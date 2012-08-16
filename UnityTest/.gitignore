@@ -1,0 +1,14 @@
+#Unity3d
+
+*.sln
+*.csproj
+*.userprefs
+*.unityproj
+*/Library/
+*/Temp
+*/Build
+*.exe
+*.pidb
+
+Assets/TouchScript/Plugins
+Library

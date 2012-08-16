@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{128FD14A-9D70-4B07-8F9A-E85A511BA28B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TouchScript</RootNamespace>
+    <AssemblyName>TouchScript</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\UnityTest\Assets\TouchScript\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\XMLDocs.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\UnityTest\Assets\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TUIOSharp">
+      <HintPath>..\Lib\TUIOSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\Lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Behaviors\Transformer2D.cs" />
+    <Compile Include="Clusters\Cluster.cs" />
+    <Compile Include="Clusters\Cluster1.cs" />
+    <Compile Include="Clusters\Cluster2.cs" />
+    <Compile Include="Debugging\TouchDebugger.cs" />
+    <Compile Include="Events\GestureStateChangeEventArgs.cs" />
+    <Compile Include="Events\TouchEventArgs.cs" />
+    <Compile Include="Gestures\FlickGesture.cs" />
+    <Compile Include="Gestures\Gesture.cs" />
+    <Compile Include="Gestures\LongPressGesture.cs" />
+    <Compile Include="Gestures\PanGesture.cs" />
+    <Compile Include="Gestures\PressGesture.cs" />
+    <Compile Include="Gestures\ReleaseGesture.cs" />
+    <Compile Include="Gestures\RotateGesture.cs" />
+    <Compile Include="Gestures\ScaleGesture.cs" />
+    <Compile Include="Gestures\TapGesture.cs" />
+    <Compile Include="Gestures\Transform2DGestureBase.cs" />
+    <Compile Include="Hit\HitTest.cs" />
+    <Compile Include="IGestureDelegate.cs" />
+    <Compile Include="InputSources\ICoordinatesRemapper.cs" />
+    <Compile Include="InputSources\InputSource.cs" />
+    <Compile Include="InputSources\MouseInput.cs" />
+    <Compile Include="InputSources\TuioInput.cs" />
+    <Compile Include="InputSources\WMTouchInput.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TouchManager.cs" />
+    <Compile Include="TouchOptions.cs" />
+    <Compile Include="TouchPoint.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
