@@ -32,7 +32,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -1.62920685e-07}
   m_LocalPosition: {x: 1000, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!1002 &400001
@@ -44,7 +43,7 @@ Camera:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 3
   m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
@@ -85,7 +84,7 @@ Behaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!1002 &9200001
 EditorExtensionImpl:
   serializedVersion: 6
@@ -99,7 +98,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  TouchPointPrefab: {fileID: 100000, guid: bec87b2606668304382b337c6705a253, type: 2}
+  TouchTexture: {fileID: 2800000, guid: a782b8a3584ec5d4bb85a19fd8354d2d, type: 1}
+  FontColor: {r: 0, g: .958217144, b: 1, a: 1}
 --- !u!1002 &11400001
 EditorExtensionImpl:
   serializedVersion: 6
