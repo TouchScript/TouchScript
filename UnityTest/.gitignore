@@ -4,9 +4,9 @@
 *.csproj
 *.userprefs
 *.unityproj
-*/Library/
-*/Temp
-*/Build
+/Library/
+/Temp/
+/Build/
 *.exe
 *.pidb
 
