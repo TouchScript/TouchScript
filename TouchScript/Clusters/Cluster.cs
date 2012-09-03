@@ -27,6 +27,7 @@ namespace TouchScript.Clusters {
         /// </summary>
         public enum OperationResult {
             Nothing,
+            WrongCamera,
             PointAdded,
             FirstPointAdded,
             PointRemoved,
@@ -34,6 +35,8 @@ namespace TouchScript.Clusters {
         }
 
         #region Public properties
+
+        public Camera Camera { get; private set; }
 
         public int PointsCount {
             get { return Points.Count; }
@@ -65,7 +68,14 @@ namespace TouchScript.Clusters {
             Points.Add(point);
             markDirty();
 
-            if (PointsCount == 1) return OperationResult.FirstPointAdded;
+            if (PointsCount == 1)
+            {
+                Camera = point.HitCamera;
+                return OperationResult.FirstPointAdded;
+            } else if (point.HitCamera != Camera)
+            {
+                return OperationResult.WrongCamera;
+            }
             return OperationResult.PointAdded;
         }
 

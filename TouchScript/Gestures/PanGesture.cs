@@ -90,8 +90,8 @@ namespace TouchScript.Gestures {
             newCenter2DPos = cluster1.GetCenterPosition();
 
             if (isMoving) {
-                oldGlobalCenter3DPos = get3DPosition(globalPlane, oldCenter2DPos);
-                newGlobalCenter3DPos = get3DPosition(globalPlane, newCenter2DPos);
+                oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, oldCenter2DPos);
+                newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos);
                 globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                 oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                 newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
@@ -101,14 +101,14 @@ namespace TouchScript.Gestures {
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
                     isMoving = true;
-                    oldGlobalCenter3DPos = get3DPosition(globalPlane, oldCenter2DPos - movementBuffer);
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, newCenter2DPos);
+                    oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, oldCenter2DPos - movementBuffer);
+                    newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos);
                     globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                     oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
                 } else {
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, newCenter2DPos - movementBuffer);
+                    newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos - movementBuffer);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     oldGlobalCenter3DPos = newGlobalCenter3DPos;
                     oldLocalCenter3DPos = newLocalCenter3DPos;

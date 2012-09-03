@@ -147,8 +147,8 @@ namespace TouchScript.Gestures {
             return global;
         }
 
-        protected virtual Vector3 get3DPosition(Plane plane, Vector2 pos2D) {
-            var ray = Camera.mainCamera.ScreenPointToRay(pos2D);
+        protected virtual Vector3 get3DPosition(Plane plane, Camera camera, Vector2 pos2D) {
+            var ray = camera.ScreenPointToRay(pos2D);
             var relativeIntersection = 0f;
             plane.Raycast(ray, out relativeIntersection);
             return ray.origin + ray.direction*relativeIntersection;

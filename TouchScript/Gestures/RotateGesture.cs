@@ -91,10 +91,10 @@ namespace TouchScript.Gestures {
             var old2DPos2 = cluster2.GetPreviousCenterPosition(Cluster2.CLUSTER2);
             var new2DPos1 = cluster2.GetCenterPosition(Cluster2.CLUSTER1);
             var new2DPos2 = cluster2.GetCenterPosition(Cluster2.CLUSTER2);
-            var old3DPos1 = get3DPosition(globalPlane, old2DPos1);
-            var old3DPos2 = get3DPosition(globalPlane, old2DPos2);
-            var new3DPos1 = get3DPosition(globalPlane, new2DPos1);
-            var new3DPos2 = get3DPosition(globalPlane, new2DPos2);
+            var old3DPos1 = get3DPosition(globalPlane, cluster2.Camera, old2DPos1);
+            var old3DPos2 = get3DPosition(globalPlane, cluster2.Camera, old2DPos2);
+            var new3DPos1 = get3DPosition(globalPlane, cluster2.Camera, new2DPos1);
+            var new3DPos2 = get3DPosition(globalPlane, cluster2.Camera, new2DPos2);
             var newVector = new3DPos2 - new3DPos1;
             var oldVector = old3DPos2 - old3DPos1;
 
@@ -113,8 +113,8 @@ namespace TouchScript.Gestures {
                 }
             }
 
-            oldGlobalCenter3DPos = get3DPosition(globalPlane, oldCenter2DPos);
-            newGlobalCenter3DPos = get3DPosition(globalPlane, newCenter2DPos);
+            oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster2.Camera, oldCenter2DPos);
+            newGlobalCenter3DPos = get3DPosition(globalPlane, cluster2.Camera, newCenter2DPos);
             oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
             newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
 
