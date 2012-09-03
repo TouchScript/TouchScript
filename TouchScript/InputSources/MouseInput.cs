@@ -24,6 +24,16 @@ namespace TouchScript.InputSources {
 
         protected override void Update() {
             base.Update();
+
+            var upHandled = false;
+            if (Input.GetMouseButtonUp(0)) {
+                if (mousePointId != -1) {
+                    endTouch(mousePointId);
+                    mousePointId = -1;
+                    upHandled = true;
+                }
+            }
+
             if (Input.GetMouseButtonDown(0)) {
                 var pos = Input.mousePosition;
                 mousePointId = beginTouch(new Vector2(pos.x, pos.y));
@@ -34,7 +44,8 @@ namespace TouchScript.InputSources {
                     moveTouch(mousePointId, new Vector2(pos.x, pos.y));
                 }
             }
-            if (Input.GetMouseButtonUp(0)) {
+
+            if (Input.GetMouseButtonUp(0) && !upHandled) {
                 endTouch(mousePointId);
                 mousePointId = -1;
             }
