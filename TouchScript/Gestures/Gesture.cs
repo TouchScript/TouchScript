@@ -127,6 +127,10 @@ namespace TouchScript.Gestures {
             Reset();
         }
 
+        protected virtual void OnDisable() {
+            setState(GestureState.Failed);
+        }
+
         #endregion
 
         #region Public methods
