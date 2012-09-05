@@ -236,6 +236,7 @@ namespace TouchScript.Gestures {
         /// <param name="value">New state.</param>
         /// <returns><c>true</c> if state was changed; otherwise, <c>false</c>.</returns>
         protected bool setState(GestureState value) {
+            if (Manager == null) return false;
             if (value == state && state != GestureState.Changed) return false;
 
             var newState = Manager.GestureChangeState(this, value);
