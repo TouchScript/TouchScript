@@ -10,5 +10,10 @@
 *.exe
 *.pidb
 
-Assets/TouchScript/Plugins
+Assets/TouchScript/Plugins/*.bat
+Assets/TouchScript/Plugins/*.bat.meta
+Assets/TouchScript/Plugins/*.pdb.meta
+Assets/TouchScript/Plugins/*.mdb.meta
+Assets/TouchScript/Plugins/*.xml
+Assets/TouchScript/Plugins/*.xml.meta
 Library
