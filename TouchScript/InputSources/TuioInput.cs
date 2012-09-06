@@ -26,17 +26,17 @@ namespace TouchScript.InputSources {
         /// Use touch flicker prevention.
         /// Handles touches disappearing and reappearing again in short period of time.
         /// </summary>
-        public bool PreventTouchFlicker = true;
+        //public bool PreventTouchFlicker = true;
 
         /// <summary>
         /// Maximum distance in cm for a new touch to be considered as disappeared old touch.
         /// </summary>
-        public float TouchFlickerDistance = 0.5f;
+        //public float TouchFlickerDistance = 0.5f;
 
         /// <summary>
         /// Maximum time in seconds while touch is considered to be still alive.
         /// </summary>
-        public float TouchFlickerDelay = 0.03f;
+        //public float TouchFlickerDelay = 0.03f;
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace TouchScript.InputSources {
         protected override void Update() {
             base.Update();
 
-            updateServerProperties();
+            //updateServerProperties();
         }
 
         protected override void OnDestroy() {
@@ -84,9 +84,9 @@ namespace TouchScript.InputSources {
         #region Private functions
 
         private void updateServerProperties() {
-            server.PreventTouchFlicker = PreventTouchFlicker;
-            server.TouchFlickerDistance = TouchFlickerDistance*TouchManager.Instance.DotsPerCentimeter/ScreenWidth;
-            server.TouchFlickerDelay = TouchFlickerDelay;
+            server.PreventTouchFlicker = false;// PreventTouchFlicker;
+            //server.TouchFlickerDistance = TouchFlickerDistance*TouchManager.Instance.DotsPerCentimeter/ScreenWidth;
+            //server.TouchFlickerDelay = TouchFlickerDelay;
         }
 
         #endregion
