@@ -170,9 +170,19 @@ namespace TouchScript.Gestures {
         ///   <c>true</c> if this instance can prevent the specified gesture; otherwise, <c>false</c>.
         /// </returns>
         public virtual bool CanPreventGesture(Gesture gesture) {
-            if (shouldRecognizeWith.Contains(gesture.GetInstanceID())) return false;
-            if (Delegate == null) return true;
-            return Delegate.ShouldRecognizeSimultaneously(this, gesture);
+            if (Delegate == null) {
+                if (gesture.CanBePreventedByGesture(this)) {
+                    if (shouldRecognizeWith.Contains(gesture.GetInstanceID())) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
+            }
         }
 
         /// <summary>
@@ -197,6 +207,18 @@ namespace TouchScript.Gestures {
         #endregion
 
         #region Internal functions
+
+        internal bool CanBePreventedByGesture(Gesture gesture) {
+            if (Delegate == null) {
+                if (shouldRecognizeWith.Contains(gesture.GetInstanceID())) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
+            }
+        }
 
         internal void SetState(GestureState value) {
             setState(value);

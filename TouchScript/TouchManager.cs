@@ -379,7 +379,7 @@ namespace TouchScript {
                             var canReceiveTouches = true;
                             foreach (var activeGesture in mightBeActiveGestures) {
                                 if (gesture == activeGesture) continue;
-                                if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture) && gesture.CanPreventGesture(activeGesture))) {
+                                if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture))) {
                                     canReceiveTouches = false;
                                     break;
                                 }
@@ -400,7 +400,8 @@ namespace TouchScript {
                     }
 
                     foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        valuePair.Key.TouchesBegan(valuePair.Value);
+                        var gesture = valuePair.Key;
+                        if (gestureIsActive(gesture)) gesture.TouchesBegan(valuePair.Value);
                     }
 
                     if (TouchPointsAdded != null) TouchPointsAdded(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
@@ -449,7 +450,8 @@ namespace TouchScript {
                     }
 
                     foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        valuePair.Key.TouchesMoved(valuePair.Value);
+                        var gesture = valuePair.Key;
+                        if (gestureIsActive(gesture)) gesture.TouchesMoved(valuePair.Value);
                     }
 
                     if (TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
@@ -492,7 +494,8 @@ namespace TouchScript {
                     }
 
                     foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        valuePair.Key.TouchesEnded(valuePair.Value);
+                        var gesture = valuePair.Key;
+                        if (gestureIsActive(gesture)) gesture.TouchesEnded(valuePair.Value);
                     }
 
                     if (TouchPointsRemoved != null) TouchPointsRemoved(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
@@ -609,7 +612,7 @@ namespace TouchScript {
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
                 if ((otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed) &&
-                    otherGesture.CanPreventGesture(gesture) && gesture.CanPreventGesture(otherGesture)) {
+                    otherGesture.CanPreventGesture(gesture)) {
                     return false;
                 }
             }
@@ -623,7 +626,7 @@ namespace TouchScript {
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
                 if (!(otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed) &&
-                    gesture.CanPreventGesture(otherGesture) && otherGesture.CanPreventGesture(gesture)) {
+                    gesture.CanPreventGesture(otherGesture)) {
                     failGesture(otherGesture);
                 }
             }
