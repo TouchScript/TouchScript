@@ -5,6 +5,10 @@ version: 1.0
 
 TouchScript is a multi-touch framework originally created by Interactive Lab to develop interactive installations.
 
+## Documentation
+Up to date documentation is available [at our web site](http://touchscript.interactivelab.ru/).  
+If you have any questions feel free to ask them here.
+
 ## Features
 - Supports TUIO, mouse and Windows 7 touch input
 - Manages gestures hierarchy and rules distribution of touch points to gestures
