@@ -1,7 +1,7 @@
 ﻿# TouchScript — multi-touch framework for Unity3d
 (c) Interactive Lab  
 Licensed under MIT license.  
-version: 1.0  
+version: 1.0.1  
 
 TouchScript is a multi-touch framework originally created by Interactive Lab to develop interactive installations.
 
@@ -77,3 +77,16 @@ tap.StateChanged += (sender, args) => {
 
 ## Examples
 See sample scenes in *Scenes* folder.
+
+## Versions history
+**1.0.1** *- 07.09.2012*
+- Fixed: bugs with disabled gestures.
+- Fixed: MouseInput bug with frozen touch points.
+- Fixed: simultaneous gesture recognition.
+- Added: Cluster.Camera.
+- Added: DLLs to the sample project.
+- Removed: PreventTouchFlicker in TuioInput.
+- Changed: camera settings for debug camera.
+
+**1.0**
+- Initial release.
