@@ -10,12 +10,18 @@ using System.Collections.Generic;
 
 namespace TouchScript.Gestures {
     /// <summary>
-    /// Recognizes when last touch is released from target
+    /// Recognizes when last touch is released from target.
+    /// Works with any gesture unless a Delegate is set.
     /// </summary>
     public class ReleaseGesture : Gesture {
         public override bool CanPreventGesture(Gesture gesture) {
             if (Delegate == null) return false;
             return Delegate.ShouldRecognizeSimultaneously(this, gesture);
+        }
+
+        public override bool CanBePreventedByGesture(Gesture gesture) {
+            if (Delegate == null) return false;
+            return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
         protected override void touchesEnded(IList<TouchPoint> touches) {

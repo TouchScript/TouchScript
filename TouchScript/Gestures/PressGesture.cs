@@ -19,6 +19,11 @@ namespace TouchScript.Gestures {
             return Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
+        public override bool CanBePreventedByGesture(Gesture gesture) {
+            if (Delegate == null) return false;
+            return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
+        }
+
         protected override void touchesBegan(IList<TouchPoint> touches) {
             if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
         }
