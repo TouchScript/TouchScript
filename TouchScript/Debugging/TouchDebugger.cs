@@ -15,6 +15,7 @@ namespace TouchScript.Debugging {
     /// <summary>
     /// Visual debugger to show touches as GUI elements.
     /// </summary>
+    [AddComponentMenu("TouchScript/Touch Debugger")]
     public class TouchDebugger : MonoBehaviour
     {
 

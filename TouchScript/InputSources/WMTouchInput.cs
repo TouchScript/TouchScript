@@ -34,6 +34,7 @@ namespace TouchScript.InputSources {
     ///     <item>App crashes on exit.</item>
     /// </list>
     /// </summary>
+    [AddComponentMenu("TouchScript/Input Sources/Windows 7 Touch Input")]
     public class WMTouchInput : InputSource {
         #region Private fields
 

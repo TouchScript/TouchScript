@@ -13,6 +13,7 @@ namespace TouchScript.Gestures {
     /// <summary>
     /// Recognizes cluster movement.
     /// </summary>
+    [AddComponentMenu("TouchScript/Gestures/Pan Gesture")]
     public class PanGesture : Transform2DGestureBase {
         #region Unity fields
 

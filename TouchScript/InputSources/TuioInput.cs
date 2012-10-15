@@ -14,6 +14,7 @@ namespace TouchScript.InputSources {
     /// <summary>
     /// Processes TUIO 1.0 input.
     /// </summary>
+    [AddComponentMenu("TouchScript/Input Sources/TUIO Input")]
     public class TuioInput : InputSource {
         #region Unity fields
 

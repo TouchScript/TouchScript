@@ -15,6 +15,7 @@ namespace TouchScript.Gestures {
     /// <summary>
     /// Recognizes rotation gesture.
     /// </summary>
+    [AddComponentMenu("TouchScript/Gestures/Rotate Gesture")]
     public class RotateGesture : Transform2DGestureBase {
         #region Unity fields
 

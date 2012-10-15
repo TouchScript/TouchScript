@@ -16,6 +16,7 @@ namespace TouchScript.Gestures {
     /// Recognizes fast movement before releasing touches.
     /// Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
+    [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
     public class FlickGesture : Gesture {
         #region Unity fields
 

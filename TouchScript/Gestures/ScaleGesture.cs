@@ -15,6 +15,7 @@ namespace TouchScript.Gestures {
     /// <summary>
     /// Recognizes scaling gesture.
     /// </summary>
+    [AddComponentMenu("TouchScript/Gestures/Scale Gesture")]
     public class ScaleGesture : Transform2DGestureBase {
         #region Unity fields
 

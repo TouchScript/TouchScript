@@ -14,6 +14,7 @@ namespace TouchScript.Gestures {
     /// <summary>
     /// Recognizes a tap.
     /// </summary>
+    [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
     public class TapGesture : Gesture {
         #region Unity fields
 

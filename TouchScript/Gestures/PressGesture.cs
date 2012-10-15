@@ -7,12 +7,14 @@
  */
 
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace TouchScript.Gestures {
     /// <summary>
     /// Recognizes when an object is touched.
     /// Works with any gesture unless a Delegate is set.
     /// </summary>
+    [AddComponentMenu("TouchScript/Gestures/Press Gesture")]
     public class PressGesture : Gesture {
         public override bool CanPreventGesture(Gesture gesture) {
             if (Delegate == null) return false;

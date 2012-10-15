@@ -12,6 +12,7 @@ namespace TouchScript.InputSources {
     /// <summary>
     /// Input source to grab mouse presses as touch points.
     /// </summary>
+    [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public class MouseInput : InputSource {
         #region Private variables
 

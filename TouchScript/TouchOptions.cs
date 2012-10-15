@@ -13,7 +13,8 @@ namespace TouchScript {
     /// <summary>
     /// Component to configure and update TouchManager's options.
     /// </summary>
-    internal class TouchOptions : MonoBehaviour {
+    [AddComponentMenu("TouchScript/Touch Options")]
+    public class TouchOptions : MonoBehaviour {
         #region Unity fields
 
         /// <summary>
