@@ -945,9 +945,6 @@ MonoBehaviour:
   m_Script: {fileID: 1254801617, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   TuioPort: 3333
-  PreventTouchFlicker: 1
-  TouchFlickerDistance: .5
-  TouchFlickerDelay: .0199999996
 --- !u!114 &67
 MonoBehaviour:
   m_ObjectHideFlags: 0

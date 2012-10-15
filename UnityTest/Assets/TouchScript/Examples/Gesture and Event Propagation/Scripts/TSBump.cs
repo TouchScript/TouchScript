@@ -2,7 +2,7 @@ using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 
-public class Bump : MonoBehaviour {
+public class TSBump : MonoBehaviour {
 
     private Vector3 startScale;
 

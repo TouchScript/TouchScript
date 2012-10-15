@@ -1,7 +1,7 @@
 using TouchScript.Gestures;
 using UnityEngine;
 
-public class Colored : MonoBehaviour {
+public class TSColored : MonoBehaviour {
     private void Start() {
         var tap = GetComponent<TapGesture>();
         if (tap == null) return;
