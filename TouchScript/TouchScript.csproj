@@ -54,6 +54,7 @@
     <Compile Include="Gestures\FlickGesture.cs" />
     <Compile Include="Gestures\Gesture.cs" />
     <Compile Include="Gestures\LongPressGesture.cs" />
+    <Compile Include="Gestures\MetaGesture.cs" />
     <Compile Include="Gestures\PanGesture.cs" />
     <Compile Include="Gestures\PressGesture.cs" />
     <Compile Include="Gestures\ReleaseGesture.cs" />
