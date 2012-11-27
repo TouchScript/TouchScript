@@ -55,8 +55,8 @@ namespace TouchScript.InputSources {
         protected override void Start() {
             base.Start();
 
-            server = new TUIOServer();
-            server.CursorAdded += OnCursorAdded;
+			server = new TUIOServer(TuioPort);
+			server.CursorAdded += OnCursorAdded;
             server.CursorUpdated += OnCursorUpdated;
             server.CursorRemoved += OnCursorRemoved;
             server.Connect();
