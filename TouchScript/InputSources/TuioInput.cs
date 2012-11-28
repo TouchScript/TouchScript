@@ -28,12 +28,10 @@ namespace TouchScript.InputSources {
         /// Handles touches disappearing and reappearing again in short period of time.
         /// </summary>
         //public bool PreventTouchFlicker = true;
-
         /// <summary>
         /// Maximum distance in cm for a new touch to be considered as disappeared old touch.
         /// </summary>
         //public float TouchFlickerDistance = 0.5f;
-
         /// <summary>
         /// Maximum time in seconds while touch is considered to be still alive.
         /// </summary>
@@ -42,11 +40,10 @@ namespace TouchScript.InputSources {
         #endregion
 
         #region Private variables
-
-        private TUIOServer server;
+        private TuioServer server;
 
         private readonly object sync = new object();
-        private readonly Dictionary<TUIOCursor, int> cursorToInternalId = new Dictionary<TUIOCursor, int>();
+        private readonly Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();
 
         #endregion
 
@@ -55,13 +52,11 @@ namespace TouchScript.InputSources {
         protected override void Start() {
             base.Start();
 
-            server = new TUIOServer();
+            server = new TuioServer();
             server.CursorAdded += OnCursorAdded;
             server.CursorUpdated += OnCursorUpdated;
             server.CursorRemoved += OnCursorRemoved;
             server.Connect();
-
-            updateServerProperties();
         }
 
         protected override void Update() {
@@ -83,18 +78,11 @@ namespace TouchScript.InputSources {
         #endregion
 
         #region Private functions
-
-        private void updateServerProperties() {
-            server.PreventTouchFlicker = false;// PreventTouchFlicker;
-            //server.TouchFlickerDistance = TouchFlickerDistance*TouchManager.Instance.DotsPerCentimeter/ScreenWidth;
-            //server.TouchFlickerDelay = TouchFlickerDelay;
-        }
-
         #endregion
 
         #region Event handlers
 
-        private void OnCursorAdded(object sender, TUIOCursorEventArgs tuioCursorEventArgs) {
+        private void OnCursorAdded(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
             lock (sync) {
                 var x = cursor.X*ScreenWidth;
@@ -103,7 +91,7 @@ namespace TouchScript.InputSources {
             }
         }
 
-        private void OnCursorUpdated(object sender, TUIOCursorEventArgs tuioCursorEventArgs) {
+        private void OnCursorUpdated(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
             lock (sync) {
                 int existingCursor;
@@ -116,7 +104,7 @@ namespace TouchScript.InputSources {
             }
         }
 
-        private void OnCursorRemoved(object sender, TUIOCursorEventArgs tuioCursorEventArgs) {
+        private void OnCursorRemoved(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
             lock (sync) {
                 int existingCursor;
