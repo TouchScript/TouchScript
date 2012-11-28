@@ -50,7 +50,7 @@ namespace TouchScript.Gestures {
 
         #region Private variables
 
-        private readonly Cluster1 cluster = new Cluster1();
+        private Cluster1 cluster = new Cluster1();
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
         private List<Vector2> positionDeltas = new List<Vector2>();

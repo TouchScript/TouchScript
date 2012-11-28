@@ -32,7 +32,7 @@ namespace TouchScript.Gestures {
 
         #region Private variables
 
-        private readonly Cluster1 cluster = new Cluster1();
+        private Cluster1 cluster = new Cluster1();
         private float totalMovement = 0f;
         private float startTime;
 

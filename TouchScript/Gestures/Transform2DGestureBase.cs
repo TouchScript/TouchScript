@@ -33,7 +33,7 @@ namespace TouchScript.Gestures {
 
         #region Private variables
 
-        protected readonly Cluster1 cluster1 = new Cluster1();
+        protected Cluster1 cluster1 = new Cluster1();
 
         #endregion
 

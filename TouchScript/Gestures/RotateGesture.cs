@@ -33,7 +33,7 @@ namespace TouchScript.Gestures {
 
         #region Private variables
 
-        private readonly Cluster2 cluster2 = new Cluster2();
+        private Cluster2 cluster2 = new Cluster2();
         private float rotationBuffer;
         private bool isRotating = false;
 

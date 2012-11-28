@@ -38,7 +38,7 @@ namespace TouchScript.Gestures {
 
         #region Private fields
 
-        private readonly Cluster1 cluster = new Cluster1();
+        private Cluster1 cluster = new Cluster1();
         private Vector2 totalMovement;
         private Timer timer = new Timer();
         private bool fireRecognizedNextUpdate = false;

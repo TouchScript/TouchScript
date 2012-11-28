@@ -186,7 +186,7 @@ namespace TouchScript.Gestures {
         }
 
         /// <summary>
-        /// Determines whether this instance can be prevent by specified gesture.
+        /// Determines whether this instance can be prevented by specified gesture.
         /// </summary>
         /// <param name="gesture">The gesture.</param>
         /// <returns>

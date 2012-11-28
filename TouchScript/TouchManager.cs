@@ -115,15 +115,15 @@ namespace TouchScript {
 
         #region private Variables
 
-        private readonly List<TouchPoint> touches = new List<TouchPoint>();
-        private readonly Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>();
+        private List<TouchPoint> touches = new List<TouchPoint>();
+        private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>();
 
         // Upcoming changes
-        private readonly List<TouchPoint> touchesBegan = new List<TouchPoint>();
-        private readonly List<TouchPoint> touchesEnded = new List<TouchPoint>();
-        private readonly List<TouchPoint> touchesCancelled = new List<TouchPoint>();
-        private readonly Dictionary<int, TouchPointUpdate> touchesMoved = new Dictionary<int, TouchPointUpdate>();
-        private readonly List<Gesture> gesturesToReset = new List<Gesture>();
+        private List<TouchPoint> touchesBegan = new List<TouchPoint>();
+        private List<TouchPoint> touchesEnded = new List<TouchPoint>();
+        private List<TouchPoint> touchesCancelled = new List<TouchPoint>();
+        private Dictionary<int, TouchPointUpdate> touchesMoved = new Dictionary<int, TouchPointUpdate>();
+        private List<Gesture> gesturesToReset = new List<Gesture>();
 
         // Locks
         private readonly object sync = new object();

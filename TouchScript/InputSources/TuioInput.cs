@@ -7,7 +7,7 @@
  */
 
 using System.Collections.Generic;
-using TUIOSharp;
+using TUIOsharp;
 using UnityEngine;
 
 namespace TouchScript.InputSources {
@@ -41,9 +41,7 @@ namespace TouchScript.InputSources {
 
         #region Private variables
         private TuioServer server;
-
-        private readonly object sync = new object();
-        private readonly Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();
+        private Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();
 
         #endregion
 
@@ -61,8 +59,6 @@ namespace TouchScript.InputSources {
 
         protected override void Update() {
             base.Update();
-
-            //updateServerProperties();
         }
 
         protected override void OnDestroy() {
@@ -78,13 +74,14 @@ namespace TouchScript.InputSources {
         #endregion
 
         #region Private functions
+
         #endregion
 
         #region Event handlers
 
         private void OnCursorAdded(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
-            lock (sync) {
+            lock (this) {
                 var x = cursor.X*ScreenWidth;
                 var y = (1 - cursor.Y)*ScreenHeight;
                 cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y)));
@@ -93,7 +90,7 @@ namespace TouchScript.InputSources {
 
         private void OnCursorUpdated(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
-            lock (sync) {
+            lock (this) {
                 int existingCursor;
                 if (!cursorToInternalId.TryGetValue(cursor, out existingCursor)) return;
 
@@ -106,7 +103,7 @@ namespace TouchScript.InputSources {
 
         private void OnCursorRemoved(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
-            lock (sync) {
+            lock (this) {
                 int existingCursor;
                 if (!cursorToInternalId.TryGetValue(cursor, out existingCursor)) return;
 

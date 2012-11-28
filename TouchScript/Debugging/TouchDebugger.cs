@@ -34,7 +34,7 @@ namespace TouchScript.Debugging {
 
         #region Private variables
 
-        private readonly Dictionary<int, TouchPoint> dummies = new Dictionary<int, TouchPoint>();
+        private Dictionary<int, TouchPoint> dummies = new Dictionary<int, TouchPoint>();
         private GUIStyle style;
 
         #endregion

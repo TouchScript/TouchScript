@@ -50,9 +50,9 @@ namespace TouchScript.Clusters {
 
         #region Private variables
 
-        private readonly List<TouchPoint> cluster1 = new List<TouchPoint>();
-        private readonly List<TouchPoint> cluster2 = new List<TouchPoint>();
-        private readonly Random rnd = new Random();
+        private List<TouchPoint> cluster1 = new List<TouchPoint>();
+        private List<TouchPoint> cluster2 = new List<TouchPoint>();
+        private Random rnd = new Random();
 
         #endregion
 

@@ -46,7 +46,7 @@ namespace TouchScript.Clusters {
 
         #region Private variables
 
-        protected readonly List<TouchPoint> Points = new List<TouchPoint>();
+        protected List<TouchPoint> Points = new List<TouchPoint>();
         protected bool Dirty { get; private set; }
 
         #endregion
