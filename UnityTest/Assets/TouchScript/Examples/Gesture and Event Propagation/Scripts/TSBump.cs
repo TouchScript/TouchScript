@@ -14,11 +14,13 @@ public class TSBump : MonoBehaviour {
 	}
 
     private void onRelease(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs) {
-        transform.localScale = startScale;
+        if (gestureStateChangeEventArgs.State == Gesture.GestureState.Recognized)
+            transform.localScale = startScale;
     }
 
     private void onPress(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs) {
-        transform.localScale = startScale * .7f;
+        if (gestureStateChangeEventArgs.State == Gesture.GestureState.Recognized)
+            transform.localScale = startScale * .7f;
     }
 
 }
