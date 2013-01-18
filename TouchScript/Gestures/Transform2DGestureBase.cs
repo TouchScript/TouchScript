@@ -108,8 +108,6 @@ namespace TouchScript.Gestures {
         }
 
         protected override void touchesMoved(IList<TouchPoint> touches) {
-            base.touchesMoved(touches);
-
             cluster1.Invalidate();
         }
 

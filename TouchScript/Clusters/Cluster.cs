@@ -68,12 +68,10 @@ namespace TouchScript.Clusters {
             Points.Add(point);
             markDirty();
 
-            if (PointsCount == 1)
-            {
+            if (PointsCount == 1) {
                 Camera = point.HitCamera;
                 return OperationResult.FirstPointAdded;
-            } else if (point.HitCamera != Camera)
-            {
+            } else if (point.HitCamera != Camera) {
                 return OperationResult.WrongCamera;
             }
             return OperationResult.PointAdded;

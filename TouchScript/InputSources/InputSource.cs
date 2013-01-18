@@ -27,9 +27,6 @@ namespace TouchScript.InputSources {
 
         protected TouchManager Manager;
 
-        protected int ScreenWidth;
-        protected int ScreenHeight;
-
         #endregion
 
         #region Unity
@@ -41,10 +38,7 @@ namespace TouchScript.InputSources {
 
         protected virtual void OnDestroy() {}
 
-        protected virtual void Update() {
-            ScreenWidth = Screen.width;
-            ScreenHeight = Screen.height;
-        }
+        protected virtual void Update() {}
 
         #endregion
 

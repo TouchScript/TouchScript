@@ -50,6 +50,8 @@ namespace TouchScript.InputSources {
         #region Private variables
         private TuioServer server;
         private Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();
+        private int screenWidth;
+        private int screenHeight;
 
         #endregion
 
@@ -67,6 +69,8 @@ namespace TouchScript.InputSources {
 
         protected override void Update() {
             base.Update();
+            screenWidth = Screen.width;
+            screenHeight = Screen.height;
         }
 
         protected override void OnDestroy() {
@@ -90,8 +94,8 @@ namespace TouchScript.InputSources {
         private void OnCursorAdded(object sender, TuioCursorEventArgs tuioCursorEventArgs) {
             var cursor = tuioCursorEventArgs.Cursor;
             lock (this) {
-                var x = cursor.X*ScreenWidth;
-                var y = (1 - cursor.Y)*ScreenHeight;
+                var x = cursor.X*screenWidth;
+                var y = (1 - cursor.Y)*screenHeight;
                 cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y)));
             }
         }
@@ -102,8 +106,8 @@ namespace TouchScript.InputSources {
                 int existingCursor;
                 if (!cursorToInternalId.TryGetValue(cursor, out existingCursor)) return;
 
-                var x = cursor.X*ScreenWidth;
-                var y = (1 - cursor.Y)*ScreenHeight;
+                var x = cursor.X*screenWidth;
+                var y = (1 - cursor.Y)*screenHeight;
 
                 moveTouch(existingCursor, new Vector2(x, y));
             }
