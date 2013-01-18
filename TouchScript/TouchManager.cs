@@ -338,212 +338,228 @@ namespace TouchScript {
 
         #region Private functions
 
+        private bool updateBegan() {
+            if (touchesBegan.Count > 0) {
+                // get touches per target
+                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                foreach (var touch in touchesBegan) {
+                    touches.Add(touch);
+                    idToTouch.Add(touch.Id, touch);
+                    RaycastHit hit;
+                    Camera hitCamera;
+                    touch.Target = GetHitTarget(touch, out hit, out hitCamera);
+                    touch.Hit = hit;
+                    touch.HitCamera = hitCamera;
+
+                    if (touch.Target != null) {
+                        List<TouchPoint> list;
+                        if (!targetTouches.TryGetValue(touch.Target, out list)) {
+                            list = new List<TouchPoint>();
+                            targetTouches.Add(touch.Target, list);
+                        }
+                        list.Add(touch);
+                    }
+                }
+
+                // get touches per gesture
+                // touches can come to a gesture from multiple targets in hierarchy
+                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                foreach (var target in targetTouches.Keys) {
+                    var mightBeActiveGestures = getHierarchyContaining(target);
+                    var possibleGestures = getHierarchyEndingWith(target);
+                    foreach (var gesture in possibleGestures) {
+                        if (!gestureIsActive(gesture)) continue;
+
+                        var canReceiveTouches = true;
+                        foreach (var activeGesture in mightBeActiveGestures) {
+                            if (gesture == activeGesture) continue;
+                            if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture))) {
+                                canReceiveTouches = false;
+                                break;
+                            }
+                        }
+                        if (canReceiveTouches) {
+                            var touchesToReceive =
+                                targetTouches[target].FindAll((TouchPoint touch) => gesture.ShouldReceiveTouch(touch));
+                            if (touchesToReceive.Count > 0) {
+                                if (gestureTouches.ContainsKey(gesture)) {
+                                    gestureTouches[gesture].AddRange(touchesToReceive);
+                                } else {
+                                    gestureTouches[gesture] = touchesToReceive;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
+                    var gesture = valuePair.Key;
+                    if (gestureIsActive(gesture)) gesture.TouchesBegan(valuePair.Value);
+                }
+
+                if (TouchPointsAdded != null) TouchPointsAdded(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
+                touchesBegan.Clear();
+
+                return true;
+            }
+            return false;
+        }
+
+        private bool updateMoved() {
+            if (touchesMoved.Count > 0) {
+                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                var reallyMoved = new List<TouchPoint>();
+                foreach (var update in touchesMoved.Values) {
+                    TouchPoint touch;
+                    if (!idToTouch.TryGetValue(update.Id, out touch)) continue;
+                    if (touch.Position == update.Position) continue;
+
+                    touch.Position = update.Position;
+                    reallyMoved.Add(touch);
+                    if (touch.Target != null) {
+                        List<TouchPoint> list;
+                        if (!targetTouches.TryGetValue(touch.Target, out list)) {
+                            list = new List<TouchPoint>();
+                            targetTouches.Add(touch.Target, list);
+                        }
+                        list.Add(touch);
+                    }
+                }
+
+                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                foreach (var target in targetTouches.Keys) {
+                    var possibleGestures = getHierarchyEndingWith(target);
+
+                    foreach (var gesture in possibleGestures) {
+                        if (!gestureIsActive(gesture)) continue;
+
+                        var touchesToReceive =
+                            targetTouches[target].FindAll(gesture.HasTouchPoint);
+                        if (touchesToReceive.Count > 0) {
+                            if (gestureTouches.ContainsKey(gesture)) {
+                                gestureTouches[gesture].AddRange(touchesToReceive);
+                            } else {
+                                gestureTouches[gesture] = touchesToReceive;
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
+                    var gesture = valuePair.Key;
+                    if (gestureIsActive(gesture)) gesture.TouchesMoved(valuePair.Value);
+                }
+
+                if (reallyMoved.Count > 0 && TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
+                touchesMoved.Clear();
+
+                return true;
+            }
+            return false;
+        }
+
+        private bool updateEnded() {
+            if (touchesEnded.Count > 0) {
+                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                foreach (var touch in touchesEnded) {
+                    idToTouch.Remove(touch.Id);
+                    touches.Remove(touch);
+                    if (touch.Target != null) {
+                        List<TouchPoint> list;
+                        if (!targetTouches.TryGetValue(touch.Target, out list)) {
+                            list = new List<TouchPoint>();
+                            targetTouches.Add(touch.Target, list);
+                        }
+                        list.Add(touch);
+                    }
+                }
+
+                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                foreach (var target in targetTouches.Keys) {
+                    var possibleGestures = getHierarchyEndingWith(target);
+                    foreach (var gesture in possibleGestures) {
+                        if (!gestureIsActive(gesture)) continue;
+
+                        var touchesToReceive =
+                            targetTouches[target].FindAll(gesture.HasTouchPoint);
+                        if (touchesToReceive.Count > 0) {
+                            if (gestureTouches.ContainsKey(gesture)) {
+                                gestureTouches[gesture].AddRange(touchesToReceive);
+                            } else {
+                                gestureTouches[gesture] = touchesToReceive;
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
+                    var gesture = valuePair.Key;
+                    if (gestureIsActive(gesture)) gesture.TouchesEnded(valuePair.Value);
+                }
+
+                if (TouchPointsRemoved != null) TouchPointsRemoved(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
+                touchesEnded.Clear();
+
+                return true;
+            }
+            return false;
+        }
+
+        private bool updateCancelled() {
+            if (touchesCancelled.Count > 0) {
+                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                foreach (var touch in touchesCancelled) {
+                    idToTouch.Remove(touch.Id);
+                    touches.Remove(touch);
+                    if (touch.Target != null) {
+                        List<TouchPoint> list;
+                        if (!targetTouches.TryGetValue(touch.Target, out list)) {
+                            list = new List<TouchPoint>();
+                            targetTouches.Add(touch.Target, list);
+                        }
+                        list.Add(touch);
+                    }
+                }
+
+                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                foreach (var target in targetTouches.Keys) {
+                    var possibleGestures = getHierarchyEndingWith(target);
+                    foreach (var gesture in possibleGestures) {
+                        if (!gestureIsActive(gesture)) continue;
+
+                        var touchesToReceive =
+                            targetTouches[target].FindAll(gesture.HasTouchPoint);
+                        if (touchesToReceive.Count > 0) {
+                            if (gestureTouches.ContainsKey(gesture)) {
+                                gestureTouches[gesture].AddRange(touchesToReceive);
+                            } else {
+                                gestureTouches[gesture] = touchesToReceive;
+                            }
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
+                    valuePair.Key.TouchesCancelled(valuePair.Value);
+                }
+
+                if (TouchPointsCancelled != null) TouchPointsCancelled(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
+                touchesCancelled.Clear();
+
+                return true;
+            }
+            return false;
+        }
+
         private void updateTouches() {
             // reset gestures changed between update loops
             resetGestures();
-            var updated = false;
-
+            bool updated;
             lock (sync) {
-                if (touchesBegan.Count > 0) {
-                    updated = true;
-                    // get touches per target
-                    var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-                    foreach (var touch in touchesBegan) {
-                        touches.Add(touch);
-                        idToTouch.Add(touch.Id, touch);
-                        RaycastHit hit;
-                        Camera hitCamera;
-                        touch.Target = GetHitTarget(touch, out hit, out hitCamera);
-                        touch.Hit = hit;
-                        touch.HitCamera = hitCamera;
-
-                        if (touch.Target != null) {
-                            List<TouchPoint> list;
-                            if (!targetTouches.TryGetValue(touch.Target, out list)) {
-                                list = new List<TouchPoint>();
-                                targetTouches.Add(touch.Target, list);
-                            }
-                            list.Add(touch);
-                        }
-                    }
-
-                    // get touches per gesture
-                    // touches can come to a gesture from multiple targets in hierarchy
-                    var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                    foreach (var target in targetTouches.Keys) {
-                        var mightBeActiveGestures = getHierarchyContaining(target);
-                        var possibleGestures = getHierarchyEndingWith(target);
-                        foreach (var gesture in possibleGestures) {
-                            if (!gestureIsActive(gesture)) continue;
-
-                            var canReceiveTouches = true;
-                            foreach (var activeGesture in mightBeActiveGestures) {
-                                if (gesture == activeGesture) continue;
-                                if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture))) {
-                                    canReceiveTouches = false;
-                                    break;
-                                }
-                            }
-                            if (canReceiveTouches) {
-                                var touchesToReceive =
-                                    targetTouches[target].FindAll((TouchPoint touch) => gesture.ShouldReceiveTouch(touch));
-                                if (touchesToReceive.Count > 0) {
-                                    List<TouchPoint> list;
-                                    if (gestureTouches.TryGetValue(gesture, out list)) {
-                                        gestureTouches[gesture].AddRange(touchesToReceive);
-                                    } else {
-                                        gestureTouches[gesture] = touchesToReceive;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        var gesture = valuePair.Key;
-                        if (gestureIsActive(gesture)) gesture.TouchesBegan(valuePair.Value);
-                    }
-
-                    if (TouchPointsAdded != null) TouchPointsAdded(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
-                    touchesBegan.Clear();
-                }
-
-                if (touchesMoved.Count > 0) {
-                    updated = true;
-                    var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-                    var reallyMoved = new List<TouchPoint>();
-                    foreach (var update in touchesMoved.Values) {
-                        TouchPoint touch;
-                        if (!idToTouch.TryGetValue(update.Id, out touch)) continue;
-                        if (touch.Position == update.Position) continue;
-
-                        touch.Position = update.Position;
-                        reallyMoved.Add(touch);
-                        if (touch.Target != null) {
-                            List<TouchPoint> list;
-                            if (!targetTouches.TryGetValue(touch.Target, out list)) {
-                                list = new List<TouchPoint>();
-                                targetTouches.Add(touch.Target, list);
-                            }
-                            list.Add(touch);
-                        }
-                    }
-
-                    var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                    foreach (var target in targetTouches.Keys) {
-                        var possibleGestures = getHierarchyEndingWith(target);
-
-                        foreach (var gesture in possibleGestures) {
-                            if (!gestureIsActive(gesture)) continue;
-
-                            var touchesToReceive =
-                                targetTouches[target].FindAll(gesture.HasTouchPoint);
-                            if (touchesToReceive.Count > 0) {
-                                List<TouchPoint> list;
-                                if (gestureTouches.TryGetValue(gesture, out list)) {
-                                    gestureTouches[gesture].AddRange(touchesToReceive);
-                                } else {
-                                    gestureTouches[gesture] = touchesToReceive;
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        var gesture = valuePair.Key;
-                        if (gestureIsActive(gesture)) gesture.TouchesMoved(valuePair.Value);
-                    }
-
-                    if (TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
-                    touchesMoved.Clear();
-                }
-
-                if (touchesEnded.Count > 0) {
-                    updated = true;
-                    var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-                    foreach (var touch in touchesEnded) {
-                        idToTouch.Remove(touch.Id);
-                        touches.Remove(touch);
-                        if (touch.Target != null) {
-                            List<TouchPoint> list;
-                            if (!targetTouches.TryGetValue(touch.Target, out list)) {
-                                list = new List<TouchPoint>();
-                                targetTouches.Add(touch.Target, list);
-                            }
-                            list.Add(touch);
-                        }
-                    }
-
-                    var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                    foreach (var target in targetTouches.Keys) {
-                        var possibleGestures = getHierarchyEndingWith(target);
-                        foreach (var gesture in possibleGestures) {
-                            if (!gestureIsActive(gesture)) continue;
-
-                            var touchesToReceive =
-                                targetTouches[target].FindAll(gesture.HasTouchPoint);
-                            if (touchesToReceive.Count > 0) {
-                                List<TouchPoint> list;
-                                if (gestureTouches.TryGetValue(gesture, out list)) {
-                                    gestureTouches[gesture].AddRange(touchesToReceive);
-                                } else {
-                                    gestureTouches[gesture] = touchesToReceive;
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        var gesture = valuePair.Key;
-                        if (gestureIsActive(gesture)) gesture.TouchesEnded(valuePair.Value);
-                    }
-
-                    if (TouchPointsRemoved != null) TouchPointsRemoved(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
-                    touchesEnded.Clear();
-                }
-
-                if (touchesCancelled.Count > 0) {
-                    updated = true;
-                    var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-                    foreach (var touch in touchesCancelled) {
-                        idToTouch.Remove(touch.Id);
-                        touches.Remove(touch);
-                        if (touch.Target != null) {
-                            List<TouchPoint> list;
-                            if (!targetTouches.TryGetValue(touch.Target, out list)) {
-                                list = new List<TouchPoint>();
-                                targetTouches.Add(touch.Target, list);
-                            }
-                            list.Add(touch);
-                        }
-                    }
-
-                    var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                    foreach (var target in targetTouches.Keys) {
-                        var possibleGestures = getHierarchyEndingWith(target);
-                        foreach (var gesture in possibleGestures) {
-                            if (!gestureIsActive(gesture)) continue;
-
-                            var touchesToReceive =
-                                targetTouches[target].FindAll(gesture.HasTouchPoint);
-                            if (touchesToReceive.Count > 0) {
-                                List<TouchPoint> list;
-                                if (gestureTouches.TryGetValue(gesture, out list)) {
-                                    gestureTouches[gesture].AddRange(touchesToReceive);
-                                } else {
-                                    gestureTouches[gesture] = touchesToReceive;
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        valuePair.Key.TouchesCancelled(valuePair.Value);
-                    }
-
-                    if (TouchPointsCancelled != null) TouchPointsCancelled(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
-                    touchesCancelled.Clear();
-                }
+                updated = updateBegan();
+                updated = updateMoved() || updated;
+                updated = updateEnded() || updated;
+                updated = updateCancelled() || updated;
             }
 
             if (updated) resetGestures();
