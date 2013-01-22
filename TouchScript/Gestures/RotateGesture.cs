@@ -108,7 +108,7 @@ namespace TouchScript.Gestures {
                 deltaRotation = angle;
             } else {
                 rotationBuffer += angle;
-                if (rotationBuffer*rotationBuffer > RotationThreshold*RotationThreshold) {
+                if (rotationBuffer*rotationBuffer >= RotationThreshold*RotationThreshold) {
                     isRotating = true;
                     deltaRotation = rotationBuffer;
                 }

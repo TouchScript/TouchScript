@@ -74,14 +74,14 @@ namespace TouchScript.Gestures {
         #region Gesture callbacks
 
         protected override void touchesBegan(IList<TouchPoint> touches) {
+            if (activeTouches.Count > MaxTouches) {
+                setState(GestureState.Failed);
+                return;
+            }
             foreach (var touch in touches) {
                 if (cluster.AddPoint(touch) == Cluster.OperationResult.FirstPointAdded) {
                     timer.Interval = TimeToPress*1000;
                     timer.Start();
-                }
-                if (activeTouches.Count > MaxTouches) {
-                    setState(GestureState.Failed);
-                    return;
                 }
             }
         }

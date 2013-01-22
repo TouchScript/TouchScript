@@ -110,11 +110,13 @@ namespace TouchScript.Gestures {
                 var delta2DDist = new2DDist - old2DDist;
                 scalingBuffer += delta2DDist;
                 var dpiScalingThreshold = ScalingThreshold*Manager.DotsPerCentimeter;
-                if (scalingBuffer*scalingBuffer > dpiScalingThreshold*dpiScalingThreshold) {
+                if (scalingBuffer*scalingBuffer >= dpiScalingThreshold*dpiScalingThreshold) {
                     isScaling = true;
                     var oldVector2D = (old2DPos2 - old2DPos1).normalized;
-                    var old2DPos1B = oldCenter2DPos + oldVector2D*((new2DDist - scalingBuffer)*.5f);
-                    var old2DPos2B = oldCenter2DPos - oldVector2D*((new2DDist - scalingBuffer)*.5f);
+                    var startScale = (new2DDist - scalingBuffer)*.5f;
+                    var startVector = oldVector2D*startScale;
+                    var old2DPos1B = oldCenter2DPos + startVector;
+                    var old2DPos2B = oldCenter2DPos - startVector;
                     deltaScale = newVector.magnitude / (get3DPosition(globalPlane, cluster2.Camera, old2DPos2B) - get3DPosition(globalPlane, cluster2.Camera, old2DPos1B)).magnitude;
                 }
             }
@@ -165,6 +167,11 @@ namespace TouchScript.Gestures {
             resetScaling();
         }
 
+        protected override void resetGestureProperties() {
+            base.resetGestureProperties();
+            LocalDeltaScale = 1f;
+        }
+
         #endregion
 
         #region Private functions
@@ -172,11 +179,6 @@ namespace TouchScript.Gestures {
         private void resetScaling() {
             scalingBuffer = 0f;
             isScaling = false;
-        }
-
-        protected override void resetGestureProperties() {
-            base.resetGestureProperties();
-            LocalDeltaScale = 1f;
         }
 
         #endregion

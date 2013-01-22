@@ -84,12 +84,12 @@ namespace TouchScript.Gestures {
             if (!moving) {
                 movementBuffer += delta;
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
+                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold) {
                     moving = true;
                 }
             }
 
-            positionDeltas.Add(cluster.GetCenterPosition() - cluster.GetPreviousCenterPosition());
+            positionDeltas.Add(delta);
             timeDeltas.Add(Time.time - previousTime);
             previousTime = Time.time;
         }
@@ -119,9 +119,7 @@ namespace TouchScript.Gestures {
                     if (Horizontal) totalMovement.y = 0;
                     if (Vertical) totalMovement.x = 0;
 
-                    var distance = totalMovement.magnitude;
-
-                    if (distance < MinDistance*TouchManager.Instance.DotsPerCentimeter) {
+                    if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter) {
                         setState(GestureState.Failed);
                     } else {
                         ScreenFlickVector = totalMovement;
