@@ -32,6 +32,11 @@ namespace TouchScript.InputSources {
         public int TuioPort = 3333;
 
         /// <summary>
+        /// Minimum movement delta to ignore in cm.
+        /// </summary>
+        public float MovementThreshold = 0.1f;
+
+        /// <summary>
         /// Use touch flicker prevention.
         /// Handles touches disappearing and reappearing again in short period of time.
         /// </summary>
@@ -61,6 +66,8 @@ namespace TouchScript.InputSources {
             base.Start();
 
 			server = new TuioServer(TuioPort);
+            server.MovementThreshold = MovementThreshold*TouchManager.Instance.DotsPerCentimeter/Mathf.Max(Screen.width, Screen.height);
+            print(MovementThreshold * TouchManager.Instance.DotsPerCentimeter / Mathf.Max(Screen.width, Screen.height));
 			server.CursorAdded += OnCursorAdded;
             server.CursorUpdated += OnCursorUpdated;
             server.CursorRemoved += OnCursorRemoved;
