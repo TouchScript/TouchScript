@@ -15,10 +15,12 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Gestures;
 using TouchScript.Hit;
+using TouchScript.Layers;
 using UnityEngine;
 
 namespace TouchScript {
@@ -26,6 +28,8 @@ namespace TouchScript {
     /// Singleton which handles all touch and gesture management.
     /// Shouldn't be instantiated manually.
     /// </summary>
+    [AddComponentMenu("TouchScript/Touch Manager")]
+    [ExecuteInEditMode()]
     public class TouchManager : MonoBehaviour {
         /// <summary>
         /// Ratio of cm to inch
@@ -66,7 +70,20 @@ namespace TouchScript {
         /// <summary>
         /// TouchManager singleton instance.
         /// </summary>
-        public static TouchManager Instance { get; private set; }
+        public static TouchManager Instance {
+            get {
+                if (shuttingDown) return null;
+                if (instance == null) {
+                    instance = FindObjectOfType(typeof (TouchManager)) as TouchManager;
+                    if (instance == null) {
+                        var go = new GameObject("TouchScript");
+                        instance = go.AddComponent<TouchManager>();
+                    }
+                }
+                Debug.Log(instance);
+                return instance;
+            }
+        }
 
         /// <summary>
         /// Active cameras to look for touch targets in specific order.
@@ -74,27 +91,62 @@ namespace TouchScript {
         public List<Camera> HitCameras { get; set; }
 
         /// <summary>
-        /// Current touch device DPI.
+        /// Current DPI.
         /// </summary>
-        public float DPI { get; set; }
+        public float DPI {
+            get { return dpi; }
+            set {
+                if (Application.isEditor) EditorDPI = value;
+                else LiveDPI = value;
+            }
+        }
+
+        /// <summary>
+        /// DPI while testing in editor.
+        /// </summary>
+        public float EditorDPI {
+            get { return editorDpi; }
+            set {
+                editorDpi = value;
+                updateDPI();
+            }
+        }
+
+        /// <summary>
+        /// DPI of target touch device.
+        /// </summary>
+        public float LiveDPI {
+            get { return liveDpi; }
+            set {
+                liveDpi = value;
+                updateDPI();
+            }
+        }
+
+        public List<LayerBase> Layers {
+            get { return new List<LayerBase>(layers); }
+        }
 
         /// <summary>
         /// Radius of single touch point on device in cm.
         /// </summary>
-        public float TouchRadius { get; set; }
+        public float TouchRadius {
+            get { return touchRadius; }
+            set { touchRadius = value; }
+        }
 
         /// <summary>
         /// Touch point radius in pixels.
         /// </summary>
         public float PixelTouchRadius {
-            get { return TouchRadius*DotsPerCentimeter; }
+            get { return touchRadius*DotsPerCentimeter; }
         }
 
         /// <summary>
         /// Pixels in a cm with current DPI.
         /// </summary>
         public float DotsPerCentimeter {
-            get { return CM_TO_INCH*DPI; }
+            get { return CM_TO_INCH*dpi; }
         }
 
         /// <summary>
@@ -114,6 +166,15 @@ namespace TouchScript {
         #endregion
 
         #region private Variables
+
+        private static TouchManager instance;
+        private static bool shuttingDown = false;
+
+        private float dpi = 72;
+        [SerializeField] private float liveDpi = 72;
+        [SerializeField] private float editorDpi = 72;
+        [SerializeField] private float touchRadius = .75f;
+        [SerializeField] private List<LayerBase> layers = new List<LayerBase>();
 
         private List<TouchPoint> touches = new List<TouchPoint>();
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>();
@@ -135,19 +196,67 @@ namespace TouchScript {
         #region Unity
 
         private void Awake() {
-            if (Instance != null) throw new InvalidOperationException("Attempt to create another instance of TouchManager.");
-            Instance = this;
-            DPI = 72;
-            TouchRadius = .75f;
+            if (instance == null) instance = this;
+            shuttingDown = false;
+            updateDPI();
+
+            if (Application.isPlaying) {
+                StartCoroutine(lateAwake());
+            }
+        }
+
+        private IEnumerator lateAwake() {
+            yield return new WaitForEndOfFrame();
+            if (layers.Count == 0) {
+                Debug.Log("No camera layers. Adding one for the main camera.");
+                if (Camera.main != null) {
+                    Camera.main.gameObject.AddComponent<CameraLayer>();
+                } else {
+                    Debug.LogError("No main camera found!");
+                }
+            }
         }
 
         private void Update() {
-            updateTouches();
+            if (Application.isPlaying) updateTouches();
+        }
+
+        private void OnDestroy() {
+        }
+
+        private void OnApplicationQuit() {
+            shuttingDown = true;
+        }
+
+        #endregion
+
+        #region Public static methods
+
+        public static bool AddLayer(LayerBase layer) {
+            if (layer == null) return false;
+            if (Instance == null) return false;
+            if (Instance.layers.Contains(layer)) return false;
+            Instance.layers.Add(layer);
+            return true;
+        }
+
+        public static bool RemoveLayer(LayerBase layer) {
+            if (layer == null) return false;
+            if (instance == null) return false;
+            return instance.layers.Remove(layer);
         }
 
         #endregion
 
         #region Public methods
+
+        public void ChangeLayerIndex(int at, int to) {
+            if (at < 0 || at >= layers.Count) return;
+            if (to < 0 || to >= layers.Count) return;
+            var data = layers[at];
+            layers.RemoveAt(at);
+            layers.Insert(to, data);
+        }
 
         /// <summary>
         /// Checks if the touch has hit something.
@@ -171,30 +280,18 @@ namespace TouchScript {
             hit = new RaycastHit();
             hitCamera = null;
 
-            if (HitCameras == null) return null;
-
-            foreach (var cam in HitCameras) {
-                hitCamera = cam;
-                var ray = cam.ScreenPointToRay(new Vector3(touch.Position.x, touch.Position.y, cam.nearClipPlane));
-                var hits = Physics.RaycastAll(ray);
-                if (hits.Length == 0) continue;
-
-                var minDist = float.PositiveInfinity;
-                foreach (var rayHit in hits) {
-                    var dist = (rayHit.point - cam.transform.position).sqrMagnitude;
-                    if (dist < minDist) {
-                        minDist = dist;
-                        hit = rayHit;
-                    }
+            foreach (var layer in layers) {
+                RaycastHit _hit;
+                Camera _camera;
+                var result = layer.Hit(touch, out _hit, out _camera);
+                switch (result) {
+                    case HitResult.Hit:
+                        hit = _hit;
+                        hitCamera = _camera;
+                        return hit.transform;
+                    case HitResult.Loss:
+                        return null;
                 }
-                var hitTests = hit.transform.GetComponents<HitTest>();
-                if (hitTests.Length == 0) return hit.transform;
-                var result = true;
-                foreach (var test in hitTests) {
-                    result = test.IsHit(hit);
-                    if (!result) break;
-                }
-                if (result) return hit.transform;
             }
 
             return null;
@@ -338,6 +435,11 @@ namespace TouchScript {
 
         #region Private functions
 
+        private void updateDPI() {
+            if (Application.isEditor) dpi = EditorDPI;
+            else dpi = LiveDPI;
+        }
+
         private bool updateBegan() {
             if (touchesBegan.Count > 0) {
                 // get touches per target
@@ -347,11 +449,11 @@ namespace TouchScript {
                     idToTouch.Add(touch.Id, touch);
                     RaycastHit hit;
                     Camera hitCamera;
-                    touch.Target = GetHitTarget(touch, out hit, out hitCamera);
-                    touch.Hit = hit;
-                    touch.HitCamera = hitCamera;
-
-                    if (touch.Target != null) {
+                    var target = GetHitTarget(touch, out hit, out hitCamera);
+                    if (target != null) {
+                        touch.Target = target;
+                        touch.Hit = hit;
+                        touch.HitCamera = hitCamera;
                         List<TouchPoint> list;
                         if (!targetTouches.TryGetValue(touch.Target, out list)) {
                             list = new List<TouchPoint>();

@@ -66,9 +66,10 @@
     <Compile Include="InputSources\MouseInput.cs" />
     <Compile Include="InputSources\TuioInput.cs" />
     <Compile Include="InputSources\WMTouchInput.cs" />
+    <Compile Include="Layers\CameraLayer.cs" />
+    <Compile Include="Layers\LayerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TouchManager.cs" />
-    <Compile Include="TouchOptions.cs" />
     <Compile Include="TouchPoint.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +82,7 @@
       <Name>TUIOsharp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

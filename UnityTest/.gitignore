@@ -16,4 +16,6 @@ Assets/TouchScript/Plugins/*.pdb.meta
 Assets/TouchScript/Plugins/*.mdb.meta
 Assets/TouchScript/Plugins/*.xml
 Assets/TouchScript/Plugins/*.xml.meta
+Assets/TouchScript/Editor/*.pdb.meta
+Assets/TouchScript/Editor/*.mdb.meta
 Library
