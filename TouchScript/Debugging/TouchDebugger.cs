@@ -43,12 +43,13 @@ namespace TouchScript.Debugging {
 
         private void Start() {
             if (camera == null) throw new Exception("A camera is required.");
-            
-            if (TouchManager.Instance == null) throw new Exception("A TouchManager is required.");
-            TouchManager.Instance.TouchPointsAdded += OnTouchPointsAdded;
-            TouchManager.Instance.TouchPointsRemoved += OnTouchPointsRemoved;
-            TouchManager.Instance.TouchPointsUpdated += OnTouchPointsUpdated;
-            TouchManager.Instance.TouchPointsCancelled += OnTouchPointsCancelled;
+
+            if (TouchManager.Instance != null) {
+                TouchManager.Instance.TouchPointsAdded += OnTouchPointsAdded;
+                TouchManager.Instance.TouchPointsRemoved += OnTouchPointsRemoved;
+                TouchManager.Instance.TouchPointsUpdated += OnTouchPointsUpdated;
+                TouchManager.Instance.TouchPointsCancelled += OnTouchPointsCancelled;
+            }
         }
 
         private void Update() {
@@ -70,10 +71,12 @@ namespace TouchScript.Debugging {
         }
 
         private void OnDestroy() {
-            TouchManager.Instance.TouchPointsAdded -= OnTouchPointsAdded;
-            TouchManager.Instance.TouchPointsRemoved -= OnTouchPointsRemoved;
-            TouchManager.Instance.TouchPointsUpdated -= OnTouchPointsUpdated;
-            TouchManager.Instance.TouchPointsCancelled -= OnTouchPointsCancelled;
+            if (TouchManager.Instance != null) {
+                TouchManager.Instance.TouchPointsAdded -= OnTouchPointsAdded;
+                TouchManager.Instance.TouchPointsRemoved -= OnTouchPointsRemoved;
+                TouchManager.Instance.TouchPointsUpdated -= OnTouchPointsUpdated;
+                TouchManager.Instance.TouchPointsCancelled -= OnTouchPointsCancelled;
+            }
         }
 
         #endregion

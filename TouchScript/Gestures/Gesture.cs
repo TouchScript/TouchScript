@@ -131,7 +131,11 @@ namespace TouchScript.Gestures {
             setState(GestureState.Failed);
         }
 
-        #endregion
+        protected virtual void OnDestroy() {
+            Manager = null;
+        }
+
+    #endregion
 
         #region Public methods
 

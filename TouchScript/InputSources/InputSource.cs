@@ -36,7 +36,9 @@ namespace TouchScript.InputSources {
             if (Manager == null) throw new InvalidOperationException("TouchManager instance is required!");
         }
 
-        protected virtual void OnDestroy() {}
+        protected virtual void OnDestroy() {
+            Manager = null;
+        }
 
         protected virtual void Update() {}
 

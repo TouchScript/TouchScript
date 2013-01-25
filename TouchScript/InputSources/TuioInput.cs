@@ -36,20 +36,6 @@ namespace TouchScript.InputSources {
         /// </summary>
         public float MovementThreshold = 0.1f;
 
-        /// <summary>
-        /// Use touch flicker prevention.
-        /// Handles touches disappearing and reappearing again in short period of time.
-        /// </summary>
-        //public bool PreventTouchFlicker = true;
-        /// <summary>
-        /// Maximum distance in cm for a new touch to be considered as disappeared old touch.
-        /// </summary>
-        //public float TouchFlickerDistance = 0.5f;
-        /// <summary>
-        /// Maximum time in seconds while touch is considered to be still alive.
-        /// </summary>
-        //public float TouchFlickerDelay = 0.03f;
-
         #endregion
 
         #region Private variables
