@@ -122,7 +122,7 @@ namespace TouchScript {
         private List<TouchPoint> touchesBegan = new List<TouchPoint>();
         private List<TouchPoint> touchesEnded = new List<TouchPoint>();
         private List<TouchPoint> touchesCancelled = new List<TouchPoint>();
-        private Dictionary<int, TouchPointUpdate> touchesMoved = new Dictionary<int, TouchPointUpdate>();
+        private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>();
         private List<Gesture> gesturesToReset = new List<Gesture>();
 
         // Locks
@@ -261,11 +261,11 @@ namespace TouchScript {
         /// <param name="position">New position.</param>
         public void MoveTouch(int id, Vector2 position) {
             lock (sync) {
-                TouchPointUpdate update;
+                Vector2 update;
                 if (touchesMoved.TryGetValue(id, out update)) {
-                    update.Position = position;
+                    touchesMoved[id] = position;
                 } else {
-                    touchesMoved.Add(id, new TouchPointUpdate(id, position));
+                    touchesMoved.Add(id, position);
                 }
             }
         }
@@ -409,51 +409,57 @@ namespace TouchScript {
             if (touchesMoved.Count > 0) {
                 var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
                 var reallyMoved = new List<TouchPoint>();
-                foreach (var update in touchesMoved.Values) {
-                    TouchPoint touch;
-                    if (!idToTouch.TryGetValue(update.Id, out touch)) continue;
-                    if (touch.Position == update.Position) continue;
 
-                    touch.Position = update.Position;
-                    reallyMoved.Add(touch);
-                    if (touch.Target != null) {
-                        List<TouchPoint> list;
-                        if (!targetTouches.TryGetValue(touch.Target, out list)) {
-                            list = new List<TouchPoint>();
-                            targetTouches.Add(touch.Target, list);
+                foreach (var touch in touches) {
+                    if (touchesMoved.ContainsKey(touch.Id)) {
+                        var position = touchesMoved[touch.Id];
+                        if (position != touch.Position) {
+                            touch.Position = position;
+                            reallyMoved.Add(touch);
+                            if (touch.Target != null) {
+                                List<TouchPoint> list;
+                                if (!targetTouches.TryGetValue(touch.Target, out list)) {
+                                    list = new List<TouchPoint>();
+                                    targetTouches.Add(touch.Target, list);
+                                }
+                                list.Add(touch);
+                            }
+                        } else {
+                            touch.Position = touch.Position;
                         }
-                        list.Add(touch);
                     }
                 }
 
-                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                foreach (var target in targetTouches.Keys) {
-                    var possibleGestures = getHierarchyEndingWith(target);
+                if (reallyMoved.Count > 0) {
+                    var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                    foreach (var target in targetTouches.Keys) {
+                        var possibleGestures = getHierarchyEndingWith(target);
 
-                    foreach (var gesture in possibleGestures) {
-                        if (!gestureIsActive(gesture)) continue;
+                        foreach (var gesture in possibleGestures) {
+                            if (!gestureIsActive(gesture)) continue;
 
-                        var touchesToReceive =
-                            targetTouches[target].FindAll(gesture.HasTouchPoint);
-                        if (touchesToReceive.Count > 0) {
-                            if (gestureTouches.ContainsKey(gesture)) {
-                                gestureTouches[gesture].AddRange(touchesToReceive);
-                            } else {
-                                gestureTouches[gesture] = touchesToReceive;
+                            var touchesToReceive =
+                                targetTouches[target].FindAll(gesture.HasTouchPoint);
+                            if (touchesToReceive.Count > 0) {
+                                if (gestureTouches.ContainsKey(gesture)) {
+                                    gestureTouches[gesture].AddRange(touchesToReceive);
+                                } else {
+                                    gestureTouches[gesture] = touchesToReceive;
+                                }
                             }
                         }
                     }
-                }
 
-                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                    var gesture = valuePair.Key;
-                    if (gestureIsActive(gesture)) gesture.TouchesMoved(valuePair.Value);
-                }
+                    foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
+                        var gesture = valuePair.Key;
+                        if (gestureIsActive(gesture)) gesture.TouchesMoved(valuePair.Value);
+                    }
 
-                if (reallyMoved.Count > 0 && TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
+                    if (TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
+                }
                 touchesMoved.Clear();
 
-                return true;
+                return reallyMoved.Count > 0;
             }
             return false;
         }
@@ -653,15 +659,5 @@ namespace TouchScript {
         }
 
         #endregion
-    }
-
-    internal class TouchPointUpdate {
-        public int Id { get; private set; }
-        public Vector2 Position { get; set; }
-
-        public TouchPointUpdate(int id, Vector2 position) {
-            Id = id;
-            Position = position;
-        }
     }
 }
