@@ -111,7 +111,7 @@ namespace TouchScript.InputSources {
                     p.Y = touch.y/100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, ScreenHeight - p.Y)));
+                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y)));
                 } else if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_UP) != 0) {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId)) {
@@ -126,7 +126,7 @@ namespace TouchScript.InputSources {
                         p.Y = touch.y/100;
                         ScreenToClient(hMainWindow, ref p);
 
-                        moveTouch(existingId, new Vector2(p.X, ScreenHeight - p.Y));
+                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
                     }
                 }
             }
