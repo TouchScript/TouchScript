@@ -67,7 +67,6 @@ namespace TouchScript.InputSources {
 
 			server = new TuioServer(TuioPort);
             server.MovementThreshold = MovementThreshold*TouchManager.Instance.DotsPerCentimeter/Mathf.Max(Screen.width, Screen.height);
-            print(MovementThreshold * TouchManager.Instance.DotsPerCentimeter / Mathf.Max(Screen.width, Screen.height));
 			server.CursorAdded += OnCursorAdded;
             server.CursorUpdated += OnCursorUpdated;
             server.CursorRemoved += OnCursorRemoved;

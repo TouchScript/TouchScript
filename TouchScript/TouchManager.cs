@@ -364,6 +364,7 @@ namespace TouchScript {
                 // get touches per gesture
                 // touches can come to a gesture from multiple targets in hierarchy
                 var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                var activeGestures = new List<Gesture>(); // no order in dictionary
                 foreach (var target in targetTouches.Keys) {
                     var mightBeActiveGestures = getHierarchyContaining(target);
                     var possibleGestures = getHierarchyEndingWith(target);
@@ -385,16 +386,16 @@ namespace TouchScript {
                                 if (gestureTouches.ContainsKey(gesture)) {
                                     gestureTouches[gesture].AddRange(touchesToReceive);
                                 } else {
-                                    gestureTouches[gesture] = touchesToReceive;
+                                    activeGestures.Add(gesture);
+                                    gestureTouches.Add(gesture, touchesToReceive);
                                 }
                             }
                         }
                     }
                 }
 
-                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                    var gesture = valuePair.Key;
-                    if (gestureIsActive(gesture)) gesture.TouchesBegan(valuePair.Value);
+                foreach (var gesture in activeGestures) {
+                    if (gestureIsActive(gesture)) gesture.TouchesBegan(gestureTouches[gesture]);
                 }
 
                 if (TouchPointsAdded != null) TouchPointsAdded(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
@@ -432,6 +433,7 @@ namespace TouchScript {
 
                 if (reallyMoved.Count > 0) {
                     var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                    var activeGestures = new List<Gesture>(); // no order in dictionary
                     foreach (var target in targetTouches.Keys) {
                         var possibleGestures = getHierarchyEndingWith(target);
 
@@ -444,15 +446,15 @@ namespace TouchScript {
                                 if (gestureTouches.ContainsKey(gesture)) {
                                     gestureTouches[gesture].AddRange(touchesToReceive);
                                 } else {
-                                    gestureTouches[gesture] = touchesToReceive;
+                                    activeGestures.Add(gesture);
+                                    gestureTouches.Add(gesture, touchesToReceive);
                                 }
                             }
                         }
                     }
 
-                    foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                        var gesture = valuePair.Key;
-                        if (gestureIsActive(gesture)) gesture.TouchesMoved(valuePair.Value);
+                    foreach (var gesture in activeGestures) {
+                        if (gestureIsActive(gesture)) gesture.TouchesMoved(gestureTouches[gesture]);
                     }
 
                     if (TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
@@ -481,6 +483,7 @@ namespace TouchScript {
                 }
 
                 var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                var activeGestures = new List<Gesture>(); // no order in dictionary
                 foreach (var target in targetTouches.Keys) {
                     var possibleGestures = getHierarchyEndingWith(target);
                     foreach (var gesture in possibleGestures) {
@@ -492,15 +495,15 @@ namespace TouchScript {
                             if (gestureTouches.ContainsKey(gesture)) {
                                 gestureTouches[gesture].AddRange(touchesToReceive);
                             } else {
-                                gestureTouches[gesture] = touchesToReceive;
+                                activeGestures.Add(gesture);
+                                gestureTouches.Add(gesture, touchesToReceive);
                             }
                         }
                     }
                 }
 
-                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                    var gesture = valuePair.Key;
-                    if (gestureIsActive(gesture)) gesture.TouchesEnded(valuePair.Value);
+                foreach (var gesture in activeGestures) {
+                    if (gestureIsActive(gesture)) gesture.TouchesEnded(gestureTouches[gesture]);
                 }
 
                 if (TouchPointsRemoved != null) TouchPointsRemoved(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
@@ -528,6 +531,7 @@ namespace TouchScript {
                 }
 
                 var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+                var activeGestures = new List<Gesture>(); // no order in dictionary
                 foreach (var target in targetTouches.Keys) {
                     var possibleGestures = getHierarchyEndingWith(target);
                     foreach (var gesture in possibleGestures) {
@@ -539,14 +543,15 @@ namespace TouchScript {
                             if (gestureTouches.ContainsKey(gesture)) {
                                 gestureTouches[gesture].AddRange(touchesToReceive);
                             } else {
-                                gestureTouches[gesture] = touchesToReceive;
+                                activeGestures.Add(gesture);
+                                gestureTouches.Add(gesture, touchesToReceive);
                             }
                         }
                     }
                 }
 
-                foreach (KeyValuePair<Gesture, List<TouchPoint>> valuePair in gestureTouches) {
-                    valuePair.Key.TouchesCancelled(valuePair.Value);
+                foreach (var gesture in activeGestures) {
+                    if (gestureIsActive(gesture)) gesture.TouchesCancelled(gestureTouches[gesture]);
                 }
 
                 if (TouchPointsCancelled != null) TouchPointsCancelled(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
