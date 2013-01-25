@@ -101,6 +101,10 @@ namespace TouchScript.Gestures {
             }
         }
 
+        protected override void onFailed() {
+            reset();
+        }
+
         protected override void reset() {
             fireRecognizedNextUpdate = false;
             cluster.RemoveAllPoints();
