@@ -80,7 +80,6 @@ namespace TouchScript {
                         instance = go.AddComponent<TouchManager>();
                     }
                 }
-                Debug.Log(instance);
                 return instance;
             }
         }

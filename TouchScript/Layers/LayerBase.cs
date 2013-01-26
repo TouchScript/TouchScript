@@ -12,18 +12,22 @@ namespace TouchScript.Layers {
             return HitResult.Miss;
         }
 
-        protected void Awake() {
+        protected virtual void Awake() {
             if (GetComponents<LayerBase>().Length > 1) {
                 DestroyImmediate(this);
                 return;
             }
 
-            if (String.IsNullOrEmpty(Name) && camera != null) Name = camera.name;
+            setName();
             TouchManager.AddLayer(this);
         }
 
-        protected void OnDestroy() {
+        protected virtual void OnDestroy() {
             TouchManager.RemoveLayer(this);
+        }
+
+        protected virtual void setName() {
+            if (String.IsNullOrEmpty(Name) && camera != null) Name = camera.name;
         }
 
     }
