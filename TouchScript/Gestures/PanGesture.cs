@@ -1,13 +1,22 @@
 ﻿/*
  * Copyright (C) 2012 Interactive Lab
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the  * Software.
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+ * Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 using System.Collections.Generic;
 using UnityEngine;
+using TouchScript.Clusters;
 
 namespace TouchScript.Gestures {
     /// <summary>
@@ -32,19 +41,6 @@ namespace TouchScript.Gestures {
         #endregion
 
         #region Public properties
-
-        /// <summary>
-        /// Delta position in screen space.
-        /// </summary>
-        public Vector2 ScreenDeltaPosition { get; private set; }
-
-        /// <summary>
-        /// Delta position in normalized screen coordinates.
-        /// </summary>
-        public Vector2 NormalizedScreenDeltaPosition {
-            get { return new Vector2(ScreenDeltaPosition.x/Screen.width, ScreenDeltaPosition.y/Screen.height); }
-        }
-
         /// <summary>
         /// 3D delta position in global coordinates.
         /// </summary>
@@ -87,12 +83,12 @@ namespace TouchScript.Gestures {
             Vector2 oldCenter2DPos;
             Vector2 newCenter2DPos;
 
-            oldCenter2DPos = cluster1.GetPreviousCenterPosition();
-            newCenter2DPos = cluster1.GetCenterPosition();
+            oldCenter2DPos = Cluster.GetPreviousCenterPosition(touches);
+            newCenter2DPos = Cluster.GetCenterPosition(touches);
 
             if (isMoving) {
-                oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, oldCenter2DPos);
-                newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos);
+                oldGlobalCenter3DPos = get3DPosition(globalPlane, ActiveTouches[0].HitCamera, oldCenter2DPos);
+                newGlobalCenter3DPos = get3DPosition(globalPlane, ActiveTouches[0].HitCamera, newCenter2DPos);
                 globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                 oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                 newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
@@ -102,14 +98,14 @@ namespace TouchScript.Gestures {
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
                     isMoving = true;
-                    oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, oldCenter2DPos - movementBuffer);
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos);
+                    oldGlobalCenter3DPos = get3DPosition(globalPlane, ActiveTouches[0].HitCamera, oldCenter2DPos - movementBuffer);
+                    newGlobalCenter3DPos = get3DPosition(globalPlane, ActiveTouches[0].HitCamera, newCenter2DPos);
                     globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                     oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
                 } else {
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos - movementBuffer);
+                    newGlobalCenter3DPos = get3DPosition(globalPlane, ActiveTouches[0].HitCamera, newCenter2DPos - movementBuffer);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     oldGlobalCenter3DPos = newGlobalCenter3DPos;
                     oldLocalCenter3DPos = newLocalCenter3DPos;
@@ -122,7 +118,6 @@ namespace TouchScript.Gestures {
                     case GestureState.Began:
                     case GestureState.Changed:
                         ScreenTransformCenter = newCenter2DPos;
-                        ScreenDeltaPosition = newCenter2DPos - oldCenter2DPos;
                         PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
                         GlobalTransformCenter = newGlobalCenter3DPos;
                         GlobalTransformPlane = globalPlane;

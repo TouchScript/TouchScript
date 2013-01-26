@@ -43,7 +43,6 @@
     <Compile Include="Behaviors\FullscreenBackgroundPlane.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Cluster.cs" />
-    <Compile Include="Clusters\Cluster1.cs" />
     <Compile Include="Clusters\Cluster2.cs" />
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />
@@ -72,6 +71,14 @@
     <Compile Include="TouchPoint.cs" />
     <Compile Include="InputSources\IOSInput.cs" />
   </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
   <ItemGroup>
     <ProjectReference Include="..\TUIOsharp\OSCsharp\OSCsharp.csproj">
       <Project>{0ADB210D-0D25-4576-8868-9C47DC4762BE}</Project>
@@ -82,12 +89,4 @@
       <Name>TUIOsharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

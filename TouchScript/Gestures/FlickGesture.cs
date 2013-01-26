@@ -1,9 +1,17 @@
 ﻿/*
  * Copyright (C) 2012 Interactive Lab
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the  * Software.
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+ * Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 using System.Collections.Generic;
@@ -49,8 +57,6 @@ namespace TouchScript.Gestures {
         #endregion
 
         #region Private variables
-
-        private Cluster1 cluster = new Cluster1();
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
         private List<Vector2> positionDeltas = new List<Vector2>();
@@ -71,16 +77,13 @@ namespace TouchScript.Gestures {
         #region Gesture callbacks
 
         protected override void touchesBegan(IList<TouchPoint> touches) {
-            foreach (var touch in touches) {
-                if (cluster.AddPoint(touch) == Cluster.OperationResult.FirstPointAdded) {
-                    previousTime = Time.time;
-                }
+            if (ActiveTouches.Count == touches.Count) {
+                  previousTime = Time.time;
             }
         }
 
         protected override void touchesMoved(IList<TouchPoint> touches) {
-            cluster.Invalidate();
-            var delta = cluster.GetCenterPosition() - cluster.GetPreviousCenterPosition();
+            var delta = Cluster.GetCenterPosition(touches) - Cluster.GetPreviousCenterPosition(touches);
             if (!moving) {
                 movementBuffer += delta;
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
@@ -96,8 +99,7 @@ namespace TouchScript.Gestures {
 
         protected override void touchesEnded(IList<TouchPoint> touches) {
             foreach (var touch in touches) {
-                var result = cluster.RemovePoint(touch);
-                if (result == Cluster.OperationResult.LastPointRemoved) {
+                if (ActiveTouches.Count == 0) {
                     if (!moving) {
                         setState(GestureState.Failed);
                         return;
@@ -134,7 +136,6 @@ namespace TouchScript.Gestures {
         }
 
         protected override void reset() {
-            cluster.RemoveAllPoints();
             moving = false;
             movementBuffer = Vector2.zero;
             timeDeltas.Clear();

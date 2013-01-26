@@ -1,9 +1,17 @@
 ﻿/*
  * Copyright (C) 2012 Interactive Lab
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the  * Software.
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+ * Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 using System;
@@ -75,10 +83,10 @@ namespace TouchScript.Clusters {
             Vector2 result;
             switch (id) {
                 case CLUSTER1:
-                    result = getCenterPosition(cluster1);
+                    result = Cluster.GetCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = getCenterPosition(cluster2);
+                    result = Cluster.GetCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -99,10 +107,10 @@ namespace TouchScript.Clusters {
             Vector2 result;
             switch (id) {
                 case CLUSTER1:
-                    result = getPreviousCenterPosition(cluster1);
+                    result = Cluster.GetPreviousCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = getPreviousCenterPosition(cluster2);
+                    result = Cluster.GetPreviousCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -129,8 +137,8 @@ namespace TouchScript.Clusters {
             var hash2 = "#";
 
             while (oldHash1 != hash1 || oldHash2 != hash2) {
-                var center1 = getCenterPosition(cluster1);
-                var center2 = getCenterPosition(cluster2);
+                var center1 = Cluster.GetCenterPosition(cluster1);
+                var center2 = Cluster.GetCenterPosition(cluster2);
                 TouchPoint obj1 = null;
                 TouchPoint obj2 = null;
 

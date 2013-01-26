@@ -729,7 +729,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 13}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
@@ -946,6 +946,7 @@ MonoBehaviour:
   m_Script: {fileID: 1254801617, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   TuioPort: 3333
+  MovementThreshold: .100000001
 --- !u!114 &67
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1001,7 +1002,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 13}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 899387094, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
