@@ -12,89 +12,108 @@ using TouchScript.Gestures;
 using UnityEngine;
 
 namespace TouchScript.Behaviors {
-    /// <summary>
-    /// Simple Component which transforms an object according to events from gestures.
-    /// </summary>
-    public class Transformer2D : MonoBehaviour {
-        #region Unity fields
+	/// <summary>
+	/// Simple Component which transforms an object according to events from gestures.
+	/// </summary>
+	public class Transformer2D : MonoBehaviour {
+		#region Unity fields
 
-        /// <summary>
-        /// Max movement speed
-        /// </summary>
-        public float Speed = 10f;
+		/// <summary>
+		/// Max movement speed
+		/// </summary>
+		public float Speed = 10f;
 
-        #endregion
+		#endregion
 
-        #region Private variables
+		#region Private variables
 
-        private Vector3 localPositionToGo;
-        private float scaleToGo;
-        private Quaternion localRotationToGo;
+		private Vector3 localPositionToGo;
+		private float scaleToGo;
+		private Quaternion localRotationToGo;
 
-        #endregion
+		#endregion
 
-        #region Unity
+		#region Unity
 
-        private void Start() {
-            setDefaults();
+		private void Start() {
+			setDefaults();
 
-            if (GetComponent<PanGesture>() != null) {
-                GetComponent<PanGesture>().StateChanged += onPanStateChanged;
-            }
-            if (GetComponent<ScaleGesture>() != null) {
-                GetComponent<ScaleGesture>().StateChanged += onScaleStateChanged;
-            }
-            if (GetComponent<RotateGesture>() != null) {
-                GetComponent<RotateGesture>().StateChanged += onRotateStateChanged;
-            }
-        }
+			if (GetComponent<PanGesture>() != null) {
+				GetComponent<PanGesture>().StateChanged += onPanStateChanged;
+			}
+			if (GetComponent<ScaleGesture>() != null) {
+				GetComponent<ScaleGesture>().StateChanged += onScaleStateChanged;
+			}
+			if (GetComponent<RotateGesture>() != null) {
+				GetComponent<RotateGesture>().StateChanged += onRotateStateChanged;
+			}
+		}
 
-        private void Update() {
-            var fraction = Speed*Time.deltaTime;
-            transform.localPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);
-            var newScale = Mathf.Lerp(transform.localScale.x, scaleToGo, fraction);
-            transform.localScale = new Vector3(newScale, newScale, newScale);
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
-        }
+		private void Update() {
+			var fraction = Speed * Time.deltaTime;
+			transform.localPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);
+			var newScale = Mathf.Lerp(transform.localScale.x, scaleToGo, fraction);
+			transform.localScale = new Vector3(newScale, newScale, newScale);
+			transform.localRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
+		}
 
-        #endregion
+		#endregion
 
-        #region Private functions
+		#region Public functions
 
-        private void setDefaults() {
-            localPositionToGo = transform.localPosition;
-            scaleToGo = transform.localScale.x;
-            localRotationToGo = transform.localRotation;
-        }
+		public void PanTeleport(Vector3 destination) {
+			localPositionToGo = destination;
+			transform.localPosition = destination;
+		}
 
-        private void onPanStateChanged(object sender, GestureStateChangeEventArgs e) {
-            var gesture = (PanGesture) sender;
+		public void RotateTeleport(Quaternion destination) {
+			localRotationToGo = destination;
+			transform.localRotation = destination;
+		}
 
-            if (gesture.LocalDeltaPosition != Vector3.zero) {
-                localPositionToGo += gesture.LocalDeltaPosition;
-            }
-        }
+		public void ScaleTeleport(float destination) {
+			scaleToGo = destination;
+			transform.localScale = new Vector3(destination, destination, destination); ;
+		}
 
-        #endregion
+		#endregion
 
-        #region Event handlers
+		#region Private functions
 
-        private void onRotateStateChanged(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs) {
-            var gesture = (RotateGesture) sender;
+		private void setDefaults() {
+			localPositionToGo = transform.localPosition;
+			scaleToGo = transform.localScale.x;
+			localRotationToGo = transform.localRotation;
+		}
 
-            if (Math.Abs(gesture.LocalDeltaRotation) > 0.01) {
-                localRotationToGo = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.GlobalTransformPlane.normal)*localRotationToGo;
-            }
-        }
+		#endregion
 
-        private void onScaleStateChanged(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs) {
-            var gesture = (ScaleGesture) sender;
+		#region Event handlers
 
-            if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001) {
-                scaleToGo *= gesture.LocalDeltaScale;
-            }
-        }
+		private void onPanStateChanged(object sender, GestureStateChangeEventArgs e) {
+			var gesture = (PanGesture)sender;
 
-        #endregion
-    }
+			if (gesture.LocalDeltaPosition != Vector3.zero) {
+				localPositionToGo += gesture.LocalDeltaPosition;
+			}
+		}
+
+		private void onRotateStateChanged(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs) {
+			var gesture = (RotateGesture)sender;
+
+			if (Math.Abs(gesture.LocalDeltaRotation) > 0.01) {
+				localRotationToGo = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.GlobalTransformPlane.normal) * localRotationToGo;
+			}
+		}
+
+		private void onScaleStateChanged(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs) {
+			var gesture = (ScaleGesture)sender;
+
+			if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001) {
+				scaleToGo *= gesture.LocalDeltaScale;
+			}
+		}
+
+		#endregion
+	}
 }
