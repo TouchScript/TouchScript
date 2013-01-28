@@ -17,8 +17,7 @@ namespace TouchScript.Events {
         public Gesture.GestureState PreviousState;
         public Gesture.GestureState State;
 
-        public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
-        {
+        public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState) {
             State = state;
             PreviousState = previousState;
         }

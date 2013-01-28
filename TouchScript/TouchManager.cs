@@ -45,22 +45,22 @@ namespace TouchScript {
         /// <summary>
         /// Occurs when new touch points are added.
         /// </summary>
-        public event EventHandler<TouchEventArgs> TouchPointsAdded;
+        public event EventHandler<TouchEventArgs> TouchesBegan;
 
         /// <summary>
         /// Occurs when touch points are updated.
         /// </summary>
-        public event EventHandler<TouchEventArgs> TouchPointsUpdated;
+        public event EventHandler<TouchEventArgs> TouchesMoved;
 
         /// <summary>
         /// Occurs when touch points are removed.
         /// </summary>
-        public event EventHandler<TouchEventArgs> TouchPointsRemoved;
+        public event EventHandler<TouchEventArgs> TouchesEnded;
 
         /// <summary>
         /// Occurs when touch points are cancelled.
         /// </summary>
-        public event EventHandler<TouchEventArgs> TouchPointsCancelled;
+        public event EventHandler<TouchEventArgs> TouchesCancelled;
 
         #endregion
 
@@ -518,7 +518,7 @@ namespace TouchScript {
                     if (gestureIsActive(gesture)) gesture.TouchesBegan(gestureTouches[gesture]);
                 }
 
-                if (TouchPointsAdded != null) TouchPointsAdded(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
+                if (TouchesBegan != null) TouchesBegan(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
                 touchesBegan.Clear();
 
                 return true;
@@ -577,7 +577,7 @@ namespace TouchScript {
                         if (gestureIsActive(gesture)) gesture.TouchesMoved(gestureTouches[gesture]);
                     }
 
-                    if (TouchPointsUpdated != null) TouchPointsUpdated(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
+                    if (TouchesMoved != null) TouchesMoved(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
                 }
                 touchesMoved.Clear();
 
@@ -626,7 +626,7 @@ namespace TouchScript {
                     if (gestureIsActive(gesture)) gesture.TouchesEnded(gestureTouches[gesture]);
                 }
 
-                if (TouchPointsRemoved != null) TouchPointsRemoved(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
+                if (TouchesEnded != null) TouchesEnded(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
                 touchesEnded.Clear();
 
                 return true;
@@ -674,7 +674,7 @@ namespace TouchScript {
                     if (gestureIsActive(gesture)) gesture.TouchesCancelled(gestureTouches[gesture]);
                 }
 
-                if (TouchPointsCancelled != null) TouchPointsCancelled(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
+                if (TouchesCancelled != null) TouchesCancelled(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
                 touchesCancelled.Clear();
 
                 return true;

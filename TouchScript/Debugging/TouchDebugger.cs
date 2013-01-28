@@ -44,10 +44,10 @@ namespace TouchScript.Debugging {
             if (camera == null) throw new Exception("A camera is required.");
 
             if (TouchManager.Instance != null) {
-                TouchManager.Instance.TouchPointsAdded += OnTouchPointsAdded;
-                TouchManager.Instance.TouchPointsRemoved += OnTouchPointsRemoved;
-                TouchManager.Instance.TouchPointsUpdated += OnTouchPointsUpdated;
-                TouchManager.Instance.TouchPointsCancelled += OnTouchPointsCancelled;
+                TouchManager.Instance.TouchesBegan += OnTouchesBegan;
+                TouchManager.Instance.TouchesEnded += OnTouchesEnded;
+                TouchManager.Instance.TouchesMoved += OnTouchesMoved;
+                TouchManager.Instance.TouchesCancelled += OnTouchesCancelled;
             }
         }
 
@@ -71,10 +71,10 @@ namespace TouchScript.Debugging {
 
         private void OnDestroy() {
             if (TouchManager.Instance != null) {
-                TouchManager.Instance.TouchPointsAdded -= OnTouchPointsAdded;
-                TouchManager.Instance.TouchPointsRemoved -= OnTouchPointsRemoved;
-                TouchManager.Instance.TouchPointsUpdated -= OnTouchPointsUpdated;
-                TouchManager.Instance.TouchPointsCancelled -= OnTouchPointsCancelled;
+                TouchManager.Instance.TouchesBegan -= OnTouchesBegan;
+                TouchManager.Instance.TouchesEnded -= OnTouchesEnded;
+                TouchManager.Instance.TouchesMoved -= OnTouchesMoved;
+                TouchManager.Instance.TouchesCancelled -= OnTouchesCancelled;
             }
         }
 
@@ -91,7 +91,7 @@ namespace TouchScript.Debugging {
 
         #region Event handlers
 
-        private void OnTouchPointsAdded(object sender, TouchEventArgs e) {
+        private void OnTouchesBegan(object sender, TouchEventArgs e) {
             if (!enabled) return;
 
             foreach (var touchPoint in e.TouchPoints) {
@@ -99,7 +99,7 @@ namespace TouchScript.Debugging {
             }
         }
 
-        private void OnTouchPointsUpdated(object sender, TouchEventArgs e) {
+        private void OnTouchesMoved(object sender, TouchEventArgs e) {
             if (!enabled) return;
 
             foreach (var touchPoint in e.TouchPoints) {
@@ -109,7 +109,7 @@ namespace TouchScript.Debugging {
             }
         }
 
-        private void OnTouchPointsRemoved(object sender, TouchEventArgs e) {
+        private void OnTouchesEnded(object sender, TouchEventArgs e) {
             if (!enabled) return;
 
             foreach (var touchPoint in e.TouchPoints) {
@@ -119,8 +119,8 @@ namespace TouchScript.Debugging {
             }
         }
 
-        private void OnTouchPointsCancelled(object sender, TouchEventArgs e) {
-            OnTouchPointsRemoved(sender, e);
+        private void OnTouchesCancelled(object sender, TouchEventArgs e) {
+            OnTouchesEnded(sender, e);
         }
 
         #endregion
