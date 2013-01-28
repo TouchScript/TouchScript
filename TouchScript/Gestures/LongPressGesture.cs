@@ -84,7 +84,7 @@ namespace TouchScript.Gestures {
         }
 
         protected override void touchesMoved(IList<TouchPoint> touches) {
-            totalMovement += Cluster.GetCenterPosition(touches) - Cluster.GetPreviousCenterPosition(touches);
+            totalMovement += Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
             if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit) setState(GestureState.Failed);
         }
 

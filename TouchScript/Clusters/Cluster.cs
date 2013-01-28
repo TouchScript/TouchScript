@@ -34,7 +34,7 @@ namespace TouchScript.Clusters {
         #region Private variables
 
         protected List<TouchPoint> Points = new List<TouchPoint>();
-        protected bool Dirty { get; private set; }
+        protected bool dirty { get; private set; }
 
         #endregion
 
@@ -42,36 +42,48 @@ namespace TouchScript.Clusters {
             markDirty();
         }
 
-        #region Public methods
-		
-		public static Vector2 GetCenterPosition(IList<TouchPoint> touches) {
+        #region Static methods
+
+        public static Camera GetClusterCamera(IList<TouchPoint> touches) {
+            if (touches.Count == 0) return Camera.mainCamera;
+            return touches[0].HitCamera;
+        }
+
+        public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches) {
             var length = touches.Count;
             if (length == 0) throw new InvalidOperationException("No points in cluster.");
             if (length == 1) return touches[0].Position;
 
-            var x = 0f;
-            var y = 0f;
+            var position = new Vector2();
             foreach (var point in touches) {
-                x += point.Position.x;
-                y += point.Position.y;
+                position += point.Position;
             }
-            return new Vector2(x/(float) length, y/(float) length);
+            return position/(float) length;
         }
 
-        public static Vector2 GetPreviousCenterPosition(IList<TouchPoint> touches) {
+        public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches) {
             var length = touches.Count;
             if (length == 0) throw new InvalidOperationException("No points in cluster.");
             if (length == 1) return touches[0].PreviousPosition;
 
-            var x = 0f;
-            var y = 0f;
+            var position = new Vector2();
             foreach (var point in touches) {
-                x += point.PreviousPosition.x;
-                y += point.PreviousPosition.y;
+                position += point.PreviousPosition;
             }
-            return new Vector2(x/(float) length, y/(float) length);
+            return position/(float) length;
         }
 
+        public static String getHash(List<TouchPoint> touches) {
+            var result = "";
+            foreach (var touchPoint in touches) {
+                result += "#" + touchPoint.Id;
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region Public methods
 
         /// <summary>
         /// Adds the point.
@@ -83,6 +95,12 @@ namespace TouchScript.Clusters {
 
             Points.Add(point);
             markDirty();
+        }
+
+        public void AddPoints(IList<TouchPoint> points) {
+            foreach (var point in points) {
+                AddPoint(point);
+            }
         }
 
         /// <summary>
@@ -98,18 +116,18 @@ namespace TouchScript.Clusters {
         }
 
         /// <summary>
-        /// Invalidates cluster state.
-        /// Call this method to recalculate cluster properties.
-        /// </summary>
-        public void Invalidate() {
-            markDirty();
-        }
-
-        /// <summary>
         /// Removes all points.
         /// </summary>
         public void RemoveAllPoints() {
             Points.Clear();
+            markDirty();
+        }
+
+        /// <summary>
+        /// Invalidates cluster state.
+        /// Call this method to recalculate cluster properties.
+        /// </summary>
+        public void Invalidate() {
             markDirty();
         }
 
@@ -118,21 +136,14 @@ namespace TouchScript.Clusters {
         #region Protected functions
 
         protected void markDirty() {
-            Dirty = true;
+            dirty = true;
         }
 
         protected void markClean() {
-            Dirty = false;
-        }
-
-        protected String getHash(List<TouchPoint> touches) {
-            var result = "";
-            foreach (var touchPoint in touches) {
-                result += "#" + touchPoint.Id;
-            }
-            return result;
+            dirty = false;
         }
 
         #endregion
+
     }
 }

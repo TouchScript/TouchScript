@@ -83,7 +83,7 @@ namespace TouchScript.Gestures {
         }
 
         protected override void touchesMoved(IList<TouchPoint> touches) {
-            var delta = Cluster.GetCenterPosition(touches) - Cluster.GetPreviousCenterPosition(touches);
+            var delta = Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
             if (!moving) {
                 movementBuffer += delta;
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;

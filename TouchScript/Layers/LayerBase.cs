@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace TouchScript.Layers {
@@ -19,17 +20,16 @@ namespace TouchScript.Layers {
             }
 
             setName();
-            TouchManager.AddLayer(this);
+            if (Application.isPlaying) TouchManager.AddLayer(this);
         }
 
         protected virtual void OnDestroy() {
-            TouchManager.RemoveLayer(this);
+            if (Application.isPlaying) TouchManager.RemoveLayer(this);
         }
 
         protected virtual void setName() {
             if (String.IsNullOrEmpty(Name) && camera != null) Name = camera.name;
         }
-
     }
 
     public enum HitResult {

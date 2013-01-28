@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\UnityTest\Assets\TouchScript\Editor\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,6 +43,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gestures\GestureEditor.cs" />
+    <Compile Include="Gestures\PanGestureEditor.cs" />
+    <Compile Include="Gestures\RotateGestureEditor.cs" />
+    <Compile Include="Gestures\ScaleGestureEditor.cs" />
+    <Compile Include="Gestures\Transform2DGestureBaseEditor.cs" />
     <Compile Include="TouchManagerEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

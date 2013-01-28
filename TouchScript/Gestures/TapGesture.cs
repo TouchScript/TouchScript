@@ -54,7 +54,7 @@ namespace TouchScript.Gestures {
         }
 
         protected override void touchesMoved(IList<TouchPoint> touches) {
-            totalMovement += (Cluster.GetCenterPosition(touches) - Cluster.GetPreviousCenterPosition(touches)).magnitude;
+            totalMovement += (Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches)).magnitude;
         }
 
         protected override void touchesEnded(IList<TouchPoint> touches) {

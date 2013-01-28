@@ -23,27 +23,46 @@ namespace TouchScript.Gestures {
     /// Base class for transform gestures.
     /// </summary>
     public abstract class Transform2DGestureBase : Gesture {
+        public enum ProjectionType {
+            Camera,
+            Local,
+            Global
+        }
+
         #region Unity fields
-
-        /// <summary>
-        /// Normal vector of a plane in which transformation occures.
-        /// Setting it to <c>Vector3.zero</c> means that gesture works in camera plane.
-        /// Other value defines a plane with normal in local or global coordinates.
-        /// </summary>
-        public Vector3 NormalVector = Vector3.zero;
-
-        /// <summary>
-        /// If true, normal vector is specified in local coordinates; otherwise, it is in global coordinates.
-        /// </summary>
-        public bool IsLocal = true;
 
         #endregion
 
         #region Private variables
+        [SerializeField] private ProjectionType projection = ProjectionType.Camera;
+        [SerializeField] private Vector3 projectionNormal = Vector3.zero;
+        protected Camera projectionCamera;
 
         #endregion
 
         #region Public properties
+
+        public ProjectionType Projection {
+            get { return projection; }
+            set {
+                projection = value;
+                updateProjectionPlane();
+            }
+        }
+
+        public Vector3 ProjectionNormal {
+            get {
+                if (projection == ProjectionType.Camera) {
+                    return projectionCamera.transform.forward;
+                } else {
+                    return projectionNormal;
+                }
+            }
+            set {
+                projectionNormal = value;
+                updateProjectionPlane();
+            }
+        }
 
         /// <summary>
         /// Transformation center in screen coordinates.
@@ -92,7 +111,7 @@ namespace TouchScript.Gestures {
         /// <summary>
         /// Plane where transformation occured.
         /// </summary>
-        public Plane GlobalTransformPlane { get; protected set; }
+        public Plane GlobalTransformPlane { get; private set; }
 
         #endregion
 
@@ -100,6 +119,7 @@ namespace TouchScript.Gestures {
 
         protected override void Awake() {
             base.Awake();
+            updateProjectionPlane();
             resetGestureProperties();
         }
 
@@ -107,11 +127,9 @@ namespace TouchScript.Gestures {
 
         #region Gesture callbacks
 
-        protected override void touchesBegan(IList<TouchPoint> touches) {
-        }
+        protected override void touchesBegan(IList<TouchPoint> touches) {}
 
-        protected override void touchesMoved(IList<TouchPoint> touches) {
-        }
+        protected override void touchesMoved(IList<TouchPoint> touches) {}
 
         protected override void touchesEnded(IList<TouchPoint> touches) {
             if (ActiveTouches.Count == 0) {
@@ -143,17 +161,27 @@ namespace TouchScript.Gestures {
             return global;
         }
 
-        protected virtual Vector3 get3DPosition(Plane plane, Camera camera, Vector2 pos2D) {
-            var ray = camera.ScreenPointToRay(pos2D);
-            var relativeIntersection = 0f;
-            plane.Raycast(ray, out relativeIntersection);
-            return ray.origin + ray.direction*relativeIntersection;
-        }
-
         protected virtual void resetGestureProperties() {
             GlobalTransformCenter = Vector3.zero;
             LocalTransformCenter = Vector3.zero;
-            GlobalTransformPlane = new Plane();
+        }
+
+        protected void updateProjectionPlane(Camera targetCamera = null) {
+            switch (projection) {
+                case ProjectionType.Camera:
+                    if (targetCamera == null) targetCamera = Camera.mainCamera;
+                    if (projectionCamera != targetCamera) {
+                        projectionCamera = targetCamera;
+                        GlobalTransformPlane = new Plane(targetCamera.transform.forward, transform.position);
+                    }
+                    break;
+                case ProjectionType.Local:
+                    GlobalTransformPlane = new Plane(transform.localToWorldMatrix.MultiplyVector(projectionNormal).normalized, transform.position);
+                    break;
+                case ProjectionType.Global:
+                    GlobalTransformPlane = new Plane(projectionNormal.normalized, transform.position);
+                    break;
+            }
         }
 
         #endregion

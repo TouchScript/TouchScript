@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Clusters;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures {
@@ -17,20 +18,6 @@ namespace TouchScript.Gestures {
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Rotate Gesture")]
     public class RotateGesture : Transform2DGestureBase {
-        #region Unity fields
-
-        /// <summary>
-        /// Minimum rotation in degrees to be considered as a possible gesture.
-        /// </summary>
-        public float RotationThreshold = 3;
-
-        /// <summary>
-        /// Minimum distance between clusters in cm for gesture to be recognized.
-        /// </summary>
-        public float MinClusterDistance = .5f;
-
-        #endregion
-
         #region Private variables
 
         private Cluster2 cluster2 = new Cluster2();
@@ -42,11 +29,28 @@ namespace TouchScript.Gestures {
         #region Public properties
 
         /// <summary>
+        /// Minimum rotation in degrees to be considered as a possible gesture.
+        /// </summary>
+        [SerializeField]
+        public float RotationThreshold { get; set; }
+
+        /// <summary>
+        /// Minimum distance between clusters in cm for gesture to be recognized.
+        /// </summary>
+        [SerializeField]
+        public float MinClusterDistance { get; set; }
+
+        /// <summary>
         /// Contains local rotation when gesture is recognized.
         /// </summary>
         public float LocalDeltaRotation { get; private set; }
 
         #endregion
+
+        public RotateGesture() : base() {
+            RotationThreshold = 3;
+            MinClusterDistance = .5f;
+        }
 
         #region Gesture callbacks
 
@@ -62,48 +66,29 @@ namespace TouchScript.Gestures {
 
             cluster2.Invalidate();
             cluster2.MinPointsDistance = MinClusterDistance*TouchManager.Instance.DotsPerCentimeter;
-            if (Camera.mainCamera == null) {
-                print("Camera.mainCamera is not set!");
-                return;
-            }
-
             if (!cluster2.HasClusters) return;
 
-            Vector3 oldGlobalCenter3DPos;
-            Vector3 oldLocalCenter3DPos;
-            Vector3 newGlobalCenter3DPos;
-            Vector3 newLocalCenter3DPos;
+            Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaRotation = 0f;
 
-            Vector3 globalPlaneNormal;
-            if (NormalVector == Vector3.zero) {
-                globalPlaneNormal = Camera.mainCamera.transform.forward;
-            } else if (IsLocal) {
-                globalPlaneNormal = transform.localToWorldMatrix.MultiplyVector(NormalVector).normalized;
-            } else {
-                globalPlaneNormal = NormalVector.normalized;
-            }
-            var globalPlane = new Plane(globalPlaneNormal, transform.position);
-
-            Vector2 oldCenter2DPos;
-            Vector2 newCenter2DPos;
+            updateProjectionPlane(Cluster.GetClusterCamera(activeTouches));
 
             var old2DPos1 = cluster2.GetPreviousCenterPosition(Cluster2.CLUSTER1);
             var old2DPos2 = cluster2.GetPreviousCenterPosition(Cluster2.CLUSTER2);
             var new2DPos1 = cluster2.GetCenterPosition(Cluster2.CLUSTER1);
             var new2DPos2 = cluster2.GetCenterPosition(Cluster2.CLUSTER2);
-            var old3DPos1 = get3DPosition(globalPlane, activeTouches[0].HitCamera, old2DPos1);
-            var old3DPos2 = get3DPosition(globalPlane, activeTouches[0].HitCamera, old2DPos2);
-            var new3DPos1 = get3DPosition(globalPlane, activeTouches[0].HitCamera, new2DPos1);
-            var new3DPos2 = get3DPosition(globalPlane, activeTouches[0].HitCamera, new2DPos2);
+            var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, GlobalTransformPlane);
+            var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, GlobalTransformPlane);
+            var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, GlobalTransformPlane);
+            var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, GlobalTransformPlane);
             var newVector = new3DPos2 - new3DPos1;
             var oldVector = old3DPos2 - old3DPos1;
 
-            oldCenter2DPos = (old2DPos1 + old2DPos2)*.5f;
-            newCenter2DPos = (new2DPos1 + new2DPos2)*.5f;
+            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2) * .5f;
+            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2) * .5f;
 
             var angle = Vector3.Angle(oldVector, newVector);
-            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), globalPlaneNormal) < 0) angle = -angle;
+            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), ProjectionNormal) < 0) angle = -angle;
             if (isRotating) {
                 deltaRotation = angle;
             } else {
@@ -114,8 +99,8 @@ namespace TouchScript.Gestures {
                 }
             }
 
-            oldGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, oldCenter2DPos);
-            newGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, newCenter2DPos);
+            oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, GlobalTransformPlane);
+            newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, GlobalTransformPlane);
             oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
             newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
 
@@ -127,7 +112,6 @@ namespace TouchScript.Gestures {
                         ScreenTransformCenter = newCenter2DPos;
                         PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
                         GlobalTransformCenter = newGlobalCenter3DPos;
-                        GlobalTransformPlane = globalPlane;
                         PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
                         LocalTransformCenter = newLocalCenter3DPos;
                         PreviousLocalTransformCenter = oldLocalCenter3DPos;

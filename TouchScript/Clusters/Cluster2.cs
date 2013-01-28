@@ -78,15 +78,15 @@ namespace TouchScript.Clusters {
         /// <exception cref="System.InvalidOperationException">If used neither CLUSTER1 or CLUSTER2 as id.</exception>
         public Vector2 GetCenterPosition(int id) {
             if (!HasClusters) throw new InvalidOperationException("Cluster has less than 2 points.");
-            if (Dirty) distributePoints();
+            if (dirty) distributePoints();
 
             Vector2 result;
             switch (id) {
                 case CLUSTER1:
-                    result = Cluster.GetCenterPosition(cluster1);
+                    result = Cluster.Get2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Cluster.GetCenterPosition(cluster2);
+                    result = Cluster.Get2DCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -102,15 +102,15 @@ namespace TouchScript.Clusters {
         /// <exception cref="System.InvalidOperationException">If used neither CLUSTER1 or CLUSTER2 as id.</exception>
         public Vector2 GetPreviousCenterPosition(int id) {
             if (!HasClusters) throw new InvalidOperationException("Cluster has less than 2 points.");
-            if (Dirty) distributePoints();
+            if (dirty) distributePoints();
 
             Vector2 result;
             switch (id) {
                 case CLUSTER1:
-                    result = Cluster.GetPreviousCenterPosition(cluster1);
+                    result = Cluster.GetPrevious2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Cluster.GetPreviousCenterPosition(cluster2);
+                    result = Cluster.GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -137,8 +137,8 @@ namespace TouchScript.Clusters {
             var hash2 = "#";
 
             while (oldHash1 != hash1 || oldHash2 != hash2) {
-                var center1 = Cluster.GetCenterPosition(cluster1);
-                var center2 = Cluster.GetCenterPosition(cluster2);
+                var center1 = Cluster.Get2DCenterPosition(cluster1);
+                var center2 = Cluster.Get2DCenterPosition(cluster2);
                 TouchPoint obj1 = null;
                 TouchPoint obj2 = null;
 

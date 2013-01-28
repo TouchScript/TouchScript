@@ -19,7 +19,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Gestures;
-using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -29,7 +28,6 @@ namespace TouchScript {
     /// Shouldn't be instantiated manually.
     /// </summary>
     [AddComponentMenu("TouchScript/Touch Manager")]
-    [ExecuteInEditMode()]
     public class TouchManager : MonoBehaviour {
         /// <summary>
         /// Ratio of cm to inch
@@ -75,7 +73,7 @@ namespace TouchScript {
                 if (shuttingDown) return null;
                 if (instance == null) {
                     instance = FindObjectOfType(typeof (TouchManager)) as TouchManager;
-                    if (instance == null) {
+                    if (instance == null && Application.isPlaying) {
                         var go = new GameObject("TouchScript");
                         instance = go.AddComponent<TouchManager>();
                     }
@@ -195,17 +193,20 @@ namespace TouchScript {
         #region Unity
 
         private void Awake() {
-            if (instance == null) instance = this;
             shuttingDown = false;
+            if (instance == null) instance = this;
             updateDPI();
 
-            if (Application.isPlaying) {
-                StartCoroutine(lateAwake());
-            }
+            StartCoroutine(lateAwake());
         }
 
         private IEnumerator lateAwake() {
             yield return new WaitForEndOfFrame();
+
+            layers = layers.FindAll(l => l != null);
+            var unknownLayers = FindObjectsOfType(typeof(LayerBase));
+            foreach (LayerBase unknownLayer in unknownLayers) AddLayer(unknownLayer);
+
             if (layers.Count == 0) {
                 Debug.Log("No camera layers. Adding one for the main camera.");
                 if (Camera.main != null) {
@@ -217,10 +218,11 @@ namespace TouchScript {
         }
 
         private void Update() {
-            if (Application.isPlaying) updateTouches();
+            updateTouches();
         }
 
         private void OnDestroy() {
+            shuttingDown = true;
         }
 
         private void OnApplicationQuit() {
@@ -232,17 +234,23 @@ namespace TouchScript {
         #region Public static methods
 
         public static bool AddLayer(LayerBase layer) {
+            if (shuttingDown) return false;
             if (layer == null) return false;
             if (Instance == null) return false;
             if (Instance.layers.Contains(layer)) return false;
             Instance.layers.Add(layer);
+            Debug.Log(string.Format("Added layer. Total layers: {0}", Instance.layers.Count));
             return true;
         }
 
         public static bool RemoveLayer(LayerBase layer) {
+            Debug.Log(string.Format("Removing layer. Instance: {0}", instance));
+            if (shuttingDown) return false;
             if (layer == null) return false;
             if (instance == null) return false;
-            return instance.layers.Remove(layer);
+            var result = instance.layers.Remove(layer);
+            Debug.Log(string.Format("Removed layer: {1}. Total layers: {0}", instance.layers.Count, result));
+            return result;
         }
 
         #endregion
@@ -280,6 +288,7 @@ namespace TouchScript {
             hitCamera = null;
 
             foreach (var layer in layers) {
+                if (layer == null) continue;
                 RaycastHit _hit;
                 Camera _camera;
                 var result = layer.Hit(touch, out _hit, out _camera);

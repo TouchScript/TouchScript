@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Utils;
 using UnityEngine;
 using TouchScript.Clusters;
 
@@ -24,15 +25,6 @@ namespace TouchScript.Gestures {
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Pan Gesture")]
     public class PanGesture : Transform2DGestureBase {
-        #region Unity fields
-
-        /// <summary>
-        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
-        /// </summary>
-        public float MovementThreshold = 0.5f;
-
-        #endregion
-
         #region Private variables
 
         private Vector2 movementBuffer;
@@ -41,6 +33,13 @@ namespace TouchScript.Gestures {
         #endregion
 
         #region Public properties
+
+        /// <summary>
+        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
+        /// </summary>
+        [SerializeField]
+        public float MovementThreshold { get; set; }
+
         /// <summary>
         /// 3D delta position in global coordinates.
         /// </summary>
@@ -53,42 +52,27 @@ namespace TouchScript.Gestures {
 
         #endregion
 
+        public PanGesture() : base() {
+            MovementThreshold = .5f;
+        }
+
         #region Gesture callbacks
 
         protected override void touchesMoved(IList<TouchPoint> touches) {
             base.touchesMoved(touches);
 
-            if (Camera.mainCamera == null) {
-                print("Camera.mainCamera is not set!");
-                return;
-            }
-
             var globalDelta3DPos = Vector3.zero;
             var localDelta3DPos = Vector3.zero;
-            Vector3 oldGlobalCenter3DPos;
-            Vector3 oldLocalCenter3DPos;
-            Vector3 newGlobalCenter3DPos;
-            Vector3 newLocalCenter3DPos;
+            Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
 
-            Vector3 globalPlaneNormal;
-            if (NormalVector == Vector3.zero) {
-                globalPlaneNormal = Camera.mainCamera.transform.forward;
-            } else if (IsLocal) {
-                globalPlaneNormal = transform.localToWorldMatrix.MultiplyVector(NormalVector).normalized;
-            } else {
-                globalPlaneNormal = NormalVector.normalized;
-            }
-            var globalPlane = new Plane(globalPlaneNormal, transform.position);
+            Vector2 oldCenter2DPos = Cluster.GetPrevious2DCenterPosition(activeTouches);
+            Vector2 newCenter2DPos = Cluster.Get2DCenterPosition(activeTouches);
 
-            Vector2 oldCenter2DPos;
-            Vector2 newCenter2DPos;
-
-            oldCenter2DPos = Cluster.GetPreviousCenterPosition(touches);
-            newCenter2DPos = Cluster.GetCenterPosition(touches);
+            updateProjectionPlane(Cluster.GetClusterCamera(activeTouches));
 
             if (isMoving) {
-                oldGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, oldCenter2DPos);
-                newGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, newCenter2DPos);
+                oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, GlobalTransformPlane);
+                newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, GlobalTransformPlane);
                 globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                 oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                 newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
@@ -98,14 +82,14 @@ namespace TouchScript.Gestures {
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
                     isMoving = true;
-                    oldGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, oldCenter2DPos - movementBuffer);
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, newCenter2DPos);
+                    oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - movementBuffer, projectionCamera, GlobalTransformPlane);
+                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, GlobalTransformPlane);
                     globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                     oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
                 } else {
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, activeTouches[0].HitCamera, newCenter2DPos - movementBuffer);
+                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos - movementBuffer, projectionCamera, GlobalTransformPlane);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     oldGlobalCenter3DPos = newGlobalCenter3DPos;
                     oldLocalCenter3DPos = newLocalCenter3DPos;
@@ -120,7 +104,6 @@ namespace TouchScript.Gestures {
                         ScreenTransformCenter = newCenter2DPos;
                         PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
                         GlobalTransformCenter = newGlobalCenter3DPos;
-                        GlobalTransformPlane = globalPlane;
                         GlobalDeltaPosition = globalDelta3DPos;
                         PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
                         LocalTransformCenter = newLocalCenter3DPos;

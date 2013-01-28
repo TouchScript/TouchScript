@@ -252,6 +252,7 @@ GameObject:
   - 114: {fileID: 69}
   - 114: {fileID: 73}
   - 114: {fileID: 51}
+  - 114: {fileID: 71}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -745,7 +746,8 @@ MonoBehaviour:
   liveDpi: 72
   editorDpi: 72
   touchRadius: .75
-  layers: []
+  layers:
+  - {fileID: 71}
 --- !u!114 &52
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -795,9 +797,8 @@ MonoBehaviour:
   WillRecognizeWith:
   - {fileID: 56}
   - {fileID: 85}
-  NormalVector: {x: 0, y: 0, z: 0}
-  IsLocal: 1
-  MovementThreshold: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &56
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -811,10 +812,8 @@ MonoBehaviour:
   WillRecognizeWith:
   - {fileID: 55}
   - {fileID: 85}
-  NormalVector: {x: 0, y: 0, z: 0}
-  IsLocal: 1
-  ScalingThreshold: .5
-  MinClusterDistance: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &57
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,9 +827,8 @@ MonoBehaviour:
   WillRecognizeWith:
   - {fileID: 83}
   - {fileID: 58}
-  NormalVector: {x: 0, y: 0, z: 0}
-  IsLocal: 1
-  MovementThreshold: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &58
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,10 +842,8 @@ MonoBehaviour:
   WillRecognizeWith:
   - {fileID: 57}
   - {fileID: 83}
-  NormalVector: {x: 0, y: 0, z: 0}
-  IsLocal: 1
-  ScalingThreshold: .5
-  MinClusterDistance: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &59
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -862,9 +858,8 @@ MonoBehaviour:
   - {fileID: 60}
   - {fileID: 87}
   - {fileID: 89}
-  NormalVector: {x: 0, y: 1, z: 0}
-  IsLocal: 1
-  MovementThreshold: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &60
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -879,10 +874,8 @@ MonoBehaviour:
   - {fileID: 59}
   - {fileID: 87}
   - {fileID: 89}
-  NormalVector: {x: 0, y: 1, z: 0}
-  IsLocal: 1
-  ScalingThreshold: .5
-  MinClusterDistance: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &61
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -994,6 +987,17 @@ MonoBehaviour:
   m_Name: 
   TouchTexture: {fileID: 2800000, guid: a782b8a3584ec5d4bb85a19fd8354d2d, type: 1}
   FontColor: {r: 0, g: .958217144, b: 1, a: 1}
+--- !u!114 &71
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 13}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1298086939, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Name: 
+  Name: Main Camera
 --- !u!196 &72
 NavMeshSettings:
   m_ObjectHideFlags: 0
@@ -1129,10 +1133,8 @@ MonoBehaviour:
   WillRecognizeWith:
   - {fileID: 58}
   - {fileID: 57}
-  NormalVector: {x: 0, y: 0, z: 0}
-  IsLocal: 1
-  RotationThreshold: 3
-  MinClusterDistance: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &84
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1157,10 +1159,8 @@ MonoBehaviour:
   WillRecognizeWith:
   - {fileID: 56}
   - {fileID: 55}
-  NormalVector: {x: 0, y: 0, z: 0}
-  IsLocal: 1
-  RotationThreshold: 3
-  MinClusterDistance: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &86
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1186,10 +1186,8 @@ MonoBehaviour:
   - {fileID: 59}
   - {fileID: 60}
   - {fileID: 89}
-  NormalVector: {x: 0, y: 1, z: 0}
-  IsLocal: 1
-  RotationThreshold: 3
-  MinClusterDistance: .5
+  projection: 0
+  projectionNormal: {x: 0, y: 0, z: 0}
 --- !u!114 &88
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -96,12 +96,12 @@ namespace TouchScript.Gestures {
         /// </summary>
         public GestureState PreviousState { get; private set; }
 		public Vector2 ScreenCenterPosition { get {
-				return Cluster.GetCenterPosition(activeTouches);
+				return Cluster.Get2DCenterPosition(activeTouches);
 			} 
 		}
 		
 		public Vector2 PreviousScreenCenterPosition { get {
-				return Cluster.GetPreviousCenterPosition(activeTouches);
+				return Cluster.GetPrevious2DCenterPosition(activeTouches);
 			} 
 		}
 
