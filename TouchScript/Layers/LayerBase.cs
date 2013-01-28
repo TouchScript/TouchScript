@@ -7,7 +7,7 @@ namespace TouchScript.Layers {
     public class LayerBase : MonoBehaviour {
         public String Name;
 
-        public virtual HitResult Hit(TouchPoint touch, out RaycastHit hit, out Camera hitCamera) {
+        public virtual HitResult Hit(Vector2 position, out RaycastHit hit, out Camera hitCamera) {
             hit = new RaycastHit();
             hitCamera = null;
             return HitResult.Miss;

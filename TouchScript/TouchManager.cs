@@ -262,10 +262,10 @@ namespace TouchScript {
         /// </summary>
         /// <param name="touch">The touch.</param>
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
-        public Transform GetHitTarget(TouchPoint touch) {
+        public Transform GetHitTarget(Vector2 position) {
             RaycastHit hit;
             Camera hitCamera;
-            return GetHitTarget(touch, out hit, out hitCamera);
+            return GetHitTarget(position, out hit, out hitCamera);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace TouchScript {
         /// <param name="hit">Output RaycastHit.</param>
         /// <param name="hitCamera">Output camera which was used to hit an object.</param>
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
-        public Transform GetHitTarget(TouchPoint touch, out RaycastHit hit, out Camera hitCamera) {
+        public Transform GetHitTarget(Vector2 position, out RaycastHit hit, out Camera hitCamera) {
             hit = new RaycastHit();
             hitCamera = null;
 
@@ -283,7 +283,7 @@ namespace TouchScript {
                 if (layer == null) continue;
                 RaycastHit _hit;
                 Camera _camera;
-                var result = layer.Hit(touch, out _hit, out _camera);
+                var result = layer.Hit(position, out _hit, out _camera);
                 switch (result) {
                     case HitResult.Hit:
                         hit = _hit;
@@ -467,7 +467,7 @@ namespace TouchScript {
                     idToTouch.Add(touch.Id, touch);
                     RaycastHit hit;
                     Camera hitCamera;
-                    var target = GetHitTarget(touch, out hit, out hitCamera);
+                    var target = GetHitTarget(touch.Position, out hit, out hitCamera);
                     if (target != null) {
                         touch.Target = target;
                         touch.Hit = hit;

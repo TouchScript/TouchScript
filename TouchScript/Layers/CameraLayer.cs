@@ -7,13 +7,13 @@ namespace TouchScript.Layers {
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
     public class CameraLayer : LayerBase {
 
-        public override HitResult Hit(TouchPoint touch, out RaycastHit hit, out Camera hitCamera) {
+        public override HitResult Hit(Vector2 position, out RaycastHit hit, out Camera hitCamera) {
             hit = new RaycastHit();
             hitCamera = null;
 
             if (camera == null) return HitResult.Error;
 
-            var ray = camera.ScreenPointToRay(new Vector3(touch.Position.x, touch.Position.y, camera.nearClipPlane));
+            var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
             var hits = Physics.RaycastAll(ray);
 
             if (hits.Length == 0) return HitResult.Miss;

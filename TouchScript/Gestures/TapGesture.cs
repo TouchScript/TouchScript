@@ -64,7 +64,7 @@ namespace TouchScript.Gestures {
                     return;
                 }
 
-                var target = Manager.GetHitTarget(touches[0]);
+                var target = Manager.GetHitTarget(touches[0].Position);
                 if (target == null || !(transform == target || target.IsChildOf(transform))) {
                     setState(GestureState.Failed);
                 } else {
