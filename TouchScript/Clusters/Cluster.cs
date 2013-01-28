@@ -115,6 +115,12 @@ namespace TouchScript.Clusters {
             markDirty();
         }
 
+        public void RemovePoints(IList<TouchPoint> points) {
+            foreach (var point in points) {
+                RemovePoint(point);
+            }
+        }
+
         /// <summary>
         /// Removes all points.
         /// </summary>

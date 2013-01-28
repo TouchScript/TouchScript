@@ -58,6 +58,7 @@
     <Compile Include="Gestures\ScaleGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\Transform2DGestureBase.cs" />
+    <Compile Include="Gestures\TwoClusterTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
     <Compile Include="IGestureDelegate.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />

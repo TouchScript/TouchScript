@@ -65,38 +65,14 @@ namespace TouchScript.Gestures {
         }
 
         /// <summary>
-        /// Transformation center in screen coordinates.
-        /// </summary>
-        public Vector2 ScreenTransformCenter { get; protected set; }
-
-        /// <summary>
-        /// Previous center in screen coordinates.
-        /// </summary>
-        public Vector2 PreviousScreenTransformCenter { get; protected set; }
-
-        /// <summary>
-        /// Transformation center in normalized screen coordinates.
-        /// </summary>
-        public Vector2 NormalizedScreenTransformCenter {
-            get { return new Vector2(ScreenTransformCenter.x/Screen.width, ScreenTransformCenter.y/Screen.height); }
-        }
-
-        /// <summary>
-        /// Previous center in screen coordinates.
-        /// </summary>
-        public Vector2 PreviousNormalizedScreenTransformCenter {
-            get { return new Vector2(PreviousScreenTransformCenter.x/Screen.width, PreviousScreenTransformCenter.y/Screen.height); }
-        }
-
-        /// <summary>
         /// Previous global transform center in 3D.
         /// </summary>
-        public Vector3 PreviousGlobalTransformCenter { get; protected set; }
+        public Vector3 PreviousWorldTransformCenter { get; protected set; }
 
         /// <summary>
         /// Global transform center in 3D.
         /// </summary>
-        public Vector3 GlobalTransformCenter { get; protected set; }
+        public Vector3 WorldTransformCenter { get; protected set; }
 
         /// <summary>
         /// Previous local transform center in 3D.
@@ -111,7 +87,7 @@ namespace TouchScript.Gestures {
         /// <summary>
         /// Plane where transformation occured.
         /// </summary>
-        public Plane GlobalTransformPlane { get; private set; }
+        public Plane WorldTransformPlane { get; private set; }
 
         #endregion
 
@@ -120,7 +96,6 @@ namespace TouchScript.Gestures {
         protected override void Awake() {
             base.Awake();
             updateProjectionPlane();
-            resetGestureProperties();
         }
 
         #endregion
@@ -147,7 +122,8 @@ namespace TouchScript.Gestures {
         }
 
         protected override void reset() {
-            resetGestureProperties();
+            WorldTransformCenter = Vector3.zero;
+            LocalTransformCenter = Vector3.zero;
         }
 
         #endregion
@@ -161,25 +137,20 @@ namespace TouchScript.Gestures {
             return global;
         }
 
-        protected virtual void resetGestureProperties() {
-            GlobalTransformCenter = Vector3.zero;
-            LocalTransformCenter = Vector3.zero;
-        }
-
         protected void updateProjectionPlane(Camera targetCamera = null) {
             switch (projection) {
                 case ProjectionType.Camera:
                     if (targetCamera == null) targetCamera = Camera.mainCamera;
                     if (projectionCamera != targetCamera) {
                         projectionCamera = targetCamera;
-                        GlobalTransformPlane = new Plane(targetCamera.transform.forward, transform.position);
+                        WorldTransformPlane = new Plane(targetCamera.transform.forward, transform.position);
                     }
                     break;
                 case ProjectionType.Local:
-                    GlobalTransformPlane = new Plane(transform.localToWorldMatrix.MultiplyVector(projectionNormal).normalized, transform.position);
+                    WorldTransformPlane = new Plane(transform.localToWorldMatrix.MultiplyVector(projectionNormal).normalized, transform.position);
                     break;
                 case ProjectionType.Global:
-                    GlobalTransformPlane = new Plane(projectionNormal.normalized, transform.position);
+                    WorldTransformPlane = new Plane(projectionNormal.normalized, transform.position);
                     break;
             }
         }

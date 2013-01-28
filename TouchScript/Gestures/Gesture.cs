@@ -95,15 +95,36 @@ namespace TouchScript.Gestures {
         /// Previous gesture state.
         /// </summary>
         public GestureState PreviousState { get; private set; }
-		public Vector2 ScreenCenterPosition { get {
+
+		public virtual Vector2 ScreenPosition { get {
 				return Cluster.Get2DCenterPosition(activeTouches);
 			} 
 		}
 		
-		public Vector2 PreviousScreenCenterPosition { get {
+		public virtual Vector2 PreviousScreenPosition { get {
 				return Cluster.GetPrevious2DCenterPosition(activeTouches);
 			} 
 		}
+
+        /// <summary>
+        /// Transformation center in normalized screen coordinates.
+        /// </summary>
+        public Vector2 NormalizedScreenPosition {
+            get {
+                var position = ScreenPosition;
+                return new Vector2(position.x / Screen.width, position.y / Screen.height);
+            }
+        }
+
+        /// <summary>
+        /// Previous center in screen coordinates.
+        /// </summary>
+        public Vector2 PreviousNormalizedScreenTransformCenter {
+            get {
+                var position = PreviousScreenPosition;
+                return new Vector2(position.x / Screen.width, position.y / Screen.height);
+            }
+        }
 
         protected List<TouchPoint> activeTouches = new List<TouchPoint>();
 

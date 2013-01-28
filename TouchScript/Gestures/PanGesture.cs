@@ -65,14 +65,14 @@ namespace TouchScript.Gestures {
             var localDelta3DPos = Vector3.zero;
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
 
-            Vector2 oldCenter2DPos = Cluster.GetPrevious2DCenterPosition(activeTouches);
-            Vector2 newCenter2DPos = Cluster.Get2DCenterPosition(activeTouches);
+            Vector2 oldCenter2DPos = PreviousScreenPosition;
+            Vector2 newCenter2DPos = ScreenPosition;
 
             updateProjectionPlane(Cluster.GetClusterCamera(activeTouches));
 
             if (isMoving) {
-                oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, GlobalTransformPlane);
-                newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, GlobalTransformPlane);
+                oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);
+                newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
                 globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                 oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                 newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
@@ -82,14 +82,14 @@ namespace TouchScript.Gestures {
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
                     isMoving = true;
-                    oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - movementBuffer, projectionCamera, GlobalTransformPlane);
-                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, GlobalTransformPlane);
+                    oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - movementBuffer, projectionCamera, WorldTransformPlane);
+                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
                     globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                     oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
                 } else {
-                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos - movementBuffer, projectionCamera, GlobalTransformPlane);
+                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos - movementBuffer, projectionCamera, WorldTransformPlane);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     oldGlobalCenter3DPos = newGlobalCenter3DPos;
                     oldLocalCenter3DPos = newLocalCenter3DPos;
@@ -101,11 +101,10 @@ namespace TouchScript.Gestures {
                     case GestureState.Possible:
                     case GestureState.Began:
                     case GestureState.Changed:
-                        ScreenTransformCenter = newCenter2DPos;
-                        PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
-                        GlobalTransformCenter = newGlobalCenter3DPos;
+                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
+                        WorldTransformCenter = newGlobalCenter3DPos;
                         GlobalDeltaPosition = globalDelta3DPos;
-                        PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
+                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
                         LocalTransformCenter = newLocalCenter3DPos;
                         LocalDeltaPosition = localDelta3DPos;
                         PreviousLocalTransformCenter = oldLocalCenter3DPos;
@@ -122,24 +121,13 @@ namespace TouchScript.Gestures {
 
         protected override void reset() {
             base.reset();
-            resetMovement();
-        }
-
-        #endregion
-
-        #region Private functions
-
-        private void resetMovement() {
+            GlobalDeltaPosition = Vector3.zero;
+            LocalDeltaPosition = Vector3.zero;
             movementBuffer = Vector2.zero;
             isMoving = false;
         }
 
-        protected override void resetGestureProperties() {
-            base.resetGestureProperties();
-            GlobalDeltaPosition = Vector3.zero;
-            LocalDeltaPosition = Vector3.zero;
-        }
-
         #endregion
+
     }
 }

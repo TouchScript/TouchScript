@@ -17,10 +17,9 @@ namespace TouchScript.Gestures {
     /// Recognizes rotation gesture.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Rotate Gesture")]
-    public class RotateGesture : Transform2DGestureBase {
+    public class RotateGesture : TwoClusterTransform2DGestureBase {
         #region Private variables
 
-        private Cluster2 cluster2 = new Cluster2();
         private float rotationBuffer;
         private bool isRotating = false;
 
@@ -33,12 +32,6 @@ namespace TouchScript.Gestures {
         /// </summary>
         [SerializeField]
         public float RotationThreshold { get; set; }
-
-        /// <summary>
-        /// Minimum distance between clusters in cm for gesture to be recognized.
-        /// </summary>
-        [SerializeField]
-        public float MinClusterDistance { get; set; }
 
         /// <summary>
         /// Contains local rotation when gesture is recognized.
@@ -54,33 +47,24 @@ namespace TouchScript.Gestures {
 
         #region Gesture callbacks
 
-        protected override void touchesBegan(IList<TouchPoint> touches) {
-            base.touchesBegan(touches);
-            foreach (var touch in touches) {
-                cluster2.AddPoint(touch);
-            }
-        }
-
         protected override void touchesMoved(IList<TouchPoint> touches) {
             base.touchesMoved(touches);
 
-            cluster2.Invalidate();
-            cluster2.MinPointsDistance = MinClusterDistance*TouchManager.Instance.DotsPerCentimeter;
-            if (!cluster2.HasClusters) return;
+            if (!clusters.HasClusters) return;
 
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaRotation = 0f;
 
             updateProjectionPlane(Cluster.GetClusterCamera(activeTouches));
 
-            var old2DPos1 = cluster2.GetPreviousCenterPosition(Cluster2.CLUSTER1);
-            var old2DPos2 = cluster2.GetPreviousCenterPosition(Cluster2.CLUSTER2);
-            var new2DPos1 = cluster2.GetCenterPosition(Cluster2.CLUSTER1);
-            var new2DPos2 = cluster2.GetCenterPosition(Cluster2.CLUSTER2);
-            var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, GlobalTransformPlane);
-            var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, GlobalTransformPlane);
-            var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, GlobalTransformPlane);
-            var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, GlobalTransformPlane);
+            var old2DPos1 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER1);
+            var old2DPos2 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER2);
+            var new2DPos1 = clusters.GetCenterPosition(Cluster2.CLUSTER1);
+            var new2DPos2 = clusters.GetCenterPosition(Cluster2.CLUSTER2);
+            var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, WorldTransformPlane);
+            var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, WorldTransformPlane);
+            var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, WorldTransformPlane);
+            var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, WorldTransformPlane);
             var newVector = new3DPos2 - new3DPos1;
             var oldVector = old3DPos2 - old3DPos1;
 
@@ -99,8 +83,8 @@ namespace TouchScript.Gestures {
                 }
             }
 
-            oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, GlobalTransformPlane);
-            newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, GlobalTransformPlane);
+            oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);
+            newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
             oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
             newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
 
@@ -109,10 +93,11 @@ namespace TouchScript.Gestures {
                     case GestureState.Possible:
                     case GestureState.Began:
                     case GestureState.Changed:
-                        ScreenTransformCenter = newCenter2DPos;
-                        PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
-                        GlobalTransformCenter = newGlobalCenter3DPos;
-                        PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
+                        screenPosition = newCenter2DPos;
+                        previousScreenPosition = oldCenter2DPos;
+                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
+                        WorldTransformCenter = newGlobalCenter3DPos;
+                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
                         LocalTransformCenter = newLocalCenter3DPos;
                         PreviousLocalTransformCenter = oldLocalCenter3DPos;
 
@@ -128,36 +113,14 @@ namespace TouchScript.Gestures {
             }
         }
 
-        protected override void touchesEnded(IList<TouchPoint> touches) {
-            foreach (var touch in touches) {
-                cluster2.RemovePoint(touch);
-            }
-            if (!cluster2.HasClusters) {
-                resetRotation();
-            }
-            base.touchesEnded(touches);
-        }
-
         protected override void reset() {
             base.reset();
-            cluster2.RemoveAllPoints();
-            resetRotation();
-        }
-
-        #endregion
-
-        #region Private functions
-
-        private void resetRotation() {
+            LocalDeltaRotation = 0f;
             rotationBuffer = 0f;
             isRotating = false;
         }
 
-        protected override void resetGestureProperties() {
-            base.resetGestureProperties();
-            LocalDeltaRotation = 0f;
-        }
-
         #endregion
+
     }
 }
