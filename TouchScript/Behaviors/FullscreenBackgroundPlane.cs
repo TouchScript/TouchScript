@@ -1,19 +1,35 @@
-﻿using UnityEngine;
+﻿/*
+ * Copyright (C) 2012 Interactive Lab
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+ * Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+using UnityEngine;
 
 namespace TouchScript.Behaviors {
-    [AddComponentMenu("TouchScript/Fullscreen Background Target")]
-    [ExecuteInEditMode]
-    [RequireComponent(typeof (BoxCollider))]
-    [RequireComponent(typeof (Camera))]
-    public class FullscreenBackgroundTarget : MonoBehaviour {
-        protected void Update() {
-            var box = GetComponent<BoxCollider>();
+	[AddComponentMenu("TouchScript/Fullscreen Background Target")]
+	[ExecuteInEditMode]
+	[RequireComponent(typeof(BoxCollider))]
+	[RequireComponent(typeof(Camera))]
+	public class FullscreenBackgroundTarget : MonoBehaviour {
+		protected void Update() {
+			var box = GetComponent<BoxCollider>();
 
-            var h = 2*camera.farClipPlane*Mathf.Tan(camera.fieldOfView/360*Mathf.PI);
-            var w = (float) Screen.width/Screen.height*h;
+			var h = 2*camera.farClipPlane*Mathf.Tan(camera.fieldOfView/360*Mathf.PI);
+			var w = (float) Screen.width/Screen.height*h;
 
-            box.center = new Vector3(0, 0, camera.farClipPlane);
-            box.size = new Vector3(w, h, .1f);
-        }
-    }
+			box.center = new Vector3(0, 0, camera.farClipPlane);
+			box.size = new Vector3(w, h, .1f);
+		}
+	}
 }
