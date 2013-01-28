@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Gestures;
+using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -203,18 +204,12 @@ namespace TouchScript {
         private IEnumerator lateAwake() {
             yield return new WaitForEndOfFrame();
 
-            layers = layers.FindAll(l => l != null);
-            var unknownLayers = FindObjectsOfType(typeof(LayerBase));
+            layers = layers.FindAll(l => l != null); // filter empty ones
+            var unknownLayers = FindObjectsOfType(typeof (LayerBase));
             foreach (LayerBase unknownLayer in unknownLayers) AddLayer(unknownLayer);
 
-            if (layers.Count == 0) {
-                Debug.Log("No camera layers. Adding one for the main camera.");
-                if (Camera.main != null) {
-                    Camera.main.gameObject.AddComponent<CameraLayer>();
-                } else {
-                    Debug.LogError("No main camera found!");
-                }
-            }
+            createCameraLayer();
+            createTouchInput();
         }
 
         private void Update() {
@@ -239,17 +234,14 @@ namespace TouchScript {
             if (Instance == null) return false;
             if (Instance.layers.Contains(layer)) return false;
             Instance.layers.Add(layer);
-            Debug.Log(string.Format("Added layer. Total layers: {0}", Instance.layers.Count));
             return true;
         }
 
         public static bool RemoveLayer(LayerBase layer) {
-            Debug.Log(string.Format("Removing layer. Instance: {0}", instance));
             if (shuttingDown) return false;
             if (layer == null) return false;
             if (instance == null) return false;
             var result = instance.layers.Remove(layer);
-            Debug.Log(string.Format("Removed layer: {1}. Total layers: {0}", instance.layers.Count, result));
             return result;
         }
 
@@ -446,6 +438,24 @@ namespace TouchScript {
         private void updateDPI() {
             if (Application.isEditor) dpi = EditorDPI;
             else dpi = LiveDPI;
+        }
+
+        private void createCameraLayer() {
+            if (layers.Count == 0) {
+                Debug.Log("No camera layers. Adding one for the main camera.");
+                if (Camera.main != null) {
+                    Camera.main.gameObject.AddComponent<CameraLayer>();
+                } else {
+                    Debug.LogError("No main camera found!");
+                }
+            }
+        }
+
+        private void createTouchInput() {
+            var inputs = FindObjectsOfType(typeof (InputSource));
+            if (inputs.Length == 0) {
+                gameObject.AddComponent<MouseInput>();
+            }
         }
 
         private bool updateBegan() {
