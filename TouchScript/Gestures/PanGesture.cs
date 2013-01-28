@@ -68,7 +68,7 @@ namespace TouchScript.Gestures {
             Vector2 oldCenter2DPos = PreviousScreenPosition;
             Vector2 newCenter2DPos = ScreenPosition;
 
-            updateProjectionPlane(Cluster.GetClusterCamera(activeTouches));
+            updateProjectionCamera(Cluster.GetClusterCamera(activeTouches));
 
             if (isMoving) {
                 oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);

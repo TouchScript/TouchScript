@@ -855,7 +855,7 @@ MonoBehaviour:
   - {fileID: 60}
   - {fileID: 87}
   - {fileID: 89}
-  projection: 0
+  projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &60
 MonoBehaviour:
@@ -871,7 +871,7 @@ MonoBehaviour:
   - {fileID: 59}
   - {fileID: 87}
   - {fileID: 89}
-  projection: 0
+  projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &61
 MonoBehaviour:
@@ -1162,7 +1162,7 @@ MonoBehaviour:
   - {fileID: 59}
   - {fileID: 60}
   - {fileID: 89}
-  projection: 0
+  projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &88
 MonoBehaviour:

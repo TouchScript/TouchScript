@@ -45,6 +45,7 @@ namespace TouchScript.Gestures {
         public ProjectionType Projection {
             get { return projection; }
             set {
+                if (projection == value) return;
                 projection = value;
                 updateProjectionPlane();
             }
@@ -59,6 +60,7 @@ namespace TouchScript.Gestures {
                 }
             }
             set {
+                if (projectionNormal == value) return;
                 projectionNormal = value;
                 updateProjectionPlane();
             }
@@ -95,6 +97,7 @@ namespace TouchScript.Gestures {
 
         protected override void Awake() {
             base.Awake();
+            updateProjectionCamera(Camera.mainCamera);
             updateProjectionPlane();
         }
 
@@ -137,14 +140,16 @@ namespace TouchScript.Gestures {
             return global;
         }
 
-        protected void updateProjectionPlane(Camera targetCamera = null) {
+        protected void updateProjectionCamera(Camera targetCamera) {
+            var changed = targetCamera != projectionCamera;
+            projectionCamera = targetCamera;
+            if (changed) updateProjectionPlane();
+        }
+
+        protected void updateProjectionPlane() {
             switch (projection) {
                 case ProjectionType.Camera:
-                    if (targetCamera == null) targetCamera = Camera.mainCamera;
-                    if (projectionCamera != targetCamera) {
-                        projectionCamera = targetCamera;
-                        WorldTransformPlane = new Plane(targetCamera.transform.forward, transform.position);
-                    }
+                    WorldTransformPlane = new Plane(projectionCamera.transform.forward, transform.position);
                     break;
                 case ProjectionType.Local:
                     WorldTransformPlane = new Plane(transform.localToWorldMatrix.MultiplyVector(projectionNormal).normalized, transform.position);

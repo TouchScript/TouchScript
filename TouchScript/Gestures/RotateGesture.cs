@@ -55,7 +55,7 @@ namespace TouchScript.Gestures {
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaRotation = 0f;
 
-            updateProjectionPlane(Cluster.GetClusterCamera(activeTouches));
+            updateProjectionCamera(Cluster.GetClusterCamera(activeTouches));
 
             var old2DPos1 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER1);
             var old2DPos2 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER2);
@@ -72,7 +72,7 @@ namespace TouchScript.Gestures {
             Vector2 newCenter2DPos = (new2DPos1 + new2DPos2) * .5f;
 
             var angle = Vector3.Angle(oldVector, newVector);
-            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), ProjectionNormal) < 0) angle = -angle;
+            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), WorldTransformPlane.normal) < 0) angle = -angle;
             if (isRotating) {
                 deltaRotation = angle;
             } else {
