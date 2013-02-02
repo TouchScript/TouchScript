@@ -39,7 +39,9 @@ namespace TouchScript.Clusters
         public static Camera GetClusterCamera(IList<TouchPoint> touches)
         {
             if (touches.Count == 0) return Camera.mainCamera;
-            return touches[0].HitCamera;
+            var cam = touches[0].Layer.Camera;
+            if (cam == null) return Camera.mainCamera;
+            return cam;
         }
 
         public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)

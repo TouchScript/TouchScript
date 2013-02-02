@@ -44,7 +44,7 @@ namespace TouchScript.Editor
                 EditorGUILayout.BeginVertical();
                 for (var i = 0; i < layers.arraySize; i++)
                 {
-                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as LayerBase;
+                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
                     string name;
                     if (layer == null)
                     {
@@ -83,11 +83,11 @@ namespace TouchScript.Editor
             {
                 layers.DeleteArrayElementAtIndex(0);
             }
-            var allLayers = FindObjectsOfType(typeof(LayerBase));
+            var allLayers = FindObjectsOfType(typeof(TouchLayer));
             var i = 0;
             layers.arraySize = allLayers.Length;
             Debug.Log(allLayers.Length);
-            foreach (LayerBase l in allLayers)
+            foreach (TouchLayer l in allLayers)
             {
                 layers.GetArrayElementAtIndex(i).objectReferenceValue = l;
                 i++;

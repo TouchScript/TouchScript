@@ -68,7 +68,7 @@
     <Compile Include="InputSources\TuioInput.cs" />
     <Compile Include="InputSources\WMTouchInput.cs" />
     <Compile Include="Layers\CameraLayer.cs" />
-    <Compile Include="Layers\LayerBase.cs" />
+    <Compile Include="Layers\TouchLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TouchManager.cs" />
     <Compile Include="TouchPoint.cs" />
@@ -87,7 +87,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General Examples\Assets\TouchScript\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General Examples\Assets\TouchScript\Plugins\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Scaleform Examples\Assets\TouchScript\Plugins\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Layers;
 using UnityEngine;
 
 namespace TouchScript
@@ -56,6 +57,6 @@ namespace TouchScript
         /// <summary>
         /// Original camera through which the target was seen.
         /// </summary>
-        public Camera HitCamera { get; internal set; }
+        public TouchLayer Layer { get; internal set; }
     }
 }
