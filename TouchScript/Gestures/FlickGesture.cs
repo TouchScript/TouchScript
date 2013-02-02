@@ -33,16 +33,13 @@ namespace TouchScript.Gestures
         /// Prevents misinterpreting taps.
         /// </summary>
         public float MovementThreshold = 0.5f;
-
-        /// <summary>
-        /// If true, tracks only horizontal movement
-        /// </summary>
-        public bool Horizontal = false;
-
-        /// <summary>
-        /// If true, tracks only vertical movement
-        /// </summary>
-        public bool Vertical = false;
+		
+		public enum GestureDirection {
+			Any,
+			Horizontal,
+			Vertical,
+		}
+		public GestureDirection Direction;
 
         #endregion
 
@@ -119,8 +116,14 @@ namespace TouchScript.Gestures
                     }
                 }
 
-                if (Horizontal) totalMovement.y = 0;
-                if (Vertical) totalMovement.x = 0;
+                switch(Direction) {
+				case GestureDirection.Horizontal:
+					totalMovement.y = 0;
+					break;
+				case GestureDirection.Vertical:
+					totalMovement.x = 0;
+					break;
+				}
 
                 if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
                 {
