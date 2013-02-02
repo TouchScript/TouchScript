@@ -9,12 +9,16 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
-    public class CameraLayer : LayerBase
+    public class CameraLayer : TouchLayer
     {
-        public override HitResult Hit(Vector2 position, out RaycastHit hit, out Camera hitCamera)
+        public override Camera Camera
+        {
+            get { return camera; }
+        }
+
+        public override HitResult Hit(Vector2 position, out RaycastHit hit)
         {
             hit = new RaycastHit();
-            hitCamera = null;
 
             if (camera == null) return HitResult.Error;
 
@@ -62,7 +66,6 @@ namespace TouchScript.Layers
 
             if (success)
             {
-                hitCamera = camera;
                 return HitResult.Hit;
             }
 

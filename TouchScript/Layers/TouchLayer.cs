@@ -8,20 +8,24 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     [ExecuteInEditMode()]
-    public class LayerBase : MonoBehaviour
+    public abstract class TouchLayer : MonoBehaviour
     {
         public String Name;
 
-        public virtual HitResult Hit(Vector2 position, out RaycastHit hit, out Camera hitCamera)
+        public virtual Camera Camera
+        {
+            get { return null; }
+        }
+
+        public virtual HitResult Hit(Vector2 position, out RaycastHit hit)
         {
             hit = new RaycastHit();
-            hitCamera = null;
             return HitResult.Miss;
         }
 
         protected virtual void Awake()
         {
-            if (GetComponents<LayerBase>().Length > 1)
+            if (GetComponents<TouchLayer>().Length > 1)
             {
                 DestroyImmediate(this);
                 return;

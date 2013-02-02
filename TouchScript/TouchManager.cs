@@ -121,9 +121,9 @@ namespace TouchScript
             }
         }
 
-        public List<LayerBase> Layers
+        public List<TouchLayer> Layers
         {
-            get { return new List<LayerBase>(layers); }
+            get { return new List<TouchLayer>(layers); }
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace TouchScript
         private float touchRadius = .75f;
 
         [SerializeField]
-        private List<LayerBase> layers = new List<LayerBase>();
+        private List<TouchLayer> layers = new List<TouchLayer>();
 
         private List<TouchPoint> touches = new List<TouchPoint>();
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>();
@@ -221,8 +221,8 @@ namespace TouchScript
             yield return new WaitForEndOfFrame();
 
             layers = layers.FindAll(l => l != null); // filter empty ones
-            var unknownLayers = FindObjectsOfType(typeof(LayerBase));
-            foreach (LayerBase unknownLayer in unknownLayers) AddLayer(unknownLayer);
+            var unknownLayers = FindObjectsOfType(typeof(TouchLayer));
+            foreach (TouchLayer unknownLayer in unknownLayers) AddLayer(unknownLayer);
 
             createCameraLayer();
             createTouchInput();
@@ -247,7 +247,7 @@ namespace TouchScript
 
         #region Public static methods
 
-        public static bool AddLayer(LayerBase layer)
+        public static bool AddLayer(TouchLayer layer)
         {
             if (shuttingDown) return false;
             if (layer == null) return false;
@@ -257,7 +257,7 @@ namespace TouchScript
             return true;
         }
 
-        public static bool RemoveLayer(LayerBase layer)
+        public static bool RemoveLayer(TouchLayer layer)
         {
             if (shuttingDown) return false;
             if (layer == null) return false;
@@ -287,8 +287,8 @@ namespace TouchScript
         public Transform GetHitTarget(Vector2 position)
         {
             RaycastHit hit;
-            Camera hitCamera;
-            return GetHitTarget(position, out hit, out hitCamera);
+            TouchLayer layer;
+            return GetHitTarget(position, out hit, out layer);
         }
 
         /// <summary>
@@ -298,22 +298,21 @@ namespace TouchScript
         /// <param name="hit">Output RaycastHit.</param>
         /// <param name="hitCamera">Output camera which was used to hit an object.</param>
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
-        public Transform GetHitTarget(Vector2 position, out RaycastHit hit, out Camera hitCamera)
+        public Transform GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
         {
             hit = new RaycastHit();
-            hitCamera = null;
+            layer = null;
 
-            foreach (var layer in layers)
+            foreach (var touchLayer in layers)
             {
-                if (layer == null) continue;
+                if (touchLayer == null) continue;
                 RaycastHit _hit;
-                Camera _camera;
-                var result = layer.Hit(position, out _hit, out _camera);
+                var result = touchLayer.Hit(position, out _hit);
                 switch (result)
                 {
                     case HitResult.Hit:
                         hit = _hit;
-                        hitCamera = _camera;
+                        layer = touchLayer;
                         return hit.transform;
                     case HitResult.Loss:
                         return null;
@@ -528,13 +527,13 @@ namespace TouchScript
                     touches.Add(touch);
                     idToTouch.Add(touch.Id, touch);
                     RaycastHit hit;
-                    Camera hitCamera;
-                    var target = GetHitTarget(touch.Position, out hit, out hitCamera);
+                    TouchLayer layer;
+                    var target = GetHitTarget(touch.Position, out hit, out layer);
                     if (target != null)
                     {
                         touch.Target = target;
                         touch.Hit = hit;
-                        touch.HitCamera = hitCamera;
+                        touch.Layer = layer;
                         List<TouchPoint> list;
                         if (!targetTouches.TryGetValue(touch.Target, out list))
                         {
