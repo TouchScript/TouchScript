@@ -59,7 +59,7 @@ PlayerSettings:
     16:9: 1
     Others: 1
   debugUnloadMode: 0
-  iPhoneBundleIdentifier: com.Company.ProductName
+  iPhoneBundleIdentifier: ru.interactivelab.touchscriptbasic
   iPhoneBundleVersion: 1.0
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 6
@@ -73,7 +73,7 @@ PlayerSettings:
   CreateWallpaper: 0
   StripUnusedMeshComponents: 0
   iPhoneSdkVersion: 988
-  iPhoneTargetOSVersion: 4
+  iPhoneTargetOSVersion: 7
   uIPrerenderedIcon: 0
   uIRequiresPersistentWiFi: 0
   uIStatusBarHidden: 1
@@ -112,7 +112,7 @@ PlayerSettings:
   wiiFloatingPointExceptions: 0
   wiiScreenCrashDumps: 1
   wiiMemoryLabelCount: 147
-  wiiMemorySetup: 5effbee7ffffff75f70100000000000000000000
+  wiiMemorySetup: 5effbee7ffffff61f50100000000000000000000
   XboxTitleId: 
   XboxImageXexPath: 
   XboxSpaPath: 
