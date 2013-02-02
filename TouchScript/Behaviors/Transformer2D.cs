@@ -25,9 +25,11 @@ namespace TouchScript.Behaviors
 
         #region Private variables
 
-        private Vector3 localPositionToGo;
-        private float scaleToGo;
+        private Vector3 localPositionToGo, localScaleToGo;
         private Quaternion localRotationToGo;
+		
+		private Vector3 lastLocalPosition, lastLocalScale;
+		private Quaternion lastLocalRotation;
 
         #endregion
 
@@ -54,9 +56,17 @@ namespace TouchScript.Behaviors
         private void Update()
         {
             var fraction = Speed*Time.deltaTime;
-            transform.localPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);
-            var newScale = Mathf.Lerp(transform.localScale.x, scaleToGo, fraction);
-            transform.localScale = new Vector3(newScale, newScale, newScale);
+			if (transform.localPosition != lastLocalPosition) { // changed by some other code
+				localPositionToGo = transform.localPosition;
+			}
+            transform.localPosition = lastLocalPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);		
+			if (transform.localScale != lastLocalScale) {
+				localScaleToGo = transform.localScale;
+			}
+            transform.localScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);		
+			if (transform.localRotation != lastLocalRotation) {
+				localRotationToGo = transform.localRotation;
+			}
             transform.localRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
         }
 
@@ -66,9 +76,9 @@ namespace TouchScript.Behaviors
 
         private void setDefaults()
         {
-            localPositionToGo = transform.localPosition;
-            scaleToGo = transform.localScale.x;
-            localRotationToGo = transform.localRotation;
+            localPositionToGo = lastLocalPosition = transform.localPosition;
+			localRotationToGo = lastLocalRotation = transform.localRotation;
+            localScaleToGo = lastLocalScale = transform.localScale;
         }
 
         private void onPanStateChanged(object sender, GestureStateChangeEventArgs e)
@@ -101,7 +111,7 @@ namespace TouchScript.Behaviors
 
             if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001)
             {
-                scaleToGo *= gesture.LocalDeltaScale;
+                localScaleToGo *= gesture.LocalDeltaScale;
             }
         }
 
