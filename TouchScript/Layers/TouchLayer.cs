@@ -23,6 +23,26 @@ namespace TouchScript.Layers
             return HitResult.Miss;
         }
 
+        internal void BeginTouch(TouchPoint touch)
+        {
+            beginTouch(touch);
+        }
+
+        internal void MoveTouch(TouchPoint touch)
+        {
+            moveTouch(touch);
+        }
+
+        internal void EndTouch(TouchPoint touch)
+        {
+            endTouch(touch);
+        }
+
+        internal void CancelTouch(TouchPoint touch)
+        {
+            cancelTouch(touch);
+        }
+
         protected virtual void Awake()
         {
             if (GetComponents<TouchLayer>().Length > 1)
@@ -44,13 +64,24 @@ namespace TouchScript.Layers
         {
             if (String.IsNullOrEmpty(Name) && camera != null) Name = camera.name;
         }
+
+        protected virtual void beginTouch(TouchPoint touch)
+        {}
+
+        protected virtual void moveTouch(TouchPoint touch)
+        {}
+
+        protected virtual void endTouch(TouchPoint touch)
+        {}
+
+        protected virtual void cancelTouch(TouchPoint touch)
+        {}
     }
 
     public enum HitResult
     {
         Hit,
         Miss,
-        Loss,
         Error
     }
 }

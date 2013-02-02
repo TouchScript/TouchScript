@@ -288,7 +288,8 @@ namespace TouchScript
         {
             RaycastHit hit;
             TouchLayer layer;
-            return GetHitTarget(position, out hit, out layer);
+            if (GetHitTarget(position, out hit, out layer) == HitResult.Hit) return hit.transform;
+            return null;
         }
 
         /// <summary>
@@ -298,7 +299,7 @@ namespace TouchScript
         /// <param name="hit">Output RaycastHit.</param>
         /// <param name="hitCamera">Output camera which was used to hit an object.</param>
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
-        public Transform GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
+        public HitResult GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
         {
             hit = new RaycastHit();
             layer = null;
@@ -313,13 +314,11 @@ namespace TouchScript
                     case HitResult.Hit:
                         hit = _hit;
                         layer = touchLayer;
-                        return hit.transform;
-                    case HitResult.Loss:
-                        return null;
+                        return result;
                 }
             }
 
-            return null;
+            return HitResult.Miss;
         }
 
         /// <summary>
@@ -528,19 +527,24 @@ namespace TouchScript
                     idToTouch.Add(touch.Id, touch);
                     RaycastHit hit;
                     TouchLayer layer;
-                    var target = GetHitTarget(touch.Position, out hit, out layer);
-                    if (target != null)
+                    if (GetHitTarget(touch.Position, out hit, out layer) == HitResult.Hit)
                     {
-                        touch.Target = target;
                         touch.Hit = hit;
                         touch.Layer = layer;
-                        List<TouchPoint> list;
-                        if (!targetTouches.TryGetValue(touch.Target, out list))
+                        var target = hit.transform;
+                        if (layer != null) layer.BeginTouch(touch);
+
+                        if (target != null)
                         {
-                            list = new List<TouchPoint>();
-                            targetTouches.Add(touch.Target, list);
+                            touch.Target = target;
+                            List<TouchPoint> list;
+                            if (!targetTouches.TryGetValue(touch.Target, out list))
+                            {
+                                list = new List<TouchPoint>();
+                                targetTouches.Add(touch.Target, list);
+                            }
+                            list.Add(touch);
                         }
-                        list.Add(touch);
                     }
                 }
 
@@ -614,6 +618,8 @@ namespace TouchScript
                         {
                             touch.Position = position;
                             reallyMoved.Add(touch);
+                            if (touch.Layer != null) touch.Layer.MoveTouch(touch);
+
                             if (touch.Target != null)
                             {
                                 List<TouchPoint> list;
@@ -682,6 +688,8 @@ namespace TouchScript
                 {
                     idToTouch.Remove(touch.Id);
                     touches.Remove(touch);
+                    if (touch.Layer != null) touch.Layer.EndTouch(touch);
+
                     if (touch.Target != null)
                     {
                         List<TouchPoint> list;
@@ -741,6 +749,8 @@ namespace TouchScript
                 {
                     idToTouch.Remove(touch.Id);
                     touches.Remove(touch);
+                    if (touch.Layer != null) touch.Layer.CancelTouch(touch);
+
                     if (touch.Target != null)
                     {
                         List<TouchPoint> list;
