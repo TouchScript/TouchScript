@@ -41,9 +41,6 @@ namespace TouchScript.Editor
             showLayers = EditorGUILayout.Foldout(showLayers, String.Format("Layers ({0})", layers.arraySize));
             if (showLayers)
             {
-                var moveDown = -1;
-                var moveUp = -1;
-                var nullLayer = -1;
                 EditorGUILayout.BeginVertical();
                 for (var i = 0; i < layers.arraySize; i++)
                 {
