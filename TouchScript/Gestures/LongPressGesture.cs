@@ -59,7 +59,14 @@ namespace TouchScript.Gestures
         {
             if (fireRecognizedNextUpdate)
             {
-                setState(GestureState.Recognized);
+                var target = Manager.GetHitTarget(Cluster.Get2DCenterPosition(ActiveTouches)); //assuming ActiveTouches.length > 0
+                if (target == null || !(transform == target || target.IsChildOf(transform)))
+                {
+                    setState(GestureState.Failed);
+                } else
+                {
+                    setState(GestureState.Recognized);
+                }
             }
         }
 
@@ -91,6 +98,7 @@ namespace TouchScript.Gestures
         {
             if (ActiveTouches.Count == 0)
             {
+				timer.Stop();
                 setState(GestureState.Failed);
             }
         }
