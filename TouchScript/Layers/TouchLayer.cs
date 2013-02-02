@@ -23,9 +23,15 @@ namespace TouchScript.Layers
             return HitResult.Miss;
         }
 
-        internal void BeginTouch(TouchPoint touch)
+        internal bool BeginTouch(TouchPoint touch)
         {
-            beginTouch(touch);
+            var result = beginTouch(touch);
+            if (result == HitResult.Hit)
+            {
+                touch.Layer = this;
+                return true;
+            }
+            return false;
         }
 
         internal void MoveTouch(TouchPoint touch)
@@ -65,8 +71,10 @@ namespace TouchScript.Layers
             if (String.IsNullOrEmpty(Name) && camera != null) Name = camera.name;
         }
 
-        protected virtual void beginTouch(TouchPoint touch)
-        {}
+        protected virtual HitResult beginTouch(TouchPoint touch)
+        {
+            return HitResult.Error;
+        }
 
         protected virtual void moveTouch(TouchPoint touch)
         {}

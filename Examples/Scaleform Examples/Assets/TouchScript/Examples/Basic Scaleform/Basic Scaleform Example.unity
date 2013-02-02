@@ -113,7 +113,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -153,3 +153,67 @@ Behaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 542320026}
   m_Enabled: 1
+--- !u!1 &955994189
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 955994190}
+  - 114: {fileID: 955994191}
+  m_Layer: 0
+  m_Name: Scaleform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &955994190
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 955994189}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &955994191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 955994189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bacbba0db8fc7b04ba9521c693523f51, type: 1}
+  m_Name: 
+  Name: Scaleform Layer
+  FlashMovieFile: TestScaleformProject.swf
+  InitParams:
+    mASVersion: 1
+    mInitVideo: 0
+    mInitSound: 1
+    mVideoSoundSystem: 0
+    mInitIME: 0
+    mEnableAmpProfiling: 0
+    mProgLoading: 0
+    mFontCacheConfig:
+      TextureHeight: 1024
+      TextureWidth: 1024
+      MaxNumTextures: 1
+      MaxSlotHeight: 48
+      MaxSlotPadding: 2
+    mSetFontCacheParams: 1
+    mEnableDynamicCache: 1
+    mFontPackParams:
+      NominalSize: 32
+      PadPixels: 2
+      TextureWidth: 512
+      TextureHeight: 512
+    mSetFontPackParams: 1
+    mGlyphCountLimit: 1000
+    SoundVolume: 10
+    IsMute: 0

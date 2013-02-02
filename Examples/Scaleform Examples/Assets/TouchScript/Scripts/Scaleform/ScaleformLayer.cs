@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Scaleform;
 using Scaleform.GFx;
+using TouchScript;
 using UnityEngine;
 using System.Collections;
 using TouchScript.Layers;
@@ -34,10 +35,7 @@ public class ScaleformLayer : TouchLayer
 #endif
     }
 
-    public override HitResult Hit(Vector2 position, out RaycastHit hit)
-    {
-        return base.Hit(position, out hit);
-    }
+    #region Unity
 
     protected void Start()
     {
@@ -78,10 +76,33 @@ public class ScaleformLayer : TouchLayer
         }
     }
 
+    #endregion
+
+    #region TouchLayer overrides
+
     protected override void setName()
     {
         Name = "Scaleform Layer";
     }
+
+    protected override HitResult  beginTouch(TouchPoint touch)
+    {
+        return HitResult.Error;
+    }
+
+    protected override void moveTouch(TouchPoint touch)
+    {
+    }
+
+    protected override void endTouch(TouchPoint touch)
+    {
+    }
+
+    protected override void cancelTouch(TouchPoint touch)
+    {
+    }
+
+    #endregion
 
     // Issues calls to Scaleform Rendering. Rendering is multithreaded on windows and single threaded on iOS/Android
     protected IEnumerator CallPluginAtEndOfFrames()

@@ -288,7 +288,7 @@ namespace TouchScript
         {
             RaycastHit hit;
             TouchLayer layer;
-            if (GetHitTarget(position, out hit, out layer) == HitResult.Hit) return hit.transform;
+            if (GetHitTarget(position, out hit, out layer)) return hit.transform;
             return null;
         }
 
@@ -299,7 +299,7 @@ namespace TouchScript
         /// <param name="hit">Output RaycastHit.</param>
         /// <param name="hitCamera">Output camera which was used to hit an object.</param>
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
-        public HitResult GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
+        public bool GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
         {
             hit = new RaycastHit();
             layer = null;
@@ -308,17 +308,15 @@ namespace TouchScript
             {
                 if (touchLayer == null) continue;
                 RaycastHit _hit;
-                var result = touchLayer.Hit(position, out _hit);
-                switch (result)
+                if (touchLayer.Hit(position, out _hit) == HitResult.Hit)
                 {
-                    case HitResult.Hit:
-                        hit = _hit;
-                        layer = touchLayer;
-                        return result;
+                    hit = _hit;
+                    layer = touchLayer;
+                    return true;
                 }
             }
 
-            return HitResult.Miss;
+            return false;
         }
 
         /// <summary>
@@ -525,18 +523,10 @@ namespace TouchScript
                 {
                     touches.Add(touch);
                     idToTouch.Add(touch.Id, touch);
-                    RaycastHit hit;
-                    TouchLayer layer;
-                    if (GetHitTarget(touch.Position, out hit, out layer) == HitResult.Hit)
+                    if (checkLayers(touch))
                     {
-                        touch.Hit = hit;
-                        touch.Layer = layer;
-                        var target = hit.transform;
-                        if (layer != null) layer.BeginTouch(touch);
-
-                        if (target != null)
+                        if (touch.Target != null)
                         {
-                            touch.Target = target;
                             List<TouchPoint> list;
                             if (!targetTouches.TryGetValue(touch.Target, out list))
                             {
@@ -921,6 +911,17 @@ namespace TouchScript
         private void failGesture(Gesture gesture)
         {
             gesture.SetState(Gesture.GestureState.Failed);
+        }
+
+        private bool checkLayers(TouchPoint touch)
+        {
+            foreach (var touchLayer in layers)
+            {
+                if (touchLayer == null) continue;
+                if (touchLayer.BeginTouch(touch)) return true;
+            }
+
+            return false;
         }
 
         #endregion

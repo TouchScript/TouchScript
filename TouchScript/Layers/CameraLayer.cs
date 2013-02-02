@@ -71,5 +71,18 @@ namespace TouchScript.Layers
 
             return HitResult.Miss;
         }
+
+        protected override HitResult beginTouch(TouchPoint touch)
+        {
+            RaycastHit hit;
+            var result = Hit(touch.Position, out hit);
+            if (result == HitResult.Hit)
+            {
+                touch.Hit = hit;
+                touch.Target = hit.transform;
+            }
+            return result;
+        }
+
     }
 }
