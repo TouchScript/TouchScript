@@ -88,8 +88,8 @@ namespace TouchScript.Layers
 
     public enum HitResult
     {
-        Hit,
-        Miss,
-        Error
+        Error = 0,
+        Hit = 1,
+        Miss = 2
     }
 }
