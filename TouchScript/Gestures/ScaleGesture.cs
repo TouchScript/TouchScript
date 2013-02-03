@@ -55,8 +55,6 @@ namespace TouchScript.Gestures
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaScale = 1f;
 
-            updateProjectionCamera(Cluster.GetClusterCamera(activeTouches));
-
             var old2DPos1 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER1);
             var old2DPos2 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER2);
             var new2DPos1 = clusters.GetCenterPosition(Cluster2.CLUSTER1);

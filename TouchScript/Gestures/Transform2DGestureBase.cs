@@ -30,7 +30,7 @@ namespace TouchScript.Gestures
         private ProjectionType projection = ProjectionType.Camera;
 
         [SerializeField]
-        private Vector3 projectionNormal = Vector3.zero;
+        private Vector3 projectionNormal = Vector3.forward;
 
         protected Camera projectionCamera;
 
@@ -101,7 +101,7 @@ namespace TouchScript.Gestures
         protected override void Awake()
         {
             base.Awake();
-            updateProjectionCamera(Camera.mainCamera);
+            updateProjectionCamera();
             updateProjectionPlane();
         }
 
@@ -113,7 +113,10 @@ namespace TouchScript.Gestures
         {}
 
         protected override void touchesMoved(IList<TouchPoint> touches)
-        {}
+        {
+            updateProjectionCamera();
+            updateProjectionPlane();
+        }
 
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
@@ -153,11 +156,10 @@ namespace TouchScript.Gestures
             return global;
         }
 
-        protected void updateProjectionCamera(Camera targetCamera)
+        protected void updateProjectionCamera()
         {
-            var changed = targetCamera != projectionCamera;
-            projectionCamera = targetCamera;
-            if (changed) updateProjectionPlane();
+            if (activeTouches.Count == 0) projectionCamera = Camera.mainCamera;
+            else projectionCamera = Cluster.GetClusterCamera(activeTouches);
         }
 
         protected void updateProjectionPlane()
@@ -169,7 +171,7 @@ namespace TouchScript.Gestures
                     WorldTransformPlane = new Plane(projectionCamera.transform.forward, transform.position);
                     break;
                 case ProjectionType.Local:
-                    WorldTransformPlane = new Plane(transform.localToWorldMatrix.MultiplyVector(projectionNormal).normalized, transform.position);
+                    WorldTransformPlane = new Plane(transform.TransformDirection(projectionNormal).normalized, transform.position);
                     break;
                 case ProjectionType.Global:
                     WorldTransformPlane = new Plane(projectionNormal.normalized, transform.position);
