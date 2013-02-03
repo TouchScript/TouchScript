@@ -105,7 +105,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 3, z: -10}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 865625385}
 --- !u!23 &33682317
 Renderer:
   m_ObjectHideFlags: 0
@@ -254,8 +254,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 289928234}
-  m_LocalRotation: {x: -.241540417, y: .355579525, z: -.0956626907, w: -.897814095}
-  m_LocalPosition: {x: 7.4108429, y: 7.27811718, z: -17.8884048}
+  m_LocalRotation: {x: -.23997283, y: .361842275, z: -.0969553441, w: -.895590782}
+  m_LocalPosition: {x: 7.5, y: 8, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -330,7 +330,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 403162831}
-  m_LocalRotation: {x: .408217937, y: -.234569728, z: .109381676, w: .875426054}
+  m_LocalRotation: {x: .408217967, y: -.234569743, z: .109381683, w: .875426114}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -467,6 +467,33 @@ MonoBehaviour:
   m_Name: 
   TouchTexture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 1}
   FontColor: {r: 0, g: .958217144, b: 1, a: 1}
+--- !u!1 &865625384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 865625385}
+  m_Layer: 0
+  m_Name: Cubes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &865625385
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 865625384}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 33682316}
+  m_Father: {fileID: 0}
 --- !u!1 &1097373604
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,6 +570,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1385619185}
   - 114: {fileID: 1385619186}
+  - 114: {fileID: 1385619187}
   m_Layer: 0
   m_Name: TouchScript
   m_TagString: Untagged
@@ -557,7 +585,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1385619184}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -573,12 +601,22 @@ MonoBehaviour:
   m_Name: 
   TuioPort: 3333
   MovementThreshold: .100000001
+--- !u!114 &1385619187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1385619184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Name: 
 --- !u!1001 &1776279018
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 865625385}
     m_Modifications:
     - target: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
       propertyPath: m_LocalPosition.x
