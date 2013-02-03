@@ -12,6 +12,7 @@ namespace TouchScript.Behaviors
     /// <summary>
     /// Simple Component which transforms an object according to events from gestures.
     /// </summary>
+    [AddComponentMenu("TouchScript/Behaviors/Transformer2D")]
     public class Transformer2D : MonoBehaviour
     {
         #region Unity fields
@@ -27,9 +28,9 @@ namespace TouchScript.Behaviors
 
         private Vector3 localPositionToGo, localScaleToGo;
         private Quaternion localRotationToGo;
-		
-		private Vector3 lastLocalPosition, lastLocalScale;
-		private Quaternion lastLocalRotation;
+
+        private Vector3 lastLocalPosition, lastLocalScale;
+        private Quaternion lastLocalRotation;
 
         #endregion
 
@@ -56,18 +57,22 @@ namespace TouchScript.Behaviors
         private void Update()
         {
             var fraction = Speed*Time.deltaTime;
-			if (transform.localPosition != lastLocalPosition) { // changed by some other code
-				localPositionToGo = transform.localPosition;
-			}
-            transform.localPosition = lastLocalPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);		
-			if (transform.localScale != lastLocalScale) {
-				localScaleToGo = transform.localScale;
-			}
-            transform.localScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);		
-			if (transform.localRotation != lastLocalRotation) {
-				localRotationToGo = transform.localRotation;
-			}
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
+            if (transform.localPosition != lastLocalPosition)
+            {
+                // changed by someone else
+                localPositionToGo = transform.localPosition;
+            }
+            transform.localPosition = lastLocalPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);
+            if (transform.localScale != lastLocalScale)
+            {
+                localScaleToGo = transform.localScale;
+            }
+            transform.localScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
+            if (transform.localRotation != lastLocalRotation)
+            {
+                localRotationToGo = transform.localRotation;
+            }
+            transform.localRotation = lastLocalRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
         }
 
         #endregion
@@ -77,7 +82,7 @@ namespace TouchScript.Behaviors
         private void setDefaults()
         {
             localPositionToGo = lastLocalPosition = transform.localPosition;
-			localRotationToGo = lastLocalRotation = transform.localRotation;
+            localRotationToGo = lastLocalRotation = transform.localRotation;
             localScaleToGo = lastLocalScale = transform.localScale;
         }
 
