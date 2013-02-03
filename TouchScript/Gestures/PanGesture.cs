@@ -33,7 +33,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// 3D delta position in global coordinates.
         /// </summary>
-        public Vector3 GlobalDeltaPosition { get; private set; }
+        public Vector3 WorldDeltaPosition { get; private set; }
 
         /// <summary>
         /// 3D delta position in local coordinates.
@@ -99,7 +99,7 @@ namespace TouchScript.Gestures
                     case GestureState.Changed:
                         PreviousWorldTransformCenter = oldGlobalCenter3DPos;
                         WorldTransformCenter = newGlobalCenter3DPos;
-                        GlobalDeltaPosition = globalDelta3DPos;
+                        WorldDeltaPosition = globalDelta3DPos;
                         PreviousWorldTransformCenter = oldGlobalCenter3DPos;
                         LocalTransformCenter = newLocalCenter3DPos;
                         LocalDeltaPosition = localDelta3DPos;
@@ -120,7 +120,7 @@ namespace TouchScript.Gestures
         protected override void reset()
         {
             base.reset();
-            GlobalDeltaPosition = Vector3.zero;
+            WorldDeltaPosition = Vector3.zero;
             LocalDeltaPosition = Vector3.zero;
             movementBuffer = Vector2.zero;
             isMoving = false;
