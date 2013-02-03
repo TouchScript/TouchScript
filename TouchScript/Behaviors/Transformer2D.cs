@@ -86,37 +86,55 @@ namespace TouchScript.Behaviors
             localScaleToGo = lastLocalScale = transform.localScale;
         }
 
-        private void onPanStateChanged(object sender, GestureStateChangeEventArgs e)
-        {
-            var gesture = (PanGesture)sender;
-
-            if (gesture.LocalDeltaPosition != Vector3.zero)
-            {
-                localPositionToGo += gesture.LocalDeltaPosition;
-            }
-        }
-
         #endregion
 
         #region Event handlers
 
-        private void onRotateStateChanged(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+        private void onPanStateChanged(object sender, GestureStateChangeEventArgs e)
         {
-            var gesture = (RotateGesture)sender;
-
-            if (Math.Abs(gesture.LocalDeltaRotation) > 0.01)
+            switch (e.State)
             {
-                localRotationToGo = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal)*localRotationToGo;
+                case Gesture.GestureState.Began:
+                case Gesture.GestureState.Changed:
+                    var gesture = (PanGesture)sender;
+
+                    if (gesture.LocalDeltaPosition != Vector3.zero)
+                    {
+                        localPositionToGo += gesture.LocalDeltaPosition;
+                    }
+                    break;
             }
         }
 
-        private void onScaleStateChanged(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+        private void onRotateStateChanged(object sender, GestureStateChangeEventArgs e)
         {
-            var gesture = (ScaleGesture)sender;
-
-            if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001)
+            switch (e.State)
             {
-                localScaleToGo *= gesture.LocalDeltaScale;
+                case Gesture.GestureState.Began:
+                case Gesture.GestureState.Changed:
+                    var gesture = (RotateGesture)sender;
+
+                    if (Math.Abs(gesture.LocalDeltaRotation) > 0.01)
+                    {
+                        localRotationToGo = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal)*localRotationToGo;
+                    }
+                    break;
+            }
+        }
+
+        private void onScaleStateChanged(object sender, GestureStateChangeEventArgs e)
+        {
+            switch (e.State)
+            {
+                case Gesture.GestureState.Began:
+                case Gesture.GestureState.Changed:
+                    var gesture = (ScaleGesture)sender;
+
+                    if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001)
+                    {
+                        localScaleToGo *= gesture.LocalDeltaScale;
+                    }
+                    break;
             }
         }
 

@@ -151,7 +151,7 @@ namespace TouchScript.Gestures
         {
             if (transform.parent != null)
             {
-                return transform.parent.worldToLocalMatrix.MultiplyVector(global);
+                return transform.parent.InverseTransformPoint(global);
             }
             return global;
         }
