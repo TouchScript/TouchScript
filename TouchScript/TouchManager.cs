@@ -69,7 +69,8 @@ namespace TouchScript
                     instance = FindObjectOfType(typeof(TouchManager)) as TouchManager;
                     if (instance == null && Application.isPlaying)
                     {
-                        var go = new GameObject("TouchScript");
+                        var go = GameObject.Find("TouchScript");
+                        if (go == null) go = new GameObject("TouchScript");
                         instance = go.AddComponent<TouchManager>();
                     }
                 }
