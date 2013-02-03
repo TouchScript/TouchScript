@@ -116,7 +116,7 @@ namespace TouchScript.Behaviors
 
                     if (Math.Abs(gesture.LocalDeltaRotation) > 0.01)
                     {
-                        localRotationToGo = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal)*localRotationToGo;
+                        localRotationToGo = Quaternion.AngleAxis(gesture.LocalDeltaRotation, transform.parent.InverseTransformDirection(gesture.WorldTransformPlane.normal))*localRotationToGo;
                     }
                     break;
             }
