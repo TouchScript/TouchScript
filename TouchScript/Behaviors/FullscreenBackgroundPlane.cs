@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TouchScript.Behaviors
 {
-    [AddComponentMenu("TouchScript/Fullscreen Background Target")]
+    [AddComponentMenu("TouchScript/Behaviors/Fullscreen Background Target")]
     [ExecuteInEditMode]
     [RequireComponent(typeof(BoxCollider))]
     [RequireComponent(typeof(Camera))]

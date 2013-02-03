@@ -162,6 +162,7 @@ namespace TouchScript.Gestures
 
         protected void updateProjectionPlane()
         {
+            if (!Application.isPlaying) return;
             switch (projection)
             {
                 case ProjectionType.Camera:

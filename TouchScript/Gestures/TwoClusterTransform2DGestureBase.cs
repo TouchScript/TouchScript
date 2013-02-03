@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Gestures
 {
-    public class TwoClusterTransform2DGestureBase : Transform2DGestureBase
+    public abstract class TwoClusterTransform2DGestureBase : Transform2DGestureBase
     {
         protected Cluster2 clusters = new Cluster2();
         protected Vector2 screenPosition;
