@@ -1,20 +1,19 @@
-﻿/*
- * Copyright (C) 2012 Interactive Lab
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the  * Software.
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+﻿/**
+ * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System.Collections.Generic;
 using TouchScript.Clusters;
 using UnityEngine;
 
-namespace TouchScript.Gestures {
+namespace TouchScript.Gestures
+{
     /// <summary>
     /// Recognizes a tap.
     /// </summary>
-    public class TapGesture : Gesture {
+    [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
+    public class TapGesture : Gesture
+    {
         #region Unity fields
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace TouchScript.Gestures {
 
         #region Private variables
 
-        private readonly Cluster1 cluster = new Cluster1();
         private float totalMovement = 0f;
         private float startTime;
 
@@ -39,44 +37,49 @@ namespace TouchScript.Gestures {
 
         #region Gesture callbacks
 
-        protected override void touchesBegan(IList<TouchPoint> touches) {
-            foreach (var touch in touches) {
-                if (cluster.AddPoint(touch) == Cluster.OperationResult.FirstPointAdded) {
-                    startTime = Time.time;
+        protected override void touchesBegan(IList<TouchPoint> touches)
+        {
+            if (ActiveTouches.Count == touches.Count)
+            {
+                startTime = Time.time;
+                setState(GestureState.Began);
+            }
+        }
+
+        protected override void touchesMoved(IList<TouchPoint> touches)
+        {
+            totalMovement += (Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches)).magnitude;
+            setState(GestureState.Changed);
+        }
+
+        protected override void touchesEnded(IList<TouchPoint> touches)
+        {
+            if (ActiveTouches.Count == 0)
+            {
+                if (totalMovement/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
+                {
+                    setState(GestureState.Failed);
+                    return;
+                }
+
+                var target = Manager.GetHitTarget(touches[0].Position);
+                if (target == null || !(transform == target || target.IsChildOf(transform)))
+                {
+                    setState(GestureState.Failed);
+                } else
+                {
+                    setState(GestureState.Recognized);
                 }
             }
         }
 
-        protected override void touchesMoved(IList<TouchPoint> touches) {
-            cluster.Invalidate();
-            totalMovement += (cluster.GetCenterPosition() - cluster.GetPreviousCenterPosition()).magnitude;
-        }
-
-        protected override void touchesEnded(IList<TouchPoint> touches) {
-            foreach (var touch in touches) {
-                var result = cluster.RemovePoint(touch);
-                if (result == Cluster.OperationResult.LastPointRemoved) {
-                    if (totalMovement/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit) {
-                        setState(GestureState.Failed);
-                        return;
-                    }
-
-                    var target = Manager.GetHitTarget(touch);
-                    if (target == null || !(transform == target || target.IsChildOf(transform))) {
-                        setState(GestureState.Failed);
-                    } else {
-                        setState(GestureState.Recognized);
-                    }
-                }
-            }
-        }
-
-        protected override void touchesCancelled(IList<TouchPoint> touches) {
+        protected override void touchesCancelled(IList<TouchPoint> touches)
+        {
             setState(GestureState.Failed);
         }
 
-        protected override void reset() {
-            cluster.RemoveAllPoints();
+        protected override void reset()
+        {
             totalMovement = 0f;
         }
 

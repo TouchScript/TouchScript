@@ -1,28 +1,20 @@
-﻿/*
- * Copyright (C) 2012 Interactive Lab
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the  * Software.
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+﻿/**
+ * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System.Collections.Generic;
+using TouchScript.Utils;
 using UnityEngine;
+using TouchScript.Clusters;
 
-namespace TouchScript.Gestures {
+namespace TouchScript.Gestures
+{
     /// <summary>
     /// Recognizes cluster movement.
     /// </summary>
-    public class PanGesture : Transform2DGestureBase {
-        #region Unity fields
-
-        /// <summary>
-        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
-        /// </summary>
-        public float MovementThreshold = 0.5f;
-
-        #endregion
-
+    [AddComponentMenu("TouchScript/Gestures/Pan Gesture")]
+    public class PanGesture : Transform2DGestureBase
+    {
         #region Private variables
 
         private Vector2 movementBuffer;
@@ -33,21 +25,15 @@ namespace TouchScript.Gestures {
         #region Public properties
 
         /// <summary>
-        /// Delta position in screen space.
+        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
         /// </summary>
-        public Vector2 ScreenDeltaPosition { get; private set; }
-
-        /// <summary>
-        /// Delta position in normalized screen coordinates.
-        /// </summary>
-        public Vector2 NormalizedScreenDeltaPosition {
-            get { return new Vector2(ScreenDeltaPosition.x/Screen.width, ScreenDeltaPosition.y/Screen.height); }
-        }
+        [SerializeField]
+        public float MovementThreshold { get; set; }
 
         /// <summary>
         /// 3D delta position in global coordinates.
         /// </summary>
-        public Vector3 GlobalDeltaPosition { get; private set; }
+        public Vector3 WorldDeltaPosition { get; private set; }
 
         /// <summary>
         /// 3D delta position in local coordinates.
@@ -56,84 +42,74 @@ namespace TouchScript.Gestures {
 
         #endregion
 
+        public PanGesture() : base()
+        {
+            MovementThreshold = .5f;
+        }
+
         #region Gesture callbacks
 
-        protected override void touchesMoved(IList<TouchPoint> touches) {
+        protected override void touchesMoved(IList<TouchPoint> touches)
+        {
             base.touchesMoved(touches);
-
-            if (Camera.mainCamera == null) {
-                print("Camera.mainCamera is not set!");
-                return;
-            }
 
             var globalDelta3DPos = Vector3.zero;
             var localDelta3DPos = Vector3.zero;
-            Vector3 oldGlobalCenter3DPos;
-            Vector3 oldLocalCenter3DPos;
-            Vector3 newGlobalCenter3DPos;
-            Vector3 newLocalCenter3DPos;
+            Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
 
-            Vector3 globalPlaneNormal;
-            if (NormalVector == Vector3.zero) {
-                globalPlaneNormal = Camera.mainCamera.transform.forward;
-            } else if (IsLocal) {
-                globalPlaneNormal = transform.localToWorldMatrix.MultiplyVector(NormalVector).normalized;
-            } else {
-                globalPlaneNormal = NormalVector.normalized;
-            }
-            var globalPlane = new Plane(globalPlaneNormal, transform.position);
+            Vector2 oldCenter2DPos = PreviousScreenPosition;
+            Vector2 newCenter2DPos = ScreenPosition;
 
-            Vector2 oldCenter2DPos;
-            Vector2 newCenter2DPos;
-
-            oldCenter2DPos = cluster1.GetPreviousCenterPosition();
-            newCenter2DPos = cluster1.GetCenterPosition();
-
-            if (isMoving) {
-                oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, oldCenter2DPos);
-                newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos);
+            if (isMoving)
+            {
+                oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);
+                newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
                 globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                 oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                 newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                 localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
-            } else {
+            } else
+            {
                 movementBuffer += newCenter2DPos - oldCenter2DPos;
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
+                if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold)
+                {
                     isMoving = true;
-                    oldGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, oldCenter2DPos - movementBuffer);
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos);
+                    oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - movementBuffer, projectionCamera, WorldTransformPlane);
+                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
                     globalDelta3DPos = newGlobalCenter3DPos - oldGlobalCenter3DPos;
                     oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
-                } else {
-                    newGlobalCenter3DPos = get3DPosition(globalPlane, cluster1.Camera, newCenter2DPos - movementBuffer);
+                } else
+                {
+                    newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos - movementBuffer, projectionCamera, WorldTransformPlane);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     oldGlobalCenter3DPos = newGlobalCenter3DPos;
                     oldLocalCenter3DPos = newLocalCenter3DPos;
                 }
             }
 
-            if (globalDelta3DPos != Vector3.zero) {
-                switch (State) {
+            if (globalDelta3DPos != Vector3.zero)
+            {
+                switch (State)
+                {
                     case GestureState.Possible:
                     case GestureState.Began:
                     case GestureState.Changed:
-                        ScreenTransformCenter = newCenter2DPos;
-                        ScreenDeltaPosition = newCenter2DPos - oldCenter2DPos;
-                        PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
-                        GlobalTransformCenter = newGlobalCenter3DPos;
-                        GlobalTransformPlane = globalPlane;
-                        GlobalDeltaPosition = globalDelta3DPos;
-                        PreviousGlobalTransformCenter = oldGlobalCenter3DPos;
+                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
+                        WorldTransformCenter = newGlobalCenter3DPos;
+                        WorldDeltaPosition = globalDelta3DPos;
+                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
                         LocalTransformCenter = newLocalCenter3DPos;
                         LocalDeltaPosition = localDelta3DPos;
                         PreviousLocalTransformCenter = oldLocalCenter3DPos;
 
-                        if (State == GestureState.Possible) {
+                        if (State == GestureState.Possible)
+                        {
                             setState(GestureState.Began);
-                        } else {
+                        } else
+                        {
                             setState(GestureState.Changed);
                         }
                         break;
@@ -141,24 +117,13 @@ namespace TouchScript.Gestures {
             }
         }
 
-        protected override void reset() {
+        protected override void reset()
+        {
             base.reset();
-            resetMovement();
-        }
-
-        #endregion
-
-        #region Private functions
-
-        private void resetMovement() {
+            WorldDeltaPosition = Vector3.zero;
+            LocalDeltaPosition = Vector3.zero;
             movementBuffer = Vector2.zero;
             isMoving = false;
-        }
-
-        protected override void resetGestureProperties() {
-            base.resetGestureProperties();
-            GlobalDeltaPosition = Vector3.zero;
-            LocalDeltaPosition = Vector3.zero;
         }
 
         #endregion

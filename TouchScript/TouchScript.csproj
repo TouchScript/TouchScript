@@ -17,36 +17,34 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\UnityTest\Assets\TouchScript\Plugins\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\XMLDocs.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\UnityTest\Assets\TouchScript\Plugins\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\XMLDocs.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="TUIOSharp">
-      <HintPath>..\Lib\TUIOSharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\Lib\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\FullscreenBackgroundPlane.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Cluster.cs" />
-    <Compile Include="Clusters\Cluster1.cs" />
     <Compile Include="Clusters\Cluster2.cs" />
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />
@@ -54,6 +52,7 @@
     <Compile Include="Gestures\FlickGesture.cs" />
     <Compile Include="Gestures\Gesture.cs" />
     <Compile Include="Gestures\LongPressGesture.cs" />
+    <Compile Include="Gestures\MetaGesture.cs" />
     <Compile Include="Gestures\PanGesture.cs" />
     <Compile Include="Gestures\PressGesture.cs" />
     <Compile Include="Gestures\ReleaseGesture.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="Gestures\ScaleGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\Transform2DGestureBase.cs" />
+    <Compile Include="Gestures\TwoClusterTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
     <Compile Include="IGestureDelegate.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
@@ -68,13 +68,29 @@
     <Compile Include="InputSources\MouseInput.cs" />
     <Compile Include="InputSources\TuioInput.cs" />
     <Compile Include="InputSources\WMTouchInput.cs" />
+    <Compile Include="Layers\CameraLayer.cs" />
+    <Compile Include="Layers\TouchLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TouchManager.cs" />
-    <Compile Include="TouchOptions.cs" />
     <Compile Include="TouchPoint.cs" />
+    <Compile Include="Utils\ProjectionUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TUIOsharp\OSCsharp\OSCsharp.csproj">
+      <Project>{0ADB210D-0D25-4576-8868-9C47DC4762BE}</Project>
+      <Name>OSCsharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TUIOsharp\TUIOsharp\TUIOsharp.csproj">
+      <Project>{6080AD8B-8ACD-4C0E-ABAD-26DB043E202B}</Project>
+      <Name>TUIOsharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General Examples\Assets\TouchScript\Plugins\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Scaleform Examples\Assets\TouchScript\Plugins\"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

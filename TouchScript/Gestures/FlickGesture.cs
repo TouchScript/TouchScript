@@ -1,22 +1,21 @@
-﻿/*
- * Copyright (C) 2012 Interactive Lab
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation  * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,  * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the  * Software.
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+﻿/**
+ * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System.Collections.Generic;
 using TouchScript.Clusters;
 using UnityEngine;
 
-namespace TouchScript.Gestures {
+namespace TouchScript.Gestures
+{
     /// <summary>
     /// Flick gesture.
     /// Recognizes fast movement before releasing touches.
     /// Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
-    public class FlickGesture : Gesture {
+    [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
+    public class FlickGesture : Gesture
+    {
         #region Unity fields
 
         /// <summary>
@@ -34,22 +33,18 @@ namespace TouchScript.Gestures {
         /// Prevents misinterpreting taps.
         /// </summary>
         public float MovementThreshold = 0.5f;
-
-        /// <summary>
-        /// If true, tracks only horizontal movement
-        /// </summary>
-        public bool Horizontal = false;
-
-        /// <summary>
-        /// If true, tracks only vertical movement
-        /// </summary>
-        public bool Vertical = false;
+		
+		public enum GestureDirection {
+			Any,
+			Horizontal,
+			Vertical,
+		}
+		public GestureDirection Direction;
 
         #endregion
 
         #region Private variables
 
-        private readonly Cluster1 cluster = new Cluster1();
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
         private List<Vector2> positionDeltas = new List<Vector2>();
@@ -69,73 +64,85 @@ namespace TouchScript.Gestures {
 
         #region Gesture callbacks
 
-        protected override void touchesBegan(IList<TouchPoint> touches) {
-            foreach (var touch in touches) {
-                if (cluster.AddPoint(touch) == Cluster.OperationResult.FirstPointAdded) {
-                    previousTime = Time.time;
-                }
+        protected override void touchesBegan(IList<TouchPoint> touches)
+        {
+            if (activeTouches.Count == touches.Count)
+            {
+                previousTime = Time.time;
             }
         }
 
-        protected override void touchesMoved(IList<TouchPoint> touches) {
-            cluster.Invalidate();
-            var delta = cluster.GetCenterPosition() - cluster.GetPreviousCenterPosition();
-            if (!moving) {
+        protected override void touchesMoved(IList<TouchPoint> touches)
+        {
+            var delta = Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
+            if (!moving)
+            {
                 movementBuffer += delta;
                 var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold) {
+                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold)
+                {
                     moving = true;
                 }
             }
 
-            positionDeltas.Add(cluster.GetCenterPosition() - cluster.GetPreviousCenterPosition());
+            positionDeltas.Add(delta);
             timeDeltas.Add(Time.time - previousTime);
             previousTime = Time.time;
         }
 
-        protected override void touchesEnded(IList<TouchPoint> touches) {
-            foreach (var touch in touches) {
-                var result = cluster.RemovePoint(touch);
-                if (result == Cluster.OperationResult.LastPointRemoved) {
-                    if (!moving) {
-                        setState(GestureState.Failed);
-                        return;
+        protected override void touchesEnded(IList<TouchPoint> touches)
+        {
+            if (activeTouches.Count == 0)
+            {
+                if (!moving)
+                {
+                    setState(GestureState.Failed);
+                    return;
+                }
+
+                var totalTime = 0f;
+                var totalMovement = Vector2.zero;
+                var i = timeDeltas.Count - 1;
+                while (i >= 0 && totalTime < FlickTime)
+                {
+                    if (totalTime + timeDeltas[i] < FlickTime)
+                    {
+                        totalTime += timeDeltas[i];
+                        totalMovement += positionDeltas[i];
+                        i--;
+                    } else
+                    {
+                        break;
                     }
+                }
 
-                    var totalTime = 0f;
-                    var totalMovement = Vector2.zero;
-                    var i = timeDeltas.Count - 1;
-                    while (i >= 0 && totalTime < FlickTime) {
-                        if (totalTime + timeDeltas[i] < FlickTime) {
-                            totalTime += timeDeltas[i];
-                            totalMovement += positionDeltas[i];
-                            i--;
-                        } else {
-                            break;
-                        }
-                    }
+                switch(Direction) {
+				case GestureDirection.Horizontal:
+					totalMovement.y = 0;
+					break;
+				case GestureDirection.Vertical:
+					totalMovement.x = 0;
+					break;
+				}
 
-                    if (Horizontal) totalMovement.y = 0;
-                    if (Vertical) totalMovement.x = 0;
-
-                    var distance = totalMovement.magnitude;
-
-                    if (distance < MinDistance*TouchManager.Instance.DotsPerCentimeter) {
-                        setState(GestureState.Failed);
-                    } else {
-                        ScreenFlickVector = totalMovement;
-                        setState(GestureState.Recognized);
-                    }
+                if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
+                {
+                    setState(GestureState.Failed);
+                } else
+                {
+                    ScreenFlickVector = totalMovement;
+                    setState(GestureState.Recognized);
                 }
             }
         }
 
-        protected override void touchesCancelled(IList<TouchPoint> touches) {
+        protected override void touchesCancelled(IList<TouchPoint> touches)
+        {
             touchesEnded(touches);
         }
 
-        protected override void reset() {
-            cluster.RemoveAllPoints();
+        protected override void reset()
+        {
             moving = false;
             movementBuffer = Vector2.zero;
             timeDeltas.Clear();
