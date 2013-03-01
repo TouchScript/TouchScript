@@ -83,7 +83,7 @@ UpgradeLog*.XML
 
 /TouchScript/bin/Release/XMLDocs.xml
 /Docs
-/Lib/*
+/Lib/*.dll
 
 # Monodevelop copies this files
 UnityTest/Assets/Plugins/*
