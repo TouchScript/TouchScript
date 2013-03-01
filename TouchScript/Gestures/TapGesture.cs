@@ -42,12 +42,14 @@ namespace TouchScript.Gestures
             if (ActiveTouches.Count == touches.Count)
             {
                 startTime = Time.time;
+                setState(GestureState.Began);
             }
         }
 
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             totalMovement += (Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches)).magnitude;
+            setState(GestureState.Changed);
         }
 
         protected override void touchesEnded(IList<TouchPoint> touches)

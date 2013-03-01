@@ -85,6 +85,7 @@ namespace TouchScript.Gestures
             {
                 timer.Interval = TimeToPress*1000;
                 timer.Start();
+                setState(GestureState.Began);
             }
         }
 
@@ -98,7 +99,7 @@ namespace TouchScript.Gestures
         {
             if (ActiveTouches.Count == 0)
             {
-				timer.Stop();
+                timer.Stop();
                 setState(GestureState.Failed);
             }
         }
