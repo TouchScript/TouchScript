@@ -40,7 +40,15 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Occurs when gesture changes state.
         /// </summary>
-        public event EventHandler<GestureStateChangeEventArgs> StateChanged;
+        public event EventHandler<GestureStateChangeEventArgs> StateChanged {
+             add {
+                 stateChangedInvoker += value;
+             }
+             remove {
+                 stateChangedInvoker -= value;
+             }
+         }
+        private EventHandler<GestureStateChangeEventArgs> stateChangedInvoker;
 
         #endregion
 
@@ -81,7 +89,7 @@ namespace TouchScript.Gestures
                         break;
                 }
 
-                if (StateChanged != null) StateChanged(this, new GestureStateChangeEventArgs(state, PreviousState));
+                if (stateChangedInvoker != null) stateChangedInvoker(this, new GestureStateChangeEventArgs(state, PreviousState));
             }
         }
 
