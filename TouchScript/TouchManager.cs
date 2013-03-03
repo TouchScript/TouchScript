@@ -31,58 +31,48 @@ namespace TouchScript
         public const float INCH_TO_CM = 1/CM_TO_INCH;
 
         #region Events
+
         /// <summary>
         /// Occurs when new touch points are added.
         /// </summary>
         /// 
-       public event EventHandler<TouchEventArgs> TouchesBegan {
-             add {
-                 touchesBeganInvoker += value;
-             }
-             remove {
-                 touchesBeganInvoker -= value;
-             }
-       }
+        public event EventHandler<TouchEventArgs> TouchesBegan
+        {
+            add { touchesBeganInvoker += value; }
+            remove { touchesBeganInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when touch points are updated.
         /// </summary>
-       public event EventHandler<TouchEventArgs> TouchesMoved {
-             add {
-                 touchesMovedInvoker += value;
-             }
-             remove {
-                 touchesMovedInvoker -= value;
-             }
-       }
+        public event EventHandler<TouchEventArgs> TouchesMoved
+        {
+            add { touchesMovedInvoker += value; }
+            remove { touchesMovedInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when touch points are removed.
         /// </summary>
-       public event EventHandler<TouchEventArgs> TouchesEnded {
-             add {
-                 touchesEndedInvoker += value;
-             }
-             remove {
-                 touchesEndedInvoker -= value;
-             }
-       }
+        public event EventHandler<TouchEventArgs> TouchesEnded
+        {
+            add { touchesEndedInvoker += value; }
+            remove { touchesEndedInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when touch points are cancelled.
         /// </summary>
-       public event EventHandler<TouchEventArgs> TouchesCancelled {
-             add {
-                 touchesCancelledInvoker += value;
-             }
-             remove {
-                 touchesCancelledInvoker -= value;
-             }
+        public event EventHandler<TouchEventArgs> TouchesCancelled
+        {
+            add { touchesCancelledInvoker += value; }
+            remove { touchesCancelledInvoker -= value; }
         }
 
         // Weird iOS Events AOT Bug hack
         private EventHandler<TouchEventArgs> touchesBeganInvoker, touchesMovedInvoker,
-                                          touchesEndedInvoker, touchesCancelledInvoker;
+                                             touchesEndedInvoker, touchesCancelledInvoker;
+
         #endregion
 
         #region Public properties
@@ -541,10 +531,13 @@ namespace TouchScript
             var inputs = FindObjectsOfType(typeof(InputSource));
             if (inputs.Length == 0)
             {
-                if (Application.platform == RuntimePlatform.IPhonePlayer)
-                    gameObject.AddComponent<IOSInput>();
-                else
+                if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android)
+                {
+                    gameObject.AddComponent<MobileInput>();
+                } else
+                {
                     gameObject.AddComponent<MouseInput>();
+                }
             }
         }
 
