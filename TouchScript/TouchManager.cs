@@ -541,7 +541,10 @@ namespace TouchScript
             var inputs = FindObjectsOfType(typeof(InputSource));
             if (inputs.Length == 0)
             {
-                gameObject.AddComponent<MouseInput>();
+                if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    gameObject.AddComponent<IOSInput>();
+                else
+                    gameObject.AddComponent<MouseInput>();
             }
         }
 
