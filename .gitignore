@@ -82,7 +82,6 @@ Backup*/
 UpgradeLog*.XML
 
 /TouchScript/bin/Release/XMLDocs.xml
-/Docs
 /Lib/*.dll
 
 # Monodevelop copies this files

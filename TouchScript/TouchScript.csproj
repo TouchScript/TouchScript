@@ -31,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\XMLDocs.xml</DocumentationFile>
+    <DocumentationFile>..\Docs\XMLDocs.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -67,7 +67,7 @@
     <Compile Include="InputSources\InputSource.cs" />
     <Compile Include="InputSources\MouseInput.cs" />
     <Compile Include="InputSources\TuioInput.cs" />
-    <Compile Include="InputSources\WMTouchInput.cs" />
+    <Compile Include="InputSources\Win7TouchInput.cs" />
     <Compile Include="Layers\CameraLayer.cs" />
     <Compile Include="Layers\TouchLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
