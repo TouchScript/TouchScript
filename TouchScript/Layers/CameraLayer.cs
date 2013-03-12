@@ -21,6 +21,7 @@ namespace TouchScript.Layers
             hit = new RaycastHit();
 
             if (camera == null) return HitResult.Error;
+            if (camera.enabled == false || camera.gameObject.active == false) return HitResult.Miss;
 
             var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
             var hits = Physics.RaycastAll(ray);
