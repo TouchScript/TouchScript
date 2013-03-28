@@ -54,7 +54,6 @@ namespace TouchScript.Clusters
 
         private List<TouchPoint> cluster1 = new List<TouchPoint>();
         private List<TouchPoint> cluster2 = new List<TouchPoint>();
-        private Random rnd = new Random();
 
         #endregion
 
