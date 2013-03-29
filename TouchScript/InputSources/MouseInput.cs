@@ -21,6 +21,18 @@ namespace TouchScript.InputSources
 
         #region Unity
 
+		protected override void Start ()
+		{
+			switch (Application.platform) 
+			{
+				case RuntimePlatform.Android:
+				case RuntimePlatform.IPhonePlayer:
+					Destroy(this);
+					return;
+			}
+			base.Start ();
+		}
+
         protected override void Update()
         {
             base.Update();
