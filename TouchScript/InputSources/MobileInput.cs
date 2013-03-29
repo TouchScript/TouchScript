@@ -7,23 +7,11 @@ using System.Collections.Generic;
 
 namespace TouchScript.InputSources
 {
-    internal struct TouchState
-    {
-        public int Id;
-        public TouchPhase Phase;
-        public Vector2 Position;
-
-        public TouchState(int anId, TouchPhase aPhase, Vector2 aPosition)
-        {
-            Id = anId;
-            Phase = aPhase;
-            Position = aPosition;
-        }
-    }
 
     /// <summary>
     /// iOS Input Source
     /// </summary>
+    [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
     public class MobileInput : InputSource
     {
         #region Private variables
@@ -118,4 +106,19 @@ namespace TouchScript.InputSources
 
         #endregion
     }
+	
+	internal struct TouchState
+    {
+        public int Id;
+        public TouchPhase Phase;
+        public Vector2 Position;
+
+        public TouchState(int anId, TouchPhase aPhase, Vector2 aPosition)
+        {
+            Id = anId;
+            Phase = aPhase;
+            Position = aPosition;
+        }
+    }
+	
 }
