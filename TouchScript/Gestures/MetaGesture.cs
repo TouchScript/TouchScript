@@ -19,22 +19,42 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Occurs when a touch point is added.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointBegan;
+        public event EventHandler<MetaGestureEventArgs> TouchPointBegan
+		{
+            add { touchPointBeganInvoker += value; }
+            remove { touchPointBeganInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when a touch point is updated.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointMoved;
+        public event EventHandler<MetaGestureEventArgs> TouchPointMoved
+		{
+            add { touchPointMovedInvoker += value; }
+            remove { touchPointMovedInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when a touch point is removed.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointEnded;
+        public event EventHandler<MetaGestureEventArgs> TouchPointEnded
+		{
+            add { touchPointEndedInvoker += value; }
+            remove { touchPointEndedInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when a touch point is cancelled.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointCancelled;
+        public event EventHandler<MetaGestureEventArgs> TouchPointCancelled
+		{
+            add { touchPointCancelledInvoker += value; }
+            remove { touchPointCancelledInvoker -= value; }
+        }
+		
+		// iOS Events AOT Bug hack
+        private EventHandler<MetaGestureEventArgs> touchPointBeganInvoker, touchPointMovedInvoker,
+        	touchPointEndedInvoker, touchPointCancelledInvoker;
 
         #endregion
 
@@ -47,10 +67,10 @@ namespace TouchScript.Gestures
                 setState(GestureState.Began);
             }
 
-            if (TouchPointBegan == null) return;
+            if (touchPointBeganInvoker == null) return;
             foreach (var touchPoint in touches)
             {
-                TouchPointBegan(this, new MetaGestureEventArgs(touchPoint));
+                touchPointBeganInvoker(this, new MetaGestureEventArgs(touchPoint));
             }
         }
 
@@ -61,10 +81,10 @@ namespace TouchScript.Gestures
                 setState(GestureState.Changed);
             }
 
-            if (TouchPointMoved == null) return;
+            if (touchPointMovedInvoker == null) return;
             foreach (var touchPoint in touches)
             {
-                TouchPointMoved(this, new MetaGestureEventArgs(touchPoint));
+                touchPointMovedInvoker(this, new MetaGestureEventArgs(touchPoint));
             }
         }
 
@@ -78,12 +98,10 @@ namespace TouchScript.Gestures
                 }
             }
 			
-            if (TouchPointEnded != null)
+            if (touchPointEndedInvoker == null) return;
+            foreach (var touchPoint in touches)
             {
-                foreach (var touchPoint in touches)
-                {
-                    TouchPointEnded(this, new MetaGestureEventArgs(touchPoint));
-                }
+                touchPointEndedInvoker(this, new MetaGestureEventArgs(touchPoint));
             }
         }
 
@@ -97,12 +115,10 @@ namespace TouchScript.Gestures
                 }
             }
 			
-            if (TouchPointCancelled != null)
+            if (touchPointCancelledInvoker == null) return;
+            foreach (var touchPoint in touches)
             {
-                foreach (var touchPoint in touches)
-                {
-                    TouchPointCancelled(this, new MetaGestureEventArgs(touchPoint));
-                }
+                touchPointCancelledInvoker(this, new MetaGestureEventArgs(touchPoint));
             }
         }
 
