@@ -47,7 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\FullscreenBackgroundPlane.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Cluster.cs" />
     <Compile Include="Clusters\Cluster2.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="TouchPoint.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
+    <Compile Include="Behaviors\FullscreenBackgroundTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TUIOsharp\OSCsharp\OSCsharp.csproj">
