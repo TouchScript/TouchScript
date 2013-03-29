@@ -68,7 +68,7 @@ namespace TouchScript.Gestures
                     setState(GestureState.Failed);
                 } else
                 {
-                    setState(GestureState.Recognized);
+                    setState(GestureState.Ended);
                 }
             }
         }

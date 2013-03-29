@@ -65,7 +65,7 @@ namespace TouchScript.Gestures
                     setState(GestureState.Failed);
                 } else
                 {
-                    setState(GestureState.Recognized);
+                    setState(GestureState.Ended);
                 }
             }
         }
@@ -92,7 +92,13 @@ namespace TouchScript.Gestures
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             totalMovement += Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
-            if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit) setState(GestureState.Failed);
+            if (totalMovement.magnitude / TouchManager.Instance.DotsPerCentimeter >= DistanceLimit) 
+            {
+                setState(GestureState.Failed);
+            }
+            else {
+                setState(GestureState.Changed);
+            }
         }
 
         protected override void touchesEnded(IList<TouchPoint> touches)
