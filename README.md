@@ -2,7 +2,8 @@
 TouchScript is a family of multi-touch frameworks for Unity3d and Flash. It is much more than a handful of routines to receive touch events from different sources. Inspired by iOS, TouchScript makes handling complex gesture interactions on large touch surfaces much easier. Unity3d and Flash implementations are developed to work together in Scaleform environment. 
 
 # Features
- - Works on PC, Mac, iOS and Android.</li>
+ - Easy and intuitive API.
+ - Works on PC, Mac, iOS and Android.
  - Manages simultaneous gesture recognition within scene hierarchy (inspired by iOS).
  - Comes with many commonly used gestures. Easy to write custom ones.
  - Supported input sources: TUIO, mouse, iOS and native Windows 7 touch.

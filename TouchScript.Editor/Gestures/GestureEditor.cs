@@ -12,8 +12,6 @@ namespace TouchScript.Editor.Gestures
     {
         public override void OnInspectorGUI()
         {
-            var instance = target as Gesture;
-
             EditorGUIUtility.LookLikeInspector();
             serializedObject.Update();
             EditorGUILayout.PropertyField(serializedObject.FindProperty("WillRecognizeWith"), true);

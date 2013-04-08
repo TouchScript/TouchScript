@@ -79,7 +79,7 @@ namespace TouchScript.InputSources
 
         private void init()
         {
-            if (Application.isEditor) return;
+			if (Application.platform != RuntimePlatform.WindowsPlayer) return;
 
             touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
 

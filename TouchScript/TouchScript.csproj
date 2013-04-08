@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,6 +32,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Docs\XMLDocs.xml</DocumentationFile>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/General Examples/Assets/TouchScript/Plugins/&quot; | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Scaleform Examples/Assets/TouchScript/Plugins/&quot;'" workingdir="" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,7 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\FullscreenBackgroundPlane.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Cluster.cs" />
     <Compile Include="Clusters\Cluster2.cs" />
@@ -75,6 +79,7 @@
     <Compile Include="TouchPoint.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
+    <Compile Include="Behaviors\FullscreenBackgroundTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TUIOsharp\OSCsharp\OSCsharp.csproj">
