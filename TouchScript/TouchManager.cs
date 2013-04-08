@@ -69,7 +69,7 @@ namespace TouchScript
             remove { touchesCancelledInvoker -= value; }
         }
 
-        // Weird iOS Events AOT Bug hack
+        // iOS Events AOT hack
         private EventHandler<TouchEventArgs> touchesBeganInvoker, touchesMovedInvoker,
                                              touchesEndedInvoker, touchesCancelledInvoker;
 
