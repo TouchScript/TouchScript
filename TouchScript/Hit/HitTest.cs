@@ -11,9 +11,18 @@ namespace TouchScript.Hit
     /// </summary>
     public abstract class HitTest : MonoBehaviour
     {
-        public virtual bool IsHit(RaycastHit hit)
+
+        public enum ObjectHitResult
         {
-            return true;
+            Error = 0,
+            Hit = 1,
+            Miss = 2,
+            Discard = 3
+        }
+
+        public virtual ObjectHitResult IsHit(RaycastHit hit)
+        {
+            return ObjectHitResult.Hit;
         }
     }
 }

@@ -330,7 +330,7 @@ namespace TouchScript
             {
                 if (touchLayer == null) continue;
                 RaycastHit _hit;
-                if (touchLayer.Hit(position, out _hit) == HitResult.Hit)
+                if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
                 {
                     hit = _hit;
                     layer = touchLayer;

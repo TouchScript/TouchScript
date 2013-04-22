@@ -85,11 +85,11 @@ public class ScaleformLayer : TouchLayer
         Name = "Scaleform Layer";
     }
 
-    protected override HitResult beginTouch(TouchPoint touch)
+    protected override LayerHitResult beginTouch(TouchPoint touch)
     {
         var result = Movie.BeginTouch(touch.Id, touch.Position.x, touch.Position.y);
         //Debug.Log(string.Format("Touch {0} returned result {1} ({2}).", touch.Id, result, (HitResult)result));
-        return (HitResult)result;
+        return (LayerHitResult)result;
     }
 
     protected override void moveTouch(TouchPoint touch)

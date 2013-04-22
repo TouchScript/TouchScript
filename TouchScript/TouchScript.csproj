@@ -66,6 +66,7 @@
     <Compile Include="Gestures\Transform2DGestureBase.cs" />
     <Compile Include="Gestures\TwoClusterTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
+    <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="IGestureDelegate.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
     <Compile Include="InputSources\IInputSource.cs" />

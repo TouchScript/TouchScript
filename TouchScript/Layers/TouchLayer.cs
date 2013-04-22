@@ -10,6 +10,14 @@ namespace TouchScript.Layers
     [ExecuteInEditMode()]
     public abstract class TouchLayer : MonoBehaviour
     {
+
+        public enum LayerHitResult
+        {
+            Error = 0,
+            Hit = 1,
+            Miss = 2
+        }
+
         public String Name;
 
         public virtual Camera Camera
@@ -17,16 +25,16 @@ namespace TouchScript.Layers
             get { return null; }
         }
 
-        public virtual HitResult Hit(Vector2 position, out RaycastHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out RaycastHit hit)
         {
             hit = new RaycastHit();
-            return HitResult.Miss;
+            return LayerHitResult.Miss;
         }
 
         internal bool BeginTouch(TouchPoint touch)
         {
             var result = beginTouch(touch);
-            if (result == HitResult.Hit)
+            if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
                 return true;
@@ -71,9 +79,9 @@ namespace TouchScript.Layers
             if (String.IsNullOrEmpty(Name) && camera != null) Name = camera.name;
         }
 
-        protected virtual HitResult beginTouch(TouchPoint touch)
+        protected virtual LayerHitResult beginTouch(TouchPoint touch)
         {
-            return HitResult.Error;
+            return LayerHitResult.Error;
         }
 
         protected virtual void moveTouch(TouchPoint touch)
@@ -84,12 +92,5 @@ namespace TouchScript.Layers
 
         protected virtual void cancelTouch(TouchPoint touch)
         {}
-    }
-
-    public enum HitResult
-    {
-        Error = 0,
-        Hit = 1,
-        Miss = 2
     }
 }

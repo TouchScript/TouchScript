@@ -16,17 +16,17 @@ namespace TouchScript.Layers
             get { return camera; }
         }
 
-        public override HitResult Hit(Vector2 position, out RaycastHit hit)
+        public override LayerHitResult Hit(Vector2 position, out RaycastHit hit)
         {
             hit = new RaycastHit();
 
-            if (camera == null) return HitResult.Error;
-            if (camera.enabled == false || camera.gameObject.active == false) return HitResult.Miss;
+            if (camera == null) return LayerHitResult.Error;
+            if (camera.enabled == false || camera.gameObject.active == false) return LayerHitResult.Miss;
 
             var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
             var hits = Physics.RaycastAll(ray);
 
-            if (hits.Length == 0) return HitResult.Miss;
+            if (hits.Length == 0) return LayerHitResult.Miss;
             if (hits.Length > 1)
             {
                 var cameraPos = camera.transform.position;
@@ -51,33 +51,41 @@ namespace TouchScript.Layers
                     break;
                 }
 
-                var allowed = true;
+                HitTest.ObjectHitResult hitResult = HitTest.ObjectHitResult.Error;
                 foreach (var test in hitTests)
                 {
-                    allowed = test.IsHit(raycastHit);
-                    if (!allowed) break;
+                    hitResult = test.IsHit(raycastHit);
+                    if (hitResult == HitTest.ObjectHitResult.Hit || hitResult == HitTest.ObjectHitResult.Discard)
+                    {
+                        break;
+                    }
                 }
-                if (allowed)
+
+                if (hitResult == HitTest.ObjectHitResult.Hit)
                 {
                     hit = raycastHit;
                     success = true;
+                    break;
+                }
+                if (hitResult == HitTest.ObjectHitResult.Discard)
+                {
                     break;
                 }
             }
 
             if (success)
             {
-                return HitResult.Hit;
+                return LayerHitResult.Hit;
             }
 
-            return HitResult.Miss;
+            return LayerHitResult.Miss;
         }
 
-        protected override HitResult beginTouch(TouchPoint touch)
+        protected override LayerHitResult beginTouch(TouchPoint touch)
         {
             RaycastHit hit;
             var result = Hit(touch.Position, out hit);
-            if (result == HitResult.Hit)
+            if (result == LayerHitResult.Hit)
             {
                 touch.Hit = hit;
                 touch.Target = hit.transform;
