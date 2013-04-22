@@ -62,8 +62,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -.707106829, y: 0, z: 0, w: .707106829}
+  m_LocalPosition: {x: 0, y: 0, z: -3.5}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 400004}
@@ -189,6 +189,7 @@ MonoBehaviour:
   WillRecognizeWith: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
+  movementThreshold: .5
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1

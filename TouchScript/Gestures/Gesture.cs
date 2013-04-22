@@ -40,14 +40,13 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Occurs when gesture changes state.
         /// </summary>
-        public event EventHandler<GestureStateChangeEventArgs> StateChanged {
-             add {
-                 stateChangedInvoker += value;
-             }
-             remove {
-                 stateChangedInvoker -= value;
-             }
-         }
+        public event EventHandler<GestureStateChangeEventArgs> StateChanged
+        {
+            add { stateChangedInvoker += value; }
+            remove { stateChangedInvoker -= value; }
+        }
+
+        // Needed to overcome iOS AOT limitations
         private EventHandler<GestureStateChangeEventArgs> stateChangedInvoker;
 
         #endregion

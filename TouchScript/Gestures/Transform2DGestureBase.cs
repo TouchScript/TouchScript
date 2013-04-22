@@ -20,10 +20,6 @@ namespace TouchScript.Gestures
             Global
         }
 
-        #region Unity fields
-
-        #endregion
-
         #region Private variables
 
         [SerializeField]

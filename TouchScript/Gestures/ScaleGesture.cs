@@ -18,6 +18,9 @@ namespace TouchScript.Gestures
     {
         #region Private variables
 
+        [SerializeField]
+        private float scalingThreshold = .5f;
+
         private float scalingBuffer;
         private bool isScaling = false;
 
@@ -28,8 +31,11 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Minimum distance in cm between clusters for gesture to be considered possible.
         /// </summary>
-        [SerializeField]
-        public float ScalingThreshold { get; set; }
+        public float ScalingThreshold
+        {
+            get { return scalingThreshold; }
+            set { scalingThreshold = value; }
+        }
 
         /// <summary>
         /// Contains local delta scale when gesture is recognized.
@@ -40,9 +46,7 @@ namespace TouchScript.Gestures
         #endregion
 
         public ScaleGesture() : base()
-        {
-            ScalingThreshold = .5f;
-        }
+        {}
 
         #region Gesture callbacks
 

@@ -20,7 +20,7 @@ namespace TouchScript.Gestures
         /// Occurs when a touch point is added.
         /// </summary>
         public event EventHandler<MetaGestureEventArgs> TouchPointBegan
-		{
+        {
             add { touchPointBeganInvoker += value; }
             remove { touchPointBeganInvoker -= value; }
         }
@@ -29,7 +29,7 @@ namespace TouchScript.Gestures
         /// Occurs when a touch point is updated.
         /// </summary>
         public event EventHandler<MetaGestureEventArgs> TouchPointMoved
-		{
+        {
             add { touchPointMovedInvoker += value; }
             remove { touchPointMovedInvoker -= value; }
         }
@@ -38,7 +38,7 @@ namespace TouchScript.Gestures
         /// Occurs when a touch point is removed.
         /// </summary>
         public event EventHandler<MetaGestureEventArgs> TouchPointEnded
-		{
+        {
             add { touchPointEndedInvoker += value; }
             remove { touchPointEndedInvoker -= value; }
         }
@@ -47,14 +47,14 @@ namespace TouchScript.Gestures
         /// Occurs when a touch point is cancelled.
         /// </summary>
         public event EventHandler<MetaGestureEventArgs> TouchPointCancelled
-		{
+        {
             add { touchPointCancelledInvoker += value; }
             remove { touchPointCancelledInvoker -= value; }
         }
-		
-		// iOS Events AOT Bug hack
+
+        // iOS Events AOT Bug hack
         private EventHandler<MetaGestureEventArgs> touchPointBeganInvoker, touchPointMovedInvoker,
-        	touchPointEndedInvoker, touchPointCancelledInvoker;
+                                                   touchPointEndedInvoker, touchPointCancelledInvoker;
 
         #endregion
 
@@ -90,14 +90,14 @@ namespace TouchScript.Gestures
 
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
-			if (State == GestureState.Began || State == GestureState.Changed)
+            if (State == GestureState.Began || State == GestureState.Changed)
             {
                 if (activeTouches.Count == 0)
                 {
                     setState(GestureState.Ended);
                 }
             }
-			
+
             if (touchPointEndedInvoker == null) return;
             foreach (var touchPoint in touches)
             {
@@ -107,14 +107,14 @@ namespace TouchScript.Gestures
 
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
-			if (State == GestureState.Began || State == GestureState.Changed)
+            if (State == GestureState.Began || State == GestureState.Changed)
             {
                 if (activeTouches.Count == 0)
                 {
                     setState(GestureState.Ended);
                 }
             }
-			
+
             if (touchPointCancelledInvoker == null) return;
             foreach (var touchPoint in touches)
             {

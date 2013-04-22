@@ -18,6 +18,9 @@ namespace TouchScript.Gestures
     {
         #region Private variables
 
+        [SerializeField]
+        private float rotationThreshold = 3f;
+
         private float rotationBuffer;
         private bool isRotating = false;
 
@@ -28,8 +31,11 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Minimum rotation in degrees for gesture to be considered possible.
         /// </summary>
-        [SerializeField]
-        public float RotationThreshold { get; set; }
+        public float RotationThreshold
+        {
+            get { return rotationThreshold; }
+            set { rotationThreshold = value; }
+        }
 
         /// <summary>
         /// Contains local rotation when gesture is recognized.
@@ -39,10 +45,7 @@ namespace TouchScript.Gestures
         #endregion
 
         public RotateGesture() : base()
-        {
-            RotationThreshold = 3;
-            MinClusterDistance = .5f;
-        }
+        {}
 
         #region Gesture callbacks
 

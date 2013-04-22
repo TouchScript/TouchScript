@@ -18,32 +18,28 @@ namespace TouchScript.Gestures
     {
         #region Unity fields
 
-        /// <summary>
-        /// Time interval in seconds in which points cluster must move by <see cref="MinDistance"/>.
-        /// </summary>
-        public float FlickTime = .5f;
-
-        /// <summary>
-        /// Minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.
-        /// </summary>
-        public float MinDistance = 1f;
-
-        /// <summary>
-        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
-        /// Prevents misinterpreting taps.
-        /// </summary>
-        public float MovementThreshold = 0.5f;
-		
-		public enum GestureDirection {
-			Any,
-			Horizontal,
-			Vertical,
-		}
-		public GestureDirection Direction;
+        public enum GestureDirection
+        {
+            Any,
+            Horizontal,
+            Vertical,
+        }
 
         #endregion
 
         #region Private variables
+
+        [SerializeField]
+        private float flickTime = .5f;
+
+        [SerializeField]
+        private float minDistance = 1f;
+
+        [SerializeField]
+        private float movementThreshold = .5f;
+
+        [SerializeField]
+        private GestureDirection direction = GestureDirection.Any;
 
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
@@ -54,6 +50,44 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public properties
+
+        /// <summary>
+        /// Time interval in seconds in which points cluster must move by <see cref="MinDistance"/>.
+        /// </summary>
+        public float FlickTime
+        {
+            get { return flickTime; }
+            set { flickTime = value; }
+        }
+
+        /// <summary>
+        /// Minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.
+        /// </summary>
+        public float MinDistance
+        {
+            get { return minDistance; }
+            set { minDistance = value; }
+        }
+
+        /// <summary>
+        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
+        /// Prevents misinterpreting taps.
+        /// </summary>
+        public float MovementThreshold
+        {
+            get { return movementThreshold; }
+            set { movementThreshold = value; }
+        }
+
+        /// <summary>
+        /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
+        /// Prevents misinterpreting taps.
+        /// </summary>
+        public GestureDirection Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
 
         /// <summary>
         /// Contains flick direction (not normalized) when gesture is recognized.
@@ -116,14 +150,15 @@ namespace TouchScript.Gestures
                     }
                 }
 
-                switch(Direction) {
-				case GestureDirection.Horizontal:
-					totalMovement.y = 0;
-					break;
-				case GestureDirection.Vertical:
-					totalMovement.x = 0;
-					break;
-				}
+                switch (Direction)
+                {
+                    case GestureDirection.Horizontal:
+                        totalMovement.y = 0;
+                        break;
+                    case GestureDirection.Vertical:
+                        totalMovement.x = 0;
+                        break;
+                }
 
                 if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
                 {

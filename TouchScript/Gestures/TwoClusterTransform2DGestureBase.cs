@@ -10,15 +10,25 @@ namespace TouchScript.Gestures
 {
     public abstract class TwoClusterTransform2DGestureBase : Transform2DGestureBase
     {
+        #region Private variables
+
+        [SerializeField]
+        public float minClusterDistance = .5f;
+
         protected Cluster2 clusters = new Cluster2();
         protected Vector2 screenPosition;
         protected Vector3 previousScreenPosition;
 
+        #endregion
+
         /// <summary>
         /// Minimum distance between clusters in cm for gesture to be recognized.
         /// </summary>
-        [SerializeField]
-        public float MinClusterDistance { get; set; }
+        public float MinClusterDistance
+        {
+            get { return minClusterDistance; }
+            set { minClusterDistance = value; }
+        }
 
         public override Vector2 ScreenPosition
         {
@@ -31,9 +41,7 @@ namespace TouchScript.Gestures
         }
 
         public TwoClusterTransform2DGestureBase() : base()
-        {
-            MinClusterDistance = .5f;
-        }
+        {}
 
         protected override void touchesBegan(IList<TouchPoint> touches)
         {

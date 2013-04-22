@@ -174,8 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   WillRecognizeWith: []
-  TimeLimit: Infinity
-  DistanceLimit: Infinity
+  timeLimit: Infinity
+  distanceLimit: Infinity
 --- !u!114 &33682322
 MonoBehaviour:
   m_ObjectHideFlags: 0

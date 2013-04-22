@@ -14,24 +14,38 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
     public class TapGesture : Gesture
     {
-        #region Unity fields
+        #region Private variables
+
+        [SerializeField]
+        private float timeLimit = float.PositiveInfinity;
+
+        [SerializeField]
+        private float distanceLimit = float.PositiveInfinity;
+
+        private float totalMovement = 0f;
+        private float startTime;
+
+        #endregion
+
+        #region Public properties
 
         /// <summary>
         /// Maximum time to hold touches until gesture is considered to be failed.
         /// </summary>
-        public float TimeLimit = float.PositiveInfinity;
+        public float TimeLimit
+        {
+            get { return timeLimit; }
+            set { timeLimit = value; }
+        }
 
         /// <summary>
         /// Maximum distance for touch cluster to move until gesture is considered to be failed.
         /// </summary>
-        public float DistanceLimit = float.PositiveInfinity;
-
-        #endregion
-
-        #region Private variables
-
-        private float totalMovement = 0f;
-        private float startTime;
+        public float DistanceLimit
+        {
+            get { return distanceLimit; }
+            set { distanceLimit = value; }
+        }
 
         #endregion
 

@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0349092c4c1d4c9f95dad6c7db0c3cb, type: 1}
   m_Name: 
   CubePrefab: {fileID: 400000}
+  Power: 10
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,8 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   WillRecognizeWith: []
-  TimeLimit: Infinity
-  DistanceLimit: Infinity
+  timeLimit: Infinity
+  distanceLimit: Infinity
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

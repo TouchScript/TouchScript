@@ -15,26 +15,16 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
-        #region Unity fields
-
-        /// <summary>
-        /// Maximum number of simultaneous touch points.
-        /// </summary>
-        public int MaxTouches = int.MaxValue;
-
-        /// <summary>
-        /// Total time in seconds required to hold touches still.
-        /// </summary>
-        public float TimeToPress = 1;
-
-        /// <summary>
-        /// Maximum distance in cm cluster can move before gesture fails.
-        /// </summary>
-        public float DistanceLimit = float.PositiveInfinity;
-
-        #endregion
-
         #region Private fields
+
+        [SerializeField]
+        private int maxTouches = int.MaxValue;
+
+        [SerializeField]
+        private float timeToPress = 1;
+
+        [SerializeField]
+        private float distanceLimit = float.PositiveInfinity;
 
         private Vector2 totalMovement;
         private Timer timer = new Timer();
@@ -43,6 +33,33 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public properties
+
+        /// <summary>
+        /// Maximum number of simultaneous touch points.
+        /// </summary>
+        public int MaxTouches
+        {
+            get { return maxTouches; }
+            set { maxTouches = value; }
+        }
+
+        /// <summary>
+        /// Total time in seconds required to hold touches still.
+        /// </summary>
+        public float TimeToPress
+        {
+            get { return timeToPress; }
+            set { timeToPress = value; }
+        }
+
+        /// <summary>
+        /// Maximum distance in cm cluster can move before gesture fails.
+        /// </summary>
+        public float DistanceLimit
+        {
+            get { return distanceLimit; }
+            set { distanceLimit = value; }
+        }
 
         #endregion
 
@@ -92,11 +109,11 @@ namespace TouchScript.Gestures
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             totalMovement += Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
-            if (totalMovement.magnitude / TouchManager.Instance.DotsPerCentimeter >= DistanceLimit) 
+            if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
-            }
-            else {
+            } else
+            {
                 setState(GestureState.Changed);
             }
         }

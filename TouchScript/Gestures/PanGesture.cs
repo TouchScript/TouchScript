@@ -17,6 +17,9 @@ namespace TouchScript.Gestures
     {
         #region Private variables
 
+        [SerializeField]
+        private float movementThreshold = 0.5f;
+
         private Vector2 movementBuffer;
         private bool isMoving = false;
 
@@ -27,8 +30,11 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Minimum distance in cm for cluster to move to be considered as a possible gesture. 
         /// </summary>
-        [SerializeField]
-        public float MovementThreshold { get; set; }
+        public float MovementThreshold
+        {
+            get { return movementThreshold; }
+            set { movementThreshold = value; }
+        }
 
         /// <summary>
         /// 3D delta position in global coordinates.
@@ -43,9 +49,7 @@ namespace TouchScript.Gestures
         #endregion
 
         public PanGesture() : base()
-        {
-            MovementThreshold = .5f;
-        }
+        {}
 
         #region Gesture callbacks
 
