@@ -38,7 +38,6 @@ namespace TouchScript.Layers
             if (camera.enabled == false || camera.gameObject.active == false) return LayerHitResult.Miss;
 
             var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
-            Debug.Log("layers: " + (int)layerMask);
             var hits = Physics.RaycastAll(ray, float.PositiveInfinity, layerMask);
 
             if (hits.Length == 0) return LayerHitResult.Miss;

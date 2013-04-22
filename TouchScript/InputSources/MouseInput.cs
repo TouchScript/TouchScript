@@ -15,23 +15,24 @@ namespace TouchScript.InputSources
         #region Private variables
 
         private int mousePointId = -1;
+        private int fakeMousePointId = -1;
         private Vector3 mousePointPos = Vector3.zero;
 
         #endregion
 
         #region Unity
 
-		protected override void Start ()
-		{
-			switch (Application.platform) 
-			{
-				case RuntimePlatform.Android:
-				case RuntimePlatform.IPhonePlayer:
-					Destroy(this);
-					return;
-			}
-			base.Start ();
-		}
+        protected override void Start()
+        {
+            switch (Application.platform)
+            {
+                case RuntimePlatform.Android:
+                case RuntimePlatform.IPhonePlayer:
+                    Destroy(this);
+                    return;
+            }
+            base.Start();
+        }
 
         protected override void Update()
         {
@@ -48,17 +49,35 @@ namespace TouchScript.InputSources
                 }
             }
 
+            if (fakeMousePointId > -1 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+            {
+                endTouch(fakeMousePointId);
+                fakeMousePointId = -1;
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 var pos = Input.mousePosition;
-                mousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
+                {
+                    fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                } else
+                {
+                    mousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                }
             } else if (Input.GetMouseButton(0))
             {
                 var pos = Input.mousePosition;
                 if (mousePointPos != pos)
                 {
                     mousePointPos = pos;
-                    moveTouch(mousePointId, new Vector2(pos.x, pos.y));
+                    if (fakeMousePointId > -1 && mousePointId == -1)
+                    {
+                        moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
+                    } else
+                    {
+                        moveTouch(mousePointId, new Vector2(pos.x, pos.y));
+                    }
                 }
             }
 
