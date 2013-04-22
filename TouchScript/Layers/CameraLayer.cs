@@ -11,10 +11,24 @@ namespace TouchScript.Layers
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
     public class CameraLayer : TouchLayer
     {
+
+        #region Private fields
+
+        [SerializeField]
+        private LayerMask layerMask = -1;
+
+        #endregion
+
+        #region Public properties
+
+        public LayerMask LayerMask { get { return layerMask; } set { layerMask = value; } }
+
         public override Camera Camera
         {
             get { return camera; }
         }
+
+        #endregion
 
         public override LayerHitResult Hit(Vector2 position, out RaycastHit hit)
         {
@@ -24,7 +38,8 @@ namespace TouchScript.Layers
             if (camera.enabled == false || camera.gameObject.active == false) return LayerHitResult.Miss;
 
             var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
-            var hits = Physics.RaycastAll(ray);
+            Debug.Log("layers: " + (int)layerMask);
+            var hits = Physics.RaycastAll(ray, float.PositiveInfinity, layerMask);
 
             if (hits.Length == 0) return LayerHitResult.Miss;
             if (hits.Length > 1)
