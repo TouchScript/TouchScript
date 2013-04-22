@@ -26,7 +26,7 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Minimum distance in cm between clusters for gesture to be considered as a possible.
+        /// Minimum distance in cm between clusters for gesture to be considered possible.
         /// </summary>
         [SerializeField]
         public float ScalingThreshold { get; set; }

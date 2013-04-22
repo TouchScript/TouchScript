@@ -26,7 +26,7 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Minimum rotation in degrees to be considered as a possible gesture.
+        /// Minimum rotation in degrees for gesture to be considered possible.
         /// </summary>
         [SerializeField]
         public float RotationThreshold { get; set; }
