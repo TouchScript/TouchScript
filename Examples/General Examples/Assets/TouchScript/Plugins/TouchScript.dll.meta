@@ -4,7 +4,9 @@ MonoAssemblyImporter:
   serializedVersion: 1
   iconMap: {}
   executionOrder:
+    TouchScript.InputSources.MobileInput: -1100
     TouchScript.InputSources.MouseInput: -1003
     TouchScript.InputSources.TuioInput: -1002
     TouchScript.InputSources.WMTouchInput: -1001
+    TouchScript.InputSources.Win7TouchInput: -1002
     TouchScript.TouchManager: -1000

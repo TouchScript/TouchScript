@@ -310,7 +310,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 66218871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: 1254801617, guid: 53d3dc02e71df20438406b9087fe1e5d, type: 1}
   m_Name: 
   TuioPort: 3333
   MovementThreshold: .100000001
@@ -2375,7 +2375,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 30.4151878, y: 23.0940094, z: .100000001}
+  m_Size: {x: 36.990696, y: 23.0940094, z: .100000001}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:

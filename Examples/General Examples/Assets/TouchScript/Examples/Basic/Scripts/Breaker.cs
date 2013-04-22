@@ -7,15 +7,15 @@ public class Breaker : MonoBehaviour
     public float Power = 10.0f;
 
     private Vector3[] directions = {
-                                   new Vector3(1, -1, 1),
-                                   new Vector3(-1, -1, 1),
-                                   new Vector3(-1, -1, -1),
-                                   new Vector3(1, -1, -1),
-                                   new Vector3(1, 1, 1),
-                                   new Vector3(-1, 1, 1),
-                                   new Vector3(-1, 1, -1),
-                                   new Vector3(1, 1, -1)
-                               };
+                                       new Vector3(1, -1, 1),
+                                       new Vector3(-1, -1, 1),
+                                       new Vector3(-1, -1, -1),
+                                       new Vector3(1, -1, -1),
+                                       new Vector3(1, 1, 1),
+                                       new Vector3(-1, 1, 1),
+                                       new Vector3(-1, 1, -1),
+                                       new Vector3(1, 1, -1)
+                                   };
 
     private void Start()
     {

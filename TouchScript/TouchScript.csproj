@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -68,9 +68,9 @@
     <Compile Include="Hit\HitTest.cs" />
     <Compile Include="IGestureDelegate.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
+    <Compile Include="InputSources\IInputSource.cs" />
     <Compile Include="InputSources\InputSource.cs" />
     <Compile Include="InputSources\MouseInput.cs" />
-    <Compile Include="InputSources\TuioInput.cs" />
     <Compile Include="InputSources\Win7TouchInput.cs" />
     <Compile Include="Layers\CameraLayer.cs" />
     <Compile Include="Layers\TouchLayer.cs" />
@@ -80,16 +80,6 @@
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
     <Compile Include="Behaviors\FullscreenBackgroundTarget.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TUIOsharp\OSCsharp\OSCsharp.csproj">
-      <Project>{0ADB210D-0D25-4576-8868-9C47DC4762BE}</Project>
-      <Name>OSCsharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TUIOsharp\TUIOsharp\TUIOsharp.csproj">
-      <Project>{6080AD8B-8ACD-4C0E-ABAD-26DB043E202B}</Project>
-      <Name>TUIOsharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

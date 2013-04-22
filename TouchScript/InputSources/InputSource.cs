@@ -10,7 +10,7 @@ namespace TouchScript.InputSources
     /// <summary>
     /// Base class for all touch input sources
     /// </summary>
-    public abstract class InputSource : MonoBehaviour
+    public abstract class InputSource : MonoBehaviour, IInputSource
     {
         #region Unity fields
 
