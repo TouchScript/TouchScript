@@ -39,8 +39,6 @@ namespace TouchScript.Debugging
 
         private void Start()
         {
-            if (camera == null) throw new Exception("A camera is required.");
-
             if (TouchManager.Instance != null)
             {
                 TouchManager.Instance.TouchesBegan += OnTouchesBegan;
@@ -48,11 +46,6 @@ namespace TouchScript.Debugging
                 TouchManager.Instance.TouchesMoved += OnTouchesMoved;
                 TouchManager.Instance.TouchesCancelled += OnTouchesCancelled;
             }
-        }
-
-        private void Update()
-        {
-            camera.orthographicSize = Screen.height*.5f;
         }
 
         private void OnGUI()
