@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -12,9 +12,16 @@ namespace TouchScript.Clusters
     /// <summary>
     /// Represents a pool of points separated into two clusters.
     /// </summary>
-    public class Cluster2 : Cluster
+    public class Clusters2 : Clusters
     {
+        /// <summary>
+        /// The first cluster.
+        /// </summary>
         public const int CLUSTER1 = 0;
+
+        /// <summary>
+        /// The second cluster.
+        /// </summary>
         public const int CLUSTER2 = 1;
 
         #region Public properties
@@ -35,10 +42,10 @@ namespace TouchScript.Clusters
         {
             get
             {
-                if (Points.Count < 2) return false;
-                foreach (var p1 in Points)
+                if (points.Count < 2) return false;
+                foreach (var p1 in points)
                 {
-                    foreach (var p2 in Points)
+                    foreach (var p2 in points)
                     {
                         if (p1 == p2) continue;
                         if (Vector2.Distance(p1.Position, p2.Position) > MinPointsDistance) return true;
@@ -57,7 +64,10 @@ namespace TouchScript.Clusters
 
         #endregion
 
-        public Cluster2() : base()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Clusters2"/> class.
+        /// </summary>
+        public Clusters2() : base()
         {
             MinPointsDistance = 1;
         }
@@ -79,10 +89,10 @@ namespace TouchScript.Clusters
             switch (id)
             {
                 case CLUSTER1:
-                    result = Cluster.Get2DCenterPosition(cluster1);
+                    result = Clusters.Get2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Cluster.Get2DCenterPosition(cluster2);
+                    result = Clusters.Get2DCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -105,10 +115,10 @@ namespace TouchScript.Clusters
             switch (id)
             {
                 case CLUSTER1:
-                    result = Cluster.GetPrevious2DCenterPosition(cluster1);
+                    result = Clusters.GetPrevious2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Cluster.GetPrevious2DCenterPosition(cluster2);
+                    result = Clusters.GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -124,10 +134,10 @@ namespace TouchScript.Clusters
         {
             cluster1.Clear();
             cluster2.Clear();
-            cluster1.Add(Points[0]);
-            cluster2.Add(Points[1]);
+            cluster1.Add(points[0]);
+            cluster2.Add(points[1]);
 
-            var total = Points.Count;
+            var total = points.Count;
             if (total == 2) return;
 
             var oldHash1 = "";
@@ -137,8 +147,8 @@ namespace TouchScript.Clusters
 
             while (oldHash1 != hash1 || oldHash2 != hash2)
             {
-                var center1 = Cluster.Get2DCenterPosition(cluster1);
-                var center2 = Cluster.Get2DCenterPosition(cluster2);
+                var center1 = Clusters.Get2DCenterPosition(cluster1);
+                var center2 = Clusters.Get2DCenterPosition(cluster2);
                 TouchPoint obj1 = null;
                 TouchPoint obj2 = null;
 
@@ -147,7 +157,7 @@ namespace TouchScript.Clusters
                 var maxDist2 = -float.MaxValue;
                 for (var i = 0; i < total; i++)
                 {
-                    var obj = Points[i];
+                    var obj = points[i];
                     var dist = (center1 - obj.Position).sqrMagnitude;
                     if (dist > maxDist2)
                     {
@@ -179,7 +189,7 @@ namespace TouchScript.Clusters
 
                 for (var i = 0; i < total; i++)
                 {
-                    var obj = Points[i];
+                    var obj = points[i];
                     if ((center1 - obj.Position).sqrMagnitude < (center2 - obj.Position).sqrMagnitude)
                     {
                         cluster1.Add(obj);
@@ -191,8 +201,8 @@ namespace TouchScript.Clusters
 
                 oldHash1 = hash1;
                 oldHash2 = hash2;
-                hash1 = getHash(cluster1);
-                hash2 = getHash(cluster2);
+                hash1 = GetPointsHash(cluster1);
+                hash2 = GetPointsHash(cluster2);
             }
 
             markClean();

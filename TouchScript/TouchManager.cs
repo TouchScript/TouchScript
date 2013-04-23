@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -143,6 +143,9 @@ namespace TouchScript
             }
         }
 
+        /// <summary>
+        /// List of touch layers.
+        /// </summary>
         public List<TouchLayer> Layers
         {
             get { return new List<TouchLayer>(layers); }
@@ -269,6 +272,11 @@ namespace TouchScript
 
         #region Public static methods
 
+        /// <summary>
+        /// Adds a layer.
+        /// </summary>
+        /// <param name="layer">The layer.</param>
+        /// <returns>True if layer was added.</returns>
         public static bool AddLayer(TouchLayer layer)
         {
             if (shuttingDown) return false;
@@ -279,6 +287,11 @@ namespace TouchScript
             return true;
         }
 
+        /// <summary>
+        /// Removes a layer.
+        /// </summary>
+        /// <param name="layer">The layer.</param>
+        /// <returns>True if layer was removed.</returns>
         public static bool RemoveLayer(TouchLayer layer)
         {
             if (shuttingDown) return false;
@@ -292,6 +305,11 @@ namespace TouchScript
 
         #region Public methods
 
+        /// <summary>
+        /// Swaps layers in sorted array.
+        /// </summary>
+        /// <param name="at">Layer index 1.</param>
+        /// <param name="to">Layer index 2</param>
         public void ChangeLayerIndex(int at, int to)
         {
             if (at < 0 || at >= layers.Count) return;
@@ -304,7 +322,7 @@ namespace TouchScript
         /// <summary>
         /// Checks if the touch has hit something.
         /// </summary>
-        /// <param name="touch">The touch.</param>
+        /// <param name="position">Touch screen position.</param>
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
         public Transform GetHitTarget(Vector2 position)
         {
@@ -317,10 +335,10 @@ namespace TouchScript
         /// <summary>
         /// Checks if the touch has hit something.
         /// </summary>
-        /// <param name="touch">The touch.</param>
+        /// <param name="position">Touch point screen position.</param>
         /// <param name="hit">Output RaycastHit.</param>
-        /// <param name="hitCamera">Output camera which was used to hit an object.</param>
-        /// <returns>Object's transform which has been hit or null otherwise.</returns>
+        /// <param name="layer">Output touch layer which was hit.</param>
+        /// <returns>True if something was hit.</returns>
         public bool GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
         {
             hit = new RaycastHit();

@@ -1,4 +1,4 @@
-/**
+/*
  * @author Michael Holub
  */
 
@@ -23,6 +23,7 @@ namespace TouchScript.InputSources
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Update()
         {
             base.Update();

@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -12,6 +12,11 @@ namespace TouchScript
     /// </summary>
     public class TouchPoint
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchPoint"/> class.
+        /// </summary>
+        /// <param name="id">Touch point id.</param>
+        /// <param name="position">Screen position.</param>
         public TouchPoint(int id, Vector2 position)
         {
             Id = id;

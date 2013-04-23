@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -6,12 +6,18 @@ using UnityEngine;
 
 namespace TouchScript.Behaviors
 {
+    /// <summary>
+    /// Fullscreen plane collider which is positioned at camera's far clipping plane to recieve all touch points not received by other objects.
+    /// </summary>
     [AddComponentMenu("TouchScript/Behaviors/Fullscreen Background Target")]
     [ExecuteInEditMode]
     [RequireComponent(typeof(BoxCollider))]
     [RequireComponent(typeof(Camera))]
     public class FullscreenBackgroundTarget : MonoBehaviour
     {
+        /// <summary>
+        /// Unity Update callback.
+        /// </summary>
         protected void Update()
         {
             var box = GetComponent<BoxCollider>();

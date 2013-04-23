@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -13,10 +13,22 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class Transform2DGestureBase : Gesture
     {
+        /// <summary>
+        /// Transform's projection type.
+        /// </summary>
         public enum ProjectionType
         {
+            /// <summary>
+            /// Use a plane parallel to camera viewport.
+            /// </summary>
             Camera,
+            /// <summary>
+            /// Use a plane with certain normal vector in local coordinates.
+            /// </summary>
             Local,
+            /// <summary>
+            /// Use a plane with certain normal vector in global coordinates.
+            /// </summary>
             Global
         }
 
@@ -28,12 +40,18 @@ namespace TouchScript.Gestures
         [SerializeField]
         private Vector3 projectionNormal = Vector3.forward;
 
+        /// <summary>
+        /// Camera which is used to project touch points from screen space to a 3d plane.
+        /// </summary>
         protected Camera projectionCamera;
 
         #endregion
 
         #region Public properties
 
+        /// <summary>
+        /// Transform's projection type.
+        /// </summary>
         public ProjectionType Projection
         {
             get { return projection; }
@@ -45,6 +63,9 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <summary>
+        /// Transform's projection plane normal.
+        /// </summary>
         public Vector3 ProjectionNormal
         {
             get
@@ -94,6 +115,7 @@ namespace TouchScript.Gestures
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();
@@ -105,15 +127,18 @@ namespace TouchScript.Gestures
 
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {}
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             updateProjectionCamera();
             updateProjectionPlane();
         }
 
+        /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             if (ActiveTouches.Count == 0)
@@ -128,11 +153,13 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
             touchesEnded(touches);
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             WorldTransformCenter = Vector3.zero;
@@ -143,6 +170,11 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
+        /// <summary>
+        /// Converts a vector from global space to this object's local space.
+        /// </summary>
+        /// <param name="global">Global vector to convert.</param>
+        /// <returns>Vector3</returns>
         protected virtual Vector3 globalToLocalPosition(Vector3 global)
         {
             if (transform.parent != null)
@@ -152,12 +184,18 @@ namespace TouchScript.Gestures
             return global;
         }
 
+        /// <summary>
+        /// Updates projection camera.
+        /// </summary>
         protected void updateProjectionCamera()
         {
             if (activeTouches.Count == 0) projectionCamera = Camera.mainCamera;
-            else projectionCamera = Cluster.GetClusterCamera(activeTouches);
+            else projectionCamera = Clusters.Clusters.GetClusterCamera(activeTouches);
         }
 
+        /// <summary>
+        /// Updates projection plane based on options set.
+        /// </summary>
         protected void updateProjectionPlane()
         {
             if (!Application.isPlaying) return;

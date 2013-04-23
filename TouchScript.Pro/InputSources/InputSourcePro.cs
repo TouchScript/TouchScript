@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -8,23 +8,22 @@ using UnityEngine;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Base class for all touch input sources in Pro assembly.
-    /// Used because Unity can't reference MonoBehaviour children from other assemblies.
+    /// Base class for all touch input sources
     /// </summary>
     public abstract class InputSourcePro : MonoBehaviour, IInputSource
     {
-        #region Unity fields
+        #region Private variables
+
+        protected TouchManager Manager;
+
+        #endregion
+
+        #region Public properties
 
         /// <summary>
         /// Optional remapper to use to change screen coordinates which go into the TouchManager.
         /// </summary>
-        public ICoordinatesRemapper CoordinatesRemapper;
-
-        #endregion
-
-        #region Private variables
-
-        protected TouchManager Manager;
+        public ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
         #endregion
 

@@ -1,17 +1,20 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
 
 namespace TouchScript.Layers
 {
+    /// <summary>
+    /// Touch layer for a camera. Used to test if specific camera sees an object which should be hit by a touch point.
+    /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
     public class CameraLayer : TouchLayer
     {
-
         #region Private fields
 
         [SerializeField]
@@ -21,8 +24,16 @@ namespace TouchScript.Layers
 
         #region Public properties
 
-        public LayerMask LayerMask { get { return layerMask; } set { layerMask = value; } }
+        /// <summary>
+        /// Layer mask to select layers which should be touchable from this CameraLayer.
+        /// </summary>
+        public LayerMask LayerMask
+        {
+            get { return layerMask; }
+            set { layerMask = value; }
+        }
 
+        /// <inheritdoc />
         public override Camera Camera
         {
             get { return camera; }
@@ -30,6 +41,7 @@ namespace TouchScript.Layers
 
         #endregion
 
+        /// <inheritdoc />
         public override LayerHitResult Hit(Vector2 position, out RaycastHit hit)
         {
             hit = new RaycastHit();
@@ -95,6 +107,7 @@ namespace TouchScript.Layers
             return LayerHitResult.Miss;
         }
 
+        /// <inheritdoc />
         protected override LayerHitResult beginTouch(TouchPoint touch)
         {
             RaycastHit hit;
@@ -107,5 +120,10 @@ namespace TouchScript.Layers
             return result;
         }
 
+        /// <inheritdoc />
+        protected override void setName()
+        {
+            if (String.IsNullOrEmpty(Name) && Camera != null) Name = Camera.name;
+        }
     }
 }

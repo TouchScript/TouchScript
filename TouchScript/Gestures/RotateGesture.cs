@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -44,11 +44,9 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        public RotateGesture() : base()
-        {}
-
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             base.touchesMoved(touches);
@@ -58,10 +56,10 @@ namespace TouchScript.Gestures
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaRotation = 0f;
 
-            var old2DPos1 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER1);
-            var old2DPos2 = clusters.GetPreviousCenterPosition(Cluster2.CLUSTER2);
-            var new2DPos1 = clusters.GetCenterPosition(Cluster2.CLUSTER1);
-            var new2DPos2 = clusters.GetCenterPosition(Cluster2.CLUSTER2);
+            var old2DPos1 = clusters.GetPreviousCenterPosition(Clusters2.CLUSTER1);
+            var old2DPos2 = clusters.GetPreviousCenterPosition(Clusters2.CLUSTER2);
+            var new2DPos1 = clusters.GetCenterPosition(Clusters2.CLUSTER1);
+            var new2DPos2 = clusters.GetCenterPosition(Clusters2.CLUSTER2);
             var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, WorldTransformPlane);
             var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, WorldTransformPlane);
             var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, WorldTransformPlane);
@@ -121,6 +119,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

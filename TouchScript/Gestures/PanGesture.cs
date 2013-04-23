@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -48,11 +48,9 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        public PanGesture() : base()
-        {}
-
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             base.touchesMoved(touches);
@@ -75,7 +73,7 @@ namespace TouchScript.Gestures
             } else
             {
                 movementBuffer += newCenter2DPos - oldCenter2DPos;
-                var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
+                var dpiMovementThreshold = MovementThreshold*manager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold)
                 {
                     isMoving = true;
@@ -121,6 +119,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -65,6 +65,7 @@ namespace TouchScript.Gestures
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();
@@ -72,11 +73,12 @@ namespace TouchScript.Gestures
             timer.AutoReset = false;
         }
 
+        /// <inheritdoc />
         protected void Update()
         {
             if (fireRecognizedNextUpdate)
             {
-                var target = Manager.GetHitTarget(Cluster.Get2DCenterPosition(ActiveTouches)); //assuming ActiveTouches.length > 0
+                var target = manager.GetHitTarget(Clusters.Clusters.Get2DCenterPosition(ActiveTouches)); //assuming ActiveTouches.length > 0
                 if (target == null || !(transform == target || target.IsChildOf(transform)))
                 {
                     setState(GestureState.Failed);
@@ -91,6 +93,7 @@ namespace TouchScript.Gestures
 
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             if (activeTouches.Count > MaxTouches)
@@ -106,9 +109,10 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            totalMovement += Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
+            totalMovement += Clusters.Clusters.Get2DCenterPosition(touches) - Clusters.Clusters.GetPrevious2DCenterPosition(touches);
             if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
@@ -118,6 +122,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             if (ActiveTouches.Count == 0)
@@ -127,11 +132,13 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void onFailed()
         {
             reset();
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             fireRecognizedNextUpdate = false;

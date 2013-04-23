@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\Transformer2D.cs" />
-    <Compile Include="Clusters\Cluster.cs" />
+    <Compile Include="Clusters\Clusters.cs" />
     <Compile Include="Clusters\Cluster2.cs" />
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />

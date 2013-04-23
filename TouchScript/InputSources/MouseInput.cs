@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -22,6 +22,7 @@ namespace TouchScript.InputSources
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Start()
         {
             switch (Application.platform)
@@ -34,6 +35,7 @@ namespace TouchScript.InputSources
             base.Start();
         }
 
+        /// <inheritdoc />
         protected override void Update()
         {
             base.Update();

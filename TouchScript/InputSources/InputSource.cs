@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -12,34 +12,46 @@ namespace TouchScript.InputSources
     /// </summary>
     public abstract class InputSource : MonoBehaviour, IInputSource
     {
-        #region Unity fields
+        #region Private variables
+
+        /// <summary>
+        /// Reference to global touch manager.
+        /// </summary>
+        protected TouchManager manager;
+
+        #endregion
+
+        #region Public properties
 
         /// <summary>
         /// Optional remapper to use to change screen coordinates which go into the TouchManager.
         /// </summary>
-        public ICoordinatesRemapper CoordinatesRemapper;
-
-        #endregion
-
-        #region Private variables
-
-        protected TouchManager Manager;
+        public ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
         #endregion
 
         #region Unity
 
+        /// <summary>
+        /// Unity Start callback.
+        /// </summary>
         protected virtual void Start()
         {
-            Manager = TouchManager.Instance;
-            if (Manager == null) throw new InvalidOperationException("TouchManager instance is required!");
+            manager = TouchManager.Instance;
+            if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
         }
 
+        /// <summary>
+        /// Unity OnDestroy callback.
+        /// </summary>
         protected virtual void OnDestroy()
         {
-            Manager = null;
+            manager = null;
         }
 
+        /// <summary>
+        /// Unity Update callback.
+        /// </summary>
         protected virtual void Update()
         {}
 
@@ -47,32 +59,50 @@ namespace TouchScript.InputSources
 
         #region Callbacks
 
+        /// <summary>
+        /// Start touch in given screen position.
+        /// </summary>
+        /// <param name="position">Screen position.</param>
+        /// <returns>Internal touch id.</returns>
         protected int beginTouch(Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return Manager.BeginTouch(position);
+            return manager.BeginTouch(position);
         }
 
+        /// <summary>
+        /// End touch with id.
+        /// </summary>
+        /// <param name="id">Touch point id.</param>
         protected void endTouch(int id)
         {
-            Manager.EndTouch(id);
+            manager.EndTouch(id);
         }
 
+        /// <summary>
+        /// Move touch with id.
+        /// </summary>
+        /// <param name="id">Touch id.</param>
+        /// <param name="position">New screen position.</param>
         protected void moveTouch(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            Manager.MoveTouch(id, position);
+            manager.MoveTouch(id, position);
         }
 
+        /// <summary>
+        /// Cancel touch with id.
+        /// </summary>
+        /// <param name="id">Touch id.</param>
         protected void cancelTouch(int id)
         {
-            Manager.CancelTouch(id);
+            manager.CancelTouch(id);
         }
 
         #endregion

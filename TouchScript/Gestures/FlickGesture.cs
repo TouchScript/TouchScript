@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -18,10 +18,22 @@ namespace TouchScript.Gestures
     {
         #region Unity fields
 
+        /// <summary>
+        /// Direction of a flick.
+        /// </summary>
         public enum GestureDirection
         {
+            /// <summary>
+            /// Direction doesn't matter.
+            /// </summary>
             Any,
+            /// <summary>
+            /// Only horizontal.
+            /// </summary>
             Horizontal,
+            /// <summary>
+            /// Only vertical.
+            /// </summary>
             Vertical,
         }
 
@@ -98,6 +110,7 @@ namespace TouchScript.Gestures
 
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             if (activeTouches.Count == touches.Count)
@@ -106,13 +119,14 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            var delta = Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
+            var delta = Clusters.Clusters.Get2DCenterPosition(touches) - Clusters.Clusters.GetPrevious2DCenterPosition(touches);
             if (!moving)
             {
                 movementBuffer += delta;
-                var dpiMovementThreshold = MovementThreshold*Manager.DotsPerCentimeter;
+                var dpiMovementThreshold = MovementThreshold*manager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold)
                 {
                     moving = true;
@@ -124,6 +138,7 @@ namespace TouchScript.Gestures
             previousTime = Time.time;
         }
 
+        /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             if (activeTouches.Count == 0)
@@ -171,11 +186,13 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
             touchesEnded(touches);
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             moving = false;

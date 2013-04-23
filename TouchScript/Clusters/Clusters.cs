@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -9,33 +9,53 @@ using UnityEngine;
 namespace TouchScript.Clusters
 {
     /// <summary>
-    /// 
+    /// Abstract base for points separated into clusters
     /// </summary>
-    public abstract class Cluster
+    public abstract class Clusters
     {
         #region Public properties
 
+        /// <summary>
+        /// Number of total points in clusters represented by this object.
+        /// </summary>
+        /// <value>
+        /// Number of points.
+        /// </value>
         public int PointsCount
         {
-            get { return Points.Count; }
+            get { return points.Count; }
         }
 
         #endregion
 
         #region Private variables
 
-        protected List<TouchPoint> Points = new List<TouchPoint>();
+        /// <summary>
+        /// List of points in clusters.
+        /// </summary>
+        protected List<TouchPoint> points = new List<TouchPoint>();
+        /// <summary>
+        /// Indicates if clusters must be rebuilt.
+        /// </summary>
         protected bool dirty { get; private set; }
 
         #endregion
 
-        protected Cluster()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Clusters"/> class.
+        /// </summary>
+        protected Clusters()
         {
             markDirty();
         }
 
         #region Static methods
 
+        /// <summary>
+        /// Returns camera instance touch points belong to.
+        /// </summary>
+        /// <param name="touches">List of touch points.</param>
+        /// <returns>Camera instance.</returns>
         public static Camera GetClusterCamera(IList<TouchPoint> touches)
         {
             if (touches.Count == 0) return Camera.mainCamera;
@@ -44,6 +64,12 @@ namespace TouchScript.Clusters
             return cam;
         }
 
+        /// <summary>
+        /// Returns centroid of current positions for given touch points.
+        /// </summary>
+        /// <param name="touches">List of touch points.</param>
+        /// <returns>Vector2</returns>
+        /// <exception cref="System.InvalidOperationException">No points in cluster.</exception>
         public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
@@ -58,6 +84,12 @@ namespace TouchScript.Clusters
             return position/(float)length;
         }
 
+        /// <summary>
+        /// Returns centroid of previous positions for given touch points.
+        /// </summary>
+        /// <param name="touches">List of touch points.</param>
+        /// <returns>Vector2</returns>
+        /// <exception cref="System.InvalidOperationException">No points in cluster.</exception>
         public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
@@ -72,7 +104,12 @@ namespace TouchScript.Clusters
             return position/(float)length;
         }
 
-        public static String getHash(List<TouchPoint> touches)
+        /// <summary>
+        /// Returns unique hash for a list of points
+        /// </summary>
+        /// <param name="touches">List of touch points.</param>
+        /// <returns>String</returns>
+        public static String GetPointsHash(List<TouchPoint> touches)
         {
             var result = "";
             foreach (var touchPoint in touches)
@@ -87,18 +124,22 @@ namespace TouchScript.Clusters
         #region Public methods
 
         /// <summary>
-        /// Adds the point.
+        /// Adds a point.
         /// </summary>
-        /// <param name="point">The point.</param>
+        /// <param name="point">A point.</param>
         /// <returns></returns>
         public void AddPoint(TouchPoint point)
         {
-            if (Points.Contains(point)) return;
+            if (points.Contains(point)) return;
 
-            Points.Add(point);
+            points.Add(point);
             markDirty();
         }
 
+        /// <summary>
+        /// Adds a list of points.
+        /// </summary>
+        /// <param name="points">List of points.</param>
         public void AddPoints(IList<TouchPoint> points)
         {
             foreach (var point in points)
@@ -114,12 +155,16 @@ namespace TouchScript.Clusters
         /// <returns></returns>
         public void RemovePoint(TouchPoint point)
         {
-            if (!Points.Contains(point)) return;
+            if (!points.Contains(point)) return;
 
-            Points.Remove(point);
+            points.Remove(point);
             markDirty();
         }
 
+        /// <summary>
+        /// Removes a list of points.
+        /// </summary>
+        /// <param name="points">List of points.</param>
         public void RemovePoints(IList<TouchPoint> points)
         {
             foreach (var point in points)
@@ -133,7 +178,7 @@ namespace TouchScript.Clusters
         /// </summary>
         public void RemoveAllPoints()
         {
-            Points.Clear();
+            points.Clear();
             markDirty();
         }
 
@@ -150,11 +195,17 @@ namespace TouchScript.Clusters
 
         #region Protected functions
 
+        /// <summary>
+        /// Signals that clusters changed and must be rebuilt.
+        /// </summary>
         protected void markDirty()
         {
             dirty = true;
         }
 
+        /// <summary>
+        /// Signals that clusters have just been rebuilt.
+        /// </summary>
         protected void markClean()
         {
             dirty = false;

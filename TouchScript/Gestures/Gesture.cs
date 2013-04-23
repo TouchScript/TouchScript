@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -15,14 +15,38 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class Gesture : MonoBehaviour
     {
+        /// <summary>
+        /// Possible states of a gesture.
+        /// </summary>
         public enum GestureState
         {
+            /// <summary>
+            /// Gesture is possible
+            /// </summary>
             Possible,
+            /// <summary>
+            /// Continuous gesture has just begun
+            /// </summary>
             Began,
+            /// <summary>
+            /// Started continuous gesture is updated
+            /// </summary>
             Changed,
+            /// <summary>
+            /// Continuous gesture is ended
+            /// </summary>
             Ended,
+            /// <summary>
+            /// Gesture is cancelled
+            /// </summary>
             Cancelled,
+            /// <summary>
+            /// Gesture is failed by itself or by another recognized gesture
+            /// </summary>
             Failed,
+            /// <summary>
+            /// Gesture is recognized
+            /// </summary>
             Recognized = Ended
         }
 
@@ -97,14 +121,20 @@ namespace TouchScript.Gestures
         /// </summary>
         public GestureState PreviousState { get; private set; }
 
+        /// <summary>
+        /// Transformation center in screen coordinates.
+        /// </summary>
         public virtual Vector2 ScreenPosition
         {
-            get { return Cluster.Get2DCenterPosition(activeTouches); }
+            get { return Clusters.Clusters.Get2DCenterPosition(activeTouches); }
         }
 
+        /// <summary>
+        /// Previous transformation center in screen coordinates.
+        /// </summary>
         public virtual Vector2 PreviousScreenPosition
         {
-            get { return Cluster.GetPrevious2DCenterPosition(activeTouches); }
+            get { return Clusters.Clusters.GetPrevious2DCenterPosition(activeTouches); }
         }
 
         /// <summary>
@@ -131,6 +161,9 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <summary>
+        /// Touch points the gesture currently owns and works with.
+        /// </summary>
         protected List<TouchPoint> activeTouches = new List<TouchPoint>();
 
         /// <summary>
@@ -150,7 +183,10 @@ namespace TouchScript.Gestures
 
         #region Private variables
 
-        protected TouchManager Manager { get; private set; }
+        /// <summary>
+        /// Reference to global TouchManager.
+        /// </summary>
+        protected TouchManager manager { get; private set; }
 
         private List<int> shouldRecognizeWith = new List<int>();
 
@@ -158,6 +194,9 @@ namespace TouchScript.Gestures
 
         #region Unity
 
+        /// <summary>
+        /// Unity3d Awake handler.
+        /// </summary>
         protected virtual void Awake()
         {
             if (WillRecognizeWith != null)
@@ -169,21 +208,31 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <summary>
+        /// Unity3d Start handler.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">TouchManager instance is required!</exception>
         protected virtual void Start()
         {
-            Manager = TouchManager.Instance;
-            if (Manager == null) throw new InvalidOperationException("TouchManager instance is required!");
+            manager = TouchManager.Instance;
+            if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
             Reset();
         }
 
+        /// <summary>
+        /// Unity3d OnDisable handler.
+        /// </summary>
         protected virtual void OnDisable()
         {
             setState(GestureState.Failed);
         }
 
+        /// <summary>
+        /// Unity3d OnDestroy handler.
+        /// </summary>
         protected virtual void OnDestroy()
         {
-            Manager = null;
+            manager = null;
         }
 
         #endregion
@@ -345,10 +394,10 @@ namespace TouchScript.Gestures
         /// <returns><c>true</c> if state was changed; otherwise, <c>false</c>.</returns>
         protected bool setState(GestureState value)
         {
-            if (Manager == null) return false;
+            if (manager == null) return false;
             if (value == state && state != GestureState.Changed) return false;
 
-            var newState = Manager.GestureChangeState(this, value);
+            var newState = manager.GestureChangeState(this, value);
             State = newState;
 
             return value == newState;
@@ -361,7 +410,7 @@ namespace TouchScript.Gestures
         protected void ignoreTouch(TouchPoint touch)
         {
             activeTouches.Remove(touch);
-            Manager.IgnoreTouch(touch);
+            manager.IgnoreTouch(touch);
         }
 
         #endregion
@@ -402,21 +451,39 @@ namespace TouchScript.Gestures
         protected virtual void reset()
         {}
 
+        /// <summary>
+        /// Called when state is changed to Possible.
+        /// </summary>
         protected virtual void onPossible()
         {}
 
+        /// <summary>
+        /// Called when state is changed to Began.
+        /// </summary>
         protected virtual void onBegan()
         {}
 
+        /// <summary>
+        /// Called when state is changed to Changed.
+        /// </summary>
         protected virtual void onChanged()
         {}
 
+        /// <summary>
+        /// Called when state is changed to Recognized.
+        /// </summary>
         protected virtual void onRecognized()
         {}
 
+        /// <summary>
+        /// Called when state is changed to Failed.
+        /// </summary>
         protected virtual void onFailed()
         {}
 
+        /// <summary>
+        /// Called when state is changed to Cancelled.
+        /// </summary>
         protected virtual void onCancelled()
         {}
 

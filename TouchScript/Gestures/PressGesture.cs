@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -14,18 +14,21 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Press Gesture")]
     public class PressGesture : Gesture
     {
+        /// <inheritdoc />
         public override bool CanPreventGesture(Gesture gesture)
         {
             if (Delegate == null) return false;
             return Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
+        /// <inheritdoc />
         public override bool CanBePreventedByGesture(Gesture gesture)
         {
             if (Delegate == null) return false;
             return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);

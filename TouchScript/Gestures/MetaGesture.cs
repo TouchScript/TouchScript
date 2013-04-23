@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -60,6 +60,7 @@ namespace TouchScript.Gestures
 
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             if (State == GestureState.Possible)
@@ -74,6 +75,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             if (State == GestureState.Began || State == GestureState.Changed)
@@ -88,6 +90,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             if (State == GestureState.Began || State == GestureState.Changed)
@@ -105,6 +108,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
             if (State == GestureState.Began || State == GestureState.Changed)
@@ -125,10 +129,20 @@ namespace TouchScript.Gestures
         #endregion
     }
 
+    /// <summary>
+    /// EventArgs for MetaGesture events.
+    /// </summary>
     public class MetaGestureEventArgs : EventArgs
     {
+        /// <summary>
+        /// Current touch point.
+        /// </summary>
         public TouchPoint TouchPoint;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.
+        /// </summary>
+        /// <param name="touchPoint">Touch point the event is for.</param>
         public MetaGestureEventArgs(TouchPoint touchPoint)
         {
             TouchPoint = touchPoint;

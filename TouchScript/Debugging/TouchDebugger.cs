@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -18,12 +18,12 @@ namespace TouchScript.Debugging
         #region Unity fields
 
         /// <summary>
-        /// Texture to use
+        /// Texture to use.
         /// </summary>
         public Texture2D TouchTexture;
 
         /// <summary>
-        /// Font color for touch ids
+        /// Font color for touch ids.
         /// </summary>
         public Color FontColor;
 

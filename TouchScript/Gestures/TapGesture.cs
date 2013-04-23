@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -51,6 +51,7 @@ namespace TouchScript.Gestures
 
         #region Gesture callbacks
 
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             if (ActiveTouches.Count == touches.Count)
@@ -60,12 +61,14 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            totalMovement += (Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches)).magnitude;
+            totalMovement += (Clusters.Clusters.Get2DCenterPosition(touches) - Clusters.Clusters.GetPrevious2DCenterPosition(touches)).magnitude;
             setState(GestureState.Changed);
         }
 
+        /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             if (ActiveTouches.Count == 0)
@@ -76,7 +79,7 @@ namespace TouchScript.Gestures
                     return;
                 }
 
-                var target = Manager.GetHitTarget(touches[0].Position);
+                var target = manager.GetHitTarget(touches[0].Position);
                 if (target == null || !(transform == target || target.IsChildOf(transform)))
                 {
                     setState(GestureState.Failed);
@@ -87,11 +90,13 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
             setState(GestureState.Failed);
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             totalMovement = 0f;

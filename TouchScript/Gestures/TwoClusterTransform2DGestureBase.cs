@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -8,15 +8,27 @@ using UnityEngine;
 
 namespace TouchScript.Gestures
 {
+    /// <summary>
+    /// Base class for transform gestures involving two clusters.
+    /// </summary>
     public abstract class TwoClusterTransform2DGestureBase : Transform2DGestureBase
     {
         #region Private variables
 
         [SerializeField]
-        public float minClusterDistance = .5f;
+        private float minClusterDistance = .5f;
 
-        protected Cluster2 clusters = new Cluster2();
+        /// <summary>
+        /// Clusters object
+        /// </summary>
+        protected Clusters2 clusters = new Clusters2();
+        /// <summary>
+        /// Transform's center point screen position.
+        /// </summary>
         protected Vector2 screenPosition;
+        /// <summary>
+        /// Transform's center point previous screen position.
+        /// </summary>
         protected Vector3 previousScreenPosition;
 
         #endregion
@@ -30,25 +42,26 @@ namespace TouchScript.Gestures
             set { minClusterDistance = value; }
         }
 
+        /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
             get { return screenPosition; }
         }
 
+        /// <inheritdoc />
         public override Vector2 PreviousScreenPosition
         {
             get { return previousScreenPosition; }
         }
 
-        public TwoClusterTransform2DGestureBase() : base()
-        {}
-
+        /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             base.touchesBegan(touches);
             clusters.AddPoints(touches);
         }
 
+        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             base.touchesMoved(touches);
@@ -57,6 +70,7 @@ namespace TouchScript.Gestures
             clusters.MinPointsDistance = MinClusterDistance*TouchManager.Instance.DotsPerCentimeter;
         }
 
+        /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             clusters.RemovePoints(touches);
@@ -66,6 +80,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

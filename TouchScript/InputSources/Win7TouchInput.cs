@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * @author Valentin Frolov
  * @author Valentin Simonov / http://va.lent.in/
  */
@@ -51,12 +51,14 @@ namespace TouchScript.InputSources
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Start()
         {
             base.Start();
             init();
         }
 
+        /// <inheritdoc />
         protected override void OnDestroy()
         {
             if (isInitialized)
