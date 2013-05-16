@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+public delegate int WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
 public delegate bool EnumWindowsProcDelegate(IntPtr hWnd, IntPtr lParam);
 
@@ -95,9 +95,19 @@ namespace TouchScript.InputSources
             isInitialized = true;
         }
 
-        private IntPtr wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private int wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            if (msg == WM_TOUCH) decodeTouches(wParam, lParam);
+            switch (msg)
+            {
+                case WM_TOUCH:
+                    decodeTouches(wParam, lParam);
+                    break;
+                case WM_CLOSE:
+                    UnregisterTouchWindow(hWnd);
+                    SetWindowLong(hWnd, -4, oldWndProcPtr);
+                    SendMessage(hWnd, WM_CLOSE, 0, 0);
+                    return 0;
+            }
             return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
 
@@ -155,6 +165,7 @@ namespace TouchScript.InputSources
 
         // Touch event window message constants [winuser.h]
         private const int WM_TOUCH = 0x0240;
+        private const int WM_CLOSE = 0x0010;
 
         // Touch API defined structures [winuser.h]
         [StructLayout(LayoutKind.Sequential)]
@@ -186,7 +197,7 @@ namespace TouchScript.InputSources
         private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll")]
-        private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        private static extern int CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -206,6 +217,9 @@ namespace TouchScript.InputSources
 
         [DllImport("user32.dll")]
         private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)]
+        private static extern int SendMessage(IntPtr hWnd, uint uMsg, int wParam, int lParam);
 
         private int touchInputSize;
 
