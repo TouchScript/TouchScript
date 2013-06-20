@@ -89,10 +89,10 @@ namespace TouchScript.Clusters
             switch (id)
             {
                 case CLUSTER1:
-                    result = Clusters.Get2DCenterPosition(cluster1);
+                    result = Get2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Clusters.Get2DCenterPosition(cluster2);
+                    result = Get2DCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -115,10 +115,10 @@ namespace TouchScript.Clusters
             switch (id)
             {
                 case CLUSTER1:
-                    result = Clusters.GetPrevious2DCenterPosition(cluster1);
+                    result = GetPrevious2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Clusters.GetPrevious2DCenterPosition(cluster2);
+                    result = GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
                     throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
@@ -147,8 +147,8 @@ namespace TouchScript.Clusters
 
             while (oldHash1 != hash1 || oldHash2 != hash2)
             {
-                var center1 = Clusters.Get2DCenterPosition(cluster1);
-                var center2 = Clusters.Get2DCenterPosition(cluster2);
+                var center1 = Get2DCenterPosition(cluster1);
+                var center2 = Get2DCenterPosition(cluster2);
                 TouchPoint obj1 = null;
                 TouchPoint obj2 = null;
 

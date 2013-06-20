@@ -13,6 +13,38 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class TwoClusterTransform2DGestureBase : Transform2DGestureBase
     {
+        #region Public properties
+
+        /// <summary>
+        /// Minimum distance between clusters in cm for gesture to be recognized.
+        /// </summary>
+        public float MinClusterDistance
+        {
+            get { return minClusterDistance; }
+            set
+            {
+                minClusterDistance = value;
+                if (Application.isPlaying)
+                {
+                    clusters.MinPointsDistance = minClusterDistance*TouchManager.Instance.DotsPerCentimeter;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override Vector2 ScreenPosition
+        {
+            get { return screenPosition; }
+        }
+
+        /// <inheritdoc />
+        public override Vector2 PreviousScreenPosition
+        {
+            get { return previousScreenPosition; }
+        }
+
+        #endregion
+
         #region Private variables
 
         [SerializeField]
@@ -33,26 +65,15 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        /// <summary>
-        /// Minimum distance between clusters in cm for gesture to be recognized.
-        /// </summary>
-        public float MinClusterDistance
+        #region Unity
+
+        protected override void Awake()
         {
-            get { return minClusterDistance; }
-            set { minClusterDistance = value; }
+            base.Awake();
+            clusters.MinPointsDistance = minClusterDistance * TouchManager.Instance.DotsPerCentimeter;
         }
 
-        /// <inheritdoc />
-        public override Vector2 ScreenPosition
-        {
-            get { return screenPosition; }
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PreviousScreenPosition
-        {
-            get { return previousScreenPosition; }
-        }
+        #endregion
 
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
@@ -67,7 +88,6 @@ namespace TouchScript.Gestures
             base.touchesMoved(touches);
 
             clusters.Invalidate();
-            clusters.MinPointsDistance = MinClusterDistance*TouchManager.Instance.DotsPerCentimeter;
         }
 
         /// <inheritdoc />
