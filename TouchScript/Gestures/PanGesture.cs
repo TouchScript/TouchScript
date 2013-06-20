@@ -15,16 +15,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Pan Gesture")]
     public class PanGesture : Transform2DGestureBase
     {
-        #region Private variables
-
-        [SerializeField]
-        private float movementThreshold = 0.5f;
-
-        private Vector2 movementBuffer;
-        private bool isMoving = false;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -45,6 +35,16 @@ namespace TouchScript.Gestures
         /// 3D delta position in local coordinates.
         /// </summary>
         public Vector3 LocalDeltaPosition { get; private set; }
+
+        #endregion
+
+        #region Private variables
+
+        [SerializeField]
+        private float movementThreshold = 0.5f;
+
+        private Vector2 movementBuffer;
+        private bool isMoving = false;
 
         #endregion
 

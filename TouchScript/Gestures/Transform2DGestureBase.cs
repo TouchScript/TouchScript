@@ -32,21 +32,6 @@ namespace TouchScript.Gestures
             Global
         }
 
-        #region Private variables
-
-        [SerializeField]
-        private ProjectionType projection = ProjectionType.Camera;
-
-        [SerializeField]
-        private Vector3 projectionNormal = Vector3.forward;
-
-        /// <summary>
-        /// Camera which is used to project touch points from screen space to a 3d plane.
-        /// </summary>
-        protected Camera projectionCamera;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -110,6 +95,21 @@ namespace TouchScript.Gestures
         /// Plane where transformation occured.
         /// </summary>
         public Plane WorldTransformPlane { get; private set; }
+
+        #endregion
+
+        #region Private variables
+
+        [SerializeField]
+        private ProjectionType projection = ProjectionType.Camera;
+
+        [SerializeField]
+        private Vector3 projectionNormal = Vector3.forward;
+
+        /// <summary>
+        /// Camera which is used to project touch points from screen space to a 3d plane.
+        /// </summary>
+        protected Camera projectionCamera;
 
         #endregion
 
