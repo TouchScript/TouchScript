@@ -24,26 +24,32 @@ namespace TouchScript.Gestures
             /// Gesture is possible
             /// </summary>
             Possible,
+
             /// <summary>
             /// Continuous gesture has just begun
             /// </summary>
             Began,
+
             /// <summary>
             /// Started continuous gesture is updated
             /// </summary>
             Changed,
+
             /// <summary>
             /// Continuous gesture is ended
             /// </summary>
             Ended,
+
             /// <summary>
             /// Gesture is cancelled
             /// </summary>
             Cancelled,
+
             /// <summary>
             /// Gesture is failed by itself or by another recognized gesture
             /// </summary>
             Failed,
+
             /// <summary>
             /// Gesture is recognized
             /// </summary>
@@ -152,7 +158,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Previous center in screen coordinates.
         /// </summary>
-        public Vector2 PreviousNormalizedScreenTransformCenter
+        public Vector2 PreviousNormalizedScreenPosition
         {
             get
             {
