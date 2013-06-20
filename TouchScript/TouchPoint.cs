@@ -12,6 +12,9 @@ namespace TouchScript
     /// </summary>
     public class TouchPoint
     {
+
+        public static readonly Vector2 InvalidPosition = new Vector2(float.NaN, float.NaN);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchPoint"/> class.
         /// </summary>

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Clusters;
+using TouchScript.Layers;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -132,7 +133,11 @@ namespace TouchScript.Gestures
         /// </summary>
         public virtual Vector2 ScreenPosition
         {
-            get { return Clusters.Clusters.Get2DCenterPosition(activeTouches); }
+            get
+            {
+                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                return Clusters.Clusters.Get2DCenterPosition(activeTouches);
+            }
         }
 
         /// <summary>
@@ -140,7 +145,11 @@ namespace TouchScript.Gestures
         /// </summary>
         public virtual Vector2 PreviousScreenPosition
         {
-            get { return Clusters.Clusters.GetPrevious2DCenterPosition(activeTouches); }
+            get
+            {
+                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                return Clusters.Clusters.GetPrevious2DCenterPosition(activeTouches);
+            }
         }
 
         /// <summary>
@@ -150,6 +159,7 @@ namespace TouchScript.Gestures
         {
             get
             {
+                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 var position = ScreenPosition;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
@@ -162,6 +172,7 @@ namespace TouchScript.Gestures
         {
             get
             {
+                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 var position = PreviousScreenPosition;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
@@ -244,6 +255,20 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public methods
+
+        public virtual bool GetCentroidHitResult(out RaycastHit hit)
+        {
+            hit = new RaycastHit();
+
+            var camera = Clusters.Clusters.GetClusterCamera(activeTouches);
+            if (camera == null) return false;
+
+            TouchLayer layer = null;
+            if (!TouchManager.Instance.GetHitTarget(ScreenPosition, out hit, out layer)) return false;
+
+            if (transform == hit.transform || hit.transform.IsChildOf(transform)) return true;
+            return false;
+        }
 
         /// <summary>
         /// Determines whether gesture controls a touch point.

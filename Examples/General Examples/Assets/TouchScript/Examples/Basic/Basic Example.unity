@@ -102,7 +102,7 @@ Transform:
   m_PrefabInternal: {fileID: 1776279018}
   m_GameObject: {fileID: 33682315}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -10}
+  m_LocalPosition: {x: 2.36665177, y: 3, z: -7.5788517}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 865625385}
@@ -176,6 +176,7 @@ MonoBehaviour:
   WillRecognizeWith: []
   timeLimit: Infinity
   distanceLimit: Infinity
+  clusterExistenceTime: .300000012
 --- !u!114 &33682322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +216,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 289928234}
   m_LocalRotation: {x: -.23997283, y: .361842275, z: -.0969553441, w: -.895590782}
-  m_LocalPosition: {x: 7.5, y: 8, z: -18}
+  m_LocalPosition: {x: 14.727107, y: 12.5700989, z: -22.0249023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -448,6 +449,8 @@ GameObject:
   - 33: {fileID: 1097373607}
   - 64: {fileID: 1097373608}
   - 23: {fileID: 1097373606}
+  - 114: {fileID: 1097373609}
+  - 114: {fileID: 1097373610}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -504,6 +507,32 @@ MeshCollider:
   m_SmoothSphereCollisions: 0
   m_Convex: 0
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1097373609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1097373604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b59087a17532774e95d9791c6e52839, type: 1}
+  m_Name: 
+  CubePrefab: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
+  Scale: .5
+--- !u!114 &1097373610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1097373604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Name: 
+  WillRecognizeWith: []
+  timeLimit: Infinity
+  distanceLimit: Infinity
+  clusterExistenceTime: .300000012
 --- !u!1 &1385619184
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +592,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 2.36665177
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
       propertyPath: m_LocalPosition.y
@@ -571,7 +600,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -7.5788517
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
       propertyPath: m_LocalRotation.x
