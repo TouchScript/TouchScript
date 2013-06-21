@@ -518,6 +518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b59087a17532774e95d9791c6e52839, type: 1}
   m_Name: 
   CubePrefab: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
+  Container: {fileID: 865625385}
   Scale: .5
 --- !u!114 &1097373610
 MonoBehaviour:
