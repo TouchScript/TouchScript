@@ -1,3 +1,4 @@
+using TouchScript.Gestures.Simple;
 using UnityEngine;
 using System.Collections;
 using TouchScript.Gestures;
