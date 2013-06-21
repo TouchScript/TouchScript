@@ -13,7 +13,7 @@ namespace TouchScript.Gestures
     /// Recognizes a tap.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
-    public class TapGesture : Gesture
+    public class TapGesture : ClusterBasedGesture
     {
         #region Private variables
 

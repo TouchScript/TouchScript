@@ -11,7 +11,7 @@ namespace TouchScript.Gestures
     /// <summary>
     /// Base class for transform gestures.
     /// </summary>
-    public abstract class Transform2DGestureBase : Gesture
+    public abstract class Transform2DGestureBase : ClusterBasedGesture
     {
         /// <summary>
         /// Transform's projection type.

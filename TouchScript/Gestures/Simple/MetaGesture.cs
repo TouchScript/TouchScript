@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TouchScript.Gestures
+namespace TouchScript.Gestures.Simple
 {
     /// <summary>
     /// Converts touchpoint events for target object into separate events to be used somewhere else.

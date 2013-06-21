@@ -136,7 +136,7 @@ namespace TouchScript.Gestures
             get
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return Clusters.Clusters.Get2DCenterPosition(activeTouches);
+                return activeTouches[0].Position;
             }
         }
 
@@ -145,10 +145,10 @@ namespace TouchScript.Gestures
         /// </summary>
         public virtual Vector2 PreviousScreenPosition
         {
-            get
+            get 
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return Clusters.Clusters.GetPrevious2DCenterPosition(activeTouches);
+                return activeTouches[0].PreviousPosition;
             }
         }
 

@@ -14,7 +14,7 @@ namespace TouchScript.Gestures
     /// Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
-    public class FlickGesture : Gesture
+    public class FlickGesture : ClusterBasedGesture
     {
         #region Unity fields
 

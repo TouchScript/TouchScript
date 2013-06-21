@@ -13,7 +13,7 @@ namespace TouchScript.Gestures
     /// Gesture which recognizes a point cluster which didn't move for specified time since it appeared.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
-    public class LongPressGesture : Gesture
+    public class LongPressGesture : ClusterBasedGesture
     {
         #region Private fields
 
