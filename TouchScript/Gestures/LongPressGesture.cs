@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using System.Timers;
-using TouchScript.Clusters;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -112,7 +111,7 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            totalMovement += Clusters.Clusters.Get2DCenterPosition(touches) - Clusters.Clusters.GetPrevious2DCenterPosition(touches);
+            totalMovement += Clusters.Clusters.Get2DCenterPosition(activeTouches) - Clusters.Clusters.GetPrevious2DCenterPosition(activeTouches);
             if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
