@@ -31,7 +31,7 @@ namespace TouchScript.Gestures
         private Vector2 cachedScreenPosition, cachedPreviousScreenPosition;
         private RaycastHit cachedCentroidHitResult;
 
-        private float totalMovement = 0f;
+        private Vector2 totalMovement = Vector2.zero;
         private float startTime;
 
         #endregion
@@ -105,7 +105,7 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            totalMovement += (Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches)).magnitude;
+            totalMovement += Cluster.Get2DCenterPosition(activeTouches) - Cluster.GetPrevious2DCenterPosition(activeTouches);
             setState(GestureState.Changed);
         }
 
@@ -120,7 +120,7 @@ namespace TouchScript.Gestures
 
             if (ActiveTouches.Count == 0)
             {
-                if (totalMovement/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
+                if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
                 {
                     setState(GestureState.Failed);
                     return;
@@ -147,7 +147,7 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void reset()
         {
-            totalMovement = 0f;
+            totalMovement = Vector2.zero;
             removedPoints.Clear();
             removedPointsTimes.Clear();
             cachedScreenPosition = TouchPoint.InvalidPosition;
