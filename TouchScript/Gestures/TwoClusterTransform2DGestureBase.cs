@@ -51,7 +51,7 @@ namespace TouchScript.Gestures
         private float minClusterDistance = .5f;
 
         /// <summary>
-        /// Clusters object
+        /// Cluster object
         /// </summary>
         protected Clusters2 clusters = new Clusters2();
         /// <summary>

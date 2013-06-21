@@ -122,7 +122,7 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            var delta = Clusters.Clusters.Get2DCenterPosition(touches) - Clusters.Clusters.GetPrevious2DCenterPosition(touches);
+            var delta = Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches);
             if (!moving)
             {
                 movementBuffer += delta;

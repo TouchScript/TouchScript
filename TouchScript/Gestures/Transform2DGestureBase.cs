@@ -190,7 +190,7 @@ namespace TouchScript.Gestures
         protected void updateProjectionCamera()
         {
             if (activeTouches.Count == 0) projectionCamera = Camera.mainCamera;
-            else projectionCamera = Clusters.Clusters.GetClusterCamera(activeTouches);
+            else projectionCamera = Cluster.GetClusterCamera(activeTouches);
         }
 
         /// <summary>

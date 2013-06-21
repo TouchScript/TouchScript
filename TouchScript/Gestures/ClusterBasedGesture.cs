@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Clusters;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -14,7 +15,7 @@ namespace TouchScript.Gestures
             get
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return Clusters.Clusters.Get2DCenterPosition(activeTouches);
+                return Cluster.Get2DCenterPosition(activeTouches);
             }
         }
 
@@ -23,7 +24,7 @@ namespace TouchScript.Gestures
             get
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return Clusters.Clusters.GetPrevious2DCenterPosition(activeTouches);
+                return Cluster.GetPrevious2DCenterPosition(activeTouches);
             }
         }
 

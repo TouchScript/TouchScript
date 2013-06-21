@@ -265,7 +265,7 @@ namespace TouchScript.Gestures
         {
             hit = new RaycastHit();
 
-            var camera = Clusters.Clusters.GetClusterCamera(activeTouches);
+            var camera = Cluster.GetClusterCamera(activeTouches);
             if (camera == null) return false;
 
             TouchLayer layer = null;

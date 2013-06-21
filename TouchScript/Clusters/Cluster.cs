@@ -11,7 +11,7 @@ namespace TouchScript.Clusters
     /// <summary>
     /// Abstract base for points separated into clusters
     /// </summary>
-    public abstract class Clusters
+    public abstract class Cluster
     {
         #region Public properties
 
@@ -42,9 +42,9 @@ namespace TouchScript.Clusters
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Clusters"/> class.
+        /// Initializes a new instance of the <see cref="Cluster"/> class.
         /// </summary>
-        protected Clusters()
+        protected Cluster()
         {
             markDirty();
         }

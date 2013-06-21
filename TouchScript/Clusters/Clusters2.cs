@@ -12,7 +12,7 @@ namespace TouchScript.Clusters
     /// <summary>
     /// Represents a pool of points separated into two clusters.
     /// </summary>
-    public class Clusters2 : Clusters
+    public class Clusters2 : Cluster
     {
         /// <summary>
         /// The first cluster.
