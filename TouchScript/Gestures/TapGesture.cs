@@ -79,7 +79,7 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        public override bool GetCentroidHitResult(out RaycastHit hit)
+        public override bool GetTargetHitResult(out RaycastHit hit)
         {
             if (State == GestureState.Ended)
             {
@@ -87,7 +87,7 @@ namespace TouchScript.Gestures
                 return true;
             }
 
-            return base.GetCentroidHitResult(out hit);
+            return base.GetTargetHitResult(out hit);
         }
 
         #region Gesture callbacks
@@ -128,7 +128,7 @@ namespace TouchScript.Gestures
 
                 updateCachedScreenPosition();
 
-                if (base.GetCentroidHitResult(out cachedCentroidHitResult))
+                if (base.GetTargetHitResult(out cachedCentroidHitResult))
                 {
                     setState(GestureState.Ended);
                 } else

@@ -256,7 +256,7 @@ namespace TouchScript.Gestures
 
         #region Public methods
 
-        public virtual bool GetCentroidHitResult(out RaycastHit hit)
+        public virtual bool GetTargetHitResult(out RaycastHit hit)
         {
             hit = new RaycastHit();
 
