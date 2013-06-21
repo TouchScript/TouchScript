@@ -589,6 +589,9 @@ MonoBehaviour:
   m_Script: {fileID: 1298086939, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   Name: 2d Camera
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &232315387
 GameObject:
   m_ObjectHideFlags: 0
@@ -2308,6 +2311,9 @@ MonoBehaviour:
   m_Script: {fileID: 1298086939, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   Name: 3d Camera
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!65 &1573308016
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2318,7 +2324,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36.990696, y: 23.0940094, z: .100000001}
+  m_Size: {x: 36.971283, y: 23.0940094, z: .100000001}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:

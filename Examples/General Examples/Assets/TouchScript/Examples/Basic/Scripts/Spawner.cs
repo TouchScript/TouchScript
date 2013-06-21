@@ -18,7 +18,7 @@ public class Spawner : MonoBehaviour
         {
             var gesture = sender as TapGesture;
             RaycastHit hit;
-            gesture.GetCentroidHitResult(out hit);
+            gesture.GetTargetHitResult(out hit);
 
             Color color = new Color(Random.value, Random.value, Random.value);
             var c = Instantiate(CubePrefab) as Transform;
