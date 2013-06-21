@@ -8,10 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-public delegate int WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-
-public delegate bool EnumWindowsProcDelegate(IntPtr hWnd, IntPtr lParam);
-
 namespace TouchScript.InputSources
 {
     internal enum TouchEvent : int
@@ -36,6 +32,8 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Windows 7 Touch Input")]
     public class Win7TouchInput : InputSource
     {
+        private delegate int WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
         #region Private fields
 
         private IntPtr hMainWindow;

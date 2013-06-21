@@ -56,6 +56,7 @@ namespace TouchScript.Gestures
             set { distanceLimit = value; }
         }
 
+        /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
             get
@@ -65,9 +66,7 @@ namespace TouchScript.Gestures
             }
         }
 
-        /// <summary>
-        /// Previous transformation center in screen coordinates.
-        /// </summary>
+        /// <inheritdoc />
         public override Vector2 PreviousScreenPosition
         {
             get
@@ -79,6 +78,7 @@ namespace TouchScript.Gestures
 
         #endregion
 
+        /// <inheritdoc />
         public override bool GetTargetHitResult(out RaycastHit hit)
         {
             if (State == GestureState.Ended)

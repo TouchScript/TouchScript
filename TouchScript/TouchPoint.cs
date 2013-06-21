@@ -13,6 +13,9 @@ namespace TouchScript
     public class TouchPoint
     {
 
+        /// <summary>
+        /// The value of TouchPoint.Position in an unkown state.
+        /// </summary>
         public static readonly Vector2 InvalidPosition = new Vector2(float.NaN, float.NaN);
 
         /// <summary>

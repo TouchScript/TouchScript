@@ -67,6 +67,7 @@ namespace TouchScript.Gestures
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();

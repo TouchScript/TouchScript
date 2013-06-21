@@ -256,6 +256,11 @@ namespace TouchScript.Gestures
 
         #region Public methods
 
+        /// <summary>
+        /// Gets result of casting a ray from gesture touch points centroid screen position.
+        /// </summary>
+        /// <param name="hit">Raycast result</param>
+        /// <returns>True if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(out RaycastHit hit)
         {
             hit = new RaycastHit();
