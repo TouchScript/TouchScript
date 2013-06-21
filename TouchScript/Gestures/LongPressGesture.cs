@@ -78,13 +78,13 @@ namespace TouchScript.Gestures
         {
             if (fireRecognizedNextUpdate)
             {
-                var target = manager.GetHitTarget(Clusters.Clusters.Get2DCenterPosition(ActiveTouches)); //assuming ActiveTouches.length > 0
-                if (target == null || !(transform == target || target.IsChildOf(transform)))
-                {
-                    setState(GestureState.Failed);
-                } else
+                RaycastHit hit;
+                if (base.GetTargetHitResult(out hit))
                 {
                     setState(GestureState.Ended);
+                } else
+                {
+                    setState(GestureState.Failed);
                 }
             }
         }
