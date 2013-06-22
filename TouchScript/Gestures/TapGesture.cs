@@ -2,9 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
 using TouchScript.Clusters;
+using TouchScript.Gestures.Simple;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -13,55 +13,26 @@ namespace TouchScript.Gestures
     /// Recognizes a tap.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
-    public class TapGesture : ClusterBasedGesture
+    public class TapGesture : SimpleTapGesture
     {
-        #region Private variables
-
-        [SerializeField]
-        private float timeLimit = float.PositiveInfinity;
-
-        [SerializeField]
-        private float distanceLimit = float.PositiveInfinity;
 
         [SerializeField]
         private float clusterExistenceTime = .3f;
 
+        private List<TouchPoint> cluster = new List<TouchPoint>(); 
         private List<TouchPoint> removedPoints = new List<TouchPoint>();
         private List<float> removedPointsTimes = new List<float>();
-        private Vector2 cachedScreenPosition, cachedPreviousScreenPosition;
-        private RaycastHit cachedCentroidHitResult;
-
-        private Vector2 totalMovement = Vector2.zero;
-        private float startTime;
-
-        #endregion
-
-        #region Public properties
-
-        /// <summary>
-        /// Maximum time to hold touches until gesture is considered to be failed.
-        /// </summary>
-        public float TimeLimit
-        {
-            get { return timeLimit; }
-            set { timeLimit = value; }
-        }
-
-        /// <summary>
-        /// Maximum distance for touch cluster to move until gesture is considered to be failed.
-        /// </summary>
-        public float DistanceLimit
-        {
-            get { return distanceLimit; }
-            set { distanceLimit = value; }
-        }
 
         /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
             get
             {
-                if (cachedScreenPosition == TouchPoint.InvalidPosition)  return base.ScreenPosition;
+                if (cachedScreenPosition == TouchPoint.InvalidPosition)
+                {
+                    if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                    return Cluster.Get2DCenterPosition(activeTouches);
+                }
                 return cachedScreenPosition;
             }
         }
@@ -71,42 +42,13 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (cachedScreenPosition == TouchPoint.InvalidPosition)  return base.PreviousScreenPosition;
-                return cachedPreviousScreenPosition;
+                if (cachedScreenPosition == TouchPoint.InvalidPosition)
+                {
+                    if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                    return Cluster.GetPrevious2DCenterPosition(activeTouches);
+                }
+                return cachedScreenPosition;
             }
-        }
-
-        #endregion
-
-        /// <inheritdoc />
-        public override bool GetTargetHitResult(out RaycastHit hit)
-        {
-            if (State == GestureState.Ended)
-            {
-                hit = cachedCentroidHitResult;
-                return true;
-            }
-
-            return base.GetTargetHitResult(out hit);
-        }
-
-        #region Gesture callbacks
-
-        /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
-        {
-            if (ActiveTouches.Count == touches.Count)
-            {
-                startTime = Time.time;
-                setState(GestureState.Began);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
-        {
-            totalMovement += Cluster.Get2DCenterPosition(activeTouches) - Cluster.GetPrevious2DCenterPosition(activeTouches);
-            setState(GestureState.Changed);
         }
 
         /// <inheritdoc />
@@ -117,49 +59,19 @@ namespace TouchScript.Gestures
                 removedPoints.Add(touch);
                 removedPointsTimes.Add(Time.time);
             }
-
-            if (ActiveTouches.Count == 0)
-            {
-                if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
-                {
-                    setState(GestureState.Failed);
-                    return;
-                }
-
-                updateCachedScreenPosition();
-
-                if (base.GetTargetHitResult(out cachedCentroidHitResult))
-                {
-                    setState(GestureState.Ended);
-                } else
-                {
-                    setState(GestureState.Failed);
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
-        {
-            setState(GestureState.Failed);
+            base.touchesEnded(touches);
         }
 
         /// <inheritdoc />
         protected override void reset()
         {
-            totalMovement = Vector2.zero;
+            base.reset();
             removedPoints.Clear();
             removedPointsTimes.Clear();
-            cachedScreenPosition = TouchPoint.InvalidPosition;
-            cachedPreviousScreenPosition = TouchPoint.InvalidPosition;
-            //cachedCentroidHitResult = new RaycastHit();
         }
 
-        #endregion
-
-        #region Private functions
-
-        private void updateCachedScreenPosition()
+        /// <inheritdoc />
+        protected override void updateCachedScreenPosition(IList<TouchPoint> touches)
         {
             TouchPoint point;
             if (removedPoints.Count == 1)
@@ -170,20 +82,16 @@ namespace TouchScript.Gestures
                 return;
             }
 
-            point = removedPoints[removedPoints.Count - 1];
-            var position = point.Position;
-            var previousPosition = point.PreviousPosition;
+            cluster.Clear();
+            cluster.Add(removedPoints[removedPoints.Count - 1]);
             var minTime = Time.time - clusterExistenceTime;
-            var i = 1;
-            for (; i <= removedPoints.Count - 1; i++)
+            for (var i = removedPoints.Count - 2; i >= 0; i--)
             {
-                var index = removedPoints.Count - 1 - i;
-                var time = removedPointsTimes[index];
-                point = removedPoints[index];
+                var time = removedPointsTimes[i];
+                point = removedPoints[i];
                 if (time > minTime)
                 {
-                    position += point.Position;
-                    previousPosition += point.PreviousPosition;
+                    cluster.Add(point);
                 }
                 else
                 {
@@ -191,11 +99,9 @@ namespace TouchScript.Gestures
                 }
             }
 
-            cachedScreenPosition = position/i;
-            cachedPreviousScreenPosition = previousPosition/i;
+            cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
+            cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
         }
-
-        #endregion
 
     }
 }

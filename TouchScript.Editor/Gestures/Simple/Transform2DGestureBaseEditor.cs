@@ -2,10 +2,10 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Gestures;
+using TouchScript.Gestures.Simple;
 using UnityEditor;
 
-namespace TouchScript.Editor.Gestures
+namespace TouchScript.Editor.Gestures.Simple
 {
     public class Transform2DGestureBaseEditor : GestureEditor
     {

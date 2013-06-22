@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,7 +52,10 @@
     <Compile Include="Gestures\PanGestureEditor.cs" />
     <Compile Include="Gestures\RotateGestureEditor.cs" />
     <Compile Include="Gestures\ScaleGestureEditor.cs" />
-    <Compile Include="Gestures\Transform2DGestureBaseEditor.cs" />
+    <Compile Include="Gestures\Simple\SimplePanGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\SimpleRotateGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\SimpleScaleGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\Transform2DGestureBaseEditor.cs" />
     <Compile Include="TouchManagerEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

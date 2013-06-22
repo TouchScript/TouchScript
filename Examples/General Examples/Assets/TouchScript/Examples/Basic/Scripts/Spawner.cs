@@ -5,6 +5,7 @@ using System.Collections;
 public class Spawner : MonoBehaviour
 {
     public Transform CubePrefab;
+    public Transform Container;
     public float Scale = .5f;
 
     private void Start()
@@ -22,7 +23,7 @@ public class Spawner : MonoBehaviour
 
             Color color = new Color(Random.value, Random.value, Random.value);
             var c = Instantiate(CubePrefab) as Transform;
-            c.parent = transform.parent;
+            c.parent = Container;
             c.name = "Cube";
             c.localScale = Vector3.one*Scale*c.localScale.x;
             c.position = hit.point + hit.normal * 2;

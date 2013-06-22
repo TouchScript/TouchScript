@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Clusters;
+using TouchScript.Gestures.Simple;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -14,108 +15,58 @@ namespace TouchScript.Gestures
     /// Recognizes rotation gesture.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Rotate Gesture")]
-    public class RotateGesture : TwoClusterTransform2DGestureBase
+    public class RotateGesture : SimpleRotateGesture
     {
-        #region Private variables
-
-        [SerializeField]
-        private float rotationThreshold = 3f;
-
-        private float rotationBuffer;
-        private bool isRotating = false;
-
-        #endregion
-
-        #region Public properties
 
         /// <summary>
-        /// Minimum rotation in degrees for gesture to be considered possible.
+        /// Cluster object
         /// </summary>
-        public float RotationThreshold
+        protected Clusters2 clusters = new Clusters2();
+
+        public override float MinPointDistance
         {
-            get { return rotationThreshold; }
-            set { rotationThreshold = value; }
+            get { return base.MinPointDistance; }
+            set
+            {
+                base.MinPointDistance = value;
+                if (Application.isPlaying)
+                {
+                    clusters.MinPointsDistance = value * TouchManager.Instance.DotsPerCentimeter;
+                }
+            }
         }
 
-        /// <summary>
-        /// Contains local rotation when gesture is recognized.
-        /// </summary>
-        public float LocalDeltaRotation { get; private set; }
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            base.Awake();
+            clusters.MinPointsDistance = MinPointDistance * TouchManager.Instance.DotsPerCentimeter;
+        }
 
-        #endregion
-
-        #region Gesture callbacks
+        /// <inheritdoc />
+        protected override void touchesBegan(IList<TouchPoint> touches)
+        {
+            base.touchesBegan(touches);
+            clusters.AddPoints(touches);
+        }
 
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             base.touchesMoved(touches);
 
-            if (!clusters.HasClusters) return;
+            clusters.Invalidate();
+        }
 
-            Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
-            var deltaRotation = 0f;
+        /// <inheritdoc />
+        protected override void touchesEnded(IList<TouchPoint> touches)
+        {
+            base.touchesEnded(touches);
 
-            var old2DPos1 = clusters.GetPreviousCenterPosition(Clusters2.CLUSTER1);
-            var old2DPos2 = clusters.GetPreviousCenterPosition(Clusters2.CLUSTER2);
-            var new2DPos1 = clusters.GetCenterPosition(Clusters2.CLUSTER1);
-            var new2DPos2 = clusters.GetCenterPosition(Clusters2.CLUSTER2);
-            var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, WorldTransformPlane);
-            var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, WorldTransformPlane);
-            var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, WorldTransformPlane);
-            var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, WorldTransformPlane);
-            var newVector = new3DPos2 - new3DPos1;
-            var oldVector = old3DPos2 - old3DPos1;
-
-            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2)*.5f;
-            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2)*.5f;
-
-            var angle = Vector3.Angle(oldVector, newVector);
-            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), WorldTransformPlane.normal) < 0) angle = -angle;
-            if (isRotating)
+            clusters.RemovePoints(touches);
+            if ((State == GestureState.Began || State == GestureState.Changed) && !clusters.HasClusters)
             {
-                deltaRotation = angle;
-            } else
-            {
-                rotationBuffer += angle;
-                if (rotationBuffer*rotationBuffer >= RotationThreshold*RotationThreshold)
-                {
-                    isRotating = true;
-                    deltaRotation = rotationBuffer;
-                }
-            }
-
-            oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);
-            newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
-            oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
-            newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
-
-            if (Math.Abs(deltaRotation) > 0.00001)
-            {
-                switch (State)
-                {
-                    case GestureState.Possible:
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        screenPosition = newCenter2DPos;
-                        previousScreenPosition = oldCenter2DPos;
-                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
-                        WorldTransformCenter = newGlobalCenter3DPos;
-                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
-                        LocalTransformCenter = newLocalCenter3DPos;
-                        PreviousLocalTransformCenter = oldLocalCenter3DPos;
-
-                        LocalDeltaRotation = deltaRotation;
-
-                        if (State == GestureState.Possible)
-                        {
-                            setState(GestureState.Began);
-                        } else
-                        {
-                            setState(GestureState.Changed);
-                        }
-                        break;
-                }
+                setState(GestureState.Ended);
             }
         }
 
@@ -123,11 +74,30 @@ namespace TouchScript.Gestures
         protected override void reset()
         {
             base.reset();
-            LocalDeltaRotation = 0f;
-            rotationBuffer = 0f;
-            isRotating = false;
+            clusters.RemoveAllPoints();
         }
 
-        #endregion
+        /// <inheritdoc />
+        protected override bool gotEnoughTouchPoints()
+        {
+            return clusters.HasClusters;
+        }
+
+        /// <inheritdoc />
+        protected override Vector2 getPointScreenPosition(int index)
+        {
+            if (index < 0) index = 0;
+            else if (index > 1) index = 1;
+            return clusters.GetCenterPosition(index);
+        }
+
+        /// <inheritdoc />
+        protected override Vector2 getPointPreviousScreenPosition(int index)
+        {
+            if (index < 0) index = 0;
+            else if (index > 1) index = 1;
+            return clusters.GetPreviousCenterPosition(index);
+        }
+
     }
 }

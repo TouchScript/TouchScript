@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using TouchScript.Clusters;
 using UnityEngine;
 
-namespace TouchScript.Gestures
+namespace TouchScript.Gestures.Simple
 {
     /// <summary>
     /// Base class for transform gestures.
     /// </summary>
-    public abstract class Transform2DGestureBase : ClusterBasedGesture
+    public abstract class Transform2DGestureBase : Gesture
     {
         /// <summary>
         /// Transform's projection type.

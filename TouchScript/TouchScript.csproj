@@ -53,7 +53,8 @@
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />
     <Compile Include="Events\TouchEventArgs.cs" />
-    <Compile Include="Gestures\ClusterBasedGesture.cs" />
+    <Compile Include="Gestures\Simple\SimpleFlickGesture.cs" />
+    <Compile Include="Gestures\Simple\SimpleLongPressGesture.cs" />
     <Compile Include="Gestures\FlickGesture.cs" />
     <Compile Include="Gestures\Gesture.cs" />
     <Compile Include="Gestures\LongPressGesture.cs" />
@@ -63,9 +64,13 @@
     <Compile Include="Gestures\Simple\MetaGesture.cs" />
     <Compile Include="Gestures\Simple\PressGesture.cs" />
     <Compile Include="Gestures\Simple\ReleaseGesture.cs" />
+    <Compile Include="Gestures\Simple\SimplePanGesture.cs" />
+    <Compile Include="Gestures\Simple\SimpleRotateGesture.cs" />
+    <Compile Include="Gestures\Simple\SimpleScaleGesture.cs" />
+    <Compile Include="Gestures\Simple\SimpleTapGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
-    <Compile Include="Gestures\Transform2DGestureBase.cs" />
-    <Compile Include="Gestures\TwoClusterTransform2DGestureBase.cs" />
+    <Compile Include="Gestures\Simple\Transform2DGestureBase.cs" />
+    <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
     <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="IGestureDelegate.cs" />
