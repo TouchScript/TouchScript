@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\FullscreenTarget.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Cluster.cs" />
     <Compile Include="Clusters\Clusters2.cs" />

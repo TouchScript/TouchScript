@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using UnityEngine;
 
 namespace TouchScript.Behaviors
@@ -9,12 +10,17 @@ namespace TouchScript.Behaviors
     /// <summary>
     /// Fullscreen plane collider which is positioned at camera's far clipping plane to recieve all touch points not received by other objects.
     /// </summary>
-    [AddComponentMenu("TouchScript/Behaviors/Fullscreen Background Target")]
     [ExecuteInEditMode]
     [RequireComponent(typeof(BoxCollider))]
     [RequireComponent(typeof(Camera))]
     public class FullscreenBackgroundTarget : MonoBehaviour
     {
+
+        private void Awake()
+        {
+            Debug.LogWarning("FullscreenBackgroundTarget class is deprecated, use FullscreenTarget (type = Background) instead.");
+        }
+
         /// <summary>
         /// Unity Update callback.
         /// </summary>

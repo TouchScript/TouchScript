@@ -226,7 +226,7 @@ MonoBehaviour:
   WillRecognizeWith: []
   projection: 1
   projectionNormal: {x: 0, y: 0, z: 1}
-  minClusterDistance: .5
+  minPointDistance: .5
   rotationThreshold: 3
 --- !u!114 &55916779
 MonoBehaviour:
@@ -263,7 +263,7 @@ MonoBehaviour:
   - {fileID: 55916778}
   projection: 0
   projectionNormal: {x: 0, y: 1, z: 0}
-  minClusterDistance: .5
+  minPointDistance: .5
   scalingThreshold: .5
 --- !u!1 &66218871
 GameObject:
@@ -1116,7 +1116,7 @@ MonoBehaviour:
   WillRecognizeWith: []
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 0}
-  minClusterDistance: .5
+  minPointDistance: .5
   rotationThreshold: 3
 --- !u!114 &606920416
 MonoBehaviour:
@@ -2230,9 +2230,9 @@ GameObject:
   - 81: {fileID: 1573308012}
   - 114: {fileID: 1573308015}
   - 65: {fileID: 1573308016}
-  - 114: {fileID: 1573308017}
   - 114: {fileID: 1573308018}
   - 114: {fileID: 1573308019}
+  - 114: {fileID: 1573308017}
   m_Layer: 0
   m_Name: 3d Camera
   m_TagString: MainCamera
@@ -2324,7 +2324,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36.971283, y: 23.0940094, z: .100000001}
+  m_Size: {x: 36.971283, y: 23.0940094, z: .00999999978}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:
@@ -2334,8 +2334,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1573308009}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1390560690, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: -1457327819, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
+  Type: 0
 --- !u!114 &1573308018
 MonoBehaviour:
   m_ObjectHideFlags: 0
