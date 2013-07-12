@@ -1,17 +1,16 @@
 using Scaleform;
 using Scaleform.GFx;
 using UnityEngine;
-using System.Collections;
 
 public class ScaleformMovie : Movie
 {
-    
-    private Value swf;
     
     private Value[] beginValues;
     private Value[] moveValues;
     private Value[] endValues;
     private Value[] cancelValues;
+
+    protected Value SWF { get; private set; }
 
     public ScaleformMovie(SFManager sfmgr, SFMovieCreationParams cp) :
         base(sfmgr, cp)
@@ -60,7 +59,7 @@ public class ScaleformMovie : Movie
     {
         Debug.Log("Got swf reference from Scaleform movie.");
 
-        this.swf = swf;
+        SWF = swf;
     }
 
     #endregion

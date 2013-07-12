@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Scaleform;
-using Scaleform.GFx;
 using TouchScript;
 using UnityEngine;
 using System.Collections;
@@ -14,6 +13,8 @@ public class ScaleformLayer : TouchLayer
 {
     public String FlashMovieFile = "main.swf";
     public SFInitParams InitParams;
+
+    public ScaleformMovie FlashInterface { get { return Movie; } }
 
     protected SFManager SFMgr;
     protected ScaleformMovie Movie;
@@ -41,14 +42,14 @@ public class ScaleformLayer : TouchLayer
     {
         if (Application.isPlaying)
         {
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
             SFMgr = new SFManager(InitParams);
             SFMgr.Init();
             // SFMgr.InstallDelegates();
             GL.IssuePluginEvent(0);
             GL.InvalidateState();
 
-            Movie = new ScaleformMovie(SFMgr, createMovieCreationParams(FlashMovieFile));
+            Movie = createMovie();
 
             StartCoroutine(CallPluginAtEndOfFrames());
         }
@@ -63,6 +64,18 @@ public class ScaleformLayer : TouchLayer
             SFMgr.Advance(Time.deltaTime);
             SFMgr.ReleaseMoviesMarkedForRelease();
             SFMgr.ReleaseValuesMarkedForRelease();
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if (Application.isPlaying)
+        {
+            // This is used to initiate RenderHALShutdown, which must take place on the render thread. 
+            GL.IssuePluginEvent(2);
+            SF_Uninit();
         }
     }
 
@@ -88,7 +101,6 @@ public class ScaleformLayer : TouchLayer
     protected override LayerHitResult beginTouch(TouchPoint touch)
     {
         var result = Movie.BeginTouch(touch.Id, touch.Position.x, touch.Position.y);
-        //Debug.Log(string.Format("Touch {0} returned result {1} ({2}).", touch.Id, result, (HitResult)result));
         return (LayerHitResult)result;
     }
 
@@ -117,6 +129,11 @@ public class ScaleformLayer : TouchLayer
             yield return new WaitForEndOfFrame();
             GL.IssuePluginEvent(1);
         }
+    }
+
+    protected virtual ScaleformMovie createMovie()
+    {
+        return new ScaleformMovie(SFMgr, createMovieCreationParams(FlashMovieFile));
     }
 
     protected SFMovieCreationParams createMovieCreationParams(string swfName)
