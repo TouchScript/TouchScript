@@ -39,7 +39,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <summary>
-        /// Contains local rotation when gesture is recognized.
+        /// Contains local rotation in DEGREES when gesture is recognized.
         /// </summary>
         public float LocalDeltaRotation { get; private set; }
 

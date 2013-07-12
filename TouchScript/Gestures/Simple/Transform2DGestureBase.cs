@@ -199,16 +199,21 @@ namespace TouchScript.Gestures.Simple
         protected void updateProjectionPlane()
         {
             if (!Application.isPlaying) return;
+
+            Vector3 center;
+            if (collider != null) center = collider.bounds.center;
+            else center = transform.position;
+
             switch (projection)
             {
                 case ProjectionType.Camera:
-                    WorldTransformPlane = new Plane(projectionCamera.transform.forward, transform.position);
+                    WorldTransformPlane = new Plane(projectionCamera.transform.forward, center);
                     break;
                 case ProjectionType.Local:
-                    WorldTransformPlane = new Plane(transform.TransformDirection(projectionNormal).normalized, transform.position);
+                    WorldTransformPlane = new Plane(transform.TransformDirection(projectionNormal).normalized, center);
                     break;
                 case ProjectionType.Global:
-                    WorldTransformPlane = new Plane(projectionNormal.normalized, transform.position);
+                    WorldTransformPlane = new Plane(projectionNormal.normalized, center);
                     break;
             }
         }
