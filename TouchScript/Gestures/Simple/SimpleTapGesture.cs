@@ -66,7 +66,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (cachedScreenPosition == TouchPoint.InvalidPosition) return base.ScreenPosition;
+                if (TouchPoint.IsInvalidPosition(cachedScreenPosition)) return base.ScreenPosition;
                 return cachedScreenPosition;
             }
         }
@@ -76,7 +76,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (cachedScreenPosition == TouchPoint.InvalidPosition) return base.PreviousScreenPosition;
+                if (TouchPoint.IsInvalidPosition(cachedScreenPosition)) return base.PreviousScreenPosition;
                 return cachedPreviousScreenPosition;
             }
         }

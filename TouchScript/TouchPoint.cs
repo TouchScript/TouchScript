@@ -19,6 +19,18 @@ namespace TouchScript
         public static readonly Vector2 InvalidPosition = new Vector2(float.NaN, float.NaN);
 
         /// <summary>
+        /// Determines whether position vector is invalid.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>
+        ///   <c>true</c> position is invalid; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsInvalidPosition(Vector2 position)
+        {
+            return position.Equals(InvalidPosition);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TouchPoint"/> class.
         /// </summary>
         /// <param name="id">Touch point id.</param>

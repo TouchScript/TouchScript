@@ -28,7 +28,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (cachedScreenPosition == TouchPoint.InvalidPosition)
+                if (TouchPoint.IsInvalidPosition(cachedScreenPosition))
                 {
                     if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                     return Cluster.Get2DCenterPosition(activeTouches);
@@ -42,7 +42,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (cachedScreenPosition == TouchPoint.InvalidPosition)
+                if (TouchPoint.IsInvalidPosition(cachedScreenPosition))
                 {
                     if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                     return Cluster.GetPrevious2DCenterPosition(activeTouches);
