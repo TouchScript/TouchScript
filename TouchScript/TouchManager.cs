@@ -874,7 +874,7 @@ namespace TouchScript
             return hierarchy;
         }
 
-        private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf = true)
+        private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf)
         {
             var hierarchy = new List<Gesture>();
             if (includeSelf)
@@ -883,7 +883,7 @@ namespace TouchScript
             }
             foreach (Transform child in target)
             {
-                hierarchy.AddRange(getHierarchyBeginningWith(child));
+                hierarchy.AddRange(getHierarchyBeginningWith(child, true));
             }
             return hierarchy;
         }
