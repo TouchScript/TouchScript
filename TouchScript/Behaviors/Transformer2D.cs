@@ -5,6 +5,7 @@
 using System;
 using TouchScript.Events;
 using TouchScript.Gestures;
+using TouchScript.Gestures.Simple;
 using UnityEngine;
 
 namespace TouchScript.Behaviors
@@ -40,17 +41,17 @@ namespace TouchScript.Behaviors
         {
             setDefaults();
 
-            if (GetComponent<PanGesture>() != null)
+            if (GetComponent<SimplePanGesture>() != null)
             {
-                GetComponent<PanGesture>().StateChanged += onPanStateChanged;
+                GetComponent<SimplePanGesture>().StateChanged += onPanStateChanged;
             }
-            if (GetComponent<ScaleGesture>() != null)
+            if (GetComponent<SimpleScaleGesture>() != null)
             {
-                GetComponent<ScaleGesture>().StateChanged += onScaleStateChanged;
+                GetComponent<SimpleScaleGesture>().StateChanged += onScaleStateChanged;
             }
-            if (GetComponent<RotateGesture>() != null)
+            if (GetComponent<SimpleRotateGesture>() != null)
             {
-                GetComponent<RotateGesture>().StateChanged += onRotateStateChanged;
+                GetComponent<SimpleRotateGesture>().StateChanged += onRotateStateChanged;
             }
         }
 
@@ -96,7 +97,7 @@ namespace TouchScript.Behaviors
             {
                 case Gesture.GestureState.Began:
                 case Gesture.GestureState.Changed:
-                    var gesture = (PanGesture)sender;
+                    var gesture = (SimplePanGesture)sender;
 
                     if (gesture.LocalDeltaPosition != Vector3.zero)
                     {
@@ -112,7 +113,7 @@ namespace TouchScript.Behaviors
             {
                 case Gesture.GestureState.Began:
                 case Gesture.GestureState.Changed:
-                    var gesture = (RotateGesture)sender;
+                    var gesture = (SimpleRotateGesture)sender;
 
                     if (Math.Abs(gesture.LocalDeltaRotation) > 0.01)
                     {
@@ -128,7 +129,7 @@ namespace TouchScript.Behaviors
             {
                 case Gesture.GestureState.Began:
                 case Gesture.GestureState.Changed:
-                    var gesture = (ScaleGesture)sender;
+                    var gesture = (SimpleScaleGesture)sender;
 
                     if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001)
                     {
