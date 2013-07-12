@@ -10,6 +10,9 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
 
+    /// <summary>
+    /// Simple Rotate gesture which takes into account only the first two touch points.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Rotate Gesture")]
     public class SimpleRotateGesture : TwoPointTransform2DGestureBase
     {

@@ -9,6 +9,9 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
 
+    /// <summary>
+    /// Simple Pan gesture which only relies on the first touch
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Pan Gesture")]
     public class SimplePanGesture : Transform2DGestureBase
     {

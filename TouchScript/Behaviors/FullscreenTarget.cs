@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using UnityEngine;
 
 namespace TouchScript.Behaviors
@@ -17,12 +16,24 @@ namespace TouchScript.Behaviors
     public class FullscreenTarget : MonoBehaviour
     {
 
+        /// <summary>
+        /// Type of the Fullscreen Target.
+        /// </summary>
         public enum TargetType
         {
+            /// <summary>
+            /// The target is attached to camera's far plane.
+            /// </summary>
             Background,
+            /// <summary>
+            /// The target is attached to camera's near plane.
+            /// </summary>
             Foreground
         }
 
+        /// <summary>
+        /// Type of the Fullscreen Target.
+        /// </summary>
         public TargetType Type = TargetType.Background;
 
         /// <summary>

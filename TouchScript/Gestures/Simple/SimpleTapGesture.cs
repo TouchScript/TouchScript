@@ -8,6 +8,9 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
 
+    /// <summary>
+    /// Simple Tap gesture which is only concerned about one finger
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Tap Gesture")]
     public class SimpleTapGesture : Gesture
     {
@@ -20,7 +23,17 @@ namespace TouchScript.Gestures.Simple
         [SerializeField]
         private float distanceLimit = float.PositiveInfinity;
 
-        protected Vector2 cachedScreenPosition, cachedPreviousScreenPosition;
+        /// <summary>
+        /// The cached screen position
+        /// </summary>
+        protected Vector2 cachedScreenPosition;
+        /// <summary>
+        /// The cached previous screen position
+        /// </summary>
+        protected Vector2 cachedPreviousScreenPosition;
+        /// <summary>
+        /// The cached target hit result
+        /// </summary>
         protected RaycastHit cachedTargetHitResult;
 
         private Vector2 totalMovement = Vector2.zero;
@@ -143,6 +156,10 @@ namespace TouchScript.Gestures.Simple
 
         #region Private functions
 
+        /// <summary>
+        /// Updates the cached screen position.
+        /// </summary>
+        /// <param name="touches">The touches.</param>
         protected virtual void updateCachedScreenPosition(IList<TouchPoint> touches)
         {
             TouchPoint point = touches[touches.Count - 1];

@@ -9,6 +9,9 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
 
+    /// <summary>
+    /// Simple Scale gesture which is only concerned about 2 first fingers.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Scale Gesture")]
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
     {

@@ -2,11 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
 using TouchScript.Clusters;
 using TouchScript.Gestures.Simple;
-using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -23,6 +21,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Clusters2 clusters = new Clusters2();
 
+        /// <inheritdoc />
         public override float MinPointDistance
         {
             get { return base.MinPointDistance; }

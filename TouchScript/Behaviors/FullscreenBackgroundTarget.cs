@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using UnityEngine;
 
 namespace TouchScript.Behaviors

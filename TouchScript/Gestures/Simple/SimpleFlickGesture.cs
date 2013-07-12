@@ -8,6 +8,9 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
 
+    /// <summary>
+    /// Simple Flick gesture which is only concerned about one finger.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Flick Gesture")]
     public class SimpleFlickGesture : Gesture
     {

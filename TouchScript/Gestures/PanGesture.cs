@@ -15,6 +15,7 @@ namespace TouchScript.Gestures
     public class PanGesture : SimplePanGesture
     {
 
+        /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
             get
@@ -24,6 +25,7 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <inheritdoc />
         public override Vector2 PreviousScreenPosition
         {
             get

@@ -56,11 +56,18 @@ namespace TouchScript.Gestures.Simple
 
         #endregion
 
+        /// <summary>
+        /// Returns true if gesture has enough touch points to be recognized
+        /// </summary>
         protected virtual bool gotEnoughTouchPoints()
         {
             return activeTouches.Count >= 2;
         }
 
+        /// <summary>
+        /// Returns screen position of a point with index 0 or 1
+        /// </summary>
+        /// <param name="index">The index.</param>
         protected virtual Vector2 getPointScreenPosition(int index)
         {
             if (index < 0) index = 0;
@@ -68,6 +75,10 @@ namespace TouchScript.Gestures.Simple
             return activeTouches[index].Position;
         }
 
+        /// <summary>
+        /// Returns previous screen position of a point with index 0 or 1
+        /// </summary>
+        /// <param name="index">The index.</param>
         protected virtual Vector2 getPointPreviousScreenPosition(int index)
         {
             if (index < 0) index = 0;

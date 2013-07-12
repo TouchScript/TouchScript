@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
 {
+    /// <summary>
+    /// Simple Long Press gesture which is only concerned about one finger.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Long Press Gesture")]
     public class SimpleLongPressGesture : Gesture
     {
