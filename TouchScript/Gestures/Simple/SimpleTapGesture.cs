@@ -103,7 +103,6 @@ namespace TouchScript.Gestures.Simple
             if (ActiveTouches.Count == touches.Count)
             {
                 startTime = Time.time;
-                setState(GestureState.Began);
             }
         }
 
@@ -111,7 +110,6 @@ namespace TouchScript.Gestures.Simple
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
             totalMovement += ScreenPosition - PreviousScreenPosition;
-            setState(GestureState.Changed);
         }
 
         /// <inheritdoc />
@@ -129,7 +127,7 @@ namespace TouchScript.Gestures.Simple
 
                 if (base.GetTargetHitResult(out cachedTargetHitResult))
                 {
-                    setState(GestureState.Ended);
+                    setState(GestureState.Recognized);
                 }
                 else
                 {

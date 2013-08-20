@@ -81,7 +81,7 @@ namespace TouchScript.Gestures.Simple
                 RaycastHit hit;
                 if (base.GetTargetHitResult(out hit))
                 {
-                    setState(GestureState.Ended);
+                    setState(GestureState.Recognized);
                 }
                 else
                 {
@@ -106,7 +106,6 @@ namespace TouchScript.Gestures.Simple
             {
                 timer.Interval = TimeToPress * 1000;
                 timer.Start();
-                setState(GestureState.Began);
             }
         }
 
@@ -117,10 +116,6 @@ namespace TouchScript.Gestures.Simple
             if (totalMovement.magnitude / TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
-            }
-            else
-            {
-                setState(GestureState.Changed);
             }
         }
 
