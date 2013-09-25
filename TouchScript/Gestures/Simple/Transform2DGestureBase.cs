@@ -22,10 +22,12 @@ namespace TouchScript.Gestures.Simple
             /// Use a plane parallel to camera viewport.
             /// </summary>
             Camera,
+
             /// <summary>
             /// Use a plane with certain normal vector in local coordinates.
             /// </summary>
             Local,
+
             /// <summary>
             /// Use a plane with certain normal vector in global coordinates.
             /// </summary>
