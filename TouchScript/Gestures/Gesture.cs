@@ -256,6 +256,12 @@ namespace TouchScript.Gestures
 
         #region Public methods
 
+        public virtual bool GetTargetHitResult()
+        {
+            RaycastHit hit;
+            return GetTargetHitResult(ScreenPosition, out hit);
+        }
+
         /// <summary>
         /// Gets result of casting a ray from gesture touch points centroid screen position.
         /// </summary>
@@ -263,13 +269,21 @@ namespace TouchScript.Gestures
         /// <returns>True if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(out RaycastHit hit)
         {
+            return GetTargetHitResult(ScreenPosition, out hit);
+        }
+
+        public virtual bool GetTargetHitResult(Vector2 position)
+        {
+            RaycastHit hit;
+            return GetTargetHitResult(position, out hit);
+        }
+
+        public virtual bool GetTargetHitResult(Vector2 position, out RaycastHit hit)
+        {
             hit = new RaycastHit();
 
-            var camera = Cluster.GetClusterCamera(activeTouches);
-            if (camera == null) return false;
-
             TouchLayer layer = null;
-            if (!TouchManager.Instance.GetHitTarget(ScreenPosition, out hit, out layer)) return false;
+            if (!TouchManager.Instance.GetHitTarget(position, out hit, out layer)) return false;
 
             if (transform == hit.transform || hit.transform.IsChildOf(transform)) return true;
             return false;

@@ -437,8 +437,6 @@ GameObject:
   - 33: {fileID: 1522683911}
   - 65: {fileID: 1522683912}
   - 23: {fileID: 1522683910}
-  - 114: {fileID: 1522683914}
-  - 114: {fileID: 1522683913}
   - 114: {fileID: 1522683915}
   - 114: {fileID: 1522683916}
   m_Layer: 0
@@ -496,29 +494,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1522683913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1522683908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca2d4c171d20a49418b03c373cf7a644, type: 1}
-  m_Name: 
---- !u!114 &1522683914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1522683908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1553043918, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
-  m_Name: 
-  WillRecognizeWith: []
-  timeLimit: Infinity
-  distanceLimit: 5
 --- !u!114 &1522683915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -530,7 +505,7 @@ MonoBehaviour:
   m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   WillRecognizeWith:
-  - {fileID: 1522683914}
+  - {fileID: 0}
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5
@@ -556,8 +531,6 @@ GameObject:
   - 33: {fileID: 1920673506}
   - 65: {fileID: 1920673507}
   - 23: {fileID: 1920673505}
-  - 114: {fileID: 1920673508}
-  - 114: {fileID: 1920673509}
   - 114: {fileID: 1920673510}
   - 114: {fileID: 1920673511}
   m_Layer: 0
@@ -615,29 +588,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1920673508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1920673503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1553043918, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
-  m_Name: 
-  WillRecognizeWith: []
-  timeLimit: Infinity
-  distanceLimit: 5
---- !u!114 &1920673509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1920673503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca2d4c171d20a49418b03c373cf7a644, type: 1}
-  m_Name: 
 --- !u!114 &1920673510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,7 +599,7 @@ MonoBehaviour:
   m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   WillRecognizeWith:
-  - {fileID: 1920673508}
+  - {fileID: 0}
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5
@@ -675,8 +625,6 @@ GameObject:
   - 33: {fileID: 2025279856}
   - 65: {fileID: 2025279857}
   - 23: {fileID: 2025279855}
-  - 114: {fileID: 2025279859}
-  - 114: {fileID: 2025279858}
   - 114: {fileID: 2025279860}
   - 114: {fileID: 2025279861}
   m_Layer: 0
@@ -734,29 +682,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2025279858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2025279853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca2d4c171d20a49418b03c373cf7a644, type: 1}
-  m_Name: 
---- !u!114 &2025279859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2025279853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1553043918, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
-  m_Name: 
-  WillRecognizeWith: []
-  timeLimit: Infinity
-  distanceLimit: 5
 --- !u!114 &2025279860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -768,7 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
   WillRecognizeWith:
-  - {fileID: 2025279859}
+  - {fileID: 0}
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5

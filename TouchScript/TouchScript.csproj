@@ -68,7 +68,6 @@
     <Compile Include="Gestures\Simple\SimplePanGesture.cs" />
     <Compile Include="Gestures\Simple\SimpleRotateGesture.cs" />
     <Compile Include="Gestures\Simple\SimpleScaleGesture.cs" />
-    <Compile Include="Gestures\Simple\SimpleTapGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\Simple\Transform2DGestureBase.cs" />
     <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBase.cs" />
