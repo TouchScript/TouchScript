@@ -37,6 +37,29 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         public Vector3 LocalDeltaPosition { get; private set; }
 
+        public override Vector2 ScreenPosition
+        {
+            get
+            {
+                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 1) return activeTouches[0].Position;
+                return (activeTouches[0].Position + activeTouches[1].Position)*.5f;
+            }
+        }
+
+        /// <summary>
+        /// Previous transformation center in screen coordinates.
+        /// </summary>
+        public override Vector2 PreviousScreenPosition
+        {
+            get
+            {
+                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
+                return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition) * .5f;
+            }
+        }
+
         #endregion
 
         #region Private variables
@@ -127,6 +150,7 @@ namespace TouchScript.Gestures.Simple
         protected override void reset()
         {
             base.reset();
+
             WorldDeltaPosition = Vector3.zero;
             LocalDeltaPosition = Vector3.zero;
             movementBuffer = Vector2.zero;
