@@ -136,7 +136,7 @@ namespace TouchScript.Gestures
             get
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return activeTouches[0].Position;
+                return Cluster.Get2DCenterPosition(activeTouches);
             }
         }
 
@@ -148,7 +148,7 @@ namespace TouchScript.Gestures
             get 
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return activeTouches[0].PreviousPosition;
+                return Cluster.GetPrevious2DCenterPosition(activeTouches);
             }
         }
 
