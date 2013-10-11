@@ -39,6 +39,7 @@ namespace TouchScript.Gestures
         protected override void Awake()
         {
             base.Awake();
+
             clusters.MinPointsDistance = MinPointDistance * TouchManager.Instance.DotsPerCentimeter;
         }
 
@@ -46,6 +47,7 @@ namespace TouchScript.Gestures
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
             base.touchesBegan(touches);
+
             clusters.AddPoints(touches);
         }
 
@@ -73,6 +75,7 @@ namespace TouchScript.Gestures
         protected override void reset()
         {
             base.reset();
+
             clusters.RemoveAllPoints();
         }
 

@@ -98,6 +98,7 @@ namespace TouchScript.Gestures.Simple
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             base.touchesEnded(touches);
+
             if (activeTouches.Count < 2 && (State == GestureState.Began || State == GestureState.Changed))
             {
                 setState(GestureState.Ended);

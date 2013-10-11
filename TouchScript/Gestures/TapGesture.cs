@@ -122,6 +122,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
+            base.touchesBegan(touches);
+
             if (ActiveTouches.Count == touches.Count)
             {
                 startTime = Time.time;
@@ -131,12 +133,16 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
+            base.touchesMoved(touches);
+
             totalMovement += ScreenPosition - PreviousScreenPosition;
         }
 
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
+            base.touchesEnded(touches);
+
             foreach (var touch in touches)
             {
                 removedPoints.Add(touch);
@@ -183,12 +189,16 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
+            base.touchesCancelled(touches);
+
             setState(GestureState.Failed);
         }
 
         /// <inheritdoc />
         protected override void reset()
         {
+            base.reset();
+
             totalMovement = Vector2.zero;
             cachedScreenPosition = TouchPoint.InvalidPosition;
             cachedPreviousScreenPosition = TouchPoint.InvalidPosition;

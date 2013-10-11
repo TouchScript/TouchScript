@@ -31,6 +31,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
+            base.touchesBegan(touches);
+
             if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
         }
     }

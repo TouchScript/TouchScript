@@ -121,6 +121,7 @@ namespace TouchScript.Gestures.Simple
         protected override void Awake()
         {
             base.Awake();
+
             updateProjectionCamera();
             updateProjectionPlane();
         }
@@ -130,12 +131,10 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
-        {}
-
-        /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
+            base.touchesMoved(touches);
+
             updateProjectionCamera();
             updateProjectionPlane();
         }
@@ -143,6 +142,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
+            base.touchesEnded(touches);
+
             if (ActiveTouches.Count == 0)
             {
                 switch (State)
@@ -158,12 +159,16 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
+            base.touchesCancelled(touches);
+
             touchesEnded(touches);
         }
 
         /// <inheritdoc />
         protected override void reset()
         {
+            base.reset();
+
             WorldTransformCenter = InvalidPosition;
             PreviousWorldTransformCenter = InvalidPosition;
             LocalTransformCenter = InvalidPosition;

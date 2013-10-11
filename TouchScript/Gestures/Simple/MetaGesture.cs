@@ -63,6 +63,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
+            base.touchesBegan(touches);
+
             if (State == GestureState.Possible)
             {
                 setState(GestureState.Began);
@@ -78,6 +80,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
+            base.touchesMoved(touches);
+
             if (State == GestureState.Began || State == GestureState.Changed)
             {
                 setState(GestureState.Changed);
@@ -93,6 +97,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
+            base.touchesEnded(touches);
+
             if (State == GestureState.Began || State == GestureState.Changed)
             {
                 if (activeTouches.Count == 0)
@@ -111,6 +117,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
+            base.touchesCancelled(touches);
+
             if (State == GestureState.Began || State == GestureState.Changed)
             {
                 if (activeTouches.Count == 0)

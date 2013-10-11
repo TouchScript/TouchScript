@@ -126,6 +126,7 @@ namespace TouchScript.Gestures.Simple
         protected override void reset()
         {
             base.reset();
+
             LocalDeltaRotation = 0f;
             rotationBuffer = 0f;
             isRotating = false;

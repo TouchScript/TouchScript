@@ -112,6 +112,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
+            base.touchesBegan(touches);
+
             if (activeTouches.Count == touches.Count)
             {
                 previousTime = Time.time;
@@ -121,6 +123,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
+            base.touchesMoved(touches);
+
             var delta = ScreenPosition - PreviousScreenPosition;
             if (!moving)
             {
@@ -140,6 +144,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
+            base.touchesEnded(touches);
+
             if (activeTouches.Count == 0)
             {
                 if (!moving)
@@ -190,12 +196,16 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesCancelled(IList<TouchPoint> touches)
         {
+            base.touchesCancelled(touches);
+
             touchesEnded(touches);
         }
 
         /// <inheritdoc />
         protected override void reset()
         {
+            base.reset();
+
             moving = false;
             movementBuffer = Vector2.zero;
             timeDeltas.Clear();

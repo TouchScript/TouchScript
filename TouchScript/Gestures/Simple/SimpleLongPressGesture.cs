@@ -69,6 +69,7 @@ namespace TouchScript.Gestures.Simple
         protected override void Awake()
         {
             base.Awake();
+
             timer.Elapsed += onTimerElapsed;
             timer.AutoReset = false;
         }
@@ -97,6 +98,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
+            base.touchesBegan(touches);
+
             if (activeTouches.Count > MaxTouches)
             {
                 setState(GestureState.Failed);
@@ -112,6 +115,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
+            base.touchesMoved(touches);
+
             totalMovement += ScreenPosition - PreviousScreenPosition;
             if (totalMovement.magnitude / TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
             {
@@ -122,6 +127,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
+            base.touchesEnded(touches);
+
             if (ActiveTouches.Count == 0)
             {
                 timer.Stop();
@@ -132,12 +139,16 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void onFailed()
         {
+            base.onFailed();
+
             reset();
         }
 
         /// <inheritdoc />
         protected override void reset()
         {
+            base.reset();
+
             fireRecognizedNextUpdate = false;
             timer.Stop();
         }
