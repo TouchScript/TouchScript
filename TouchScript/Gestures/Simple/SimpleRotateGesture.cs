@@ -39,7 +39,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <summary>
-        /// Contains local rotation in DEGREES when gesture is recognized.
+        /// Contains local rotation in degrees when gesture is recognized.
         /// </summary>
         public float LocalDeltaRotation { get; private set; }
 
@@ -50,9 +50,10 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchesMoved(touches);
-
             if (!gotEnoughTouchPoints()) return;
+            if (!relevantTouchPoints(touches)) return;
+
+            base.touchesMoved(touches);
 
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaRotation = 0f;

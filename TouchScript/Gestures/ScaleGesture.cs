@@ -85,6 +85,11 @@ namespace TouchScript.Gestures
             return clusters.HasClusters;
         }
 
+        protected override bool relevantTouchPoints(IList<TouchPoint> touches)
+        {
+            return true;
+        }
+
         /// <inheritdoc />
         protected override Vector2 getPointScreenPosition(int index)
         {

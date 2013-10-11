@@ -72,6 +72,22 @@ namespace TouchScript.Gestures.Simple
             return activeTouches.Count >= 2;
         }
 
+        protected virtual bool relevantTouchPoints(IList<TouchPoint> touches)
+        {
+            var result = false;
+            // We care only about the first and the second touch points
+            foreach (var touchPoint in touches)
+            {
+                if (touchPoint == activeTouches[0] || touchPoint == activeTouches[1])
+                {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Returns screen position of a point with index 0 or 1
         /// </summary>

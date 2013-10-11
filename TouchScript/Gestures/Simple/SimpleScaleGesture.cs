@@ -50,9 +50,10 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchesMoved(touches);
-
             if (!gotEnoughTouchPoints()) return;
+            if (!relevantTouchPoints(touches)) return;
+
+            base.touchesMoved(touches);
 
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaScale = 1f;
@@ -130,6 +131,7 @@ namespace TouchScript.Gestures.Simple
         protected override void reset()
         {
             base.reset();
+
             LocalDeltaScale = 1f;
             scalingBuffer = 0f;
             isScaling = false;
