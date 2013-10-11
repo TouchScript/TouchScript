@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace TouchScript.Clusters
@@ -114,7 +115,7 @@ namespace TouchScript.Clusters
             var result = "";
             foreach (var touchPoint in touches)
             {
-                result += "#" + touchPoint.Id;
+                result += "#" + Convert.ToString(touchPoint.Id);
             }
             return result;
         }
