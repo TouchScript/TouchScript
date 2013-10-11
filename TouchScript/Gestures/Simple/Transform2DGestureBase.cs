@@ -164,8 +164,10 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void reset()
         {
-            WorldTransformCenter = Vector3.zero;
-            LocalTransformCenter = Vector3.zero;
+            WorldTransformCenter = InvalidPosition;
+            PreviousWorldTransformCenter = InvalidPosition;
+            LocalTransformCenter = InvalidPosition;
+            PreviousLocalTransformCenter = InvalidPosition;
         }
 
         #endregion

@@ -29,13 +29,21 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
-            get { return screenPosition; }
+            get
+            {
+                if (TouchPoint.IsInvalidPosition(screenPosition)) return base.ScreenPosition;
+                return screenPosition;
+            }
         }
 
         /// <inheritdoc />
         public override Vector2 PreviousScreenPosition
         {
-            get { return previousScreenPosition; }
+            get
+            {
+                if (TouchPoint.IsInvalidPosition(previousScreenPosition)) return base.PreviousScreenPosition;
+                return previousScreenPosition;
+            }
         }
 
         #endregion
@@ -52,7 +60,7 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Transform's center point previous screen position.
         /// </summary>
-        protected Vector3 previousScreenPosition;
+        protected Vector2 previousScreenPosition;
 
         #endregion
 
@@ -94,6 +102,14 @@ namespace TouchScript.Gestures.Simple
             {
                 setState(GestureState.Ended);
             }
+        }
+
+        protected override void reset()
+        {
+            base.reset();
+
+            screenPosition = TouchPoint.InvalidPosition;
+            previousScreenPosition = TouchPoint.InvalidPosition;
         }
 
     }

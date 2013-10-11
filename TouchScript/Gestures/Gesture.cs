@@ -16,6 +16,9 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class Gesture : MonoBehaviour
     {
+
+        public static readonly Vector3 InvalidPosition = new Vector3(float.NaN, float.NaN, float.NaN);
+
         /// <summary>
         /// Possible states of a gesture.
         /// </summary>
@@ -55,6 +58,11 @@ namespace TouchScript.Gestures
             /// Gesture is recognized
             /// </summary>
             Recognized = Ended
+        }
+
+        public static bool IsInvalidPosition(Vector3 position)
+        {
+            return position.Equals(InvalidPosition);
         }
 
         #region Unity fields
