@@ -179,17 +179,17 @@ namespace TouchScript
         /// <summary>
         /// Number of active touches.
         /// </summary>
-        public int TouchesCount
+        public int TouchPointsCount
         {
-            get { return touches.Count; }
+            get { return touchPoints.Count; }
         }
 
         /// <summary>
         /// List of active touches.
         /// </summary>
-        public List<TouchPoint> Touches
+        public List<TouchPoint> TouchPoints
         {
-            get { return new List<TouchPoint>(touches); }
+            get { return new List<TouchPoint>(touchPoints); }
         }
 
         #endregion
@@ -213,7 +213,7 @@ namespace TouchScript
         [SerializeField]
         private List<TouchLayer> layers = new List<TouchLayer>();
 
-        private List<TouchPoint> touches = new List<TouchPoint>();
+        private List<TouchPoint> touchPoints = new List<TouchPoint>();
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>();
 
         // Upcoming changes
@@ -561,7 +561,7 @@ namespace TouchScript
 
         private void resetTouchPoints()
         {
-            foreach (var touchPoint in touches)
+            foreach (var touchPoint in touchPoints)
             {
                 touchPoint.ResetPosition();
             }
@@ -575,7 +575,7 @@ namespace TouchScript
                 var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
                 foreach (var touch in touchesBegan)
                 {
-                    touches.Add(touch);
+                    touchPoints.Add(touch);
                     idToTouch.Add(touch.Id, touch);
                     if (checkLayers(touch))
                     {
@@ -653,7 +653,7 @@ namespace TouchScript
                 var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
                 var reallyMoved = new List<TouchPoint>();
 
-                foreach (var touch in touches)
+                foreach (var touch in touchPoints)
                 {
                     if (touchesMoved.ContainsKey(touch.Id))
                     {
@@ -731,7 +731,7 @@ namespace TouchScript
                 foreach (var touch in touchesEnded)
                 {
                     idToTouch.Remove(touch.Id);
-                    touches.Remove(touch);
+                    touchPoints.Remove(touch);
                     if (touch.Layer != null) touch.Layer.EndTouch(touch);
 
                     if (touch.Target != null)
@@ -792,7 +792,7 @@ namespace TouchScript
                 foreach (var touch in touchesCancelled)
                 {
                     idToTouch.Remove(touch.Id);
-                    touches.Remove(touch);
+                    touchPoints.Remove(touch);
                     if (touch.Layer != null) touch.Layer.CancelTouch(touch);
 
                     if (touch.Target != null)
