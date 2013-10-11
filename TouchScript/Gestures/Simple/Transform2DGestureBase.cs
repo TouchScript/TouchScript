@@ -144,7 +144,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (ActiveTouches.Count == 0)
+            if (activeTouches.Count == 0)
             {
                 switch (State)
                 {

@@ -105,7 +105,7 @@ namespace TouchScript.Gestures.Simple
                 setState(GestureState.Failed);
                 return;
             }
-            if (ActiveTouches.Count == touches.Count)
+            if (activeTouches.Count == touches.Count)
             {
                 timer.Interval = TimeToPress * 1000;
                 timer.Start();
@@ -129,7 +129,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (ActiveTouches.Count == 0)
+            if (activeTouches.Count == 0)
             {
                 timer.Stop();
                 setState(GestureState.Failed);
