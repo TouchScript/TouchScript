@@ -26,17 +26,20 @@ namespace TouchScript.Gestures
         private float clusterExistenceTime = .3f;
 
         /// <summary>
-        /// The cached screen position
+        /// The cached screen position. 
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         protected Vector2 cachedScreenPosition;
 
         /// <summary>
-        /// The cached previous screen position
+        /// The cached previous screen position.
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         protected Vector2 cachedPreviousScreenPosition;
 
         /// <summary>
-        /// The cached target hit result
+        /// The cached target hit result.
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         protected RaycastHit cachedTargetHitResult;
 
