@@ -73,7 +73,7 @@ namespace TouchScript.Clusters
         public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
-            if (length == 0) throw new InvalidOperationException("No points in cluster.");
+            if (length == 0) return TouchPoint.InvalidPosition;
             if (length == 1) return touches[0].Position;
 
             var position = new Vector2();
@@ -93,7 +93,7 @@ namespace TouchScript.Clusters
         public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
-            if (length == 0) throw new InvalidOperationException("No points in cluster.");
+            if (length == 0) return TouchPoint.InvalidPosition;
             if (length == 1) return touches[0].PreviousPosition;
 
             var position = new Vector2();

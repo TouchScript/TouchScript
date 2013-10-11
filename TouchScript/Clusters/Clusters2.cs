@@ -81,7 +81,7 @@ namespace TouchScript.Clusters
         /// <exception cref="System.InvalidOperationException">If used neither CLUSTER1 or CLUSTER2 as id.</exception>
         public Vector2 GetCenterPosition(int id)
         {
-            if (!HasClusters) throw new InvalidOperationException("Cluster has less than 2 points.");
+            if (!HasClusters) return TouchPoint.InvalidPosition;
             if (dirty) distributePoints();
 
             Vector2 result;
@@ -94,7 +94,7 @@ namespace TouchScript.Clusters
                     result = Get2DCenterPosition(cluster2);
                     break;
                 default:
-                    throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
+                    return TouchPoint.InvalidPosition;
             }
             return result;
         }
@@ -107,7 +107,7 @@ namespace TouchScript.Clusters
         /// <exception cref="System.InvalidOperationException">If used neither CLUSTER1 or CLUSTER2 as id.</exception>
         public Vector2 GetPreviousCenterPosition(int id)
         {
-            if (!HasClusters) throw new InvalidOperationException("Cluster has less than 2 points.");
+            if (!HasClusters) return TouchPoint.InvalidPosition;
             if (dirty) distributePoints();
 
             Vector2 result;
@@ -120,7 +120,7 @@ namespace TouchScript.Clusters
                     result = GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
-                    throw new InvalidOperationException(String.Format("{0} is not a valid cluster index.", id));
+                    return TouchPoint.InvalidPosition;
             }
             return result;
         }
