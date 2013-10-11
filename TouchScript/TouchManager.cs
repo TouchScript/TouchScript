@@ -255,7 +255,7 @@ namespace TouchScript
 
         private void Update()
         {
-            updateTouches();
+            updateTouchPoints();
         }
 
         private void OnDestroy()
@@ -559,6 +559,14 @@ namespace TouchScript
             }
         }
 
+        private void resetTouchPoints()
+        {
+            foreach (var touchPoint in touches)
+            {
+                touchPoint.ResetPosition();
+            }
+        }
+
         private bool updateBegan()
         {
             if (touchesBegan.Count > 0)
@@ -837,13 +845,14 @@ namespace TouchScript
             return false;
         }
 
-        private void updateTouches()
+        private void updateTouchPoints()
         {
             // reset gestures changed between update loops
             resetGestures();
             bool updated;
             lock (sync)
             {
+                resetTouchPoints();
                 updated = updateBegan();
                 updated = updateMoved() || updated;
                 updated = updateEnded() || updated;

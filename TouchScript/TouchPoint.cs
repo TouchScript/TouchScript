@@ -81,5 +81,10 @@ namespace TouchScript
         /// Original camera through which the target was seen.
         /// </summary>
         public TouchLayer Layer { get; internal set; }
+
+        internal void ResetPosition()
+        {
+            PreviousPosition = Position;
+        }
     }
 }
