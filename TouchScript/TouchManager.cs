@@ -230,6 +230,16 @@ namespace TouchScript
 
         #endregion
 
+        #region Temporary variables
+
+        // Temporary variables for update methods.
+        private Dictionary<Transform, List<TouchPoint>> targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+        private Dictionary<Gesture, List<TouchPoint>> gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+        private List<TouchPoint> reallyMoved = new List<TouchPoint>();
+        private List<Gesture> activeGestures = new List<Gesture>();
+
+        #endregion
+
         #region Unity
 
         private void Awake()
@@ -572,7 +582,7 @@ namespace TouchScript
             if (touchesBegan.Count > 0)
             {
                 // get touches per target
-                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                targetTouches.Clear();
                 foreach (var touch in touchesBegan)
                 {
                     touchPoints.Add(touch);
@@ -594,8 +604,8 @@ namespace TouchScript
 
                 // get touches per gesture
                 // touches can come to a gesture from multiple targets in hierarchy
-                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                var activeGestures = new List<Gesture>(); // no order in dictionary
+                gestureTouches.Clear();
+                activeGestures.Clear(); // no order in dictionary
                 foreach (var target in targetTouches.Keys)
                 {
                     var mightBeActiveGestures = getHierarchyContaining(target);
@@ -650,8 +660,8 @@ namespace TouchScript
         {
             if (touchesMoved.Count > 0)
             {
-                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-                var reallyMoved = new List<TouchPoint>();
+                targetTouches.Clear();
+                reallyMoved.Clear();
 
                 foreach (var touch in touchPoints)
                 {
@@ -683,8 +693,8 @@ namespace TouchScript
 
                 if (reallyMoved.Count > 0)
                 {
-                    var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                    var activeGestures = new List<Gesture>(); // no order in dictionary
+                    gestureTouches.Clear();
+                    activeGestures.Clear(); // no order in dictionary
                     foreach (var target in targetTouches.Keys)
                     {
                         var possibleGestures = getHierarchyEndingWith(target);
@@ -727,7 +737,7 @@ namespace TouchScript
         {
             if (touchesEnded.Count > 0)
             {
-                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                targetTouches.Clear();
                 foreach (var touch in touchesEnded)
                 {
                     idToTouch.Remove(touch.Id);
@@ -746,8 +756,8 @@ namespace TouchScript
                     }
                 }
 
-                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                var activeGestures = new List<Gesture>(); // no order in dictionary
+                gestureTouches.Clear();
+                activeGestures.Clear(); // no order in dictionary
                 foreach (var target in targetTouches.Keys)
                 {
                     var possibleGestures = getHierarchyEndingWith(target);
@@ -788,7 +798,7 @@ namespace TouchScript
         {
             if (touchesCancelled.Count > 0)
             {
-                var targetTouches = new Dictionary<Transform, List<TouchPoint>>();
+                targetTouches.Clear();
                 foreach (var touch in touchesCancelled)
                 {
                     idToTouch.Remove(touch.Id);
@@ -807,8 +817,8 @@ namespace TouchScript
                     }
                 }
 
-                var gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
-                var activeGestures = new List<Gesture>(); // no order in dictionary
+                gestureTouches.Clear();
+                activeGestures.Clear(); // no order in dictionary
                 foreach (var target in targetTouches.Keys)
                 {
                     var possibleGestures = getHierarchyEndingWith(target);
