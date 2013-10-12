@@ -119,14 +119,20 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
+        protected override void reset()
+        {
+            base.reset();
+
+            rotationBuffer = 0f;
+            isRotating = false;
+        }
+
         /// <inheritdoc />
         protected override void restart()
         {
             base.restart();
 
             LocalDeltaRotation = 0f;
-            rotationBuffer = 0f;
-            isRotating = false;
         }
 
         #endregion

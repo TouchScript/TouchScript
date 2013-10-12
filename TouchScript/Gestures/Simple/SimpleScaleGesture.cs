@@ -123,14 +123,20 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
+        protected override void reset()
+        {
+            base.reset();
+
+            scalingBuffer = 0f;
+            isScaling = false;
+        }
+
         /// <inheritdoc />
         protected override void restart()
         {
             base.restart();
 
             LocalDeltaScale = 1f;
-            scalingBuffer = 0f;
-            isScaling = false;
         }
 
         #endregion

@@ -109,7 +109,10 @@ namespace TouchScript.Gestures.Simple
         }
 
         protected virtual void restart()
-        {}
+        {
+            screenPosition = TouchPoint.InvalidPosition;
+            previousScreenPosition = TouchPoint.InvalidPosition;
+        }
 
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
@@ -127,8 +130,6 @@ namespace TouchScript.Gestures.Simple
             base.reset();
 
             restart();
-            screenPosition = TouchPoint.InvalidPosition;
-            previousScreenPosition = TouchPoint.InvalidPosition;
         }
     }
 }
