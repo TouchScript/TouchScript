@@ -471,7 +471,7 @@ namespace TouchScript
                         case Gesture.GestureState.Possible:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", gesture, state, gesture.State));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[]{gesture, state, gesture.State}));
                             break;
                     }
                     if (gestureCanRecognize(gesture))
@@ -490,7 +490,7 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", gesture, state, gesture.State));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[]{gesture, state, gesture.State}));
                             break;
                     }
                     break;
@@ -514,7 +514,7 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", gesture, state, gesture.State));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[]{gesture, state, gesture.State}));
                             break;
                     }
                     break;
