@@ -96,7 +96,7 @@ namespace TouchScript.Gestures.Simple
                 setState(GestureState.Failed);
                 return;
             }
-            if (ActiveTouches.Count == touches.Count)
+            if (activeTouches.Count == touches.Count)
             {
                 StartCoroutine("wait");
             }
@@ -119,7 +119,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (ActiveTouches.Count == 0)
+            if (activeTouches.Count == 0)
             {
                 StopCoroutine("wait");
                 setState(GestureState.Failed);

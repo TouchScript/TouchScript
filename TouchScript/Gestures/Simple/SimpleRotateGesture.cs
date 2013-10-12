@@ -9,14 +9,12 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
 {
-
     /// <summary>
     /// Simple Rotate gesture which takes into account only the first two touch points.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Rotate Gesture")]
     public class SimpleRotateGesture : TwoPointTransform2DGestureBase
     {
-
         #region Private variables
 
         [SerializeField]
@@ -69,19 +67,18 @@ namespace TouchScript.Gestures.Simple
             var newVector = new3DPos2 - new3DPos1;
             var oldVector = old3DPos2 - old3DPos1;
 
-            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2) * .5f;
-            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2) * .5f;
+            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2)*.5f;
+            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2)*.5f;
 
             var angle = Vector3.Angle(oldVector, newVector);
             if (Vector3.Dot(Vector3.Cross(oldVector, newVector), WorldTransformPlane.normal) < 0) angle = -angle;
             if (isRotating)
             {
                 deltaRotation = angle;
-            }
-            else
+            } else
             {
                 rotationBuffer += angle;
-                if (rotationBuffer * rotationBuffer >= RotationThreshold * RotationThreshold)
+                if (rotationBuffer*rotationBuffer >= RotationThreshold*RotationThreshold)
                 {
                     isRotating = true;
                     deltaRotation = rotationBuffer;
@@ -113,8 +110,7 @@ namespace TouchScript.Gestures.Simple
                         if (State == GestureState.Possible)
                         {
                             setState(GestureState.Began);
-                        }
-                        else
+                        } else
                         {
                             setState(GestureState.Changed);
                         }
@@ -123,17 +119,22 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
-        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();
 
-            LocalDeltaRotation = 0f;
             rotationBuffer = 0f;
             isRotating = false;
         }
 
-        #endregion
+        /// <inheritdoc />
+        protected override void restart()
+        {
+            base.restart();
 
+            LocalDeltaRotation = 0f;
+        }
+
+        #endregion
     }
 }

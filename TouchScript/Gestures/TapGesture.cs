@@ -124,7 +124,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (ActiveTouches.Count == touches.Count)
+            if (activeTouches.Count == touches.Count)
             {
                 startTime = Time.time;
             }
@@ -149,7 +149,7 @@ namespace TouchScript.Gestures
                 removedPointsTimes.Add(Time.time);
             }
 
-            if (ActiveTouches.Count == 0)
+            if (activeTouches.Count == 0)
             {
                 if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
                 {

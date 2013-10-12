@@ -15,7 +15,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Rotate Gesture")]
     public class RotateGesture : SimpleRotateGesture
     {
-
         /// <summary>
         /// Cluster object
         /// </summary>
@@ -30,7 +29,7 @@ namespace TouchScript.Gestures
                 base.MinPointDistance = value;
                 if (Application.isPlaying)
                 {
-                    clusters.MinPointsDistance = value * TouchManager.Instance.DotsPerCentimeter;
+                    clusters.MinPointsDistance = value*TouchManager.Instance.DotsPerCentimeter;
                 }
             }
         }
@@ -40,35 +39,31 @@ namespace TouchScript.Gestures
         {
             base.Awake();
 
-            clusters.MinPointsDistance = MinPointDistance * TouchManager.Instance.DotsPerCentimeter;
+            clusters.MinPointsDistance = MinPointDistance*TouchManager.Instance.DotsPerCentimeter;
         }
 
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchesBegan(touches);
-
             clusters.AddPoints(touches);
+
+            base.touchesBegan(touches);
         }
 
         /// <inheritdoc />
         protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchesMoved(touches);
-
             clusters.Invalidate();
+
+            base.touchesMoved(touches);
         }
 
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchesEnded(touches);
-
             clusters.RemovePoints(touches);
-            if ((State == GestureState.Began || State == GestureState.Changed) && !clusters.HasClusters)
-            {
-                setState(GestureState.Ended);
-            }
+
+            base.touchesEnded(touches);
         }
 
         /// <inheritdoc />
@@ -105,6 +100,5 @@ namespace TouchScript.Gestures
             else if (index > 1) index = 1;
             return clusters.GetPreviousCenterPosition(index);
         }
-
     }
 }

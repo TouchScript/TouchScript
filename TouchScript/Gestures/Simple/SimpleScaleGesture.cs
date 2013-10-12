@@ -8,14 +8,12 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
 {
-
     /// <summary>
     /// Simple Scale gesture which is only concerned about 2 first fingers.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Scale Gesture")]
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
     {
-
         #region Private variables
 
         [SerializeField]
@@ -68,27 +66,26 @@ namespace TouchScript.Gestures.Simple
             var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, WorldTransformPlane);
             var newVector = new3DPos2 - new3DPos1;
 
-            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2) * .5f;
-            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2) * .5f;
+            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2)*.5f;
+            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2)*.5f;
 
             if (isScaling)
             {
-                deltaScale = newVector.magnitude / Vector3.Distance(old3DPos2, old3DPos1);
-            }
-            else
+                deltaScale = newVector.magnitude/Vector3.Distance(old3DPos2, old3DPos1);
+            } else
             {
                 var old2DDist = Vector2.Distance(old2DPos1, old2DPos2);
                 var new2DDist = Vector2.Distance(new2DPos1, new2DPos2);
                 var delta2DDist = new2DDist - old2DDist;
                 scalingBuffer += delta2DDist;
-                var dpiScalingThreshold = ScalingThreshold * manager.DotsPerCentimeter;
-                if (scalingBuffer * scalingBuffer >= dpiScalingThreshold * dpiScalingThreshold)
+                var dpiScalingThreshold = ScalingThreshold*manager.DotsPerCentimeter;
+                if (scalingBuffer*scalingBuffer >= dpiScalingThreshold*dpiScalingThreshold)
                 {
                     isScaling = true;
                     var oldVector2D = (old2DPos2 - old2DPos1).normalized;
-                    var startScale = (new2DDist - scalingBuffer) * .5f;
-                    var startVector = oldVector2D * startScale;
-                    deltaScale = newVector.magnitude / (ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos + startVector, projectionCamera, WorldTransformPlane) - ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - startVector, projectionCamera, WorldTransformPlane)).magnitude;
+                    var startScale = (new2DDist - scalingBuffer)*.5f;
+                    var startVector = oldVector2D*startScale;
+                    deltaScale = newVector.magnitude/(ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos + startVector, projectionCamera, WorldTransformPlane) - ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - startVector, projectionCamera, WorldTransformPlane)).magnitude;
                 }
             }
 
@@ -117,8 +114,7 @@ namespace TouchScript.Gestures.Simple
                         if (State == GestureState.Possible)
                         {
                             setState(GestureState.Began);
-                        }
-                        else
+                        } else
                         {
                             setState(GestureState.Changed);
                         }
@@ -127,17 +123,22 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
-        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();
 
-            LocalDeltaScale = 1f;
             scalingBuffer = 0f;
             isScaling = false;
         }
 
-        #endregion
+        /// <inheritdoc />
+        protected override void restart()
+        {
+            base.restart();
 
+            LocalDeltaScale = 1f;
+        }
+
+        #endregion
     }
 }
