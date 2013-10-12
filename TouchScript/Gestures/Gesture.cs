@@ -16,7 +16,6 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class Gesture : MonoBehaviour
     {
-
         public static readonly Vector3 InvalidPosition = new Vector3(float.NaN, float.NaN, float.NaN);
 
         /// <summary>
@@ -153,7 +152,7 @@ namespace TouchScript.Gestures
         /// </summary>
         public virtual Vector2 PreviousScreenPosition
         {
-            get 
+            get
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 return Cluster.GetPrevious2DCenterPosition(activeTouches);
@@ -209,9 +208,14 @@ namespace TouchScript.Gestures
         #region Private variables
 
         /// <summary>
+        /// Reference to global GestureManager.
+        /// </summary>
+        protected GestureManager gestureManager { get; private set; }
+
+        /// <summary>
         /// Reference to global TouchManager.
         /// </summary>
-        protected TouchManager manager { get; private set; }
+        protected TouchManager touchManager { get; private set; }
 
         private List<int> shouldRecognizeWith = new List<int>();
 
@@ -239,8 +243,9 @@ namespace TouchScript.Gestures
         /// <exception cref="System.InvalidOperationException">TouchManager instance is required!</exception>
         protected virtual void Start()
         {
-            manager = TouchManager.Instance;
-            if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
+            touchManager = TouchManager.Instance;
+            gestureManager = GestureManager.Instance;
+
             Reset();
         }
 
@@ -257,7 +262,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void OnDestroy()
         {
-            manager = null;
+            gestureManager = null;
         }
 
         #endregion
@@ -452,10 +457,10 @@ namespace TouchScript.Gestures
         /// <returns><c>true</c> if state was changed; otherwise, <c>false</c>.</returns>
         protected bool setState(GestureState value)
         {
-            if (manager == null) return false;
+            if (gestureManager == null) return false;
             if (value == state && state != GestureState.Changed) return false;
 
-            var newState = manager.GestureChangeState(this, value);
+            var newState = gestureManager.GestureChangeState(this, value);
             State = newState;
 
             return value == newState;
@@ -468,7 +473,6 @@ namespace TouchScript.Gestures
         protected void ignoreTouch(TouchPoint touch)
         {
             activeTouches.Remove(touch);
-            manager.IgnoreTouch(touch);
         }
 
         #endregion

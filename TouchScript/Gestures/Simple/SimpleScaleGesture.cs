@@ -78,7 +78,7 @@ namespace TouchScript.Gestures.Simple
                 var new2DDist = Vector2.Distance(new2DPos1, new2DPos2);
                 var delta2DDist = new2DDist - old2DDist;
                 scalingBuffer += delta2DDist;
-                var dpiScalingThreshold = ScalingThreshold*manager.DotsPerCentimeter;
+                var dpiScalingThreshold = ScalingThreshold*touchManager.DotsPerCentimeter;
                 if (scalingBuffer*scalingBuffer >= dpiScalingThreshold*dpiScalingThreshold)
                 {
                     isScaling = true;

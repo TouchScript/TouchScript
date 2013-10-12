@@ -7,14 +7,12 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
 {
-
     /// <summary>
     /// Simple Flick gesture which is only concerned about one finger.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Flick Gesture")]
     public class SimpleFlickGesture : Gesture
     {
-
         #region Unity fields
 
         /// <summary>
@@ -26,10 +24,12 @@ namespace TouchScript.Gestures.Simple
             /// Direction doesn't matter.
             /// </summary>
             Any,
+
             /// <summary>
             /// Only horizontal.
             /// </summary>
             Horizontal,
+
             /// <summary>
             /// Only vertical.
             /// </summary>
@@ -129,8 +129,8 @@ namespace TouchScript.Gestures.Simple
             if (!moving)
             {
                 movementBuffer += delta;
-                var dpiMovementThreshold = MovementThreshold * manager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold * dpiMovementThreshold)
+                var dpiMovementThreshold = MovementThreshold*touchManager.DotsPerCentimeter;
+                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold)
                 {
                     moving = true;
                 }
@@ -164,8 +164,7 @@ namespace TouchScript.Gestures.Simple
                         totalTime += timeDeltas[i];
                         totalMovement += positionDeltas[i];
                         i--;
-                    }
-                    else
+                    } else
                     {
                         break;
                     }
@@ -181,11 +180,10 @@ namespace TouchScript.Gestures.Simple
                         break;
                 }
 
-                if (totalMovement.magnitude < MinDistance * TouchManager.Instance.DotsPerCentimeter)
+                if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
                 {
                     setState(GestureState.Failed);
-                }
-                else
+                } else
                 {
                     ScreenFlickVector = totalMovement;
                     setState(GestureState.Recognized);
@@ -213,6 +211,5 @@ namespace TouchScript.Gestures.Simple
         }
 
         #endregion
-
     }
 }

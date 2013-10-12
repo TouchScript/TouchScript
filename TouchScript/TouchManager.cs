@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Events;
-using TouchScript.Gestures;
 using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
@@ -31,6 +30,18 @@ namespace TouchScript
         public const float INCH_TO_CM = 1/CM_TO_INCH;
 
         #region Events
+
+        public event EventHandler FrameStarted
+        {
+            add { frameStartedInvoker += value; }
+            remove { frameStartedInvoker -= value; }
+        }
+
+        public event EventHandler FrameFinished
+        {
+            add { frameFinishedInvoker += value; }
+            remove { frameFinishedInvoker -= value; }
+        }
 
         /// <summary>
         /// Occurs when new touch points are added.
@@ -73,6 +84,8 @@ namespace TouchScript
         private EventHandler<TouchEventArgs> touchesBeganInvoker, touchesMovedInvoker,
                                              touchesEndedInvoker, touchesCancelledInvoker;
 
+        private EventHandler frameStartedInvoker, frameFinishedInvoker;
+
         #endregion
 
         #region Public properties
@@ -98,11 +111,6 @@ namespace TouchScript
                 return instance;
             }
         }
-
-        /// <summary>
-        /// Active cameras to look for touch targets in specific order.
-        /// </summary>
-        public List<Camera> HitCameras { get; set; }
 
         /// <summary>
         /// Current DPI.
@@ -194,7 +202,7 @@ namespace TouchScript
 
         #endregion
 
-        #region private Variables
+        #region Private variables
 
         private static TouchManager instance;
         private static bool shuttingDown = false;
@@ -218,25 +226,14 @@ namespace TouchScript
 
         // Upcoming changes
         private List<TouchPoint> touchesBegan = new List<TouchPoint>();
+        private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>();
         private List<TouchPoint> touchesEnded = new List<TouchPoint>();
         private List<TouchPoint> touchesCancelled = new List<TouchPoint>();
-        private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>();
-        private List<Gesture> gesturesToReset = new List<Gesture>();
-
-        // Locks
-        private readonly object sync = new object();
-
-        private int nextTouchPointId = 0;
-
-        #endregion
-
-        #region Temporary variables
 
         // Temporary variables for update methods.
-        private Dictionary<Transform, List<TouchPoint>> targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-        private Dictionary<Gesture, List<TouchPoint>> gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
         private List<TouchPoint> reallyMoved = new List<TouchPoint>();
-        private List<Gesture> activeGestures = new List<Gesture>();
+
+        private int nextTouchPointId = 0;
 
         #endregion
 
@@ -377,62 +374,12 @@ namespace TouchScript
         public int BeginTouch(Vector2 position)
         {
             TouchPoint touch;
-            lock (sync)
+            lock (touchesBegan)
             {
                 touch = new TouchPoint(nextTouchPointId++, position);
                 touchesBegan.Add(touch);
             }
             return touch.Id;
-        }
-
-        /// <summary>
-        /// Ends a touch.
-        /// </summary>
-        /// <param name="id">Internal touch id.</param>
-        public void EndTouch(int id)
-        {
-            lock (sync)
-            {
-                TouchPoint touch;
-                if (!idToTouch.TryGetValue(id, out touch))
-                {
-                    foreach (var addedTouch in touchesBegan)
-                    {
-                        if (addedTouch.Id == id)
-                        {
-                            touch = addedTouch;
-                            break;
-                        }
-                    }
-                    if (touch == null) return;
-                }
-                touchesEnded.Add(touch);
-            }
-        }
-
-        /// <summary>
-        /// Cancels a touch.
-        /// </summary>
-        /// <param name="id">Internal touch id.</param>
-        public void CancelTouch(int id)
-        {
-            lock (sync)
-            {
-                TouchPoint touch;
-                if (!idToTouch.TryGetValue(id, out touch))
-                {
-                    foreach (var addedTouch in touchesBegan)
-                    {
-                        if (addedTouch.Id == id)
-                        {
-                            touch = addedTouch;
-                            break;
-                        }
-                    }
-                    if (touch == null) return;
-                }
-                touchesCancelled.Add(touch);
-            }
         }
 
         /// <summary>
@@ -442,7 +389,7 @@ namespace TouchScript
         /// <param name="position">New position.</param>
         public void MoveTouch(int id, Vector2 position)
         {
-            lock (sync)
+            lock (touchesMoved)
             {
                 Vector2 update;
                 if (touchesMoved.TryGetValue(id, out update))
@@ -455,79 +402,63 @@ namespace TouchScript
             }
         }
 
+        /// <summary>
+        /// Ends a touch.
+        /// </summary>
+        /// <param name="id">Internal touch id.</param>
+        public void EndTouch(int id)
+        {
+            lock (touchesEnded)
+            {
+                TouchPoint touch;
+                if (!idToTouch.TryGetValue(id, out touch))
+                {
+                    // This touch was added this frame
+                    foreach (var addedTouch in touchesBegan)
+                    {
+                        if (addedTouch.Id == id)
+                        {
+                            touch = addedTouch;
+                            break;
+                        }
+                    }
+                    // No touch with such id
+                    if (touch == null) return;
+                }
+                touchesEnded.Add(touch);
+            }
+        }
+
+        /// <summary>
+        /// Cancels a touch.
+        /// </summary>
+        /// <param name="id">Internal touch id.</param>
+        public void CancelTouch(int id)
+        {
+            lock (touchesCancelled)
+            {
+                TouchPoint touch;
+                if (!idToTouch.TryGetValue(id, out touch))
+                {
+                    // This touch was added this frame
+                    foreach (var addedTouch in touchesBegan)
+                    {
+                        if (addedTouch.Id == id)
+                        {
+                            touch = addedTouch;
+                            break;
+                        }
+                    }
+                    // No touch with such id
+                    if (touch == null) return;
+                }
+                touchesCancelled.Add(touch);
+            }
+        }
+
         #endregion
 
         #region Internal methods
-
-        internal Gesture.GestureState GestureChangeState(Gesture gesture, Gesture.GestureState state)
-        {
-            switch (state)
-            {
-                case Gesture.GestureState.Possible:
-                    break;
-                case Gesture.GestureState.Began:
-                    switch (gesture.State)
-                    {
-                        case Gesture.GestureState.Possible:
-                            break;
-                        default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[]{gesture, state, gesture.State}));
-                            break;
-                    }
-                    if (gestureCanRecognize(gesture))
-                    {
-                        recognizeGesture(gesture);
-                    } else
-                    {
-                        if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
-                        return Gesture.GestureState.Failed;
-                    }
-                    break;
-                case Gesture.GestureState.Changed:
-                    switch (gesture.State)
-                    {
-                        case Gesture.GestureState.Began:
-                        case Gesture.GestureState.Changed:
-                            break;
-                        default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[]{gesture, state, gesture.State}));
-                            break;
-                    }
-                    break;
-                case Gesture.GestureState.Failed:
-                    if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
-                    break;
-                case Gesture.GestureState.Recognized: // Ended
-                    if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
-                    switch (gesture.State)
-                    {
-                        case Gesture.GestureState.Possible:
-                            if (gestureCanRecognize(gesture))
-                            {
-                                recognizeGesture(gesture);
-                            } else
-                            {
-                                return Gesture.GestureState.Failed;
-                            }
-                            break;
-                        case Gesture.GestureState.Began:
-                        case Gesture.GestureState.Changed:
-                            break;
-                        default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[]{gesture, state, gesture.State}));
-                            break;
-                    }
-                    break;
-                case Gesture.GestureState.Cancelled:
-                    if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
-                    break;
-            }
-
-            return state;
-        }
-
-        internal void IgnoreTouch(TouchPoint touch)
-        {}
 
         #endregion
 
@@ -569,83 +500,19 @@ namespace TouchScript
             }
         }
 
-        private void resetTouchPoints()
-        {
-            foreach (var touchPoint in touchPoints)
-            {
-                touchPoint.ResetPosition();
-            }
-        }
-
         private bool updateBegan()
         {
             if (touchesBegan.Count > 0)
             {
-                // get touches per target
-                targetTouches.Clear();
                 foreach (var touch in touchesBegan)
                 {
                     touchPoints.Add(touch);
                     idToTouch.Add(touch.Id, touch);
-                    if (checkLayers(touch))
+                    foreach (var touchLayer in layers)
                     {
-                        if (touch.Target != null)
-                        {
-                            List<TouchPoint> list;
-                            if (!targetTouches.TryGetValue(touch.Target, out list))
-                            {
-                                list = new List<TouchPoint>();
-                                targetTouches.Add(touch.Target, list);
-                            }
-                            list.Add(touch);
-                        }
+                        if (touchLayer == null) continue;
+                        if (touchLayer.BeginTouch(touch)) break;
                     }
-                }
-
-                // get touches per gesture
-                // touches can come to a gesture from multiple targets in hierarchy
-                gestureTouches.Clear();
-                activeGestures.Clear(); // no order in dictionary
-                foreach (var target in targetTouches.Keys)
-                {
-                    var mightBeActiveGestures = getHierarchyContaining(target);
-                    var possibleGestures = getHierarchyEndingWith(target);
-                    foreach (var gesture in possibleGestures)
-                    {
-                        if (!gestureIsActive(gesture)) continue;
-
-                        var canReceiveTouches = true;
-                        foreach (var activeGesture in mightBeActiveGestures)
-                        {
-                            if (gesture == activeGesture) continue;
-                            if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture)))
-                            {
-                                canReceiveTouches = false;
-                                break;
-                            }
-                        }
-                        if (canReceiveTouches)
-                        {
-                            var touchesToReceive =
-                                targetTouches[target].FindAll((TouchPoint touch) => gesture.ShouldReceiveTouch(touch));
-                            if (touchesToReceive.Count > 0)
-                            {
-                                if (gestureTouches.ContainsKey(gesture))
-                                {
-                                    gestureTouches[gesture].AddRange(touchesToReceive);
-                                } else
-                                {
-                                    activeGestures.Add(gesture);
-                                    gestureTouches.Add(gesture, touchesToReceive);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                foreach (var gesture in activeGestures)
-                {
-                    if (gestureIsActive(gesture)) gesture.TouchesBegan(gestureTouches[gesture]);
                 }
 
                 if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
@@ -660,7 +527,6 @@ namespace TouchScript
         {
             if (touchesMoved.Count > 0)
             {
-                targetTouches.Clear();
                 reallyMoved.Clear();
 
                 foreach (var touch in touchPoints)
@@ -673,59 +539,14 @@ namespace TouchScript
                             touch.Position = position;
                             reallyMoved.Add(touch);
                             if (touch.Layer != null) touch.Layer.MoveTouch(touch);
-
-                            if (touch.Target != null)
-                            {
-                                List<TouchPoint> list;
-                                if (!targetTouches.TryGetValue(touch.Target, out list))
-                                {
-                                    list = new List<TouchPoint>();
-                                    targetTouches.Add(touch.Target, list);
-                                }
-                                list.Add(touch);
-                            }
-                        } else
-                        {
-                            touch.Position = touch.Position;
                         }
+                    } else
+                    {
+                        touch.ResetPosition();
                     }
                 }
 
-                if (reallyMoved.Count > 0)
-                {
-                    gestureTouches.Clear();
-                    activeGestures.Clear(); // no order in dictionary
-                    foreach (var target in targetTouches.Keys)
-                    {
-                        var possibleGestures = getHierarchyEndingWith(target);
-
-                        foreach (var gesture in possibleGestures)
-                        {
-                            if (!gestureIsActive(gesture)) continue;
-
-                            var touchesToReceive =
-                                targetTouches[target].FindAll(gesture.HasTouchPoint);
-                            if (touchesToReceive.Count > 0)
-                            {
-                                if (gestureTouches.ContainsKey(gesture))
-                                {
-                                    gestureTouches[gesture].AddRange(touchesToReceive);
-                                } else
-                                {
-                                    activeGestures.Add(gesture);
-                                    gestureTouches.Add(gesture, touchesToReceive);
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (var gesture in activeGestures)
-                    {
-                        if (gestureIsActive(gesture)) gesture.TouchesMoved(gestureTouches[gesture]);
-                    }
-
-                    if (touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
-                }
+                if (reallyMoved.Count > 0 && touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
                 touchesMoved.Clear();
 
                 return reallyMoved.Count > 0;
@@ -737,53 +558,11 @@ namespace TouchScript
         {
             if (touchesEnded.Count > 0)
             {
-                targetTouches.Clear();
                 foreach (var touch in touchesEnded)
                 {
                     idToTouch.Remove(touch.Id);
                     touchPoints.Remove(touch);
                     if (touch.Layer != null) touch.Layer.EndTouch(touch);
-
-                    if (touch.Target != null)
-                    {
-                        List<TouchPoint> list;
-                        if (!targetTouches.TryGetValue(touch.Target, out list))
-                        {
-                            list = new List<TouchPoint>();
-                            targetTouches.Add(touch.Target, list);
-                        }
-                        list.Add(touch);
-                    }
-                }
-
-                gestureTouches.Clear();
-                activeGestures.Clear(); // no order in dictionary
-                foreach (var target in targetTouches.Keys)
-                {
-                    var possibleGestures = getHierarchyEndingWith(target);
-                    foreach (var gesture in possibleGestures)
-                    {
-                        if (!gestureIsActive(gesture)) continue;
-
-                        var touchesToReceive =
-                            targetTouches[target].FindAll(gesture.HasTouchPoint);
-                        if (touchesToReceive.Count > 0)
-                        {
-                            if (gestureTouches.ContainsKey(gesture))
-                            {
-                                gestureTouches[gesture].AddRange(touchesToReceive);
-                            } else
-                            {
-                                activeGestures.Add(gesture);
-                                gestureTouches.Add(gesture, touchesToReceive);
-                            }
-                        }
-                    }
-                }
-
-                foreach (var gesture in activeGestures)
-                {
-                    if (gestureIsActive(gesture)) gesture.TouchesEnded(gestureTouches[gesture]);
                 }
 
                 if (touchesEndedInvoker != null) touchesEndedInvoker(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
@@ -798,53 +577,11 @@ namespace TouchScript
         {
             if (touchesCancelled.Count > 0)
             {
-                targetTouches.Clear();
                 foreach (var touch in touchesCancelled)
                 {
                     idToTouch.Remove(touch.Id);
                     touchPoints.Remove(touch);
                     if (touch.Layer != null) touch.Layer.CancelTouch(touch);
-
-                    if (touch.Target != null)
-                    {
-                        List<TouchPoint> list;
-                        if (!targetTouches.TryGetValue(touch.Target, out list))
-                        {
-                            list = new List<TouchPoint>();
-                            targetTouches.Add(touch.Target, list);
-                        }
-                        list.Add(touch);
-                    }
-                }
-
-                gestureTouches.Clear();
-                activeGestures.Clear(); // no order in dictionary
-                foreach (var target in targetTouches.Keys)
-                {
-                    var possibleGestures = getHierarchyEndingWith(target);
-                    foreach (var gesture in possibleGestures)
-                    {
-                        if (!gestureIsActive(gesture)) continue;
-
-                        var touchesToReceive =
-                            targetTouches[target].FindAll(gesture.HasTouchPoint);
-                        if (touchesToReceive.Count > 0)
-                        {
-                            if (gestureTouches.ContainsKey(gesture))
-                            {
-                                gestureTouches[gesture].AddRange(touchesToReceive);
-                            } else
-                            {
-                                activeGestures.Add(gesture);
-                                gestureTouches.Add(gesture, touchesToReceive);
-                            }
-                        }
-                    }
-                }
-
-                foreach (var gesture in activeGestures)
-                {
-                    if (gestureIsActive(gesture)) gesture.TouchesCancelled(gestureTouches[gesture]);
                 }
 
                 if (touchesCancelledInvoker != null) touchesCancelledInvoker(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
@@ -857,136 +594,15 @@ namespace TouchScript
 
         private void updateTouchPoints()
         {
-            // reset gestures changed between update loops
-            resetGestures();
+            if (frameStartedInvoker != null) frameStartedInvoker(this, EventArgs.Empty);
+
             bool updated;
-            lock (sync)
-            {
-                resetTouchPoints();
-                updated = updateBegan();
-                updated = updateMoved() || updated;
-                updated = updateEnded() || updated;
-                updated = updateCancelled() || updated;
-            }
+            lock (touchesBegan) updated = updateBegan();
+            lock (touchesMoved) updated = updateMoved() || updated;
+            lock (touchesEnded) updated = updateEnded() || updated;
+            lock (touchesCancelled) updated = updateCancelled() || updated;
 
-            if (updated) resetGestures();
-        }
-
-        private void resetGestures()
-        {
-            foreach (var gesture in gesturesToReset)
-            {
-                gesture.Reset();
-                gesture.SetState(Gesture.GestureState.Possible);
-            }
-            gesturesToReset.Clear();
-        }
-
-        private List<Gesture> getHierarchyEndingWith(Transform target)
-        {
-            var hierarchy = new List<Gesture>();
-            while (target != null)
-            {
-                hierarchy.AddRange(getEnabledGesturesOnTarget(target));
-                target = target.parent;
-            }
-            return hierarchy;
-        }
-
-        private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf)
-        {
-            var hierarchy = new List<Gesture>();
-            if (includeSelf)
-            {
-                hierarchy.AddRange(getEnabledGesturesOnTarget(target));
-            }
-            foreach (Transform child in target)
-            {
-                hierarchy.AddRange(getHierarchyBeginningWith(child, true));
-            }
-            return hierarchy;
-        }
-
-        private List<Gesture> getHierarchyContaining(Transform target)
-        {
-            var hierarchy = getHierarchyEndingWith(target);
-            hierarchy.AddRange(getHierarchyBeginningWith(target, false));
-            return hierarchy;
-        }
-
-        private List<Gesture> getEnabledGesturesOnTarget(Transform target)
-        {
-            var result = new List<Gesture>();
-            if (target.gameObject.active)
-            {
-                result.AddRange(target.GetComponents<Gesture>());
-            }
-            return result;
-        }
-
-        private bool gestureIsActive(Gesture gesture)
-        {
-            if (gesture.gameObject.active == false) return false;
-            if (gesture.enabled == false) return false;
-            switch (gesture.State)
-            {
-                case Gesture.GestureState.Failed:
-                case Gesture.GestureState.Recognized:
-                case Gesture.GestureState.Cancelled:
-                    return false;
-                default:
-                    return true;
-            }
-        }
-
-        private bool gestureCanRecognize(Gesture gesture)
-        {
-            if (!gesture.ShouldBegin()) return false;
-
-            var gestures = getHierarchyContaining(gesture.transform);
-            foreach (var otherGesture in gestures)
-            {
-                if (gesture == otherGesture) continue;
-                if (!gestureIsActive(otherGesture)) continue;
-                if ((otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed) &&
-                    otherGesture.CanPreventGesture(gesture))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private void recognizeGesture(Gesture gesture)
-        {
-            var gestures = getHierarchyContaining(gesture.transform);
-            foreach (var otherGesture in gestures)
-            {
-                if (gesture == otherGesture) continue;
-                if (!gestureIsActive(otherGesture)) continue;
-                if (!(otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed) &&
-                    gesture.CanPreventGesture(otherGesture))
-                {
-                    failGesture(otherGesture);
-                }
-            }
-        }
-
-        private void failGesture(Gesture gesture)
-        {
-            gesture.SetState(Gesture.GestureState.Failed);
-        }
-
-        private bool checkLayers(TouchPoint touch)
-        {
-            foreach (var touchLayer in layers)
-            {
-                if (touchLayer == null) continue;
-                if (touchLayer.BeginTouch(touch)) return true;
-            }
-
-            return false;
+            if (frameFinishedInvoker != null) frameFinishedInvoker(this, EventArgs.Empty);
         }
 
         #endregion

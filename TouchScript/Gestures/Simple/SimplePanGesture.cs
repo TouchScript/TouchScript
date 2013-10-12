@@ -8,14 +8,12 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
 {
-
     /// <summary>
     /// Simple Pan gesture which only relies on the first touch
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Pan Gesture")]
     public class SimplePanGesture : Transform2DGestureBase
     {
-
         #region Public properties
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace TouchScript.Gestures.Simple
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
-                return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition) * .5f;
+                return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition)*.5f;
             }
         }
 
@@ -94,12 +92,11 @@ namespace TouchScript.Gestures.Simple
                 oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                 newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                 localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
-            }
-            else
+            } else
             {
                 movementBuffer += newCenter2DPos - oldCenter2DPos;
-                var dpiMovementThreshold = MovementThreshold * manager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude > dpiMovementThreshold * dpiMovementThreshold)
+                var dpiMovementThreshold = MovementThreshold*touchManager.DotsPerCentimeter;
+                if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold)
                 {
                     isMoving = true;
                     oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - movementBuffer, projectionCamera, WorldTransformPlane);
@@ -108,8 +105,7 @@ namespace TouchScript.Gestures.Simple
                     oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
                     localDelta3DPos = newLocalCenter3DPos - globalToLocalPosition(oldGlobalCenter3DPos);
-                }
-                else
+                } else
                 {
                     newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos - movementBuffer, projectionCamera, WorldTransformPlane);
                     newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
@@ -136,8 +132,7 @@ namespace TouchScript.Gestures.Simple
                         if (State == GestureState.Possible)
                         {
                             setState(GestureState.Began);
-                        }
-                        else
+                        } else
                         {
                             setState(GestureState.Changed);
                         }
@@ -158,6 +153,5 @@ namespace TouchScript.Gestures.Simple
         }
 
         #endregion
-
     }
 }

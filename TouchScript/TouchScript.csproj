@@ -54,6 +54,7 @@
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />
     <Compile Include="Events\TouchEventArgs.cs" />
+    <Compile Include="GestureManager.cs" />
     <Compile Include="Gestures\Simple\SimpleFlickGesture.cs" />
     <Compile Include="Gestures\Simple\SimpleLongPressGesture.cs" />
     <Compile Include="Gestures\FlickGesture.cs" />
