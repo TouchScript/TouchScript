@@ -2,8 +2,8 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections;
 using System.Collections.Generic;
-using System.Timers;
 using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
@@ -27,7 +27,7 @@ namespace TouchScript.Gestures.Simple
         private float distanceLimit = float.PositiveInfinity;
 
         private Vector2 totalMovement;
-        private Timer timer = new Timer();
+        private float recognizeTime;
         private bool fireRecognizedNextUpdate = false;
 
         #endregion
@@ -66,15 +66,6 @@ namespace TouchScript.Gestures.Simple
         #region Unity
 
         /// <inheritdoc />
-        protected override void Awake()
-        {
-            base.Awake();
-
-            timer.Elapsed += onTimerElapsed;
-            timer.AutoReset = false;
-        }
-
-        /// <inheritdoc />
         protected void Update()
         {
             if (fireRecognizedNextUpdate)
@@ -107,8 +98,7 @@ namespace TouchScript.Gestures.Simple
             }
             if (ActiveTouches.Count == touches.Count)
             {
-                timer.Interval = TimeToPress * 1000;
-                timer.Start();
+                StartCoroutine("wait");
             }
         }
 
@@ -131,7 +121,7 @@ namespace TouchScript.Gestures.Simple
 
             if (ActiveTouches.Count == 0)
             {
-                timer.Stop();
+                StopCoroutine("wait");
                 setState(GestureState.Failed);
             }
         }
@@ -150,15 +140,20 @@ namespace TouchScript.Gestures.Simple
             base.reset();
 
             fireRecognizedNextUpdate = false;
-            timer.Stop();
+            StopCoroutine("wait");
         }
 
         #endregion
 
-        #region Event handlers
+        #region Private functions
 
-        private void onTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private IEnumerator wait()
         {
+            recognizeTime = Time.time + TimeToPress;
+            while (Time.time < recognizeTime)
+            {
+                yield return null;
+            }
             fireRecognizedNextUpdate = true;
         }
 
