@@ -539,6 +539,9 @@ namespace TouchScript
                             touch.Position = position;
                             reallyMoved.Add(touch);
                             if (touch.Layer != null) touch.Layer.MoveTouch(touch);
+                        } else
+                        {
+                            touch.ResetPosition();
                         }
                     } else
                     {

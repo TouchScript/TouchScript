@@ -217,7 +217,7 @@ namespace TouchScript
             {
                 if (!gestureIsActive(gesture)) continue;
 
-                distributePointsByGestures(target, gesture);
+                distributePointsByGestures(target, gesture, gesture.HasTouchPoint);
             }
         }
 
@@ -239,14 +239,14 @@ namespace TouchScript
                         break;
                     }
                 }
-                if (canReceiveTouches) distributePointsByGestures(target, gesture);
+                if (canReceiveTouches) distributePointsByGestures(target, gesture, gesture.ShouldReceiveTouch);
             }
         }
 
-        private void distributePointsByGestures(Transform target, Gesture gesture)
+        private void distributePointsByGestures(Transform target, Gesture gesture, Predicate<TouchPoint> condition)
         {
             var touchesToReceive =
-                targetTouches[target].FindAll((TouchPoint touch) => gesture.ShouldReceiveTouch(touch));
+                targetTouches[target].FindAll(condition);
             if (touchesToReceive.Count > 0)
             {
                 if (gestureTouches.ContainsKey(gesture))
