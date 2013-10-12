@@ -20,10 +20,7 @@ namespace TouchScript.Gestures.Simple
         public virtual float MinPointDistance
         {
             get { return minPointDistance; }
-            set
-            {
-                minPointDistance = value;
-            }
+            set { minPointDistance = value; }
         }
 
         /// <inheritdoc />
@@ -57,6 +54,7 @@ namespace TouchScript.Gestures.Simple
         /// Transform's center point screen position.
         /// </summary>
         protected Vector2 screenPosition;
+
         /// <summary>
         /// Transform's center point previous screen position.
         /// </summary>
@@ -110,14 +108,17 @@ namespace TouchScript.Gestures.Simple
             return activeTouches[index].PreviousPosition;
         }
 
+        protected virtual void restart()
+        {}
+
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count < 2 && (State == GestureState.Began || State == GestureState.Changed))
+            if (activeTouches.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
             {
-                setState(GestureState.Ended);
+                restart();
             }
         }
 
@@ -125,9 +126,9 @@ namespace TouchScript.Gestures.Simple
         {
             base.reset();
 
+            restart();
             screenPosition = TouchPoint.InvalidPosition;
             previousScreenPosition = TouchPoint.InvalidPosition;
         }
-
     }
 }
