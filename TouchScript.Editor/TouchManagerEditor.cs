@@ -16,19 +16,19 @@ namespace TouchScript.Editor
 
         private SerializedProperty liveDPI;
         private SerializedProperty editorDPI;
-        private SerializedProperty touchRadius;
         private SerializedProperty layers;
 
         private void OnEnable()
         {
             liveDPI = serializedObject.FindProperty("liveDpi");
             editorDPI = serializedObject.FindProperty("editorDpi");
-            touchRadius = serializedObject.FindProperty("touchRadius");
             layers = serializedObject.FindProperty("layers");
         }
 
         public override void OnInspectorGUI()
         {
+            EditorGUIUtility.LookLikeInspector();
+
             var instance = target as TouchManager;
 
             serializedObject.Update();
@@ -36,7 +36,6 @@ namespace TouchScript.Editor
 
             liveDPI.floatValue = EditorGUILayout.FloatField("Live DPI", liveDPI.floatValue);
             editorDPI.floatValue = EditorGUILayout.FloatField("Editor DPI", editorDPI.floatValue);
-            touchRadius.floatValue = EditorGUILayout.FloatField("Touch Radius (cm)", touchRadius.floatValue);
 
             showLayers = EditorGUILayout.Foldout(showLayers, String.Format("Layers ({0})", layers.arraySize));
             if (showLayers)

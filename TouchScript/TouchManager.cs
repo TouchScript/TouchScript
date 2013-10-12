@@ -160,23 +160,6 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Radius of single touch point on device in cm.
-        /// </summary>
-        public float TouchRadius
-        {
-            get { return touchRadius; }
-            set { touchRadius = value; }
-        }
-
-        /// <summary>
-        /// Touch point radius in pixels.
-        /// </summary>
-        public float PixelTouchRadius
-        {
-            get { return touchRadius*DotsPerCentimeter; }
-        }
-
-        /// <summary>
         /// Pixels in a cm with current DPI.
         /// </summary>
         public float DotsPerCentimeter
@@ -214,9 +197,6 @@ namespace TouchScript
 
         [SerializeField]
         private float editorDpi = 72;
-
-        [SerializeField]
-        private float touchRadius = .75f;
 
         [SerializeField]
         private List<TouchLayer> layers = new List<TouchLayer>();
