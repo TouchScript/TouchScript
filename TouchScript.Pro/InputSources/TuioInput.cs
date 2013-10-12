@@ -24,7 +24,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Minimum movement delta to ignore in cm.
         /// </summary>
-        public float MovementThreshold = 0.1f;
+        public float MovementThreshold = 0f;
 
         #endregion
 
