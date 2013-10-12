@@ -26,11 +26,10 @@ namespace TouchScript.InputSources
     /// Known issues:
     /// <list type="bullet">
     ///     <item>DOES NOT WORK IN EDITOR.</item>
-    ///     <item>App crashes on exit.</item>
     /// </list>
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Windows 7 Touch Input")]
-    public class Win7TouchInput : InputSource
+    public class Win7TouchInput : InputSourceWindows
     {
         private delegate int WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 

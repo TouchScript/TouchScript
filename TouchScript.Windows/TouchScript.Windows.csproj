@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{128FD14A-9D70-4B07-8F9A-E85A511BA28B}</ProjectGuid>
+    <ProjectGuid>{6A8A2544-312D-45F2-BDE1-A16058E2AD99}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TouchScript</RootNamespace>
-    <AssemblyName>TouchScript</AssemblyName>
+    <RootNamespace>TouchScript.Windows</RootNamespace>
+    <AssemblyName>TouchScript.Windows</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,47 +47,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\FullscreenTarget.cs" />
-    <Compile Include="Behaviors\Transformer2D.cs" />
-    <Compile Include="Clusters\Cluster.cs" />
-    <Compile Include="Clusters\Clusters2.cs" />
-    <Compile Include="Debugging\TouchDebugger.cs" />
-    <Compile Include="Events\GestureStateChangeEventArgs.cs" />
-    <Compile Include="Events\TouchEventArgs.cs" />
-    <Compile Include="Gestures\Simple\SimpleFlickGesture.cs" />
-    <Compile Include="Gestures\Simple\SimpleLongPressGesture.cs" />
-    <Compile Include="Gestures\FlickGesture.cs" />
-    <Compile Include="Gestures\Gesture.cs" />
-    <Compile Include="Gestures\LongPressGesture.cs" />
-    <Compile Include="Gestures\PanGesture.cs" />
-    <Compile Include="Gestures\RotateGesture.cs" />
-    <Compile Include="Gestures\ScaleGesture.cs" />
-    <Compile Include="Gestures\Simple\MetaGesture.cs" />
-    <Compile Include="Gestures\Simple\PressGesture.cs" />
-    <Compile Include="Gestures\Simple\ReleaseGesture.cs" />
-    <Compile Include="Gestures\Simple\SimplePanGesture.cs" />
-    <Compile Include="Gestures\Simple\SimpleRotateGesture.cs" />
-    <Compile Include="Gestures\Simple\SimpleScaleGesture.cs" />
-    <Compile Include="Gestures\TapGesture.cs" />
-    <Compile Include="Gestures\Simple\Transform2DGestureBase.cs" />
-    <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBase.cs" />
-    <Compile Include="Hit\HitTest.cs" />
-    <Compile Include="Hit\Untouchable.cs" />
-    <Compile Include="IGestureDelegate.cs" />
-    <Compile Include="InputSources\ICoordinatesRemapper.cs" />
-    <Compile Include="InputSources\IInputSource.cs" />
-    <Compile Include="InputSources\InputSource.cs" />
-    <Compile Include="InputSources\MouseInput.cs" />
-    <Compile Include="Layers\CameraLayer.cs" />
-    <Compile Include="Layers\TouchLayer.cs" />
+    <Compile Include="InputSources\InputSourceWindows.cs" />
+    <Compile Include="InputSources\Win7TouchInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TouchManager.cs" />
-    <Compile Include="TouchPoint.cs" />
-    <Compile Include="Utils\ProjectionUtils.cs" />
-    <Compile Include="InputSources\MobileInput.cs" />
-    <Compile Include="Behaviors\FullscreenBackgroundTarget.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TouchScript\TouchScript.csproj">
+      <Project>{128FD14A-9D70-4B07-8F9A-E85A511BA28B}</Project>
+      <Name>TouchScript</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General Examples\Assets\TouchScript\Plugins\"
