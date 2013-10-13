@@ -210,7 +210,7 @@ namespace TouchScript.Gestures
 
         [SerializeField]
         [HideInInspector]
-        private List<int> shouldRecognizeWith = new List<int>();
+        private List<int> friendlyGestureIds = new List<int>();
 
         #endregion
 
@@ -254,6 +254,23 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public methods
+
+        public virtual void AddFriendlyGesture(Gesture gesture)
+        {
+            RegisterFriendlyGesture(gesture);
+            gesture.RegisterFriendlyGesture(this);
+        }
+
+        public virtual void RemoveFriendlyGesture(Gesture gesture)
+        {
+            UnregisterFriendlyGesture(gesture);
+            gesture.UnregisterFriendlyGesture(this);
+        }
+
+        public bool IsFriendly(Gesture gesture)
+        {
+            return friendlyGestureIds.Contains(gesture.GetInstanceID());
+        }
 
         public virtual bool GetTargetHitResult()
         {
@@ -301,25 +318,6 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Tells that the gesture should (or shouldn't) work simultaneously with this gesture.
-        /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        /// <param name="value">if set to <c>true</c> allows simultaneous recognition.</param>
-        public void ShouldRecognizeSimultaneouslyWith(Gesture gesture, bool value = true)
-        {
-            if (gesture == this) return;
-
-            var id = gesture.GetInstanceID();
-            if (value && !shouldRecognizeWith.Contains(id))
-            {
-                shouldRecognizeWith.Add(id);
-            } else
-            {
-                shouldRecognizeWith.Remove(id);
-            }
-        }
-
-        /// <summary>
         /// Determines whether this instance can prevent the specified gesture.
         /// </summary>
         /// <param name="gesture">The gesture.</param>
@@ -330,23 +328,10 @@ namespace TouchScript.Gestures
         {
             if (Delegate == null)
             {
-                if (gesture.CanBePreventedByGesture(this))
-                {
-                    if (shouldRecognizeWith.Contains(gesture.GetInstanceID()))
-                    {
-                        return false;
-                    } else
-                    {
-                        return true;
-                    }
-                } else
-                {
-                    return false;
-                }
-            } else
-            {
-                return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
+                if (gesture.CanBePreventedByGesture(this)) return !IsFriendly(gesture);
+                return false;
             }
+            return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
         /// <summary>
@@ -358,19 +343,8 @@ namespace TouchScript.Gestures
         /// </returns>
         public virtual bool CanBePreventedByGesture(Gesture gesture)
         {
-            if (Delegate == null)
-            {
-                if (shouldRecognizeWith.Contains(gesture.GetInstanceID()))
-                {
-                    return false;
-                } else
-                {
-                    return true;
-                }
-            } else
-            {
-                return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
-            }
+            if (Delegate == null) return !IsFriendly(gesture);
+            return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
         /// <summary>
@@ -430,6 +404,18 @@ namespace TouchScript.Gestures
         {
             activeTouches.RemoveAll(touches.Contains);
             touchesCancelled(touches);
+        }
+
+        internal void RegisterFriendlyGesture(Gesture gesture)
+        {
+            if (gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+
+            friendlyGestureIds.Add(gesture.GetInstanceID());
+        }
+
+        internal void UnregisterFriendlyGesture(Gesture gesture)
+        {
+            friendlyGestureIds.Remove(gesture.GetInstanceID());
         }
 
         #endregion
