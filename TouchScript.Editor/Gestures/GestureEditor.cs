@@ -15,7 +15,7 @@ namespace TouchScript.Editor.Gestures
 
         private const string FRIENDLY_GESTURES_PROPERTY_NAME = "friendlyGestureIds";
 
-        private GUIStyle boxStyle, headerStyle;
+        private GUIStyle boxStyle, headerStyle, gestureLabelStyle;
         private SerializedProperty serializedGestures;
 
         private bool shouldRecognizeShown;
@@ -39,8 +39,12 @@ namespace TouchScript.Editor.Gestures
 
                 headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
                 headerStyle.contentOffset = new Vector2(3, -2);
+
+                gestureLabelStyle = new GUIStyle(GUI.skin.label);
+                gestureLabelStyle.fontSize = 10;
             }
 
+            EditorGUIUtility.LookLikeControls();
             GUILayout.BeginVertical("ShurikenEffectBg");
 
             var content = new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER);
@@ -51,7 +55,7 @@ namespace TouchScript.Editor.Gestures
             {
                 GUILayout.BeginVertical("ShurikenModuleBg");
                 GUILayout.Space(10);
-                EditorGUILayout.BeginVertical();
+                GUILayout.BeginVertical();
 
                 for (int i = 0; i < serializedGestures.arraySize; i++)
                 {
@@ -59,7 +63,7 @@ namespace TouchScript.Editor.Gestures
                     var gesture = EditorUtility.InstanceIDToObject(item.intValue) as Gesture;
 
                     Rect rect = EditorGUILayout.BeginHorizontal(boxStyle);
-                    EditorGUILayout.LabelField(string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUILayout.ExpandWidth(true));
+                    EditorGUILayout.LabelField(string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), gestureLabelStyle, GUILayout.ExpandWidth(true));
                     if (GUILayout.Button("remove", GUILayout.Width(60), GUILayout.Height(16)))
                     {
                         toRemove = gesture;
@@ -70,7 +74,7 @@ namespace TouchScript.Editor.Gestures
                     }
                     EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.EndVertical();
+                GUILayout.EndVertical();
                 if (serializedGestures.arraySize > 0) GUILayout.Space(9);
 
                 Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, boxStyle, GUILayout.ExpandWidth(true));
@@ -124,7 +128,6 @@ namespace TouchScript.Editor.Gestures
 
         private void addGesture(Gesture value)
         {
-            Debug.Log(value);
             if (value == target) return;
 
             for (int i = 0; i < serializedGestures.arraySize; i++)
@@ -143,6 +146,7 @@ namespace TouchScript.Editor.Gestures
 
             serializedObject.ApplyModifiedProperties();
             so.ApplyModifiedProperties();
+            EditorUtility.SetDirty(value);
         }
 
         private void removeGesture(Gesture value)
@@ -156,6 +160,7 @@ namespace TouchScript.Editor.Gestures
                     serializedGestures.DeleteArrayElementAtIndex(i);
 
                     var so = new SerializedObject(value);
+                    so.Update();
                     var prop = so.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
                     id = target.GetInstanceID();
                     for (int j = 0; j < prop.arraySize; j++)
@@ -164,11 +169,13 @@ namespace TouchScript.Editor.Gestures
                         if (item.intValue == id)
                         {
                             prop.DeleteArrayElementAtIndex(j);
+                            break;
                         }
                     }
 
-                    so.ApplyModifiedProperties();
                     serializedObject.ApplyModifiedProperties();
+                    so.ApplyModifiedProperties();
+                    EditorUtility.SetDirty(value);
                     break;
                 }
             }
