@@ -8,117 +8,170 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof(Gesture))]
+    [CustomEditor(typeof (Gesture))]
     public class GestureEditor : UnityEditor.Editor
     {
+        public const string TEXT_FRIENDLY_HEADER = "Gestures which can work together with this gesture.";
 
+        private const string FRIENDLY_GESTURES_PROPERTY_NAME = "friendlyGestureIds";
+
+        private GUIStyle boxStyle, headerStyle;
         private SerializedProperty serializedGestures;
-        private GUIStyle boxStyle;
-        private bool shouldRecognizeFolded = true;
+
+        private bool shouldRecognizeShown;
 
         protected virtual void OnEnable()
         {
-            serializedGestures = serializedObject.FindProperty("shouldRecognizeWith");
+            hideFlags = HideFlags.HideAndDontSave;
+            serializedGestures = serializedObject.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
         }
 
         public override void OnInspectorGUI()
         {
-            EditorGUIUtility.LookLikeInspector();
-
             if (boxStyle == null)
             {
                 boxStyle = new GUIStyle(GUI.skin.box);
-                boxStyle.margin = new RectOffset(10, 10, 10, 10);
+                boxStyle.margin = new RectOffset(10, 10, 1, 0);
+                boxStyle.padding = new RectOffset(0, 0, 0, 0);
+                boxStyle.contentOffset = Vector2.zero;
                 boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
                 boxStyle.alignment = TextAnchor.MiddleCenter;
+
+                headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
+                headerStyle.contentOffset = new Vector2(3, -2);
             }
 
-            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(20.0f));
-            var rect = GUILayoutUtility.GetRect(0, 15f);
-            var style = "ShurikenModuleTitle";
+            GUILayout.BeginVertical("ShurikenEffectBg");
 
-            //Rect position = EditorGUILayout.BeginVertical();
-            //position.y -= 4f;
-            //position.height += 4f;
-            //GUI.Label(position, GUIContent.none, "ShurikenModuleBg");
-            ////moduleUI.OnInspectorGUI(this.m_ParticleSystem);
-            //EditorGUILayout.LabelField("Bla");
-            //EditorGUILayout.EndVertical();
+            var content = new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER);
+            shouldRecognizeShown = GUI.Toggle(GUILayoutUtility.GetRect(0, 16), shouldRecognizeShown, content, headerStyle);
 
-            shouldRecognizeFolded = EditorGUILayout.Toggle("Should Recognize with", shouldRecognizeFolded, "ShurikenModuleTitle", GUILayout.ExpandWidth(true));
-
-            if (shouldRecognizeFolded)
+            Gesture toRemove = null;
+            if (shouldRecognizeShown)
             {
-                EditorGUI.indentLevel++;
+                GUILayout.BeginVertical("ShurikenModuleBg");
+                GUILayout.Space(10);
                 EditorGUILayout.BeginVertical();
-                for (var i = 0; i < serializedGestures.arraySize; i++)
+
+                for (int i = 0; i < serializedGestures.arraySize; i++)
                 {
-                    var item = serializedGestures.GetArrayElementAtIndex(i);
+                    SerializedProperty item = serializedGestures.GetArrayElementAtIndex(i);
                     var gesture = EditorUtility.InstanceIDToObject(item.intValue) as Gesture;
-                    EditorGUILayout.BeginHorizontal();
+
+                    Rect rect = EditorGUILayout.BeginHorizontal(boxStyle);
                     EditorGUILayout.LabelField(string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUILayout.ExpandWidth(true));
-                    GUILayout.Button("remove", GUILayout.Width(60), GUILayout.Height(16));
+                    if (GUILayout.Button("remove", GUILayout.Width(60), GUILayout.Height(16)))
+                    {
+                        toRemove = gesture;
+                    }
+                    else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+                    {
+                        EditorGUIUtility.PingObject(gesture);
+                    }
                     EditorGUILayout.EndHorizontal();
                 }
                 EditorGUILayout.EndVertical();
+                if (serializedGestures.arraySize > 0) GUILayout.Space(9);
 
                 Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, boxStyle, GUILayout.ExpandWidth(true));
-                GUI.Box(dropArea, "Drag Gesture Here", boxStyle);
+                GUI.Box(dropArea, "Drag a Gesture Here", boxStyle);
                 switch (Event.current.type)
                 {
                     case EventType.DragUpdated:
+                        if (dropArea.Contains(Event.current.mousePosition)) DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                        break;
                     case EventType.DragPerform:
-                        if (!dropArea.Contains(Event.current.mousePosition))
-                            return;
-
-                        DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-
-                        if (Event.current.type == EventType.DragPerform)
+                        if (dropArea.Contains(Event.current.mousePosition))
                         {
+                            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
                             DragAndDrop.AcceptDrag();
 
-                            foreach (var obj in DragAndDrop.objectReferences)
+                            foreach (Object obj in DragAndDrop.objectReferences)
                             {
                                 if (obj is GameObject)
                                 {
                                     var go = obj as GameObject;
-                                    var gestures = go.GetComponents<Gesture>();
-                                    foreach (var gesture in gestures)
+                                    Gesture[] gestures = go.GetComponents<Gesture>();
+                                    foreach (Gesture gesture in gestures)
                                     {
                                         addGesture(gesture);
                                     }
-                                } else if (obj is Gesture)
+                                }
+                                else if (obj is Gesture)
                                 {
                                     addGesture(obj as Gesture);
                                 }
                             }
+
+                            Event.current.Use();
                         }
                         break;
                 }
-            }
 
+                GUILayout.Space(10);
+                GUILayout.EndVertical();
+
+            }
             GUILayout.EndVertical();
+
+            if (toRemove != null)
+            {
+                removeGesture(toRemove);
+            }
 
             serializedObject.ApplyModifiedProperties();
         }
 
         private void addGesture(Gesture value)
         {
-            Debug.Log(string.Format("Adding {0}", value));
+            Debug.Log(value);
+            if (value == target) return;
 
-            for (var i = 0; i < serializedGestures.arraySize; i++)
+            for (int i = 0; i < serializedGestures.arraySize; i++)
             {
-                var item = serializedGestures.GetArrayElementAtIndex(i);
-                Debug.Log(item.intValue);
-                if (item.intValue == value.GetInstanceID())
-                {
-                    Debug.Log("Got this gesture already");
-                    return;
-                }
+                SerializedProperty item = serializedGestures.GetArrayElementAtIndex(i);
+                if (item.intValue == value.GetInstanceID()) return;
             }
 
             serializedGestures.arraySize++;
             serializedGestures.GetArrayElementAtIndex(serializedGestures.arraySize - 1).intValue = value.GetInstanceID();
+
+            var so = new SerializedObject(value);
+            var prop = so.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
+            prop.arraySize++;
+            prop.GetArrayElementAtIndex(prop.arraySize - 1).intValue = target.GetInstanceID();
+
+            serializedObject.ApplyModifiedProperties();
+            so.ApplyModifiedProperties();
+        }
+
+        private void removeGesture(Gesture value)
+        {
+            var id = value.GetInstanceID();
+            for (int i = 0; i < serializedGestures.arraySize; i++)
+            {
+                SerializedProperty item = serializedGestures.GetArrayElementAtIndex(i);
+                if (item.intValue == id)
+                {
+                    serializedGestures.DeleteArrayElementAtIndex(i);
+
+                    var so = new SerializedObject(value);
+                    var prop = so.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
+                    id = target.GetInstanceID();
+                    for (int j = 0; j < prop.arraySize; j++)
+                    {
+                        item = prop.GetArrayElementAtIndex(j);
+                        if (item.intValue == id)
+                        {
+                            prop.DeleteArrayElementAtIndex(j);
+                        }
+                    }
+
+                    so.ApplyModifiedProperties();
+                    serializedObject.ApplyModifiedProperties();
+                    break;
+                }
+            }
         }
 
     }
