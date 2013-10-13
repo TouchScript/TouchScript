@@ -17,13 +17,16 @@ namespace TouchScript.Gestures
         #region Private variables
 
         [SerializeField]
+        [HideInInspector]
         private float timeLimit = float.PositiveInfinity;
 
         [SerializeField]
+        [HideInInspector]
         private float distanceLimit = float.PositiveInfinity;
 
         [SerializeField]
-        private float clusterExistenceTime = .3f;
+        [HideInInspector]
+        private float combineTouchPointsInterval = .3f;
 
         /// <summary>
         /// The cached screen position. 
@@ -70,10 +73,10 @@ namespace TouchScript.Gestures
             set { distanceLimit = value; }
         }
 
-        public float ClusterExistenceTime
+        public float CombineTouchPointsInterval
         {
-            get { return clusterExistenceTime; }
-            set { clusterExistenceTime = value; }
+            get { return combineTouchPointsInterval; }
+            set { combineTouchPointsInterval = value; }
         }
 
         /// <inheritdoc />
@@ -159,7 +162,7 @@ namespace TouchScript.Gestures
 
                 // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
                 var cluster = new List<TouchPoint>();
-                var minTime = Time.time - clusterExistenceTime;
+                var minTime = Time.time - combineTouchPointsInterval;
                 for (var i = removedPoints.Count - 1; i >= 0; i--)
                 {
                     var point = removedPoints[i];

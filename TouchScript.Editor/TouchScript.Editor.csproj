@@ -56,6 +56,7 @@
     <Compile Include="Gestures\Simple\SimpleRotateGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleScaleGestureEditor.cs" />
     <Compile Include="Gestures\Simple\Transform2DGestureBaseEditor.cs" />
+    <Compile Include="Gestures\TapGestureEditor.cs" />
     <Compile Include="TouchManagerEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

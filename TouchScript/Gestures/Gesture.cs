@@ -64,15 +64,6 @@ namespace TouchScript.Gestures
             return position.Equals(InvalidPosition);
         }
 
-        #region Unity fields
-
-        /// <summary>
-        /// An array of gestures which are added to <see cref="ShouldRecognizeSimultaneouslyWith"/> DURING STARTUP so these other gestures could work with this one. 
-        /// </summary>
-        public Gesture[] WillRecognizeWith;
-
-        #endregion
-
         #region Events
 
         /// <summary>
@@ -217,6 +208,8 @@ namespace TouchScript.Gestures
         /// </summary>
         protected TouchManager touchManager { get; private set; }
 
+        [SerializeField]
+        [HideInInspector]
         private List<int> shouldRecognizeWith = new List<int>();
 
         #endregion
@@ -228,13 +221,6 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void Awake()
         {
-            if (WillRecognizeWith != null)
-            {
-                foreach (var gesture in WillRecognizeWith)
-                {
-                    if (gesture != null) ShouldRecognizeSimultaneouslyWith(gesture);
-                }
-            }
         }
 
         /// <summary>
