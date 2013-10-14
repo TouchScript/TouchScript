@@ -41,19 +41,17 @@ namespace TouchScript.Editor.Gestures
 
                 foldoutStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleBg"));
                 foldoutStyle.padding = new RectOffset(10, 10, 10, 10);
-//                foldoutStyle.margin = new RectOffset(-10, 0, 0, 0);
-                foldoutStyle.contentOffset = new Vector2(-10, 0);
 
                 headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
                 headerStyle.contentOffset = new Vector2(3, -2);
 
                 gestureLabelStyle = new GUIStyle(GUI.skin.label);
-                gestureLabelStyle.fontSize = 10;
-                gestureLabelStyle.padding = new RectOffset(-10, 0, 4, 0);
+                gestureLabelStyle.fontSize = 9;
+                gestureLabelStyle.padding = new RectOffset(-10, 0, 5, 0);
             }
 
             EditorGUIUtility.LookLikeInspector();
-            GUILayout.BeginVertical("ShurikenEffectBg");
+            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(1f));
 
             open = GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);
             if (open)
@@ -74,6 +72,8 @@ namespace TouchScript.Editor.Gestures
             shouldRecognizeShown = drawFoldout(shouldRecognizeShown, new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER), () =>
                 {
                     Gesture toRemove = null;
+                    serializedObject.UpdateIfDirtyOrScript();
+
                     GUILayout.BeginVertical();
                     for (int i = 0; i < serializedGestures.arraySize; i++)
                     {
