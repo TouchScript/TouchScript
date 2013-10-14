@@ -17,10 +17,14 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Minimum distance between 2 points in cm for gesture to be recognized.
         /// </summary>
-        public virtual float MinPointDistance
+        public virtual float MinPointsDistance
         {
-            get { return minPointDistance; }
-            set { minPointDistance = value; }
+            get { return minPointsDistance; }
+            set
+            {
+                minPointsDistance = value;
+                minPointsDistanceInPixels = value*TouchManager.Instance.DotsPerCentimeter;
+            }
         }
 
         /// <inheritdoc />
@@ -48,7 +52,9 @@ namespace TouchScript.Gestures.Simple
         #region Private variables
 
         [SerializeField]
-        private float minPointDistance = .5f;
+        private float minPointsDistance = .5f;
+
+        protected float minPointsDistanceInPixels;
 
         /// <summary>
         /// Transform's center point screen position.
@@ -61,6 +67,14 @@ namespace TouchScript.Gestures.Simple
         protected Vector2 previousScreenPosition;
 
         #endregion
+
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            base.Awake();
+
+            minPointsDistanceInPixels = minPointsDistance * TouchManager.Instance.DotsPerCentimeter;
+        }
 
         /// <summary>
         /// Returns true if gesture has enough touch points to be recognized

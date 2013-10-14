@@ -51,15 +51,17 @@ namespace TouchScript.Gestures.Simple
             if (!gotEnoughTouchPoints()) return;
             if (!relevantTouchPoints(touches)) return;
 
-            base.touchesMoved(touches);
-
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaRotation = 0f;
+            
+            var new2DPos1 = getPointScreenPosition(0);
+            var new2DPos2 = getPointScreenPosition(1);
+            if (Vector2.Distance(new2DPos1, new2DPos2) < minPointsDistanceInPixels) return;
+
+            base.touchesMoved(touches);
 
             var old2DPos1 = getPointPreviousScreenPosition(0);
             var old2DPos2 = getPointPreviousScreenPosition(1);
-            var new2DPos1 = getPointScreenPosition(0);
-            var new2DPos2 = getPointScreenPosition(1);
             var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, WorldTransformPlane);
             var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, WorldTransformPlane);
             var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, WorldTransformPlane);

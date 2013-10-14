@@ -38,5 +38,6 @@ namespace TouchScript.Editor.Gestures.Simple
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
+
     }
 }

@@ -21,15 +21,15 @@ namespace TouchScript.Gestures
         protected Clusters2 clusters = new Clusters2();
 
         /// <inheritdoc />
-        public override float MinPointDistance
+        public override float MinPointsDistance
         {
-            get { return base.MinPointDistance; }
+            get { return base.MinPointsDistance; }
             set
             {
-                base.MinPointDistance = value;
+                base.MinPointsDistance = value;
                 if (Application.isPlaying)
                 {
-                    clusters.MinPointsDistance = value*TouchManager.Instance.DotsPerCentimeter;
+                    clusters.MinPointsDistance = minPointsDistanceInPixels;
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace TouchScript.Gestures
         {
             base.Awake();
 
-            clusters.MinPointsDistance = MinPointDistance*TouchManager.Instance.DotsPerCentimeter;
+            clusters.MinPointsDistance = minPointsDistanceInPixels;
         }
 
         /// <inheritdoc />
