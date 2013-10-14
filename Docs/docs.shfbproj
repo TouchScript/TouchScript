@@ -24,8 +24,21 @@
     <SandcastlePath>..\..\..\..\Program Files (x86)\Sandcastle\</SandcastlePath>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\TouchScript\bin\Release\TouchScript.dll" />
-<DocumentationSource sourceFile="XMLDocs.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\TouchScript.Pro\bin\Release\TouchScript.Pro.dll" />
+      <DocumentationSource sourceFile="..\TouchScript.Pro\bin\Release\TouchScript.Pro.XML" />
+      <DocumentationSource sourceFile="..\TouchScript.Windows\bin\Release\TouchScript.Windows.dll" />
+      <DocumentationSource sourceFile="..\TouchScript.Windows\bin\Release\TouchScript.Windows.XML" />
+      <DocumentationSource sourceFile="..\TouchScript\bin\Release\TouchScript.XML" />
+    </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
+    <SyntaxFilters>CSharp</SyntaxFilters>
+    <HeaderText>
+    </HeaderText>
+    <CopyrightText>
+    </CopyrightText>
+    <ProductTitle>TouchScript</ProductTitle>
+    <FooterText>&amp;lt%3bscript type=&amp;quot%3btext/javascript&amp;quot%3b&amp;gt%3b var _gaq = _gaq || []%3b _gaq.push%28[&amp;#39%3b_setAccount&amp;#39%3b, &amp;#39%3bUA-36698945-2&amp;#39%3b]%29%3b _gaq.push%28[&amp;#39%3b_trackPageview&amp;#39%3b]%29%3b %28function%28%29 {{ var ga = document.createElement%28&amp;#39%3bscript&amp;#39%3b%29%3b ga.type = &amp;#39%3btext/javascript&amp;#39%3b%3b ga.async = true%3b ga.src = %28&amp;#39%3bhttps:&amp;#39%3b == document.location.protocol %3f &amp;#39%3bhttps://ssl&amp;#39%3b : &amp;#39%3bhttp://www&amp;#39%3b%29 + &amp;#39%3b.google-analytics.com/ga.js&amp;#39%3b%3b var s = document.getElementsByTagName%28&amp;#39%3bscript&amp;#39%3b%29[0]%3b s.parentNode.insertBefore%28ga, s%29%3b }}%29%28%29%3b &amp;lt%3b/script&amp;gt%3b</FooterText>
+    <HelpAttributes />
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
