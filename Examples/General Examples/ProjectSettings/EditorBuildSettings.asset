@@ -6,4 +6,4 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TouchScript/Examples/Everything Combined/Everything Combined Example.unity
+    path: Assets/TouchScript/Examples/Everything Combined/Everything Combined.unity

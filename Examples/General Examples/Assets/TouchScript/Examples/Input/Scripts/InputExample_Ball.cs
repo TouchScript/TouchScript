@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InputExampleBall : MonoBehaviour
+public class InputExample_Ball : MonoBehaviour
 {
     public float Speed = 1f;
 

@@ -2,7 +2,7 @@ using TouchScript.Gestures;
 using UnityEngine;
 using System.Collections;
 
-public class Spawner : MonoBehaviour
+public class BasicExample_Spawner : MonoBehaviour
 {
     public Transform CubePrefab;
     public Transform Container;

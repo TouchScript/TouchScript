@@ -3,8 +3,8 @@ using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 
-public class Cubes : MonoBehaviour {
-
+public class CombinedExample_Cubes : MonoBehaviour
+{
     private enum CubesState
     {
         Idle,
@@ -22,7 +22,7 @@ public class Cubes : MonoBehaviour {
         if (State != CubesState.Idle) return;
 
         State = CubesState.Rotating;
-        targetRotation = Quaternion.AngleAxis(90, axis) * transform.localRotation;
+        targetRotation = Quaternion.AngleAxis(90, axis)*transform.localRotation;
     }
 
     private void Start()
@@ -36,7 +36,7 @@ public class Cubes : MonoBehaviour {
     {
         if (State == CubesState.Rotating)
         {
-            var fraction = AutoRotationSpeed * Time.deltaTime;
+            var fraction = AutoRotationSpeed*Time.deltaTime;
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, fraction);
             if (Quaternion.Angle(transform.localRotation, targetRotation) < .1)
             {
@@ -45,7 +45,7 @@ public class Cubes : MonoBehaviour {
             }
         } else
         {
-            var fraction = RotationSpeed * Time.deltaTime;
+            var fraction = RotationSpeed*Time.deltaTime;
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, fraction);
         }
     }
@@ -61,10 +61,9 @@ public class Cubes : MonoBehaviour {
 
                 if (Math.Abs(gesture.LocalDeltaRotation) > 0.01)
                 {
-                    targetRotation = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal) * targetRotation;
+                    targetRotation = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal)*targetRotation;
                 }
                 break;
         }
     }
-
 }

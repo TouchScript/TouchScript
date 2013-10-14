@@ -1,7 +1,7 @@
 using UnityEngine;
 using TouchScript.Gestures;
 
-public class Breaker : MonoBehaviour
+public class BasicExample_Breaker : MonoBehaviour
 {
     public Transform CubePrefab;
     public float Power = 10.0f;

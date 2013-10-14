@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HitTestScene : MonoBehaviour {
+public class HitTestExample : MonoBehaviour {
 
     private void OnGUI()
     {

@@ -1,16 +1,13 @@
-using System;
 using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
-using System.Collections;
 
-public class Side : MonoBehaviour
+public class CombinedExample_Side : MonoBehaviour
 {
-
     public float Speed = 10f;
 
     private Vector3 startPosition;
-    private Vector3 targetPosition; 
+    private Vector3 targetPosition;
 
     private void Start()
     {
@@ -20,9 +17,7 @@ public class Side : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(targetY);
-        var fraction = Speed * Time.deltaTime;
-        //transform.localPosition = targetPosition;
+        var fraction = Speed*Time.deltaTime;
         transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, fraction);
     }
 
@@ -35,7 +30,7 @@ public class Side : MonoBehaviour
                 var target = sender as PanGesture;
                 Debug.DrawRay(transform.position, target.WorldTransformPlane.normal);
                 Debug.DrawRay(transform.position, target.WorldDeltaPosition.normalized);
-                
+
                 var local = new Vector3(0, transform.InverseTransformDirection(target.WorldDeltaPosition).y, 0);
                 targetPosition += transform.parent.InverseTransformDirection(transform.TransformDirection(local));
 
@@ -43,5 +38,4 @@ public class Side : MonoBehaviour
                 break;
         }
     }
-
 }

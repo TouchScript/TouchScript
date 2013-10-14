@@ -2,7 +2,7 @@ using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 
-public class Button : MonoBehaviour
+public class CombinedExample_Button : MonoBehaviour
 {
     private void Start()
     {
@@ -14,5 +14,4 @@ public class Button : MonoBehaviour
         if (gestureStateChangeEventArgs.State == Gesture.GestureState.Recognized)
             GameObject.Find("Big Cube").renderer.material.color = renderer.material.color;
     }
-
 }

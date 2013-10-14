@@ -2,34 +2,27 @@ using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 
-public class SideButton : MonoBehaviour
+public class CombinedExample_Bump : MonoBehaviour
 {
-
-    private float startY;
+    private Vector3 startScale;
 
     private void Start()
     {
-        startY = transform.localPosition.y;
-
         if (GetComponent<PressGesture>() != null) GetComponent<PressGesture>().StateChanged += onPress;
         if (GetComponent<ReleaseGesture>() != null) GetComponent<ReleaseGesture>().StateChanged += onRelease;
+
+        startScale = transform.localScale;
     }
 
     private void onRelease(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
     {
         if (gestureStateChangeEventArgs.State == Gesture.GestureState.Recognized)
-        {
-            transform.localPosition = Vector3.up*startY;
-            var cubes = GameObject.Find("Cubes").GetComponent<Cubes>();
-            cubes.Rotate(transform.up);
-        }
+            transform.localScale = startScale;
     }
 
     private void onPress(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
     {
         if (gestureStateChangeEventArgs.State == Gesture.GestureState.Recognized)
-        {
-            transform.localPosition = Vector3.up*(startY - .08f);
-        }
+            transform.localScale = startScale*.7f;
     }
 }

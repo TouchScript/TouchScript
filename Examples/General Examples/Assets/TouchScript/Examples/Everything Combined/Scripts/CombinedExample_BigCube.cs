@@ -1,7 +1,6 @@
 using UnityEngine;
-using System.Collections;
 
-public class BigCube : MonoBehaviour
+public class CombinedExample_BigCube : MonoBehaviour
 {
     private Vector3 startScale;
 
