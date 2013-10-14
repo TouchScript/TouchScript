@@ -9,7 +9,40 @@ namespace TouchScript.Editor.Utils
 
         private static GUIStyle foldoutStyle, headerStyle;
 
-        public static bool DrawFoldout(bool open, GUIContent header, Action content)
+        public static GUIStyle BoxStyle
+        {
+            get
+            {
+                if (boxStyle == null)
+                {
+                    boxStyle = new GUIStyle(GUI.skin.box);
+                    boxStyle.margin = new RectOffset(0, 0, 1, 0);
+                    boxStyle.padding = new RectOffset(0, 0, 0, 0);
+                    boxStyle.contentOffset = new Vector2(0, 0);
+                    boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
+                    boxStyle.alignment = TextAnchor.MiddleCenter;
+                }
+                return boxStyle;
+            }
+        }
+
+        public static GUIStyle BoxLabelStyle
+        {
+            get
+            {
+                if (boxLabelStyle == null)
+                {
+                    boxLabelStyle = new GUIStyle(GUI.skin.label);
+                    boxLabelStyle.fontSize = 9;
+                    boxLabelStyle.padding = new RectOffset(-10, 0, 5, 0);
+                }
+                return boxLabelStyle;
+            }
+        }
+
+        private static GUIStyle boxStyle, boxLabelStyle;
+
+        public static bool Foldout(bool open, GUIContent header, Action content)
         {
             if (foldoutStyle == null)
             {
@@ -37,7 +70,7 @@ namespace TouchScript.Editor.Utils
             return open;
         }
 
-        public static void DrawCompactVector3(GUIContent content, SerializedProperty property)
+        public static void CompactVector3(GUIContent content, SerializedProperty property)
         {
             GUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(content);

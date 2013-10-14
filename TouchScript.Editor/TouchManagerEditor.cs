@@ -3,6 +3,7 @@
  */
 
 using System;
+using TouchScript.Editor.Utils;
 using TouchScript.Layers;
 using UnityEditor;
 using UnityEngine;
@@ -12,11 +13,17 @@ namespace TouchScript.Editor
     [CustomEditor(typeof(TouchManager))]
     public class TouchManagerEditor : UnityEditor.Editor
     {
+        public const string TEXT_LIVEDPI = "DPI used in built app runing on target device.";
+        public const string TEXT_EDITORDPI = "DPI used in the editor.";
+        public const string TEXT_MOVEDOWN = "Move down.";
+
         private bool showLayers = false;
 
         private SerializedProperty liveDPI;
         private SerializedProperty editorDPI;
         private SerializedProperty layers;
+
+        private GUIStyle layerButtonStyle;
 
         private void OnEnable()
         {
@@ -27,65 +34,59 @@ namespace TouchScript.Editor
 
         public override void OnInspectorGUI()
         {
-            EditorGUIUtility.LookLikeInspector();
+            if (layerButtonStyle == null)
+            {
+                layerButtonStyle = new GUIStyle(EditorStyles.miniButton);
+                layerButtonStyle.fontSize = 9;
+                layerButtonStyle.padding = new RectOffset(-4, 0, -3, 0);
+            }
 
-            var instance = target as TouchManager;
+            EditorGUIUtility.LookLikeInspector();
 
             serializedObject.Update();
             GUI.changed = false;
 
-            liveDPI.floatValue = EditorGUILayout.FloatField("Live DPI", liveDPI.floatValue);
-            editorDPI.floatValue = EditorGUILayout.FloatField("Editor DPI", editorDPI.floatValue);
+            EditorGUILayout.PropertyField(liveDPI, new GUIContent("Live DPI", TEXT_LIVEDPI));
+            EditorGUILayout.PropertyField(editorDPI, new GUIContent("Editor DPI", TEXT_EDITORDPI));
 
-            showLayers = EditorGUILayout.Foldout(showLayers, String.Format("Layers ({0})", layers.arraySize));
-            if (showLayers)
-            {
-                EditorGUILayout.BeginVertical();
-                for (var i = 0; i < layers.arraySize; i++)
+            showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)), () =>
                 {
-                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
-                    string name;
-                    if (layer == null)
+                    EditorGUILayout.BeginVertical();
+                    for (var i = 0; i < layers.arraySize; i++)
                     {
-                        name = "Unknown";
-                    } else
-                    {
-                        name = layer.Name;
+                        var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
+                        string name;
+                        if (layer == null) name = "Unknown";
+                        else name = layer.Name;
+
+                        var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
+                        
+                        EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
+                        if (GUILayout.Button(new GUIContent("Move Down", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(70), GUILayout.Height(18)))
+                        {
+                            layers.MoveArrayElement(i, i + 1);
+                        }
+                        else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+                        {
+                            EditorGUIUtility.PingObject(layer);
+                        }
+                        EditorGUILayout.EndHorizontal();
                     }
-                    EditorGUILayout.BeginHorizontal();
-                    if (GUILayout.Button("^", GUILayout.MaxWidth(30)))
-                    {
-                        layers.MoveArrayElement(i, i - 1);
-                    }
-                    if (GUILayout.Button("V", GUILayout.MaxWidth(30)))
-                    {
-                        layers.MoveArrayElement(i, i + 1);
-                    }
-                    EditorGUILayout.LabelField("Layer: " + name);
                     EditorGUILayout.EndVertical();
-                }
-                EditorGUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100)))
-                {
-                    refresh();
-                }
-            }
+                    GUILayout.Space(5f);
+                    if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
+                });
 
             serializedObject.ApplyModifiedProperties();
-            if (GUI.changed) EditorUtility.SetDirty(instance);
         }
 
         private void refresh()
         {
-            while (layers.arraySize > 0)
-            {
-                layers.DeleteArrayElementAtIndex(0);
-            }
+            layers.ClearArray();
             var allLayers = FindObjectsOfType(typeof(TouchLayer));
             var i = 0;
             layers.arraySize = allLayers.Length;
-            Debug.Log(allLayers.Length);
             foreach (TouchLayer l in allLayers)
             {
                 layers.GetArrayElementAtIndex(i).objectReferenceValue = l;

@@ -10,16 +10,14 @@ using Object = UnityEngine.Object;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof (Gesture))]
+    [CustomEditor(typeof(Gesture))]
     public class GestureEditor : UnityEditor.Editor
     {
         public const string TEXT_FRIENDLY_HEADER = "Gestures which can work together with this gesture.";
 
         private const string FRIENDLY_GESTURES_PROPERTY_NAME = "friendlyGestures";
 
-        private GUIStyle boxStyle, gestureLabelStyle;
         private SerializedProperty serializedGestures;
-
         private bool shouldRecognizeShown;
 
         protected virtual void OnEnable()
@@ -30,97 +28,81 @@ namespace TouchScript.Editor.Gestures
 
         public override void OnInspectorGUI()
         {
-            if (boxStyle == null)
-            {
-                boxStyle = new GUIStyle(GUI.skin.box);
-                boxStyle.margin = new RectOffset(0, 0, 1, 0);
-                boxStyle.padding = new RectOffset(0, 0, 0, 0);
-                boxStyle.contentOffset = new Vector2(0, 0);
-                boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
-                boxStyle.alignment = TextAnchor.MiddleCenter;
-
-                gestureLabelStyle = new GUIStyle(GUI.skin.label);
-                gestureLabelStyle.fontSize = 9;
-                gestureLabelStyle.padding = new RectOffset(-10, 0, 5, 0);
-            }
-
-            shouldRecognizeShown = GUIElements.DrawFoldout(shouldRecognizeShown, new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER), () =>
-                {
-                    int gestureIndexToRemove = -1;
-                    int gesturesDrawn = 0;
-
-                    serializedObject.UpdateIfDirtyOrScript();
-
-                    GUILayout.BeginVertical();
-                    for (int i = 0; i < serializedGestures.arraySize; i++)
-                    {
-                        var gesture = serializedGestures.GetArrayElementAtIndex(i).objectReferenceValue as Gesture;
-
-                        if (gesture == null)
-                        {
-                            //Debug.Log(string.Format("Gesture at {0} on {1} is null!!", i, target));
-                            gestureIndexToRemove = i;
-                        }
-                        else
-                        {
-                            Rect rect = EditorGUILayout.BeginHorizontal(boxStyle, GUILayout.Height(23));
-                            EditorGUILayout.LabelField(string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), gestureLabelStyle, GUILayout.ExpandWidth(true));
-                            if (GUILayout.Button("remove", GUILayout.Width(60), GUILayout.Height(16)))
-                            {
-                                gestureIndexToRemove = i;
-                            }
-                            else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-                            {
-                                EditorGUIUtility.PingObject(gesture);
-                            }
-                            EditorGUILayout.EndHorizontal();
-                            gesturesDrawn++;
-                        }
-                        
-                    }
-                    GUILayout.EndVertical();
-                    if (gesturesDrawn > 0) GUILayout.Space(9);
-
-                    Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, boxStyle, GUILayout.ExpandWidth(true));
-                    GUI.Box(dropArea, "Drag a Gesture Here", boxStyle);
-                    switch (Event.current.type)
-                    {
-                        case EventType.DragUpdated:
-                            if (dropArea.Contains(Event.current.mousePosition)) DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                            break;
-                        case EventType.DragPerform:
-                            if (dropArea.Contains(Event.current.mousePosition))
-                            {
-                                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                                DragAndDrop.AcceptDrag();
-
-                                foreach (Object obj in DragAndDrop.objectReferences)
-                                {
-                                    if (obj is GameObject)
+            shouldRecognizeShown =
+                GUIElements.Foldout(shouldRecognizeShown, new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER),
+                                    () =>
                                     {
-                                        var go = obj as GameObject;
-                                        Gesture[] gestures = go.GetComponents<Gesture>();
-                                        foreach (Gesture gesture in gestures)
+                                        int gestureIndexToRemove = -1;
+                                        int gesturesDrawn = 0;
+
+                                        serializedObject.UpdateIfDirtyOrScript();
+
+                                        GUILayout.BeginVertical();
+                                        for (int i = 0; i < serializedGestures.arraySize; i++)
                                         {
-                                            addGesture(gesture);
+                                            var gesture = serializedGestures.GetArrayElementAtIndex(i).objectReferenceValue as Gesture;
+
+                                            if (gesture == null)
+                                            {
+                                                //Debug.Log(string.Format("Gesture at {0} on {1} is null!!", i, target));
+                                                gestureIndexToRemove = i;
+                                            } else
+                                            {
+                                                Rect rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
+                                                EditorGUILayout.LabelField(string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
+                                                if (GUILayout.Button("remove", GUILayout.Width(60), GUILayout.Height(16)))
+                                                {
+                                                    gestureIndexToRemove = i;
+                                                } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+                                                {
+                                                    EditorGUIUtility.PingObject(gesture);
+                                                }
+                                                EditorGUILayout.EndHorizontal();
+                                                gesturesDrawn++;
+                                            }
                                         }
-                                    }
-                                    else if (obj is Gesture)
-                                    {
-                                        addGesture(obj as Gesture);
-                                    }
-                                }
+                                        GUILayout.EndVertical();
+                                        if (gesturesDrawn > 0) GUILayout.Space(9);
 
-                                Event.current.Use();
-                            }
-                            break;
-                    }
+                                        Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUIElements.BoxStyle, GUILayout.ExpandWidth(true));
+                                        GUI.Box(dropArea, "Drag a Gesture Here", GUIElements.BoxStyle);
+                                        switch (Event.current.type)
+                                        {
+                                            case EventType.DragUpdated:
+                                                if (dropArea.Contains(Event.current.mousePosition)) DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                                                break;
+                                            case EventType.DragPerform:
+                                                if (dropArea.Contains(Event.current.mousePosition))
+                                                {
+                                                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                                                    DragAndDrop.AcceptDrag();
 
-                    if (gestureIndexToRemove > -1)
-                    {
-                        removeGestureAt(gestureIndexToRemove);
-                    }
-                });
+                                                    foreach (Object obj in DragAndDrop.objectReferences)
+                                                    {
+                                                        if (obj is GameObject)
+                                                        {
+                                                            var go = obj as GameObject;
+                                                            Gesture[] gestures = go.GetComponents<Gesture>();
+                                                            foreach (Gesture gesture in gestures)
+                                                            {
+                                                                addGesture(gesture);
+                                                            }
+                                                        } else if (obj is Gesture)
+                                                        {
+                                                            addGesture(obj as Gesture);
+                                                        }
+                                                    }
+
+                                                    Event.current.Use();
+                                                }
+                                                break;
+                                        }
+
+                                        if (gestureIndexToRemove > -1)
+                                        {
+                                            removeGestureAt(gestureIndexToRemove);
+                                        }
+                                    });
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -185,6 +167,5 @@ namespace TouchScript.Editor.Gestures
             }
             array.arraySize--;
         }
-
     }
 }

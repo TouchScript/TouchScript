@@ -33,7 +33,7 @@ namespace TouchScript.Editor.Gestures.Simple
             EditorGUILayout.PropertyField(projection, new GUIContent("Projection Type", TEXT_PROJECTION));
             if (projection.enumValueIndex != (int)Transform2DGestureBase.ProjectionType.Camera)
             {
-                GUIElements.DrawCompactVector3(new GUIContent("Projection Normal", TEXT_PROJECTIONNORMAL), projectionNormal);
+                GUIElements.CompactVector3(new GUIContent("Projection Normal", TEXT_PROJECTIONNORMAL), projectionNormal);
             }
 
             serializedObject.ApplyModifiedProperties();
