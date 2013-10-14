@@ -52,10 +52,16 @@
     <Compile Include="Gestures\PanGestureEditor.cs" />
     <Compile Include="Gestures\RotateGestureEditor.cs" />
     <Compile Include="Gestures\ScaleGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\MetaGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\PressGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\ReleaseGestureEditor.cs" />
+    <Compile Include="Gestures\FlickGestureEditor.cs" />
+    <Compile Include="Gestures\LongPressGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimplePanGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleRotateGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleScaleGestureEditor.cs" />
     <Compile Include="Gestures\Simple\Transform2DGestureBaseEditor.cs" />
+    <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBaseEditor.cs" />
     <Compile Include="Gestures\TapGestureEditor.cs" />
     <Compile Include="TouchManagerEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,19 +11,28 @@ namespace TouchScript.Editor.Gestures.Simple
     [CustomEditor(typeof(SimplePanGesture))]
     public class SimplePanGestureEditor : Transform2DGestureBaseEditor
     {
+
+        public const string TEXT_MOVEMENTTHRESHOLD = "Minimum distance in cm touch points must move for the gesture to begin.";
+
+        private SerializedProperty movementThreshold;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            movementThreshold = serializedObject.FindProperty("movementThreshold");
+        }
+
         public override void OnInspectorGUI()
         {
-            var instance = target as SimplePanGesture;
+            serializedObject.UpdateIfDirtyOrScript();
+            EditorGUIUtility.LookLikeInspector();
 
-            serializedObject.Update();
-            EditorGUIUtility.LookLikeControls();
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Movement Threshold (cm)", GUILayout.MinWidth(200));
-            instance.MovementThreshold = EditorGUILayout.FloatField("", instance.MovementThreshold, GUILayout.MinWidth(50));
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.HelpBox("Minimum distance in cm for cluster to move to be considered as a possible gesture.", MessageType.Info, true);
+            EditorGUILayout.PropertyField(movementThreshold, new GUIContent("Movement Threshold (cm)", TEXT_MOVEMENTTHRESHOLD));
+
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
+
     }
 }

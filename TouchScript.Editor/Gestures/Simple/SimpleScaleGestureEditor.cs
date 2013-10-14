@@ -9,29 +9,30 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures.Simple
 {
     [CustomEditor(typeof(SimpleScaleGesture))]
-    public class SimpleScaleGestureEditor : Transform2DGestureBaseEditor
+    public class SimpleScaleGestureEditor : TwoPointTransform2DGestureBaseEditor
     {
+
+        public const string TEXT_SCALINGTHRESHOLD = "Minimum distance in cm touch points must move for the gesture to begin.";
+
+        private SerializedProperty scalingThreshold;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            scalingThreshold = serializedObject.FindProperty("scalingThreshold");
+        }
+
         public override void OnInspectorGUI()
         {
-            var instance = target as SimpleScaleGesture;
+            serializedObject.UpdateIfDirtyOrScript();
+            EditorGUIUtility.LookLikeInspector();
 
-            serializedObject.Update();
-            EditorGUIUtility.LookLikeControls();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Scaling Threshold (cm)", GUILayout.MinWidth(200));
-            instance.ScalingThreshold = EditorGUILayout.FloatField("", instance.ScalingThreshold, GUILayout.MinWidth(50));
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.HelpBox("Minimum distance in cm between clusters for gesture to be considered possible.", MessageType.Info, true);
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Min Point Distance (cm)", GUILayout.MinWidth(200));
-            instance.MinPointDistance = EditorGUILayout.FloatField("", instance.MinPointDistance, GUILayout.MinWidth(50));
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.HelpBox("Minimum distance between points (fingers) in cm for gesture to be recognized.", MessageType.Info, true);
+            EditorGUILayout.PropertyField(scalingThreshold, new GUIContent("Scaling Threshold (cm)", TEXT_SCALINGTHRESHOLD));
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
+
     }
 }
