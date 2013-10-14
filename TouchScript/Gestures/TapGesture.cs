@@ -17,15 +17,12 @@ namespace TouchScript.Gestures
         #region Private variables
 
         [SerializeField]
-        [HideInInspector]
         private float timeLimit = float.PositiveInfinity;
 
         [SerializeField]
-        [HideInInspector]
         private float distanceLimit = float.PositiveInfinity;
 
         [SerializeField]
-        [HideInInspector]
         private float combineTouchPointsInterval = .3f;
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace TouchScript.Gestures.Simple
             {
                 if (projection == value) return;
                 projection = value;
-                updateProjectionPlane();
+                if (Application.isPlaying) updateProjectionPlane();
             }
         }
 
@@ -69,7 +69,7 @@ namespace TouchScript.Gestures.Simple
             {
                 if (projectionNormal == value) return;
                 projectionNormal = value;
-                updateProjectionPlane();
+                if (Application.isPlaying) updateProjectionPlane();
             }
         }
 

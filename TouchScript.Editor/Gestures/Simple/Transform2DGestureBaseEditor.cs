@@ -4,34 +4,37 @@
 
 using TouchScript.Gestures.Simple;
 using UnityEditor;
+using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.Simple
 {
     public class Transform2DGestureBaseEditor : GestureEditor
     {
+
+        public const string TEXT_PROJECTION = "Method used to project 2d screen positions of touch points into 3d space.";
+        public const string TEXT_PROJECTIONNORMAL = "Normal of the plane in 3d space where touch points' positions are projected.";
+
+        private SerializedProperty projection, projectionNormal;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            projection = serializedObject.FindProperty("projection");
+            projectionNormal = serializedObject.FindProperty("projectionNormal");
+        }
+
         public override void OnInspectorGUI()
         {
-            var instance = target as Transform2DGestureBase;
+            serializedObject.UpdateIfDirtyOrScript();
+            EditorGUIUtility.LookLikeInspector();
 
-            serializedObject.Update();
-            EditorGUIUtility.LookLikeControls();
-            instance.Projection = (Transform2DGestureBase.ProjectionType)EditorGUILayout.EnumPopup("Projection Type", instance.Projection);
-            switch (instance.Projection)
+            EditorGUILayout.PropertyField(projection, new GUIContent("Projection Type", TEXT_PROJECTION));
+            if (projection.enumValueIndex != (int)Transform2DGestureBase.ProjectionType.Camera)
             {
-                case Transform2DGestureBase.ProjectionType.Camera:
-                    EditorGUILayout.HelpBox("Object is moving on a plane through its pivot point parallel to camera screen.", MessageType.Info, true);
-                    break;
-                case Transform2DGestureBase.ProjectionType.Global:
-                    EditorGUILayout.HelpBox("Object is moving on a plane through its pivot point with given normal vector in global space.", MessageType.Info, true);
-                    break;
-                case Transform2DGestureBase.ProjectionType.Local:
-                    EditorGUILayout.HelpBox("Object is moving on a plane through its pivot point with given normal vector in local space.", MessageType.Info, true);
-                    break;
+                drawCompactVector3(new GUIContent("Projection Normal", TEXT_PROJECTIONNORMAL), projectionNormal);
             }
-            if (instance.Projection != Transform2DGestureBase.ProjectionType.Camera)
-            {
-                instance.ProjectionNormal = EditorGUILayout.Vector3Field("Projection Normal", instance.ProjectionNormal);
-            }
+
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }

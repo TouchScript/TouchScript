@@ -4,11 +4,9 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-
     [CustomEditor(typeof(TapGesture))]
     public class TapGestureEditor : GestureEditor
     {
-
         public const string TEXT_TIMELIMIT = "Tap fails if is being pressed for more than <Value> seconds.";
         public const string TEXT_DISTANCELIMIT = "Tap fails if fingers move more than <Value> cm.";
         public const string TEXT_COMBINETOUCHPOINTSINTERVAL = "When several fingers are used to perform a tap, touch points released not earlier than <Time - CombineInterval> are used to calculate gesture's final screen position. If set to 0, position of the last touch point is used.";
@@ -42,8 +40,7 @@ namespace TouchScript.Editor.Gestures
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(timeLimit, new GUIContent("Value (sec)"));
                 EditorGUI.indentLevel--;
-            }
-            else
+            } else
             {
                 timeLimit.floatValue = float.PositiveInfinity;
             }
@@ -56,8 +53,7 @@ namespace TouchScript.Editor.Gestures
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(distanceLimit, new GUIContent("Value (cm)", TEXT_DISTANCELIMIT));
                 EditorGUI.indentLevel--;
-            }
-            else
+            } else
             {
                 distanceLimit.floatValue = float.PositiveInfinity;
             }
@@ -71,6 +67,5 @@ namespace TouchScript.Editor.Gestures
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
-
     }
 }
