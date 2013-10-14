@@ -26,19 +26,19 @@ namespace TouchScript.Gestures
         private float combineTouchPointsInterval = .3f;
 
         /// <summary>
-        /// The cached screen position. 
+        /// Cached screen position. 
         /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         protected Vector2 cachedScreenPosition;
 
         /// <summary>
-        /// The cached previous screen position.
+        /// Cached previous screen position.
         /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         protected Vector2 cachedPreviousScreenPosition;
 
         /// <summary>
-        /// The cached target hit result.
+        /// Cached target hit result.
         /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         protected RaycastHit cachedTargetHitResult;
@@ -53,7 +53,7 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Maximum time to hold touches until gesture is considered to be failed.
+        /// Maximum time to hold touches until gesture fails.
         /// </summary>
         public float TimeLimit
         {
@@ -62,7 +62,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Maximum distance for touch cluster to move until gesture is considered to be failed.
+        /// Maximum distance for touch cluster to move until gesture fails.
         /// </summary>
         public float DistanceLimit
         {
@@ -70,6 +70,9 @@ namespace TouchScript.Gestures
             set { distanceLimit = value; }
         }
 
+        /// <summary>
+        /// Time interval before gesture is recognized to combine all lifted touch points into a cluster and calculate their screen positions.
+        /// </summary>
         public float CombineTouchPointsInterval
         {
             get { return combineTouchPointsInterval; }
@@ -205,10 +208,6 @@ namespace TouchScript.Gestures
             removedPoints.Clear();
             removedPointsTimes.Clear();
         }
-
-        #endregion
-
-        #region Private functions
 
         #endregion
     }

@@ -7,7 +7,7 @@ using TouchScript.Gestures;
 namespace TouchScript
 {
     /// <summary>
-    /// Interface to implement to be able to customize gestures behavior.
+    /// Interface to implement to be able to customize gestures' behavior.
     /// </summary>
     public interface IGestureDelegate
     {

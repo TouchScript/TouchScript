@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Input source to grab mouse presses as touch points.
+    /// Input source to grab mouse clicks as touch points.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public class MouseInput : InputSource

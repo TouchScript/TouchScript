@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using System;
 using UnityEditor;
 using UnityEngine;
 

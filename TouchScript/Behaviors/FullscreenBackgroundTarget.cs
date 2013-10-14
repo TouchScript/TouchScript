@@ -14,16 +14,12 @@ namespace TouchScript.Behaviors
     [RequireComponent(typeof(Camera))]
     public class FullscreenBackgroundTarget : MonoBehaviour
     {
-
         private void Awake()
         {
             Debug.LogWarning("FullscreenBackgroundTarget class is deprecated, use FullscreenTarget (type = Background) instead.");
         }
 
-        /// <summary>
-        /// Unity Update callback.
-        /// </summary>
-        protected void Update()
+        private void Update()
         {
             var box = GetComponent<BoxCollider>();
 

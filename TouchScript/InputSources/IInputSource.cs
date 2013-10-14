@@ -1,4 +1,8 @@
-﻿namespace TouchScript.InputSources
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+namespace TouchScript.InputSources
 {
     /// <summary>
     /// Abstract touch input source.

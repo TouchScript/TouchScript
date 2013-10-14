@@ -16,6 +16,7 @@ namespace TouchScript.Events
         /// Previous gesture state.
         /// </summary>
         public Gesture.GestureState PreviousState;
+
         /// <summary>
         /// Current gesture state.
         /// </summary>

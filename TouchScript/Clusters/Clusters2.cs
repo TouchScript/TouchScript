@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,11 +73,10 @@ namespace TouchScript.Clusters
         #region Public methods
 
         /// <summary>
-        /// Gets the center position of one of the clusters.
+        /// Calculates the center position of one of the clusters.
         /// </summary>
         /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid position.</returns>
-        /// <exception cref="System.InvalidOperationException">If used neither CLUSTER1 or CLUSTER2 as id.</exception>
+        /// <returns>Cluster's centroid position or <see cref="TouchPoint.InvalidPosition"/> if cluster contains no points.</returns>
         public Vector2 GetCenterPosition(int id)
         {
             if (!HasClusters) return TouchPoint.InvalidPosition;
@@ -100,11 +98,10 @@ namespace TouchScript.Clusters
         }
 
         /// <summary>
-        /// Gets previous center position of one of the clusters.
+        /// Calculates previous center position of one of the clusters.
         /// </summary>
         /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid previous position.</returns>
-        /// <exception cref="System.InvalidOperationException">If used neither CLUSTER1 or CLUSTER2 as id.</exception>
+        /// <returns>Cluster's centroid previous position or <see cref="TouchPoint.InvalidPosition"/> if cluster contains no points.</returns>
         public Vector2 GetPreviousCenterPosition(int id)
         {
             if (!HasClusters) return TouchPoint.InvalidPosition;

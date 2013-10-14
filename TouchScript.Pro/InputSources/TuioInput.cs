@@ -39,6 +39,7 @@ namespace TouchScript.InputSources
 
         #region Unity
 
+        /// <inheritdoc />
         protected override void Start()
         {
             base.Start();
@@ -51,6 +52,7 @@ namespace TouchScript.InputSources
             server.Connect();
         }
 
+        /// <inheritdoc />
         protected override void Update()
         {
             base.Update();
@@ -58,6 +60,7 @@ namespace TouchScript.InputSources
             screenHeight = Screen.height;
         }
 
+        /// <inheritdoc />
         protected override void OnDestroy()
         {
             if (server != null)
@@ -69,10 +72,6 @@ namespace TouchScript.InputSources
             }
             base.OnDestroy();
         }
-
-        #endregion
-
-        #region Private functions
 
         #endregion
 

@@ -7,9 +7,8 @@ using System.Collections.Generic;
 
 namespace TouchScript.InputSources
 {
-
     /// <summary>
-    /// iOS Input Source
+    /// Mobile Input Source
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
     public class MobileInput : InputSource
@@ -37,7 +36,7 @@ namespace TouchScript.InputSources
                     case TouchPhase.Began:
                         if (touchIds.Contains(t.fingerId))
                         {
-                            // ending previous touch (maybe we missed frame)
+                            // ending previous touch (maybe we missed a frame)
                             endTouch(t.fingerId);
                             int id = beginTouch(t.position);
                             touchStates[t.fingerId] = new TouchState(id, t.phase, t.position);
@@ -56,7 +55,7 @@ namespace TouchScript.InputSources
                             moveTouch(ts.Id, t.position);
                         } else
                         {
-                            //maybe we missed began phase
+                            // maybe we missed began phase
                             touchIds.Add(t.fingerId);
                             int id = beginTouch(t.position);
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
@@ -71,7 +70,7 @@ namespace TouchScript.InputSources
                             endTouch(ts.Id);
                         } else
                         {
-                            //maybe we totally missed one finger begin-end transition
+                            // maybe we totally missed one finger begin-end transition
                             int id = beginTouch(t.position);
                             endTouch(id);
                         }
@@ -85,16 +84,14 @@ namespace TouchScript.InputSources
                             endTouch(ts.Id);
                         } else
                         {
-                            //maybe we totally missed one finger begin-end transition
+                            // maybe we totally missed one finger begin-end transition
                             int id = beginTouch(t.position);
                             cancelTouch(id);
                         }
                         break;
                     case TouchPhase.Stationary:
                         if (touchIds.Contains(t.fingerId))
-                        {
-                            //do nothing
-                        } else
+                        {} else
                         {
                             touchIds.Add(t.fingerId);
                             int id = beginTouch(t.position);
@@ -107,8 +104,8 @@ namespace TouchScript.InputSources
 
         #endregion
     }
-	
-	internal struct TouchState
+
+    internal struct TouchState
     {
         public int Id;
         public TouchPhase Phase;
@@ -121,5 +118,4 @@ namespace TouchScript.InputSources
             Position = aPosition;
         }
     }
-	
 }

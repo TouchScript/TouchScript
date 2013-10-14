@@ -13,7 +13,6 @@ namespace TouchScript.Layers
     [ExecuteInEditMode()]
     public abstract class TouchLayer : MonoBehaviour
     {
-
         /// <summary>
         /// Result of a touch point's hit test with a layer.
         /// </summary>
@@ -23,10 +22,12 @@ namespace TouchScript.Layers
             /// Something wrong happened.
             /// </summary>
             Error = 0,
+
             /// <summary>
             /// Touch point hit an object.
             /// </summary>
             Hit = 1,
+
             /// <summary>
             /// Touch point didn't hit an object.
             /// </summary>

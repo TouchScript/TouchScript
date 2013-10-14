@@ -10,12 +10,11 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Recognizes cluster movement.
+    /// Recognizes dragging gesture.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Pan Gesture")]
     public class PanGesture : SimplePanGesture
     {
-
         private Clusters2 clusters = new Clusters2();
 
         /// <inheritdoc />
@@ -25,7 +24,7 @@ namespace TouchScript.Gestures
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 if (activeTouches.Count == 1) return activeTouches[0].Position;
-                return (clusters.GetCenterPosition(Clusters2.CLUSTER1) + clusters.GetCenterPosition(Clusters2.CLUSTER2)) * .5f;
+                return (clusters.GetCenterPosition(Clusters2.CLUSTER1) + clusters.GetCenterPosition(Clusters2.CLUSTER2))*.5f;
             }
         }
 
@@ -36,7 +35,7 @@ namespace TouchScript.Gestures
             {
                 if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
-                return (clusters.GetPreviousCenterPosition(Clusters2.CLUSTER1) + clusters.GetPreviousCenterPosition(Clusters2.CLUSTER2)) * .5f;
+                return (clusters.GetPreviousCenterPosition(Clusters2.CLUSTER1) + clusters.GetPreviousCenterPosition(Clusters2.CLUSTER2))*.5f;
             }
         }
 
@@ -79,6 +78,5 @@ namespace TouchScript.Gestures
 
             clusters.RemoveAllPoints();
         }
-
     }
 }

@@ -1,4 +1,7 @@
-﻿using TouchScript.Gestures.Simple;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
 using UnityEditor;
 using UnityEngine;
 

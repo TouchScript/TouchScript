@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using TouchScript.Gestures.Simple;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -15,7 +14,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
-
         #region Private fields
 
         [SerializeField]
@@ -75,8 +73,7 @@ namespace TouchScript.Gestures
                 if (base.GetTargetHitResult(out hit))
                 {
                     setState(GestureState.Recognized);
-                }
-                else
+                } else
                 {
                     setState(GestureState.Failed);
                 }
@@ -109,7 +106,7 @@ namespace TouchScript.Gestures
             base.touchesMoved(touches);
 
             totalMovement += ScreenPosition - PreviousScreenPosition;
-            if (totalMovement.magnitude / TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
+            if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
             }
@@ -159,6 +156,5 @@ namespace TouchScript.Gestures
         }
 
         #endregion
-
     }
 }

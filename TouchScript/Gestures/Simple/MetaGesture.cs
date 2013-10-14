@@ -52,7 +52,7 @@ namespace TouchScript.Gestures.Simple
             remove { touchPointCancelledInvoker -= value; }
         }
 
-        // iOS Events AOT Bug hack
+        // iOS Events AOT hack
         private EventHandler<MetaGestureEventArgs> touchPointBeganInvoker, touchPointMovedInvoker,
                                                    touchPointEndedInvoker, touchPointCancelledInvoker;
 
@@ -65,16 +65,10 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesBegan(touches);
 
-            if (State == GestureState.Possible)
-            {
-                setState(GestureState.Began);
-            }
+            if (State == GestureState.Possible) setState(GestureState.Began);
 
             if (touchPointBeganInvoker == null) return;
-            foreach (var touchPoint in touches)
-            {
-                touchPointBeganInvoker(this, new MetaGestureEventArgs(touchPoint));
-            }
+            foreach (var touchPoint in touches) touchPointBeganInvoker(this, new MetaGestureEventArgs(touchPoint));
         }
 
         /// <inheritdoc />
@@ -82,16 +76,10 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesMoved(touches);
 
-            if (State == GestureState.Began || State == GestureState.Changed)
-            {
-                setState(GestureState.Changed);
-            }
+            if (State == GestureState.Began || State == GestureState.Changed) setState(GestureState.Changed);
 
             if (touchPointMovedInvoker == null) return;
-            foreach (var touchPoint in touches)
-            {
-                touchPointMovedInvoker(this, new MetaGestureEventArgs(touchPoint));
-            }
+            foreach (var touchPoint in touches) touchPointMovedInvoker(this, new MetaGestureEventArgs(touchPoint));
         }
 
         /// <inheritdoc />
@@ -99,19 +87,10 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (State == GestureState.Began || State == GestureState.Changed)
-            {
-                if (activeTouches.Count == 0)
-                {
-                    setState(GestureState.Ended);
-                }
-            }
+            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
 
             if (touchPointEndedInvoker == null) return;
-            foreach (var touchPoint in touches)
-            {
-                touchPointEndedInvoker(this, new MetaGestureEventArgs(touchPoint));
-            }
+            foreach (var touchPoint in touches) touchPointEndedInvoker(this, new MetaGestureEventArgs(touchPoint));
         }
 
         /// <inheritdoc />
@@ -119,19 +98,10 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesCancelled(touches);
 
-            if (State == GestureState.Began || State == GestureState.Changed)
-            {
-                if (activeTouches.Count == 0)
-                {
-                    setState(GestureState.Ended);
-                }
-            }
+            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
 
             if (touchPointCancelledInvoker == null) return;
-            foreach (var touchPoint in touches)
-            {
-                touchPointCancelledInvoker(this, new MetaGestureEventArgs(touchPoint));
-            }
+            foreach (var touchPoint in touches) touchPointCancelledInvoker(this, new MetaGestureEventArgs(touchPoint));
         }
 
         #endregion

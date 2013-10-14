@@ -13,7 +13,7 @@ namespace TouchScript.Hit
     {
 
         /// <summary>
-        /// Result of a check to see if a hit object should recieve this touch or not.
+        /// Result of a check to find if a hit object should recieve this touch or not.
         /// </summary>
         public enum ObjectHitResult
         {
@@ -39,7 +39,7 @@ namespace TouchScript.Hit
         /// Determines whether a touch point hit the object.
         /// </summary>
         /// <param name="hit">Data from a raycast.</param>
-        /// <returns>Hit if touch point hits the object, Miss if it doesn't, Discard if it doesn't and this touch must be ignored, Error otherwise.</returns>
+        /// <returns><see cref="ObjectHitResult.Hit"/> if touch point hits the object, <see cref="ObjectHitResult.Miss"/> if it doesn't, <see cref="ObjectHitResult.Discard"/> if it doesn't and this touch must be ignored, Error otherwise.</returns>
         public virtual ObjectHitResult IsHit(RaycastHit hit)
         {
             return ObjectHitResult.Hit;

@@ -16,6 +16,9 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class Gesture : MonoBehaviour
     {
+        /// <summary>
+        /// Invalid 3d position. Some properties return this constant when their result doesn't make sense.
+        /// </summary>
         public static readonly Vector3 InvalidPosition = new Vector3(float.NaN, float.NaN, float.NaN);
 
         /// <summary>
@@ -59,6 +62,13 @@ namespace TouchScript.Gestures
             Recognized = Ended
         }
 
+        /// <summary>
+        /// Determines whether position is invalid.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>
+        ///   <c>true</c> if position is invalid; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsInvalidPosition(Vector3 position)
         {
             return position.Equals(InvalidPosition);
@@ -182,7 +192,7 @@ namespace TouchScript.Gestures
         protected List<TouchPoint> activeTouches = new List<TouchPoint>();
 
         /// <summary>
-        /// List of gesture's active touches.
+        /// List of gesture's active touch points.
         /// </summary>
         public List<TouchPoint> ActiveTouches
         {
@@ -260,6 +270,10 @@ namespace TouchScript.Gestures
 
         #region Public methods
 
+        /// <summary>
+        /// Adds a friendly gesture.
+        /// </summary>
+        /// <param name="gesture">The gesture.</param>
         public virtual void AddFriendlyGesture(Gesture gesture)
         {
             if (gesture == null || gesture == this) return;
@@ -268,6 +282,10 @@ namespace TouchScript.Gestures
             gesture.RegisterFriendlyGesture(this);
         }
 
+        /// <summary>
+        /// Removes a friendly gesture.
+        /// </summary>
+        /// <param name="gesture">The gesture.</param>
         public virtual void RemoveFriendlyGesture(Gesture gesture)
         {
             if (gesture == null || gesture == this) return;
@@ -276,11 +294,22 @@ namespace TouchScript.Gestures
             gesture.UnregisterFriendlyGesture(this);
         }
 
+        /// <summary>
+        /// Determines whether the specified gesture is friendly.
+        /// </summary>
+        /// <param name="gesture">The gesture.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified gesture is friendly; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsFriendly(Gesture gesture)
         {
             return friendlyGestureIds.Contains(gesture.GetInstanceID());
         }
 
+        /// <summary>
+        /// Gets result of casting a ray from gesture touch points' centroid screen position.
+        /// </summary>
+        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult()
         {
             RaycastHit hit;
@@ -291,18 +320,29 @@ namespace TouchScript.Gestures
         /// Gets result of casting a ray from gesture touch points centroid screen position.
         /// </summary>
         /// <param name="hit">Raycast result</param>
-        /// <returns>True if ray hits gesture's target; otherwise, false.</returns>
+        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(out RaycastHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
         }
 
+        /// <summary>
+        /// Gets result of casting a ray from specific screen position.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(Vector2 position)
         {
             RaycastHit hit;
             return GetTargetHitResult(position, out hit);
         }
 
+        /// <summary>
+        /// Gets result of casting a ray from specific screen position.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="hit">Raycast result.</param>
+        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(Vector2 position, out RaycastHit hit)
         {
             hit = new RaycastHit();

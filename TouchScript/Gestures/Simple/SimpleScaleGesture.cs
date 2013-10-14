@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
     /// <summary>
-    /// Simple Scale gesture which is only concerned about 2 first fingers.
+    /// Simple Scale gesture which takes into account only the first two touch points.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Scale Gesture")]
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
@@ -27,7 +27,7 @@ namespace TouchScript.Gestures.Simple
         #region Public properties
 
         /// <summary>
-        /// Minimum distance delta in cm between touch points for gesture to be considered possible.
+        /// Minimum distance in cm between touch points for gesture to begin.
         /// </summary>
         public float ScalingThreshold
         {
@@ -125,6 +125,7 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

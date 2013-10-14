@@ -8,14 +8,12 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Flick gesture.
     /// Recognizes fast movement before releasing touches.
     /// Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
     public class FlickGesture : Gesture
     {
-
         #region Unity fields
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Minimum distance in cm for touch points to move to be considered as a possible gesture. 
+        /// Minimum distance in cm for touch points to move for gesture to be recognized. 
         /// Prevents misinterpreting taps.
         /// </summary>
         public float MovementThreshold
@@ -94,8 +92,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Minimum distance in cm for touch points to move to be considered as a possible gesture. 
-        /// Prevents misinterpreting taps.
+        /// Direction to look for.
         /// </summary>
         public GestureDirection Direction
         {
@@ -132,8 +129,8 @@ namespace TouchScript.Gestures
             if (!moving)
             {
                 movementBuffer += delta;
-                var dpiMovementThreshold = MovementThreshold * touchManager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold * dpiMovementThreshold)
+                var dpiMovementThreshold = MovementThreshold*touchManager.DotsPerCentimeter;
+                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold)
                 {
                     moving = true;
                 }
@@ -167,8 +164,7 @@ namespace TouchScript.Gestures
                         totalTime += timeDeltas[i];
                         totalMovement += positionDeltas[i];
                         i--;
-                    }
-                    else
+                    } else
                     {
                         break;
                     }
@@ -184,11 +180,10 @@ namespace TouchScript.Gestures
                         break;
                 }
 
-                if (totalMovement.magnitude < MinDistance * TouchManager.Instance.DotsPerCentimeter)
+                if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
                 {
                     setState(GestureState.Failed);
-                }
-                else
+                } else
                 {
                     ScreenFlickVector = totalMovement;
                     setState(GestureState.Recognized);
@@ -216,6 +211,5 @@ namespace TouchScript.Gestures
         }
 
         #endregion
-
     }
 }

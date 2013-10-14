@@ -13,8 +13,7 @@ using UnityEngine;
 namespace TouchScript
 {
     /// <summary>
-    /// Singleton which handles all touch and gesture management.
-    /// Shouldn't be instantiated manually.
+    /// Singleton which handles all touch points management.
     /// </summary>
     [AddComponentMenu("TouchScript/Touch Manager")]
     public class TouchManager : MonoBehaviour
@@ -31,12 +30,18 @@ namespace TouchScript
 
         #region Events
 
+        /// <summary>
+        /// Occurs when a new frame is started before all other events.
+        /// </summary>
         public event EventHandler FrameStarted
         {
             add { frameStartedInvoker += value; }
             remove { frameStartedInvoker -= value; }
         }
 
+        /// <summary>
+        /// Occurs when a frame is finished. After all other events.
+        /// </summary>
         public event EventHandler FrameFinished
         {
             add { frameFinishedInvoker += value; }
@@ -46,7 +51,6 @@ namespace TouchScript
         /// <summary>
         /// Occurs when new touch points are added.
         /// </summary>
-        /// 
         public event EventHandler<TouchEventArgs> TouchesBegan
         {
             add { touchesBeganInvoker += value; }

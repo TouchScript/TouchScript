@@ -4,13 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace TouchScript.Clusters
 {
     /// <summary>
-    /// Abstract base for points separated into clusters
+    /// Abstract base for points separated into clusters.
     /// </summary>
     public abstract class Cluster
     {
@@ -19,9 +18,6 @@ namespace TouchScript.Clusters
         /// <summary>
         /// Number of total points in clusters represented by this object.
         /// </summary>
-        /// <value>
-        /// Number of points.
-        /// </value>
         public int PointsCount
         {
             get { return points.Count; }
@@ -35,6 +31,7 @@ namespace TouchScript.Clusters
         /// List of points in clusters.
         /// </summary>
         protected List<TouchPoint> points = new List<TouchPoint>();
+
         /// <summary>
         /// Indicates if clusters must be rebuilt.
         /// </summary>
@@ -53,7 +50,7 @@ namespace TouchScript.Clusters
         #region Static methods
 
         /// <summary>
-        /// Returns camera instance touch points belong to.
+        /// Returns a camera which was used to capture cluster's points.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Camera instance.</returns>
@@ -66,11 +63,10 @@ namespace TouchScript.Clusters
         }
 
         /// <summary>
-        /// Returns centroid of current positions for given touch points.
+        /// Calculates the centroid of touch points' positions.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
-        /// <returns>Vector2</returns>
-        /// <exception cref="System.InvalidOperationException">No points in cluster.</exception>
+        /// <returns>Centroid of touch points' positions or <see cref="TouchPoint.InvalidPosition"/> if cluster contains no points.</returns>
         public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
@@ -78,19 +74,15 @@ namespace TouchScript.Clusters
             if (length == 1) return touches[0].Position;
 
             var position = new Vector2();
-            foreach (var point in touches)
-            {
-                position += point.Position;
-            }
+            foreach (var point in touches) position += point.Position;
             return position/(float)length;
         }
 
         /// <summary>
-        /// Returns centroid of previous positions for given touch points.
+        /// Calculates the centroid of previous touch points' positions.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
-        /// <returns>Vector2</returns>
-        /// <exception cref="System.InvalidOperationException">No points in cluster.</exception>
+        /// <returns>Centroid of previous touch point's positions or <see cref="TouchPoint.InvalidPosition"/> if cluster contains no points.</returns>
         public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
@@ -98,25 +90,19 @@ namespace TouchScript.Clusters
             if (length == 1) return touches[0].PreviousPosition;
 
             var position = new Vector2();
-            foreach (var point in touches)
-            {
-                position += point.PreviousPosition;
-            }
+            foreach (var point in touches) position += point.PreviousPosition;
             return position/(float)length;
         }
 
         /// <summary>
-        /// Returns unique hash for a list of points
+        /// Computes a unique hash for a list of touch points.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
-        /// <returns>String</returns>
+        /// <returns>A unique string for a list of touch points.</returns>
         public static String GetPointsHash(List<TouchPoint> touches)
         {
             var result = "";
-            foreach (var touchPoint in touches)
-            {
-                result += "#" + Convert.ToString(touchPoint.Id);
-            }
+            foreach (var touchPoint in touches) result += "#" + Convert.ToString(touchPoint.Id);
             return result;
         }
 
@@ -125,7 +111,7 @@ namespace TouchScript.Clusters
         #region Public methods
 
         /// <summary>
-        /// Adds a point.
+        /// Adds a point to cluster.
         /// </summary>
         /// <param name="point">A point.</param>
         /// <returns></returns>
@@ -138,21 +124,18 @@ namespace TouchScript.Clusters
         }
 
         /// <summary>
-        /// Adds a list of points.
+        /// Adds a list of points to cluster.
         /// </summary>
         /// <param name="points">List of points.</param>
         public void AddPoints(IList<TouchPoint> points)
         {
-            foreach (var point in points)
-            {
-                AddPoint(point);
-            }
+            foreach (var point in points) AddPoint(point);
         }
 
         /// <summary>
-        /// Removes the point.
+        /// Removes a point from cluster.
         /// </summary>
-        /// <param name="point">The point.</param>
+        /// <param name="point">A point.</param>
         /// <returns></returns>
         public void RemovePoint(TouchPoint point)
         {
@@ -163,19 +146,16 @@ namespace TouchScript.Clusters
         }
 
         /// <summary>
-        /// Removes a list of points.
+        /// Removes a list of points from cluster.
         /// </summary>
         /// <param name="points">List of points.</param>
         public void RemovePoints(IList<TouchPoint> points)
         {
-            foreach (var point in points)
-            {
-                RemovePoint(point);
-            }
+            foreach (var point in points) RemovePoint(point);
         }
 
         /// <summary>
-        /// Removes all points.
+        /// Removes all points from cluster.
         /// </summary>
         public void RemoveAllPoints()
         {

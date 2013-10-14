@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
     /// <summary>
-    /// Simple Pan gesture which only relies on the first touch
+    /// Simple Pan gesture which only relies on the first touch.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Simple Pan Gesture")]
     public class SimplePanGesture : Transform2DGestureBase
@@ -17,7 +17,7 @@ namespace TouchScript.Gestures.Simple
         #region Public properties
 
         /// <summary>
-        /// Minimum distance in cm for touch points to move to be considered as a possible gesture. 
+        /// Minimum distance in cm for touch points to move for gesture to begin. 
         /// </summary>
         public float MovementThreshold
         {
@@ -35,6 +35,7 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         public Vector3 LocalDeltaPosition { get; private set; }
 
+        /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
             get
@@ -45,9 +46,7 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
-        /// <summary>
-        /// Previous transformation center in screen coordinates.
-        /// </summary>
+        /// <inheritdoc />
         public override Vector2 PreviousScreenPosition
         {
             get

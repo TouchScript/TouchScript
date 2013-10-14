@@ -180,10 +180,10 @@ namespace TouchScript.Gestures.Simple
         #region Private functions
 
         /// <summary>
-        /// Converts a vector from global space to this object's local space.
+        /// Converts a vector from global space to object's local space.
         /// </summary>
         /// <param name="global">Global vector to convert.</param>
-        /// <returns>Vector3</returns>
+        /// <returns>Vector in local space.</returns>
         protected virtual Vector3 globalToLocalPosition(Vector3 global)
         {
             if (transform.parent != null)

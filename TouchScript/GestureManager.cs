@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using System;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Gestures;
@@ -6,11 +10,17 @@ using UnityEngine;
 
 namespace TouchScript
 {
+    /// <summary>
+    /// Manages touch points dispatching within a hierarchy of gestures.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gesture Manager")]
     public class GestureManager : MonoBehaviour
     {
         #region Public properties
 
+        /// <summary>
+        /// Singleton instance.
+        /// </summary>
         public static GestureManager Instance
         {
             get

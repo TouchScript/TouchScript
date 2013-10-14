@@ -28,7 +28,7 @@ namespace TouchScript.Gestures.Simple
         #region Public properties
 
         /// <summary>
-        /// Minimum rotation in degrees for gesture to be considered possible.
+        /// Minimum rotation in degrees for gesture to begin.
         /// </summary>
         public float RotationThreshold
         {
@@ -37,7 +37,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <summary>
-        /// Contains local rotation in degrees when gesture is recognized.
+        /// Local delta rotation in degrees. Changes every Begin or Changed state.
         /// </summary>
         public float LocalDeltaRotation { get; private set; }
 
@@ -121,6 +121,7 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

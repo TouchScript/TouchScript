@@ -8,14 +8,14 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
     /// <summary>
-    /// Base class for transform gestures involving two clusters.
+    /// Base class for transform gestures involving two points/clusters.
     /// </summary>
     public abstract class TwoPointTransform2DGestureBase : Transform2DGestureBase
     {
         #region Public properties
 
         /// <summary>
-        /// Minimum distance between 2 points in cm for gesture to be recognized.
+        /// Minimum distance between 2 points in cm for gesture to begin.
         /// </summary>
         public virtual float MinPointsDistance
         {
@@ -54,6 +54,9 @@ namespace TouchScript.Gestures.Simple
         [SerializeField]
         private float minPointsDistance = .5f;
 
+        /// <summary>
+        /// <see cref="MinPointsDistance"/> in pixels for internal use.
+        /// </summary>
         protected float minPointsDistanceInPixels;
 
         /// <summary>
@@ -73,17 +76,23 @@ namespace TouchScript.Gestures.Simple
         {
             base.Awake();
 
-            minPointsDistanceInPixels = minPointsDistance * TouchManager.Instance.DotsPerCentimeter;
+            minPointsDistanceInPixels = minPointsDistance*TouchManager.Instance.DotsPerCentimeter;
         }
 
         /// <summary>
-        /// Returns true if gesture has enough touch points to be recognized
+        /// Checks if gesture has enough touch points to be recognized.
         /// </summary>
+        /// <returns>True if there are two or more active touch points, False otherwise.</returns>
         protected virtual bool gotEnoughTouchPoints()
         {
             return activeTouches.Count >= 2;
         }
 
+        /// <summary>
+        /// Checks if there are touch points in the list which matter for the gesture.
+        /// </summary>
+        /// <param name="touches">List of touch points</param>
+        /// <returns>True if there are relevant touch points, False otherwise.</returns>
         protected virtual bool relevantTouchPoints(IList<TouchPoint> touches)
         {
             var result = false;
@@ -122,6 +131,9 @@ namespace TouchScript.Gestures.Simple
             return activeTouches[index].PreviousPosition;
         }
 
+        /// <summary>
+        /// Restarts the gesture when it continues after being left only with one finger.
+        /// </summary>
         protected virtual void restart()
         {
             screenPosition = TouchPoint.InvalidPosition;
@@ -139,6 +151,7 @@ namespace TouchScript.Gestures.Simple
             }
         }
 
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

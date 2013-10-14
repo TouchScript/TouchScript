@@ -12,7 +12,6 @@ namespace TouchScript
     /// </summary>
     public class TouchPoint
     {
-
         /// <summary>
         /// The value of TouchPoint.Position in an unkown state.
         /// </summary>

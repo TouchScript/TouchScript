@@ -80,8 +80,10 @@ namespace TouchScript.Gestures
             return clusters.HasClusters;
         }
 
+        /// <inheritdoc />
         protected override bool relevantTouchPoints(IList<TouchPoint> touches)
         {
+            // every touch point is relevant for us
             return true;
         }
 
