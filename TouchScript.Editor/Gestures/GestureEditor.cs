@@ -28,45 +28,6 @@ namespace TouchScript.Editor.Gestures
             serializedGestures = serializedObject.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
         }
 
-        protected bool drawFoldout(bool open, GUIContent header, Action content)
-        {
-            if (boxStyle == null)
-            {
-                boxStyle = new GUIStyle(GUI.skin.box);
-                boxStyle.margin = new RectOffset(0, 0, 1, 0);
-                boxStyle.padding = new RectOffset(0, 0, 0, 0);
-                boxStyle.contentOffset = new Vector2(0, 0);
-                boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
-                boxStyle.alignment = TextAnchor.MiddleCenter;
-
-                foldoutStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleBg"));
-                foldoutStyle.padding = new RectOffset(10, 10, 10, 10);
-
-                headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
-                headerStyle.contentOffset = new Vector2(3, -2);
-
-                gestureLabelStyle = new GUIStyle(GUI.skin.label);
-                gestureLabelStyle.fontSize = 9;
-                gestureLabelStyle.padding = new RectOffset(-10, 0, 5, 0);
-            }
-
-            EditorGUIUtility.LookLikeInspector();
-            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(1f));
-
-            open = GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);
-            if (open)
-            {
-                GUILayout.BeginVertical(foldoutStyle);
-
-                content();
-
-                GUILayout.EndVertical();
-            }
-            GUILayout.EndVertical();
-
-            return open;
-        }
-
         public override void OnInspectorGUI()
         {
             shouldRecognizeShown = drawFoldout(shouldRecognizeShown, new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER), () =>
@@ -138,6 +99,45 @@ namespace TouchScript.Editor.Gestures
             serializedObject.ApplyModifiedProperties();
         }
 
+        protected bool drawFoldout(bool open, GUIContent header, Action content)
+        {
+            if (boxStyle == null)
+            {
+                boxStyle = new GUIStyle(GUI.skin.box);
+                boxStyle.margin = new RectOffset(0, 0, 1, 0);
+                boxStyle.padding = new RectOffset(0, 0, 0, 0);
+                boxStyle.contentOffset = new Vector2(0, 0);
+                boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
+                boxStyle.alignment = TextAnchor.MiddleCenter;
+
+                foldoutStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleBg"));
+                foldoutStyle.padding = new RectOffset(10, 10, 10, 10);
+
+                headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
+                headerStyle.contentOffset = new Vector2(3, -2);
+
+                gestureLabelStyle = new GUIStyle(GUI.skin.label);
+                gestureLabelStyle.fontSize = 9;
+                gestureLabelStyle.padding = new RectOffset(-10, 0, 5, 0);
+            }
+
+            EditorGUIUtility.LookLikeInspector();
+            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(1f));
+
+            open = GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);
+            if (open)
+            {
+                GUILayout.BeginVertical(foldoutStyle);
+
+                content();
+
+                GUILayout.EndVertical();
+            }
+            GUILayout.EndVertical();
+
+            return open;
+        }
+
         private void addGesture(Gesture value)
         {
             if (value == target) return;
@@ -152,6 +152,7 @@ namespace TouchScript.Editor.Gestures
             serializedGestures.GetArrayElementAtIndex(serializedGestures.arraySize - 1).intValue = value.GetInstanceID();
 
             var so = new SerializedObject(value);
+            so.Update();
             var prop = so.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
             prop.arraySize++;
             prop.GetArrayElementAtIndex(prop.arraySize - 1).intValue = target.GetInstanceID();
