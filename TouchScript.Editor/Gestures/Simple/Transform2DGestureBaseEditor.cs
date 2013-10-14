@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Editor.Utils;
 using TouchScript.Gestures.Simple;
 using UnityEditor;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace TouchScript.Editor.Gestures.Simple
             EditorGUILayout.PropertyField(projection, new GUIContent("Projection Type", TEXT_PROJECTION));
             if (projection.enumValueIndex != (int)Transform2DGestureBase.ProjectionType.Camera)
             {
-                drawCompactVector3(new GUIContent("Projection Normal", TEXT_PROJECTIONNORMAL), projectionNormal);
+                GUIElements.DrawCompactVector3(new GUIContent("Projection Normal", TEXT_PROJECTIONNORMAL), projectionNormal);
             }
 
             serializedObject.ApplyModifiedProperties();

@@ -209,7 +209,8 @@ namespace TouchScript.Gestures
         protected TouchManager touchManager { get; private set; }
 
         [SerializeField]
-        [HideInInspector]
+        private List<Gesture> friendlyGestures = new List<Gesture>();
+
         private List<int> friendlyGestureIds = new List<int>();
 
         #endregion
@@ -221,6 +222,10 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void Awake()
         {
+            foreach (var gesture in friendlyGestures)
+            {
+                AddFriendlyGesture(gesture);
+            }
         }
 
         /// <summary>
@@ -257,12 +262,16 @@ namespace TouchScript.Gestures
 
         public virtual void AddFriendlyGesture(Gesture gesture)
         {
+            if (gesture == null || gesture == this) return;
+
             RegisterFriendlyGesture(gesture);
             gesture.RegisterFriendlyGesture(this);
         }
 
         public virtual void RemoveFriendlyGesture(Gesture gesture)
         {
+            if (gesture == null || gesture == this) return;
+
             UnregisterFriendlyGesture(gesture);
             gesture.UnregisterFriendlyGesture(this);
         }

@@ -223,7 +223,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: -1142697980, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 32160000
+  friendlyGestures:
+  - {fileID: 55916781}
   projection: 1
   projectionNormal: {x: 0, y: 0, z: 1}
   minPointsDistance: .5
@@ -259,7 +260,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 2105402742, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 2c160000
+  friendlyGestures:
+  - {fileID: 55916778}
   projection: 0
   projectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
@@ -446,7 +448,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &97938005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,7 +460,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!1 &101985063
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +514,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
@@ -716,7 +718,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &253627974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,7 +730,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!1001 &367641490
 Prefab:
   m_ObjectHideFlags: 0
@@ -1058,7 +1060,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &576368705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,7 +1072,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!1 &606920412
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,7 +1113,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: -1142697980, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 0}
   minPointsDistance: .5
@@ -1224,7 +1226,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   maxTouches: 2147483647
   timeToPress: 1
   distanceLimit: Infinity
@@ -1239,7 +1241,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &707697966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1251,7 +1253,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &707697967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1507,7 +1509,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   maxTouches: 2147483647
   timeToPress: 1
   distanceLimit: Infinity
@@ -1522,7 +1524,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &897968765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,7 +1536,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &897968766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1647,7 +1649,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
@@ -1704,7 +1706,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
@@ -1814,7 +1816,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &1133511953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1826,7 +1828,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!1 &1229247221
 GameObject:
   m_ObjectHideFlags: 0
@@ -1880,7 +1882,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
@@ -1925,7 +1927,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
@@ -2106,7 +2108,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   maxTouches: 2147483647
   timeToPress: 1
   distanceLimit: Infinity
@@ -2121,7 +2123,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &1476145109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2133,7 +2135,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &1476145110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2345,7 +2347,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1700093535, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &1573308019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2565,7 +2567,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
@@ -2732,7 +2734,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &1771078780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2744,7 +2746,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!1001 &1808575625
 Prefab:
   m_ObjectHideFlags: 0
@@ -2927,7 +2929,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!114 &1899528390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2939,7 +2941,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
 --- !u!1 &1947692393
 GameObject:
   m_ObjectHideFlags: 0
