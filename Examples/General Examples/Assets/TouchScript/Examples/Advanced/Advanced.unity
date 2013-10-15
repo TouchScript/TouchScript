@@ -528,6 +528,7 @@ GameObject:
   - 4: {fileID: 156856780}
   - 20: {fileID: 156856781}
   - 114: {fileID: 156856782}
+  - 114: {fileID: 156856783}
   m_Layer: 0
   m_Name: 2d Camera
   m_TagString: Untagged
@@ -592,6 +593,41 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &156856783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 156856779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 1}
+  m_Name: 
+  Text: 'Advanced example showing many features working together.
+
+
+    1. There are two Camera Layers: 2d and 3d. 2d layer is checked for touch targets
+    first, it contains RGB boxes.
+
+    2. RGB boxes have LongPressGestures attached and change Big Cube''s color if pressed
+    for more than 1 second.
+
+    3. Big Cube can be scaled and rotated simultaneously because ScaleGesture and
+    RotateGesture attached to it are "Friendly".
+
+    4. Small boxes with yellow buttons can be moved but they are constrained to one
+    axis.
+
+    5. Yellow buttons trigger Cube''s animation.
+
+    6. You can rotate the whole structure too because Cubes has RotateGesture attached
+    to it.
+
+    7. Finally, there''s a MetaGesture on background which spawned cube trails under
+    touch points.
+
+
+    Use Alt+click to place a second touch point if you don''t have a multitouch device.'
 --- !u!1 &232315387
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,11 +776,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1.29999995
+      value: 3.2532959
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.04587555
+      value: -1.22236633
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1160,7 +1196,7 @@ Transform:
   m_PrefabInternal: {fileID: 1808575625}
   m_GameObject: {fileID: 707697958}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.29999995, y: -2.04587603, z: 5.53505802}
+  m_LocalPosition: {x: 2.56195068, y: 1.76010084, z: 5.53505802}
   m_LocalScale: {x: 1, y: 1, z: .300000012}
   m_Children: []
   m_Father: {fileID: 156856780}
@@ -1274,11 +1310,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 2.89587402
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.04587603
+      value: .27744627
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1443,7 +1479,7 @@ Transform:
   m_PrefabInternal: {fileID: 367641490}
   m_GameObject: {fileID: 897968757}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.29999995, y: -2.04587555, z: 5.53505754}
+  m_LocalPosition: {x: 3.2532959, y: -1.22236633, z: 5.53505754}
   m_LocalScale: {x: 1, y: 1, z: .300000012}
   m_Children: []
   m_Father: {fileID: 156856780}
@@ -2042,7 +2078,7 @@ Transform:
   m_PrefabInternal: {fileID: 820124756}
   m_GameObject: {fileID: 1476145101}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.04587603, z: 5.53505802}
+  m_LocalPosition: {x: 2.89587402, y: .27744627, z: 5.53505802}
   m_LocalScale: {x: 1, y: 1, z: .300000012}
   m_Children: []
   m_Father: {fileID: 156856780}
@@ -2247,7 +2283,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1573308009}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -.67295742, z: -13.1231995}
+  m_LocalPosition: {x: .129110336, y: -.384726524, z: -13.1231995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2324,7 +2360,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36.9929008, y: 23.0940094, z: .00999999978}
+  m_Size: {x: 30.7920132, y: 23.0940094, z: .00999999978}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:
@@ -2756,11 +2792,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1.29999995
+      value: 2.56195068
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.04587603
+      value: 1.76010084
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 63fe86e02334ebf4b9c777aad49227b3, type: 2}
       propertyPath: m_LocalPosition.z

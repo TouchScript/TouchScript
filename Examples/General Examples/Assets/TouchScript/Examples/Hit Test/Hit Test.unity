@@ -177,8 +177,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 289928234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e9ea9439161b4429429246890f92d9, type: 1}
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 1}
   m_Name: 
+  Text: "An example to illustrate different object filtering techniques:\n1. 'Untouchable
+    Discarding Behavior' \u2014 doesn't let other colliders behind the red cube get
+    touch points.\n2. 'Untouchable Behavior' \u2014 doesn't recieve touch input and
+    lets other colliders behind the red cube get touch points.\n3. 'Untouchable Layer'
+    \u2014 the whole layer is ignored during hit test calculations.\n\nTry to drag
+    green and red cubes."
 --- !u!1 &302423102
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +552,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5

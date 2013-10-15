@@ -173,7 +173,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   timeLimit: Infinity
   distanceLimit: Infinity
   combineTouchPointsInterval: .300000012
@@ -202,6 +202,7 @@ GameObject:
   - 92: {fileID: 289928238}
   - 124: {fileID: 289928239}
   - 81: {fileID: 289928237}
+  - 114: {fileID: 289928240}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -269,6 +270,23 @@ Behaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 289928234}
   m_Enabled: 1
+--- !u!114 &289928240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 289928234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 1}
+  m_Name: 
+  Text: 'A basic touch handling example.
+
+
+    Click on white plane to spawn new cubes. Click on cubes to break them.
+
+    Notice, all the cubes have a TapGesture attached. Check out <Breaker> script to
+    find out how to handle taps.'
 --- !u!1 &403162831
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +548,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
   m_Name: 
-  friendlyGestureIds: 
+  friendlyGestures: []
   timeLimit: Infinity
   distanceLimit: Infinity
   combineTouchPointsInterval: .300000012
