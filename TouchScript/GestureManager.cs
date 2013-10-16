@@ -194,9 +194,15 @@ namespace TouchScript
 
         private void update(List<TouchPoint> points, Action<Transform> process, Action<Gesture, List<TouchPoint>> dispatch)
         {
+            // WARNING! Arcane magic ahead!
+
+            // Dictionary<Transform, List<TouchPoint>> - touch points sorted by targets
             targetTouches.Clear();
+            // Dictionary<Gesture, List<TouchPoint>> - touch points sorted by gesture
             gestureTouches.Clear();
-            activeGestures.Clear(); // no order in dictionary
+            // gestures which got any touch points
+            // needed because there's no order in dictionary
+            activeGestures.Clear(); 
 
             foreach (var touch in points)
             {
@@ -211,9 +217,8 @@ namespace TouchScript
                     list.Add(touch);
                 }
             }
+            // arranged touch points by target
 
-            // get touches per gesture
-            // touches can come to a gesture from multiple targets in hierarchy
             foreach (var target in targetTouches.Keys) process(target);
             foreach (var gesture in activeGestures)
                 if (gestureIsActive(gesture)) dispatch(gesture, gestureTouches[gesture]);
@@ -221,6 +226,7 @@ namespace TouchScript
 
         private void processTarget(Transform target)
         {
+            // gestures on objects in the hierarchy from "root" to target
             var possibleGestures = getHierarchyEndingWith(target);
 
             foreach (var gesture in possibleGestures)
@@ -233,10 +239,14 @@ namespace TouchScript
 
         private void processTargetBegan(Transform target)
         {
+            // gestures in the target's hierarchy which might affect gesture on the target
             var mightBeActiveGestures = getHierarchyContaining(target);
+            // gestures on objects in the hierarchy from "root" to target
             var possibleGestures = getHierarchyEndingWith(target);
             foreach (var gesture in possibleGestures)
             {
+                // WARNING! Gestures might change during this loop.
+                // For example when one of them recognizes.
                 if (!gestureIsActive(gesture)) continue;
 
                 var canReceiveTouches = true;
@@ -245,10 +255,13 @@ namespace TouchScript
                     if (gesture == activeGesture) continue;
                     if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture)))
                     {
+                        // there's a started gesture which prevents this one
                         canReceiveTouches = false;
                         break;
                     }
                 }
+
+                // check gesture's ShouldReceiveTouch callback
                 if (canReceiveTouches) distributePointsByGestures(target, gesture, gesture.ShouldReceiveTouch);
             }
         }
@@ -318,7 +331,11 @@ namespace TouchScript
             var result = new List<Gesture>();
             if (target.gameObject.active)
             {
-                result.AddRange(target.GetComponents<Gesture>());
+                var gestures = target.GetComponents<Gesture>();
+                foreach (var gesture in gestures)
+                {
+                    if (gesture.enabled) result.Add(gesture);
+                }
             }
             return result;
         }
