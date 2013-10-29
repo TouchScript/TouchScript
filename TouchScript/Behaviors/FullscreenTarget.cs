@@ -50,8 +50,8 @@ namespace TouchScript.Behaviors
                 box.center = new Vector3(0, 0, camera.farClipPlane);
             } else if (Type == TargetType.Foreground)
             {
-                h *= camera.nearClipPlane;
-                box.center = new Vector3(0, 0, camera.nearClipPlane + .005f);
+                h *= camera.nearClipPlane + .0051f;
+                box.center = new Vector3(0, 0, camera.nearClipPlane + .0051f);
             }
             var w = (float)Screen.width/Screen.height*h;
 
