@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Clusters;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -14,6 +15,7 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
     public class FlickGesture : Gesture
     {
+
         #region Unity fields
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace TouchScript.Gestures
         #region Private variables
 
         [SerializeField]
-        private float flickTime = .5f;
+        private float flickTime = .1f;
 
         [SerializeField]
         private float minDistance = 1f;
@@ -55,9 +57,10 @@ namespace TouchScript.Gestures
 
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
+        private bool isActive = false;
+
         private List<Vector2> positionDeltas = new List<Vector2>();
         private List<float> timeDeltas = new List<float>();
-        private float previousTime;
 
         #endregion
 
@@ -105,7 +108,17 @@ namespace TouchScript.Gestures
         /// </summary>
         public Vector2 ScreenFlickVector { get; private set; }
 
+        public float ScreenFlickTime { get; private set; }
+
         #endregion
+
+        protected void LateUpdate()
+        {
+            if (!isActive) return;
+
+            positionDeltas.Add(ScreenPosition - PreviousScreenPosition);
+            timeDeltas.Add(Time.deltaTime);
+        }
 
         #region Gesture callbacks
 
@@ -116,7 +129,7 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == touches.Count)
             {
-                previousTime = Time.time;
+                isActive = true;
             }
         }
 
@@ -125,20 +138,15 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            var delta = ScreenPosition - PreviousScreenPosition;
             if (!moving)
             {
-                movementBuffer += delta;
+                movementBuffer += ScreenPosition - PreviousScreenPosition;
                 var dpiMovementThreshold = MovementThreshold*touchManager.DotsPerCentimeter;
                 if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold)
                 {
                     moving = true;
                 }
             }
-
-            positionDeltas.Add(delta);
-            timeDeltas.Add(Time.time - previousTime);
-            previousTime = Time.time;
         }
 
         /// <inheritdoc />
@@ -148,26 +156,25 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == 0)
             {
+                isActive = false;
+
                 if (!moving)
                 {
                     setState(GestureState.Failed);
                     return;
                 }
 
+                positionDeltas.Add(Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches));
+                timeDeltas.Add(Time.deltaTime);
+
                 var totalTime = 0f;
                 var totalMovement = Vector2.zero;
                 var i = timeDeltas.Count - 1;
                 while (i >= 0 && totalTime < FlickTime)
                 {
-                    if (totalTime + timeDeltas[i] < FlickTime)
-                    {
-                        totalTime += timeDeltas[i];
-                        totalMovement += positionDeltas[i];
-                        i--;
-                    } else
-                    {
-                        break;
-                    }
+                    totalTime += timeDeltas[i];
+                    totalMovement += positionDeltas[i];
+                    i--;
                 }
 
                 switch (Direction)
@@ -180,12 +187,14 @@ namespace TouchScript.Gestures
                         break;
                 }
 
-                if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
+                if (totalMovement.magnitude < MinDistance * TouchManager.Instance.DotsPerCentimeter)
                 {
                     setState(GestureState.Failed);
-                } else
+                }
+                else
                 {
                     ScreenFlickVector = totalMovement;
+                    ScreenFlickTime = totalTime;
                     setState(GestureState.Recognized);
                 }
             }
@@ -204,10 +213,11 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
+            isActive = false;
             moving = false;
             movementBuffer = Vector2.zero;
-            timeDeltas.Clear();
             positionDeltas.Clear();
+            timeDeltas.Clear();
         }
 
         #endregion
