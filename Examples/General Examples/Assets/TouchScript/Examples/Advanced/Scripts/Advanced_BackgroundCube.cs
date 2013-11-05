@@ -24,6 +24,6 @@ public class Advanced_BackgroundCube : MonoBehaviour
         }
 
         transform.localScale = Vector3.one*scale;
-        transform.RotateAroundLocal(axis, RotationSpeed*360*Time.deltaTime);
+        transform.Rotate(axis, RotationSpeed*360*Time.deltaTime);
     }
 }

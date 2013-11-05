@@ -39,7 +39,7 @@ public class Advanced_BackgroundSpawner : MonoBehaviour
     private void OnTouchEvent(object sender, MetaGestureEventArgs e)
     {
         shouldSpawn = true;
-        spawnCoords = camera.ScreenToWorldPoint(new Vector3(e.TouchPoint.Position.x, e.TouchPoint.Position.y, camera.far));
+        spawnCoords = camera.ScreenToWorldPoint(new Vector3(e.TouchPoint.Position.x, e.TouchPoint.Position.y, camera.farClipPlane));
     }
 
     private void OnTouchEnded(object sender, MetaGestureEventArgs e)
