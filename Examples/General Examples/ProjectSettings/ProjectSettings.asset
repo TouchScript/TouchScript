@@ -7,12 +7,13 @@ PlayerSettings:
   AndroidProfiler: 0
   defaultScreenOrientation: 0
   targetDevice: 2
-  targetPlatform: 1
+  targetGlesGraphics: 1
   targetResolution: 0
   accelerometerFrequency: 60
   companyName: valyard
   productName: General Examples
-  AndroidLicensePublicKey: 
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 960
@@ -20,6 +21,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_ActiveColorSpace: 0
   m_MTRendering: 1
+  m_UseDX11: 0
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   displayResolutionDialog: 1
@@ -31,16 +33,25 @@ PlayerSettings:
   use32BitDisplayBuffer: 0
   use24BitDepthBuffer: 0
   defaultIsFullScreen: 0
+  defaultIsNativeResolution: 1
   runInBackground: 1
   captureSingleScreen: 0
   Override IPod Music: 0
+  Prepare IOS For Recording: 0
+  enableHWStatistics: 1
   usePlayerLog: 1
+  stripPhysics: 0
+  forceSingleInstance: 0
+  resizableWindow: 0
   useMacAppStoreValidation: 0
-  xboxSkinOnGPU: 1
+  gpuSkinning: 1
   xboxEnableAvatar: 0
   xboxEnableKinect: 0
   xboxEnableKinectAutoTracking: 0
-  xboxEnableSpeech: 0
+  xboxEnableFitness: 0
+  macFullscreenMode: 2
+  xboxSpeechDB: 0
+  xboxEnableHeadOrientation: 0
   wiiHio2Usage: -1
   wiiLoadingScreenRectPlacement: 0
   wiiLoadingScreenBackground: {r: 1, g: 1, b: 1, a: 1}
@@ -58,8 +69,8 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  debugUnloadMode: 0
   iPhoneBundleIdentifier: ru.interactivelab.touchscript
+  productGUID: 0b2aa2b1c24cbc74ca2d27d2f6d0b8b4
   iPhoneBundleVersion: 1.0
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 6
@@ -71,6 +82,7 @@ PlayerSettings:
   ForceInternetPermission: 0
   ForceSDCardPermission: 0
   CreateWallpaper: 0
+  APKExpansionFiles: 0
   StripUnusedMeshComponents: 0
   iPhoneSdkVersion: 988
   iPhoneTargetOSVersion: 22
@@ -87,7 +99,6 @@ PlayerSettings:
   iPadLandscapeSplashScreen: {fileID: 0}
   iPadHighResLandscapeSplashScreen: {fileID: 0}
   AndroidTargetDevice: 0
-  AndroidTargetGraphics: 1
   AndroidSplashScreenScale: 0
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
@@ -111,29 +122,72 @@ PlayerSettings:
   wiiControllerCount: 1
   wiiFloatingPointExceptions: 0
   wiiScreenCrashDumps: 1
-  wiiMemoryLabelCount: 147
-  wiiMemorySetup: 5effbee7ffffff75f70100000000000000000000
   XboxTitleId: 
   XboxImageXexPath: 
   XboxSpaPath: 
   XboxGenerateSpa: 0
   XboxDeployKinectResources: 0
   XboxSplashScreen: {fileID: 0}
-  xboxSpeechDB: 0
+  xboxEnableSpeech: 0
+  xboxAdditionalTitleMemorySize: 0
+  xboxDeployKinectHeadOrientation: 0
+  xboxDeployKinectHeadPosition: 0
   ps3TitleConfigPath: 
   ps3DLCConfigPath: 
   ps3ThumbnailPath: 
   ps3BackgroundPath: 
   ps3SoundPath: 
   ps3TrophyCommId: 
+  ps3NpCommunicationPassphrase: 
   ps3TrophyPackagePath: 
-  ps3ReservedMemorySizeMB: 16
   ps3BootCheckMaxSaveGameSizeKB: 128
   ps3TrophyCommSig: 
   ps3SaveGameSlots: 1
   ps3TrialMode: 0
   flashStrippingLevel: 2
+  scriptingDefineSymbols: {}
+  metroPackageName: General Examples
+  metroPackageLogo: 
+  metroPackageVersion: 
+  metroCertificatePath: 
+  metroCertificatePassword: 
+  metroCertificateSubject: 
+  metroCertificateIssuer: 
+  metroCertificateNotAfter: 0000000000000000
+  metroApplicationDescription: General Examples
+  metroTileLogo: 
+  metroTileWideLogo: 
+  metroTileSmallLogo: 
+  metroTileShortName: 
+  metroCommandLineArgsFile: 
+  metroTileShowName: 0
+  metroTileForegroundText: 1
+  metroTileBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  metroSplashScreenImage: 
+  metroSplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  metroSplashScreenUseBackgroundColor: 0
+  metroCapabilities: {}
+  metroCompilationOverrides: 1
+  blackberryDeviceAddress: 
+  blackberryDevicePassword: 
+  blackberryTokenPath: 
+  blackberryTokenExires: 
+  blackberryTokenAuthor: 
+  blackberryTokenAuthorId: 
+  blackberryAuthorId: 
+  blackberryCskPassword: 
+  blackberrySaveLogPath: 
+  blackberryAuthorIdOveride: 0
+  blackberrySharedPermissions: 0
+  blackberryCameraPermissions: 0
+  blackberryGPSPermissions: 0
+  blackberryDeviceIDPermissions: 0
+  blackberryMicrophonePermissions: 0
+  blackberryBuildId: 0
+  blackberryLandscapeSplashScreen: {fileID: 0}
+  blackberryPortraitSplashScreen: {fileID: 0}
+  blackberrySquareSplashScreen: {fileID: 0}
   firstStreamedLevelWithResources: 0
   unityRebuildLibraryVersion: 9
-  unityForwardCompatibleVersion: 36
+  unityForwardCompatibleVersion: 38
   unityStandardAssetsVersion: 0
