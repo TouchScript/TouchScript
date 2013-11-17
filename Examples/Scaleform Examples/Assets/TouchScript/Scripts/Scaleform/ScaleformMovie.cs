@@ -5,52 +5,51 @@ using UnityEngine;
 public class ScaleformMovie : Movie
 {
     
-    private Value[] beginValues;
-    private Value[] moveValues;
-    private Value[] endValues;
-    private Value[] cancelValues;
+    public ScaleformLayer Layer { get; private set; }
+    public SFManager SFManager { get; private set; }
+    public Value SWF { get; private set; }
 
-    protected Value SWF { get; private set; }
-
-    public ScaleformMovie(SFManager sfmgr, SFMovieCreationParams cp) :
-        base(sfmgr, cp)
+    public ScaleformMovie(ScaleformLayer layer, SFManager sfmgr, SFMovieCreationParams creationParams) :
+        base(sfmgr, creationParams)
     {
-        beginValues = new Value[3];
-        moveValues = new Value[3];
-        endValues = new Value[1];
-        cancelValues = new Value[1];
+        Layer = layer;
+        SFManager = sfmgr;
 
         SetFocus(true);
     }
 
     public int BeginTouch(int id, float x, float y)
     {
-        beginValues[0] = new Value(id, MovieID);
-        beginValues[1] = new Value(x / Screen.width, MovieID);
-        beginValues[2] = new Value(1 - y / Screen.height, MovieID);
-        var result = Invoke("root.Scaleform_beginTouch", beginValues, 3);
+        var result = Invoke("root.Scaleform_beginTouch", id, x / Screen.width, 1 - y / Screen.height);
         if (result != null && result.IsInt()) return result.GetInt();
         return 0;
     }
 
     public void MoveTouch(int id, float x, float y)
     {
-        moveValues[0] = new Value(id, MovieID);
-        moveValues[1] = new Value(x / Screen.width, MovieID);
-        moveValues[2] = new Value(1 - y / Screen.height, MovieID);
-        Invoke("root.Scaleform_moveTouch", moveValues, 3);
+        Invoke("root.Scaleform_moveTouch", id, x / Screen.width, 1 - y / Screen.height);
     }
 
     public void EndTouch(int id)
     {
-        endValues[0] = new Value(id, MovieID);
-        Invoke("root.Scaleform_endTouch", endValues, 1);
+        Invoke("root.Scaleform_endTouch", id);
     }
 
     public void CancelTouch(int id)
     {
-        cancelValues[0] = new Value(id, MovieID);
-        Invoke("root.Scaleform_cancelTouch", cancelValues, 1);
+        Invoke("root.Scaleform_cancelTouch", id);
+    }
+
+    public override bool AcceptMouseEvents()
+    {
+        // we route all input data from Unity
+        return false;
+    }
+
+    public override bool AcceptTouchEvents()
+    {
+        // we route all input data from Unity
+        return false;
     }
 
     #region Scaleform callbacks

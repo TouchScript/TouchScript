@@ -1,16 +1,15 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
-Scene:
+SceneSettings:
   m_ObjectHideFlags: 0
   m_PVSData: 
-  m_QueryMode: 1
   m_PVSObjectsArray: []
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
-    viewCellSize: 1
-    bakeMode: 2
-    memoryUsage: 10485760
+    smallestOccluder: 5
+    smallestHole: .25
+    backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_Fog: 0
@@ -23,11 +22,12 @@ RenderSettings:
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 0}
   m_ObjectHideFlags: 0
 --- !u!127 &3
-GameManager:
+LevelGameManager:
   m_ObjectHideFlags: 0
 --- !u!157 &4
 LightmapSettings:
@@ -79,7 +79,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 542320027}
   - 20: {fileID: 542320028}
@@ -132,6 +132,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!81 &542320029
 AudioListener:
   m_ObjectHideFlags: 0
@@ -158,7 +159,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 955994190}
   - 114: {fileID: 955994191}
@@ -188,33 +189,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 955994189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bacbba0db8fc7b04ba9521c693523f51, type: 1}
+  m_Script: {fileID: 11500000, guid: bacbba0db8fc7b04ba9521c693523f51, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   Name: Scaleform Layer
   FlashMovieFile: TestScaleformProject.swf
+  ScaleMode: 0
+  Key:
+    Key: 
+  WhenToRender: 0
+  Initialized: 0
+  RenderableTexture: {fileID: 0}
+  UseBackgroundColor: 0
+  BackgroundColor:
+    serializedVersion: 2
+    rgba: 4278190080
   InitParams:
-    mASVersion: 1
-    mInitVideo: 0
-    mInitSound: 1
-    mVideoSoundSystem: 0
-    mInitIME: 0
-    mEnableAmpProfiling: 0
-    mProgLoading: 0
-    mFontCacheConfig:
+    TheASVersion: 1
+    InitVideo: 0
+    InitSound: 1
+    TheVideoSoundSystem: 0
+    IsInitIME: 0
+    IsProgLoading: 0
+    ProgLoading: 0
+    TheFontCacheConfig:
       TextureHeight: 1024
-      TextureWidth: 1024
+      TextureWidth: 512
       MaxNumTextures: 1
       MaxSlotHeight: 48
-      MaxSlotPadding: 2
-    mSetFontCacheParams: 1
-    mEnableDynamicCache: 1
-    mFontPackParams:
+    SetFontCacheParams: 1
+    IsEnableDynamicCache: 1
+    TheFontPackParams:
       NominalSize: 32
       PadPixels: 2
       TextureWidth: 512
       TextureHeight: 512
-    mSetFontPackParams: 1
-    mGlyphCountLimit: 1000
+    SetFontPackParams: 1
+    GlyphCountLimit: 1000
     SoundVolume: 10
     IsMute: 0
 --- !u!1 &1958858705
@@ -222,7 +233,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 1958858706}
   - 114: {fileID: 1958858707}
@@ -254,11 +265,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1958858705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   liveDpi: 72
   editorDpi: 72
-  touchRadius: .75
   layers: []
 --- !u!114 &1958858708
 MonoBehaviour:
@@ -268,8 +279,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1958858705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: 059153ab8995a424d965759f3c6b1d6e, type: 1}
+  m_Script: {fileID: 1254801617, guid: 059153ab8995a424d965759f3c6b1d6e, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   TuioPort: 3333
   MovementThreshold: .100000001
 --- !u!114 &1958858709
@@ -280,5 +292,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1958858705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 

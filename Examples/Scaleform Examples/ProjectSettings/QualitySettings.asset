@@ -23,6 +23,7 @@ QualitySettings:
     vSyncCount: 0
     lodBias: .300000012
     maximumLODLevel: 0
+    particleRaycastBudget: 4
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Fast
@@ -41,6 +42,7 @@ QualitySettings:
     vSyncCount: 0
     lodBias: .400000006
     maximumLODLevel: 0
+    particleRaycastBudget: 4
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Simple
@@ -59,6 +61,7 @@ QualitySettings:
     vSyncCount: 0
     lodBias: .699999988
     maximumLODLevel: 0
+    particleRaycastBudget: 4
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Good
@@ -77,6 +80,7 @@ QualitySettings:
     vSyncCount: 1
     lodBias: 1
     maximumLODLevel: 0
+    particleRaycastBudget: 4
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Beautiful
@@ -95,6 +99,7 @@ QualitySettings:
     vSyncCount: 1
     lodBias: 1.5
     maximumLODLevel: 0
+    particleRaycastBudget: 4
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Fantastic
@@ -113,14 +118,6 @@ QualitySettings:
     vSyncCount: 1
     lodBias: 2
     maximumLODLevel: 0
+    particleRaycastBudget: 4
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality:
-    Android: 2
-    FlashPlayer: 3
-    GLES Emulation: 3
-    PS3: 3
-    Standalone: 5
-    Web: 3
-    Wii: 3
-    XBOX360: 3
-    iPhone: 2
+  m_PerPlatformDefaultQuality: {}
