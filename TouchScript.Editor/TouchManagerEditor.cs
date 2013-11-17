@@ -7,6 +7,7 @@ using TouchScript.Editor.Utils;
 using TouchScript.Layers;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace TouchScript.Editor
 {
@@ -17,13 +18,12 @@ namespace TouchScript.Editor
         public const string TEXT_EDITORDPI = "DPI used in the editor.";
         public const string TEXT_MOVEDOWN = "Move down.";
 
-        private bool showLayers = false;
-
-        private SerializedProperty liveDPI;
         private SerializedProperty editorDPI;
-        private SerializedProperty layers;
 
         private GUIStyle layerButtonStyle;
+        private SerializedProperty layers;
+        private SerializedProperty liveDPI;
+        private bool showLayers;
 
         private void OnEnable()
         {
@@ -38,10 +38,8 @@ namespace TouchScript.Editor
             {
                 layerButtonStyle = new GUIStyle(EditorStyles.miniButton);
                 layerButtonStyle.fontSize = 9;
-                layerButtonStyle.padding = new RectOffset(-4, 0, -3, 0);
+                layerButtonStyle.contentOffset = new Vector2(0, 0);
             }
-
-            EditorGUIUtility.LookLikeInspector();
 
             serializedObject.Update();
             GUI.changed = false;
@@ -49,10 +47,11 @@ namespace TouchScript.Editor
             EditorGUILayout.PropertyField(liveDPI, new GUIContent("Live DPI", TEXT_LIVEDPI));
             EditorGUILayout.PropertyField(editorDPI, new GUIContent("Editor DPI", TEXT_EDITORDPI));
 
-            showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)), () =>
+            showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)),
+                () =>
                 {
                     EditorGUILayout.BeginVertical();
-                    for (var i = 0; i < layers.arraySize; i++)
+                    for (int i = 0; i < layers.arraySize; i++)
                     {
                         var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
                         string name;
@@ -60,13 +59,12 @@ namespace TouchScript.Editor
                         else name = layer.Name;
 
                         var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
-                        
+
                         EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
-                        if (GUILayout.Button(new GUIContent("Move Down", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(70), GUILayout.Height(18)))
+                        if (GUILayout.Button(new GUIContent("v", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
                         {
                             layers.MoveArrayElement(i, i + 1);
-                        }
-                        else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+                        } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
                         {
                             EditorGUIUtility.PingObject(layer);
                         }
@@ -84,8 +82,8 @@ namespace TouchScript.Editor
         private void refresh()
         {
             layers.ClearArray();
-            var allLayers = FindObjectsOfType(typeof(TouchLayer));
-            var i = 0;
+            Object[] allLayers = FindObjectsOfType(typeof(TouchLayer));
+            int i = 0;
             layers.arraySize = allLayers.Length;
             foreach (TouchLayer l in allLayers)
             {

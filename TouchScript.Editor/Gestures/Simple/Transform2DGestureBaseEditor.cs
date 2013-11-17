@@ -11,8 +11,8 @@ namespace TouchScript.Editor.Gestures.Simple
 {
     public class Transform2DGestureBaseEditor : GestureEditor
     {
-
         public const string TEXT_PROJECTION = "Method used to project 2d screen positions of touch points into 3d space.";
+
         public const string TEXT_PROJECTIONNORMAL = "Normal of the plane in 3d space where touch points' positions are projected.";
 
         private SerializedProperty projection, projectionNormal;
@@ -28,7 +28,6 @@ namespace TouchScript.Editor.Gestures.Simple
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
-            EditorGUIUtility.LookLikeInspector();
 
             EditorGUILayout.PropertyField(projection, new GUIContent("Projection Type", TEXT_PROJECTION));
             if (projection.enumValueIndex != (int)Transform2DGestureBase.ProjectionType.Camera)
@@ -39,6 +38,5 @@ namespace TouchScript.Editor.Gestures.Simple
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
-
     }
 }

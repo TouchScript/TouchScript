@@ -10,6 +10,5 @@ namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(ScaleGesture))]
     public class ScaleGestureEditor : SimpleScaleGestureEditor
-    {
-    }
+    {}
 }

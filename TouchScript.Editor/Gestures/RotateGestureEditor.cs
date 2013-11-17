@@ -10,6 +10,5 @@ namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(RotateGesture))]
     public class RotateGestureEditor : SimpleRotateGestureEditor
-    {
-    }
+    {}
 }

@@ -7,10 +7,7 @@ using UnityEditor;
 
 namespace TouchScript.Editor.Gestures.Simple
 {
-
     [CustomEditor(typeof(MetaGesture))]
     public class MetaGestureEditor : GestureEditor
-    {
-    }
-
+    {}
 }

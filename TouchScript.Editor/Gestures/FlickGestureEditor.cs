@@ -8,17 +8,20 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-
     [CustomEditor(typeof(FlickGesture))]
     public class FlickGestureEditor : GestureEditor
     {
-
         public const string TEXT_DIRECTION = "Flick direction.";
+
         public const string TEXT_MOVEMENTTHRESHOLD = "Minimum distance in cm touch points must move for the gesture to begin.";
+
         public const string TEXT_FLICKTIME = "Time interval in seconds during which touch points must move by <Minimum Distance> for the gesture to be recognized.";
+
         public const string TEXT_MINDISTANCE = "Minimum distance in cm touch points must move in <Flick Time> seconds for the gesture to be recognized.";
 
-        private SerializedProperty flickTime, minDistance, movementThreshold, direction;
+        private SerializedProperty direction;
+
+        private SerializedProperty flickTime, minDistance, movementThreshold;
 
         protected override void OnEnable()
         {
@@ -33,7 +36,6 @@ namespace TouchScript.Editor.Gestures
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
-            EditorGUIUtility.LookLikeInspector();
 
             EditorGUILayout.PropertyField(direction, new GUIContent("Direction", TEXT_DIRECTION));
             EditorGUILayout.PropertyField(movementThreshold, new GUIContent("Movement Threshold (cm)", TEXT_MOVEMENTTHRESHOLD));
@@ -43,7 +45,5 @@ namespace TouchScript.Editor.Gestures
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
-
     }
-
 }

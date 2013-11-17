@@ -10,7 +10,6 @@ namespace TouchScript.Editor.Utils
 {
     public class GUIElements
     {
-
         private static GUIStyle foldoutStyle, headerStyle;
 
         public static GUIStyle BoxStyle
@@ -38,7 +37,7 @@ namespace TouchScript.Editor.Utils
                 {
                     boxLabelStyle = new GUIStyle(GUI.skin.label);
                     boxLabelStyle.fontSize = 9;
-                    boxLabelStyle.padding = new RectOffset(-10, 0, 5, 0);
+                    boxLabelStyle.padding = new RectOffset(0, 0, 5, 0);
                 }
                 return boxLabelStyle;
             }
@@ -84,6 +83,5 @@ namespace TouchScript.Editor.Utils
             property.vector3Value = new Vector3(x, y, z);
             GUILayout.EndHorizontal();
         }
-
     }
 }

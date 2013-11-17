@@ -10,6 +10,5 @@ namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(PanGesture))]
     public class PanGestureEditor : SimplePanGestureEditor
-    {
-    }
+    {}
 }
