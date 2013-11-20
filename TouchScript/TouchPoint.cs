@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -74,7 +75,7 @@ namespace TouchScript
         /// <summary>
         /// Original hit information.
         /// </summary>
-        public RaycastHit Hit { get; internal set; }
+        public TouchHit Hit { get; internal set; }
 
         /// <summary>
         /// Original camera through which the target was seen.

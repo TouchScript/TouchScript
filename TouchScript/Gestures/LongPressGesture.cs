@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TouchScript.Hit;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -69,8 +70,7 @@ namespace TouchScript.Gestures
         {
             if (fireRecognizedNextUpdate)
             {
-                RaycastHit hit;
-                if (base.GetTargetHitResult(out hit))
+                if (base.GetTargetHitResult())
                 {
                     setState(GestureState.Recognized);
                 } else

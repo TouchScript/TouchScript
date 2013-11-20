@@ -3,6 +3,7 @@
  */
 
 using System;
+using TouchScript.Hit;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -54,9 +55,9 @@ namespace TouchScript.Layers
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>Hit, if an object is hit, Miss or Error otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out RaycastHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
-            hit = new RaycastHit();
+            hit = new TouchHit();
             return LayerHitResult.Miss;
         }
 

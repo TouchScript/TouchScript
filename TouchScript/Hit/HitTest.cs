@@ -40,7 +40,7 @@ namespace TouchScript.Hit
         /// </summary>
         /// <param name="hit">Data from a raycast.</param>
         /// <returns><see cref="ObjectHitResult.Hit"/> if touch point hits the object, <see cref="ObjectHitResult.Miss"/> if it doesn't, <see cref="ObjectHitResult.Discard"/> if it doesn't and this touch must be ignored, Error otherwise.</returns>
-        public virtual ObjectHitResult IsHit(RaycastHit hit)
+        public virtual ObjectHitResult IsHit(TouchHit hit)
         {
             return ObjectHitResult.Hit;
         }

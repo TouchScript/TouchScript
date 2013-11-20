@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Events;
+using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
@@ -317,9 +318,9 @@ namespace TouchScript
         /// <returns>Object's transform which has been hit or null otherwise.</returns>
         public Transform GetHitTarget(Vector2 position)
         {
-            RaycastHit hit;
+            TouchHit hit;
             TouchLayer layer;
-            if (GetHitTarget(position, out hit, out layer)) return hit.transform;
+            if (GetHitTarget(position, out hit, out layer)) return hit.Transform;
             return null;
         }
 
@@ -330,15 +331,15 @@ namespace TouchScript
         /// <param name="hit">Output RaycastHit.</param>
         /// <param name="layer">Output touch layer which was hit.</param>
         /// <returns>True if something was hit.</returns>
-        public bool GetHitTarget(Vector2 position, out RaycastHit hit, out TouchLayer layer)
+        public bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer)
         {
-            hit = new RaycastHit();
+            hit = new TouchHit();
             layer = null;
 
             foreach (var touchLayer in layers)
             {
                 if (touchLayer == null) continue;
-                RaycastHit _hit;
+                TouchHit _hit;
                 if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
                 {
                     hit = _hit;

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Clusters;
+using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -312,7 +313,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult()
         {
-            RaycastHit hit;
+            TouchHit hit;
             return GetTargetHitResult(ScreenPosition, out hit);
         }
 
@@ -321,7 +322,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="hit">Raycast result</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(out RaycastHit hit)
+        public virtual bool GetTargetHitResult(out TouchHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
         }
@@ -333,7 +334,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(Vector2 position)
         {
-            RaycastHit hit;
+            TouchHit hit;
             return GetTargetHitResult(position, out hit);
         }
 
@@ -343,14 +344,12 @@ namespace TouchScript.Gestures
         /// <param name="position">The position.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(Vector2 position, out RaycastHit hit)
+        public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
         {
-            hit = new RaycastHit();
-
             TouchLayer layer = null;
             if (!TouchManager.Instance.GetHitTarget(position, out hit, out layer)) return false;
 
-            if (transform == hit.transform || hit.transform.IsChildOf(transform)) return true;
+            if (transform == hit.Transform || hit.Transform.IsChildOf(transform)) return true;
             return false;
         }
 

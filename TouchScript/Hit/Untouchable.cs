@@ -18,7 +18,7 @@ namespace TouchScript.Hit
         public bool DiscardTouch = false;
 
         /// <inheritdoc />
-        public override ObjectHitResult IsHit(RaycastHit hit)
+        public override ObjectHitResult IsHit(TouchHit hit)
         {
             return DiscardTouch ? ObjectHitResult.Discard : ObjectHitResult.Miss;
         }

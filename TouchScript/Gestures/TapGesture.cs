@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Clusters;
+using TouchScript.Hit;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -41,7 +42,7 @@ namespace TouchScript.Gestures
         /// Cached target hit result.
         /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
-        protected RaycastHit cachedTargetHitResult;
+        protected TouchHit cachedTargetHitResult;
 
         private Vector2 totalMovement = Vector2.zero;
         private float startTime;
@@ -104,12 +105,12 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         public override bool GetTargetHitResult()
         {
-            RaycastHit hit;
+            TouchHit hit;
             return GetTargetHitResult(out hit);
         }
 
         /// <inheritdoc />
-        public override bool GetTargetHitResult(out RaycastHit hit)
+        public override bool GetTargetHitResult(out TouchHit hit)
         {
             if (State == GestureState.Ended)
             {
