@@ -242,11 +242,13 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Unity3d Start handler.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">TouchManager instance is required!</exception>
         protected virtual void Start()
         {
             touchManager = TouchManager.Instance;
             gestureManager = GestureManager.Instance;
+
+            if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
+            if (gestureManager == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
 
             Reset();
         }

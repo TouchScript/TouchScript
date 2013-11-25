@@ -3,15 +3,6 @@ using UnityEngine;
 
 public class Basic2dExample_Logo : MonoBehaviour {
 
-    private enum State
-    {
-        Free,
-        Manual
-    }
-
-    private State state;
-    private Rigidbody2D rb;
-
 	void Start ()
 	{
 	    GetComponent<PressGesture>().StateChanged += (sender, args) =>
@@ -19,43 +10,30 @@ public class Basic2dExample_Logo : MonoBehaviour {
 	        switch (args.State)
 	        {
 	            case Gesture.GestureState.Recognized:
-	                if (state == State.Free) stateManual();
+	                for (var i = 0; i < 3; i++)
+	                {
+	                    var angle = Quaternion.Euler(0, 0, 360/3*i);
+	                    var rb = createCopy(transform.localPosition + angle*Vector3.right*transform.localScale.x*1.2f);
+	                    rb.mass = GetComponent<Rigidbody2D>().mass/3;
+                        rb.AddForce(angle * Vector2.right * 5000);
+	                }
+                    Destroy(gameObject);
 	                break;
 	        }
 	    };
-        GetComponent<ReleaseGesture>().StateChanged += (sender, args) =>
-        {
-            switch (args.State)
-            {
-                case Gesture.GestureState.Recognized:
-                    if (state == State.Manual) stateFree();
-                    break;
-            }
-        };
-
-	    rb = GetComponent<Rigidbody2D>();
-
-	    stateFree();
 	}
+
+    private Rigidbody2D createCopy(Vector3 position)
+    {
+        var obj = Instantiate(gameObject) as GameObject;
+        obj.name = "Logo";
+        var t = obj.transform;
+        t.parent = transform.parent;
+        t.position = position;
+        t.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
+        t.localScale = Vector3.one*transform.localScale.x*.6f;
+        return obj.GetComponent<Rigidbody2D>();
+    }
 	
-    private void stateFree()
-    {
-        setState(State.Free);
-
-        rb.gravityScale = 1;
-    }
-
-    private void stateManual()
-    {
-        setState(State.Manual);
-
-        rb.gravityScale = 0;
-    }
-
-    private void setState(State value)
-    {
-        state = value;
-        Debug.Log("State " + value);
-    }
 
 }

@@ -38,7 +38,7 @@ namespace TouchScript.Hit
                 Type = HitType.Hit2D,
                 Collider2d = value.collider,
                 Distance = value.fraction,
-                Normal = value.normal,
+                Normal = -Vector3.forward,
                 Point = value.point,
                 Rigidbody2D = value.rigidbody,
                 Transform = value.transform
