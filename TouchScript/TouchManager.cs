@@ -193,6 +193,7 @@ namespace TouchScript
         #region Private variables
 
         private static TouchManager instance;
+        // Flag to indicate that we are going out of Play Mode in the editor. Otherwise there might be a loop when while deinitializing other objects access TouchScript.Instance which recreates an instance of TouchManager and everything breaks.
         private static bool shuttingDown = false;
 
         private float dpi = 72;
@@ -252,12 +253,7 @@ namespace TouchScript
 
         private void OnDestroy()
         {
-            shuttingDown = true;
-        }
-
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
+            if (!Application.isLoadingLevel) shuttingDown = true;
         }
 
         #endregion

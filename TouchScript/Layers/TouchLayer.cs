@@ -11,7 +11,7 @@ namespace TouchScript.Layers
     /// <summary>
     /// Base class for all touch layers. Used to check if some object is hit by a touch point.
     /// </summary>
-    [ExecuteInEditMode()]
+    [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
         /// <summary>
@@ -92,7 +92,7 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void Awake()
         {
-            if (GetComponents<TouchLayer>().Length > 1)
+            if (GetComponents(GetType()).Length > 1)
             {
                 DestroyImmediate(this);
                 return;

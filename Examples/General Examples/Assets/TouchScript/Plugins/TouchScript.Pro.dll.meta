@@ -3,4 +3,6 @@ guid: 53d3dc02e71df20438406b9087fe1e5d
 MonoAssemblyImporter:
   serializedVersion: 1
   iconMap: {}
-  executionOrder: {}
+  executionOrder:
+    TouchScript.InputSources.TuioInput: -1120
+  userData: 
