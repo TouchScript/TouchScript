@@ -25,7 +25,7 @@ namespace TouchScript.Layers
                     break;
                 }
 
-                HitTest.ObjectHitResult hitResult = HitTest.ObjectHitResult.Error;
+                var hitResult = HitTest.ObjectHitResult.Error;
                 foreach (var test in hitTests)
                 {
                     hitResult = test.IsHit(hit);

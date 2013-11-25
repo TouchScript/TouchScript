@@ -1,6 +1,6 @@
 using TouchScript.Gestures;
+using TouchScript.Hit;
 using UnityEngine;
-using System.Collections;
 
 public class BasicExample_Spawner : MonoBehaviour
 {
@@ -18,7 +18,7 @@ public class BasicExample_Spawner : MonoBehaviour
         if (e.State == Gesture.GestureState.Recognized)
         {
             var gesture = sender as TapGesture;
-            RaycastHit hit;
+            TouchHit hit;
             gesture.GetTargetHitResult(out hit);
 
             Color color = new Color(Random.value, Random.value, Random.value);
@@ -26,7 +26,7 @@ public class BasicExample_Spawner : MonoBehaviour
             c.parent = Container;
             c.name = "Cube";
             c.localScale = Vector3.one*Scale*c.localScale.x;
-            c.position = hit.point + hit.normal * 2;
+            c.position = hit.Point + hit.Normal * 2;
             c.renderer.material.color = color;
 
         }
