@@ -52,6 +52,7 @@ namespace TouchScript
         #region Private variables
 
         private static GestureManager instance;
+        // Flag to indicate that we are going out of Play Mode in the editor. Otherwise there might be a loop when while deinitializing other objects access TouchScript.Instance which recreates an instance of TouchManager and everything breaks.
         private static bool shuttingDown = false;
 
         // Upcoming changes
@@ -85,12 +86,7 @@ namespace TouchScript
 
         private void OnDestroy()
         {
-            shuttingDown = true;
-        }
-
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
+            if (!Application.isLoadingLevel) shuttingDown = true;
         }
 
         #endregion
