@@ -25,7 +25,7 @@ namespace TouchScript.Hit
                 Rigidbody = value.rigidbody,
                 TextureCoord = value.textureCoord,
                 TextureCoord2 = value.textureCoord2,
-                Transform = value.transform,
+                Transform = value.collider.transform,
                 TriangleIndex = value.triangleIndex
             };
             return result;
@@ -41,7 +41,7 @@ namespace TouchScript.Hit
                 Normal = -Vector3.forward,
                 Point = value.point,
                 Rigidbody2D = value.rigidbody,
-                Transform = value.transform
+                Transform = value.collider.transform
             };
             return result;
         }
