@@ -14,7 +14,6 @@ namespace TouchScript.Layers
         {
             hit = new TouchHit();
             var hits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
-            Debug.Log(hits.Length);
 
             if (hits.Length == 0) return LayerHitResult.Miss;
             if (hits.Length > 1) hits = sortHits(hits);
