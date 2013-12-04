@@ -92,12 +92,6 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void Awake()
         {
-            if (GetComponents(GetType()).Length > 1)
-            {
-                DestroyImmediate(this);
-                return;
-            }
-
             setName();
             if (Application.isPlaying) TouchManager.AddLayer(this);
         }
