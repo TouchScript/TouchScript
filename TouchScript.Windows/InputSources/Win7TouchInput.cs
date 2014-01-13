@@ -31,7 +31,7 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Windows 7 Touch Input")]
     public class Win7TouchInput : InputSourceWindows
     {
-        private delegate int WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         #region Private fields
 
@@ -60,7 +60,7 @@ namespace TouchScript.InputSources
         {
             if (isInitialized)
             {
-                SetWindowLong(hMainWindow, -4, oldWndProcPtr);
+                SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
                 UnregisterTouchWindow(hMainWindow);
 
                 hMainWindow = IntPtr.Zero;
@@ -85,14 +85,14 @@ namespace TouchScript.InputSources
             hMainWindow = GetForegroundWindow();
             RegisterTouchWindow(hMainWindow, 0);
 
-            newWndProc = new WndProcDelegate(wndProc);
+            newWndProc = wndProc;
             newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
-            oldWndProcPtr = SetWindowLong(hMainWindow, -4, newWndProcPtr);
+            oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
 
             isInitialized = true;
         }
 
-        private int wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private IntPtr wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             switch (msg)
             {
@@ -101,9 +101,9 @@ namespace TouchScript.InputSources
                     break;
                 case WM_CLOSE:
                     UnregisterTouchWindow(hWnd);
-                    SetWindowLong(hWnd, -4, oldWndProcPtr);
-                    SendMessage(hWnd, WM_CLOSE, 0, 0);
-                    return 0;
+                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
+                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    return IntPtr.Zero;
             }
             return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
@@ -191,10 +191,10 @@ namespace TouchScript.InputSources
         private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll")]
-        private static extern int CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -216,13 +216,13 @@ namespace TouchScript.InputSources
         private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
 
         [DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)]
-        private static extern int SendMessage(IntPtr hWnd, uint uMsg, int wParam, int lParam);
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         private int touchInputSize;
 
         private int HIWORD(int value)
         {
-            return (int)(value >> 16);
+            return (int)(value >> 0xf);
         }
 
         private int LOWORD(int value)

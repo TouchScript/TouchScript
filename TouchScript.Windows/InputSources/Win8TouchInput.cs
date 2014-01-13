@@ -21,7 +21,7 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Windows 8 Touch Input")]
     public class Win8TouchInput : InputSourceWindows
     {
-        private delegate int WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         #region Private fields
 
@@ -50,7 +50,7 @@ namespace TouchScript.InputSources
         {
             if (isInitialized)
             {
-                SetWindowLong(hMainWindow, -4, oldWndProcPtr);
+                SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
 
                 hMainWindow = IntPtr.Zero;
                 oldWndProcPtr = IntPtr.Zero;
@@ -71,14 +71,14 @@ namespace TouchScript.InputSources
 
             hMainWindow = GetForegroundWindow();
 
-            newWndProc = new WndProcDelegate(wndProc);
+            newWndProc = wndProc;
             newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
-            oldWndProcPtr = SetWindowLong(hMainWindow, -4, newWndProcPtr);
+            oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
 
             isInitialized = true;
         }
 
-        private int wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private IntPtr wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             switch (msg)
             {
@@ -88,9 +88,9 @@ namespace TouchScript.InputSources
 					decodeTouches(msg, wParam, lParam);
 					break;
                 case WM_CLOSE:
-                    SetWindowLong(hWnd, -4, oldWndProcPtr);
-                    SendMessage(hWnd, WM_CLOSE, 0, 0);
-                    return 0;
+                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
+                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    return IntPtr.Zero;
             }
             return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
@@ -150,10 +150,10 @@ namespace TouchScript.InputSources
 		
 		private enum POINTER_INPUT_TYPE
 		{
-			PT_POINTER  = 0x00000001,
-			PT_TOUCH    = 0x00000002,
-			PT_PEN      = 0x00000003,
-			PT_MOUSE    = 0x00000004,
+			PT_POINTER = 0x00000001,
+			PT_TOUCH = 0x00000002,
+			PT_PEN = 0x00000003,
+			PT_MOUSE = 0x00000004,
 		}
 		
 		private enum POINTER_BUTTON_CHANGE_TYPE
@@ -175,21 +175,21 @@ namespace TouchScript.InputSources
         [StructLayout(LayoutKind.Sequential, Pack=1)]
         private struct POINTER_INFO
         {
-		  public POINTER_INPUT_TYPE         pointerType;
-		  public UInt32                     pointerId;
-		  public UInt32                     frameId;
-		  public UInt32			              pointerFlags;
-		  public IntPtr                     sourceDevice;
-		  public IntPtr                       hwndTarget;
-		  public POINT                      ptPixelLocation;
-		  public POINT                      ptHimetricLocation;
-		  public POINT                      ptPixelLocationRaw;
-		  public POINT                      ptHimetricLocationRaw;
-		  public UInt32                       dwTime;
-		  public UInt32                      historyCount;
-		  public Int32                       inputData;
-		  public UInt32                       dwKeyStates;
-		  public UInt64                     PerformanceCount;
+		  public POINTER_INPUT_TYPE pointerType;
+		  public UInt32 pointerId;
+		  public UInt32 frameId;
+		  public UInt32	pointerFlags;
+		  public IntPtr sourceDevice;
+		  public IntPtr hwndTarget;
+		  public POINT ptPixelLocation;
+		  public POINT ptHimetricLocation;
+		  public POINT ptPixelLocationRaw;
+		  public POINT ptHimetricLocationRaw;
+		  public UInt32 dwTime;
+		  public UInt32 historyCount;
+		  public Int32 inputData;
+		  public UInt32 dwKeyStates;
+		  public UInt64 PerformanceCount;
 		  public POINTER_BUTTON_CHANGE_TYPE ButtonChangeType;
         }
 
@@ -204,16 +204,16 @@ namespace TouchScript.InputSources
         private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll")]
-        private static extern int CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
 
         [DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)]
-        private static extern int SendMessage(IntPtr hWnd, uint uMsg, int wParam, int lParam);
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
@@ -221,7 +221,7 @@ namespace TouchScript.InputSources
 		
         private int HIWORD(int value)
         {
-            return (int)(value >> 16);
+            return (int)(value >> 0xf);
         }
 
         private int LOWORD(int value)
