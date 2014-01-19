@@ -14,6 +14,35 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Press Gesture")]
     public class PressGesture : Gesture
     {
+
+        #region Public properties
+        
+        public bool IgnoreChildren
+        {
+            get { return ignoreChildren; }
+            set { ignoreChildren = value; }
+        }
+        
+        #endregion
+        
+        #region Private variables
+        
+        [SerializeField]
+        private bool ignoreChildren = false;
+        
+        #endregion
+        
+        #region Gesture callbacks
+        
+        public override bool ShouldReceiveTouch(TouchPoint touch)
+        {
+            if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
+            if (!base.ShouldReceiveTouch(touch)) return false;
+            
+            if (touch.Target != transform) return false;
+            return true;
+        }
+
         /// <inheritdoc />
         public override bool CanPreventGesture(Gesture gesture)
         {
@@ -35,5 +64,8 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
         }
+
+        #endregion
+
     }
 }
