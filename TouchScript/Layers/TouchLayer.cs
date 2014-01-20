@@ -35,6 +35,8 @@ namespace TouchScript.Layers
             Miss = 2
         }
 
+        public event EventHandler<TouchLayerEventArgs> TouchBegan;
+
         /// <summary>
         /// Touch layer's name.
         /// </summary>
@@ -67,6 +69,7 @@ namespace TouchScript.Layers
             if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
+                if (TouchBegan != null) TouchBegan(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
@@ -143,4 +146,16 @@ namespace TouchScript.Layers
         protected virtual void cancelTouch(TouchPoint touch)
         {}
     }
+
+    public class TouchLayerEventArgs : EventArgs
+    {
+
+        public TouchPoint TouchPoint;
+
+        public TouchLayerEventArgs(TouchPoint touchPoint) : base()
+        {
+            TouchPoint = touchPoint;
+        }
+    }
+
 }
