@@ -56,7 +56,6 @@ namespace TouchScript.Editor.Utils
                 headerStyle.contentOffset = new Vector2(3, -2);
             }
 
-            EditorGUIUtility.LookLikeInspector();
             GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(1f));
 
             open = GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);

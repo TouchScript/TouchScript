@@ -325,7 +325,7 @@ namespace TouchScript
         private List<Gesture> getEnabledGesturesOnTarget(Transform target)
         {
             var result = new List<Gesture>();
-            if (target.gameObject.active)
+            if (target.gameObject.activeInHierarchy)
             {
                 var gestures = target.GetComponents<Gesture>();
                 foreach (var gesture in gestures)
@@ -338,7 +338,7 @@ namespace TouchScript
 
         private bool gestureIsActive(Gesture gesture)
         {
-            if (gesture.gameObject.active == false) return false;
+            if (gesture.gameObject.activeInHierarchy == false) return false;
             if (gesture.enabled == false) return false;
             switch (gesture.State)
             {

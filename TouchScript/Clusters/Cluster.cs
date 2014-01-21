@@ -56,9 +56,9 @@ namespace TouchScript.Clusters
         /// <returns>Camera instance.</returns>
         public static Camera GetClusterCamera(IList<TouchPoint> touches)
         {
-            if (touches.Count == 0) return Camera.mainCamera;
+            if (touches.Count == 0) return Camera.main;
             var cam = touches[0].Layer.Camera;
-            if (cam == null) return Camera.mainCamera;
+            if (cam == null) return Camera.main;
             return cam;
         }
 
