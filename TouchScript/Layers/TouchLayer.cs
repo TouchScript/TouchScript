@@ -35,7 +35,14 @@ namespace TouchScript.Layers
             Miss = 2
         }
 
-        public event EventHandler<TouchLayerEventArgs> TouchBegan;
+        public event EventHandler<TouchLayerEventArgs> TouchBegan
+        {
+            add { touchBeganInvoker += value; }
+            remove { touchBeganInvoker -= value; }
+        }
+        
+        // Needed to overcome iOS AOT limitations
+        private EventHandler<TouchLayerEventArgs> touchBeganInvoker;
 
         /// <summary>
         /// Touch layer's name.
@@ -69,7 +76,7 @@ namespace TouchScript.Layers
             if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
-                if (TouchBegan != null) TouchBegan(this, new TouchLayerEventArgs(touch));
+                if (touchBeganInvoker != null) touchBeganInvoker(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
