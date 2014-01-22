@@ -200,11 +200,20 @@ namespace TouchScript.InputSources
             public int Y;
         }
 
+        private IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
+        {
+            if (IntPtr.Size == 8) return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
+            return new IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32()));
+        }
+
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
-        [DllImport("user32.dll")]
-        private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        private static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+        private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll")]
         private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
