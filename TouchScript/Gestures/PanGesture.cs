@@ -49,14 +49,6 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
-        /// <inheritdoc />
-        protected override void Awake()
-        {
-            base.Awake();
-
-            clusters.MinPointsDistance = 0;
-        }
-
         #endregion
 
         #region Gesture callbacks

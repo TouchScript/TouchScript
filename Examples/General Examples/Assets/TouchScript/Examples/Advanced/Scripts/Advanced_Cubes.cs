@@ -25,11 +25,19 @@ public class Advanced_Cubes : MonoBehaviour
         targetRotation = Quaternion.AngleAxis(90, axis)*transform.localRotation;
     }
 
-    private void Start()
+    private void Awake()
     {
         targetRotation = transform.localRotation;
+    }
 
-        GetComponent<RotateGesture>().StateChanged += onRotateStateChanged;
+    private void OnEnable()
+    {
+        GetComponent<RotateGesture>().StateChanged += rotateStateChangedHandler;
+    }
+
+    private void OnDisable()
+    {
+        GetComponent<RotateGesture>().StateChanged -= rotateStateChangedHandler;
     }
 
     private void Update()
@@ -50,7 +58,7 @@ public class Advanced_Cubes : MonoBehaviour
         }
     }
 
-    private void onRotateStateChanged(object sender, GestureStateChangeEventArgs e)
+    private void rotateStateChangedHandler(object sender, GestureStateChangeEventArgs e)
     {
         if (State != CubesState.Idle) return;
         switch (e.State)

@@ -8,12 +8,17 @@ public class BasicExample_Spawner : MonoBehaviour
     public Transform Container;
     public float Scale = .5f;
 
-    private void Start()
+    private void OnEnable()
     {
-        GetComponent<TapGesture>().StateChanged += HandleStateChanged;
+        GetComponent<TapGesture>().StateChanged += tapStateChangedHandler;
     }
 
-    private void HandleStateChanged(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
+    private void OnDisable()
+    {
+        GetComponent<TapGesture>().StateChanged -= tapStateChangedHandler;
+    }
+
+    private void tapStateChangedHandler(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
     {
         if (e.State == Gesture.GestureState.Recognized)
         {

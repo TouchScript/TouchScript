@@ -7,9 +7,14 @@ public class InputExample : MonoBehaviour
 {
     public GameObject Prefab;
 
-    private void Start()
+    private void OnEnable()
     {
         TouchManager.Instance.TouchesBegan += touchBeganHandler;
+    }
+
+    private void OnDisable()
+    {
+        TouchManager.Instance.TouchesBegan -= touchBeganHandler;
     }
 
     private void spawnPrefabAt(Vector2 position)

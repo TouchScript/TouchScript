@@ -74,6 +74,10 @@ namespace TouchScript
         private void Awake()
         {
             shuttingDown = false;
+        }
+
+        private void OnEnable()
+        {
             if (instance == null) instance = this;
 
             TouchManager.Instance.FrameStarted += frameStartedHandler;
@@ -82,6 +86,16 @@ namespace TouchScript
             TouchManager.Instance.TouchesMoved += touchMovedHandler;
             TouchManager.Instance.TouchesEnded += touchEndedHandler;
             TouchManager.Instance.TouchesCancelled += touchCancelledHandler;
+        }
+
+        private void OnDisable()
+        {
+            TouchManager.Instance.FrameStarted -= frameStartedHandler;
+            TouchManager.Instance.FrameFinished -= frameFinishedHandler;
+            TouchManager.Instance.TouchesBegan -= touchBeganHandler;
+            TouchManager.Instance.TouchesMoved -= touchMovedHandler;
+            TouchManager.Instance.TouchesEnded -= touchEndedHandler;
+            TouchManager.Instance.TouchesCancelled -= touchCancelledHandler;
         }
 
         private void OnDestroy()
@@ -217,7 +231,9 @@ namespace TouchScript
 
             foreach (var target in targetTouches.Keys) process(target);
             foreach (var gesture in activeGestures)
+            {
                 if (gestureIsActive(gesture)) dispatch(gesture, gestureTouches[gesture]);
+            }
         }
 
         private void processTarget(Transform target)

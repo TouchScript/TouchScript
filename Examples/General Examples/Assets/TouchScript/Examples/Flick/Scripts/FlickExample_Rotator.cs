@@ -10,15 +10,16 @@ public class FlickExample_Rotator : MonoBehaviour
     private Quaternion targetRotation;
     private Vector3 speed;
 
-    private void Start()
+    private void OnEnable()
     {
-        GetComponent<FlickGesture>().StateChanged += flickHandler;
-        GetComponent<PressGesture>().StateChanged += pressHandler;
+        GetComponent<FlickGesture>().StateChanged += flickStateChangedHandler;
+        GetComponent<PressGesture>().StateChanged += pressStateChangedHandler;
     }
 
-    private void pressHandler(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+    private void OnDisable()
     {
-        Target.angularVelocity = Vector3.zero;
+        GetComponent<FlickGesture>().StateChanged -= flickStateChangedHandler;
+        GetComponent<PressGesture>().StateChanged -= pressStateChangedHandler;
     }
 
     private void FixedUpdate()
@@ -30,7 +31,7 @@ public class FlickExample_Rotator : MonoBehaviour
         }
     }
 
-    private void flickHandler(object sender, GestureStateChangeEventArgs e)
+    private void flickStateChangedHandler(object sender, GestureStateChangeEventArgs e)
     {
         if (e.State == Gesture.GestureState.Recognized)
         {
@@ -38,4 +39,13 @@ public class FlickExample_Rotator : MonoBehaviour
             speed = new Vector3(spd.y, -spd.x, 0);
         }
     }
+
+    private void pressStateChangedHandler(object sender, GestureStateChangeEventArgs e)
+    {
+        if (e.State == Gesture.GestureState.Recognized)
+        {
+            Target.angularVelocity = Vector3.zero;
+        }
+    }
+
 }

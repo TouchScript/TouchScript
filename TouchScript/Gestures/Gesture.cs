@@ -220,17 +220,6 @@ namespace TouchScript.Gestures
         #region Unity methods
 
         /// <summary>
-        /// Unity3d Awake handler.
-        /// </summary>
-        protected virtual void Awake()
-        {
-            foreach (var gesture in friendlyGestures)
-            {
-                AddFriendlyGesture(gesture);
-            }
-        }
-
-        /// <summary>
         /// Unity3d Start handler.
         /// </summary>
         protected virtual void OnEnable()
@@ -241,6 +230,11 @@ namespace TouchScript.Gestures
             if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
             if (gestureManager == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
 
+            foreach (var gesture in friendlyGestures)
+            {
+                AddFriendlyGesture(gesture);
+            }
+
             Reset();
         }
 
@@ -250,6 +244,9 @@ namespace TouchScript.Gestures
         protected virtual void OnDisable()
         {
             setState(GestureState.Failed);
+
+            gestureManager = null;
+            touchManager = null;
         }
 
         /// <summary>
@@ -257,8 +254,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void OnDestroy()
         {
-            gestureManager = null;
-            touchManager = null;
+            
         }
 
         #endregion

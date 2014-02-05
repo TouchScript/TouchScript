@@ -74,9 +74,9 @@ namespace TouchScript.Gestures.Simple
         #region Unity methods
 
         /// <inheritdoc />
-        protected override void Awake()
+        protected override void OnEnable()
         {
-            base.Awake();
+            base.OnEnable();
 
             minPointsDistanceInPixels = minPointsDistance * touchManager.DotsPerCentimeter;
         }

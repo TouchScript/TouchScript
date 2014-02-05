@@ -9,10 +9,19 @@ public class Advanced_Side : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 targetPosition;
 
-    private void Start()
+    private void Awake()
     {
         startPosition = targetPosition = transform.localPosition;
-        GetComponent<PanGesture>().StateChanged += OnStateChanged;
+    }
+
+    private void OnEnable()
+    {
+        GetComponent<PanGesture>().StateChanged += panStateChangeHandler;
+    }
+
+    private void OnDisable()
+    {
+        GetComponent<PanGesture>().StateChanged -= panStateChangeHandler;
     }
 
     private void Update()
@@ -21,15 +30,13 @@ public class Advanced_Side : MonoBehaviour
         transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, fraction);
     }
 
-    private void OnStateChanged(object sender, GestureStateChangeEventArgs e)
+    private void panStateChangeHandler(object sender, GestureStateChangeEventArgs e)
     {
         switch (e.State)
         {
             case Gesture.GestureState.Began:
             case Gesture.GestureState.Changed:
                 var target = sender as PanGesture;
-                Debug.DrawRay(transform.position, target.WorldTransformPlane.normal);
-                Debug.DrawRay(transform.position, target.WorldDeltaPosition.normalized);
 
                 var local = new Vector3(0, transform.InverseTransformDirection(target.WorldDeltaPosition).y, 0);
                 targetPosition += transform.parent.InverseTransformDirection(transform.TransformDirection(local));

@@ -197,7 +197,8 @@ namespace TouchScript
         #region Private variables
 
         private static TouchManager instance;
-        // Flag to indicate that we are going out of Play Mode in the editor. Otherwise there might be a loop when while deinitializing other objects access TouchScript.Instance which recreates an instance of TouchManager and everything breaks.
+        // Flag to indicate that we are going out of Play Mode in the editor. 
+        // Otherwise there might be a loop when while deinitializing other objects access TouchScript.Instance which recreates an instance of TouchManager and everything breaks.
         private static bool shuttingDown = false;
 
         private float dpi = 72;
@@ -413,13 +414,22 @@ namespace TouchScript
         private void Awake()
         {
             shuttingDown = false;
+        }
+
+        private void Update()
+        {
+            updateTouchPoints();
+        }
+
+        private void OnEnable()
+        {
             if (instance == null) instance = this;
             updateDPI();
 
-            StartCoroutine(lateAwake());
+            StartCoroutine(lateEnable());
         }
 
-        private IEnumerator lateAwake()
+        private IEnumerator lateEnable()
         {
             yield return new WaitForEndOfFrame();
 
@@ -431,9 +441,8 @@ namespace TouchScript
             createTouchInput();
         }
 
-        private void Update()
+        private void OnDisable()
         {
-            updateTouchPoints();
         }
 
         private void OnDestroy()

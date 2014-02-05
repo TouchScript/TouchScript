@@ -37,22 +37,23 @@ namespace TouchScript.Behaviors
 
         #region Unity methods
 
-        private void Start()
+        private void Awake()
         {
             setDefaults();
+        }
 
-            if (GetComponent<SimplePanGesture>() != null)
-            {
-                GetComponent<SimplePanGesture>().StateChanged += panStateChanged;
-            }
-            if (GetComponent<SimpleScaleGesture>() != null)
-            {
-                GetComponent<SimpleScaleGesture>().StateChanged += scaleStateChanged;
-            }
-            if (GetComponent<SimpleRotateGesture>() != null)
-            {
-                GetComponent<SimpleRotateGesture>().StateChanged += rotateStateChanged;
-            }
+        private void OnEnable()
+        {
+            if (GetComponent<SimplePanGesture>() != null) GetComponent<SimplePanGesture>().StateChanged += panStateChanged;
+            if (GetComponent<SimpleScaleGesture>() != null) GetComponent<SimpleScaleGesture>().StateChanged += scaleStateChanged;
+            if (GetComponent<SimpleRotateGesture>() != null) GetComponent<SimpleRotateGesture>().StateChanged += rotateStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            if (GetComponent<SimplePanGesture>() != null) GetComponent<SimplePanGesture>().StateChanged -= panStateChanged;
+            if (GetComponent<SimpleScaleGesture>() != null) GetComponent<SimpleScaleGesture>().StateChanged -= scaleStateChanged;
+            if (GetComponent<SimpleRotateGesture>() != null) GetComponent<SimpleRotateGesture>().StateChanged -= rotateStateChanged;
         }
 
         private void Update()

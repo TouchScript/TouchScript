@@ -6,23 +6,29 @@ public class BasicExample_Breaker : MonoBehaviour
     public Transform CubePrefab;
     public float Power = 10.0f;
 
-    private Vector3[] directions = {
-                                       new Vector3(1, -1, 1),
-                                       new Vector3(-1, -1, 1),
-                                       new Vector3(-1, -1, -1),
-                                       new Vector3(1, -1, -1),
-                                       new Vector3(1, 1, 1),
-                                       new Vector3(-1, 1, 1),
-                                       new Vector3(-1, 1, -1),
-                                       new Vector3(1, 1, -1)
-                                   };
-
-    private void Start()
+    private Vector3[] directions =
     {
-        GetComponent<TapGesture>().StateChanged += HandleStateChanged;
+        new Vector3(1, -1, 1),
+        new Vector3(-1, -1, 1),
+        new Vector3(-1, -1, -1),
+        new Vector3(1, -1, -1),
+        new Vector3(1, 1, 1),
+        new Vector3(-1, 1, 1),
+        new Vector3(-1, 1, -1),
+        new Vector3(1, 1, -1)
+    };
+
+    private void OnEnable()
+    {
+        GetComponent<TapGesture>().StateChanged += tapStateChangedhandler;
     }
 
-    private void HandleStateChanged(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
+    private void OnDisable()
+    {
+        GetComponent<TapGesture>().StateChanged -= tapStateChangedhandler;
+    }
+
+    private void tapStateChangedhandler(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
     {
         if (e.State == Gesture.GestureState.Recognized)
         {

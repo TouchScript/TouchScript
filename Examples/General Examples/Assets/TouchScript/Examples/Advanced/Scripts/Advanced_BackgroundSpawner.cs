@@ -15,10 +15,10 @@ public class Advanced_BackgroundSpawner : MonoBehaviour
     private void Start()
     {
         var metaGesture = GetComponent<MetaGesture>();
-        metaGesture.TouchPointBegan += OnTouchEvent;
-        metaGesture.TouchPointMoved += OnTouchEvent;
-        metaGesture.TouchPointEnded += OnTouchEnded;
-        metaGesture.TouchPointCancelled += OnTouchEnded;
+        metaGesture.TouchPointBegan += touchEventHandler;
+        metaGesture.TouchPointMoved += touchEventHandler;
+        metaGesture.TouchPointEnded += touchEndedHandler;
+        metaGesture.TouchPointCancelled += touchEndedHandler;
 
         StartCoroutine(doSpawn());
     }
@@ -36,13 +36,13 @@ public class Advanced_BackgroundSpawner : MonoBehaviour
         }
     }
 
-    private void OnTouchEvent(object sender, MetaGestureEventArgs e)
+    private void touchEventHandler(object sender, MetaGestureEventArgs e)
     {
         shouldSpawn = true;
         spawnCoords = camera.ScreenToWorldPoint(new Vector3(e.TouchPoint.Position.x, e.TouchPoint.Position.y, camera.farClipPlane));
     }
 
-    private void OnTouchEnded(object sender, MetaGestureEventArgs e)
+    private void touchEndedHandler(object sender, MetaGestureEventArgs e)
     {
         if (((MetaGesture)sender).State == Gesture.GestureState.Ended) shouldSpawn = false;
     }

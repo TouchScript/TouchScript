@@ -45,9 +45,9 @@ namespace TouchScript.Gestures
         #region Unity methods
 
         /// <inheritdoc />
-        protected override void Awake()
+        protected override void OnEnable()
         {
-            base.Awake();
+            base.OnEnable();
 
             clusters.MinPointsDistance = minPointsDistanceInPixels;
         }

@@ -1,27 +1,37 @@
-﻿using TouchScript.Gestures;
+﻿using System;
+using TouchScript.Events;
+using TouchScript.Gestures;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Basic2dExample_Logo : MonoBehaviour {
 
-	void Start ()
+	void OnEnable()
 	{
-	    GetComponent<PressGesture>().StateChanged += (sender, args) =>
-	    {
-	        switch (args.State)
-	        {
-	            case Gesture.GestureState.Recognized:
-	                for (var i = 0; i < 3; i++)
-	                {
-	                    var angle = Quaternion.Euler(0, 0, 360/3*i);
-	                    var rb = createCopy(transform.localPosition + angle*Vector3.right*transform.localScale.x*1.2f);
-	                    rb.mass = GetComponent<Rigidbody2D>().mass/3;
-                        rb.AddForce(angle * Vector2.right * 5000);
-	                }
-                    Destroy(gameObject);
-	                break;
-	        }
-	    };
+	    GetComponent<PressGesture>().StateChanged += pressStateChangedHandler;
 	}
+
+    void OnDisable()
+    {
+        GetComponent<PressGesture>().StateChanged -= pressStateChangedHandler;
+    }
+
+    private void pressStateChangedHandler(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+    {
+        switch (gestureStateChangeEventArgs.State)
+        {
+            case Gesture.GestureState.Recognized:
+                for (var i = 0; i < 3; i++)
+                {
+                    var angle = Quaternion.Euler(0, 0, 360 / 3 * i);
+                    var rb = createCopy(transform.localPosition + angle * Vector3.right * transform.localScale.x * 1.2f);
+                    rb.mass = GetComponent<Rigidbody2D>().mass / 3;
+                    rb.AddForce(angle * Vector2.right * 5000);
+                }
+                Destroy(gameObject);
+                break;
+        }
+    }
 
     private Rigidbody2D createCopy(Vector3 position)
     {
@@ -34,6 +44,7 @@ public class Basic2dExample_Logo : MonoBehaviour {
         t.localScale = Vector3.one*transform.localScale.x*.6f;
         return obj.GetComponent<Rigidbody2D>();
     }
+
 	
 
 }
