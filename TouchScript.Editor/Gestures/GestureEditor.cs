@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof(Gesture))]
+    [CustomEditor(typeof(Gesture), true)]
     public class GestureEditor : UnityEditor.Editor
     {
         public const string TEXT_FRIENDLY_HEADER = "Gestures which can work together with this gesture.";
