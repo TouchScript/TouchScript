@@ -184,7 +184,7 @@ namespace TouchScript.Layers
 
     public class TouchLayerEventArgs : EventArgs
     {
-        public TouchPoint TouchPoint;
+        public TouchPoint TouchPoint { get; private set; }
 
         public TouchLayerEventArgs(TouchPoint touchPoint) : base()
         {

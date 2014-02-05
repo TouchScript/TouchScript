@@ -15,7 +15,7 @@ namespace TouchScript.Events
         /// <summary>
         /// List of touch points participating in the event.
         /// </summary>
-        public List<TouchPoint> TouchPoints;
+        public List<TouchPoint> TouchPoints { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.

@@ -115,7 +115,7 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Current touch point.
         /// </summary>
-        public TouchPoint TouchPoint;
+        public TouchPoint TouchPoint { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.

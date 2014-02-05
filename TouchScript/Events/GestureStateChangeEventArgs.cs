@@ -15,12 +15,12 @@ namespace TouchScript.Events
         /// <summary>
         /// Previous gesture state.
         /// </summary>
-        public Gesture.GestureState PreviousState;
+        public Gesture.GestureState PreviousState { get; private set; }
 
         /// <summary>
         /// Current gesture state.
         /// </summary>
-        public Gesture.GestureState State;
+        public Gesture.GestureState State { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GestureStateChangeEventArgs"/> class.
