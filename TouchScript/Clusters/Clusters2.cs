@@ -29,8 +29,8 @@ namespace TouchScript.Clusters
         #region Public properties
 
         /// <summary>
-        /// Minimum distance in cm between clusters to treat them as two separate clusters.
-        /// Default: 1cm.
+        /// Minimum distance in pixels between clusters to treat them as two separate clusters.
+        /// Default: 0.
         /// </summary>
         public float MinPointsDistance { get; set; }
 
@@ -71,7 +71,7 @@ namespace TouchScript.Clusters
         /// </summary>
         public Clusters2() : base()
         {
-            MinPointsDistance = 1;
+            MinPointsDistance = 0;
         }
 
         #region Public methods
