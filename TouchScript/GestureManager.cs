@@ -164,31 +164,31 @@ namespace TouchScript
 
         #region Private functions
 
-        private void updateBegan(List<TouchPoint> points)
+        private void updateBegan(IList<TouchPoint> points)
         {
             update(points, processTargetBegan,
                 (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
         }
 
-        private void updateMoved(List<TouchPoint> points)
+        private void updateMoved(IList<TouchPoint> points)
         {
             update(points, processTarget,
                 (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
         }
 
-        private void updateEnded(List<TouchPoint> points)
+        private void updateEnded(IList<TouchPoint> points)
         {
             update(points, processTarget,
                 (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
         }
 
-        private void updateCancelled(List<TouchPoint> points)
+        private void updateCancelled(IList<TouchPoint> points)
         {
             update(points, processTarget,
                 (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
         }
 
-        private void update(List<TouchPoint> points, Action<Transform> process, Action<Gesture, List<TouchPoint>> dispatch)
+        private void update(IList<TouchPoint> points, Action<Transform> process, Action<Gesture, IList<TouchPoint>> dispatch)
         {
             // WARNING! Arcane magic ahead!
 

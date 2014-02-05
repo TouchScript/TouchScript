@@ -99,7 +99,7 @@ namespace TouchScript.Clusters
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>A unique string for a list of touch points.</returns>
-        public static String GetPointsHash(List<TouchPoint> touches)
+        public static String GetPointsHash(IList<TouchPoint> touches)
         {
             var result = "";
             foreach (var touchPoint in touches) result += "#" + Convert.ToString(touchPoint.Id);
