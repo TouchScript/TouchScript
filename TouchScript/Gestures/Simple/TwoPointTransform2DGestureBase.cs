@@ -71,6 +71,8 @@ namespace TouchScript.Gestures.Simple
 
         #endregion
 
+        #region Unity methods
+
         /// <inheritdoc />
         protected override void Awake()
         {
@@ -78,6 +80,10 @@ namespace TouchScript.Gestures.Simple
 
             minPointsDistanceInPixels = minPointsDistance*TouchManager.Instance.DotsPerCentimeter;
         }
+
+        #endregion
+
+        #region Protected functions
 
         /// <summary>
         /// Checks if gesture has enough touch points to be recognized.
@@ -140,6 +146,10 @@ namespace TouchScript.Gestures.Simple
             previousScreenPosition = TouchPoint.InvalidPosition;
         }
 
+        #endregion
+
+        #region Gesture callbacks
+
         /// <inheritdoc />
         protected override void touchesEnded(IList<TouchPoint> touches)
         {
@@ -158,5 +168,7 @@ namespace TouchScript.Gestures.Simple
 
             restart();
         }
+
+        #endregion
     }
 }

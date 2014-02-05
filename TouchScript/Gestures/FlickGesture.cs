@@ -15,8 +15,7 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
     public class FlickGesture : Gesture
     {
-
-        #region Unity fields
+        #region Constants
 
         /// <summary>
         /// Direction of a flick.
@@ -38,29 +37,6 @@ namespace TouchScript.Gestures
             /// </summary>
             Vertical,
         }
-
-        #endregion
-
-        #region Private variables
-
-        [SerializeField]
-        private float flickTime = .1f;
-
-        [SerializeField]
-        private float minDistance = 1f;
-
-        [SerializeField]
-        private float movementThreshold = .5f;
-
-        [SerializeField]
-        private GestureDirection direction = GestureDirection.Any;
-
-        private bool moving = false;
-        private Vector2 movementBuffer = Vector2.zero;
-        private bool isActive = false;
-
-        private List<Vector2> positionDeltas = new List<Vector2>();
-        private List<float> timeDeltas = new List<float>();
 
         #endregion
 
@@ -112,6 +88,31 @@ namespace TouchScript.Gestures
 
         #endregion
 
+        #region Private variables
+
+        [SerializeField]
+        private float flickTime = .1f;
+
+        [SerializeField]
+        private float minDistance = 1f;
+
+        [SerializeField]
+        private float movementThreshold = .5f;
+
+        [SerializeField]
+        private GestureDirection direction = GestureDirection.Any;
+
+        private bool moving = false;
+        private Vector2 movementBuffer = Vector2.zero;
+        private bool isActive = false;
+
+        private List<Vector2> positionDeltas = new List<Vector2>();
+        private List<float> timeDeltas = new List<float>();
+
+        #endregion
+
+        #region Unity methods
+
         protected void LateUpdate()
         {
             if (!isActive) return;
@@ -119,6 +120,8 @@ namespace TouchScript.Gestures
             positionDeltas.Add(ScreenPosition - PreviousScreenPosition);
             timeDeltas.Add(Time.deltaTime);
         }
+
+        #endregion
 
         #region Gesture callbacks
 
@@ -187,11 +190,10 @@ namespace TouchScript.Gestures
                         break;
                 }
 
-                if (totalMovement.magnitude < MinDistance * TouchManager.Instance.DotsPerCentimeter)
+                if (totalMovement.magnitude < MinDistance*TouchManager.Instance.DotsPerCentimeter)
                 {
                     setState(GestureState.Failed);
-                }
-                else
+                } else
                 {
                     ScreenFlickVector = totalMovement;
                     ScreenFlickTime = totalTime;

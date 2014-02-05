@@ -14,6 +14,8 @@ namespace TouchScript.Layers
     [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
+        #region Constants
+
         /// <summary>
         /// Result of a touch point's hit test with a layer.
         /// </summary>
@@ -35,14 +37,22 @@ namespace TouchScript.Layers
             Miss = 2
         }
 
+        #endregion
+
+        #region Events
+
         public event EventHandler<TouchLayerEventArgs> TouchBegan
         {
             add { touchBeganInvoker += value; }
             remove { touchBeganInvoker -= value; }
         }
-        
+
         // Needed to overcome iOS AOT limitations
         private EventHandler<TouchLayerEventArgs> touchBeganInvoker;
+
+        #endregion
+
+        #region Public properties
 
         /// <summary>
         /// Touch layer's name.
@@ -58,6 +68,10 @@ namespace TouchScript.Layers
             get { return null; }
         }
 
+        #endregion
+
+        #region Public methods
+
         /// <summary>
         /// Checks if a point hits something in this layer.
         /// </summary>
@@ -69,6 +83,31 @@ namespace TouchScript.Layers
             hit = new TouchHit();
             return LayerHitResult.Miss;
         }
+
+        #endregion
+
+        #region Unity methods
+
+        /// <summary>
+        /// Unity Awake callback.
+        /// </summary>
+        protected virtual void Awake()
+        {
+            setName();
+            if (Application.isPlaying) TouchManager.AddLayer(this);
+        }
+
+        /// <summary>
+        /// Unity OnDestroy callback.
+        /// </summary>
+        protected virtual void OnDestroy()
+        {
+            if (Application.isPlaying) TouchManager.RemoveLayer(this);
+        }
+
+        #endregion
+
+        #region Internal methods
 
         internal bool BeginTouch(TouchPoint touch)
         {
@@ -97,22 +136,9 @@ namespace TouchScript.Layers
             cancelTouch(touch);
         }
 
-        /// <summary>
-        /// Unity Awake callback.
-        /// </summary>
-        protected virtual void Awake()
-        {
-            setName();
-            if (Application.isPlaying) TouchManager.AddLayer(this);
-        }
+        #endregion
 
-        /// <summary>
-        /// Unity OnDestroy callback.
-        /// </summary>
-        protected virtual void OnDestroy()
-        {
-            if (Application.isPlaying) TouchManager.RemoveLayer(this);
-        }
+        #region Protected functions
 
         /// <summary>
         /// Updates touch layers's name.
@@ -152,11 +178,12 @@ namespace TouchScript.Layers
         /// <param name="touch">Touch point.</param>
         protected virtual void cancelTouch(TouchPoint touch)
         {}
+
+        #endregion
     }
 
     public class TouchLayerEventArgs : EventArgs
     {
-
         public TouchPoint TouchPoint;
 
         public TouchLayerEventArgs(TouchPoint touchPoint) : base()
@@ -164,5 +191,4 @@ namespace TouchScript.Layers
             TouchPoint = touchPoint;
         }
     }
-
 }

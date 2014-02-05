@@ -167,25 +167,25 @@ namespace TouchScript
         private void updateBegan(List<TouchPoint> points)
         {
             update(points, processTargetBegan,
-                   (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
+                (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
         }
 
         private void updateMoved(List<TouchPoint> points)
         {
             update(points, processTarget,
-                   (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
+                (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
         }
 
         private void updateEnded(List<TouchPoint> points)
         {
             update(points, processTarget,
-                   (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
+                (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
         }
 
         private void updateCancelled(List<TouchPoint> points)
         {
             update(points, processTarget,
-                   (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
+                (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
         }
 
         private void update(List<TouchPoint> points, Action<Transform> process, Action<Gesture, List<TouchPoint>> dispatch)
@@ -198,7 +198,7 @@ namespace TouchScript
             gestureTouches.Clear();
             // gestures which got any touch points
             // needed because there's no order in dictionary
-            activeGestures.Clear(); 
+            activeGestures.Clear();
 
             foreach (var touch in points)
             {

@@ -15,23 +15,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
-        #region Private fields
-
-        [SerializeField]
-        private int maxTouches = int.MaxValue;
-
-        [SerializeField]
-        private float timeToPress = 1;
-
-        [SerializeField]
-        private float distanceLimit = float.PositiveInfinity;
-
-        private Vector2 totalMovement;
-        private float recognizeTime;
-        private bool fireRecognizedNextUpdate = false;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -63,7 +46,24 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        #region Unity
+        #region Private variables
+
+        [SerializeField]
+        private int maxTouches = int.MaxValue;
+
+        [SerializeField]
+        private float timeToPress = 1;
+
+        [SerializeField]
+        private float distanceLimit = float.PositiveInfinity;
+
+        private Vector2 totalMovement;
+        private float recognizeTime;
+        private bool fireRecognizedNextUpdate = false;
+
+        #endregion
+
+        #region Unity methods
 
         /// <inheritdoc />
         protected void Update()

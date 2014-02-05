@@ -15,7 +15,13 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Pan Gesture")]
     public class PanGesture : SimplePanGesture
     {
+        #region Private variables
+
         private Clusters2 clusters = new Clusters2();
+
+        #endregion
+
+        #region Public methods
 
         /// <inheritdoc />
         public override Vector2 ScreenPosition
@@ -39,6 +45,10 @@ namespace TouchScript.Gestures
             }
         }
 
+        #endregion
+
+        #region Unity methods
+
         /// <inheritdoc />
         protected override void Awake()
         {
@@ -46,6 +56,10 @@ namespace TouchScript.Gestures
 
             clusters.MinPointsDistance = 0;
         }
+
+        #endregion
+
+        #region Gesture callbacks
 
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
@@ -78,5 +92,7 @@ namespace TouchScript.Gestures
 
             clusters.RemoveAllPoints();
         }
+
+        #endregion
     }
 }

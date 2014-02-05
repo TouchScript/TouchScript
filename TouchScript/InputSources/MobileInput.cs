@@ -20,7 +20,7 @@ namespace TouchScript.InputSources
 
         #endregion
 
-        #region Unity
+        #region Unity methods
 
         /// <inheritdoc />
         protected override void Update()

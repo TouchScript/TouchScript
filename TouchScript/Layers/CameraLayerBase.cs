@@ -7,14 +7,6 @@ namespace TouchScript.Layers
 {
     public abstract class CameraLayerBase : TouchLayer
     {
-
-        #region Private fields
-
-        [SerializeField]
-        private LayerMask layerMask = -1;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -34,6 +26,15 @@ namespace TouchScript.Layers
 
         #endregion
 
+        #region Private fields
+
+        [SerializeField]
+        private LayerMask layerMask = -1;
+
+        #endregion
+
+        #region Public methods
+
         /// <inheritdoc />
         public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
@@ -46,6 +47,10 @@ namespace TouchScript.Layers
             var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
             return castRay(ray, out hit);
         }
+
+        #endregion
+
+        #region Protected functions
 
         /// <inheritdoc />
         protected override LayerHitResult beginTouch(TouchPoint touch)
@@ -68,5 +73,6 @@ namespace TouchScript.Layers
 
         protected abstract LayerHitResult castRay(Ray ray, out TouchHit hit);
 
+        #endregion
     }
 }

@@ -4,12 +4,36 @@ namespace TouchScript.Hit
 {
     public struct TouchHit
     {
+        #region Constants
 
         public enum HitType
         {
             Hit3D,
             Hit2D
         }
+
+        #endregion
+
+        #region Public properties
+
+        public HitType Type { get; private set; }
+        public Vector3 BarycentricCoordinate { get; private set; }
+        public Collider Collider { get; private set; }
+        public Collider2D Collider2d { get; private set; }
+        public float Distance { get; private set; }
+        public Vector2 LightmapCoord { get; private set; }
+        public Vector3 Normal { get; private set; }
+        public Vector3 Point { get; private set; }
+        public Rigidbody Rigidbody { get; private set; }
+        public Rigidbody2D Rigidbody2D { get; private set; }
+        public Vector2 TextureCoord { get; private set; }
+        public Vector2 TextureCoord2 { get; private set; }
+        public Transform Transform { get; private set; }
+        public int TriangleIndex { get; private set; }
+
+        #endregion
+
+        #region Public methods
 
         public static TouchHit FromRaycastHit(RaycastHit value)
         {
@@ -46,19 +70,6 @@ namespace TouchScript.Hit
             return result;
         }
 
-        public HitType Type;
-        public Vector3 BarycentricCoordinate;
-        public Collider Collider;
-        public Collider2D Collider2d;
-        public float Distance;
-        public Vector2 LightmapCoord;
-        public Vector3 Normal;
-        public Vector3 Point;
-        public Rigidbody Rigidbody;
-        public Rigidbody2D Rigidbody2D;
-        public Vector2 TextureCoord;
-        public Vector2 TextureCoord2;
-        public Transform Transform;
-        public int TriangleIndex;
+        #endregion
     }
 }

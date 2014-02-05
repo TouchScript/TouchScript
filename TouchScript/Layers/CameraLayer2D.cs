@@ -7,8 +7,22 @@ namespace TouchScript.Layers
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
     public class CameraLayer2D : CameraLayerBase
     {
+        #region Private variables
 
         private List<RaycastHit2D> sortedHits;
+
+        #endregion
+
+        #region Unity methods
+
+        private void OnEnable()
+        {
+            sortedHits = new List<RaycastHit2D>();
+        }
+
+        #endregion
+
+        #region Protected functions
 
         protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
         {
@@ -58,11 +72,6 @@ namespace TouchScript.Layers
             return LayerHitResult.Miss;
         }
 
-        private void OnEnable()
-        {
-            sortedHits = new List<RaycastHit2D>();
-        }
-
         private RaycastHit2D[] sortHits(RaycastHit2D[] hits)
         {
             sortedHits.Clear();
@@ -84,5 +93,6 @@ namespace TouchScript.Layers
             return sortedHits.ToArray();
         }
 
+        #endregion
     }
 }

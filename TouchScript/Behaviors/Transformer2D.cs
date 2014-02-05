@@ -16,7 +16,7 @@ namespace TouchScript.Behaviors
     [AddComponentMenu("TouchScript/Behaviors/Transformer2D")]
     public class Transformer2D : MonoBehaviour
     {
-        #region Unity fields
+        #region Public properties
 
         /// <summary>
         /// Max movement speed
@@ -35,7 +35,7 @@ namespace TouchScript.Behaviors
 
         #endregion
 
-        #region Unity
+        #region Unity methods
 
         private void Start()
         {
@@ -43,15 +43,15 @@ namespace TouchScript.Behaviors
 
             if (GetComponent<SimplePanGesture>() != null)
             {
-                GetComponent<SimplePanGesture>().StateChanged += onPanStateChanged;
+                GetComponent<SimplePanGesture>().StateChanged += panStateChanged;
             }
             if (GetComponent<SimpleScaleGesture>() != null)
             {
-                GetComponent<SimpleScaleGesture>().StateChanged += onScaleStateChanged;
+                GetComponent<SimpleScaleGesture>().StateChanged += scaleStateChanged;
             }
             if (GetComponent<SimpleRotateGesture>() != null)
             {
-                GetComponent<SimpleRotateGesture>().StateChanged += onRotateStateChanged;
+                GetComponent<SimpleRotateGesture>().StateChanged += rotateStateChanged;
             }
         }
 
@@ -91,7 +91,7 @@ namespace TouchScript.Behaviors
 
         #region Event handlers
 
-        private void onPanStateChanged(object sender, GestureStateChangeEventArgs e)
+        private void panStateChanged(object sender, GestureStateChangeEventArgs e)
         {
             switch (e.State)
             {
@@ -107,7 +107,7 @@ namespace TouchScript.Behaviors
             }
         }
 
-        private void onRotateStateChanged(object sender, GestureStateChangeEventArgs e)
+        private void rotateStateChanged(object sender, GestureStateChangeEventArgs e)
         {
             switch (e.State)
             {
@@ -129,7 +129,7 @@ namespace TouchScript.Behaviors
             }
         }
 
-        private void onScaleStateChanged(object sender, GestureStateChangeEventArgs e)
+        private void scaleStateChanged(object sender, GestureStateChangeEventArgs e)
         {
             switch (e.State)
             {

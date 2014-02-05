@@ -15,8 +15,22 @@ namespace TouchScript.Layers
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
     public class CameraLayer : CameraLayerBase
     {
+        #region Private variables
 
         private List<RaycastHit> sortedHits;
+
+        #endregion
+
+        #region Unity methods
+
+        private void OnEnable()
+        {
+            sortedHits = new List<RaycastHit>();
+        }
+
+        #endregion
+
+        #region Protected functions
 
         protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
         {
@@ -66,11 +80,6 @@ namespace TouchScript.Layers
             return LayerHitResult.Miss;
         }
 
-        private void OnEnable()
-        {
-            sortedHits = new List<RaycastHit>();
-        }
-
         private RaycastHit[] sortHits(RaycastHit[] hits)
         {
             var cameraPos = camera.transform.position;
@@ -86,5 +95,6 @@ namespace TouchScript.Layers
             return sortedHits.ToArray();
         }
 
+        #endregion
     }
 }

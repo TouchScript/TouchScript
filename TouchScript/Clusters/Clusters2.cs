@@ -12,6 +12,8 @@ namespace TouchScript.Clusters
     /// </summary>
     public class Clusters2 : Cluster
     {
+        #region Constants
+
         /// <summary>
         /// The first cluster.
         /// </summary>
@@ -21,6 +23,8 @@ namespace TouchScript.Clusters
         /// The second cluster.
         /// </summary>
         public const int CLUSTER2 = 1;
+
+        #endregion
 
         #region Public properties
 

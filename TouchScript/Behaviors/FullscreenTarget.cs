@@ -18,6 +18,8 @@ namespace TouchScript.Behaviors
     [RequireComponent(typeof(Camera))]
     public class FullscreenTarget : MonoBehaviour
     {
+        #region Constants
+
         /// <summary>
         /// Type of the Fullscreen Target.
         /// </summary>
@@ -34,10 +36,18 @@ namespace TouchScript.Behaviors
             Foreground
         }
 
+        #endregion
+
+        #region Public properties
+
         /// <summary>
         /// Type of the Fullscreen Target.
         /// </summary>
         public TargetType Type = TargetType.Background;
+
+        #endregion
+
+        #region Unity methods
 
         private void Update()
         {
@@ -57,5 +67,7 @@ namespace TouchScript.Behaviors
 
             box.size = new Vector3(w, h, .01f);
         }
+
+        #endregion
     }
 }

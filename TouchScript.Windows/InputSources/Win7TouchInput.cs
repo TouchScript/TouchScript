@@ -10,17 +10,6 @@ using System.Runtime.InteropServices;
 
 namespace TouchScript.InputSources
 {
-    internal enum TouchEvent : int
-    {
-        TOUCHEVENTF_MOVE = 0x0001,
-        TOUCHEVENTF_DOWN = 0x0002,
-        TOUCHEVENTF_UP = 0x0004,
-        TOUCHEVENTF_INRANGE = 0x0008,
-        TOUCHEVENTF_PRIMARY = 0x0010,
-        TOUCHEVENTF_NOCOALESCE = 0x0020,
-        TOUCHEVENTF_PEN = 0x0040
-    }
-
     /// <summary>
     /// Processes Windows 7 touch events.
     /// Known issues:
@@ -31,9 +20,24 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Windows 7 Touch Input")]
     public class Win7TouchInput : InputSourceWindows
     {
+        #region Constants
+
+        private enum TouchEvent : int
+        {
+            TOUCHEVENTF_MOVE = 0x0001,
+            TOUCHEVENTF_DOWN = 0x0002,
+            TOUCHEVENTF_UP = 0x0004,
+            TOUCHEVENTF_INRANGE = 0x0008,
+            TOUCHEVENTF_PRIMARY = 0x0010,
+            TOUCHEVENTF_NOCOALESCE = 0x0020,
+            TOUCHEVENTF_PEN = 0x0040
+        }
+
         private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        #region Private fields
+        #endregion
+
+        #region Private vatiables
 
         private IntPtr hMainWindow;
         private IntPtr oldWndProcPtr;

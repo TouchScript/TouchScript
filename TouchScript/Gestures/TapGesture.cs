@@ -15,45 +15,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
     public class TapGesture : Gesture
     {
-        #region Private variables
-
-        [SerializeField]
-        private float timeLimit = float.PositiveInfinity;
-
-        [SerializeField]
-        private float distanceLimit = float.PositiveInfinity;
-
-        [SerializeField]
-        private bool combineTouchPoints = true;
-
-        [SerializeField]
-        private float combineTouchPointsInterval = .3f;
-
-        /// <summary>
-        /// Cached screen position. 
-        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
-        /// </summary>
-        protected Vector2 cachedScreenPosition;
-
-        /// <summary>
-        /// Cached previous screen position.
-        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
-        /// </summary>
-        protected Vector2 cachedPreviousScreenPosition;
-
-        /// <summary>
-        /// Cached target hit result.
-        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
-        /// </summary>
-        protected TouchHit cachedTargetHitResult;
-
-        private Vector2 totalMovement = Vector2.zero;
-        private float startTime;
-        private List<TouchPoint> removedPoints = new List<TouchPoint>();
-        private List<float> removedPointsTimes = new List<float>();
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -111,6 +72,47 @@ namespace TouchScript.Gestures
 
         #endregion
 
+        #region Private variables
+
+        [SerializeField]
+        private float timeLimit = float.PositiveInfinity;
+
+        [SerializeField]
+        private float distanceLimit = float.PositiveInfinity;
+
+        [SerializeField]
+        private bool combineTouchPoints = true;
+
+        [SerializeField]
+        private float combineTouchPointsInterval = .3f;
+
+        /// <summary>
+        /// Cached screen position. 
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// </summary>
+        protected Vector2 cachedScreenPosition;
+
+        /// <summary>
+        /// Cached previous screen position.
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// </summary>
+        protected Vector2 cachedPreviousScreenPosition;
+
+        /// <summary>
+        /// Cached target hit result.
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// </summary>
+        protected TouchHit cachedTargetHitResult;
+
+        private Vector2 totalMovement = Vector2.zero;
+        private float startTime;
+        private List<TouchPoint> removedPoints = new List<TouchPoint>();
+        private List<float> removedPointsTimes = new List<float>();
+
+        #endregion
+
+        #region Public methods
+
         /// <inheritdoc />
         public override bool GetTargetHitResult()
         {
@@ -129,6 +131,8 @@ namespace TouchScript.Gestures
 
             return base.GetTargetHitResult(out hit);
         }
+
+        #endregion
 
         #region Gesture callbacks
 

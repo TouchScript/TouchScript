@@ -15,10 +15,7 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Rotate Gesture")]
     public class RotateGesture : SimpleRotateGesture
     {
-        /// <summary>
-        /// Cluster object
-        /// </summary>
-        protected Clusters2 clusters = new Clusters2();
+        #region Public properties
 
         /// <inheritdoc />
         public override float MinPointsDistance
@@ -34,6 +31,19 @@ namespace TouchScript.Gestures
             }
         }
 
+        #endregion
+
+        #region Private variables
+
+        /// <summary>
+        /// Cluster object
+        /// </summary>
+        protected Clusters2 clusters = new Clusters2();
+
+        #endregion
+
+        #region Unity methods
+
         /// <inheritdoc />
         protected override void Awake()
         {
@@ -41,6 +51,10 @@ namespace TouchScript.Gestures
 
             clusters.MinPointsDistance = minPointsDistanceInPixels;
         }
+
+        #endregion
+
+        #region Gesture callbacks
 
         /// <inheritdoc />
         protected override void touchesBegan(IList<TouchPoint> touches)
@@ -74,6 +88,10 @@ namespace TouchScript.Gestures
             clusters.RemoveAllPoints();
         }
 
+        #endregion
+
+        #region Protected functions
+
         /// <inheritdoc />
         protected override bool gotEnoughTouchPoints()
         {
@@ -102,5 +120,7 @@ namespace TouchScript.Gestures
             else if (index > 1) index = 1;
             return clusters.GetPreviousCenterPosition(index);
         }
+
+        #endregion
     }
 }

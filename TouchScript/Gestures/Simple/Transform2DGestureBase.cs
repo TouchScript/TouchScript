@@ -13,6 +13,8 @@ namespace TouchScript.Gestures.Simple
     /// </summary>
     public abstract class Transform2DGestureBase : Gesture
     {
+        #region Constants
+
         /// <summary>
         /// Transform's projection type.
         /// </summary>
@@ -33,6 +35,8 @@ namespace TouchScript.Gestures.Simple
             /// </summary>
             Global
         }
+
+        #endregion
 
         #region Public properties
 
@@ -115,7 +119,7 @@ namespace TouchScript.Gestures.Simple
 
         #endregion
 
-        #region Unity
+        #region Unity methods
 
         /// <inheritdoc />
         protected override void Awake()

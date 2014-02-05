@@ -12,15 +12,23 @@ namespace TouchScript.Hit
     [AddComponentMenu("TouchScript/Behaviors/Untouchable")]
     public class Untouchable : HitTest
     {
+        #region Public properties
+
         /// <summary>
         /// If <c>true</c> touch point not only prevented but discarded making it impossible for other gestures to get it.
         /// </summary>
         public bool DiscardTouch = false;
+
+        #endregion
+
+        #region Public methods
 
         /// <inheritdoc />
         public override ObjectHitResult IsHit(TouchHit hit)
         {
             return DiscardTouch ? ObjectHitResult.Discard : ObjectHitResult.Miss;
         }
+
+        #endregion
     }
 }

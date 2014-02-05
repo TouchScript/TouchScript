@@ -12,15 +12,6 @@ namespace TouchScript.InputSources
     /// </summary>
     public abstract class InputSource : MonoBehaviour, IInputSource
     {
-        #region Private variables
-
-        /// <summary>
-        /// Reference to global touch manager.
-        /// </summary>
-        protected TouchManager manager;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -30,7 +21,16 @@ namespace TouchScript.InputSources
 
         #endregion
 
-        #region Unity
+        #region Private variables
+
+        /// <summary>
+        /// Reference to global touch manager.
+        /// </summary>
+        protected TouchManager manager;
+
+        #endregion
+
+        #region Unity methods
 
         /// <summary>
         /// Unity Start callback.

@@ -17,6 +17,8 @@ namespace TouchScript.Gestures
     /// </summary>
     public abstract class Gesture : MonoBehaviour
     {
+        #region Constants
+
         /// <summary>
         /// Invalid 3d position. Some properties return this constant when their result doesn't make sense.
         /// </summary>
@@ -63,17 +65,7 @@ namespace TouchScript.Gestures
             Recognized = Ended
         }
 
-        /// <summary>
-        /// Determines whether position is invalid.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>
-        ///   <c>true</c> if position is invalid; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsInvalidPosition(Vector3 position)
-        {
-            return position.Equals(InvalidPosition);
-        }
+        #endregion
 
         #region Events
 
@@ -92,8 +84,6 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public properties
-
-        private GestureState state = GestureState.Possible;
 
         /// <summary>
         /// Current gesture state.
@@ -188,11 +178,6 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Touch points the gesture currently owns and works with.
-        /// </summary>
-        protected List<TouchPoint> activeTouches = new List<TouchPoint>();
-
-        /// <summary>
         /// List of gesture's active touch points.
         /// </summary>
         public List<TouchPoint> ActiveTouches
@@ -200,12 +185,12 @@ namespace TouchScript.Gestures
             get { return new List<TouchPoint>(activeTouches); }
         }
 
-        #endregion
-
         /// <summary>
         /// An object implementing <see cref="IGestureDelegate"/> to be asked for gesture specific actions.
         /// </summary>
         public IGestureDelegate Delegate { get; set; }
+
+        #endregion
 
         #region Private variables
 
@@ -219,14 +204,20 @@ namespace TouchScript.Gestures
         /// </summary>
         protected TouchManager touchManager { get; private set; }
 
+        /// <summary>
+        /// Touch points the gesture currently owns and works with.
+        /// </summary>
+        protected List<TouchPoint> activeTouches = new List<TouchPoint>();
+
         [SerializeField]
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private List<int> friendlyGestureIds = new List<int>();
+        private GestureState state = GestureState.Possible;
 
         #endregion
 
-        #region Unity
+        #region Unity methods
 
         /// <summary>
         /// Unity3d Awake handler.
@@ -272,6 +263,18 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// Determines whether position is invalid.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>
+        ///   <c>true</c> if position is invalid; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsInvalidPosition(Vector3 position)
+        {
+            return position.Equals(InvalidPosition);
+        }
 
         /// <summary>
         /// Adds a friendly gesture.

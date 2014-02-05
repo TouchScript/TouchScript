@@ -19,6 +19,8 @@ namespace TouchScript
     [AddComponentMenu("TouchScript/Touch Manager")]
     public class TouchManager : MonoBehaviour
     {
+        #region Constants
+
         /// <summary>
         /// Ratio of cm to inch
         /// </summary>
@@ -28,6 +30,8 @@ namespace TouchScript
         /// Ratio of inch to cm
         /// </summary>
         public const float INCH_TO_CM = 1/CM_TO_INCH;
+
+        #endregion
 
         #region Events
 
@@ -87,7 +91,7 @@ namespace TouchScript
 
         // iOS Events AOT hack
         private EventHandler<TouchEventArgs> touchesBeganInvoker, touchesMovedInvoker,
-                                             touchesEndedInvoker, touchesCancelledInvoker;
+            touchesEndedInvoker, touchesCancelledInvoker;
 
         private EventHandler frameStartedInvoker, frameFinishedInvoker;
 
@@ -220,41 +224,6 @@ namespace TouchScript
         private List<TouchPoint> reallyMoved = new List<TouchPoint>();
 
         private int nextTouchPointId = 0;
-
-        #endregion
-
-        #region Unity
-
-        private void Awake()
-        {
-            shuttingDown = false;
-            if (instance == null) instance = this;
-            updateDPI();
-
-            StartCoroutine(lateAwake());
-        }
-
-        private IEnumerator lateAwake()
-        {
-            yield return new WaitForEndOfFrame();
-
-            layers = layers.FindAll(l => l != null); // filter empty ones
-            var unknownLayers = FindObjectsOfType(typeof(TouchLayer));
-            foreach (TouchLayer unknownLayer in unknownLayers) AddLayer(unknownLayer);
-
-            createCameraLayer();
-            createTouchInput();
-        }
-
-        private void Update()
-        {
-            updateTouchPoints();
-        }
-
-        private void OnDestroy()
-        {
-            if (!Application.isLoadingLevel) shuttingDown = true;
-        }
 
         #endregion
 
@@ -439,7 +408,38 @@ namespace TouchScript
 
         #endregion
 
-        #region Internal methods
+        #region Unity
+
+        private void Awake()
+        {
+            shuttingDown = false;
+            if (instance == null) instance = this;
+            updateDPI();
+
+            StartCoroutine(lateAwake());
+        }
+
+        private IEnumerator lateAwake()
+        {
+            yield return new WaitForEndOfFrame();
+
+            layers = layers.FindAll(l => l != null); // filter empty ones
+            var unknownLayers = FindObjectsOfType(typeof(TouchLayer));
+            foreach (TouchLayer unknownLayer in unknownLayers) AddLayer(unknownLayer);
+
+            createCameraLayer();
+            createTouchInput();
+        }
+
+        private void Update()
+        {
+            updateTouchPoints();
+        }
+
+        private void OnDestroy()
+        {
+            if (!Application.isLoadingLevel) shuttingDown = true;
+        }
 
         #endregion
 

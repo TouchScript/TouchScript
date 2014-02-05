@@ -14,7 +14,7 @@ namespace TouchScript.Debugging
     [AddComponentMenu("TouchScript/Touch Debugger")]
     public class TouchDebugger : MonoBehaviour
     {
-        #region Unity fields
+        #region Public properties
 
         /// <summary>
         /// Texture to use.
@@ -34,16 +34,16 @@ namespace TouchScript.Debugging
 
         #endregion
 
-        #region Unity
+        #region Unity methods
 
-        private void Start()
+        private void OnEnable()
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.TouchesBegan += OnTouchesBegan;
-                TouchManager.Instance.TouchesEnded += OnTouchesEnded;
-                TouchManager.Instance.TouchesMoved += OnTouchesMoved;
-                TouchManager.Instance.TouchesCancelled += OnTouchesCancelled;
+                TouchManager.Instance.TouchesBegan += touchesBeganHandler;
+                TouchManager.Instance.TouchesEnded += touchesEndedHandler;
+                TouchManager.Instance.TouchesMoved += touchesMovedHandler;
+                TouchManager.Instance.TouchesCancelled += touchesCancelledHandler;
             }
         }
 
@@ -62,14 +62,14 @@ namespace TouchScript.Debugging
             }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.TouchesBegan -= OnTouchesBegan;
-                TouchManager.Instance.TouchesEnded -= OnTouchesEnded;
-                TouchManager.Instance.TouchesMoved -= OnTouchesMoved;
-                TouchManager.Instance.TouchesCancelled -= OnTouchesCancelled;
+                TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
+                TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
+                TouchManager.Instance.TouchesMoved -= touchesMovedHandler;
+                TouchManager.Instance.TouchesCancelled -= touchesCancelledHandler;
             }
         }
 
@@ -86,20 +86,16 @@ namespace TouchScript.Debugging
 
         #region Event handlers
 
-        private void OnTouchesBegan(object sender, TouchEventArgs e)
+        private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            if (!enabled) return;
-
             foreach (var touchPoint in e.TouchPoints)
             {
                 dummies.Add(touchPoint.Id, touchPoint);
             }
         }
 
-        private void OnTouchesMoved(object sender, TouchEventArgs e)
+        private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            if (!enabled) return;
-
             foreach (var touchPoint in e.TouchPoints)
             {
                 TouchPoint dummy;
@@ -108,10 +104,8 @@ namespace TouchScript.Debugging
             }
         }
 
-        private void OnTouchesEnded(object sender, TouchEventArgs e)
+        private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            if (!enabled) return;
-
             foreach (var touchPoint in e.TouchPoints)
             {
                 TouchPoint dummy;
@@ -120,9 +114,9 @@ namespace TouchScript.Debugging
             }
         }
 
-        private void OnTouchesCancelled(object sender, TouchEventArgs e)
+        private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            OnTouchesEnded(sender, e);
+            touchesEndedHandler(sender, e);
         }
 
         #endregion

@@ -12,21 +12,21 @@ namespace TouchScript.InputSources
     /// </summary>
     public abstract class InputSourcePro : MonoBehaviour, IInputSource
     {
-        #region Private variables
-
-        /// <summary>
-        /// Reference to global touch manager.
-        /// </summary>
-        protected TouchManager manager;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
         /// Optional remapper to use to change screen coordinates which go into the TouchManager.
         /// </summary>
         public ICoordinatesRemapper CoordinatesRemapper { get; set; }
+
+        #endregion
+
+        #region Private variables
+
+        /// <summary>
+        /// Reference to global touch manager.
+        /// </summary>
+        protected TouchManager manager;
 
         #endregion
 

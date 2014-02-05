@@ -54,7 +54,7 @@ namespace TouchScript.Gestures.Simple
 
         // iOS Events AOT hack
         private EventHandler<MetaGestureEventArgs> touchPointBeganInvoker, touchPointMovedInvoker,
-                                                   touchPointEndedInvoker, touchPointCancelledInvoker;
+            touchPointEndedInvoker, touchPointCancelledInvoker;
 
         #endregion
 
