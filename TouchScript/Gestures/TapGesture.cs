@@ -24,6 +24,9 @@ namespace TouchScript.Gestures
         private float distanceLimit = float.PositiveInfinity;
 
         [SerializeField]
+        private bool combineTouchPoints = true;
+
+        [SerializeField]
         private float combineTouchPointsInterval = .3f;
 
         /// <summary>
@@ -69,6 +72,12 @@ namespace TouchScript.Gestures
         {
             get { return distanceLimit; }
             set { distanceLimit = value; }
+        }
+
+        public bool CombineTouchPoints
+        {
+            get { return combineTouchPoints; }
+            set { combineTouchPoints = value; }
         }
 
         /// <summary>
@@ -147,10 +156,13 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            foreach (var touch in touches)
+            if (combineTouchPoints)
             {
-                removedPoints.Add(touch);
-                removedPointsTimes.Add(Time.time);
+                foreach (var touch in touches)
+                {
+                    removedPoints.Add(touch);
+                    removedPointsTimes.Add(Time.time);
+                }
             }
 
             if (activeTouches.Count == 0)
@@ -161,31 +173,48 @@ namespace TouchScript.Gestures
                     return;
                 }
 
-                // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                var cluster = new List<TouchPoint>();
-                var minTime = Time.time - combineTouchPointsInterval;
-                for (var i = removedPoints.Count - 1; i >= 0; i--)
+                if (combineTouchPoints)
                 {
-                    var point = removedPoints[i];
-                    if (removedPointsTimes[i] >= minTime)
+                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
+                    var cluster = new List<TouchPoint>();
+                    var minTime = Time.time - combineTouchPointsInterval;
+                    for (var i = removedPoints.Count - 1; i >= 0; i--)
                     {
-                        // Points must be over target when released
-                        if (base.GetTargetHitResult(point.Position)) cluster.Add(point);
+                        var point = removedPoints[i];
+                        if (removedPointsTimes[i] >= minTime)
+                        {
+                            // Points must be over target when released
+                            if (base.GetTargetHitResult(point.Position)) cluster.Add(point);
+                        } else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (cluster.Count > 0)
+                    {
+                        cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
+                        cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
+                        GetTargetHitResult(cachedScreenPosition, out cachedTargetHitResult);
+                        setState(GestureState.Recognized);
                     } else
                     {
-                        break;
+                        setState(GestureState.Failed);
                     }
-                }
-
-                if (cluster.Count > 0)
-                {
-                    cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
-                    cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
-                    GetTargetHitResult(cachedScreenPosition, out cachedTargetHitResult);
-                    setState(GestureState.Recognized);
                 } else
                 {
-                    setState(GestureState.Failed);
+                    var point = touches[touches.Count - 1];
+                    cachedScreenPosition = point.Position;
+                    cachedPreviousScreenPosition = point.PreviousPosition;
+
+                    // Points must be over target when released
+                    if (base.GetTargetHitResult(point.Position, out cachedTargetHitResult))
+                    {
+                        setState(GestureState.Recognized);
+                    } else
+                    {
+                        setState(GestureState.Recognized);
+                    }
                 }
             }
         }
