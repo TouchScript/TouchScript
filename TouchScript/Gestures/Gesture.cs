@@ -180,9 +180,9 @@ namespace TouchScript.Gestures
         /// <summary>
         /// List of gesture's active touch points.
         /// </summary>
-        public List<TouchPoint> ActiveTouches
+        public IList<TouchPoint> ActiveTouches
         {
-            get { return new List<TouchPoint>(activeTouches); }
+            get { return activeTouches.AsReadOnly(); }
         }
 
         /// <summary>

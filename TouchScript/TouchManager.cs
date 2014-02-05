@@ -163,9 +163,9 @@ namespace TouchScript
         /// <summary>
         /// List of touch layers.
         /// </summary>
-        public List<TouchLayer> Layers
+        public IList<TouchLayer> Layers
         {
-            get { return new List<TouchLayer>(layers); }
+            get { return layers.AsReadOnly(); }
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace TouchScript
         /// <summary>
         /// List of active touches.
         /// </summary>
-        public List<TouchPoint> TouchPoints
+        public IList<TouchPoint> TouchPoints
         {
-            get { return new List<TouchPoint>(touchPoints); }
+            get { return touchPoints.AsReadOnly(); }
         }
 
         #endregion
