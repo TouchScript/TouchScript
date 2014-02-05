@@ -171,7 +171,7 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == 0)
             {
-                if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
+                if (totalMovement.magnitude / touchManager.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
                 {
                     setState(GestureState.Failed);
                     return;

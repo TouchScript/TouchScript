@@ -23,7 +23,7 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 minPointsDistance = value;
-                minPointsDistanceInPixels = value*TouchManager.Instance.DotsPerCentimeter;
+                minPointsDistanceInPixels = value * touchManager.DotsPerCentimeter;
             }
         }
 
@@ -78,7 +78,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.Awake();
 
-            minPointsDistanceInPixels = minPointsDistance*TouchManager.Instance.DotsPerCentimeter;
+            minPointsDistanceInPixels = minPointsDistance * touchManager.DotsPerCentimeter;
         }
 
         #endregion

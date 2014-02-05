@@ -106,7 +106,7 @@ namespace TouchScript.Gestures
             base.touchesMoved(touches);
 
             totalMovement += ScreenPosition - PreviousScreenPosition;
-            if (totalMovement.magnitude/TouchManager.Instance.DotsPerCentimeter >= DistanceLimit)
+            if (totalMovement.magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
             }

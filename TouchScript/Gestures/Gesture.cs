@@ -233,7 +233,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Unity3d Start handler.
         /// </summary>
-        protected virtual void Start()
+        protected virtual void OnEnable()
         {
             touchManager = TouchManager.Instance;
             gestureManager = GestureManager.Instance;
@@ -258,6 +258,7 @@ namespace TouchScript.Gestures
         protected virtual void OnDestroy()
         {
             gestureManager = null;
+            touchManager = null;
         }
 
         #endregion
@@ -352,7 +353,7 @@ namespace TouchScript.Gestures
         public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
         {
             TouchLayer layer = null;
-            if (!TouchManager.Instance.GetHitTarget(position, out hit, out layer)) return false;
+            if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;
 
             if (transform == hit.Transform || hit.Transform.IsChildOf(transform)) return true;
             return false;
