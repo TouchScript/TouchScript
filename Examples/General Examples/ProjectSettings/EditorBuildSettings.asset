@@ -6,6 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TouchScript/Examples/Advanced/Advanced.unity
+    path: Assets/TouchScript/Examples/Examples.unity
   - enabled: 1
     path: Assets/TouchScript/Examples/Basic/Basic.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Advanced/Advanced.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Basic 2D/Basic 2D.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Flick/Flick.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Input/Input.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Hit Test/Hit Test.unity

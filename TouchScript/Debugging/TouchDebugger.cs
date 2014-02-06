@@ -47,6 +47,17 @@ namespace TouchScript.Debugging
             }
         }
 
+        private void OnDisable()
+        {
+            if (TouchManager.Instance != null)
+            {
+                TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
+                TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
+                TouchManager.Instance.TouchesMoved -= touchesMovedHandler;
+                TouchManager.Instance.TouchesCancelled -= touchesCancelledHandler;
+            }
+        }
+
         private void OnGUI()
         {
             if (TouchTexture == null) return;
@@ -59,17 +70,6 @@ namespace TouchScript.Debugging
                 var y = Screen.height - dummy.Value.Position.y;
                 GUI.DrawTexture(new Rect(x - TouchTexture.width/2, y - TouchTexture.height/2, TouchTexture.width, TouchTexture.height), TouchTexture, ScaleMode.ScaleToFit);
                 GUI.Label(new Rect(x + TouchTexture.width, y - 9, 60, 25), dummy.Value.Id.ToString());
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (TouchManager.Instance != null)
-            {
-                TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
-                TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
-                TouchManager.Instance.TouchesMoved -= touchesMovedHandler;
-                TouchManager.Instance.TouchesCancelled -= touchesCancelledHandler;
             }
         }
 

@@ -55,6 +55,7 @@
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />
     <Compile Include="Events\TouchEventArgs.cs" />
     <Compile Include="GestureManager.cs" />
+    <Compile Include="GestureManagerInstance.cs" />
     <Compile Include="Gestures\FlickGesture.cs" />
     <Compile Include="Gestures\Gesture.cs" />
     <Compile Include="Gestures\LongPressGesture.cs" />
@@ -74,16 +75,19 @@
     <Compile Include="Hit\TouchHit.cs" />
     <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="IGestureDelegate.cs" />
+    <Compile Include="IGestureManager.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
     <Compile Include="InputSources\IInputSource.cs" />
     <Compile Include="InputSources\InputSource.cs" />
     <Compile Include="InputSources\MouseInput.cs" />
+    <Compile Include="ITouchManager.cs" />
     <Compile Include="Layers\CameraLayer.cs" />
     <Compile Include="Layers\CameraLayer2D.cs" />
     <Compile Include="Layers\CameraLayerBase.cs" />
     <Compile Include="Layers\TouchLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TouchManager.cs" />
+    <Compile Include="TouchManagerInstance.cs" />
     <Compile Include="TouchPoint.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />

@@ -1,16 +1,15 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
-Scene:
+SceneSettings:
   m_ObjectHideFlags: 0
   m_PVSData: 
-  m_QueryMode: 1
   m_PVSObjectsArray: []
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
-    viewCellSize: 1
-    bakeMode: 2
-    memoryUsage: 10485760
+    smallestOccluder: 5
+    smallestHole: .25
+    backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_Fog: 0
@@ -23,11 +22,12 @@ RenderSettings:
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 0}
   m_ObjectHideFlags: 0
 --- !u!127 &3
-GameManager:
+LevelGameManager:
   m_ObjectHideFlags: 0
 --- !u!157 &4
 LightmapSettings:
@@ -79,7 +79,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
   m_PrefabInternal: {fileID: 1174230159}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 33682316}
   - 33: {fileID: 33682318}
@@ -125,6 +125,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &33682318
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -171,11 +174,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 33682315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   friendlyGestures: []
   timeLimit: Infinity
   distanceLimit: Infinity
+  combineTouchPoints: 1
   combineTouchPointsInterval: .300000012
 --- !u!114 &33682322
 MonoBehaviour:
@@ -186,8 +191,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 33682315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0349092c4c1d4c9f95dad6c7db0c3cb, type: 1}
+  m_Script: {fileID: 11500000, guid: b0349092c4c1d4c9f95dad6c7db0c3cb, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CubePrefab: {fileID: 33682316}
   Power: 10
 --- !u!1 &289928234
@@ -195,7 +201,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 289928235}
   - 20: {fileID: 289928236}
@@ -249,6 +255,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!81 &289928237
 AudioListener:
   m_ObjectHideFlags: 0
@@ -278,8 +285,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 289928234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 1}
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   Text: 'A basic touch handling example.
 
 
@@ -292,7 +300,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 403162832}
   - 108: {fileID: 403162833}
@@ -354,7 +362,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
   m_PrefabInternal: {fileID: 549352689}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 463825119}
   - 114: {fileID: 463825124}
@@ -385,9 +393,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 463825118}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
-  TouchTexture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 1}
+  m_EditorClassIdentifier: 
+  TouchTexture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
   FontColor: {r: 0, g: .958217144, b: 1, a: 1}
 --- !u!1001 &549352689
 Prefab:
@@ -434,7 +443,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 865625385}
   m_Layer: 0
@@ -461,7 +470,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 1097373605}
   - 33: {fileID: 1097373607}
@@ -499,12 +508,15 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1097373607
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -533,8 +545,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1097373604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b59087a17532774e95d9791c6e52839, type: 1}
+  m_Script: {fileID: 11500000, guid: 5b59087a17532774e95d9791c6e52839, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CubePrefab: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
   Container: {fileID: 865625385}
   Scale: .5
@@ -546,11 +559,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1097373604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   friendlyGestures: []
   timeLimit: Infinity
   distanceLimit: Infinity
+  combineTouchPoints: 1
   combineTouchPointsInterval: .300000012
 --- !u!1001 &1174230159
 Prefab:
@@ -597,11 +612,14 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 1385619185}
   - 114: {fileID: 1385619186}
   - 114: {fileID: 1385619187}
+  - 114: {fileID: 1385619188}
+  - 114: {fileID: 1385619190}
+  - 114: {fileID: 1385619189}
   m_Layer: 0
   m_Name: TouchScript
   m_TagString: Untagged
@@ -628,8 +646,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1385619184}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: 53d3dc02e71df20438406b9087fe1e5d, type: 1}
+  m_Script: {fileID: 1254801617, guid: 53d3dc02e71df20438406b9087fe1e5d, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   TuioPort: 3333
   MovementThreshold: 0
 --- !u!114 &1385619187
@@ -640,5 +659,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 1385619184}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 1}
+  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyOnMobileDevices: 1
+--- !u!114 &1385619188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1385619184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1385619189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1385619184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 175516946, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1385619190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1385619184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1496140412, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -26,7 +26,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Reference to global touch manager.
         /// </summary>
-        protected TouchManager manager;
+        protected ITouchManager manager;
 
         #endregion
 

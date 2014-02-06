@@ -9,12 +9,18 @@ public class InputExample : MonoBehaviour
 
     private void OnEnable()
     {
-        TouchManager.Instance.TouchesBegan += touchBeganHandler;
+        if (TouchManager.Instance != null)
+        {
+            TouchManager.Instance.TouchesBegan += touchBeganHandler;
+        }
     }
 
     private void OnDisable()
     {
-        TouchManager.Instance.TouchesBegan -= touchBeganHandler;
+        if (TouchManager.Instance != null)
+        {
+            TouchManager.Instance.TouchesBegan -= touchBeganHandler;
+        }
     }
 
     private void spawnPrefabAt(Vector2 position)

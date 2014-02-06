@@ -43,7 +43,6 @@ namespace TouchScript.Editor.Gestures
 
                             if (gesture == null)
                             {
-                                //Debug.Log(string.Format("Gesture at {0} on {1} is null!!", i, target));
                                 gestureIndexToRemove = i;
                             } else
                             {

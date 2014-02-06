@@ -82,11 +82,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 154815402}
-  - 114: {fileID: 154815401}
-  - 114: {fileID: 154815400}
   - 114: {fileID: 154815405}
   - 114: {fileID: 154815404}
   - 114: {fileID: 154815403}
+  - 114: {fileID: 154815401}
+  - 114: {fileID: 154815400}
   m_Layer: 0
   m_Name: TouchScript
   m_TagString: Untagged
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 154815399}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 490251640, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 175516946, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &154815401
@@ -113,13 +113,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 154815399}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1496140412, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveDpi: 72
-  editorDpi: 72
-  layers:
-  - {fileID: 0}
 --- !u!4 &154815402
 Transform:
   m_ObjectHideFlags: 0
@@ -166,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DestroyOnMobileDevices: 1
 --- !u!1 &402488199
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1001 &1077202744
 Prefab:
   m_ObjectHideFlags: 0
@@ -792,6 +790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &2052080707
 MonoBehaviour:
   m_ObjectHideFlags: 0

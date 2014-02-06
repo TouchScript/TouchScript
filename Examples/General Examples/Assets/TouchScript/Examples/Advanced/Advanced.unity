@@ -4,13 +4,12 @@
 SceneSettings:
   m_ObjectHideFlags: 0
   m_PVSData: 
-  m_QueryMode: 1
   m_PVSObjectsArray: []
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
-    viewCellSize: 1
-    bakeMode: 2
-    memoryUsage: 10485760
+    smallestOccluder: 5
+    smallestHole: .25
+    backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_Fog: 0
@@ -23,6 +22,7 @@ RenderSettings:
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 0}
   m_ObjectHideFlags: 0
@@ -122,6 +122,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3235456
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -194,6 +197,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &55916776
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -283,6 +289,7 @@ GameObject:
   - 114: {fileID: 66218874}
   - 114: {fileID: 66218876}
   - 114: {fileID: 66218877}
+  - 114: {fileID: 66218878}
   m_Layer: 0
   m_Name: TouchScript
   m_TagString: Untagged
@@ -312,6 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DestroyOnMobileDevices: 1
 --- !u!114 &66218874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +369,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1496140412, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &66218878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 66218871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 175516946, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &97937998
@@ -414,6 +433,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &97938001
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -460,6 +482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &97938005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1 &101985063
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +617,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!114 &156856782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,6 +752,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &253627970
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -773,6 +801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &253627974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,6 +815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1001 &367641490
 Prefab:
   m_ObjectHideFlags: 0
@@ -1000,6 +1030,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &558000484
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1072,6 +1105,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &576368701
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1118,6 +1154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &576368705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1131,6 +1168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1 &606920412
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1281,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &707697961
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1305,6 +1346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &707697966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1318,6 +1360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &707697967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1531,6 +1574,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &897968760
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1593,6 +1639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &897968765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1606,6 +1653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &897968766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1847,6 +1895,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1133511949
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1893,6 +1944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &1133511953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1906,6 +1958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1 &1229247221
 GameObject:
   m_ObjectHideFlags: 0
@@ -2072,6 +2125,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1296342930
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2146,6 +2202,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1476145104
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2208,6 +2267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &1476145109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2221,6 +2281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &1476145110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2281,6 +2342,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1486482836
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2365,6 +2429,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!81 &1573308012
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2411,7 +2476,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 30.8173771, y: 23.0940094, z: .00999999978}
+  m_Size: {x: 30.7920132, y: 23.0940094, z: .00999999978}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:
@@ -2711,6 +2776,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1765346674
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2783,6 +2851,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1771078776
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2829,6 +2900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &1771078780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2842,6 +2914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1001 &1808575625
 Prefab:
   m_ObjectHideFlags: 0
@@ -2981,6 +3054,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1899528386
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3027,6 +3103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!114 &1899528390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3040,6 +3117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyGestures: []
+  ignoreChildren: 0
 --- !u!1 &1947692393
 GameObject:
   m_ObjectHideFlags: 0
@@ -3088,6 +3166,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1947692396
 MeshFilter:
   m_ObjectHideFlags: 0

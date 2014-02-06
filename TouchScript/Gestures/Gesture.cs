@@ -197,12 +197,12 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Reference to global GestureManager.
         /// </summary>
-        protected GestureManager gestureManager { get; private set; }
+        protected IGestureManager gestureManager { get { return gestureManagerInstance; } }
 
         /// <summary>
         /// Reference to global TouchManager.
         /// </summary>
-        protected TouchManager touchManager { get; private set; }
+        protected ITouchManager touchManager { get; private set; }
 
         /// <summary>
         /// Touch points the gesture currently owns and works with.
@@ -211,8 +211,9 @@ namespace TouchScript.Gestures
 
         [SerializeField]
         private List<Gesture> friendlyGestures = new List<Gesture>();
-
         private List<int> friendlyGestureIds = new List<int>();
+
+        private GestureManagerInstance gestureManagerInstance;
         private GestureState state = GestureState.Possible;
 
         #endregion
@@ -225,10 +226,10 @@ namespace TouchScript.Gestures
         protected virtual void OnEnable()
         {
             touchManager = TouchManager.Instance;
-            gestureManager = GestureManager.Instance;
+            gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
 
             if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
-            if (gestureManager == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
+            if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
 
             foreach (var gesture in friendlyGestures)
             {
@@ -245,16 +246,8 @@ namespace TouchScript.Gestures
         {
             setState(GestureState.Failed);
 
-            gestureManager = null;
+            gestureManagerInstance = null;
             touchManager = null;
-        }
-
-        /// <summary>
-        /// Unity3d OnDestroy handler.
-        /// </summary>
-        protected virtual void OnDestroy()
-        {
-            
         }
 
         #endregion
@@ -479,10 +472,10 @@ namespace TouchScript.Gestures
         /// <returns><c>true</c> if state was changed; otherwise, <c>false</c>.</returns>
         protected bool setState(GestureState value)
         {
-            if (gestureManager == null) return false;
+            if (gestureManagerInstance == null) return false;
             if (value == state && state != GestureState.Changed) return false;
 
-            var newState = gestureManager.GestureChangeState(this, value);
+            var newState = gestureManagerInstance.GestureChangeState(this, value);
             State = newState;
 
             return value == newState;

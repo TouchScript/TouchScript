@@ -94,7 +94,7 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying) TouchManager.AddLayer(this);
+            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.AddLayer(this);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void OnDestroy()
         {
-            if (Application.isPlaying) TouchManager.RemoveLayer(this);
+            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.RemoveLayer(this);
         }
 
         #endregion

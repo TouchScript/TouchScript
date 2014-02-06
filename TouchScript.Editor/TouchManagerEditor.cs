@@ -18,17 +18,15 @@ namespace TouchScript.Editor
         public const string TEXT_EDITORDPI = "DPI used in the editor.";
         public const string TEXT_MOVEDOWN = "Move down.";
 
-        private SerializedProperty editorDPI;
-
         private GUIStyle layerButtonStyle;
+
+        private TouchManager instance;
         private SerializedProperty layers;
-        private SerializedProperty liveDPI;
         private bool showLayers;
 
         private void OnEnable()
         {
-            liveDPI = serializedObject.FindProperty("liveDpi");
-            editorDPI = serializedObject.FindProperty("editorDpi");
+            instance = target as TouchManager;
             layers = serializedObject.FindProperty("layers");
         }
 
@@ -42,10 +40,17 @@ namespace TouchScript.Editor
             }
 
             serializedObject.Update();
-            GUI.changed = false;
 
-            EditorGUILayout.PropertyField(liveDPI, new GUIContent("Live DPI", TEXT_LIVEDPI));
-            EditorGUILayout.PropertyField(editorDPI, new GUIContent("Editor DPI", TEXT_EDITORDPI));
+            if (Application.isPlaying) GUI.enabled = false;
+
+            EditorGUI.BeginChangeCheck();
+            var newLiveDPI = EditorGUILayout.IntField(new GUIContent("Live DPI", TEXT_LIVEDPI), (int)instance.LiveDPI);
+            var newEditorDPI = EditorGUILayout.IntField(new GUIContent("Editor DPI", TEXT_EDITORDPI), (int)instance.EditorDPI);
+            if (EditorGUI.EndChangeCheck())
+            {
+                instance.LiveDPI = newLiveDPI;
+                instance.EditorDPI = newEditorDPI;
+            }
 
             showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)),
                 () =>
@@ -76,6 +81,7 @@ namespace TouchScript.Editor
                     if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
                 });
 
+            GUI.enabled = true;
             serializedObject.ApplyModifiedProperties();
         }
 
