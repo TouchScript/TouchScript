@@ -105,7 +105,6 @@ MonoBehaviour:
   m_Script: {fileID: -1496140412, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisableMouseInputInBuilds: 1
 --- !u!114 &821588231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisableOnMobilePlatforms: 1
+  DestroyOnMobileDevices: 1
 --- !u!114 &821588233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +141,6 @@ MonoBehaviour:
   m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisableOnNonTouchPlatforms: 1
 --- !u!114 &821588234
 MonoBehaviour:
   m_ObjectHideFlags: 0
