@@ -15,7 +15,7 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
-        public bool DestroyOnMobileDevices = true;
+        public bool DisableOnMobilePlatforms = true;
 
         #endregion
 
@@ -30,9 +30,9 @@ namespace TouchScript.InputSources
         #region Unity methods
 
         /// <inheritdoc />
-        protected override void Start()
+        protected override void OnEnable()
         {
-            if (DestroyOnMobileDevices)
+            if (DisableOnMobilePlatforms)
             {
                 switch (Application.platform)
                 {
@@ -40,11 +40,24 @@ namespace TouchScript.InputSources
                     case RuntimePlatform.IPhonePlayer:
                     case RuntimePlatform.WP8Player:
                         // don't need mouse here
-                        Destroy(this);
+                        enabled = false;
                         return;
                 }
             }
-            base.Start();
+
+            base.OnEnable();
+
+            mousePointId = -1;
+            fakeMousePointId = -1;
+        }
+
+        /// <inheritdoc />
+        protected override void OnDisable()
+        {
+            if (mousePointId != -1) cancelTouch(mousePointId);
+            if (fakeMousePointId != -1) cancelTouch(fakeMousePointId);
+
+            base.OnDisable();
         }
 
         /// <inheritdoc />

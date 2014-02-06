@@ -26,6 +26,12 @@ namespace TouchScript.InputSources
 
         #endregion
 
+        #region Public properties
+
+        public bool DisableMouseInputInBuilds = true;
+
+        #endregion
+
         #region Private variables
 
         private IntPtr hMainWindow;
@@ -42,14 +48,29 @@ namespace TouchScript.InputSources
         #region Unity
 
         /// <inheritdoc />
-        protected override void Start()
+        protected override void OnEnable()
         {
-            base.Start();
+            if (Application.platform != RuntimePlatform.WindowsPlayer)
+            {
+                enabled = false;
+                return;
+            }
+
+            if (DisableMouseInputInBuilds)
+            {
+                var inputs = FindObjectsOfType<MouseInput>();
+                foreach (var mouseInput in inputs)
+                {
+                    mouseInput.enabled = false;
+                }
+            }
+
+            base.OnEnable();
             init();
         }
 
         /// <inheritdoc />
-        protected override void OnDestroy()
+        protected override void OnDisable()
         {
             if (isInitialized)
             {
@@ -61,7 +82,13 @@ namespace TouchScript.InputSources
 
                 newWndProc = null;
             }
-            base.OnDestroy();
+
+            foreach (var i in winToInternalId)
+            {
+                cancelTouch(i.Value);
+            }
+
+            base.OnDisable();
         }
 
         #endregion
@@ -70,8 +97,6 @@ namespace TouchScript.InputSources
 
         private void init()
         {
-            if (Application.platform != RuntimePlatform.WindowsPlayer) return;
-
             hMainWindow = GetForegroundWindow();
 
             newWndProc = wndProc;

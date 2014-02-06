@@ -33,18 +33,18 @@ namespace TouchScript.InputSources
         #region Unity
 
         /// <summary>
-        /// Unity3d Start callback.
+        /// Unity3d OnEnable callback.
         /// </summary>
-        protected virtual void Start()
+        protected virtual void OnEnable()
         {
             manager = TouchManager.Instance;
             if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
         }
 
         /// <summary>
-        /// Unity3d OnDestroy callback.
+        /// Unity3d OnDisable callback.
         /// </summary>
-        protected virtual void OnDestroy()
+        protected virtual void OnDisable()
         {
             manager = null;
         }
@@ -60,7 +60,7 @@ namespace TouchScript.InputSources
         #region Callbacks
 
         /// <summary>
-        /// Start touch in given screen position.
+        /// OnEnable touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>

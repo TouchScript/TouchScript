@@ -40,9 +40,9 @@ namespace TouchScript.InputSources
         #region Unity
 
         /// <inheritdoc />
-        protected override void Start()
+        protected override void OnEnable()
         {
-            base.Start();
+            base.OnEnable();
 
             server = new TuioServer(TuioPort);
             server.MovementThreshold = MovementThreshold * manager.DotsPerCentimeter/Mathf.Max(Screen.width, Screen.height);
@@ -61,7 +61,7 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        protected override void OnDestroy()
+        protected override void OnDisable()
         {
             if (server != null)
             {
@@ -70,7 +70,13 @@ namespace TouchScript.InputSources
                 server.CursorRemoved -= OnCursorRemoved;
                 server.Disconnect();
             }
-            base.OnDestroy();
+
+            foreach (var i in cursorToInternalId)
+            {
+                cancelTouch(i.Value);
+            }
+
+            base.OnDisable();
         }
 
         #endregion
