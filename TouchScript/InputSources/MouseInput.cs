@@ -12,6 +12,13 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public class MouseInput : InputSource
     {
+
+        #region Public properties
+
+        public bool DestroyOnMobileDevices = true;
+
+        #endregion
+
         #region Private variables
 
         private int mousePointId = -1;
@@ -25,12 +32,17 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void Start()
         {
-            switch (Application.platform)
+            if (DestroyOnMobileDevices)
             {
-                case RuntimePlatform.Android:
-                case RuntimePlatform.IPhonePlayer:
-                    Destroy(this);
-                    return;
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.Android:
+                    case RuntimePlatform.IPhonePlayer:
+                    case RuntimePlatform.WP8Player:
+                        // don't need mouse here
+                        Destroy(this);
+                        return;
+                }
             }
             base.Start();
         }
