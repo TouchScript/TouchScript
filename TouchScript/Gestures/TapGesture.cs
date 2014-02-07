@@ -15,6 +15,13 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
     public class TapGesture : Gesture
     {
+
+        #region Constants
+
+        public const string TAPPED_MESSAGE = "OnTapped";
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
@@ -229,6 +236,13 @@ namespace TouchScript.Gestures
             base.touchesCancelled(touches);
 
             setState(GestureState.Failed);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(TAPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

@@ -15,6 +15,15 @@ namespace TouchScript.Gestures.Simple
     [AddComponentMenu("TouchScript/Gestures/Simple Rotate Gesture")]
     public class SimpleRotateGesture : TwoPointTransform2DGestureBase
     {
+
+        #region Constants
+
+        public const string ROTATE_STARTED_MESSAGE = "OnRotateStarted";
+        public const string ROTATED_MESSAGE = "OnRotated";
+        public const string ROTATE_STOPPED_MESSAGE = "OnRotateStopped";
+
+        #endregion
+
         #region Private variables
 
         [SerializeField]
@@ -119,6 +128,45 @@ namespace TouchScript.Gestures.Simple
                         break;
                 }
             }
+        }
+
+        /// <inheritdoc />
+        protected override void onBegan()
+        {
+            base.onBegan();
+            if (UseSendMessage)
+            {
+                SendMessageTarget.SendMessage(ROTATE_STARTED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                SendMessageTarget.SendMessage(ROTATED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onChanged()
+        {
+            base.onChanged();
+            if (UseSendMessage) SendMessageTarget.SendMessage(ROTATED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onFailed()
+        {
+            base.onFailed();
+            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(ROTATE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onCancelled()
+        {
+            base.onCancelled();
+            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(ROTATE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

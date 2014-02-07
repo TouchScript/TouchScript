@@ -15,6 +15,12 @@ namespace TouchScript.Gestures
     public class ReleaseGesture : Gesture
     {
 
+        #region Constants
+
+        public const string RELEASED_MESSAGE = "OnReleased";
+
+        #endregion
+
         #region Public properties
         
         public bool IgnoreChildren
@@ -63,6 +69,13 @@ namespace TouchScript.Gestures
             base.touchesEnded(touches);
 
             if (activeTouches.Count == 0) setState(GestureState.Recognized);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(RELEASED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

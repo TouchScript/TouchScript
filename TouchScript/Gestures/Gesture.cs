@@ -19,6 +19,8 @@ namespace TouchScript.Gestures
     {
         #region Constants
 
+        public const string STATE_CHANGED_MESSAGE = "OnGestureStateChanged";
+
         /// <summary>
         /// Invalid 3d position. Some properties return this constant when their result doesn't make sense.
         /// </summary>
@@ -85,6 +87,28 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        public bool UseSendMessage
+        {
+            get { return useSendMessage; }
+            set { useSendMessage = value; }
+        }
+
+        public bool SendStateChangeMessages
+        {
+            get { return sendStateChangeMessages; }
+            set { sendStateChangeMessages = value; }
+        }
+
+        public GameObject SendMessageTarget
+        {
+            get { return sendMessageTarget; }
+            set
+            {
+                sendMessageTarget = value;
+                if (value == null) sendMessageTarget = gameObject;
+            }
+        }
+
         /// <summary>
         /// Current gesture state.
         /// </summary>
@@ -119,6 +143,7 @@ namespace TouchScript.Gestures
                 }
 
                 if (stateChangedInvoker != null) stateChangedInvoker(this, new GestureStateChangeEventArgs(state, PreviousState));
+                if (useSendMessage && sendStateChangeMessages) sendMessageTarget.SendMessage(STATE_CHANGED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -197,7 +222,10 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Reference to global GestureManager.
         /// </summary>
-        protected IGestureManager gestureManager { get { return gestureManagerInstance; } }
+        protected IGestureManager gestureManager
+        {
+            get { return gestureManagerInstance; }
+        }
 
         /// <summary>
         /// Reference to global TouchManager.
@@ -210,7 +238,17 @@ namespace TouchScript.Gestures
         protected List<TouchPoint> activeTouches = new List<TouchPoint>();
 
         [SerializeField]
+        private bool useSendMessage = false;
+
+        [SerializeField]
+        private bool sendStateChangeMessages = false;
+
+        [SerializeField]
+        private GameObject sendMessageTarget;
+
+        [SerializeField]
         private List<Gesture> friendlyGestures = new List<Gesture>();
+
         private List<int> friendlyGestureIds = new List<int>();
 
         private GestureManagerInstance gestureManagerInstance;
@@ -236,6 +274,7 @@ namespace TouchScript.Gestures
                 AddFriendlyGesture(gesture);
             }
 
+            if (sendMessageTarget == null) sendMessageTarget = gameObject;
             Reset();
         }
 

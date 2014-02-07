@@ -15,6 +15,13 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
+
+        #region Constants
+
+        public const string LONG_PRESSED_MESSAGE = "OnLongPressed";
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
@@ -130,6 +137,13 @@ namespace TouchScript.Gestures
             base.onFailed();
 
             reset();
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(LONG_PRESSED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />
