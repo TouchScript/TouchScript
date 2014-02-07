@@ -18,22 +18,12 @@ namespace TouchScript
         [Flags]
         public enum MessageTypes
         {
-            FrameStarted = 1 << 0,
-            FrameFinished = 1 << 1,
-            TouchesBegan = 1 << 2,
-            TouchesMoved = 1 << 3,
-            TouchesEnded = 1 << 4,
-            TouchesCancelled = 1 << 5
-        }
-
-        public enum MessageNames
-        {
-            OnTouchFrameStarted = MessageTypes.FrameStarted,
-            OnTouchFrameFinished = MessageTypes.FrameFinished,
-            OnTouchesBegan = MessageTypes.TouchesBegan,
-            OnTouchesMoved = MessageTypes.TouchesMoved,
-            OnTouchesEnded = MessageTypes.TouchesEnded,
-            OnTouchesCancelled = MessageTypes.TouchesCancelled
+            FrameStarted                = 1 << 0,
+            FrameFinished               = 1 << 1,
+            TouchesBegan                = 1 << 2,
+            TouchesMoved                = 1 << 3,
+            TouchesEnded                = 1 << 4,
+            TouchesCancelled            = 1 << 5
         }
 
         /// <summary>
@@ -53,10 +43,7 @@ namespace TouchScript
         /// <summary>
         /// TouchManager singleton instance.
         /// </summary>
-        public static ITouchManager Instance
-        {
-            get { return TouchManagerInstance.Instance; }
-        }
+        public static ITouchManager Instance { get { return TouchManagerInstance.Instance; } }
 
         /// <summary>
         /// Current DPI.
@@ -120,7 +107,10 @@ namespace TouchScript
 
         public bool UseSendMessage
         {
-            get { return useSendMessage; }
+            get
+            {
+                return useSendMessage;
+            }
             set
             {
                 if (value == useSendMessage) return;
@@ -142,7 +132,10 @@ namespace TouchScript
 
         public GameObject SendMessageTarget
         {
-            get { return sendMessageTarget; }
+            get
+            {
+                return sendMessageTarget;
+            }
             set
             {
                 sendMessageTarget = value;
@@ -179,7 +172,7 @@ namespace TouchScript
         private void OnEnable()
         {
             if (Instance == null) return;
-
+            
             Instance.LiveDPI = liveDpi;
             Instance.EditorDPI = editorDpi;
             for (var i = 0; i < layers.Count; i++)
@@ -220,34 +213,35 @@ namespace TouchScript
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesBegan.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage("OnTouchesBegan", e.TouchPoints);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesMoved.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage("OnTouchesMoved", e.TouchPoints);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesEnded.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage("OnTouchesEnded", e.TouchPoints);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesCancelled.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage("OnTouchesCancelled", e.TouchPoints);
         }
 
         private void frameStartedhandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameStarted.ToString(), SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage("OnTouchFrameStarted");
         }
 
         private void frameFinishedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameFinished.ToString(), SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage("OnTouchFrameFinished");
         }
 
         #endregion
+
     }
 }

@@ -53,9 +53,8 @@ namespace TouchScript.Editor
                 instance.EditorDPI = newEditorDPI;
             }
 
-            EditorGUIUtility.labelWidth = 160;
             EditorGUI.BeginChangeCheck();
-            var useSendMessage = GUILayout.Toggle(instance.UseSendMessage, new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE));
+            var useSendMessage = EditorGUILayout.Toggle(new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE), instance.UseSendMessage);
             var sTarget = instance.SendMessageTarget;
             var sMask = instance.SendMessageEvents;
             if (useSendMessage)
@@ -68,40 +67,37 @@ namespace TouchScript.Editor
                 instance.UseSendMessage = useSendMessage;
                 instance.SendMessageTarget = sTarget;
                 instance.SendMessageEvents = sMask;
-                EditorUtility.SetDirty(instance);
             }
 
             if (Application.isPlaying) GUI.enabled = false;
-
-            showLayers = GUIElements.BeginFoldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)));
-            if (showLayers)
-            {
-                EditorGUILayout.BeginVertical();
-                for (int i = 0; i < layers.arraySize; i++)
+            showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)),
+                () =>
                 {
-                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
-                    string name;
-                    if (layer == null) name = "Unknown";
-                    else name = layer.Name;
-
-                    var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
-
-                    EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
-                    if (GUILayout.Button(new GUIContent("v", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
+                    EditorGUILayout.BeginVertical();
+                    for (int i = 0; i < layers.arraySize; i++)
                     {
-                        layers.MoveArrayElement(i, i + 1);
-                    } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-                    {
-                        EditorGUIUtility.PingObject(layer);
+                        var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
+                        string name;
+                        if (layer == null) name = "Unknown";
+                        else name = layer.Name;
+
+                        var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
+
+                        EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
+                        if (GUILayout.Button(new GUIContent("v", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
+                        {
+                            layers.MoveArrayElement(i, i + 1);
+                        } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+                        {
+                            EditorGUIUtility.PingObject(layer);
+                        }
+                        EditorGUILayout.EndHorizontal();
                     }
-                    EditorGUILayout.EndHorizontal();
-                }
-                EditorGUILayout.EndVertical();
+                    EditorGUILayout.EndVertical();
 
-                GUILayout.Space(5f);
-                if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
-            }
-            GUIElements.EndFoldout();
+                    GUILayout.Space(5f);
+                    if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
+                });
 
             GUI.enabled = true;
             serializedObject.ApplyModifiedProperties();
