@@ -2,7 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
+using TouchScript.Events;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -12,6 +14,17 @@ namespace TouchScript
     public class TouchManager : MonoBehaviour
     {
         #region Constants
+
+        [Flags]
+        public enum MessageTypes
+        {
+            FrameStarted                = 1 << 0,
+            FrameFinished               = 1 << 1,
+            TouchesBegan                = 1 << 2,
+            TouchesMoved                = 1 << 3,
+            TouchesEnded                = 1 << 4,
+            TouchesCancelled            = 1 << 5
+        }
 
         /// <summary>
         /// Ratio of cm to inch
@@ -92,6 +105,44 @@ namespace TouchScript
             }
         }
 
+        public bool UseSendMessage
+        {
+            get
+            {
+                return useSendMessage;
+            }
+            set
+            {
+                if (value == useSendMessage) return;
+                useSendMessage = value;
+                updateSubscription();
+            }
+        }
+
+        public MessageTypes SendMessageEvents
+        {
+            get { return sendMessageEvents; }
+            set
+            {
+                if (sendMessageEvents == value) return;
+                sendMessageEvents = value;
+                updateSubscription();
+            }
+        }
+
+        public GameObject SendMessageTarget
+        {
+            get
+            {
+                return sendMessageTarget;
+            }
+            set
+            {
+                sendMessageTarget = value;
+                if (value == null) sendMessageTarget = gameObject;
+            }
+        }
+
         #endregion
 
         #region Private variables
@@ -101,6 +152,15 @@ namespace TouchScript
 
         [SerializeField]
         private float editorDpi = 72;
+
+        [SerializeField]
+        private bool useSendMessage = false;
+
+        [SerializeField]
+        private MessageTypes sendMessageEvents = MessageTypes.TouchesBegan | MessageTypes.TouchesCancelled | MessageTypes.TouchesEnded | MessageTypes.TouchesMoved;
+
+        [SerializeField]
+        private GameObject sendMessageTarget;
 
         [SerializeField]
         private List<TouchLayer> layers = new List<TouchLayer>();
@@ -119,9 +179,69 @@ namespace TouchScript
             {
                 Instance.AddLayer(layers[i], i);
             }
+
+            updateSubscription();
         }
 
         #endregion
-        
+
+        #region Private functions
+
+        private void updateSubscription()
+        {
+            if (!Application.isPlaying) return;
+            if (Instance == null) return;
+
+            if (sendMessageTarget == null) sendMessageTarget = gameObject;
+
+            Instance.FrameStarted -= frameStartedhandler;
+            Instance.FrameFinished -= frameFinishedHandler;
+            Instance.TouchesBegan -= touchesBeganHandler;
+            Instance.TouchesMoved -= touchesMovedHandler;
+            Instance.TouchesEnded -= touchesEndedHandler;
+            Instance.TouchesCancelled -= touchesCancelledHandler;
+
+            if (!useSendMessage) return;
+
+            if ((SendMessageEvents & MessageTypes.FrameStarted) != 0) Instance.FrameStarted += frameStartedhandler;
+            if ((SendMessageEvents & MessageTypes.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
+            if ((SendMessageEvents & MessageTypes.TouchesBegan) != 0) Instance.TouchesBegan += touchesBeganHandler;
+            if ((SendMessageEvents & MessageTypes.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
+            if ((SendMessageEvents & MessageTypes.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
+            if ((SendMessageEvents & MessageTypes.TouchesCancelled) != 0) Instance.TouchesCancelled += touchesCancelledHandler;
+        }
+
+        private void touchesBeganHandler(object sender, TouchEventArgs e)
+        {
+            sendMessageTarget.SendMessage("OnTouchesBegan", e.TouchPoints);
+        }
+
+        private void touchesMovedHandler(object sender, TouchEventArgs e)
+        {
+            sendMessageTarget.SendMessage("OnTouchesMoved", e.TouchPoints);
+        }
+
+        private void touchesEndedHandler(object sender, TouchEventArgs e)
+        {
+            sendMessageTarget.SendMessage("OnTouchesEnded", e.TouchPoints);
+        }
+
+        private void touchesCancelledHandler(object sender, TouchEventArgs e)
+        {
+            sendMessageTarget.SendMessage("OnTouchesCancelled", e.TouchPoints);
+        }
+
+        private void frameStartedhandler(object sender, EventArgs e)
+        {
+            sendMessageTarget.SendMessage("OnTouchFrameStarted");
+        }
+
+        private void frameFinishedHandler(object sender, EventArgs e)
+        {
+            sendMessageTarget.SendMessage("OnTouchFrameFinished");
+        }
+
+        #endregion
+
     }
 }

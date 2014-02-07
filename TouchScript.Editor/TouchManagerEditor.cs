@@ -17,6 +17,9 @@ namespace TouchScript.Editor
         public const string TEXT_LIVEDPI = "DPI used in built app runing on target device.";
         public const string TEXT_EDITORDPI = "DPI used in the editor.";
         public const string TEXT_MOVEDOWN = "Move down.";
+        public const string TEXT_USESENDMESSAGE = "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.";
+        public const string TEXT_SENDMESSAGETARGET = "The GameObject target of Unity Messages. If null, host GameObject is used.";
+        public const string TEXT_SENDMESSAGEEVENTS = "Which events should be sent as Unity Messages.";
 
         private GUIStyle layerButtonStyle;
 
@@ -41,8 +44,6 @@ namespace TouchScript.Editor
 
             serializedObject.Update();
 
-            if (Application.isPlaying) GUI.enabled = false;
-
             EditorGUI.BeginChangeCheck();
             var newLiveDPI = EditorGUILayout.IntField(new GUIContent("Live DPI", TEXT_LIVEDPI), (int)instance.LiveDPI);
             var newEditorDPI = EditorGUILayout.IntField(new GUIContent("Editor DPI", TEXT_EDITORDPI), (int)instance.EditorDPI);
@@ -52,6 +53,23 @@ namespace TouchScript.Editor
                 instance.EditorDPI = newEditorDPI;
             }
 
+            EditorGUI.BeginChangeCheck();
+            var useSendMessage = EditorGUILayout.Toggle(new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE), instance.UseSendMessage);
+            var sTarget = instance.SendMessageTarget;
+            var sMask = instance.SendMessageEvents;
+            if (useSendMessage)
+            {
+                sTarget = EditorGUILayout.ObjectField(new GUIContent("SendMessage Target", TEXT_SENDMESSAGETARGET), sTarget, typeof(GameObject), true) as GameObject;
+                sMask = (TouchManager.MessageTypes)EditorGUILayout.EnumMaskField(new GUIContent("SendMessage Events", TEXT_SENDMESSAGEEVENTS), instance.SendMessageEvents);
+            }
+            if (EditorGUI.EndChangeCheck())
+            {
+                instance.UseSendMessage = useSendMessage;
+                instance.SendMessageTarget = sTarget;
+                instance.SendMessageEvents = sMask;
+            }
+
+            if (Application.isPlaying) GUI.enabled = false;
             showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)),
                 () =>
                 {

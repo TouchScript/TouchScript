@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Events;
 using TouchScript.Hit;
-using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
 
