@@ -33,19 +33,21 @@ namespace TouchScript.Editor.Gestures
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginChangeCheck();
-            var useSendMessage = EditorGUILayout.Toggle(new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE), gestureInstance.UseSendMessage);
+            var useSendMessage = GUILayout.Toggle(gestureInstance.UseSendMessage, new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE));
             var sTarget = gestureInstance.SendMessageTarget;
             var sendStateChangeMEssages = gestureInstance.SendStateChangeMessages;
             if (useSendMessage)
             {
+                EditorGUIUtility.labelWidth = 160;
                 sTarget = EditorGUILayout.ObjectField(new GUIContent("SendMessage Target", TEXT_SENDMESSAGETARGET), sTarget, typeof(GameObject), true) as GameObject;
-                sendStateChangeMEssages = EditorGUILayout.Toggle(new GUIContent("Send State Change Messages", TEXT_SENDSTATECHANGEMESSAGES), gestureInstance.SendStateChangeMessages);
+                sendStateChangeMEssages = GUILayout.Toggle(gestureInstance.SendStateChangeMessages, new GUIContent("Send State Change Messages", TEXT_SENDSTATECHANGEMESSAGES));
             }
             if (EditorGUI.EndChangeCheck())
             {
                 gestureInstance.UseSendMessage = useSendMessage;
                 gestureInstance.SendMessageTarget = sTarget;
                 gestureInstance.SendStateChangeMessages = sendStateChangeMEssages;
+                EditorUtility.SetDirty(gestureInstance);
             }
 
             shouldRecognizeShown =

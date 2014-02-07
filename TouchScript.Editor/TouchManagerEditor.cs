@@ -53,8 +53,9 @@ namespace TouchScript.Editor
                 instance.EditorDPI = newEditorDPI;
             }
 
+            EditorGUIUtility.labelWidth = 160;
             EditorGUI.BeginChangeCheck();
-            var useSendMessage = EditorGUILayout.Toggle(new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE), instance.UseSendMessage);
+            var useSendMessage = GUILayout.Toggle(instance.UseSendMessage, new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE));
             var sTarget = instance.SendMessageTarget;
             var sMask = instance.SendMessageEvents;
             if (useSendMessage)
@@ -67,6 +68,7 @@ namespace TouchScript.Editor
                 instance.UseSendMessage = useSendMessage;
                 instance.SendMessageTarget = sTarget;
                 instance.SendMessageEvents = sMask;
+                EditorUtility.SetDirty(instance);
             }
 
             if (Application.isPlaying) GUI.enabled = false;
