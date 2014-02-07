@@ -13,20 +13,41 @@ namespace TouchScript.Editor.Gestures
     public class GestureEditor : UnityEditor.Editor
     {
         public const string TEXT_FRIENDLY_HEADER = "Gestures which can work together with this gesture.";
+        public const string TEXT_USESENDMESSAGE = "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.";
+        public const string TEXT_SENDMESSAGETARGET = "The GameObject target of Unity Messages. If null, host GameObject is used.";
+        public const string TEXT_SENDSTATECHANGEMESSAGES = "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.";
 
         private const string FRIENDLY_GESTURES_PROPERTY_NAME = "friendlyGestures";
 
+        private Gesture gestureInstance;
         private SerializedProperty serializedGestures;
         private bool shouldRecognizeShown;
 
         protected virtual void OnEnable()
         {
             hideFlags = HideFlags.HideAndDontSave;
+            gestureInstance = target as Gesture;
             serializedGestures = serializedObject.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
         }
 
         public override void OnInspectorGUI()
         {
+            EditorGUI.BeginChangeCheck();
+            var useSendMessage = EditorGUILayout.Toggle(new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE), gestureInstance.UseSendMessage);
+            var sTarget = gestureInstance.SendMessageTarget;
+            var sendStateChangeMEssages = gestureInstance.SendStateChangeMessages;
+            if (useSendMessage)
+            {
+                sTarget = EditorGUILayout.ObjectField(new GUIContent("SendMessage Target", TEXT_SENDMESSAGETARGET), sTarget, typeof(GameObject), true) as GameObject;
+                sendStateChangeMEssages = EditorGUILayout.Toggle(new GUIContent("Send State Change Messages", TEXT_SENDSTATECHANGEMESSAGES), gestureInstance.SendStateChangeMessages);
+            }
+            if (EditorGUI.EndChangeCheck())
+            {
+                gestureInstance.UseSendMessage = useSendMessage;
+                gestureInstance.SendMessageTarget = sTarget;
+                gestureInstance.SendStateChangeMessages = sendStateChangeMEssages;
+            }
+
             shouldRecognizeShown =
                 GUIElements.Foldout(shouldRecognizeShown, new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER),
                     () =>
