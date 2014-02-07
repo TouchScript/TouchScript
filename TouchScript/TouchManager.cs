@@ -220,32 +220,32 @@ namespace TouchScript
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesBegan.ToString(), e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesBegan.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesMoved.ToString(), e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesMoved.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesEnded.ToString(), e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesEnded.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesCancelled.ToString(), e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesCancelled.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameStartedhandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameStarted.ToString());
+            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameStarted.ToString(), SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameFinishedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameFinished.ToString());
+            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameFinished.ToString(), SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion
