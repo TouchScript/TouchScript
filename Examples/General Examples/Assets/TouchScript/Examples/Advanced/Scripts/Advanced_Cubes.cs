@@ -14,14 +14,14 @@ public class Advanced_Cubes : MonoBehaviour
     public float AutoRotationSpeed = 10f;
     public float RotationSpeed = 20f;
 
-    private CubesState State;
+    private CubesState state;
     private Quaternion targetRotation;
 
     public void Rotate(Vector3 axis)
     {
-        if (State != CubesState.Idle) return;
+        if (state != CubesState.Idle) return;
 
-        State = CubesState.Rotating;
+        state = CubesState.Rotating;
         targetRotation = Quaternion.AngleAxis(90, axis)*transform.localRotation;
     }
 
@@ -42,14 +42,14 @@ public class Advanced_Cubes : MonoBehaviour
 
     private void Update()
     {
-        if (State == CubesState.Rotating)
+        if (state == CubesState.Rotating)
         {
             var fraction = AutoRotationSpeed*Time.deltaTime;
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, fraction);
             if (Quaternion.Angle(transform.localRotation, targetRotation) < .1)
             {
                 transform.localRotation = targetRotation;
-                State = CubesState.Idle;
+                state = CubesState.Idle;
             }
         } else
         {
@@ -60,14 +60,14 @@ public class Advanced_Cubes : MonoBehaviour
 
     private void rotateStateChangedHandler(object sender, GestureStateChangeEventArgs e)
     {
-        if (State != CubesState.Idle) return;
+        if (state != CubesState.Idle) return;
         switch (e.State)
         {
             case Gesture.GestureState.Began:
             case Gesture.GestureState.Changed:
                 var gesture = (RotateGesture)sender;
 
-                if (Math.Abs(gesture.LocalDeltaRotation) > 0.01)
+                if (Mathf.Abs(gesture.LocalDeltaRotation) > 0.01)
                 {
                     targetRotation = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal)*targetRotation;
                 }
