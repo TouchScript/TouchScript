@@ -18,12 +18,22 @@ namespace TouchScript
         [Flags]
         public enum MessageTypes
         {
-            FrameStarted                = 1 << 0,
-            FrameFinished               = 1 << 1,
-            TouchesBegan                = 1 << 2,
-            TouchesMoved                = 1 << 3,
-            TouchesEnded                = 1 << 4,
-            TouchesCancelled            = 1 << 5
+            FrameStarted = 1 << 0,
+            FrameFinished = 1 << 1,
+            TouchesBegan = 1 << 2,
+            TouchesMoved = 1 << 3,
+            TouchesEnded = 1 << 4,
+            TouchesCancelled = 1 << 5
+        }
+
+        public enum MessageNames
+        {
+            OnTouchFrameStarted = MessageTypes.FrameStarted,
+            OnTouchFrameFinished = MessageTypes.FrameFinished,
+            OnTouchesBegan = MessageTypes.TouchesBegan,
+            OnTouchesMoved = MessageTypes.TouchesMoved,
+            OnTouchesEnded = MessageTypes.TouchesEnded,
+            OnTouchesCancelled = MessageTypes.TouchesCancelled
         }
 
         /// <summary>
@@ -43,7 +53,10 @@ namespace TouchScript
         /// <summary>
         /// TouchManager singleton instance.
         /// </summary>
-        public static ITouchManager Instance { get { return TouchManagerInstance.Instance; } }
+        public static ITouchManager Instance
+        {
+            get { return TouchManagerInstance.Instance; }
+        }
 
         /// <summary>
         /// Current DPI.
@@ -107,10 +120,7 @@ namespace TouchScript
 
         public bool UseSendMessage
         {
-            get
-            {
-                return useSendMessage;
-            }
+            get { return useSendMessage; }
             set
             {
                 if (value == useSendMessage) return;
@@ -132,10 +142,7 @@ namespace TouchScript
 
         public GameObject SendMessageTarget
         {
-            get
-            {
-                return sendMessageTarget;
-            }
+            get { return sendMessageTarget; }
             set
             {
                 sendMessageTarget = value;
@@ -172,7 +179,7 @@ namespace TouchScript
         private void OnEnable()
         {
             if (Instance == null) return;
-            
+
             Instance.LiveDPI = liveDpi;
             Instance.EditorDPI = editorDpi;
             for (var i = 0; i < layers.Count; i++)
@@ -213,35 +220,34 @@ namespace TouchScript
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage("OnTouchesBegan", e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesBegan.ToString(), e.TouchPoints);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage("OnTouchesMoved", e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesMoved.ToString(), e.TouchPoints);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage("OnTouchesEnded", e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesEnded.ToString(), e.TouchPoints);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage("OnTouchesCancelled", e.TouchPoints);
+            sendMessageTarget.SendMessage(MessageNames.OnTouchesCancelled.ToString(), e.TouchPoints);
         }
 
         private void frameStartedhandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage("OnTouchFrameStarted");
+            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameStarted.ToString());
         }
 
         private void frameFinishedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage("OnTouchFrameFinished");
+            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameFinished.ToString());
         }
 
         #endregion
-
     }
 }
