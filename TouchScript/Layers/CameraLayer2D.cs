@@ -9,6 +9,9 @@ namespace TouchScript.Layers
     {
         #region Private variables
 
+        [SerializeField]
+        [HideInInspector]
+        private int[] sortedLayerIds = new int[0];
         private List<RaycastHit2D> sortedHits;
 
         #endregion
@@ -84,8 +87,10 @@ namespace TouchScript.Layers
                 var sprite2 = b.transform.GetComponent<SpriteRenderer>();
                 if (sprite1 == null || sprite2 == null) return 0;
 
-                if (sprite1.sortingLayerID < sprite2.sortingLayerID) return 1;
-                if (sprite1.sortingLayerID > sprite2.sortingLayerID) return -1;
+                var s1Id = sprite1.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite1.sortingLayerID] : 0;
+                var s2Id = sprite2.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite2.sortingLayerID] : 0;
+                if (s1Id < s2Id) return 1;
+                if (s1Id > s2Id) return -1;
                 if (sprite1.sortingOrder < sprite2.sortingOrder) return 1;
                 if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
                 return 0;
