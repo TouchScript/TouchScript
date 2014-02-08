@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof(LongPressGesture))]
+    [CustomEditor(typeof(LongPressGesture), true)]
     public class LongPressGestureEditor : GestureEditor
     {
         public const string TEXT_MAXTOUCHES = "Limit maximum number of simultaneous touch points.";

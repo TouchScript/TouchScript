@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.Simple
 {
+    [CustomEditor(typeof(Transform2DGestureBase), true)]
     public class Transform2DGestureBaseEditor : GestureEditor
     {
         public const string TEXT_PROJECTION = "Method used to project 2d screen positions of touch points into 3d space.";

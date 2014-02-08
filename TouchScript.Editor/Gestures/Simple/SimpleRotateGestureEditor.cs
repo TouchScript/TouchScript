@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.Simple
 {
-    [CustomEditor(typeof(SimpleRotateGesture))]
+    [CustomEditor(typeof(SimpleRotateGesture), true)]
     public class SimpleRotateGestureEditor : TwoPointTransform2DGestureBaseEditor
     {
         public const string TEXT_ROTATIONTHRESHOLD = "Minimum rotation in degrees for the gesture to begin.";

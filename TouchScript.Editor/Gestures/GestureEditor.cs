@@ -16,42 +16,71 @@ namespace TouchScript.Editor.Gestures
         public const string TEXT_USESENDMESSAGE = "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.";
         public const string TEXT_SENDMESSAGETARGET = "The GameObject target of Unity Messages. If null, host GameObject is used.";
         public const string TEXT_SENDSTATECHANGEMESSAGES = "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.";
+        public const string TEXT_COMBINETOUCHPOINTSINTERVAL = "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.";
 
-        private const string FRIENDLY_GESTURES_PROPERTY_NAME = "friendlyGestures";
+        private const string FRIENDLY_GESTURES_PROP = "friendlyGestures";
+        private const string COMBINE_TOUCH_POINTS_PROP = "combineTouchPoints";
+        private const string COMBINE_TOUCH_POINTS_INTERVAL_PROP = "combineTouchPointsInterval";
+
+        protected bool shouldDrawCombineTouchPoints = false;
 
         private Gesture gestureInstance;
         private SerializedProperty serializedGestures;
+        private SerializedProperty combineTouchPoints;
+        private SerializedProperty combineTouchPointsInterval;
         private bool shouldRecognizeShown;
 
         protected virtual void OnEnable()
         {
             hideFlags = HideFlags.HideAndDontSave;
             gestureInstance = target as Gesture;
-            serializedGestures = serializedObject.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
+            serializedGestures = serializedObject.FindProperty(FRIENDLY_GESTURES_PROP);
+            combineTouchPoints = serializedObject.FindProperty(COMBINE_TOUCH_POINTS_PROP);
+            combineTouchPointsInterval = serializedObject.FindProperty(COMBINE_TOUCH_POINTS_INTERVAL_PROP);
         }
 
         public override void OnInspectorGUI()
         {
+            EditorGUIUtility.labelWidth = 160;
+
             EditorGUI.BeginChangeCheck();
             var useSendMessage = GUILayout.Toggle(gestureInstance.UseSendMessage, new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE));
             var sTarget = gestureInstance.SendMessageTarget;
-            var sendStateChangeMEssages = gestureInstance.SendStateChangeMessages;
+            var sendStateChangeMessages = gestureInstance.SendStateChangeMessages;
             if (useSendMessage)
             {
-                EditorGUIUtility.labelWidth = 160;
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label(GUIContent.none, GUILayout.Width(30));
+                EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
                 sTarget = EditorGUILayout.ObjectField(new GUIContent("SendMessage Target", TEXT_SENDMESSAGETARGET), sTarget, typeof(GameObject), true) as GameObject;
-                sendStateChangeMEssages = GUILayout.Toggle(gestureInstance.SendStateChangeMessages, new GUIContent("Send State Change Messages", TEXT_SENDSTATECHANGEMESSAGES));
+                sendStateChangeMessages = GUILayout.Toggle(gestureInstance.SendStateChangeMessages, new GUIContent("Send State Change Messages", TEXT_SENDSTATECHANGEMESSAGES));
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.EndHorizontal();
             }
             if (EditorGUI.EndChangeCheck())
             {
                 gestureInstance.UseSendMessage = useSendMessage;
                 gestureInstance.SendMessageTarget = sTarget;
-                gestureInstance.SendStateChangeMessages = sendStateChangeMEssages;
+                gestureInstance.SendStateChangeMessages = sendStateChangeMessages;
                 EditorUtility.SetDirty(gestureInstance);
             }
 
+            if (shouldDrawCombineTouchPoints)
+            {
+                combineTouchPoints.boolValue = GUILayout.Toggle(combineTouchPoints.boolValue, new GUIContent("Combine Touch Points", TEXT_COMBINETOUCHPOINTSINTERVAL));
+                if (combineTouchPoints.boolValue)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Label(GUIContent.none, GUILayout.Width(30));
+                    EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
+                    EditorGUILayout.PropertyField(combineTouchPointsInterval, new GUIContent("Combine Interval (sec)", TEXT_COMBINETOUCHPOINTSINTERVAL));
+                    EditorGUILayout.EndVertical();
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+
             shouldRecognizeShown =
-                GUIElements.Foldout(shouldRecognizeShown, new GUIContent("Friendly gestures", TEXT_FRIENDLY_HEADER),
+                GUIElements.Foldout(shouldRecognizeShown, new GUIContent(string.Format("Friendly gestures ({0})", serializedGestures.arraySize), TEXT_FRIENDLY_HEADER),
                     () =>
                     {
                         int gestureIndexToRemove = -1;
@@ -147,7 +176,7 @@ namespace TouchScript.Editor.Gestures
 
             var so = new SerializedObject(value);
             so.Update();
-            SerializedProperty prop = so.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
+            SerializedProperty prop = so.FindProperty(FRIENDLY_GESTURES_PROP);
             prop.arraySize++;
             prop.GetArrayElementAtIndex(prop.arraySize - 1).objectReferenceValue = target;
 
@@ -167,7 +196,7 @@ namespace TouchScript.Editor.Gestures
             {
                 var so = new SerializedObject(gesture);
                 so.Update();
-                SerializedProperty prop = so.FindProperty(FRIENDLY_GESTURES_PROPERTY_NAME);
+                SerializedProperty prop = so.FindProperty(FRIENDLY_GESTURES_PROP);
                 for (int j = 0; j < prop.arraySize; j++)
                 {
                     if (prop.GetArrayElementAtIndex(j).objectReferenceValue == target)

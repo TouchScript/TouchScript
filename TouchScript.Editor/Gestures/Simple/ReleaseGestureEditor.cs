@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.Simple
 {
-    [CustomEditor(typeof(ReleaseGesture))]
+    [CustomEditor(typeof(ReleaseGesture), true)]
     public class ReleaseGestureEditor : GestureEditor
     {
 

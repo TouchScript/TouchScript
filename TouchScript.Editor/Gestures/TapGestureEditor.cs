@@ -8,16 +8,12 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof(TapGesture))]
+    [CustomEditor(typeof(TapGesture), true)]
     public class TapGestureEditor : GestureEditor
     {
         public const string TEXT_TIMELIMIT = "Gesture fails if it is being pressed for more than <Value> seconds.";
         public const string TEXT_DISTANCELIMIT = "Gesture fails if fingers move more than <Value> cm.";
 
-        public const string TEXT_COMBINETOUCHPOINTSINTERVAL = "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.";
-
-        private SerializedProperty combineTouchPoints;
-        private SerializedProperty combineTouchPointsInterval;
         private SerializedProperty distanceLimit;
         private SerializedProperty timeLimit;
         private bool useDistanceLimit;
@@ -29,11 +25,11 @@ namespace TouchScript.Editor.Gestures
 
             timeLimit = serializedObject.FindProperty("timeLimit");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
-            combineTouchPoints = serializedObject.FindProperty("combineTouchPoints");
-            combineTouchPointsInterval = serializedObject.FindProperty("combineTouchPointsInterval");
 
             useTimeLimit = !float.IsInfinity(timeLimit.floatValue);
             useDistanceLimit = !float.IsInfinity(distanceLimit.floatValue);
+
+            shouldDrawCombineTouchPoints = true;
         }
 
         public override void OnInspectorGUI()
@@ -66,16 +62,6 @@ namespace TouchScript.Editor.Gestures
                 distanceLimit.floatValue = float.PositiveInfinity;
             }
             useDistanceLimit = newDistanceLimit;
-
-            combineTouchPoints.boolValue = GUILayout.Toggle(combineTouchPoints.boolValue, new GUIContent("Combine Touch Points", TEXT_COMBINETOUCHPOINTSINTERVAL));
-            if (combineTouchPoints.boolValue)
-            {
-                // making float field smaller
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(new GUIContent("Combine Interval (sec)", TEXT_COMBINETOUCHPOINTSINTERVAL), GUILayout.MinWidth(200));
-                combineTouchPointsInterval.floatValue = EditorGUILayout.FloatField(GUIContent.none, combineTouchPointsInterval.floatValue, GUILayout.MinWidth(50));
-                EditorGUILayout.EndHorizontal();
-            }
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();

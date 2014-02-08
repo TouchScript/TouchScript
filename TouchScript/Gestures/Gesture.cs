@@ -8,6 +8,7 @@ using TouchScript.Events;
 using TouchScript.Clusters;
 using TouchScript.Hit;
 using TouchScript.Layers;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -82,6 +83,21 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        public bool CombineTouchPoints
+        {
+            get { return combineTouchPoints; }
+            set { combineTouchPoints = value; }
+        }
+
+        /// <summary>
+        /// Time interval before gesture is recognized to combine all lifted touch points into a cluster and calculate their screen positions.
+        /// </summary>
+        public float CombineTouchPointsInterval
+        {
+            get { return combineTouchPointsInterval; }
+            set { combineTouchPointsInterval = value; }
+        }
+
         public bool UseSendMessage
         {
             get { return useSendMessage; }
@@ -154,7 +170,11 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
+                if (activeTouches.Count == 0)
+                {
+                    if (!TouchPoint.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
+                    return TouchPoint.INVALID_POSITION;
+                }
                 return Cluster.Get2DCenterPosition(activeTouches);
             }
         }
@@ -166,7 +186,11 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
+                if (activeTouches.Count == 0)
+                {
+                    if (!TouchPoint.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
+                    return TouchPoint.INVALID_POSITION;
+                }
                 return Cluster.GetPrevious2DCenterPosition(activeTouches);
             }
         }
@@ -178,8 +202,8 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 var position = ScreenPosition;
+                if (TouchPoint.IsInvalidPosition(position)) return TouchPoint.INVALID_POSITION;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
@@ -191,8 +215,8 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 var position = PreviousScreenPosition;
+                if (TouchPoint.IsInvalidPosition(position)) return TouchPoint.INVALID_POSITION;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
@@ -233,6 +257,12 @@ namespace TouchScript.Gestures
         protected List<TouchPoint> activeTouches = new List<TouchPoint>();
 
         [SerializeField]
+        private bool combineTouchPoints = false;
+
+        [SerializeField]
+        private float combineTouchPointsInterval = .3f;
+
+        [SerializeField]
         private bool useSendMessage = false;
 
         [SerializeField]
@@ -246,8 +276,21 @@ namespace TouchScript.Gestures
 
         private List<int> friendlyGestureIds = new List<int>();
 
+        private TimedTouchSequence touchSequence = new TimedTouchSequence();
         private GestureManagerInstance gestureManagerInstance;
         private GestureState state = GestureState.Possible;
+
+        /// <summary>
+        /// Cached screen position. 
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// </summary>
+        private Vector2 cachedScreenPosition;
+
+        /// <summary>
+        /// Cached previous screen position.
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// </summary>
+        private Vector2 cachedPreviousScreenPosition;
 
         #endregion
 
@@ -485,7 +528,12 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        #region Misc methods
+        #region Protected methods
+
+        protected virtual bool shouldCacheTouchPointPosition(TouchPoint value)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Tries to change gesture state.
@@ -535,7 +583,38 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="touches">The touches.</param>
         protected virtual void touchesEnded(IList<TouchPoint> touches)
-        {}
+        {
+            if (combineTouchPoints)
+            {
+                foreach (var touch in touches)
+                {
+                    touchSequence.Add(touch, Time.time);
+                }
+
+                if (activeTouches.Count == 0)
+                {
+                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
+                    var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
+                    cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
+                    cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
+                }
+            } else
+            {
+                if (activeTouches.Count == 0)
+                {
+                    var lastPoint = touches[touches.Count - 1];
+                    if (shouldCacheTouchPointPosition(lastPoint))
+                    {
+                        cachedScreenPosition = lastPoint.Position;
+                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
+                    } else
+                    {
+                        cachedScreenPosition = TouchPoint.INVALID_POSITION;
+                        cachedPreviousScreenPosition = TouchPoint.INVALID_POSITION;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Called when touches are cancelled.

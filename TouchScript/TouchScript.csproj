@@ -91,6 +91,7 @@
     <Compile Include="TouchPoint.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
+    <Compile Include="Utils\TimedTouchSequence.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

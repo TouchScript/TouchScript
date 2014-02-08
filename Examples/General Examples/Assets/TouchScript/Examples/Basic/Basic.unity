@@ -177,11 +177,14 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
   friendlyGestures: []
   timeLimit: Infinity
   distanceLimit: Infinity
-  combineTouchPoints: 1
-  combineTouchPointsInterval: .300000012
 --- !u!114 &33682322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,11 +565,14 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 1
+  combineTouchPointsInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
   friendlyGestures: []
   timeLimit: Infinity
   distanceLimit: Infinity
-  combineTouchPoints: 1
-  combineTouchPointsInterval: .300000012
 --- !u!1001 &1174230159
 Prefab:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof(FlickGesture))]
+    [CustomEditor(typeof(FlickGesture), true)]
     public class FlickGestureEditor : GestureEditor
     {
         public const string TEXT_DIRECTION = "Flick direction.";

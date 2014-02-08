@@ -49,10 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gestures\GestureEditor.cs" />
-    <Compile Include="Gestures\PanGestureEditor.cs" />
-    <Compile Include="Gestures\RotateGestureEditor.cs" />
-    <Compile Include="Gestures\ScaleGestureEditor.cs" />
-    <Compile Include="Gestures\Simple\MetaGestureEditor.cs" />
     <Compile Include="Gestures\Simple\PressGestureEditor.cs" />
     <Compile Include="Gestures\Simple\ReleaseGestureEditor.cs" />
     <Compile Include="Gestures\FlickGestureEditor.cs" />
