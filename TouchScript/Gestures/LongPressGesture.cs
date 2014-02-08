@@ -64,28 +64,11 @@ namespace TouchScript.Gestures
         [SerializeField]
         private float distanceLimit = float.PositiveInfinity;
 
-        private Vector2 totalMovement;
-        private float recognizeTime;
-        private bool fireRecognizedNextUpdate = false;
+        private Vector2 startPosition;
 
         #endregion
 
         #region Unity methods
-
-        /// <inheritdoc />
-        protected void Update()
-        {
-            if (fireRecognizedNextUpdate)
-            {
-                if (base.GetTargetHitResult())
-                {
-                    setState(GestureState.Recognized);
-                } else
-                {
-                    setState(GestureState.Failed);
-                }
-            }
-        }
 
         #endregion
 
@@ -101,8 +84,10 @@ namespace TouchScript.Gestures
                 setState(GestureState.Failed);
                 return;
             }
+
             if (activeTouches.Count == touches.Count)
             {
+                startPosition = touches[0].Position;
                 StartCoroutine("wait");
             }
         }
@@ -112,8 +97,7 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            totalMovement += ScreenPosition - PreviousScreenPosition;
-            if (totalMovement.magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
+            if (distanceLimit < float.PositiveInfinity && (ScreenPosition - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
             {
                 setState(GestureState.Failed);
             }
@@ -132,14 +116,6 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-
-            reset();
-        }
-
-        /// <inheritdoc />
         protected override void onRecognized()
         {
             base.onRecognized();
@@ -151,7 +127,6 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
-            fireRecognizedNextUpdate = false;
             StopCoroutine("wait");
         }
 
@@ -161,12 +136,18 @@ namespace TouchScript.Gestures
 
         private IEnumerator wait()
         {
-            recognizeTime = Time.time + TimeToPress;
-            while (Time.time < recognizeTime)
+            yield return new WaitForSeconds(TimeToPress);
+
+            if (State == GestureState.Possible)
             {
-                yield return null;
+                if (base.GetTargetHitResult())
+                {
+                    setState(GestureState.Recognized);
+                } else
+                {
+                    setState(GestureState.Failed);
+                }
             }
-            fireRecognizedNextUpdate = true;
         }
 
         #endregion
