@@ -251,8 +251,8 @@ namespace TouchScript.Gestures
             base.reset();
 
             totalMovement = Vector2.zero;
-            cachedScreenPosition = TouchPoint.InvalidPosition;
-            cachedPreviousScreenPosition = TouchPoint.InvalidPosition;
+            cachedScreenPosition = TouchPoint.INVALID_POSITION;
+            cachedPreviousScreenPosition = TouchPoint.INVALID_POSITION;
             removedPoints.Clear();
             removedPointsTimes.Clear();
         }
