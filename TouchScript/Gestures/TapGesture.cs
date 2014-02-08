@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,16 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public properties
+
+        public int NumberOfTapsRequired
+        {
+            get { return numberOfTapsRequired; }
+            set
+            {
+                if (value <= 0) numberOfTapsRequired = 1;
+                else numberOfTapsRequired = value;
+            }
+        }
 
         /// <summary>
         /// Maximum time to hold touches until gesture fails.
@@ -45,13 +56,16 @@ namespace TouchScript.Gestures
         #region Private variables
 
         [SerializeField]
+        private int numberOfTapsRequired = 1;
+
+        [SerializeField]
         private float timeLimit = float.PositiveInfinity;
 
         [SerializeField]
         private float distanceLimit = float.PositiveInfinity;
 
-        private Vector2 totalMovement = Vector2.zero;
-        private float startTime;
+        private int tapsDone;
+        private Vector2 startPosition;
 
         #endregion
 
@@ -64,7 +78,15 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == touches.Count)
             {
-                startTime = Time.time;
+                if (tapsDone == 0)
+                {
+                    startPosition = touches[0].Position;
+                    if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
+                } else
+                {
+                    if (distanceLimit < float.PositiveInfinity && (touches[0].Position - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit) 
+                        setState(GestureState.Failed);
+                }
             }
         }
 
@@ -73,7 +95,10 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            totalMovement += ScreenPosition - PreviousScreenPosition;
+            if (distanceLimit < float.PositiveInfinity && (ScreenPosition - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
+            {
+                setState(GestureState.Failed);
+            }
         }
 
         /// <inheritdoc />
@@ -83,18 +108,18 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == 0)
             {
-                if (totalMovement.magnitude / touchManager.DotsPerCentimeter >= DistanceLimit || Time.time - startTime > TimeLimit)
-                {
-                    setState(GestureState.Failed);
-                    return;
-                }
-
                 if (TouchPoint.IsInvalidPosition(ScreenPosition))
                 {
                     setState(GestureState.Failed);
                 } else
                 {
-                    setState(GestureState.Recognized);
+                    if ((ScreenPosition - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
+                    {
+                        setState(GestureState.Failed);
+                        return;
+                    }
+                    tapsDone++;
+                    if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
                 }
             }
         }
@@ -111,6 +136,8 @@ namespace TouchScript.Gestures
         protected override void onRecognized()
         {
             base.onRecognized();
+
+            StopCoroutine("wait");
             if (UseSendMessage) SendMessageTarget.SendMessage(TAPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -119,7 +146,8 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
-            totalMovement = Vector2.zero;
+            StopCoroutine("wait");
+            tapsDone = 0;
         }
 
         /// <inheritdoc />
@@ -130,5 +158,17 @@ namespace TouchScript.Gestures
         }
 
         #endregion
+
+        #region private functions
+
+        private IEnumerator wait()
+        {
+            yield return new WaitForSeconds(TimeLimit);
+
+            if (State == GestureState.Possible) setState(GestureState.Failed);
+        }
+
+        #endregion
+
     }
 }
