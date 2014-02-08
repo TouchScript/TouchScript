@@ -190,6 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 29650220}
@@ -207,6 +209,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 29650220}
@@ -423,6 +427,8 @@ MonoBehaviour:
   m_Script: {fileID: -1142697980, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 55916773}
@@ -466,6 +472,8 @@ MonoBehaviour:
   m_Script: {fileID: 2105402742, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 55916773}
@@ -643,6 +651,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 85253948}
@@ -660,6 +670,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 85253948}
@@ -849,6 +861,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Text: 'Advanced example showing many features working together.
+
+    This example uses UnityScript and Messages.
 
 
     1. There are two Camera Layers: 2d and 3d. 2d layer is checked for touch targets
@@ -1192,6 +1206,8 @@ MonoBehaviour:
   m_Script: {fileID: -1142697980, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 606920412}
@@ -1409,6 +1425,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1023181599}
@@ -1426,6 +1444,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1023181599}
@@ -1600,6 +1620,8 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1147511325}
@@ -1718,6 +1740,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
@@ -1735,6 +1759,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
@@ -1752,6 +1778,8 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
@@ -1858,6 +1886,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1318505542}
@@ -1875,6 +1905,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1318505542}
@@ -1993,6 +2025,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
@@ -2010,6 +2044,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
@@ -2027,6 +2063,8 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
@@ -2133,6 +2171,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1534987188}
@@ -2150,6 +2190,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1534987188}
@@ -2254,6 +2296,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1562923258}
@@ -2271,6 +2315,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1562923258}
@@ -2466,6 +2512,8 @@ MonoBehaviour:
   m_Script: {fileID: 1700093535, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1573308009}
@@ -2525,6 +2573,8 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1585189937}
@@ -2693,6 +2743,8 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1746090350}
@@ -2847,6 +2899,8 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1981862720}
@@ -2949,6 +3003,8 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1997631761}
@@ -3059,6 +3115,8 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2037494010}
@@ -3178,6 +3236,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
@@ -3195,6 +3255,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
@@ -3212,6 +3274,8 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
