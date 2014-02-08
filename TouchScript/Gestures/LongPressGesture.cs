@@ -123,13 +123,6 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void onRecognized()
-        {
-            base.onRecognized();
-            if (UseSendMessage) SendMessageTarget.SendMessage(LONG_PRESSED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();
