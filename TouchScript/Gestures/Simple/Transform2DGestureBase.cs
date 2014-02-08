@@ -173,10 +173,10 @@ namespace TouchScript.Gestures.Simple
         {
             base.reset();
 
-            WorldTransformCenter = InvalidPosition;
-            PreviousWorldTransformCenter = InvalidPosition;
-            LocalTransformCenter = InvalidPosition;
-            PreviousLocalTransformCenter = InvalidPosition;
+            WorldTransformCenter = TouchPoint.INVALID_POSITION;
+            PreviousWorldTransformCenter = TouchPoint.INVALID_POSITION;
+            LocalTransformCenter = TouchPoint.INVALID_POSITION;
+            PreviousLocalTransformCenter = TouchPoint.INVALID_POSITION;
         }
 
         #endregion
