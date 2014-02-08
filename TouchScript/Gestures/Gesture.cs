@@ -22,11 +22,6 @@ namespace TouchScript.Gestures
         public const string STATE_CHANGED_MESSAGE = "OnGestureStateChanged";
 
         /// <summary>
-        /// Invalid 3d position. Some properties return this constant when their result doesn't make sense.
-        /// </summary>
-        public static readonly Vector3 InvalidPosition = new Vector3(float.NaN, float.NaN, float.NaN);
-
-        /// <summary>
         /// Possible states of a gesture.
         /// </summary>
         public enum GestureState
@@ -292,18 +287,6 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public methods
-
-        /// <summary>
-        /// Determines whether position is invalid.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>
-        ///   <c>true</c> if position is invalid; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsInvalidPosition(Vector3 position)
-        {
-            return position.Equals(InvalidPosition);
-        }
 
         /// <summary>
         /// Adds a friendly gesture.
