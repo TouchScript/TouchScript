@@ -11,9 +11,19 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(TapGesture), true)]
     public class TapGestureEditor : GestureEditor
     {
-        public const string TEXT_TIMELIMIT = "Gesture fails if it is being pressed for more than <Value> seconds.";
-        public const string TEXT_DISTANCELIMIT = "Gesture fails if fingers move more than <Value> cm.";
+        public const string TEXT_NUMBEROFTAPSREQUIRED = "Number of taps required for this gesture to be recognized.";
+        public const string TEXT_TIMELIMIT = "Gesture fails if in <value> seconds user didn't do the required number of taps.";
+        public const string TEXT_DISTANCELIMIT = "Gesture fails if taps are made more than <value> cm away from the first touch position.";
 
+        private enum NumberOfTaps
+        {
+            One = 1,
+            Two = 2,
+            Three = 3,
+            More = 4
+        }
+
+        private SerializedProperty numberOfTapsRequired;
         private SerializedProperty distanceLimit;
         private SerializedProperty timeLimit;
         private bool useDistanceLimit;
@@ -23,6 +33,7 @@ namespace TouchScript.Editor.Gestures
         {
             base.OnEnable();
 
+            numberOfTapsRequired = serializedObject.FindProperty("numberOfTapsRequired");
             timeLimit = serializedObject.FindProperty("timeLimit");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
 
@@ -36,7 +47,26 @@ namespace TouchScript.Editor.Gestures
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            bool newTimelimit = GUILayout.Toggle(useTimeLimit, new GUIContent("Limit Press Time", TEXT_TIMELIMIT));
+            var value = numberOfTapsRequired.intValue;
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent("Number of Taps Required", TEXT_NUMBEROFTAPSREQUIRED), GUILayout.ExpandWidth(true), GUILayout.MinWidth(160));
+            if (value <= 3)
+            {
+                var numberOfTaps = value > 3 ? NumberOfTaps.More : (NumberOfTaps)value;
+                value = (int)(NumberOfTaps)EditorGUILayout.EnumPopup(numberOfTaps, GUILayout.ExpandWidth(true), GUILayout.MinWidth(50));
+            } else
+            {
+                value = EditorGUILayout.IntField(value, GUILayout.ExpandWidth(true), GUILayout.MinWidth(50));
+            }
+            EditorGUILayout.EndHorizontal();
+            if (EditorGUI.EndChangeCheck())
+            {
+                numberOfTapsRequired.intValue = Mathf.Max(value, 1);
+            }
+
+            bool newTimelimit = GUILayout.Toggle(useTimeLimit, new GUIContent("Limit Time", TEXT_TIMELIMIT));
             if (newTimelimit)
             {
                 if (newTimelimit != useTimeLimit) timeLimit.floatValue = 0;

@@ -19,8 +19,6 @@ namespace TouchScript.Editor.Gestures
         public const string TEXT_COMBINETOUCHPOINTSINTERVAL = "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.";
 
         private const string FRIENDLY_GESTURES_PROP = "friendlyGestures";
-        private const string COMBINE_TOUCH_POINTS_PROP = "combineTouchPoints";
-        private const string COMBINE_TOUCH_POINTS_INTERVAL_PROP = "combineTouchPointsInterval";
 
         protected bool shouldDrawCombineTouchPoints = false;
 
@@ -34,9 +32,9 @@ namespace TouchScript.Editor.Gestures
         {
             hideFlags = HideFlags.HideAndDontSave;
             gestureInstance = target as Gesture;
-            serializedGestures = serializedObject.FindProperty(FRIENDLY_GESTURES_PROP);
-            combineTouchPoints = serializedObject.FindProperty(COMBINE_TOUCH_POINTS_PROP);
-            combineTouchPointsInterval = serializedObject.FindProperty(COMBINE_TOUCH_POINTS_INTERVAL_PROP);
+            serializedGestures = serializedObject.FindProperty("friendlyGestures");
+            combineTouchPoints = serializedObject.FindProperty("combineTouchPoints");
+            combineTouchPointsInterval = serializedObject.FindProperty("combineTouchPointsInterval");
         }
 
         public override void OnInspectorGUI()
