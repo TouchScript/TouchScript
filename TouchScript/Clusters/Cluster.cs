@@ -66,11 +66,11 @@ namespace TouchScript.Clusters
         /// Calculates the centroid of touch points' positions.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
-        /// <returns>Centroid of touch points' positions or <see cref="TouchPoint.InvalidPosition"/> if cluster contains no points.</returns>
+        /// <returns>Centroid of touch points' positions or <see cref="TouchPoint.INVALID_POSITION"/> if cluster contains no points.</returns>
         public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
-            if (length == 0) return TouchPoint.InvalidPosition;
+            if (length == 0) return TouchPoint.INVALID_POSITION;
             if (length == 1) return touches[0].Position;
 
             var position = new Vector2();
@@ -82,11 +82,11 @@ namespace TouchScript.Clusters
         /// Calculates the centroid of previous touch points' positions.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
-        /// <returns>Centroid of previous touch point's positions or <see cref="TouchPoint.InvalidPosition"/> if cluster contains no points.</returns>
+        /// <returns>Centroid of previous touch point's positions or <see cref="TouchPoint.INVALID_POSITION"/> if cluster contains no points.</returns>
         public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches)
         {
             var length = touches.Count;
-            if (length == 0) return TouchPoint.InvalidPosition;
+            if (length == 0) return TouchPoint.INVALID_POSITION;
             if (length == 1) return touches[0].PreviousPosition;
 
             var position = new Vector2();

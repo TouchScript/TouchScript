@@ -159,7 +159,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 return Cluster.Get2DCenterPosition(activeTouches);
             }
         }
@@ -171,7 +171,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 return Cluster.GetPrevious2DCenterPosition(activeTouches);
             }
         }
@@ -183,7 +183,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 var position = ScreenPosition;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
@@ -196,7 +196,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 var position = PreviousScreenPosition;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }

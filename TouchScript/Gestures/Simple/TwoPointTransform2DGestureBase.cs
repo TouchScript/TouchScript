@@ -142,8 +142,8 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         protected virtual void restart()
         {
-            screenPosition = TouchPoint.InvalidPosition;
-            previousScreenPosition = TouchPoint.InvalidPosition;
+            screenPosition = TouchPoint.INVALID_POSITION;
+            previousScreenPosition = TouchPoint.INVALID_POSITION;
         }
 
         #endregion

@@ -18,7 +18,7 @@ namespace TouchScript
         /// <summary>
         /// The value of TouchPoint.Position in an unkown state.
         /// </summary>
-        public static readonly Vector2 InvalidPosition = new Vector2(float.NaN, float.NaN);
+        public static readonly Vector2 INVALID_POSITION = new Vector2(float.NaN, float.NaN);
 
         #endregion
 
@@ -93,7 +93,7 @@ namespace TouchScript
         /// </returns>
         public static bool IsInvalidPosition(Vector2 position)
         {
-            return position.Equals(InvalidPosition);
+            return position.Equals(INVALID_POSITION);
         }
 
         #endregion

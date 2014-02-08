@@ -28,7 +28,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 if (activeTouches.Count == 1) return activeTouches[0].Position;
                 return (clusters.GetCenterPosition(Clusters2.CLUSTER1) + clusters.GetCenterPosition(Clusters2.CLUSTER2))*.5f;
             }
@@ -39,7 +39,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
+                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
                 if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
                 return (clusters.GetPreviousCenterPosition(Clusters2.CLUSTER1) + clusters.GetPreviousCenterPosition(Clusters2.CLUSTER2))*.5f;
             }
