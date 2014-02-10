@@ -72,34 +72,36 @@ namespace TouchScript.Editor
             }
 
             if (Application.isPlaying) GUI.enabled = false;
-            showLayers = GUIElements.Foldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)),
-                () =>
+
+            showLayers = GUIElements.BeginFoldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)));
+            if (showLayers)
+            {
+                EditorGUILayout.BeginVertical();
+                for (int i = 0; i < layers.arraySize; i++)
                 {
-                    EditorGUILayout.BeginVertical();
-                    for (int i = 0; i < layers.arraySize; i++)
+                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
+                    string name;
+                    if (layer == null) name = "Unknown";
+                    else name = layer.Name;
+
+                    var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
+
+                    EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
+                    if (GUILayout.Button(new GUIContent("v", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
                     {
-                        var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
-                        string name;
-                        if (layer == null) name = "Unknown";
-                        else name = layer.Name;
-
-                        var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
-
-                        EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
-                        if (GUILayout.Button(new GUIContent("v", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
-                        {
-                            layers.MoveArrayElement(i, i + 1);
-                        } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-                        {
-                            EditorGUIUtility.PingObject(layer);
-                        }
-                        EditorGUILayout.EndHorizontal();
+                        layers.MoveArrayElement(i, i + 1);
+                    } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+                    {
+                        EditorGUIUtility.PingObject(layer);
                     }
-                    EditorGUILayout.EndVertical();
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUILayout.EndVertical();
 
-                    GUILayout.Space(5f);
-                    if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
-                });
+                GUILayout.Space(5f);
+                if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
+            }
+            GUIElements.EndFoldout();
 
             GUI.enabled = true;
             serializedObject.ApplyModifiedProperties();
