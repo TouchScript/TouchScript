@@ -2,7 +2,7 @@
 
 namespace TouchScript.Hit
 {
-    public struct TouchHit
+    public class TouchHit
     {
         #region Constants
 
