@@ -8,8 +8,18 @@ namespace TouchScript.Hit
 
         public enum HitType
         {
+            /// <summary>
+            /// The hit is assigned to an object with Collider in 3D space.
+            /// </summary>
             Hit3D,
-            Hit2D
+            /// <summary>
+            /// The hit is assigned to a 2D object with Collider2D.
+            /// </summary>
+            Hit2D,
+            /// <summary>
+            /// The hit exists in screen space and doesn't necessary correspond to 3D object with Collider.
+            /// </summary>
+            Screen
         }
 
         #endregion
