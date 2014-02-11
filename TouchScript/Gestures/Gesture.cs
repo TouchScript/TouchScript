@@ -83,6 +83,17 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        public Gesture RequireToFail
+        {
+            get { return requireToFail; }
+            set
+            {
+                if (requireToFail != null) requireToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
+                requireToFail = value;
+                if (requireToFail != null) requireToFail.StateChanged += requiredToFailGestureStateChangedHandler;
+            }
+        }
+
         public bool CombineTouchPoints
         {
             get { return combineTouchPoints; }
@@ -272,6 +283,9 @@ namespace TouchScript.Gestures
         private GameObject sendMessageTarget;
 
         [SerializeField]
+        private Gesture requireToFail;
+
+        [SerializeField]
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private List<int> friendlyGestureIds = new List<int>();
@@ -296,21 +310,26 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
+        protected virtual void Awake()
+        {
+            foreach (var gesture in friendlyGestures)
+            {
+                AddFriendlyGesture(gesture);
+            }
+            RequireToFail = requireToFail;
+        }
+
         /// <summary>
         /// Unity3d Start handler.
         /// </summary>
         protected virtual void OnEnable()
         {
+            // TouchManager might be different in another scene
             touchManager = TouchManager.Instance;
             gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
 
             if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
             if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
-
-            foreach (var gesture in friendlyGestures)
-            {
-                AddFriendlyGesture(gesture);
-            }
 
             if (sendMessageTarget == null) sendMessageTarget = gameObject;
             Reset();
@@ -327,6 +346,14 @@ namespace TouchScript.Gestures
             touchManager = null;
         }
 
+        protected virtual void OnDestroy()
+        {
+            foreach (var gesture in friendlyGestures)
+            {
+                RemoveFriendlyGesture(gesture);
+            }
+        }
+
         #endregion
 
         #region Public methods
@@ -339,32 +366,8 @@ namespace TouchScript.Gestures
         {
             if (gesture == null || gesture == this) return;
 
-            RegisterFriendlyGesture(gesture);
-            gesture.RegisterFriendlyGesture(this);
-        }
-
-        /// <summary>
-        /// Removes a friendly gesture.
-        /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        public virtual void RemoveFriendlyGesture(Gesture gesture)
-        {
-            if (gesture == null || gesture == this) return;
-
-            UnregisterFriendlyGesture(gesture);
-            gesture.UnregisterFriendlyGesture(this);
-        }
-
-        /// <summary>
-        /// Determines whether the specified gesture is friendly.
-        /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified gesture is friendly; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsFriendly(Gesture gesture)
-        {
-            return friendlyGestureIds.Contains(gesture.GetInstanceID());
+            registerFriendlyGesture(gesture);
+            gesture.registerFriendlyGesture(this);
         }
 
         /// <summary>
@@ -514,16 +517,17 @@ namespace TouchScript.Gestures
             touchesCancelled(touches);
         }
 
-        internal void RegisterFriendlyGesture(Gesture gesture)
+        internal virtual void RemoveFriendlyGesture(Gesture gesture)
         {
-            if (gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+            if (gesture == null || gesture == this) return;
 
-            friendlyGestureIds.Add(gesture.GetInstanceID());
+            unregisterFriendlyGesture(gesture);
+            gesture.unregisterFriendlyGesture(this);
         }
 
-        internal void UnregisterFriendlyGesture(Gesture gesture)
+        internal bool IsFriendly(Gesture gesture)
         {
-            friendlyGestureIds.Remove(gesture.GetInstanceID());
+            return friendlyGestureIds.Contains(gesture.GetInstanceID());
         }
 
         #endregion
@@ -664,6 +668,31 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void onCancelled()
         {}
+
+        #endregion
+
+        #region Private functions
+
+        private void registerFriendlyGesture(Gesture gesture)
+        {
+            if (gesture == null || gesture == this || friendlyGestures.Contains(gesture)) return;
+
+            friendlyGestures.Add(gesture);
+        }
+
+        private void unregisterFriendlyGesture(Gesture gesture)
+        {
+            friendlyGestures.Remove(gesture);
+        }
+
+        #endregion
+
+        #region Event handlers
+
+        private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }
