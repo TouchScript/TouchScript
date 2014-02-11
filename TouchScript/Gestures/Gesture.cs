@@ -289,6 +289,7 @@ namespace TouchScript.Gestures
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private List<int> friendlyGestureIds = new List<int>();
+        private List<DelayedTouch> delayedTouchSequence = new List<DelayedTouch>();
 
         private TimedTouchSequence touchSequence = new TimedTouchSequence();
         private GestureManagerInstance gestureManagerInstance;
@@ -477,6 +478,7 @@ namespace TouchScript.Gestures
             {
                 RemoveFriendlyGesture(gesture);
             }
+            RequireToFail = null;
         }
 
         #endregion
@@ -491,13 +493,22 @@ namespace TouchScript.Gestures
         internal void Reset()
         {
             activeTouches.Clear();
+            delayedTouchSequence.Clear();
             reset();
         }
 
         internal void TouchesBegan(IList<TouchPoint> touches)
         {
-            activeTouches.AddRange(touches);
-            touchesBegan(touches);
+            if (requireToFail != null && state == GestureState.Possible)
+            {
+                foreach (var touch in touches)
+                {
+                    delayedTouchSequence.Add(new DelayedTouch(touch, TouchPoint.TouchEventType.Began));
+                }
+            } else
+            {
+                touchesBegan_internal(touches);
+            }
         }
 
         internal void TouchesMoved(IList<TouchPoint> touches)
@@ -507,14 +518,31 @@ namespace TouchScript.Gestures
 
         internal void TouchesEnded(IList<TouchPoint> touches)
         {
-            activeTouches.RemoveAll(touches.Contains);
-            touchesEnded(touches);
+            if (requireToFail != null && state == GestureState.Possible)
+            {
+                foreach (var touch in touches)
+                {
+                    delayedTouchSequence.Add(new DelayedTouch(touch, TouchPoint.TouchEventType.Ended));
+                }
+            } else
+            {
+                touchesEnded_internal(touches);
+            }
         }
 
         internal void TouchesCancelled(IList<TouchPoint> touches)
         {
-            activeTouches.RemoveAll(touches.Contains);
-            touchesCancelled(touches);
+            if (requireToFail != null && state == GestureState.Possible)
+            {
+                foreach (var touch in touches)
+                {
+                    delayedTouchSequence.Add(new DelayedTouch(touch, TouchPoint.TouchEventType.Cancelled));
+                }
+            }
+            else
+            {
+                touchesCancelled_internal(touches);
+            }
         }
 
         internal virtual void RemoveFriendlyGesture(Gesture gesture)
@@ -587,38 +615,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="touches">The touches.</param>
         protected virtual void touchesEnded(IList<TouchPoint> touches)
-        {
-            if (combineTouchPoints)
-            {
-                foreach (var touch in touches)
-                {
-                    touchSequence.Add(touch, Time.time);
-                }
-
-                if (activeTouches.Count == 0)
-                {
-                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                    var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
-                    cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
-                    cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
-                }
-            } else
-            {
-                if (activeTouches.Count == 0)
-                {
-                    var lastPoint = touches[touches.Count - 1];
-                    if (shouldCacheTouchPointPosition(lastPoint))
-                    {
-                        cachedScreenPosition = lastPoint.Position;
-                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
-                    } else
-                    {
-                        cachedScreenPosition = TouchPoint.INVALID_POSITION;
-                        cachedPreviousScreenPosition = TouchPoint.INVALID_POSITION;
-                    }
-                }
-            }
-        }
+        {}
 
         /// <summary>
         /// Called when touches are cancelled.
@@ -673,6 +670,58 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
+        private void touchesBegan_internal(IList<TouchPoint> touches)
+        {
+            activeTouches.AddRange(touches);
+            touchesBegan(touches);
+        }
+
+        private void touchesEnded_internal(IList<TouchPoint> touches)
+        {
+            activeTouches.RemoveAll(touches.Contains);
+
+            if (combineTouchPoints)
+            {
+                foreach (var touch in touches)
+                {
+                    touchSequence.Add(touch, Time.time);
+                }
+
+                if (activeTouches.Count == 0)
+                {
+                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
+                    var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
+                    cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
+                    cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
+                }
+            }
+            else
+            {
+                if (activeTouches.Count == 0)
+                {
+                    var lastPoint = touches[touches.Count - 1];
+                    if (shouldCacheTouchPointPosition(lastPoint))
+                    {
+                        cachedScreenPosition = lastPoint.Position;
+                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
+                    }
+                    else
+                    {
+                        cachedScreenPosition = TouchPoint.INVALID_POSITION;
+                        cachedPreviousScreenPosition = TouchPoint.INVALID_POSITION;
+                    }
+                }
+            }
+
+            touchesEnded(touches);
+        }
+
+        private void touchesCancelled_internal(IList<TouchPoint> touches)
+        {
+            activeTouches.RemoveAll(touches.Contains);
+            touchesCancelled(touches);
+        }
+
         private void registerFriendlyGesture(Gesture gesture)
         {
             if (gesture == null || gesture == this || friendlyGestures.Contains(gesture)) return;
@@ -685,15 +734,75 @@ namespace TouchScript.Gestures
             friendlyGestures.Remove(gesture);
         }
 
+        private void dispatchDelayed()
+        {
+            if (delayedTouchSequence.Count == 0) return;
+
+            var list = new List<TouchPoint>();
+            var listType = TouchPoint.TouchEventType.Began;
+            foreach (var touch in delayedTouchSequence)
+            {
+                if (touch.Type != listType)
+                {
+                    if (list.Count > 0)
+                    {
+                        switch (listType)
+                        {
+                            case TouchPoint.TouchEventType.Began:
+                                touchesBegan_internal(list);
+                                break;
+                            case TouchPoint.TouchEventType.Ended:
+                                touchesEnded_internal(list);
+                                break;
+                            case TouchPoint.TouchEventType.Cancelled:
+                                touchesCancelled_internal(list);
+                                break;
+                        }
+                        list.Clear();
+                        if (state == GestureState.Failed || state == GestureState.Recognized) break;
+                    }
+                    listType = touch.Type;
+                }
+                list.Add(touch.Touch);
+            }
+
+            delayedTouchSequence.Clear();
+        }
+
         #endregion
 
         #region Event handlers
 
-        private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+        private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs e)
         {
-            throw new NotImplementedException();
+            if (state != GestureState.Possible) return;
+            switch (e.State)
+            {
+                case GestureState.Failed:
+                    dispatchDelayed();
+                    break;
+                case GestureState.Began:
+                    setState(GestureState.Failed);
+                    break;
+                case GestureState.Recognized:
+                    if (e.State == GestureState.Possible) setState(GestureState.Failed);
+                    break;
+            }
         }
 
         #endregion
     }
+
+    internal struct DelayedTouch
+    {
+        public TouchPoint Touch;
+        public TouchPoint.TouchEventType Type;
+
+        public DelayedTouch(TouchPoint touch, TouchPoint.TouchEventType type)
+        {
+            Touch = touch;
+            Type = type;
+        }
+    }
+
 }

@@ -20,19 +20,34 @@ public class BasicExample_Breaker : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<TapGesture>().StateChanged += tapStateChangedhandler;
+        //GetComponent<TapGesture>().StateChanged += tapStateChangedhandler;
+        foreach (var tap in GetComponents<TapGesture>())
+        {
+            tap.StateChanged += tapStateChangedhandler;
+        }
     }
 
     private void OnDisable()
     {
-        GetComponent<TapGesture>().StateChanged -= tapStateChangedhandler;
+        //GetComponent<TapGesture>().StateChanged -= tapStateChangedhandler;
+        foreach (var tap in GetComponents<TapGesture>())
+        {
+            tap.StateChanged -= tapStateChangedhandler;
+        }
     }
 
     private void tapStateChangedhandler(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
     {
+        var tap = sender as TapGesture;
+        Debug.Log(tap + "(" + tap.NumberOfTapsRequired + ")" + " " + e.State);
+
         if (e.State == Gesture.GestureState.Recognized)
         {
-            if (transform.localScale.x > 0.05f)
+            
+            if (tap.NumberOfTapsRequired == 2)
+            {
+                transform.Translate(0, 10, 0, Space.World);
+            } else if (transform.localScale.x > 0.05f)
             {
                 Color color = new Color(Random.value, Random.value, Random.value);
                 for (int i = 0; i < 8; i++)
@@ -45,8 +60,8 @@ public class BasicExample_Breaker : MonoBehaviour
                     c.rigidbody.velocity = Power*Random.insideUnitSphere;
                     c.renderer.material.color = color;
                 }
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
         }
     }
 }

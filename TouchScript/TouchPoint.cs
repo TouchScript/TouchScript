@@ -15,6 +15,14 @@ namespace TouchScript
     {
         #region Constants
 
+        public enum TouchEventType
+        {
+            Began,
+            Moved,
+            Ended,
+            Cancelled
+        }
+
         /// <summary>
         /// The value of TouchPoint.Position in an unkown state.
         /// </summary>
@@ -35,7 +43,7 @@ namespace TouchScript
         public Vector2 Position
         {
             get { return position; }
-            set
+            internal set
             {
                 PreviousPosition = position;
                 position = value;

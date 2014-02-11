@@ -1,5 +1,4 @@
-﻿using System;
-using TouchScript.Events;
+﻿using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 using Random = UnityEngine.Random;

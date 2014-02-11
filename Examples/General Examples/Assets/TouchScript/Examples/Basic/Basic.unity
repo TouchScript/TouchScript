@@ -88,6 +88,7 @@ GameObject:
   - 54: {fileID: 33682320}
   - 114: {fileID: 33682321}
   - 114: {fileID: 33682322}
+  - 114: {fileID: 33682323}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -182,7 +183,9 @@ MonoBehaviour:
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
+  requireToFail: {fileID: 33682323}
   friendlyGestures: []
+  numberOfTapsRequired: 1
   timeLimit: Infinity
   distanceLimit: Infinity
 --- !u!114 &33682322
@@ -199,6 +202,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CubePrefab: {fileID: 33682316}
   Power: 10
+--- !u!114 &33682323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33682315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combineTouchPoints: 0
+  combineTouchPointsInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireToFail: {fileID: 0}
+  friendlyGestures: []
+  numberOfTapsRequired: 2
+  timeLimit: 1
+  distanceLimit: Infinity
 --- !u!1 &289928234
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,7 +594,9 @@ MonoBehaviour:
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
+  requireToFail: {fileID: 0}
   friendlyGestures: []
+  numberOfTapsRequired: 1
   timeLimit: Infinity
   distanceLimit: Infinity
 --- !u!1001 &1174230159
@@ -608,6 +634,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
+      propertyPath: requireToFail
+      value: 
+      objectReference: {fileID: 33682323}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
   m_RootGameObject: {fileID: 33682315}
