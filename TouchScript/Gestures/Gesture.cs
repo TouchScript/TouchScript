@@ -348,7 +348,8 @@ namespace TouchScript.Gestures
 
         protected virtual void OnDestroy()
         {
-            foreach (var gesture in friendlyGestures)
+            var copy = new List<Gesture>(friendlyGestures);
+            foreach (var gesture in copy)
             {
                 RemoveFriendlyGesture(gesture);
             }
@@ -691,7 +692,6 @@ namespace TouchScript.Gestures
 
         private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
         {
-            throw new NotImplementedException();
         }
 
         #endregion
