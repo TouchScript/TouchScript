@@ -112,6 +112,8 @@ namespace TouchScript.Gestures.Simple
         [SerializeField]
         private Vector3 projectionNormal = Vector3.forward;
 
+        private Collider cachedCollider;
+
         /// <summary>
         /// Camera which is used to project touch points from screen space to a 3d plane.
         /// </summary>
@@ -126,6 +128,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.OnEnable();
 
+            cachedCollider = collider;
             updateProjectionCamera();
             updateProjectionPlane();
         }
@@ -214,7 +217,7 @@ namespace TouchScript.Gestures.Simple
             if (!Application.isPlaying) return;
 
             Vector3 center;
-            if (collider != null) center = collider.bounds.center;
+            if (cachedCollider != null) center = cachedCollider.bounds.center;
             else center = transform.position;
 
             switch (projection)
