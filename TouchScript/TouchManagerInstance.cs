@@ -238,7 +238,7 @@ namespace TouchScript
         /// <inheritdoc />
         public bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer)
         {
-            hit = new TouchHit();
+            hit = null;
             layer = null;
 
             foreach (var touchLayer in layers)

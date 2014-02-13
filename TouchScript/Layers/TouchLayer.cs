@@ -80,7 +80,7 @@ namespace TouchScript.Layers
         /// <returns>Hit, if an object is hit, Miss or Error otherwise.</returns>
         public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
             return LayerHitResult.Miss;
         }
 

@@ -29,7 +29,7 @@ namespace TouchScript.Layers
 
         protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
             var hits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
 
             if (hits.Length == 0) return LayerHitResult.Miss;
@@ -38,7 +38,7 @@ namespace TouchScript.Layers
             var success = false;
             foreach (var raycastHit in hits)
             {
-                hit = TouchHit.FromRaycastHit2D(raycastHit);
+                hit = TouchHit.GetTouchHit(raycastHit);
                 var hitTests = raycastHit.transform.GetComponents<HitTest>();
                 if (hitTests.Length == 0)
                 {

@@ -280,8 +280,7 @@ namespace TouchScript
 
         private void distributePointsByGestures(Transform target, Gesture gesture, Predicate<TouchPoint> condition)
         {
-            var touchesToReceive =
-                targetTouches[target].FindAll(condition);
+            var touchesToReceive = targetTouches[target].FindAll(condition);
             if (touchesToReceive.Count > 0)
             {
                 if (gestureTouches.ContainsKey(gesture))

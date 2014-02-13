@@ -12,10 +12,12 @@ namespace TouchScript.Hit
             /// The hit is assigned to an object with Collider in 3D space.
             /// </summary>
             Hit3D,
+
             /// <summary>
             /// The hit is assigned to a 2D object with Collider2D.
             /// </summary>
             Hit2D,
+
             /// <summary>
             /// The hit exists in screen space and doesn't necessary correspond to 3D object with Collider.
             /// </summary>
@@ -43,41 +45,74 @@ namespace TouchScript.Hit
 
         #endregion
 
-        #region Public methods
+        public static int count;
 
-        public static TouchHit FromRaycastHit(RaycastHit value)
+        public static TouchHit GetTouchHit(RaycastHit value)
         {
-            var result = new TouchHit()
-            {
-                Type = HitType.Hit3D,
-                BarycentricCoordinate = value.barycentricCoordinate,
-                Collider = value.collider,
-                Distance = value.distance,
-                LightmapCoord = value.lightmapCoord,
-                Normal = value.normal,
-                Point = value.point,
-                Rigidbody = value.rigidbody,
-                TextureCoord = value.textureCoord,
-                TextureCoord2 = value.textureCoord2,
-                Transform = value.collider.transform,
-                TriangleIndex = value.triangleIndex
-            };
+            var result = new TouchHit(HitType.Hit3D);
+            result.InitWith(value);
             return result;
         }
 
-        public static TouchHit FromRaycastHit2D(RaycastHit2D value)
+        public static TouchHit GetTouchHit(RaycastHit2D value)
         {
-            var result = new TouchHit()
-            {
-                Type = HitType.Hit2D,
-                Collider2d = value.collider,
-                Distance = value.fraction,
-                Normal = -Vector3.forward,
-                Point = value.point,
-                Rigidbody2D = value.rigidbody,
-                Transform = value.collider.transform
-            };
+            var result = new TouchHit(HitType.Hit2D);
+            result.InitWith(value);
             return result;
+        }
+
+        public static TouchHit GetTouchHit(Transform value)
+        {
+            var result = new TouchHit(HitType.Screen);
+            result.InitWith(value);
+            return result;
+        }
+
+        #region Constructors
+
+        private TouchHit(HitType type)
+        {
+            Type = type;
+        }
+
+        #endregion
+
+        #region Internal methods
+
+        internal void InitWith(RaycastHit value)
+        {
+            Type = HitType.Hit3D;
+
+            BarycentricCoordinate = value.barycentricCoordinate;
+            Collider = value.collider;
+            Distance = value.distance;
+            LightmapCoord = value.lightmapCoord;
+            Normal = value.normal;
+            Point = value.point;
+            Rigidbody = value.rigidbody;
+            TextureCoord = value.textureCoord;
+            TextureCoord2 = value.textureCoord2;
+            Transform = value.collider.transform;
+            TriangleIndex = value.triangleIndex;
+        }
+
+        internal void InitWith(RaycastHit2D value)
+        {
+            Type = HitType.Hit2D;
+
+            Collider2d = value.collider;
+            Distance = value.fraction;
+            Normal = -Vector3.forward;
+            Point = value.point;
+            Rigidbody2D = value.rigidbody;
+            Transform = value.collider.transform;
+        }
+
+        internal void InitWith(Transform value)
+        {
+            Type = HitType.Screen;
+
+            Transform = value;
         }
 
         #endregion

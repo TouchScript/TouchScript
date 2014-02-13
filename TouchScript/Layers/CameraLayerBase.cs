@@ -38,7 +38,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
 
             if (camera == null) return LayerHitResult.Error;
             if (camera.enabled == false || camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
