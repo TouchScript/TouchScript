@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace TouchScript.Clusters
@@ -36,6 +37,8 @@ namespace TouchScript.Clusters
         /// Indicates if clusters must be rebuilt.
         /// </summary>
         protected bool dirty { get; private set; }
+
+        private static StringBuilder hashString = new StringBuilder();
 
         #endregion
 
@@ -101,9 +104,14 @@ namespace TouchScript.Clusters
         /// <returns>A unique string for a list of touch points.</returns>
         public static String GetPointsHash(IList<TouchPoint> touches)
         {
-            var result = "";
-            foreach (var touchPoint in touches) result += "#" + Convert.ToString(touchPoint.Id);
-            return result;
+            hashString.Remove(0, hashString.Length);
+            for (var i = 0; i < touches.Count; i++)
+            {
+                hashString.Append("#");
+                hashString.Append(touches[i].Id);
+
+            }
+            return hashString.ToString();
         }
 
         #endregion
