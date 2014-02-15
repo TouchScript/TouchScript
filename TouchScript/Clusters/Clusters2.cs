@@ -32,7 +32,15 @@ namespace TouchScript.Clusters
         /// Minimum distance in pixels between clusters to treat them as two separate clusters.
         /// Default: 0.
         /// </summary>
-        public float MinPointsDistance { get; set; }
+        public float MinPointsDistance
+        {
+            get { return minPointDistance; }
+            set
+            {
+                minPointDistance = value;
+                minPointDistanceSqr = value*value;
+            }
+        }
 
         /// <summary>
         /// Indicates that this cluster instance has two valid clusters.
@@ -44,16 +52,8 @@ namespace TouchScript.Clusters
         {
             get
             {
-                if (points.Count < 2) return false;
-                foreach (var p1 in points)
-                {
-                    foreach (var p2 in points)
-                    {
-                        if (p1 == p2) continue;
-                        if (Vector2.Distance(p1.Position, p2.Position) > MinPointsDistance) return true;
-                    }
-                }
-                return false;
+                if (dirty) distributePoints();
+                return hasClusters;
             }
         }
 
@@ -63,6 +63,8 @@ namespace TouchScript.Clusters
 
         private List<TouchPoint> cluster1 = new List<TouchPoint>();
         private List<TouchPoint> cluster2 = new List<TouchPoint>();
+        private float minPointDistance, minPointDistanceSqr;
+        private bool hasClusters = false;
 
         #endregion
 
@@ -84,7 +86,6 @@ namespace TouchScript.Clusters
         public Vector2 GetCenterPosition(int id)
         {
             if (!HasClusters) return TouchPoint.InvalidPosition;
-            if (dirty) distributePoints();
 
             Vector2 result;
             switch (id)
@@ -109,7 +110,6 @@ namespace TouchScript.Clusters
         public Vector2 GetPreviousCenterPosition(int id)
         {
             if (!HasClusters) return TouchPoint.InvalidPosition;
-            if (dirty) distributePoints();
 
             Vector2 result;
             switch (id)
@@ -134,6 +134,10 @@ namespace TouchScript.Clusters
         {
             cluster1.Clear();
             cluster2.Clear();
+
+            hasClusters = checkClusters();
+            if (!hasClusters) return;
+
             cluster1.Add(points[0]);
             cluster2.Add(points[1]);
 
@@ -206,6 +210,34 @@ namespace TouchScript.Clusters
             }
 
             markClean();
+        }
+
+        private bool checkClusters()
+        {
+            var length = points.Count - 1;
+            if (length < 1) return false;
+            if (length == 1)
+            {
+                var p1 = points[0].Position;
+                var p2 = points[1].Position;
+                var dx = p1.x - p2.x;
+                var dy = p1.y - p2.y;
+                if (dx * dx + dy * dy >= minPointDistanceSqr) return true;
+                return false;
+            }
+
+            for (var i = 0; i < length; i++)
+            {
+                for (var j = i + 1; j <= length; j++)
+                {
+                    var p1 = points[i].Position;
+                    var p2 = points[j].Position;
+                    var dx = p1.x - p2.x;
+                    var dy = p1.y - p2.y;
+                    if (dx * dx + dy * dy >= minPointDistanceSqr) return true;
+                }
+            }
+            return false;
         }
 
         #endregion
