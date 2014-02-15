@@ -85,7 +85,7 @@ namespace TouchScript.Clusters
         /// <returns>Cluster's centroid position or <see cref="TouchPoint.INVALID_POSITION"/> if cluster contains no points.</returns>
         public Vector2 GetCenterPosition(int id)
         {
-            if (!HasClusters) return TouchPoint.InvalidPosition;
+            if (!HasClusters) return TouchPoint.INVALID_POSITION;
 
             Vector2 result;
             switch (id)
@@ -109,7 +109,7 @@ namespace TouchScript.Clusters
         /// <returns>Cluster's centroid previous position or <see cref="TouchPoint.INVALID_POSITION"/> if cluster contains no points.</returns>
         public Vector2 GetPreviousCenterPosition(int id)
         {
-            if (!HasClusters) return TouchPoint.InvalidPosition;
+            if (!HasClusters) return TouchPoint.INVALID_POSITION;
 
             Vector2 result;
             switch (id)
