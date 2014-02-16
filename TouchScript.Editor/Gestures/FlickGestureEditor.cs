@@ -11,17 +11,16 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(FlickGesture), true)]
     public class FlickGestureEditor : GestureEditor
     {
-        public const string TEXT_DIRECTION = "Flick direction.";
 
-        public const string TEXT_MOVEMENTTHRESHOLD = "Minimum distance in cm touch points must move for the gesture to begin.";
-
-        public const string TEXT_FLICKTIME = "Time interval in seconds during which touch points must move by <Minimum Distance> for the gesture to be recognized.";
-
-        public const string TEXT_MINDISTANCE = "Minimum distance in cm touch points must move in <Flick Time> seconds for the gesture to be recognized.";
+        private static readonly GUIContent DIRECTION = new GUIContent("Direction", "Flick direction.");
+        private static readonly GUIContent MOVEMENT_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
+        private static readonly GUIContent FLICK_TIME = new GUIContent("Flick Time (sec)", "Time interval in seconds during which touch points must move by <Minimum Distance> for the gesture to be recognized.");
+        private static readonly GUIContent MIN_DISTANCE = new GUIContent("Minimum Distance (cm)", "Minimum distance in cm touch points must move in <Flick Time> seconds for the gesture to be recognized.");
 
         private SerializedProperty direction;
-
-        private SerializedProperty flickTime, minDistance, movementThreshold;
+        private SerializedProperty flickTime;
+        private SerializedProperty minDistance;
+        private SerializedProperty movementThreshold;
 
         protected override void OnEnable()
         {
@@ -37,10 +36,11 @@ namespace TouchScript.Editor.Gestures
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            EditorGUILayout.PropertyField(direction, new GUIContent("Direction", TEXT_DIRECTION));
-            EditorGUILayout.PropertyField(movementThreshold, new GUIContent("Movement Threshold (cm)", TEXT_MOVEMENTTHRESHOLD));
-            EditorGUILayout.PropertyField(flickTime, new GUIContent("Flick Time (sec)", TEXT_FLICKTIME));
-            EditorGUILayout.PropertyField(minDistance, new GUIContent("Minimum Distance (cm)", TEXT_MINDISTANCE));
+            EditorGUIUtility.labelWidth = 180;
+            EditorGUILayout.PropertyField(direction, DIRECTION);
+            EditorGUILayout.PropertyField(movementThreshold, MOVEMENT_THRESHOLD);
+            EditorGUILayout.PropertyField(flickTime, FLICK_TIME);
+            EditorGUILayout.PropertyField(minDistance, MIN_DISTANCE);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
