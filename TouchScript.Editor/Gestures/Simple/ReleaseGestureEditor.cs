@@ -12,7 +12,7 @@ namespace TouchScript.Editor.Gestures.Simple
     public class ReleaseGestureEditor : GestureEditor
     {
 
-        public const string IGNORE_CHILDREN = "If selected this gesture ignores touch points from children.";
+        private static readonly GUIContent IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores touch points from children.");
         
         private SerializedProperty ignoreChildren;
         
@@ -27,7 +27,7 @@ namespace TouchScript.Editor.Gestures.Simple
         {
             serializedObject.UpdateIfDirtyOrScript();
             
-            EditorGUILayout.PropertyField(ignoreChildren, new GUIContent("Ignore Children", IGNORE_CHILDREN));
+            EditorGUILayout.PropertyField(ignoreChildren, IGNORE_CHILDREN);
             
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();

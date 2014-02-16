@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -34,6 +35,7 @@ namespace TouchScript.Gestures
         #region Private variables
         
         [SerializeField]
+        [ToggleLeft]
         private bool ignoreChildren = false;
         
         #endregion

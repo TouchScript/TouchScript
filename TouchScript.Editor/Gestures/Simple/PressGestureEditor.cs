@@ -11,27 +11,25 @@ namespace TouchScript.Editor.Gestures.Simple
     [CustomEditor(typeof(PressGesture), true)]
     public class PressGestureEditor : GestureEditor
     {
+        private static readonly GUIContent IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores touch points from children.");
 
-        public const string IGNORE_CHILDREN = "If selected this gesture ignores touch points from children.";
-        
         private SerializedProperty ignoreChildren;
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
-            
+
             ignoreChildren = serializedObject.FindProperty("ignoreChildren");
         }
-        
+
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
-            
-            EditorGUILayout.PropertyField(ignoreChildren, new GUIContent("Ignore Children", IGNORE_CHILDREN));
-            
+
+            EditorGUILayout.PropertyField(ignoreChildren, IGNORE_CHILDREN);
+
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
-
     }
 }
