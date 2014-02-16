@@ -139,9 +139,7 @@ namespace TouchScript.Editor.Gestures
                 else
                 {
                     Rect rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
-                    EditorGUILayout.LabelField(
-                        string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name),
-                        GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
+                    EditorGUILayout.LabelField(string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUIElements.BoxLabelStyle, GUILayout.MinWidth(100), GUILayout.ExpandWidth(true));
                     if (GUILayout.Button("remove", GUILayout.Width(60), GUILayout.Height(16)))
                     {
                         gestureIndexToRemove = i;

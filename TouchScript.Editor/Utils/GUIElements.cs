@@ -54,7 +54,7 @@ namespace TouchScript.Editor.Utils
 
         public static bool BeginFoldout(bool open, GUIContent header)
         {
-            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(1f));
+            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(16f));
 
             return GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);
         }
