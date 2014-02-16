@@ -11,16 +11,14 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(LongPressGesture), true)]
     public class LongPressGestureEditor : GestureEditor
     {
-        public const string TEXT_MAXTOUCHES = "Limit maximum number of simultaneous touch points.";
 
-        public const string TEXT_TIMETOPRESS = "Total time in seconds required to hold touches for gesture to be recognized.";
+        private static readonly GUIContent MAX_TOUCHES = new GUIContent("Limit Number of Touch Points", "Limit maximum number of simultaneous touch points.");
+        private static readonly GUIContent TIME_TO_PRESS = new GUIContent("Time to Press (sec)", "Limit maximum number of simultaneous touch points.");
+        private static readonly GUIContent DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if fingers move more than <Value> cm.");
 
-        public const string TEXT_DISTANCELIMIT = "Gesture fails if fingers move more than <Value> cm.";
         private SerializedProperty distanceLimit;
-
-        private SerializedProperty maxTouches, timeToPress;
-        private bool useDistanceLimit;
-        private bool useTouchesLimit;
+        private SerializedProperty maxTouches;
+        private SerializedProperty timeToPress;
 
         protected override void OnEnable()
         {
@@ -29,42 +27,15 @@ namespace TouchScript.Editor.Gestures
             maxTouches = serializedObject.FindProperty("maxTouches");
             timeToPress = serializedObject.FindProperty("timeToPress");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
-
-            useTouchesLimit = maxTouches.intValue != int.MaxValue;
-            useDistanceLimit = !float.IsInfinity(distanceLimit.floatValue);
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            EditorGUILayout.PropertyField(timeToPress, new GUIContent("Time to Press (sec)", TEXT_TIMETOPRESS));
-
-            bool newToucheslimit = GUILayout.Toggle(useTouchesLimit, new GUIContent("Limit Number of Touch Points", TEXT_MAXTOUCHES));
-            if (newToucheslimit)
-            {
-                if (newToucheslimit != useTouchesLimit) maxTouches.intValue = 1;
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(maxTouches, new GUIContent("Value", TEXT_MAXTOUCHES));
-                EditorGUI.indentLevel--;
-            } else
-            {
-                maxTouches.intValue = int.MaxValue;
-            }
-            useTouchesLimit = newToucheslimit;
-
-            bool newDistanceLimit = GUILayout.Toggle(useDistanceLimit, new GUIContent("Limit Movement", TEXT_DISTANCELIMIT));
-            if (newDistanceLimit)
-            {
-                if (newDistanceLimit != useDistanceLimit) distanceLimit.floatValue = 0;
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(distanceLimit, new GUIContent("Value (cm)", TEXT_DISTANCELIMIT));
-                EditorGUI.indentLevel--;
-            } else
-            {
-                distanceLimit.floatValue = float.PositiveInfinity;
-            }
-            useDistanceLimit = newDistanceLimit;
+            EditorGUILayout.PropertyField(timeToPress, TIME_TO_PRESS);
+            EditorGUILayout.PropertyField(maxTouches, MAX_TOUCHES);
+            EditorGUILayout.PropertyField(distanceLimit, DISTANCE_LIMIT);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();

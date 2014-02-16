@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -56,12 +57,14 @@ namespace TouchScript.Gestures
         #region Private variables
 
         [SerializeField]
+        [NullToggle(NullIntValue = int.MaxValue)]
         private int maxTouches = int.MaxValue;
 
         [SerializeField]
         private float timeToPress = 1;
 
         [SerializeField]
+        [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float distanceLimit = float.PositiveInfinity;
 
         private Vector2 startPosition;
