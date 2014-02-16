@@ -11,7 +11,7 @@ namespace TouchScript.Editor.Gestures.Simple
     [CustomEditor(typeof(SimpleRotateGesture), true)]
     public class SimpleRotateGestureEditor : TwoPointTransform2DGestureBaseEditor
     {
-        public const string TEXT_ROTATIONTHRESHOLD = "Minimum rotation in degrees for the gesture to begin.";
+        private static readonly GUIContent ROTATION_THRESHOLD = new GUIContent("Rotation Threshold (deg)", "Minimum rotation in degrees for the gesture to begin.");
 
         private SerializedProperty rotationThreshold;
 
@@ -26,7 +26,8 @@ namespace TouchScript.Editor.Gestures.Simple
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            EditorGUILayout.PropertyField(rotationThreshold, new GUIContent("Rotation Threshold (deg)", TEXT_ROTATIONTHRESHOLD));
+            EditorGUIUtility.labelWidth = 160;
+            EditorGUILayout.PropertyField(rotationThreshold, ROTATION_THRESHOLD);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();

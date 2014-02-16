@@ -64,15 +64,5 @@ namespace TouchScript.Editor.Utils
             GUILayout.EndVertical();
         }
 
-        public static void CompactVector3(GUIContent content, SerializedProperty property)
-        {
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(content);
-            var x = EditorGUILayout.FloatField(property.vector3Value.x, GUILayout.MaxWidth(80), GUILayout.MinWidth(40));
-            var y = EditorGUILayout.FloatField(property.vector3Value.y, GUILayout.MaxWidth(80), GUILayout.MinWidth(40));
-            var z = EditorGUILayout.FloatField(property.vector3Value.z, GUILayout.MaxWidth(80), GUILayout.MinWidth(40));
-            property.vector3Value = new Vector3(x, y, z);
-            GUILayout.EndHorizontal();
-        }
     }
 }

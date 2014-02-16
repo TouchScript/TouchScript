@@ -11,7 +11,7 @@ namespace TouchScript.Editor.Gestures.Simple
     [CustomEditor(typeof(SimplePanGesture), true)]
     public class SimplePanGestureEditor : Transform2DGestureBaseEditor
     {
-        public const string TEXT_MOVEMENTTHRESHOLD = "Minimum distance in cm touch points must move for the gesture to begin.";
+        private static readonly GUIContent MOVEMENT_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
 
         private SerializedProperty movementThreshold;
 
@@ -26,7 +26,8 @@ namespace TouchScript.Editor.Gestures.Simple
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            EditorGUILayout.PropertyField(movementThreshold, new GUIContent("Movement Threshold (cm)", TEXT_MOVEMENTTHRESHOLD));
+            EditorGUIUtility.labelWidth = 160;
+            EditorGUILayout.PropertyField(movementThreshold, MOVEMENT_THRESHOLD);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
