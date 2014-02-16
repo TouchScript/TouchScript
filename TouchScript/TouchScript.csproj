@@ -89,6 +89,8 @@
     <Compile Include="TouchManager.cs" />
     <Compile Include="TouchManagerInstance.cs" />
     <Compile Include="TouchPoint.cs" />
+    <Compile Include="Utils\Editor\Attributes\NullToggle.cs" />
+    <Compile Include="Utils\Editor\Attributes\ToggleLeftAttribute.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
     <Compile Include="Utils\TimedTouchSequence.cs" />
