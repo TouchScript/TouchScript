@@ -9,6 +9,7 @@ using TouchScript.Clusters;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Utils;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -83,14 +84,14 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
-        public Gesture RequireToFail
+        public Gesture RequireGestureToFail
         {
-            get { return requireToFail; }
+            get { return requireGestureToFail; }
             set
             {
-                if (requireToFail != null) requireToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
-                requireToFail = value;
-                if (requireToFail != null) requireToFail.StateChanged += requiredToFailGestureStateChangedHandler;
+                if (requireGestureToFail != null) requireGestureToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
+                requireGestureToFail = value;
+                if (requireGestureToFail != null) requireGestureToFail.StateChanged += requiredToFailGestureStateChangedHandler;
             }
         }
 
@@ -268,22 +269,26 @@ namespace TouchScript.Gestures
         protected List<TouchPoint> activeTouches = new List<TouchPoint>();
 
         [SerializeField]
+        [ToggleLeft]
         private bool combineTouchPoints = false;
 
         [SerializeField]
         private float combineTouchPointsInterval = .3f;
 
         [SerializeField]
+        [ToggleLeft]
         private bool useSendMessage = false;
 
         [SerializeField]
+        [ToggleLeft]
         private bool sendStateChangeMessages = false;
 
         [SerializeField]
         private GameObject sendMessageTarget;
 
         [SerializeField]
-        private Gesture requireToFail;
+        [NullToggle]
+        private Gesture requireGestureToFail;
 
         [SerializeField]
         private List<Gesture> friendlyGestures = new List<Gesture>();
@@ -316,7 +321,7 @@ namespace TouchScript.Gestures
             {
                 AddFriendlyGesture(gesture);
             }
-            RequireToFail = requireToFail;
+            RequireGestureToFail = requireGestureToFail;
         }
 
         /// <summary>

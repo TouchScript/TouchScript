@@ -13,99 +13,113 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(Gesture), true)]
     public class GestureEditor : UnityEditor.Editor
     {
-        public const string TEXT_FRIENDLY_HEADER = "List gestures which can work together with this gesture.";
-        public const string TEXT_REQUIRETOFAIL = "List of gestures which must fail for this gesture to start.";
-        public const string TEXT_USESENDMESSAGE = "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.";
-        public const string TEXT_SENDMESSAGETARGET = "The GameObject target of Unity Messages. If null, host GameObject is used.";
-        public const string TEXT_SENDSTATECHANGEMESSAGES = "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.";
-        public const string TEXT_COMBINETOUCHPOINTSINTERVAL = "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.";
-
+        private const string TEXT_FRIENDLY_HEADER = "List gestures which can work together with this gesture.";
         private const string FRIENDLY_GESTURES_PROP = "friendlyGestures";
+
+        private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
+        private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
+        private static readonly GUIContent SEND_STATE_CHANGE_MESSAGES = new GUIContent("Send State Change Messages", "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.");
+        private static readonly GUIContent COMBINE_TOUCH_POINTS = new GUIContent("Combine Touch Points", "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
+        private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
+        private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
 
         protected bool shouldDrawCombineTouchPoints = false;
 
         private Gesture gestureInstance;
         private SerializedProperty friendlyGestures;
-        private SerializedProperty requireToFail;
-        private SerializedProperty combineTouchPoints;
-        private SerializedProperty combineTouchPointsInterval;
+        private SerializedProperty requireGestureToFail;
+        private SerializedProperty combineTouchPoints, combineTouchPointsInterval;
+        private SerializedProperty useSendMessage, sendMessageTarget, sendStateChangeMessages;
+
         private bool friendlyShown, requireToFailShown, requireToFailChecked;
 
         protected virtual void OnEnable()
         {
             hideFlags = HideFlags.HideAndDontSave;
             gestureInstance = target as Gesture;
+
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
-            requireToFail = serializedObject.FindProperty("requireToFail");
+            requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
+
             combineTouchPoints = serializedObject.FindProperty("combineTouchPoints");
             combineTouchPointsInterval = serializedObject.FindProperty("combineTouchPointsInterval");
-            requireToFailChecked = requireToFail.objectReferenceValue != null;
+
+            useSendMessage = serializedObject.FindProperty("useSendMessage");
+            sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
+            sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
+
+            requireToFailChecked = requireGestureToFail.objectReferenceValue != null;
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            EditorGUIUtility.labelWidth = 160;
+            drawSendMessage();
+            drawCombineTouchPoints();
+            drawRequireToFail();
+            drawFriendlyGestures();
 
-            EditorGUI.BeginChangeCheck();
-            var useSendMessage = GUILayout.Toggle(gestureInstance.UseSendMessage, new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE));
-            var sTarget = gestureInstance.SendMessageTarget;
-            var sendStateChangeMessages = gestureInstance.SendStateChangeMessages;
-            if (useSendMessage)
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void drawSendMessage()
+        {
+            EditorGUILayout.PropertyField(useSendMessage, USE_SEND_MESSAGE);
+            if (useSendMessage.boolValue)
             {
+                EditorGUIUtility.labelWidth = 70;
+
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(GUIContent.none, GUILayout.Width(30));
+                GUILayout.Label(GUIContent.none, GUILayout.Width(10));
                 EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-                sTarget = EditorGUILayout.ObjectField(new GUIContent("SendMessage Target", TEXT_SENDMESSAGETARGET), sTarget, typeof(GameObject), true) as GameObject;
-                sendStateChangeMessages = GUILayout.Toggle(gestureInstance.SendStateChangeMessages, new GUIContent("Send State Change Messages", TEXT_SENDSTATECHANGEMESSAGES));
+                EditorGUILayout.PropertyField(sendMessageTarget, SEND_MESSAGE_TARGET);
+                EditorGUILayout.PropertyField(sendStateChangeMessages, SEND_STATE_CHANGE_MESSAGES);
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndHorizontal();
             }
-            if (EditorGUI.EndChangeCheck())
-            {
-                gestureInstance.UseSendMessage = useSendMessage;
-                gestureInstance.SendMessageTarget = sTarget;
-                gestureInstance.SendStateChangeMessages = sendStateChangeMessages;
-                EditorUtility.SetDirty(gestureInstance);
-            }
+        }
 
+        private void drawCombineTouchPoints()
+        {
             if (shouldDrawCombineTouchPoints)
             {
-                combineTouchPoints.boolValue = GUILayout.Toggle(combineTouchPoints.boolValue, new GUIContent("Combine Touch Points", TEXT_COMBINETOUCHPOINTSINTERVAL));
+                EditorGUILayout.PropertyField(combineTouchPoints, COMBINE_TOUCH_POINTS);
                 if (combineTouchPoints.boolValue)
                 {
                     EditorGUILayout.BeginHorizontal();
                     GUILayout.Label(GUIContent.none, GUILayout.Width(30));
                     EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-                    EditorGUILayout.PropertyField(combineTouchPointsInterval, new GUIContent("Combine Interval (sec)", TEXT_COMBINETOUCHPOINTSINTERVAL));
+                    EditorGUILayout.PropertyField(combineTouchPointsInterval, COMBINE_TOUCH_POINTS_INTERVAL);
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.EndHorizontal();
                 }
             }
+        }
 
-            EditorGUILayout.BeginHorizontal();
-            requireToFailChecked = GUILayout.Toggle(requireToFailChecked, new GUIContent("Require to Fail", TEXT_REQUIRETOFAIL));
-            if (requireToFailChecked)
+        private void drawRequireToFail()
+        {
+            EditorGUILayout.PropertyField(requireGestureToFail, REQUIRE_GESTURE_TO_FAIL);
+        }
+
+        private void drawFriendlyGestures()
+        {
+            EditorGUI.BeginChangeCheck();
+            var _friendlyGestures_expanded = GUIElements.BeginFoldout(friendlyGestures.isExpanded, new GUIContent(string.Format("Friendly gestures ({0})", friendlyGestures.arraySize), TEXT_FRIENDLY_HEADER));
+            if (EditorGUI.EndChangeCheck())
             {
-                EditorGUILayout.PropertyField(requireToFail, GUIContent.none);
-            } else
-            {
-                requireToFail.objectReferenceValue = null;
+                friendlyGestures.isExpanded = _friendlyGestures_expanded;
             }
-            EditorGUILayout.EndHorizontal();
-
-            friendlyGestures.isExpanded = GUIElements.BeginFoldout(friendlyGestures.isExpanded, new GUIContent(string.Format("Friendly gestures ({0})", friendlyGestures.arraySize), TEXT_FRIENDLY_HEADER));
-            if (friendlyGestures.isExpanded)
+            if (_friendlyGestures_expanded)
             {
                 GUILayout.BeginVertical(GUIElements.FoldoutStyle);
                 drawGestureList(friendlyGestures, addFriendlyGesture, removeFriendlyGestureAt);
                 GUILayout.EndVertical();
             }
             GUIElements.EndFoldout();
-
-            serializedObject.ApplyModifiedProperties();
         }
+
+        #region Gesture List
 
         private void drawGestureList(SerializedProperty prop, Action<SerializedProperty, Gesture> addGesture, Func<SerializedProperty, int, Gesture> removeGestureAt)
         {
@@ -261,5 +275,8 @@ namespace TouchScript.Editor.Gestures
             }
             array.arraySize--;
         }
+
+        #endregion
+
     }
 }
