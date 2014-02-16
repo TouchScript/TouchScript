@@ -87,8 +87,9 @@ namespace TouchScript.Editor.Gestures
                 EditorGUILayout.PropertyField(combineTouchPoints, COMBINE_TOUCH_POINTS);
                 if (combineTouchPoints.boolValue)
                 {
+                    EditorGUIUtility.labelWidth = 160;
                     EditorGUILayout.BeginHorizontal();
-                    GUILayout.Label(GUIContent.none, GUILayout.Width(30));
+                    GUILayout.Label(GUIContent.none, GUILayout.Width(10));
                     EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
                     EditorGUILayout.PropertyField(combineTouchPointsInterval, COMBINE_TOUCH_POINTS_INTERVAL);
                     EditorGUILayout.EndVertical();

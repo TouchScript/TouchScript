@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -59,9 +60,11 @@ namespace TouchScript.Gestures
         private int numberOfTapsRequired = 1;
 
         [SerializeField]
+        [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float timeLimit = float.PositiveInfinity;
 
         [SerializeField]
+        [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float distanceLimit = float.PositiveInfinity;
 
         private int tapsDone;

@@ -4,17 +4,16 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Utils.PropertyDrawers
 {
-    [CustomPropertyDrawer(typeof(NullToggle))]
+    [CustomPropertyDrawer(typeof(NullToggleAttribute))]
     public class NullToggleDrawer : PropertyDrawer
     {
-
         private bool? expanded = null;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             updateExpanded(property);
             if (expanded == false) return 16;
-            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null) return 16 * 3 + 2 * 2;
+            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null) return 16*3 + 2*2;
             return 16*2 + 2;
         }
 
@@ -34,9 +33,11 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                     case SerializedPropertyType.Integer:
                         property.intValue = (int)getNullValue(property);
                         break;
+                    case SerializedPropertyType.Float:
+                        property.floatValue = (float)getNullValue(property);
+                        break;
                 }
-            }
-            else
+            } else
             {
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.LabelField(new Rect(position.x + 14, position.y + 18, 40, 16), new GUIContent("Value", label.tooltip));
@@ -54,8 +55,12 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                         }
                         break;
                     case SerializedPropertyType.Integer:
-                        int intValue = EditorGUI.IntField(position, label, property.intValue);
+                        int intValue = EditorGUI.IntField(position, GUIContent.none, property.intValue);
                         if (EditorGUI.EndChangeCheck()) property.intValue = intValue;
+                        break;
+                    case SerializedPropertyType.Float:
+                        float floatValue = EditorGUI.FloatField(position, GUIContent.none, property.floatValue);
+                        if (EditorGUI.EndChangeCheck()) property.floatValue = floatValue;
                         break;
                 }
             }
@@ -122,7 +127,6 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             //            EditorGUI.DoGradientField(EditorGUI.PrefixLabel(position, controlID2, label), controlID2, null, property);
             //            break;
             //        }
-
         }
 
         private void Begin(Rect position, SerializedProperty property, GUIContent label)
@@ -151,22 +155,25 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                     return property.objectReferenceValue == getNullValue(property);
                 case SerializedPropertyType.Integer:
                     return property.intValue == (int)getNullValue(property);
+                case SerializedPropertyType.Float:
+                    return property.floatValue == (float)getNullValue(property);
             }
             return false;
         }
 
         private object getNullValue(SerializedProperty property)
         {
-            var attr = attribute as NullToggle;
+            var attr = attribute as NullToggleAttribute;
             switch (property.propertyType)
             {
                 case SerializedPropertyType.ObjectReference:
                     return attr.NullObjectValue;
                 case SerializedPropertyType.Integer:
                     return attr.NullIntValue;
+                case SerializedPropertyType.Float:
+                    return attr.NullFloatValue;
             }
             return null;
         }
-
     }
 }
