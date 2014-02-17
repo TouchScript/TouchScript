@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -15,6 +16,7 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        [ToggleLeft]
         public bool DisableOnMobilePlatforms = true;
 
         #endregion

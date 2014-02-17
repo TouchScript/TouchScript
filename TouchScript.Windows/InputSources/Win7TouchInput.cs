@@ -3,6 +3,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        [ToggleLeft]
         public bool DisableMouseInputInBuilds = true;
 
         #endregion

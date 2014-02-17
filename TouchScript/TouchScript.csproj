@@ -77,6 +77,8 @@
     <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="IGestureDelegate.cs" />
     <Compile Include="IGestureManager.cs" />
+    <Compile Include="InputSources\Devices\GenericInputDevice.cs" />
+    <Compile Include="InputSources\Devices\InputDevice.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
     <Compile Include="InputSources\IInputSource.cs" />
     <Compile Include="InputSources\InputSource.cs" />
