@@ -71,6 +71,7 @@
     <Compile Include="Gestures\Simple\Transform2DGestureBase.cs" />
     <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
+    <Compile Include="Hit\IgnoreTrigger.cs" />
     <Compile Include="Hit\TouchHit.cs" />
     <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="IGestureDelegate.cs" />
