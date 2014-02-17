@@ -313,55 +313,6 @@ namespace TouchScript.Gestures
 
         #endregion
 
-        #region Unity methods
-
-        protected virtual void Awake()
-        {
-            foreach (var gesture in friendlyGestures)
-            {
-                AddFriendlyGesture(gesture);
-            }
-            RequireGestureToFail = requireGestureToFail;
-        }
-
-        /// <summary>
-        /// Unity3d Start handler.
-        /// </summary>
-        protected virtual void OnEnable()
-        {
-            // TouchManager might be different in another scene
-            touchManager = TouchManager.Instance;
-            gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
-
-            if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
-            if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
-
-            if (sendMessageTarget == null) sendMessageTarget = gameObject;
-            Reset();
-        }
-
-        /// <summary>
-        /// Unity3d OnDisable handler.
-        /// </summary>
-        protected virtual void OnDisable()
-        {
-            setState(GestureState.Failed);
-
-            gestureManagerInstance = null;
-            touchManager = null;
-        }
-
-        protected virtual void OnDestroy()
-        {
-            var copy = new List<Gesture>(friendlyGestures);
-            foreach (var gesture in copy)
-            {
-                RemoveFriendlyGesture(gesture);
-            }
-        }
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
@@ -483,6 +434,55 @@ namespace TouchScript.Gestures
         {
             if (Delegate == null) return true;
             return Delegate.ShouldBegin(this);
+        }
+
+        #endregion
+
+        #region Unity methods
+
+        protected virtual void Awake()
+        {
+            foreach (var gesture in friendlyGestures)
+            {
+                AddFriendlyGesture(gesture);
+            }
+            RequireGestureToFail = requireGestureToFail;
+        }
+
+        /// <summary>
+        /// Unity3d Start handler.
+        /// </summary>
+        protected virtual void OnEnable()
+        {
+            // TouchManager might be different in another scene
+            touchManager = TouchManager.Instance;
+            gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
+
+            if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
+            if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
+
+            if (sendMessageTarget == null) sendMessageTarget = gameObject;
+            Reset();
+        }
+
+        /// <summary>
+        /// Unity3d OnDisable handler.
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            setState(GestureState.Failed);
+
+            gestureManagerInstance = null;
+            touchManager = null;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            var copy = new List<Gesture>(friendlyGestures);
+            foreach (var gesture in copy)
+            {
+                RemoveFriendlyGesture(gesture);
+            }
         }
 
         #endregion
