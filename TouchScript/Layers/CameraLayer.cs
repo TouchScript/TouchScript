@@ -51,14 +51,12 @@ namespace TouchScript.Layers
                     break;
                 }
 
-                var hitResult = HitTest.ObjectHitResult.Error;
+                var hitResult = HitTest.ObjectHitResult.Hit;
                 foreach (var test in hitTests)
                 {
+                    if (!test.enabled) continue;
                     hitResult = test.IsHit(hit);
-                    if (hitResult == HitTest.ObjectHitResult.Hit || hitResult == HitTest.ObjectHitResult.Discard)
-                    {
-                        break;
-                    }
+                    if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
                 }
 
                 if (hitResult == HitTest.ObjectHitResult.Hit)
@@ -66,16 +64,10 @@ namespace TouchScript.Layers
                     success = true;
                     break;
                 }
-                if (hitResult == HitTest.ObjectHitResult.Discard)
-                {
-                    break;
-                }
+                if (hitResult == HitTest.ObjectHitResult.Discard) break;
             }
 
-            if (success)
-            {
-                return LayerHitResult.Hit;
-            }
+            if (success) return LayerHitResult.Hit;
 
             return LayerHitResult.Miss;
         }
