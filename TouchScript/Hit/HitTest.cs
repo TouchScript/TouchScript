@@ -54,5 +54,12 @@ namespace TouchScript.Hit
         }
 
         #endregion
+
+        #region Unity methods
+
+        private void OnEnable()
+        {}
+
+        #endregion
     }
 }
