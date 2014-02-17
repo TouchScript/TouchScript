@@ -85,10 +85,16 @@ namespace TouchScript.Gestures
                 {
                     startPosition = touches[0].Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
+                }
+                else if (tapsDone >= numberOfTapsRequired) // Might be delayed and retapped while waiting
+                {
+                    setState(GestureState.Possible);
+                    reset();
+                    startPosition = touches[0].Position;
+                    if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
                 } else
                 {
-                    if (distanceLimit < float.PositiveInfinity && (touches[0].Position - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit) 
-                        setState(GestureState.Failed);
+                    if (distanceLimit < float.PositiveInfinity && (touches[0].Position - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit) setState(GestureState.Failed);
                 }
             }
         }

@@ -297,6 +297,8 @@ namespace TouchScript.Gestures
 
         private TimedTouchSequence touchSequence = new TimedTouchSequence();
         private GestureManagerInstance gestureManagerInstance;
+        private GestureState delayedStateChange = GestureState.Possible;
+        private bool requiredGestureFailed = false;
         private GestureState state = GestureState.Possible;
 
         /// <summary>
@@ -483,6 +485,7 @@ namespace TouchScript.Gestures
             {
                 RemoveFriendlyGesture(gesture);
             }
+            RequireGestureToFail = null;
         }
 
         #endregion
@@ -497,6 +500,8 @@ namespace TouchScript.Gestures
         internal void Reset()
         {
             activeTouches.Clear();
+            delayedStateChange = GestureState.Possible;
+            requiredGestureFailed = false;
             reset();
         }
 
@@ -553,7 +558,23 @@ namespace TouchScript.Gestures
         protected bool setState(GestureState value)
         {
             if (gestureManagerInstance == null) return false;
-            if (value == state && state != GestureState.Changed) return false;
+            if (requireGestureToFail != null)
+            {
+                switch (value)
+                {
+                    case GestureState.Recognized:
+                    case GestureState.Began:
+                        if (!requiredGestureFailed)
+                        {
+                            delayedStateChange = value;
+                            return false;
+                        }
+                        break;
+                    case GestureState.Possible:
+                        delayedStateChange = GestureState.Possible;
+                        break;
+                }
+            }
 
             var newState = gestureManagerInstance.GestureChangeState(this, value);
             State = newState;
@@ -695,8 +716,23 @@ namespace TouchScript.Gestures
 
         #region Event handlers
 
-        private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs gestureStateChangeEventArgs)
+        private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs e)
         {
+            if (sender != requireGestureToFail) return;
+            switch (e.State)
+            {
+                case GestureState.Failed:
+                    requiredGestureFailed = true;
+                    if (delayedStateChange != GestureState.Possible)
+                    {
+                        setState(delayedStateChange);
+                    }
+                    break;
+                case GestureState.Began:
+                case GestureState.Recognized:
+                    setState(GestureState.Failed);
+                    break;
+            }
         }
 
         #endregion
