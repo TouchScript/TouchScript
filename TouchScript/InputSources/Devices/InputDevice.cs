@@ -4,10 +4,30 @@ namespace TouchScript.InputSources.Devices
 {
     public class InputDevice : ScriptableObject
     {
+
+        private static bool isLaptop
+        {
+            get
+            {
+                if (_isLaptop == null)
+                {
+                    var gpuName = SystemInfo.graphicsDeviceName.ToLower();
+                    if (gpuName.IndexOf("intel hd graphics") > 0) _isLaptop = true;
+                    else if (gpuName.IndexOf("mobile") > 0) _isLaptop = true;
+                    else if (gpuName[gpuName.Length - 1] == 'm') _isLaptop = true;
+                    else if (gpuName.LastIndexOf("m series") == gpuName.Length - 8) _isLaptop = true;
+                    else _isLaptop = false;
+                }
+                return _isLaptop == true;
+            }
+        }
+
         public virtual float DPI
         {
             get { return dpi; }
         }
+
+        private static bool? _isLaptop = null;
 
         [SerializeField]
         private float dpi;
@@ -15,6 +35,7 @@ namespace TouchScript.InputSources.Devices
         private void OnEnable()
         {
             Debug.Log(string.Format("Current resolution: {0}x{1}, dpi: {2}, fullscreen: {3}, editor: {4}.", Screen.currentResolution.width, Screen.currentResolution.height, Screen.dpi, Screen.fullScreen, Application.isEditor));
+            Debug.Log(string.Format("{0} {1} {2} is laptop: {3}", SystemInfo.deviceModel, SystemInfo.graphicsDeviceID, SystemInfo.graphicsDeviceName, isLaptop));
 
             dpi = Screen.dpi;
             if (dpi < float.Epsilon)
@@ -42,7 +63,11 @@ namespace TouchScript.InputSources.Devices
                         else if (width >= 2880 && height == 1800) dpi = 220; // 15" retina
                         else if (width >= 2560)
                         {
-                            if (height >= 1600) dpi = 226; // 13.3" retina (or 30" display o.O)
+                            if (height >= 1600)
+                            {
+                                if (isLaptop) dpi = 226; // 13.3" retina
+                                else dpi = 101; // 30" display
+                            }
                             else if (height >= 1440) dpi = 109; // 27" iMac
                         }
                         else if (width >= 2048)
@@ -54,7 +79,11 @@ namespace TouchScript.InputSources.Devices
                         {
                             if (height >= 1440) dpi = 110; // 24"
                             else if (height >= 1200) dpi = 90; // 26-27"
-                            else if (height >= 1080) dpi = 125; // 23" or 17" laptop
+                            else if (height >= 1080)
+                            {
+                                if (isLaptop) dpi = 130; // 15" - 18" laptop
+                                else dpi = 92; // +-24" display
+                            }
                         }
                         else if (width >= 1680) dpi = 129; // 15" laptop
                         else if (width >= 1600) dpi = 140; // 13" laptop
@@ -107,6 +136,7 @@ namespace TouchScript.InputSources.Devices
 
             Debug.Log("DPI: " + dpi);
         }
+
 
     }
 }
