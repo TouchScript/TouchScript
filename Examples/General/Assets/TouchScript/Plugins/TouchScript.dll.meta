@@ -5,10 +5,6 @@ MonoAssemblyImporter:
   iconMap: {}
   executionOrder:
     TouchScript.GestureManagerInstance: -1000
-    TouchScript.InputSources.MobileInput: -1100
     TouchScript.InputSources.MouseInput: -1101
-    TouchScript.InputSources.TuioInput: -1102
-    TouchScript.InputSources.WMTouchInput: -1103
-    TouchScript.InputSources.Win7TouchInput: -1104
     TouchScript.TouchManagerInstance: -900
   userData: 
