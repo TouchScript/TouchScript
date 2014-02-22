@@ -3,6 +3,7 @@
  */
 
 using System;
+using TouchScript.Devices.Display;
 using TouchScript.Editor.Utils;
 using TouchScript.Layers;
 using UnityEditor;
@@ -14,12 +15,11 @@ namespace TouchScript.Editor
     [CustomEditor(typeof(TouchManager))]
     public class TouchManagerEditor : UnityEditor.Editor
     {
-        public const string TEXT_LIVEDPI = "DPI used in built app runing on target device.";
-        public const string TEXT_EDITORDPI = "DPI used in the editor.";
-        public const string TEXT_MOVEDOWN = "Move down.";
-        public const string TEXT_USESENDMESSAGE = "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.";
-        public const string TEXT_SENDMESSAGETARGET = "The GameObject target of Unity Messages. If null, host GameObject is used.";
-        public const string TEXT_SENDMESSAGEEVENTS = "Which events should be sent as Unity Messages.";
+        private static readonly GUIContent DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
+        private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
+        private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("SendMessage Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
+        private static readonly GUIContent SEND_MESSAGE_EVENTS = new GUIContent("SendMessage Events", "Which events should be sent as Unity Messages.");
+        private static readonly GUIContent MOVE_DOWN = new GUIContent("v", "Move down");
 
         private GUIStyle layerButtonStyle;
 
@@ -45,23 +45,21 @@ namespace TouchScript.Editor
             serializedObject.Update();
 
             EditorGUI.BeginChangeCheck();
-            var newLiveDPI = EditorGUILayout.IntField(new GUIContent("Live DPI", TEXT_LIVEDPI), (int)instance.LiveDPI);
-            var newEditorDPI = EditorGUILayout.IntField(new GUIContent("Editor DPI", TEXT_EDITORDPI), (int)instance.EditorDPI);
+            var newDevice = EditorGUILayout.ObjectField(DISPLAY_DEVICE, instance.DisplayDevice, typeof(DisplayDevice), true) as DisplayDevice;
             if (EditorGUI.EndChangeCheck())
             {
-                instance.LiveDPI = newLiveDPI;
-                instance.EditorDPI = newEditorDPI;
+                instance.DisplayDevice = newDevice;
             }
 
             EditorGUIUtility.labelWidth = 160;
             EditorGUI.BeginChangeCheck();
-            var useSendMessage = GUILayout.Toggle(instance.UseSendMessage, new GUIContent("Use SendMessage", TEXT_USESENDMESSAGE));
+            var useSendMessage = GUILayout.Toggle(instance.UseSendMessage, USE_SEND_MESSAGE);
             var sTarget = instance.SendMessageTarget;
             var sMask = instance.SendMessageEvents;
             if (useSendMessage)
             {
-                sTarget = EditorGUILayout.ObjectField(new GUIContent("SendMessage Target", TEXT_SENDMESSAGETARGET), sTarget, typeof(GameObject), true) as GameObject;
-                sMask = (TouchManager.MessageTypes)EditorGUILayout.EnumMaskField(new GUIContent("SendMessage Events", TEXT_SENDMESSAGEEVENTS), instance.SendMessageEvents);
+                sTarget = EditorGUILayout.ObjectField(SEND_MESSAGE_TARGET, sTarget, typeof(GameObject), true) as GameObject;
+                sMask = (TouchManager.MessageTypes)EditorGUILayout.EnumMaskField(SEND_MESSAGE_EVENTS, instance.SendMessageEvents);
             }
             if (EditorGUI.EndChangeCheck())
             {
@@ -87,7 +85,7 @@ namespace TouchScript.Editor
                     var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
 
                     EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
-                    if (GUILayout.Button(new GUIContent("v", TEXT_MOVEDOWN), layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
+                    if (GUILayout.Button(MOVE_DOWN, layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
                     {
                         layers.MoveArrayElement(i, i + 1);
                     } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using TouchScript.Devices.Display;
 using TouchScript.Events;
 using TouchScript.Layers;
 using UnityEngine;
@@ -58,64 +59,30 @@ namespace TouchScript
             get { return TouchManagerInstance.Instance; }
         }
 
+        public DisplayDevice DisplayDevice
+        {
+            get
+            {
+                if (Instance == null) return displayDevice;
+                return Instance.DisplayDevice;
+            }
+            set
+            {
+                if (Instance == null)
+                {
+                    displayDevice = value;
+                    return;
+                }
+                Instance.DisplayDevice = value;
+            }
+        }
+
         /// <summary>
         /// Current DPI.
         /// </summary>
         public float DPI
         {
-            get
-            {
-                if (Instance == null)
-                {
-                    return Application.isEditor ? editorDpi : liveDpi;
-                }
-                return Instance.DPI;
-            }
-            set
-            {
-                if (Instance == null)
-                {
-                    if (Application.isEditor) editorDpi = value;
-                    else liveDpi = value;
-                } else
-                {
-                    Instance.DPI = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// DPI while testing in editor.
-        /// </summary>
-        public float EditorDPI
-        {
-            get
-            {
-                if (Instance == null) return editorDpi;
-                return Instance.EditorDPI;
-            }
-            set
-            {
-                if (Instance == null) editorDpi = value;
-                else Instance.EditorDPI = value;
-            }
-        }
-
-        /// <summary>
-        /// DPI of target touch device.
-        /// </summary>
-        public float LiveDPI
-        {
-            get
-            {
-                if (Instance == null) return liveDpi;
-                return Instance.LiveDPI;
-            }
-            set
-            {
-                if (Instance == null) liveDpi = value;
-                else Instance.LiveDPI = value;
-            }
+            get { return DisplayDevice.DPI; }
         }
 
         public bool UseSendMessage
@@ -155,10 +122,7 @@ namespace TouchScript
         #region Private variables
 
         [SerializeField]
-        private float liveDpi = 72;
-
-        [SerializeField]
-        private float editorDpi = 72;
+        private DisplayDevice displayDevice;
 
         [SerializeField]
         private bool useSendMessage = false;
@@ -180,8 +144,7 @@ namespace TouchScript
         {
             if (Instance == null) return;
 
-            Instance.LiveDPI = liveDpi;
-            Instance.EditorDPI = editorDpi;
+            Instance.DisplayDevice = displayDevice;
             for (var i = 0; i < layers.Count; i++)
             {
                 Instance.AddLayer(layers[i], i);

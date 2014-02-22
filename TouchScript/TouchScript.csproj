@@ -77,8 +77,7 @@
     <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="IGestureDelegate.cs" />
     <Compile Include="IGestureManager.cs" />
-    <Compile Include="InputSources\Devices\GenericInputDevice.cs" />
-    <Compile Include="InputSources\Devices\InputDevice.cs" />
+    <Compile Include="Devices\Display\DisplayDevice.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
     <Compile Include="InputSources\IInputSource.cs" />
     <Compile Include="InputSources\InputSource.cs" />
@@ -98,7 +97,9 @@
     <Compile Include="InputSources\MobileInput.cs" />
     <Compile Include="Utils\TimedTouchSequence.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Devices\Input\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General Examples\Assets\TouchScript\Plugins\"

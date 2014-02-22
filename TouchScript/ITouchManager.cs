@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using TouchScript.Devices.Display;
 using TouchScript.Events;
 using TouchScript.Hit;
 using TouchScript.Layers;
@@ -43,20 +44,12 @@ namespace TouchScript
         /// </summary>
         event EventHandler<TouchEventArgs> TouchesCancelled;
 
+        DisplayDevice DisplayDevice { get; set; }
+
         /// <summary>
         /// Current DPI.
         /// </summary>
-        float DPI { get; set; }
-
-        /// <summary>
-        /// DPI while testing in editor.
-        /// </summary>
-        float EditorDPI { get; set; }
-
-        /// <summary>
-        /// DPI of target touch device.
-        /// </summary>
-        float LiveDPI { get; set; }
+        float DPI { get; }
 
         /// <summary>
         /// List of touch layers.

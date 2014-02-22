@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace TouchScript.InputSources.Devices
+namespace TouchScript.Devices.Display
 {
-    public abstract class InputDevice : ScriptableObject
+    public class DisplayDevice : ScriptableObject
     {
 
         internal static bool IsLaptop

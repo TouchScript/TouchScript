@@ -3,7 +3,7 @@
  */
 
 using System;
-using TouchScript.InputSources.Devices;
+using TouchScript.Devices.Display;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -20,12 +20,6 @@ namespace TouchScript.InputSources
         /// </summary>
         public ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
-        public InputDevice InputDevice
-        {
-            get { return inputDevice; }
-            set { inputDevice = value; }
-        }
-
         #endregion
 
         #region Private variables
@@ -34,9 +28,6 @@ namespace TouchScript.InputSources
         /// Reference to global touch manager.
         /// </summary>
         protected ITouchManager manager;
-
-        [SerializeField]
-        private InputDevice inputDevice;
 
         #endregion
 
@@ -49,8 +40,6 @@ namespace TouchScript.InputSources
         {
             manager = TouchManager.Instance;
             if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
-
-            if (inputDevice == null) inputDevice = ScriptableObject.CreateInstance<GenericInputDevice>();
         }
 
         /// <summary>

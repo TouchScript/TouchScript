@@ -2,7 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.InputSources.Devices;
+using TouchScript.Devices.Display;
 
 namespace TouchScript.InputSources
 {
@@ -15,8 +15,5 @@ namespace TouchScript.InputSources
         /// An object used to change coordinates of touch points coming from this input source.
         /// </summary>
         ICoordinatesRemapper CoordinatesRemapper { get; set; }
-
-        InputDevice InputDevice { get; set; }
-
     }
 }

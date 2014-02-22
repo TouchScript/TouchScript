@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TouchScript.Devices.Display;
 using TouchScript.Events;
 using TouchScript.Hit;
 using TouchScript.Layers;
@@ -14,7 +15,6 @@ namespace TouchScript
 {
     internal class TouchManagerInstance : MonoBehaviour, ITouchManager
     {
-
         #region Events
 
         /// <inheritdoc />
@@ -93,37 +93,28 @@ namespace TouchScript
             }
         }
 
+        public DisplayDevice DisplayDevice
+        {
+            get
+            {
+                if (displayDevice == null)
+                {
+                    displayDevice = ScriptableObject.CreateInstance<DisplayDevice>();
+                }
+                return displayDevice;
+            }
+            set
+            {
+                if (value == null) return;
+                displayDevice = value;
+                updateDPI();
+            }
+        }
+
         /// <inheritdoc />
         public float DPI
         {
             get { return dpi; }
-            set
-            {
-                if (Application.isEditor) EditorDPI = value;
-                else LiveDPI = value;
-            }
-        }
-
-        /// <inheritdoc />
-        public float EditorDPI
-        {
-            get { return editorDpi; }
-            set
-            {
-                editorDpi = value;
-                updateDPI();
-            }
-        }
-
-        /// <inheritdoc />
-        public float LiveDPI
-        {
-            get { return liveDpi; }
-            set
-            {
-                liveDpi = value;
-                updateDPI();
-            }
         }
 
         /// <inheritdoc />
@@ -157,10 +148,9 @@ namespace TouchScript
         private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
 
-        private float dpi;
-        private float liveDpi = 72;
-        private float editorDpi = 72;
-        private float dotsPerCentimeter;
+        private DisplayDevice displayDevice;
+        private float dpi = 96;
+        private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
         private List<TouchLayer> layers = new List<TouchLayer>();
         private List<TouchPoint> touchPoints = new List<TouchPoint>();
@@ -277,8 +267,7 @@ namespace TouchScript
                 if (touchesMoved.TryGetValue(id, out update))
                 {
                     touchesMoved[id] = position;
-                }
-                else
+                } else
                 {
                     touchesMoved.Add(id, position);
                 }
@@ -377,9 +366,8 @@ namespace TouchScript
 
         private void updateDPI()
         {
-            if (Application.isEditor) dpi = EditorDPI;
-            else dpi = LiveDPI;
-            dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
+            dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
+            dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
         }
 
         private void updateLayers()
@@ -437,13 +425,11 @@ namespace TouchScript
                             touch.Position = position;
                             reallyMoved.Add(touch);
                             if (touch.Layer != null) touch.Layer.MoveTouch(touch);
-                        }
-                        else
+                        } else
                         {
                             touch.ResetPosition();
                         }
-                    }
-                    else
+                    } else
                     {
                         touch.ResetPosition();
                     }
@@ -509,6 +495,5 @@ namespace TouchScript
         }
 
         #endregion
-
     }
 }
