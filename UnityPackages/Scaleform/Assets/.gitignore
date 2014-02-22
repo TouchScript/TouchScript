@@ -13,6 +13,6 @@ TouchScript/Editor/*
 !TouchScript/Editor/*.cs
 !TouchScript/Editor/*.cs.meta
 
-!TouchScript/Scripts2.meta
+!TouchScript/Scripts.meta
 !TouchScript/Scripts
 !TouchScript/Scripts/*
