@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace TouchScript.InputSources.Devices
 {
@@ -12,10 +13,8 @@ namespace TouchScript.InputSources.Devices
                 if (_isLaptop == null)
                 {
                     var gpuName = SystemInfo.graphicsDeviceName.ToLower();
-                    if (gpuName.IndexOf("intel hd graphics") > 0) _isLaptop = true;
-                    else if (gpuName.IndexOf("mobile") > 0) _isLaptop = true;
-                    else if (gpuName[gpuName.Length - 1] == 'm') _isLaptop = true;
-                    else if (gpuName.LastIndexOf("m series") == gpuName.Length - 8) _isLaptop = true;
+                    var regex = new Regex(@"^(.*mobile.*|intel hd graphics.*|.*m\s*(series)?\s*(opengl engine)?)$", RegexOptions.IgnoreCase);
+                    if (regex.IsMatch(gpuName)) _isLaptop = true;
                     else _isLaptop = false;
                 }
                 return _isLaptop == true;
