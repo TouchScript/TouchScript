@@ -3,38 +3,39 @@ using UnityEngine;
 
 namespace TouchScript.InputSources.Devices
 {
-    public class InputDevice : ScriptableObject
+    public abstract class InputDevice : ScriptableObject
     {
 
-        private static bool isLaptop
+        internal static bool IsLaptop
         {
             get
             {
-                if (_isLaptop == null)
+                if (isLaptop == null)
                 {
                     var gpuName = SystemInfo.graphicsDeviceName.ToLower();
                     var regex = new Regex(@"^(.*mobile.*|intel hd graphics.*|.*m\s*(series)?\s*(opengl engine)?)$", RegexOptions.IgnoreCase);
-                    if (regex.IsMatch(gpuName)) _isLaptop = true;
-                    else _isLaptop = false;
+                    if (regex.IsMatch(gpuName)) isLaptop = true;
+                    else isLaptop = false;
                 }
-                return _isLaptop == true;
+                return isLaptop == true;
             }
         }
 
         public virtual float DPI
         {
             get { return dpi; }
+            set { dpi = value; }
         }
 
-        private static bool? _isLaptop = null;
+        private static bool? isLaptop = null;
 
         [SerializeField]
-        private float dpi;
+        protected float dpi;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
-            Debug.Log(string.Format("Current resolution: {0}x{1}, dpi: {2}, fullscreen: {3}, editor: {4}.", Screen.currentResolution.width, Screen.currentResolution.height, Screen.dpi, Screen.fullScreen, Application.isEditor));
-            Debug.Log(string.Format("{0} {1} {2} is laptop: {3}", SystemInfo.deviceModel, SystemInfo.graphicsDeviceID, SystemInfo.graphicsDeviceName, isLaptop));
+            Debug.Log(string.Format("Platform: {5}, current resolution: {0}x{1}, dpi: {2}, fullscreen: {3}, editor: {4}.", Screen.currentResolution.width, Screen.currentResolution.height, Screen.dpi, Screen.fullScreen, Application.isEditor, Application.platform));
+            Debug.Log(string.Format("{0} / {1} / {2} / is laptop: {3}", SystemInfo.deviceModel, SystemInfo.graphicsDeviceID, SystemInfo.graphicsDeviceName, IsLaptop));
 
             dpi = Screen.dpi;
             if (dpi < float.Epsilon)
@@ -64,7 +65,7 @@ namespace TouchScript.InputSources.Devices
                         {
                             if (height >= 1600)
                             {
-                                if (isLaptop) dpi = 226; // 13.3" retina
+                                if (IsLaptop) dpi = 226; // 13.3" retina
                                 else dpi = 101; // 30" display
                             }
                             else if (height >= 1440) dpi = 109; // 27" iMac
@@ -80,7 +81,7 @@ namespace TouchScript.InputSources.Devices
                             else if (height >= 1200) dpi = 90; // 26-27"
                             else if (height >= 1080)
                             {
-                                if (isLaptop) dpi = 130; // 15" - 18" laptop
+                                if (IsLaptop) dpi = 130; // 15" - 18" laptop
                                 else dpi = 92; // +-24" display
                             }
                         }
@@ -132,8 +133,6 @@ namespace TouchScript.InputSources.Devices
                         break;
                 }
             }
-
-            Debug.Log("DPI: " + dpi);
         }
 
 
