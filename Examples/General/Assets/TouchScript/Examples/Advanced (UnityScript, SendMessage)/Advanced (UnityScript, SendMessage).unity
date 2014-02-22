@@ -195,6 +195,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 29650220}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &29650223
@@ -214,6 +215,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 29650220}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &29650224
@@ -432,6 +434,7 @@ MonoBehaviour:
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 55916773}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures:
   - {fileID: 55916781}
   projection: 1
@@ -477,6 +480,7 @@ MonoBehaviour:
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 55916773}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures:
   - {fileID: 55916778}
   projection: 0
@@ -492,12 +496,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 66218872}
   - 114: {fileID: 66218875}
-  - 114: {fileID: 66218873}
-  - 114: {fileID: 66218874}
-  - 114: {fileID: 66218876}
-  - 114: {fileID: 66218877}
-  - 114: {fileID: 66218878}
-  - 114: {fileID: 66218879}
   m_Layer: 0
   m_Name: TouchScript
   m_TagString: Untagged
@@ -514,33 +512,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1630705136}
   m_Father: {fileID: 0}
---- !u!114 &66218873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 66218871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DisableOnMobilePlatforms: 1
---- !u!114 &66218874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 66218871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: 53d3dc02e71df20438406b9087fe1e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TuioPort: 3333
-  MovementThreshold: 0
 --- !u!114 &66218875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,61 +526,13 @@ MonoBehaviour:
   m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveDpi: 72
-  editorDpi: 72
+  displayDevice: {fileID: 0}
   useSendMessage: 1
   sendMessageEvents: -12
   sendMessageTarget: {fileID: 66218871}
   layers:
   - {fileID: 156856782}
   - {fileID: 1573308015}
---- !u!114 &66218876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 66218871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DisableOnNonTouchPlatforms: 1
---- !u!114 &66218877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 66218871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1496140412, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DisableMouseInputInBuilds: 1
---- !u!114 &66218878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 66218871}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 175516946, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DisableMouseInputInBuilds: 1
---- !u!114 &66218879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 66218871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12f0d83657f65114ea5463e87f4fb256, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &85253948
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +582,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 85253948}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &85253951
@@ -675,6 +602,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 85253948}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &85253952
@@ -1211,6 +1139,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 606920412}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 0}
@@ -1430,6 +1359,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1023181599}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1023181602
@@ -1449,6 +1379,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1023181599}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1023181603
@@ -1625,6 +1556,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1147511325}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
@@ -1745,6 +1677,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1279678969
@@ -1764,6 +1697,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1279678970
@@ -1783,6 +1717,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   maxTouches: 2147483647
   timeToPress: 1
@@ -1891,6 +1826,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1318505542}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1318505545
@@ -1910,6 +1846,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1318505542}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1318505546
@@ -1967,6 +1904,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1988597174}
   m_GameObject: {fileID: 1318505542}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1328438855
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
+  m_RootGameObject: {fileID: 2052612291}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &1425271478
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,6 +1979,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1425271482
@@ -2049,6 +1999,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1425271483
@@ -2068,6 +2019,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   maxTouches: 2147483647
   timeToPress: 1
@@ -2176,6 +2128,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1534987188}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1534987191
@@ -2195,6 +2148,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1534987188}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1534987192
@@ -2301,6 +2255,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1562923258}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1562923261
@@ -2320,6 +2275,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1562923258}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &1562923262
@@ -2487,7 +2443,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 30.7920132, y: 23.0940094, z: .00999999978}
+  m_Size: {x: 30.8044281, y: 23.0940094, z: .00999999978}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:
@@ -2517,6 +2473,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1573308009}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
 --- !u!114 &1573308019
 MonoBehaviour:
@@ -2578,6 +2535,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1585189937}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
@@ -2595,6 +2553,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+--- !u!1 &1630705134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+  m_PrefabInternal: {fileID: 1821669930}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1630705136}
+  - 114: {fileID: 1630705135}
+  m_Layer: 0
+  m_Name: Inputs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1630705135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1,
+    type: 2}
+  m_PrefabInternal: {fileID: 1821669930}
+  m_GameObject: {fileID: 1630705134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DisableOnMobilePlatforms: 1
+--- !u!4 &1630705136
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+  m_PrefabInternal: {fileID: 1821669930}
+  m_GameObject: {fileID: 1630705134}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 66218872}
 --- !u!1 &1632866179
 GameObject:
   m_ObjectHideFlags: 0
@@ -2657,50 +2655,6 @@ Light:
   m_ShadowAngle: 0
   m_IndirectIntensity: 1
   m_AreaSize: {x: 1, y: 1}
---- !u!1001 &1655233165
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: -1.62920685e-07
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-      propertyPath: m_Name
-      value: Touch Debugger
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-  m_RootGameObject: {fileID: 2052612291}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &1746090350
 GameObject:
   m_ObjectHideFlags: 0
@@ -2748,6 +2702,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1746090350}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
@@ -2765,6 +2720,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+--- !u!1001 &1821669930
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 66218872}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
+  m_RootGameObject: {fileID: 1630705134}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1001 &1947506374
 Prefab:
   m_ObjectHideFlags: 0
@@ -2904,6 +2899,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1981862720}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
@@ -3008,6 +3004,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1997631761}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
@@ -3120,6 +3117,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2037494010}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 1, y: 0, z: 0}
@@ -3141,7 +3139,7 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-  m_PrefabInternal: {fileID: 1655233165}
+  m_PrefabInternal: {fileID: 1328438855}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2052612292}
@@ -3157,10 +3155,10 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
-  m_PrefabInternal: {fileID: 1655233165}
+  m_PrefabInternal: {fileID: 1328438855}
   m_GameObject: {fileID: 2052612291}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -1.62920685e-07}
-  m_LocalPosition: {x: 1000, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3169,15 +3167,17 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c,
     type: 2}
-  m_PrefabInternal: {fileID: 1655233165}
+  m_PrefabInternal: {fileID: 1328438855}
   m_GameObject: {fileID: 2052612291}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TouchTexture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
-  FontColor: {r: 0, g: .958217144, b: 1, a: 1}
+  texture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
+  fontColor: {r: 0, g: 1, b: 1, a: 1}
+  useDPI: 1
+  touchSize: 1
 --- !u!1 &2142444254
 GameObject:
   m_ObjectHideFlags: 0
@@ -3241,6 +3241,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &2142444258
@@ -3260,6 +3261,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
 --- !u!114 &2142444259
@@ -3279,6 +3281,7 @@ MonoBehaviour:
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
+  requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   maxTouches: 2147483647
   timeToPress: 1

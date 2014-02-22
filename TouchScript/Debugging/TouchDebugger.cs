@@ -19,18 +19,57 @@ namespace TouchScript.Debugging
         /// <summary>
         /// Texture to use.
         /// </summary>
-        public Texture2D TouchTexture;
+        public Texture2D TouchTexture
+        {
+            get { return texture; }
+            set
+            {
+                texture = value;
+                update();
+            }
+        }
 
         /// <summary>
         /// Font color for touch ids.
         /// </summary>
-        public Color FontColor;
+        public Color FontColor
+        {
+            get { return fontColor; }
+            set { fontColor = value; }
+        }
 
-        public bool UseDPI = true;
+        public bool UseDPI
+        {
+            get { return useDPI; }
+            set
+            {
+                useDPI = value;
+                update();
+            }
+        }
+
+        public float TouchSize
+        {
+            get { return touchSize; }
+            set
+            {
+                touchSize = value;
+                update();
+            }
+        }
 
         #endregion
 
         #region Private variables
+
+        [SerializeField]
+        private Texture2D texture;
+        [SerializeField]
+        private Color fontColor = new Color(0, 1, 1, 1);
+        [SerializeField]
+        private bool useDPI = true;
+        [SerializeField]
+        private float touchSize = 1f;
 
         private Dictionary<int, TouchPoint> dummies = new Dictionary<int, TouchPoint>();
         private float textureDPI, scale, dpi, shadowOffset;
@@ -49,7 +88,7 @@ namespace TouchScript.Debugging
                 return;
             }
 
-            updateDPI();
+            update();
 
             if (TouchManager.Instance != null)
             {
@@ -75,7 +114,7 @@ namespace TouchScript.Debugging
         {
             if (TouchTexture == null) return;
             if (style == null) style = new GUIStyle(GUI.skin.label);
-            updateDPI();
+            checkDPI();
 
             style.fontSize = fontSize;
 
@@ -88,7 +127,7 @@ namespace TouchScript.Debugging
                 var id = dummy.Value.Id.ToString();
                 GUI.color = Color.black;
                 GUI.Label(new Rect(x + xOffset + shadowOffset, y + yOffset + shadowOffset, labelWidth, labelHeight), id, style);
-                GUI.color = FontColor;
+                GUI.color = fontColor;
                 GUI.Label(new Rect(x + xOffset, y + yOffset, labelWidth, labelHeight), id, style);
             }
         }
@@ -97,24 +136,25 @@ namespace TouchScript.Debugging
 
         #region Private functions
 
-        private void updateDPI()
+        private void checkDPI()
         {
-            if (!UseDPI)
-            {
-                if (width != 0) return;
+            if (useDPI && !Mathf.Approximately(dpi, TouchManager.Instance.DPI)) update();
+        }
 
+        private void update()
+        {
+            if (!useDPI)
+            {
                 width = 32;
                 height = 32;
                 scale = 1/4f;
                 computeConsts();
             } else
             {
-                if (Mathf.Approximately(dpi, TouchManager.Instance.DPI)) return;
-
-                textureDPI = TouchTexture.width * TouchManager.INCH_TO_CM / 1.5f;
+                textureDPI = texture.width * TouchManager.INCH_TO_CM / touchSize;
                 scale = TouchManager.Instance.DPI / textureDPI;
-                width = (int)(TouchTexture.width * scale);
-                height = (int)(TouchTexture.height * scale);
+                width = (int)(texture.width * scale);
+                height = (int)(texture.height * scale);
                 computeConsts();
             }
         }

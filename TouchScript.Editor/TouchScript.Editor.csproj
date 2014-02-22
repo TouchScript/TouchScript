@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/General/Assets/TouchScript/Editor/&quot; | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Scaleform/Assets/TouchScript/Editor/&quot;'" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/General/Assets/TouchScript/Editor/&quot; | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Scaleform/Assets/TouchScript/Editor/&quot;  | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Windows Phone/Assets/TouchScript/Editor/&quot;'" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debugging\TouchDebuggerEditor.cs" />
     <Compile Include="Gestures\GestureEditor.cs" />
     <Compile Include="Gestures\Simple\PressGestureEditor.cs" />
     <Compile Include="Gestures\Simple\ReleaseGestureEditor.cs" />
@@ -76,7 +77,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General\Assets\TouchScript\Editor\"
-xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Scaleform\Assets\TouchScript\Editor\"</PostBuildEvent>
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Scaleform\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Windows Phone\Assets\TouchScript\Editor\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
