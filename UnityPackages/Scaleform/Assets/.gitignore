@@ -1,0 +1,18 @@
+TouchScript/*
+!TouchScript/Examples.meta
+!TouchScript/Examples
+TouchScript/Examples/*
+!TouchScript/Examples/Basic Scaleform
+!TouchScript/Examples/Basic Scaleform.meta
+!TouchScript/Examples/_prefabs
+!TouchScript/Examples/_prefabs.meta
+
+!TouchScript/Editor.meta
+!TouchScript/Editor
+TouchScript/Editor/*
+!TouchScript/Editor/*.cs
+!TouchScript/Editor/*.cs.meta
+
+!TouchScript/Scripts2.meta
+!TouchScript/Scripts
+!TouchScript/Scripts/*
