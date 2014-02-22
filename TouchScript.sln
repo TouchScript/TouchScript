@@ -5,15 +5,15 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript", "TouchScript\TouchScript.csproj", "{128FD14A-9D70-4B07-8F9A-E85A511BA28B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSCsharp", "TUIOsharp\OSCsharp\OSCsharp.csproj", "{0ADB210D-0D25-4576-8868-9C47DC4762BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSCsharp", "TouchScript.Other\TUIOsharp\OSCsharp\OSCsharp.csproj", "{0ADB210D-0D25-4576-8868-9C47DC4762BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TUIOsharp", "TUIOsharp\TUIOsharp\TUIOsharp.csproj", "{6080AD8B-8ACD-4C0E-ABAD-26DB043E202B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TUIOsharp", "TouchScript.Other\TUIOsharp\TUIOsharp\TUIOsharp.csproj", "{6080AD8B-8ACD-4C0E-ABAD-26DB043E202B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.Editor", "TouchScript.Editor\TouchScript.Editor.csproj", "{AFD89D67-B5D9-4BB7-BD73-A7A78568D61A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.TUIO", "TouchScript.TUIO\TouchScript.TUIO.csproj", "{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.TUIO", "TouchScript.Other\TouchScript.TUIO\TouchScript.TUIO.csproj", "{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.Windows", "TouchScript.Windows\TouchScript.Windows.csproj", "{6A8A2544-312D-45F2-BDE1-A16058E2AD99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.Windows", "TouchScript.Other\TouchScript.Windows\TouchScript.Windows.csproj", "{6A8A2544-312D-45F2-BDE1-A16058E2AD99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
