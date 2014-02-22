@@ -34,7 +34,7 @@
     <DocumentationFile>bin\Release\TouchScript.Windows.XML</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/General Examples/Assets/TouchScript/Plugins/&quot; | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Scaleform Examples/Assets/TouchScript/Plugins/&quot;'" workingdir="" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/General/Assets/TouchScript/Plugins/&quot; | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Scaleform/Assets/TouchScript/Plugins/&quot;'" workingdir="" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -62,8 +62,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General Examples\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Scaleform Examples\Assets\TouchScript\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\General\Assets\TouchScript\Plugins\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)Examples\Scaleform\Assets\TouchScript\Plugins\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
