@@ -8,8 +8,8 @@
     <ProjectGuid>{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TouchScript.Pro</RootNamespace>
-    <AssemblyName>TouchScript.Pro</AssemblyName>
+    <RootNamespace>TouchScript</RootNamespace>
+    <AssemblyName>TouchScript.TUIO</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -29,7 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\TouchScript.Pro.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\TouchScript.TUIO.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

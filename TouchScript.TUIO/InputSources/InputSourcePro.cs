@@ -3,7 +3,6 @@
  */
 
 using System;
-using TouchScript.Devices.Display;
 using UnityEngine;
 
 namespace TouchScript.InputSources
