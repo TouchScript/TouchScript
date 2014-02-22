@@ -19,7 +19,3 @@ Assets/TouchScript/Plugins/*.xml.meta
 Assets/TouchScript/Editor/*.pdb.meta
 Assets/TouchScript/Editor/*.mdb.meta
 Library
-
-Assets/Plugins/*
-Assets/Scripts/Scaleform/*
-Assets/Scripts/Scaleform.meta
