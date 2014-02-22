@@ -1,0 +1,6 @@
+TouchScript/*
+!TouchScript/Examples.meta
+!TouchScript/Examples
+TouchScript/Examples/*
+!TouchScript/Examples/_prefabs
+!TouchScript/Examples/_prefabs.meta
