@@ -39,7 +39,6 @@ public class BasicExample_Breaker : MonoBehaviour
     private void tapStateChangedhandler(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
     {
         var tap = sender as TapGesture;
-        Debug.Log(tap + "(" + tap.NumberOfTapsRequired + ")" + " " + e.State);
 
         if (e.State == Gesture.GestureState.Recognized)
         {

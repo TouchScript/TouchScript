@@ -26,11 +26,16 @@ namespace TouchScript.Debugging
         /// </summary>
         public Color FontColor;
 
+        public bool UseDPI = true;
+
         #endregion
 
         #region Private variables
 
         private Dictionary<int, TouchPoint> dummies = new Dictionary<int, TouchPoint>();
+        private float textureDPI, scale, dpi, shadowOffset;
+        private int width, height, halfWidth, halfHeight, xOffset, yOffset, labelWidth, labelHeight, fontSize;
+        private GUIStyle style;
 
         #endregion
 
@@ -38,6 +43,14 @@ namespace TouchScript.Debugging
 
         private void OnEnable()
         {
+            if (TouchTexture == null)
+            {
+                Debug.LogError("Touch Debugger doesn't have touch texture assigned!");
+                return;
+            }
+
+            updateDPI();
+
             if (TouchManager.Instance != null)
             {
                 TouchManager.Instance.TouchesBegan += touchesBeganHandler;
@@ -61,21 +74,62 @@ namespace TouchScript.Debugging
         private void OnGUI()
         {
             if (TouchTexture == null) return;
+            if (style == null) style = new GUIStyle(GUI.skin.label);
+            updateDPI();
 
-            GUI.color = FontColor;
+            style.fontSize = fontSize;
 
             foreach (KeyValuePair<int, TouchPoint> dummy in dummies)
             {
                 var x = dummy.Value.Position.x;
                 var y = Screen.height - dummy.Value.Position.y;
-                GUI.DrawTexture(new Rect(x - TouchTexture.width/2, y - TouchTexture.height/2, TouchTexture.width, TouchTexture.height), TouchTexture, ScaleMode.ScaleToFit);
-                GUI.Label(new Rect(x + TouchTexture.width, y - 9, 60, 25), dummy.Value.Id.ToString());
+                GUI.DrawTexture(new Rect(x - halfWidth, y - halfHeight, width, height), TouchTexture, ScaleMode.ScaleToFit);
+
+                var id = dummy.Value.Id.ToString();
+                GUI.color = Color.black;
+                GUI.Label(new Rect(x + xOffset + shadowOffset, y + yOffset + shadowOffset, labelWidth, labelHeight), id, style);
+                GUI.color = FontColor;
+                GUI.Label(new Rect(x + xOffset, y + yOffset, labelWidth, labelHeight), id, style);
             }
         }
 
         #endregion
 
         #region Private functions
+
+        private void updateDPI()
+        {
+            if (!UseDPI)
+            {
+                if (width != 0) return;
+
+                width = 32;
+                height = 32;
+                scale = 1/4f;
+                computeConsts();
+            } else
+            {
+                if (Mathf.Approximately(dpi, TouchManager.Instance.DPI)) return;
+
+                textureDPI = TouchTexture.width * TouchManager.INCH_TO_CM / 1.5f;
+                scale = TouchManager.Instance.DPI / textureDPI;
+                width = (int)(TouchTexture.width * scale);
+                height = (int)(TouchTexture.height * scale);
+                computeConsts();
+            }
+        }
+
+        private void computeConsts()
+        {
+            halfWidth = width / 2;
+            halfHeight = height / 2;
+            xOffset = (int)(width*.3f);
+            yOffset = (int)(height*.3f);
+            fontSize = (int)(32 * scale);
+            shadowOffset = 2*scale;
+            labelWidth = 10*fontSize;
+            labelHeight = 2*fontSize;
+        }
 
         private void updateDummy(TouchPoint dummy)
         {
