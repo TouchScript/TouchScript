@@ -9,7 +9,8 @@ TouchScript/Examples/General.meta
 !TouchScript/Plugins
 TouchScript/Plugins/*
 !TouchScript/Plugins/TouchScript.WindowsPhone.dll.meta
+!TouchScript/Plugins/TouchScript.WindowsPhone.Plugin.dll.meta
 !TouchScript/Plugins/WP8.meta
 !TouchScript/Plugins/WP8
 TouchScript/Plugins/WP8/*
-!TouchScript/Plugins/WP8/TouchScript.WindowsPhone.dll.meta
+!TouchScript/Plugins/WP8/TouchScript.WindowsPhone.Plugin.dll.meta
