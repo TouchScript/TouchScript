@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Editor/&quot;'" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/Scaleform/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Android/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.iOS/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.TUIO/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Windows7/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsPhone/Assets/TouchScript/Editor/&quot; | cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsStore/Assets/TouchScript/Editor/&quot;'" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -77,7 +77,14 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Editor\"
-</PostBuildEvent>
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\Scaleform\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.Android\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.iOS\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.TUIO\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.Windows7\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.WIndows8\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.WIndowsPhone\Assets\TouchScript\Editor\"
+xcopy /y $(ProjectDir)$(OutDir)*.dll "$(SolutionDir)UnityPackages\TouchScript.WindowsStore\Assets\TouchScript\Editor\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
