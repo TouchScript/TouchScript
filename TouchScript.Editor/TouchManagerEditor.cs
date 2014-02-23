@@ -24,13 +24,17 @@ namespace TouchScript.Editor
         private GUIStyle layerButtonStyle;
 
         private TouchManager instance;
-        private SerializedProperty layers;
+        private SerializedProperty layers, displayDevice, useSendMessage, sendMessageTarget, sendMessageEvents;
         private bool showLayers;
 
         private void OnEnable()
         {
             instance = target as TouchManager;
             layers = serializedObject.FindProperty("layers");
+            displayDevice = serializedObject.FindProperty("displayDevice");
+            useSendMessage = serializedObject.FindProperty("useSendMessage");
+            sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
+            sendMessageEvents = serializedObject.FindProperty("sendMessageEvents");
         }
 
         public override void OnInspectorGUI()
@@ -44,29 +48,35 @@ namespace TouchScript.Editor
 
             serializedObject.Update();
 
+            var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
+            var label = EditorGUI.BeginProperty(r, DISPLAY_DEVICE, displayDevice);
             EditorGUI.BeginChangeCheck();
-            var newDevice = EditorGUILayout.ObjectField(DISPLAY_DEVICE, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
+            r = EditorGUI.PrefixLabel(r, label);
+            var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
             if (EditorGUI.EndChangeCheck())
             {
                 instance.DisplayDevice = newDevice;
+                EditorUtility.SetDirty(instance);
             }
+            EditorGUI.EndProperty();
 
             EditorGUIUtility.labelWidth = 160;
-            EditorGUI.BeginChangeCheck();
-            var useSendMessage = GUILayout.Toggle(instance.UseSendMessage, USE_SEND_MESSAGE);
-            var sTarget = instance.SendMessageTarget;
-            var sMask = instance.SendMessageEvents;
-            if (useSendMessage)
+            EditorGUILayout.PropertyField(useSendMessage, USE_SEND_MESSAGE);
+            if (useSendMessage.boolValue)
             {
-                sTarget = EditorGUILayout.ObjectField(SEND_MESSAGE_TARGET, sTarget, typeof(GameObject), true) as GameObject;
-                sMask = (TouchManager.MessageTypes)EditorGUILayout.EnumMaskField(SEND_MESSAGE_EVENTS, instance.SendMessageEvents);
-            }
-            if (EditorGUI.EndChangeCheck())
-            {
-                instance.UseSendMessage = useSendMessage;
-                instance.SendMessageTarget = sTarget;
-                instance.SendMessageEvents = sMask;
-                EditorUtility.SetDirty(instance);
+                EditorGUILayout.PropertyField(sendMessageTarget, SEND_MESSAGE_TARGET);
+
+                r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.layerMaskField);
+                label = EditorGUI.BeginProperty(r, SEND_MESSAGE_EVENTS, sendMessageEvents);
+                EditorGUI.BeginChangeCheck();
+                r = EditorGUI.PrefixLabel(r, label);
+                var sMask = (TouchManager.MessageTypes)EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    instance.SendMessageEvents = sMask;
+                    EditorUtility.SetDirty(instance);
+                }
+                EditorGUI.EndProperty();
             }
 
             if (Application.isPlaying) GUI.enabled = false;

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TouchScript.Devices.Display;
 using TouchScript.Events;
 using TouchScript.Layers;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript
@@ -125,6 +126,7 @@ namespace TouchScript
         private UnityEngine.Object displayDevice;
 
         [SerializeField]
+        [ToggleLeft]
         private bool useSendMessage = false;
 
         [SerializeField]
