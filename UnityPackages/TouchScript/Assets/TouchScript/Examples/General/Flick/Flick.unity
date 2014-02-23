@@ -103,85 +103,6 @@ Transform:
   - {fileID: 1555347269}
   - {fileID: 1856562034}
   m_Father: {fileID: 0}
---- !u!1 &218814737
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 218814743}
-  m_Layer: 0
-  m_Name: TouchScript
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &218814743
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 218814737}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 303255125}
-  m_Father: {fileID: 0}
---- !u!1001 &260715118
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 218814743}
-    m_Modifications: []
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
-  m_RootGameObject: {fileID: 303255124}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
---- !u!1 &303255124
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
-  m_PrefabInternal: {fileID: 260715118}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 303255125}
-  - 114: {fileID: 303255126}
-  m_Layer: 0
-  m_Name: Inputs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &303255125
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
-  m_PrefabInternal: {fileID: 260715118}
-  m_GameObject: {fileID: 303255124}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 218814743}
---- !u!114 &303255126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1,
-    type: 2}
-  m_PrefabInternal: {fileID: 260715118}
-  m_GameObject: {fileID: 303255124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DisableOnMobilePlatforms: 1
 --- !u!1 &516519482
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,6 +146,18 @@ MonoBehaviour:
   fontColor: {r: 0, g: 1, b: 1, a: 1}
   useDPI: 1
   touchSize: 1
+--- !u!1001 &529472573
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_RootGameObject: {fileID: 1972820913}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &1459090116
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +339,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: .469921619, y: .352299154, z: .00999999978}
+  m_Size: {x: .469367504, y: .352299154, z: .00999999978}
   m_Center: {x: 0, y: 0, z: .305100024}
 --- !u!114 &1555347275
 MonoBehaviour:
@@ -490,6 +423,46 @@ MonoBehaviour:
 
 
     Try to flick over the screen to make toe cube rotating.'
+--- !u!1 &1631278213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 529472573}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1631278215}
+  - 114: {fileID: 1631278214}
+  m_Layer: 0
+  m_Name: Inputs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1631278214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 529472573}
+  m_GameObject: {fileID: 1631278213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DisableOnMobilePlatforms: 1
+--- !u!4 &1631278215
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 529472573}
+  m_GameObject: {fileID: 1631278213}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1972820914}
 --- !u!1001 &1740565552
 Prefab:
   m_ObjectHideFlags: 0
@@ -564,3 +537,48 @@ Light:
   m_ShadowAngle: 0
   m_IndirectIntensity: 1
   m_AreaSize: {x: 1, y: 1}
+--- !u!1 &1972820913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 529472573}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1972820914}
+  - 114: {fileID: 1972820915}
+  m_Layer: 0
+  m_Name: TouchScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1972820914
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 529472573}
+  m_GameObject: {fileID: 1972820913}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1631278215}
+  m_Father: {fileID: 0}
+--- !u!114 &1972820915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 529472573}
+  m_GameObject: {fileID: 1972820913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayDevice: {fileID: 0}
+  useSendMessage: 0
+  sendMessageEvents: 60
+  sendMessageTarget: {fileID: 0}
+  layers: []

@@ -74,14 +74,15 @@ NavMeshSettings:
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
   m_NavMesh: {fileID: 0}
---- !u!1 &154815399
+--- !u!1 &88934595
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabParentObject: {fileID: 100002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 1550604603}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 154815402}
+  - 4: {fileID: 88934596}
+  - 114: {fileID: 88934597}
   m_Layer: 0
   m_Name: TouchScript
   m_TagString: Untagged
@@ -89,18 +90,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &154815402
+--- !u!4 &88934596
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 154815399}
+  m_PrefabParentObject: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 1550604603}
+  m_GameObject: {fileID: 88934595}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 536651444}
+  - {fileID: 1090882169}
   m_Father: {fileID: 0}
+--- !u!114 &88934597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1550604603}
+  m_GameObject: {fileID: 88934595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayDevice: {fileID: 0}
+  useSendMessage: 0
+  sendMessageEvents: 60
+  sendMessageTarget: {fileID: 0}
+  layers:
+  - {fileID: 1696624850}
 --- !u!1 &402488199
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,46 +163,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!1 &536651442
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
-  m_PrefabInternal: {fileID: 1731400475}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 536651444}
-  - 114: {fileID: 536651443}
-  m_Layer: 0
-  m_Name: Inputs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &536651443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1,
-    type: 2}
-  m_PrefabInternal: {fileID: 1731400475}
-  m_GameObject: {fileID: 536651442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DisableOnMobilePlatforms: 1
---- !u!4 &536651444
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
-  m_PrefabInternal: {fileID: 1731400475}
-  m_GameObject: {fileID: 536651442}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 154815402}
 --- !u!1 &657881213
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,6 +481,46 @@ Prefab:
   m_RootGameObject: {fileID: 914883884}
   m_IsPrefabParent: 0
   m_IsExploded: 1
+--- !u!1 &1090882167
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 1550604603}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1090882169}
+  - 114: {fileID: 1090882168}
+  m_Layer: 0
+  m_Name: Inputs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1090882168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1550604603}
+  m_GameObject: {fileID: 1090882167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DisableOnMobilePlatforms: 1
+--- !u!4 &1090882169
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_PrefabInternal: {fileID: 1550604603}
+  m_GameObject: {fileID: 1090882167}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 88934596}
 --- !u!1001 &1134769065
 Prefab:
   m_ObjectHideFlags: 0
@@ -572,6 +591,26 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1cb01469e80fe4f4780dc71e06de9da0, type: 2}
   m_RootGameObject: {fileID: 2052080705}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
+--- !u!1001 &1550604603
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.data[0]
+      value: 
+      objectReference: {fileID: 1696624850}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_RootGameObject: {fileID: 88934595}
   m_IsPrefabParent: 0
   m_IsExploded: 1
 --- !u!1 &1696624849
@@ -687,18 +726,6 @@ MonoBehaviour:
 
 
     Tap on a Unity logo to break it into 3 smaller logos.'
---- !u!1001 &1731400475
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 154815402}
-    m_Modifications: []
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 9b8af0b8d3d84fe4fb3b6beb3093c4e1, type: 2}
-  m_RootGameObject: {fileID: 536651442}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &1832126249
 GameObject:
   m_ObjectHideFlags: 0
