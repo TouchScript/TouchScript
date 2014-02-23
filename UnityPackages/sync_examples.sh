@@ -5,7 +5,7 @@ if [[ $# -eq 0 ]] ; then
     exit 0
 fi
 
-echo "Syncing TouchScript folder for $1."
+printf "\nSynchronizing TouchScript folder for $1.\n"
 rm -rf tmp
 mkdir tmp
 rootfolder="$1/Assets/TouchScript/"
