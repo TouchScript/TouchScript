@@ -44,7 +44,7 @@ namespace TouchScript
         /// </summary>
         event EventHandler<TouchEventArgs> TouchesCancelled;
 
-        DisplayDevice DisplayDevice { get; set; }
+        IDisplayDevice DisplayDevice { get; set; }
 
         /// <summary>
         /// Current DPI.

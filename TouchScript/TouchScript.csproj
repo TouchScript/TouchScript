@@ -52,6 +52,8 @@
     <Compile Include="Clusters\Cluster.cs" />
     <Compile Include="Clusters\Clusters2.cs" />
     <Compile Include="Debugging\TouchDebugger.cs" />
+    <Compile Include="Devices\Display\GenericDisplayDevice.cs" />
+    <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="Events\GestureStateChangeEventArgs.cs" />
     <Compile Include="Events\TouchEventArgs.cs" />
     <Compile Include="GestureManager.cs" />

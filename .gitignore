@@ -83,9 +83,3 @@ UpgradeLog*.XML
 
 /TouchScript/bin/Release/XMLDocs.xml
 /Lib/*.dll
-
-UnityTest/Assets/Plugins/*
-UnityTest/Assets/Scripts/Scaleform/*
-UnityTest/Assets/TouchScript/Editor/UnityEditor.*
-UnityTest/Assets/TouchScript/Editor/UnityEngine.*
-UnityTest/Assets/TouchScript/Plugins/UnityEngine.*

@@ -45,7 +45,7 @@ namespace TouchScript.Editor
             serializedObject.Update();
 
             EditorGUI.BeginChangeCheck();
-            var newDevice = EditorGUILayout.ObjectField(DISPLAY_DEVICE, instance.DisplayDevice, typeof(DisplayDevice), true) as DisplayDevice;
+            var newDevice = EditorGUILayout.ObjectField(DISPLAY_DEVICE, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
             if (EditorGUI.EndChangeCheck())
             {
                 instance.DisplayDevice = newDevice;

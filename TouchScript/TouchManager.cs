@@ -59,18 +59,18 @@ namespace TouchScript
             get { return TouchManagerInstance.Instance; }
         }
 
-        public DisplayDevice DisplayDevice
+        public IDisplayDevice DisplayDevice
         {
             get
             {
-                if (Instance == null) return displayDevice;
+                if (Instance == null) return displayDevice as IDisplayDevice;
                 return Instance.DisplayDevice;
             }
             set
             {
                 if (Instance == null)
                 {
-                    displayDevice = value;
+                    displayDevice = value as UnityEngine.Object;
                     return;
                 }
                 Instance.DisplayDevice = value;
@@ -122,7 +122,7 @@ namespace TouchScript
         #region Private variables
 
         [SerializeField]
-        private DisplayDevice displayDevice;
+        private UnityEngine.Object displayDevice;
 
         [SerializeField]
         private bool useSendMessage = false;
@@ -144,7 +144,7 @@ namespace TouchScript
         {
             if (Instance == null) return;
 
-            Instance.DisplayDevice = displayDevice;
+            Instance.DisplayDevice = displayDevice as IDisplayDevice;
             for (var i = 0; i < layers.Count; i++)
             {
                 Instance.AddLayer(layers[i], i);

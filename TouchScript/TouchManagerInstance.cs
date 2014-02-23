@@ -93,13 +93,13 @@ namespace TouchScript
             }
         }
 
-        public DisplayDevice DisplayDevice
+        public IDisplayDevice DisplayDevice
         {
             get
             {
                 if (displayDevice == null)
                 {
-                    displayDevice = ScriptableObject.CreateInstance<DisplayDevice>();
+                    displayDevice = ScriptableObject.CreateInstance<GenericDisplayDevice>();
                 }
                 return displayDevice;
             }
@@ -148,7 +148,7 @@ namespace TouchScript
         private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
 
-        private DisplayDevice displayDevice;
+        private IDisplayDevice displayDevice;
         private float dpi = 96;
         private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
