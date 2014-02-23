@@ -30,6 +30,9 @@ namespace TouchScript.Devices.Display
             Debug.Log(string.Format("Platform: {5}, current resolution: {0}x{1}, dpi: {2}, fullscreen: {3}, editor: {4}.", Screen.currentResolution.width, Screen.currentResolution.height, Screen.dpi, Screen.fullScreen, Application.isEditor, Application.platform));
             Debug.Log(string.Format("{0} / {1} / {2} / is laptop: {3}", SystemInfo.deviceModel, SystemInfo.graphicsDeviceID, SystemInfo.graphicsDeviceName, IsLaptop));
 
+            Name = Application.platform.ToString();
+            if (IsLaptop) Name += " (Laptop)";
+
             dpi = Screen.dpi;
             if (dpi < float.Epsilon)
             {

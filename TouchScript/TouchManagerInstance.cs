@@ -105,8 +105,13 @@ namespace TouchScript
             }
             set
             {
-                if (value == null) return;
-                displayDevice = value;
+                if (value == null)
+                {
+                    displayDevice = ScriptableObject.CreateInstance<GenericDisplayDevice>();
+                } else
+                {
+                    displayDevice = value;
+                }
                 updateDPI();
             }
         }
