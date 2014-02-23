@@ -151,8 +151,9 @@ namespace TouchScript.Debugging
                 computeConsts();
             } else
             {
+                dpi = TouchManager.Instance.DPI;
                 textureDPI = texture.width * TouchManager.INCH_TO_CM / touchSize;
-                scale = TouchManager.Instance.DPI / textureDPI;
+                scale = dpi / textureDPI;
                 width = (int)(texture.width * scale);
                 height = (int)(texture.height * scale);
                 computeConsts();
