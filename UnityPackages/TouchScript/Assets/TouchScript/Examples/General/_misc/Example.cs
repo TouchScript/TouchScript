@@ -3,6 +3,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Example : MonoBehaviour {
 
+    [Multiline(16)]
     public string Text;
 
     private GUIStyle style;
