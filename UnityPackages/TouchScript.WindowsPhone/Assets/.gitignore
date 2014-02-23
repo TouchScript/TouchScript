@@ -1,3 +1,5 @@
+*.dll
+
 TouchScript/*
 !TouchScript/Examples.meta
 !TouchScript/Examples
