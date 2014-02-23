@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 114: {fileID: 11400002}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!114 &11400002
+--- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -35,11 +35,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: 53d3dc02e71df20438406b9087fe1e5d, type: 3}
+  m_Script: {fileID: 175516946, guid: bb6056dc800c1084da7273cb9f23f5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TuioPort: 3333
-  MovementThreshold: 0
+  DisableMouseInputInBuilds: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
