@@ -4,3 +4,10 @@ TouchScript/*
 TouchScript/Examples/*
 !TouchScript/Examples/_prefabs
 !TouchScript/Examples/_prefabs.meta
+
+!TouchScript/Plugins.meta
+!TouchScript/Plugins
+TouchScript/Plugins/*
+!TouchScript/Plugins/TouchScript.TUIO.dll.meta
+!TouchScript/Plugins/TUIOSharp.dll.meta
+!TouchScript/Plugins/OSCSharp.dll.meta

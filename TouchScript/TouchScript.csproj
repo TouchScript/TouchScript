@@ -34,7 +34,7 @@
     <DocumentationFile>bin\Release\TouchScript.XML</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/TouchScript.dll &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/TouchScript.dll&quot;'" workingdir="" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/TouchScript.dll&quot;'" workingdir="" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

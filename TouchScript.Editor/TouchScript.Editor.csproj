@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/General/Assets/TouchScript/Editor/&quot; | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Scaleform/Assets/TouchScript/Editor/&quot;  | cp ${TargetDir}/*.* &quot;${SolutionDir}/Examples/Windows Phone/Assets/TouchScript/Editor/&quot;'" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Editor/&quot;'" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
