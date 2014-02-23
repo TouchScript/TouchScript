@@ -732,7 +732,7 @@ Transform:
   - {fileID: 1279678966}
   - {fileID: 2142444255}
   - {fileID: 1632866180}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 533530303}
 --- !u!20 &156856781
 Camera:
   m_ObjectHideFlags: 0
@@ -919,6 +919,36 @@ MeshFilter:
   m_PrefabInternal: {fileID: 597987674}
   m_GameObject: {fileID: 237287927}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &533530302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 533530303}
+  m_Layer: 0
+  m_Name: Scene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &533530303
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 533530302}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 156856780}
+  - {fileID: 1573308010}
+  - {fileID: 606920413}
+  - {fileID: 557322850}
+  m_Father: {fileID: 0}
 --- !u!1 &557322849
 GameObject:
   m_ObjectHideFlags: 0
@@ -945,7 +975,7 @@ Transform:
   m_LocalPosition: {x: .37795639, y: 1.7158165, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 533530303}
 --- !u!108 &557322851
 Light:
   m_ObjectHideFlags: 0
@@ -1117,12 +1147,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 606920412}
   m_LocalRotation: {x: -.868162811, y: -.359604865, z: -.130885586, w: .315985352}
-  m_LocalPosition: {x: 7.79086093e-08, y: -1.6736049e-08, z: 3.05470067e-08}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 55916774}
   - {fileID: 232315388}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 533530303}
 --- !u!114 &606920414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2367,7 +2397,7 @@ Transform:
   m_LocalPosition: {x: .129110336, y: -.384726524, z: -13.1231995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 533530303}
 --- !u!20 &1573308011
 Camera:
   m_ObjectHideFlags: 0

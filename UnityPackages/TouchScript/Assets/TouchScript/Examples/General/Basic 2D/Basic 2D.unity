@@ -610,7 +610,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  sortedLayerIds: 
+  sortedLayerIds: 00000000
 --- !u!81 &1696624851
 AudioListener:
   m_ObjectHideFlags: 0
@@ -671,7 +671,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1832126250}
 --- !u!114 &1696624856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -726,6 +726,7 @@ Transform:
   m_Children:
   - {fileID: 914883888}
   - {fileID: 2052080711}
+  - {fileID: 1696624855}
   - {fileID: 657881218}
   m_Father: {fileID: 0}
 --- !u!1 &2052080705

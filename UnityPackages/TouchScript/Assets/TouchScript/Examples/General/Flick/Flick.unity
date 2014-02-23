@@ -74,6 +74,35 @@ NavMeshSettings:
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
   m_NavMesh: {fileID: 0}
+--- !u!1 &80546004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 80546005}
+  m_Layer: 0
+  m_Name: Scene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &80546005
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 80546004}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1459090117}
+  - {fileID: 1555347269}
+  - {fileID: 1856562034}
+  m_Father: {fileID: 0}
 --- !u!1 &218814737
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +254,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: .525212884, y: .525212884, z: .525212884}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 80546005}
 --- !u!23 &1459090118
 Renderer:
   m_ObjectHideFlags: 0
@@ -316,7 +345,7 @@ Transform:
   m_LocalPosition: {x: 0, y: .608493865, z: -1.33729422}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 80546005}
 --- !u!20 &1555347270
 Camera:
   m_ObjectHideFlags: 0
@@ -499,7 +528,7 @@ Transform:
   m_LocalPosition: {x: -.925027847, y: 2.01269865, z: -1.44725394}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 80546005}
 --- !u!108 &1856562035
 Light:
   m_ObjectHideFlags: 0

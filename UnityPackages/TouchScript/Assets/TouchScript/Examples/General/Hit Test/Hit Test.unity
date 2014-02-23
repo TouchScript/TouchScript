@@ -105,7 +105,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 431791961}
 --- !u!20 &289928236
 Camera:
   m_ObjectHideFlags: 0
@@ -214,7 +214,7 @@ Transform:
   m_LocalPosition: {x: -.617594838, y: 1.02387905, z: 1.19001579}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 431791961}
 --- !u!108 &302423104
 Light:
   m_ObjectHideFlags: 0
@@ -319,6 +319,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &431791960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 431791961}
+  m_Layer: 0
+  m_Name: Scene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &431791961
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431791960}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 955263853}
+  - {fileID: 289928235}
+  - {fileID: 302423103}
+  m_Father: {fileID: 0}
 --- !u!1 &432655349
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +570,7 @@ Transform:
   - {fileID: 432655350}
   - {fileID: 1596162147}
   - {fileID: 411420699}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 431791961}
 --- !u!23 &955263854
 Renderer:
   m_ObjectHideFlags: 0
