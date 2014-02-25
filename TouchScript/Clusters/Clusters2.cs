@@ -61,8 +61,8 @@ namespace TouchScript.Clusters
 
         #region Private variables
 
-        private List<TouchPoint> cluster1 = new List<TouchPoint>();
-        private List<TouchPoint> cluster2 = new List<TouchPoint>();
+        private List<ITouchPoint> cluster1 = new List<ITouchPoint>();
+        private List<ITouchPoint> cluster2 = new List<ITouchPoint>();
         private float minPointDistance, minPointDistanceSqr;
         private bool hasClusters = false;
 
@@ -82,10 +82,10 @@ namespace TouchScript.Clusters
         /// Calculates the center position of one of the clusters.
         /// </summary>
         /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid position or <see cref="TouchPoint.INVALID_POSITION"/> if cluster contains no points.</returns>
+        /// <returns>Cluster's centroid position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
         public Vector2 GetCenterPosition(int id)
         {
-            if (!HasClusters) return TouchPoint.INVALID_POSITION;
+            if (!HasClusters) return TouchManager.INVALID_POSITION;
 
             Vector2 result;
             switch (id)
@@ -97,7 +97,7 @@ namespace TouchScript.Clusters
                     result = Get2DCenterPosition(cluster2);
                     break;
                 default:
-                    return TouchPoint.INVALID_POSITION;
+                    return TouchManager.INVALID_POSITION;
             }
             return result;
         }
@@ -106,10 +106,10 @@ namespace TouchScript.Clusters
         /// Calculates previous center position of one of the clusters.
         /// </summary>
         /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid previous position or <see cref="TouchPoint.INVALID_POSITION"/> if cluster contains no points.</returns>
+        /// <returns>Cluster's centroid previous position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
         public Vector2 GetPreviousCenterPosition(int id)
         {
-            if (!HasClusters) return TouchPoint.INVALID_POSITION;
+            if (!HasClusters) return TouchManager.INVALID_POSITION;
 
             Vector2 result;
             switch (id)
@@ -121,7 +121,7 @@ namespace TouchScript.Clusters
                     result = GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
-                    return TouchPoint.INVALID_POSITION;
+                    return TouchManager.INVALID_POSITION;
             }
             return result;
         }
@@ -153,8 +153,8 @@ namespace TouchScript.Clusters
             {
                 var center1 = Get2DCenterPosition(cluster1);
                 var center2 = Get2DCenterPosition(cluster2);
-                TouchPoint obj1 = null;
-                TouchPoint obj2 = null;
+                ITouchPoint obj1 = null;
+                ITouchPoint obj2 = null;
 
                 // Take most distant points from cluster1 and cluster2
                 var maxDist1 = -float.MaxValue;

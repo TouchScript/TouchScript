@@ -111,27 +111,30 @@ namespace TouchScript.Layers
 
         internal bool BeginTouch(TouchPoint touch)
         {
-            var result = beginTouch(touch);
+            TouchHit hit;
+            var result = beginTouch(touch, out hit);
             if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
+                touch.Hit = hit;
+                touch.Target = hit.Transform;
                 if (touchBeganInvoker != null) touchBeganInvoker(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
         }
 
-        internal void MoveTouch(TouchPoint touch)
+        internal void MoveTouch(ITouchPoint touch)
         {
             moveTouch(touch);
         }
 
-        internal void EndTouch(TouchPoint touch)
+        internal void EndTouch(ITouchPoint touch)
         {
             endTouch(touch);
         }
 
-        internal void CancelTouch(TouchPoint touch)
+        internal void CancelTouch(ITouchPoint touch)
         {
             cancelTouch(touch);
         }
@@ -153,8 +156,9 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch point.</param>
         /// <returns>If this touch hit anything in the layer.</returns>
-        protected virtual LayerHitResult beginTouch(TouchPoint touch)
+        protected virtual LayerHitResult beginTouch(ITouchPoint touch, out TouchHit hit)
         {
+            hit = null;
             return LayerHitResult.Error;
         }
 
@@ -162,21 +166,21 @@ namespace TouchScript.Layers
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void moveTouch(TouchPoint touch)
+        protected virtual void moveTouch(ITouchPoint touch)
         {}
 
         /// <summary>
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void endTouch(TouchPoint touch)
+        protected virtual void endTouch(ITouchPoint touch)
         {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void cancelTouch(TouchPoint touch)
+        protected virtual void cancelTouch(ITouchPoint touch)
         {}
 
         #endregion
@@ -184,9 +188,10 @@ namespace TouchScript.Layers
 
     public class TouchLayerEventArgs : EventArgs
     {
-        public TouchPoint TouchPoint { get; private set; }
+        public ITouchPoint TouchPoint { get; private set; }
 
-        public TouchLayerEventArgs(TouchPoint touchPoint) : base()
+        public TouchLayerEventArgs(ITouchPoint touchPoint)
+            : base()
         {
             TouchPoint = touchPoint;
         }

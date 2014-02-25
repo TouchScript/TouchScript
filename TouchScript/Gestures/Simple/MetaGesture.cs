@@ -70,7 +70,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouchPoint> touches)
         {
             base.touchesBegan(touches);
 
@@ -88,7 +88,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouchPoint> touches)
         {
             base.touchesMoved(touches);
 
@@ -106,7 +106,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouchPoint> touches)
         {
             base.touchesEnded(touches);
 
@@ -124,7 +124,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
+        protected override void touchesCancelled(IList<ITouchPoint> touches)
         {
             base.touchesCancelled(touches);
 
@@ -152,13 +152,13 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Current touch point.
         /// </summary>
-        public TouchPoint TouchPoint { get; private set; }
+        public ITouchPoint TouchPoint { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.
         /// </summary>
         /// <param name="touchPoint">Touch point the event is for.</param>
-        public MetaGestureEventArgs(TouchPoint touchPoint)
+        public MetaGestureEventArgs(ITouchPoint touchPoint)
         {
             TouchPoint = touchPoint;
         }

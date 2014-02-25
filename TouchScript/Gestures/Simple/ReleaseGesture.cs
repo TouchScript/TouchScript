@@ -42,7 +42,7 @@ namespace TouchScript.Gestures
         
         #region Gesture callbacks
 
-        public override bool ShouldReceiveTouch(TouchPoint touch)
+        public override bool ShouldReceiveTouch(ITouchPoint touch)
         {
             if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
             if (!base.ShouldReceiveTouch(touch)) return false;
@@ -66,7 +66,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouchPoint> touches)
         {
             base.touchesEnded(touches);
 

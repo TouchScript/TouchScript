@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace TouchScript.Utils
 {
-    internal class TimedTouchSequence
+    internal sealed class TimedTouchSequence
     {
-        private List<TouchPoint> points = new List<TouchPoint>();
+        private List<ITouchPoint> points = new List<ITouchPoint>();
         private List<float> timestamps = new List<float>();
 
         public TimedTouchSequence()
         {}
 
-        public void Add(TouchPoint touch, float time)
+        public void Add(ITouchPoint touch, float time)
         {
             points.Add(touch);
             timestamps.Add(time);
@@ -23,9 +23,9 @@ namespace TouchScript.Utils
             timestamps.Clear();
         }
 
-        public IList<TouchPoint> FindTouchPointsLaterThan(float time)
+        public IList<ITouchPoint> FindTouchPointsLaterThan(float time)
         {
-            var list = new List<TouchPoint>();
+            var list = new List<ITouchPoint>();
             for (var i = points.Count - 1; i >= 0; i--)
             {
                 if (timestamps[i] > time) list.Add(points[i]);
@@ -35,9 +35,9 @@ namespace TouchScript.Utils
             return list;
         }
 
-        public IList<TouchPoint> FindTouchPointsLaterThan(float time, Predicate<TouchPoint> predicate)
+        public IList<ITouchPoint> FindTouchPointsLaterThan(float time, Predicate<ITouchPoint> predicate)
         {
-            var list = new List<TouchPoint>();
+            var list = new List<ITouchPoint>();
             for (var i = points.Count - 1; i >= 0; i--)
             {
                 if (timestamps[i] > time)

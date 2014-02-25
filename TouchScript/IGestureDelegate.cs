@@ -17,7 +17,7 @@ namespace TouchScript
         /// <param name="gesture">The gesture.</param>
         /// <param name="touch">The touch.</param>
         /// <returns><c>true</c> if it should; <c>false</c> otherwise.</returns>
-        bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch);
+        bool ShouldReceiveTouch(Gesture gesture, ITouchPoint touch);
 
         /// <summary>
         /// Shoulds the gesture begin or not.

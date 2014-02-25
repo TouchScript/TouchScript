@@ -71,7 +71,7 @@ namespace TouchScript.Debugging
         [SerializeField]
         private float touchSize = 1f;
 
-        private Dictionary<int, TouchPoint> dummies = new Dictionary<int, TouchPoint>();
+        private Dictionary<int, ITouchPoint> dummies = new Dictionary<int, ITouchPoint>();
         private float textureDPI, scale, dpi, shadowOffset;
         private int width, height, halfWidth, halfHeight, xOffset, yOffset, labelWidth, labelHeight, fontSize;
         private GUIStyle style;
@@ -118,7 +118,7 @@ namespace TouchScript.Debugging
 
             style.fontSize = fontSize;
 
-            foreach (KeyValuePair<int, TouchPoint> dummy in dummies)
+            foreach (KeyValuePair<int, ITouchPoint> dummy in dummies)
             {
                 var x = dummy.Value.Position.x;
                 var y = Screen.height - dummy.Value.Position.y;
@@ -172,7 +172,7 @@ namespace TouchScript.Debugging
             labelHeight = 2*fontSize;
         }
 
-        private void updateDummy(TouchPoint dummy)
+        private void updateDummy(ITouchPoint dummy)
         {
             dummies[dummy.Id] = dummy;
         }
@@ -193,7 +193,7 @@ namespace TouchScript.Debugging
         {
             foreach (var touchPoint in e.TouchPoints)
             {
-                TouchPoint dummy;
+                ITouchPoint dummy;
                 if (!dummies.TryGetValue(touchPoint.Id, out dummy)) return;
                 updateDummy(touchPoint);
             }
@@ -203,7 +203,7 @@ namespace TouchScript.Debugging
         {
             foreach (var touchPoint in e.TouchPoints)
             {
-                TouchPoint dummy;
+                ITouchPoint dummy;
                 if (!dummies.TryGetValue(touchPoint.Id, out dummy)) return;
                 dummies.Remove(touchPoint.Id);
             }

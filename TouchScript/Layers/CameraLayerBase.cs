@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
 
@@ -53,15 +52,9 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult beginTouch(TouchPoint touch)
+        protected override LayerHitResult beginTouch(ITouchPoint touch, out TouchHit hit)
         {
-            TouchHit hit;
             var result = Hit(touch.Position, out hit);
-            if (result == LayerHitResult.Hit)
-            {
-                touch.Hit = hit;
-                touch.Target = hit.Transform;
-            }
             return result;
         }
 

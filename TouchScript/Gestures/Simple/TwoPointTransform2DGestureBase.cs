@@ -32,7 +32,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (TouchPoint.IsInvalidPosition(screenPosition)) return base.ScreenPosition;
+                if (TouchManager.IsInvalidPosition(screenPosition)) return base.ScreenPosition;
                 return screenPosition;
             }
         }
@@ -42,7 +42,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (TouchPoint.IsInvalidPosition(previousScreenPosition)) return base.PreviousScreenPosition;
+                if (TouchManager.IsInvalidPosition(previousScreenPosition)) return base.PreviousScreenPosition;
                 return previousScreenPosition;
             }
         }
@@ -99,7 +99,7 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         /// <param name="touches">List of touch points</param>
         /// <returns>True if there are relevant touch points, False otherwise.</returns>
-        protected virtual bool relevantTouchPoints(IList<TouchPoint> touches)
+        protected virtual bool relevantTouchPoints(IList<ITouchPoint> touches)
         {
             var result = false;
             // We care only about the first and the second touch points
@@ -142,8 +142,8 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         protected virtual void restart()
         {
-            screenPosition = TouchPoint.INVALID_POSITION;
-            previousScreenPosition = TouchPoint.INVALID_POSITION;
+            screenPosition = TouchManager.INVALID_POSITION;
+            previousScreenPosition = TouchManager.INVALID_POSITION;
         }
 
         #endregion
@@ -151,7 +151,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouchPoint> touches)
         {
             base.touchesEnded(touches);
 

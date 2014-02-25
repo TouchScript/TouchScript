@@ -9,6 +9,7 @@ using TouchScript.Events;
 using TouchScript.Layers;
 using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace TouchScript
 {
@@ -18,7 +19,7 @@ namespace TouchScript
         #region Constants
 
         [Flags]
-        public enum MessageTypes
+        public enum MessageType
         {
             FrameStarted = 1 << 0,
             FrameFinished = 1 << 1,
@@ -28,14 +29,14 @@ namespace TouchScript
             TouchesCancelled = 1 << 5
         }
 
-        public enum MessageNames
+        public enum MessageName
         {
-            OnTouchFrameStarted = MessageTypes.FrameStarted,
-            OnTouchFrameFinished = MessageTypes.FrameFinished,
-            OnTouchesBegan = MessageTypes.TouchesBegan,
-            OnTouchesMoved = MessageTypes.TouchesMoved,
-            OnTouchesEnded = MessageTypes.TouchesEnded,
-            OnTouchesCancelled = MessageTypes.TouchesCancelled
+            OnTouchFrameStarted = MessageType.FrameStarted,
+            OnTouchFrameFinished = MessageType.FrameFinished,
+            OnTouchesBegan = MessageType.TouchesBegan,
+            OnTouchesMoved = MessageType.TouchesMoved,
+            OnTouchesEnded = MessageType.TouchesEnded,
+            OnTouchesCancelled = MessageType.TouchesCancelled
         }
 
         /// <summary>
@@ -47,6 +48,11 @@ namespace TouchScript
         /// Ratio of inch to cm
         /// </summary>
         public const float INCH_TO_CM = 1/CM_TO_INCH;
+
+        /// <summary>
+        /// The value of TouchPoint.Position in an unkown state.
+        /// </summary>
+        public static readonly Vector2 INVALID_POSITION = new Vector2(Single.NaN, Single.NaN);
 
         #endregion
 
@@ -71,7 +77,7 @@ namespace TouchScript
             {
                 if (Instance == null)
                 {
-                    displayDevice = value as UnityEngine.Object;
+                    displayDevice = value as Object;
                     return;
                 }
                 Instance.DisplayDevice = value;
@@ -97,7 +103,7 @@ namespace TouchScript
             }
         }
 
-        public MessageTypes SendMessageEvents
+        public MessageType SendMessageEvents
         {
             get { return sendMessageEvents; }
             set
@@ -120,17 +126,33 @@ namespace TouchScript
 
         #endregion
 
+        #region Public methods
+
+        /// <summary>
+        /// Determines whether position vector is invalid.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>
+        ///   <c>true</c> position is invalid; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsInvalidPosition(Vector2 position)
+        {
+            return position.Equals(INVALID_POSITION);
+        }
+
+        #endregion
+
         #region Private variables
 
         [SerializeField]
-        private UnityEngine.Object displayDevice;
+        private Object displayDevice;
 
         [SerializeField]
         [ToggleLeft]
         private bool useSendMessage = false;
 
         [SerializeField]
-        private MessageTypes sendMessageEvents = MessageTypes.TouchesBegan | MessageTypes.TouchesCancelled | MessageTypes.TouchesEnded | MessageTypes.TouchesMoved;
+        private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled | MessageType.TouchesEnded | MessageType.TouchesMoved;
 
         [SerializeField]
         private GameObject sendMessageTarget;
@@ -175,42 +197,42 @@ namespace TouchScript
 
             if (!useSendMessage) return;
 
-            if ((SendMessageEvents & MessageTypes.FrameStarted) != 0) Instance.FrameStarted += frameStartedhandler;
-            if ((SendMessageEvents & MessageTypes.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
-            if ((SendMessageEvents & MessageTypes.TouchesBegan) != 0) Instance.TouchesBegan += touchesBeganHandler;
-            if ((SendMessageEvents & MessageTypes.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
-            if ((SendMessageEvents & MessageTypes.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
-            if ((SendMessageEvents & MessageTypes.TouchesCancelled) != 0) Instance.TouchesCancelled += touchesCancelledHandler;
+            if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedhandler;
+            if ((SendMessageEvents & MessageType.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
+            if ((SendMessageEvents & MessageType.TouchesBegan) != 0) Instance.TouchesBegan += touchesBeganHandler;
+            if ((SendMessageEvents & MessageType.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
+            if ((SendMessageEvents & MessageType.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
+            if ((SendMessageEvents & MessageType.TouchesCancelled) != 0) Instance.TouchesCancelled += touchesCancelledHandler;
         }
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesBegan.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesMoved.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesEnded.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchesCancelled.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameStartedhandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameStarted.ToString(), SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchFrameStarted.ToString(), SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameFinishedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageNames.OnTouchFrameFinished.ToString(), SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchFrameFinished.ToString(), SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

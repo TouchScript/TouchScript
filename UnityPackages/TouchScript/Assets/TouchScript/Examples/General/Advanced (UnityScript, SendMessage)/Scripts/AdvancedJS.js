@@ -12,28 +12,28 @@ function OnTouchFrameFinished()
     print("OnTouchFrameFinished");
 }
 
-function OnTouchesBegan(touchPoints:IList.<TouchPoint>)
+function OnTouchesBegan(touchPoints:IList.<ITouchPoint>)
 {
 	var s : String = "";
 	for (var i:int; i < touchPoints.Count; i++) s += "id: " + touchPoints[i].Id + " ";
     print("OnTouchesBegan ( " + s + ")");
 }
 
-function OnTouchesMoved(touchPoints:IList.<TouchPoint>)
+function OnTouchesMoved(touchPoints:IList.<ITouchPoint>)
 {
 	var s : String = "";
 	for (var i:int; i < touchPoints.Count; i++) s += "id: " + touchPoints[i].Id + " ";
     print("OnTouchesMoved ( " + s + ")");
 }
 
-function OnTouchesEnded(touchPoints:IList.<TouchPoint>)
+function OnTouchesEnded(touchPoints:IList.<ITouchPoint>)
 {
 	var s : String = "";
 	for (var i:int; i < touchPoints.Count; i++) s += "id: " + touchPoints[i].Id + " ";
     print("OnTouchesEnded ( " + s + ")");
 }
 
-function OnTouchesCancelled(touchPoints:IList.<TouchPoint>)
+function OnTouchesCancelled(touchPoints:IList.<ITouchPoint>)
 {
 	var s : String = "";
 	for (var i:int; i < touchPoints.Count; i++) s += "id: " + touchPoints[i].Id + " ";

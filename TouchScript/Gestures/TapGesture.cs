@@ -75,7 +75,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouchPoint> touches)
         {
             base.touchesBegan(touches);
 
@@ -100,7 +100,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouchPoint> touches)
         {
             base.touchesMoved(touches);
 
@@ -111,13 +111,13 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouchPoint> touches)
         {
             base.touchesEnded(touches);
 
             if (activeTouches.Count == 0)
             {
-                if (TouchPoint.IsInvalidPosition(ScreenPosition))
+                if (TouchManager.IsInvalidPosition(ScreenPosition))
                 {
                     setState(GestureState.Failed);
                 } else
@@ -134,7 +134,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
+        protected override void touchesCancelled(IList<ITouchPoint> touches)
         {
             base.touchesCancelled(touches);
 
@@ -160,7 +160,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override bool shouldCacheTouchPointPosition(TouchPoint value)
+        protected override bool shouldCacheTouchPointPosition(ITouchPoint value)
         {
             // Points must be over target when released
             return GetTargetHitResult(value.Position);

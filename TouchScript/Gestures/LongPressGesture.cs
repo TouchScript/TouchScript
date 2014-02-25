@@ -78,7 +78,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouchPoint> touches)
         {
             base.touchesBegan(touches);
 
@@ -96,7 +96,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouchPoint> touches)
         {
             base.touchesMoved(touches);
 
@@ -107,7 +107,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouchPoint> touches)
         {
             base.touchesEnded(touches);
 

@@ -70,7 +70,7 @@ namespace TouchScript.Editor
                 label = EditorGUI.BeginProperty(r, SEND_MESSAGE_EVENTS, sendMessageEvents);
                 EditorGUI.BeginChangeCheck();
                 r = EditorGUI.PrefixLabel(r, label);
-                var sMask = (TouchManager.MessageTypes)EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
+                var sMask = (TouchManager.MessageType)EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
                 if (EditorGUI.EndChangeCheck())
                 {
                     instance.SendMessageEvents = sMask;

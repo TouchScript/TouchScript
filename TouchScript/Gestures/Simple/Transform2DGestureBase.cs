@@ -138,7 +138,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouchPoint> touches)
         {
             base.touchesMoved(touches);
 
@@ -147,7 +147,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouchPoint> touches)
         {
             base.touchesEnded(touches);
 
@@ -164,7 +164,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
+        protected override void touchesCancelled(IList<ITouchPoint> touches)
         {
             base.touchesCancelled(touches);
 
@@ -176,10 +176,10 @@ namespace TouchScript.Gestures.Simple
         {
             base.reset();
 
-            WorldTransformCenter = TouchPoint.INVALID_POSITION;
-            PreviousWorldTransformCenter = TouchPoint.INVALID_POSITION;
-            LocalTransformCenter = TouchPoint.INVALID_POSITION;
-            PreviousLocalTransformCenter = TouchPoint.INVALID_POSITION;
+            WorldTransformCenter = TouchManager.INVALID_POSITION;
+            PreviousWorldTransformCenter = TouchManager.INVALID_POSITION;
+            LocalTransformCenter = TouchManager.INVALID_POSITION;
+            PreviousLocalTransformCenter = TouchManager.INVALID_POSITION;
         }
 
         #endregion

@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Events;
 using TouchScript.Hit;
@@ -141,9 +142,9 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public IList<TouchPoint> TouchPoints
+        public IList<ITouchPoint> TouchPoints
         {
-            get { return touchPoints.AsReadOnly(); }
+            get { return touchPoints.Cast<ITouchPoint>().ToList(); }
         }
 
         #endregion
@@ -159,16 +160,16 @@ namespace TouchScript
 
         private List<TouchLayer> layers = new List<TouchLayer>();
         private List<TouchPoint> touchPoints = new List<TouchPoint>();
-        private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>();
+        private Dictionary<int, ITouchPoint> idToTouch = new Dictionary<int, ITouchPoint>();
 
         // Upcoming changes
-        private List<TouchPoint> touchesBegan = new List<TouchPoint>();
+        private List<ITouchPoint> touchesBegan = new List<ITouchPoint>();
         private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>();
-        private List<TouchPoint> touchesEnded = new List<TouchPoint>();
-        private List<TouchPoint> touchesCancelled = new List<TouchPoint>();
+        private List<ITouchPoint> touchesEnded = new List<ITouchPoint>();
+        private List<ITouchPoint> touchesCancelled = new List<ITouchPoint>();
 
         // Temporary variables for update methods.
-        private List<TouchPoint> reallyMoved = new List<TouchPoint>();
+        private List<ITouchPoint> reallyMoved = new List<ITouchPoint>();
 
         private int nextTouchPointId = 0;
 
@@ -284,7 +285,7 @@ namespace TouchScript
         {
             lock (touchesEnded)
             {
-                TouchPoint touch;
+                ITouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
                     // This touch was added this frame
@@ -308,7 +309,7 @@ namespace TouchScript
         {
             lock (touchesCancelled)
             {
-                TouchPoint touch;
+                ITouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
                     // This touch was added this frame
@@ -397,16 +398,16 @@ namespace TouchScript
             {
                 foreach (var touch in touchesBegan)
                 {
-                    touchPoints.Add(touch);
+                    touchPoints.Add(touch as TouchPoint);
                     idToTouch.Add(touch.Id, touch);
                     foreach (var touchLayer in layers)
                     {
                         if (touchLayer == null) continue;
-                        if (touchLayer.BeginTouch(touch)) break;
+                        if (touchLayer.BeginTouch(touch as TouchPoint)) break;
                     }
                 }
 
-                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(new List<TouchPoint>(touchesBegan)));
+                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesBegan));
                 touchesBegan.Clear();
 
                 return true;
@@ -440,7 +441,7 @@ namespace TouchScript
                     }
                 }
 
-                if (reallyMoved.Count > 0 && touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(new List<TouchPoint>(reallyMoved)));
+                if (reallyMoved.Count > 0 && touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(new List<ITouchPoint>(reallyMoved)));
                 touchesMoved.Clear();
 
                 return reallyMoved.Count > 0;
@@ -455,11 +456,11 @@ namespace TouchScript
                 foreach (var touch in touchesEnded)
                 {
                     idToTouch.Remove(touch.Id);
-                    touchPoints.Remove(touch);
+                    touchPoints.Remove(touch as TouchPoint);
                     if (touch.Layer != null) touch.Layer.EndTouch(touch);
                 }
 
-                if (touchesEndedInvoker != null) touchesEndedInvoker(this, new TouchEventArgs(new List<TouchPoint>(touchesEnded)));
+                if (touchesEndedInvoker != null) touchesEndedInvoker(this, new TouchEventArgs(new List<ITouchPoint>(touchesEnded)));
                 touchesEnded.Clear();
 
                 return true;
@@ -474,11 +475,11 @@ namespace TouchScript
                 foreach (var touch in touchesCancelled)
                 {
                     idToTouch.Remove(touch.Id);
-                    touchPoints.Remove(touch);
+                    touchPoints.Remove(touch as TouchPoint);
                     if (touch.Layer != null) touch.Layer.CancelTouch(touch);
                 }
 
-                if (touchesCancelledInvoker != null) touchesCancelledInvoker(this, new TouchEventArgs(new List<TouchPoint>(touchesCancelled)));
+                if (touchesCancelledInvoker != null) touchesCancelledInvoker(this, new TouchEventArgs(new List<ITouchPoint>(touchesCancelled)));
                 touchesCancelled.Clear();
 
                 return true;

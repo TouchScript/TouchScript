@@ -49,7 +49,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
+                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
                 if (activeTouches.Count == 1) return activeTouches[0].Position;
                 return (activeTouches[0].Position + activeTouches[1].Position)*.5f;
             }
@@ -60,7 +60,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.INVALID_POSITION;
+                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
                 if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
                 return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition)*.5f;
             }
@@ -81,7 +81,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouchPoint> touches)
         {
             base.touchesMoved(touches);
 

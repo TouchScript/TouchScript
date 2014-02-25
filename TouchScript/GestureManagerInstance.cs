@@ -55,8 +55,8 @@ namespace TouchScript
         #region Temporary variables
 
         // Temporary variables for update methods.
-        private Dictionary<Transform, List<TouchPoint>> targetTouches = new Dictionary<Transform, List<TouchPoint>>();
-        private Dictionary<Gesture, List<TouchPoint>> gestureTouches = new Dictionary<Gesture, List<TouchPoint>>();
+        private Dictionary<Transform, List<ITouchPoint>> targetTouches = new Dictionary<Transform, List<ITouchPoint>>();
+        private Dictionary<Gesture, List<ITouchPoint>> gestureTouches = new Dictionary<Gesture, List<ITouchPoint>>();
         private List<Gesture> activeGestures = new List<Gesture>();
 
         #endregion
@@ -178,37 +178,37 @@ namespace TouchScript
 
         #region Private functions
 
-        private void updateBegan(IList<TouchPoint> points)
+        private void updateBegan(IList<ITouchPoint> points)
         {
             update(points, processTargetBegan,
                 (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
         }
 
-        private void updateMoved(IList<TouchPoint> points)
+        private void updateMoved(IList<ITouchPoint> points)
         {
             update(points, processTarget,
                 (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
         }
 
-        private void updateEnded(IList<TouchPoint> points)
+        private void updateEnded(IList<ITouchPoint> points)
         {
             update(points, processTarget,
                 (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
         }
 
-        private void updateCancelled(IList<TouchPoint> points)
+        private void updateCancelled(IList<ITouchPoint> points)
         {
             update(points, processTarget,
                 (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
         }
 
-        private void update(IList<TouchPoint> points, Action<Transform> process, Action<Gesture, IList<TouchPoint>> dispatch)
+        private void update(IList<ITouchPoint> points, Action<Transform> process, Action<Gesture, IList<ITouchPoint>> dispatch)
         {
             // WARNING! Arcane magic ahead!
 
-            // Dictionary<Transform, List<TouchPoint>> - touch points sorted by targets
+            // Dictionary<Transform, List<ITouchPoint>> - touch points sorted by targets
             targetTouches.Clear();
-            // Dictionary<Gesture, List<TouchPoint>> - touch points sorted by gesture
+            // Dictionary<Gesture, List<ITouchPoint>> - touch points sorted by gesture
             gestureTouches.Clear();
             // gestures which got any touch points
             // needed because there's no order in dictionary
@@ -218,10 +218,10 @@ namespace TouchScript
             {
                 if (touch.Target != null)
                 {
-                    List<TouchPoint> list;
+                    List<ITouchPoint> list;
                     if (!targetTouches.TryGetValue(touch.Target, out list))
                     {
-                        list = new List<TouchPoint>();
+                        list = new List<ITouchPoint>();
                         targetTouches.Add(touch.Target, list);
                     }
                     list.Add(touch);
@@ -278,7 +278,7 @@ namespace TouchScript
             }
         }
 
-        private void distributePointsByGestures(Transform target, Gesture gesture, Predicate<TouchPoint> condition)
+        private void distributePointsByGestures(Transform target, Gesture gesture, Predicate<ITouchPoint> condition)
         {
             var touchesToReceive = targetTouches[target].FindAll(condition);
             if (touchesToReceive.Count > 0)

@@ -69,7 +69,7 @@ namespace TouchScript
         /// <summary>
         /// List of active touches.
         /// </summary>
-        IList<TouchPoint> TouchPoints { get; }
+        IList<ITouchPoint> TouchPoints { get; }
 
         /// <summary>
         /// Adds a layer.
