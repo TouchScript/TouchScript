@@ -13,7 +13,7 @@ using UnityEngine;
 namespace TouchScript
 {
     [AddComponentMenu("TouchScript/Touch Manager")]
-    public class TouchManager : MonoBehaviour
+    public sealed class TouchManager : MonoBehaviour
     {
         #region Constants
 

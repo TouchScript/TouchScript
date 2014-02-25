@@ -10,12 +10,12 @@ using UnityEngine;
 
 namespace TouchScript
 {
-    internal class GestureManagerInstance : MonoBehaviour, IGestureManager
+    internal sealed class GestureManagerInstance : MonoBehaviour, IGestureManager
     {
 
         #region Public properties
 
-        public static GestureManagerInstance Instance
+        public static IGestureManager Instance
         {
             get
             {

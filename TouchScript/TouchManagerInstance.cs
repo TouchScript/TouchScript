@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace TouchScript
 {
-    internal class TouchManagerInstance : MonoBehaviour, ITouchManager
+    internal sealed class TouchManagerInstance : MonoBehaviour, ITouchManager
     {
         #region Events
 
@@ -69,7 +69,7 @@ namespace TouchScript
 
         #region Public properties
 
-        public static TouchManagerInstance Instance
+        public static ITouchManager Instance
         {
             get
             {
