@@ -31,7 +31,7 @@ namespace TouchScript
 
         public Vector2 PreviousPosition { get; private set; }
 
-        public TouchHit Hit { get; internal set; }
+        public ITouchHit Hit { get; internal set; }
 
         public TouchLayer Layer { get; internal set; }
 

@@ -78,7 +78,7 @@ namespace TouchScript.Layers
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>Hit, if an object is hit, Miss or Error otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out ITouchHit hit)
         {
             hit = null;
             return LayerHitResult.Miss;
@@ -111,7 +111,7 @@ namespace TouchScript.Layers
 
         internal bool BeginTouch(TouchPoint touch)
         {
-            TouchHit hit;
+            ITouchHit hit;
             var result = beginTouch(touch, out hit);
             if (result == LayerHitResult.Hit)
             {
@@ -156,7 +156,7 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch point.</param>
         /// <returns>If this touch hit anything in the layer.</returns>
-        protected virtual LayerHitResult beginTouch(ITouchPoint touch, out TouchHit hit)
+        protected virtual LayerHitResult beginTouch(ITouchPoint touch, out ITouchHit hit)
         {
             hit = null;
             return LayerHitResult.Error;

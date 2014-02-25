@@ -35,7 +35,7 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out ITouchHit hit)
         {
             hit = null;
 
@@ -52,7 +52,7 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult beginTouch(ITouchPoint touch, out TouchHit hit)
+        protected override LayerHitResult beginTouch(ITouchPoint touch, out ITouchHit hit)
         {
             var result = Hit(touch.Position, out hit);
             return result;
@@ -64,7 +64,7 @@ namespace TouchScript.Layers
             if (String.IsNullOrEmpty(Name) && Camera != null) Name = Camera.name;
         }
 
-        protected abstract LayerHitResult castRay(Ray ray, out TouchHit hit);
+        protected abstract LayerHitResult castRay(Ray ray, out ITouchHit hit);
 
         #endregion
     }

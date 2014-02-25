@@ -32,7 +32,7 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
-        protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
+        protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
             hit = null;
             var hits = Physics.RaycastAll(ray, float.PositiveInfinity, LayerMask);
@@ -43,7 +43,7 @@ namespace TouchScript.Layers
             var success = false;
             foreach (var raycastHit in hits)
             {
-                hit = TouchHit.GetTouchHit(raycastHit);
+                hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
                 var hitTests = raycastHit.transform.GetComponents<HitTest>();
                 if (hitTests.Length == 0)
                 {

@@ -30,7 +30,7 @@ namespace TouchScript
         /// <summary>
         /// Original hit information.
         /// </summary>
-        TouchHit Hit { get; }
+        ITouchHit Hit { get; }
 
         /// <summary>
         /// Original camera through which the target was seen.

@@ -225,14 +225,14 @@ namespace TouchScript
         /// <inheritdoc />
         public Transform GetHitTarget(Vector2 position)
         {
-            TouchHit hit;
+            ITouchHit hit;
             TouchLayer layer;
             if (GetHitTarget(position, out hit, out layer)) return hit.Transform;
             return null;
         }
 
         /// <inheritdoc />
-        public bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer)
+        public bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer)
         {
             hit = null;
             layer = null;
@@ -240,7 +240,7 @@ namespace TouchScript
             foreach (var touchLayer in layers)
             {
                 if (touchLayer == null) continue;
-                TouchHit _hit;
+                ITouchHit _hit;
                 if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
                 {
                     hit = _hit;

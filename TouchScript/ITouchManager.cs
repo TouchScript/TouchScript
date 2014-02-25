@@ -108,7 +108,7 @@ namespace TouchScript
         /// <param name="hit">Output RaycastHit.</param>
         /// <param name="layer">Output touch layer which was hit.</param>
         /// <returns>True if something was hit.</returns>
-        bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer);
+        bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer);
 
         /// <summary>
         /// Registers a touch.
