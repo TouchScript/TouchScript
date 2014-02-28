@@ -52,7 +52,7 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult beginTouch(ITouchPoint touch, out ITouchHit hit)
+        protected override LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
         {
             var result = Hit(touch.Position, out hit);
             return result;

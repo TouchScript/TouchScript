@@ -70,7 +70,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
@@ -88,7 +88,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
 
@@ -106,11 +106,11 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && touchPoints.Count == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
             if (touchEndedInvoker != null)
@@ -124,11 +124,11 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouchPoint> touches)
+        protected override void touchesCancelled(IList<ITouch> touches)
         {
             base.touchesCancelled(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && touchPoints.Count == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
             if (touchCancelledInvoker != null)
@@ -152,13 +152,13 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Current touch point.
         /// </summary>
-        public ITouchPoint TouchPoint { get; private set; }
+        public ITouch TouchPoint { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.
         /// </summary>
         /// <param name="touchPoint">Touch point the event is for.</param>
-        public MetaGestureEventArgs(ITouchPoint touchPoint)
+        public MetaGestureEventArgs(ITouch touchPoint)
         {
             TouchPoint = touchPoint;
         }

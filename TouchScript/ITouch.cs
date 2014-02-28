@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TouchScript
 {
-    public interface ITouchPoint
+    public interface ITouch
     {
         /// <summary>
         /// Internal unique touch point id.

@@ -11,7 +11,7 @@ namespace TouchScript
     /// <summary>
     /// Touch point.
     /// </summary>
-    internal sealed class TouchPoint : ITouchPoint
+    internal sealed class TouchPoint : ITouch
     {
         #region Public properties
 

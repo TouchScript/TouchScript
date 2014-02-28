@@ -77,17 +77,17 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
-            if (touchPoints.Count > MaxTouches)
+            if (activeTouches.Count > MaxTouches)
             {
                 setState(GestureState.Failed);
                 return;
             }
 
-            if (touchPoints.Count == touches.Count)
+            if (activeTouches.Count == touches.Count)
             {
                 startPosition = touches[0].Position;
                 StartCoroutine("wait");
@@ -95,7 +95,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
 
@@ -106,11 +106,11 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
-            if (touchPoints.Count == 0)
+            if (activeTouches.Count == 0)
             {
                 StopCoroutine("wait");
                 setState(GestureState.Failed);

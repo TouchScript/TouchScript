@@ -56,7 +56,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             clusters.AddPoints(touches);
 
@@ -64,7 +64,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             clusters.Invalidate();
 
@@ -72,7 +72,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             clusters.RemovePoints(touches);
 
@@ -98,7 +98,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouchPoints(IList<ITouchPoint> touches)
+        protected override bool relevantTouchPoints(IList<ITouch> touches)
         {
             // every touch point is relevant for us
             return true;

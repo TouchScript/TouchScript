@@ -27,8 +27,8 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (touchPoints.Count == 0) return TouchManager.INVALID_POSITION;
-                if (touchPoints.Count == 1) return touchPoints[0].Position;
+                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
+                if (activeTouches.Count == 1) return activeTouches[0].Position;
                 return (clusters.GetCenterPosition(Clusters.Clusters.CLUSTER1) + clusters.GetCenterPosition(Clusters.Clusters.CLUSTER2))*.5f;
             }
         }
@@ -38,8 +38,8 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (touchPoints.Count == 0) return TouchManager.INVALID_POSITION;
-                if (touchPoints.Count == 1) return touchPoints[0].PreviousPosition;
+                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
+                if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
                 return (clusters.GetPreviousCenterPosition(Clusters.Clusters.CLUSTER1) + clusters.GetPreviousCenterPosition(Clusters.Clusters.CLUSTER2))*.5f;
             }
         }
@@ -53,7 +53,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             clusters.AddPoints(touches);
 
@@ -61,7 +61,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             clusters.Invalidate();
 
@@ -69,7 +69,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             clusters.RemovePoints(touches);
 

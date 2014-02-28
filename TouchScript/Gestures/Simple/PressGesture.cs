@@ -42,7 +42,7 @@ namespace TouchScript.Gestures
         
         #region Gesture callbacks
 
-        public override bool ShouldReceiveTouch(ITouchPoint touch)
+        public override bool ShouldReceiveTouch(ITouch touch)
         {
             if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
             if (!base.ShouldReceiveTouch(touch)) return false;
@@ -66,11 +66,11 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
-            if (touchPoints.Count == touches.Count) setState(GestureState.Recognized);
+            if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
         }
 
         /// <inheritdoc />

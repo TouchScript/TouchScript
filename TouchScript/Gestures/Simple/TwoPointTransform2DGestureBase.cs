@@ -91,7 +91,7 @@ namespace TouchScript.Gestures.Simple
         /// <returns>True if there are two or more active touch points, False otherwise.</returns>
         protected virtual bool gotEnoughTouchPoints()
         {
-            return touchPoints.Count >= 2;
+            return activeTouches.Count >= 2;
         }
 
         /// <summary>
@@ -99,13 +99,13 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         /// <param name="touches">List of touch points</param>
         /// <returns>True if there are relevant touch points, False otherwise.</returns>
-        protected virtual bool relevantTouchPoints(IList<ITouchPoint> touches)
+        protected virtual bool relevantTouchPoints(IList<ITouch> touches)
         {
             var result = false;
             // We care only about the first and the second touch points
             foreach (var touchPoint in touches)
             {
-                if (touchPoint == touchPoints[0] || touchPoint == touchPoints[1])
+                if (touchPoint == activeTouches[0] || touchPoint == activeTouches[1])
                 {
                     result = true;
                     break;
@@ -123,7 +123,7 @@ namespace TouchScript.Gestures.Simple
         {
             if (index < 0) index = 0;
             else if (index > 1) index = 1;
-            return touchPoints[index].Position;
+            return activeTouches[index].Position;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace TouchScript.Gestures.Simple
         {
             if (index < 0) index = 0;
             else if (index > 1) index = 1;
-            return touchPoints[index].PreviousPosition;
+            return activeTouches[index].PreviousPosition;
         }
 
         /// <summary>
@@ -151,11 +151,11 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
-            if (touchPoints.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
+            if (activeTouches.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
             {
                 restart();
             }

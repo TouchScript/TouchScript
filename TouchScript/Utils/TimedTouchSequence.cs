@@ -5,13 +5,13 @@ namespace TouchScript.Utils
 {
     internal sealed class TimedTouchSequence
     {
-        private List<ITouchPoint> points = new List<ITouchPoint>();
+        private List<ITouch> points = new List<ITouch>();
         private List<float> timestamps = new List<float>();
 
         public TimedTouchSequence()
         {}
 
-        public void Add(ITouchPoint touch, float time)
+        public void Add(ITouch touch, float time)
         {
             points.Add(touch);
             timestamps.Add(time);
@@ -23,9 +23,9 @@ namespace TouchScript.Utils
             timestamps.Clear();
         }
 
-        public IList<ITouchPoint> FindTouchPointsLaterThan(float time)
+        public IList<ITouch> FindTouchPointsLaterThan(float time)
         {
-            var list = new List<ITouchPoint>();
+            var list = new List<ITouch>();
             for (var i = points.Count - 1; i >= 0; i--)
             {
                 if (timestamps[i] > time) list.Add(points[i]);
@@ -35,9 +35,9 @@ namespace TouchScript.Utils
             return list;
         }
 
-        public IList<ITouchPoint> FindTouchPointsLaterThan(float time, Predicate<ITouchPoint> predicate)
+        public IList<ITouch> FindTouchPointsLaterThan(float time, Predicate<ITouch> predicate)
         {
-            var list = new List<ITouchPoint>();
+            var list = new List<ITouch>();
             for (var i = points.Count - 1; i >= 0; i--)
             {
                 if (timestamps[i] > time)

@@ -124,17 +124,17 @@ namespace TouchScript.Layers
             return false;
         }
 
-        internal void MoveTouch(ITouchPoint touch)
+        internal void MoveTouch(ITouch touch)
         {
             moveTouch(touch);
         }
 
-        internal void EndTouch(ITouchPoint touch)
+        internal void EndTouch(ITouch touch)
         {
             endTouch(touch);
         }
 
-        internal void CancelTouch(ITouchPoint touch)
+        internal void CancelTouch(ITouch touch)
         {
             cancelTouch(touch);
         }
@@ -156,7 +156,7 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch point.</param>
         /// <returns>If this touch hit anything in the layer.</returns>
-        protected virtual LayerHitResult beginTouch(ITouchPoint touch, out ITouchHit hit)
+        protected virtual LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
         {
             hit = null;
             return LayerHitResult.Error;
@@ -166,21 +166,21 @@ namespace TouchScript.Layers
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void moveTouch(ITouchPoint touch)
+        protected virtual void moveTouch(ITouch touch)
         {}
 
         /// <summary>
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void endTouch(ITouchPoint touch)
+        protected virtual void endTouch(ITouch touch)
         {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void cancelTouch(ITouchPoint touch)
+        protected virtual void cancelTouch(ITouch touch)
         {}
 
         #endregion
@@ -188,9 +188,9 @@ namespace TouchScript.Layers
 
     public class TouchLayerEventArgs : EventArgs
     {
-        public ITouchPoint TouchPoint { get; private set; }
+        public ITouch TouchPoint { get; private set; }
 
-        public TouchLayerEventArgs(ITouchPoint touchPoint)
+        public TouchLayerEventArgs(ITouch touchPoint)
             : base()
         {
             TouchPoint = touchPoint;

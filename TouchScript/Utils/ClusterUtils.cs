@@ -14,7 +14,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Camera instance.</returns>
-        public static Camera GetClusterCamera(IList<ITouchPoint> touches)
+        public static Camera GetClusterCamera(IList<ITouch> touches)
         {
             if (touches.Count == 0) return Camera.main;
             var cam = touches[0].Layer.Camera;
@@ -27,7 +27,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Centroid of touch points' positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
-        public static Vector2 Get2DCenterPosition(IList<ITouchPoint> touches)
+        public static Vector2 Get2DCenterPosition(IList<ITouch> touches)
         {
             var length = touches.Count;
             if (length == 0) return TouchManager.INVALID_POSITION;
@@ -43,7 +43,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Centroid of previous touch point's positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
-        public static Vector2 GetPrevious2DCenterPosition(IList<ITouchPoint> touches)
+        public static Vector2 GetPrevious2DCenterPosition(IList<ITouch> touches)
         {
             var length = touches.Count;
             if (length == 0) return TouchManager.INVALID_POSITION;
@@ -59,7 +59,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>A unique string for a list of touch points.</returns>
-        public static String GetPointsHash(IList<ITouchPoint> touches)
+        public static String GetPointsHash(IList<ITouch> touches)
         {
             hashString.Remove(0, hashString.Length);
             for (var i = 0; i < touches.Count; i++)

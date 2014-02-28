@@ -180,12 +180,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (touchPoints.Count == 0)
+                if (activeTouches.Count == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return ClusterUtils.Get2DCenterPosition(touchPoints);
+                return ClusterUtils.Get2DCenterPosition(activeTouches);
             }
         }
 
@@ -196,12 +196,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (touchPoints.Count == 0)
+                if (activeTouches.Count == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return ClusterUtils.GetPrevious2DCenterPosition(touchPoints);
+                return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
             }
         }
 
@@ -234,9 +234,9 @@ namespace TouchScript.Gestures
         /// <summary>
         /// List of gesture's active touch points.
         /// </summary>
-        public IList<ITouchPoint> TouchPoints
+        public IList<ITouch> ActiveTouches
         {
-            get { return touchPoints.AsReadOnly(); }
+            get { return activeTouches.AsReadOnly(); }
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Touch points the gesture currently owns and works with.
         /// </summary>
-        protected List<ITouchPoint> touchPoints = new List<ITouchPoint>();
+        protected List<ITouch> activeTouches = new List<ITouch>();
 
         [SerializeField]
         [ToggleLeft]
@@ -381,9 +381,9 @@ namespace TouchScript.Gestures
         /// <returns>
         ///   <c>true</c> if gesture controls the touch point; otherwise, <c>false</c>.
         /// </returns>
-        public bool HasTouchPoint(ITouchPoint touch)
+        public bool HasTouchPoint(ITouch touch)
         {
-            return touchPoints.Contains(touch);
+            return activeTouches.Contains(touch);
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="touch">The touch.</param>
         /// <returns><c>true</c> if this touch should be received by the gesture; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldReceiveTouch(ITouchPoint touch)
+        public virtual bool ShouldReceiveTouch(ITouch touch)
         {
             if (Delegate == null) return true;
             return Delegate.ShouldReceiveTouch(this, touch);
@@ -498,32 +498,32 @@ namespace TouchScript.Gestures
 
         internal void Reset()
         {
-            touchPoints.Clear();
+            activeTouches.Clear();
             delayedStateChange = GestureState.Possible;
             requiredGestureFailed = false;
             reset();
         }
 
-        internal void TouchesBegan(IList<ITouchPoint> touches)
+        internal void TouchesBegan(IList<ITouch> touches)
         {
-            touchPoints.AddRange(touches);
+            activeTouches.AddRange(touches);
             touchesBegan(touches);
         }
 
-        internal void TouchesMoved(IList<ITouchPoint> touches)
+        internal void TouchesMoved(IList<ITouch> touches)
         {
             touchesMoved(touches);
         }
 
-        internal void TouchesEnded(IList<ITouchPoint> touches)
+        internal void TouchesEnded(IList<ITouch> touches)
         {
-            touchPoints.RemoveAll(touches.Contains);
+            activeTouches.RemoveAll(touches.Contains);
             touchesEnded(touches);
         }
 
-        internal void TouchesCancelled(IList<ITouchPoint> touches)
+        internal void TouchesCancelled(IList<ITouch> touches)
         {
-            touchPoints.RemoveAll(touches.Contains);
+            activeTouches.RemoveAll(touches.Contains);
             touchesCancelled(touches);
         }
 
@@ -544,7 +544,7 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
-        protected virtual bool shouldCacheTouchPointPosition(ITouchPoint value)
+        protected virtual bool shouldCacheTouchPointPosition(ITouch value)
         {
             return true;
         }
@@ -589,21 +589,21 @@ namespace TouchScript.Gestures
         /// Called when new touches appear.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesBegan(IList<ITouchPoint> touches)
+        protected virtual void touchesBegan(IList<ITouch> touches)
         {}
 
         /// <summary>
         /// Called for moved touches.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesMoved(IList<ITouchPoint> touches)
+        protected virtual void touchesMoved(IList<ITouch> touches)
         {}
 
         /// <summary>
         /// Called if touches are removed.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesEnded(IList<ITouchPoint> touches)
+        protected virtual void touchesEnded(IList<ITouch> touches)
         {
             if (combineTouchPoints)
             {
@@ -612,7 +612,7 @@ namespace TouchScript.Gestures
                     touchSequence.Add(touch, Time.time);
                 }
 
-                if (touchPoints.Count == 0)
+                if (activeTouches.Count == 0)
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
                     var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
@@ -621,7 +621,7 @@ namespace TouchScript.Gestures
                 }
             } else
             {
-                if (touchPoints.Count == 0)
+                if (activeTouches.Count == 0)
                 {
                     var lastPoint = touches[touches.Count - 1];
                     if (shouldCacheTouchPointPosition(lastPoint))
@@ -641,7 +641,7 @@ namespace TouchScript.Gestures
         /// Called when touches are cancelled.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesCancelled(IList<ITouchPoint> touches)
+        protected virtual void touchesCancelled(IList<ITouch> touches)
         {}
 
         /// <summary>

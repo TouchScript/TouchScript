@@ -55,7 +55,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             if (!gotEnoughTouchPoints()) return;
             if (!relevantTouchPoints(touches)) return;

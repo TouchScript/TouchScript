@@ -88,7 +88,7 @@
     <Compile Include="InputSources\InputSource.cs" />
     <Compile Include="InputSources\MouseInput.cs" />
     <Compile Include="ITouchManager.cs" />
-    <Compile Include="ITouchPoint.cs" />
+    <Compile Include="ITouch.cs" />
     <Compile Include="Layers\CameraLayer.cs" />
     <Compile Include="Layers\CameraLayer2D.cs" />
     <Compile Include="Layers\CameraLayerBase.cs" />

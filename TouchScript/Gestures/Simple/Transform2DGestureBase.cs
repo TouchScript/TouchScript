@@ -138,7 +138,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
 
@@ -147,11 +147,11 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
-            if (touchPoints.Count == 0)
+            if (activeTouches.Count == 0)
             {
                 switch (State)
                 {
@@ -164,7 +164,7 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouchPoint> touches)
+        protected override void touchesCancelled(IList<ITouch> touches)
         {
             base.touchesCancelled(touches);
 
@@ -205,8 +205,8 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         protected void updateProjectionCamera()
         {
-            if (touchPoints.Count == 0) projectionCamera = Camera.main;
-            else projectionCamera = ClusterUtils.GetClusterCamera(touchPoints);
+            if (activeTouches.Count == 0) projectionCamera = Camera.main;
+            else projectionCamera = ClusterUtils.GetClusterCamera(activeTouches);
         }
 
         /// <summary>
