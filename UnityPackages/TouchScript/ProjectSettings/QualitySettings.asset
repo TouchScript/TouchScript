@@ -115,9 +115,16 @@ QualitySettings:
     antiAliasing: 8
     softParticles: 1
     softVegetation: 1
-    vSyncCount: 1
+    vSyncCount: 0
     lodBias: 2
     maximumLODLevel: 0
     particleRaycastBudget: 4
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality: {}
+  m_PerPlatformDefaultQuality:
+    Android: 5
+    BlackBerry: 5
+    Standalone: 5
+    WP8: 5
+    Web: 5
+    Windows Store Apps: 5
+    iPhone: 5
