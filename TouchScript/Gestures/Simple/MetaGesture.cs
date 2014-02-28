@@ -16,10 +16,10 @@ namespace TouchScript.Gestures.Simple
     {
         #region Constants
 
-        public const string TOUCH_POINT_BEGAN_MESSAGE = "OnTouchPointBegan";
-        public const string TOUCH_POINT_MOVED_MESSAGE = "OnTouchPointMoved";
-        public const string TOUCH_POINT_ENDED_MESSAGE = "OnTouchPointEnded";
-        public const string TOUCH_POINT_CANCELLED_MESSAGE = "OnTouchPointCancelled";
+        public const string TOUCH_BEGAN_MESSAGE = "OnTouchBegan";
+        public const string TOUCH_MOVED_MESSAGE = "OnTouchMoved";
+        public const string TOUCH_ENDED_MESSAGE = "OnTouchEnded";
+        public const string TOUCH_CANCELLED_MESSAGE = "OnTouchCancelled";
 
         #endregion
 
@@ -28,42 +28,42 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Occurs when a touch point is added.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointBegan
+        public event EventHandler<MetaGestureEventArgs> TouchBegan
         {
-            add { touchPointBeganInvoker += value; }
-            remove { touchPointBeganInvoker -= value; }
+            add { touchBeganInvoker += value; }
+            remove { touchBeganInvoker -= value; }
         }
 
         /// <summary>
         /// Occurs when a touch point is updated.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointMoved
+        public event EventHandler<MetaGestureEventArgs> TouchMoved
         {
-            add { touchPointMovedInvoker += value; }
-            remove { touchPointMovedInvoker -= value; }
+            add { touchMovedInvoker += value; }
+            remove { touchMovedInvoker -= value; }
         }
 
         /// <summary>
         /// Occurs when a touch point is removed.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointEnded
+        public event EventHandler<MetaGestureEventArgs> TouchEnded
         {
-            add { touchPointEndedInvoker += value; }
-            remove { touchPointEndedInvoker -= value; }
+            add { touchEndedInvoker += value; }
+            remove { touchEndedInvoker -= value; }
         }
 
         /// <summary>
         /// Occurs when a touch point is cancelled.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchPointCancelled
+        public event EventHandler<MetaGestureEventArgs> TouchCancelled
         {
-            add { touchPointCancelledInvoker += value; }
-            remove { touchPointCancelledInvoker -= value; }
+            add { touchCancelledInvoker += value; }
+            remove { touchCancelledInvoker -= value; }
         }
 
         // iOS Events AOT hack
-        private EventHandler<MetaGestureEventArgs> touchPointBeganInvoker, touchPointMovedInvoker,
-            touchPointEndedInvoker, touchPointCancelledInvoker;
+        private EventHandler<MetaGestureEventArgs> touchBeganInvoker, touchMovedInvoker,
+            touchEndedInvoker, touchCancelledInvoker;
 
         #endregion
 
@@ -77,13 +77,13 @@ namespace TouchScript.Gestures.Simple
             if (State == GestureState.Possible) setState(GestureState.Began);
 
             var length = touches.Count;
-            if (touchPointBeganInvoker != null)
+            if (touchBeganInvoker != null)
             {
-                for (var i = 0; i < length; i++) touchPointBeganInvoker(this, new MetaGestureEventArgs(touches[i]));
+                for (var i = 0; i < length; i++) touchBeganInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
             if (UseSendMessage)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_POINT_BEGAN_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_BEGAN_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -95,13 +95,13 @@ namespace TouchScript.Gestures.Simple
             if (State == GestureState.Began || State == GestureState.Changed) setState(GestureState.Changed);
 
             var length = touches.Count;
-            if (touchPointMovedInvoker != null)
+            if (touchMovedInvoker != null)
             {
-                for (var i = 0; i < length; i++) touchPointMovedInvoker(this, new MetaGestureEventArgs(touches[i]));
+                for (var i = 0; i < length; i++) touchMovedInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
             if (UseSendMessage)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_POINT_MOVED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_MOVED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -113,13 +113,13 @@ namespace TouchScript.Gestures.Simple
             if ((State == GestureState.Began || State == GestureState.Changed) && touchPoints.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
-            if (touchPointEndedInvoker != null)
+            if (touchEndedInvoker != null)
             {
-                for (var i = 0; i < length; i++) touchPointEndedInvoker(this, new MetaGestureEventArgs(touches[i]));
+                for (var i = 0; i < length; i++) touchEndedInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
             if (UseSendMessage)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_POINT_ENDED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_ENDED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -131,13 +131,13 @@ namespace TouchScript.Gestures.Simple
             if ((State == GestureState.Began || State == GestureState.Changed) && touchPoints.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
-            if (touchPointCancelledInvoker != null)
+            if (touchCancelledInvoker != null)
             {
-                for (var i = 0; i < length; i++) touchPointCancelledInvoker(this, new MetaGestureEventArgs(touches[i]));
+                for (var i = 0; i < length; i++) touchCancelledInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
             if (UseSendMessage)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_POINT_CANCELLED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_CANCELLED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 

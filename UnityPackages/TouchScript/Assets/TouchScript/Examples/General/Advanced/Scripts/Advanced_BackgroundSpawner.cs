@@ -15,10 +15,10 @@ public class Advanced_BackgroundSpawner : MonoBehaviour
     private void Start()
     {
         var metaGesture = GetComponent<MetaGesture>();
-        metaGesture.TouchPointBegan += touchEventHandler;
-        metaGesture.TouchPointMoved += touchEventHandler;
-        metaGesture.TouchPointEnded += touchEndedHandler;
-        metaGesture.TouchPointCancelled += touchEndedHandler;
+        metaGesture.TouchBegan += touchEventHandler;
+        metaGesture.TouchMoved += touchEventHandler;
+        metaGesture.TouchEnded += touchEndedHandler;
+        metaGesture.TouchCancelled += touchEndedHandler;
 
         StartCoroutine(doSpawn());
     }
