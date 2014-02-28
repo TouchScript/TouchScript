@@ -2,8 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Devices.Display;
-
 namespace TouchScript.InputSources
 {
     /// <summary>

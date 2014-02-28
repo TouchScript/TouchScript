@@ -53,7 +53,7 @@ namespace TouchScript.InputSources
         /// Unity3d Update callback.
         /// </summary>
         protected virtual void Update()
-        { }
+        {}
 
         #endregion
 

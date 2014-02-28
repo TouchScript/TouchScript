@@ -13,7 +13,7 @@ namespace TouchScript.Layers
     /// Touch layer for a camera. Used to test if specific camera sees an object which should be hit by a touch point.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
-    public class CameraLayer : CameraLayerBase
+    public sealed class CameraLayer : CameraLayerBase
     {
         #region Private variables
 

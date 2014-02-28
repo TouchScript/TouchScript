@@ -13,7 +13,7 @@ namespace TouchScript.InputSources
     /// Mobile Input Source
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
-    public class MobileInput : InputSource
+    public sealed class MobileInput : InputSource
     {
 
         #region Public properties

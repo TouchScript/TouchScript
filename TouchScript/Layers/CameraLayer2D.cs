@@ -5,13 +5,14 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
-    public class CameraLayer2D : CameraLayerBase
+    public sealed class CameraLayer2D : CameraLayerBase
     {
         #region Private variables
 
         [SerializeField]
         [HideInInspector]
         private int[] sortedLayerIds = new int[0];
+
         private List<RaycastHit2D> sortedHits;
 
         #endregion
