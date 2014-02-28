@@ -38,7 +38,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Cluster object
         /// </summary>
-        protected Clusters2 clusters = new Clusters2();
+        protected Clusters.Clusters clusters = new Clusters.Clusters();
 
         #endregion
 

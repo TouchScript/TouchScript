@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Clusters;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
@@ -206,7 +207,7 @@ namespace TouchScript.Gestures.Simple
         protected void updateProjectionCamera()
         {
             if (activeTouches.Count == 0) projectionCamera = Camera.main;
-            else projectionCamera = Cluster.GetClusterCamera(activeTouches);
+            else projectionCamera = ClusterUtils.GetClusterCamera(activeTouches);
         }
 
         /// <summary>

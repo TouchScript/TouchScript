@@ -187,7 +187,7 @@ namespace TouchScript.Gestures
                     if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return Cluster.Get2DCenterPosition(activeTouches);
+                return ClusterUtils.Get2DCenterPosition(activeTouches);
             }
         }
 
@@ -203,7 +203,7 @@ namespace TouchScript.Gestures
                     if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return Cluster.GetPrevious2DCenterPosition(activeTouches);
+                return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
             }
         }
 
@@ -617,8 +617,8 @@ namespace TouchScript.Gestures
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
                     var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
-                    cachedScreenPosition = Cluster.Get2DCenterPosition(cluster);
-                    cachedPreviousScreenPosition = Cluster.GetPrevious2DCenterPosition(cluster);
+                    cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
+                    cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
                 }
             } else
             {

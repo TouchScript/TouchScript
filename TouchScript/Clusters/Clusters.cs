@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Clusters
@@ -10,7 +11,7 @@ namespace TouchScript.Clusters
     /// <summary>
     /// Represents a pool of points separated into two clusters.
     /// </summary>
-    public class Clusters2 : Cluster
+    public sealed class Clusters
     {
         #region Constants
 
@@ -27,6 +28,14 @@ namespace TouchScript.Clusters
         #endregion
 
         #region Public properties
+
+        /// <summary>
+        /// Number of total points in clusters represented by this object.
+        /// </summary>
+        public int PointsCount
+        {
+            get { return points.Count; }
+        }
 
         /// <summary>
         /// Minimum distance in pixels between clusters to treat them as two separate clusters.
@@ -61,6 +70,8 @@ namespace TouchScript.Clusters
 
         #region Private variables
 
+        private List<ITouchPoint> points = new List<ITouchPoint>();
+        private bool dirty;
         private List<ITouchPoint> cluster1 = new List<ITouchPoint>();
         private List<ITouchPoint> cluster2 = new List<ITouchPoint>();
         private float minPointDistance, minPointDistanceSqr;
@@ -69,11 +80,12 @@ namespace TouchScript.Clusters
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Clusters2"/> class.
+        /// Initializes a new instance of the <see cref="Clusters"/> class.
         /// </summary>
-        public Clusters2() : base()
+        public Clusters()
         {
             MinPointsDistance = 0;
+            markDirty();
         }
 
         #region Public methods
@@ -91,10 +103,10 @@ namespace TouchScript.Clusters
             switch (id)
             {
                 case CLUSTER1:
-                    result = Get2DCenterPosition(cluster1);
+                    result = ClusterUtils.Get2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = Get2DCenterPosition(cluster2);
+                    result = ClusterUtils.Get2DCenterPosition(cluster2);
                     break;
                 default:
                     return TouchManager.INVALID_POSITION;
@@ -115,15 +127,77 @@ namespace TouchScript.Clusters
             switch (id)
             {
                 case CLUSTER1:
-                    result = GetPrevious2DCenterPosition(cluster1);
+                    result = ClusterUtils.GetPrevious2DCenterPosition(cluster1);
                     break;
                 case CLUSTER2:
-                    result = GetPrevious2DCenterPosition(cluster2);
+                    result = ClusterUtils.GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
                     return TouchManager.INVALID_POSITION;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Adds a point to cluster.
+        /// </summary>
+        /// <param name="point">A point.</param>
+        /// <returns></returns>
+        public void AddPoint(ITouchPoint point)
+        {
+            if (points.Contains(point)) return;
+
+            points.Add(point);
+            markDirty();
+        }
+
+        /// <summary>
+        /// Adds a list of points to cluster.
+        /// </summary>
+        /// <param name="points">List of points.</param>
+        public void AddPoints(IList<ITouchPoint> points)
+        {
+            foreach (var point in points) AddPoint(point);
+        }
+
+        /// <summary>
+        /// Removes a point from cluster.
+        /// </summary>
+        /// <param name="point">A point.</param>
+        /// <returns></returns>
+        public void RemovePoint(ITouchPoint point)
+        {
+            if (!points.Contains(point)) return;
+
+            points.Remove(point);
+            markDirty();
+        }
+
+        /// <summary>
+        /// Removes a list of points from cluster.
+        /// </summary>
+        /// <param name="points">List of points.</param>
+        public void RemovePoints(IList<ITouchPoint> points)
+        {
+            foreach (var point in points) RemovePoint(point);
+        }
+
+        /// <summary>
+        /// Removes all points from cluster.
+        /// </summary>
+        public void RemoveAllPoints()
+        {
+            points.Clear();
+            markDirty();
+        }
+
+        /// <summary>
+        /// Invalidates cluster state.
+        /// Call this method to recalculate cluster properties.
+        /// </summary>
+        public void Invalidate()
+        {
+            markDirty();
         }
 
         #endregion
@@ -151,8 +225,8 @@ namespace TouchScript.Clusters
 
             while (oldHash1 != hash1 || oldHash2 != hash2)
             {
-                var center1 = Get2DCenterPosition(cluster1);
-                var center2 = Get2DCenterPosition(cluster2);
+                var center1 = ClusterUtils.Get2DCenterPosition(cluster1);
+                var center2 = ClusterUtils.Get2DCenterPosition(cluster2);
                 ITouchPoint obj1 = null;
                 ITouchPoint obj2 = null;
 
@@ -205,8 +279,8 @@ namespace TouchScript.Clusters
 
                 oldHash1 = hash1;
                 oldHash2 = hash2;
-                hash1 = GetPointsHash(cluster1);
-                hash2 = GetPointsHash(cluster2);
+                hash1 = ClusterUtils.GetPointsHash(cluster1);
+                hash2 = ClusterUtils.GetPointsHash(cluster2);
             }
 
             markClean();
@@ -238,6 +312,16 @@ namespace TouchScript.Clusters
                 }
             }
             return false;
+        }
+
+        private void markDirty()
+        {
+            dirty = true;
+        }
+
+        private void markClean()
+        {
+            dirty = false;
         }
 
         #endregion

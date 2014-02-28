@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Clusters;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -169,7 +170,7 @@ namespace TouchScript.Gestures
                     return;
                 }
 
-                positionDeltas.Add(Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches));
+                positionDeltas.Add(ClusterUtils.Get2DCenterPosition(touches) - ClusterUtils.GetPrevious2DCenterPosition(touches));
                 timeDeltas.Add(Time.deltaTime);
 
                 var totalTime = 0f;
