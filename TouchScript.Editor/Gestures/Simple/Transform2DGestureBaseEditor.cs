@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures.Simple
 {
     [CustomEditor(typeof(Transform2DGestureBase), true)]
-    public class Transform2DGestureBaseEditor : GestureEditor
+    internal class Transform2DGestureBaseEditor : GestureEditor
     {
         private static readonly GUIContent PROJECTION = new GUIContent("Projection Type", "Method used to project 2d screen positions of touch points into 3d space.");
         private static readonly GUIContent PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where touch points' positions are projected.");

@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(TapGesture), true)]
-    public class TapGestureEditor : GestureEditor
+    internal sealed class TapGestureEditor : GestureEditor
     {
         private static readonly GUIContent TIME_LIMIT = new GUIContent("Limit Time (sec)", "Gesture fails if in <value> seconds user didn't do the required number of taps.");
         private static readonly GUIContent DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if taps are made more than <value> cm away from the first touch position.");

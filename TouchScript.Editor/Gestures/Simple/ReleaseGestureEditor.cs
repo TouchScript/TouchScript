@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures.Simple
 {
     [CustomEditor(typeof(ReleaseGesture), true)]
-    public class ReleaseGestureEditor : GestureEditor
+    internal sealed class ReleaseGestureEditor : GestureEditor
     {
 
         private static readonly GUIContent IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores touch points from children.");

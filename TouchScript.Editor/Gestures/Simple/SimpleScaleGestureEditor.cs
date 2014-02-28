@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures.Simple
 {
     [CustomEditor(typeof(SimpleScaleGesture), true)]
-    public class SimpleScaleGestureEditor : TwoPointTransform2DGestureBaseEditor
+    internal sealed class SimpleScaleGestureEditor : TwoPointTransform2DGestureBaseEditor
     {
         private static readonly GUIContent SCALING_THRESHOLD = new GUIContent("Scaling Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
 

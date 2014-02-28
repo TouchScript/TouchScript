@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 namespace TouchScript.Editor
 {
     [CustomEditor(typeof(TouchManager))]
-    public class TouchManagerEditor : UnityEditor.Editor
+    internal sealed class TouchManagerEditor : UnityEditor.Editor
     {
         private static readonly GUIContent DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");

@@ -11,7 +11,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(Gesture), true)]
-    public class GestureEditor : UnityEditor.Editor
+    internal class GestureEditor : UnityEditor.Editor
     {
         private const string TEXT_FRIENDLY_HEADER = "List gestures which can work together with this gesture.";
         private const string FRIENDLY_GESTURES_PROP = "friendlyGestures";

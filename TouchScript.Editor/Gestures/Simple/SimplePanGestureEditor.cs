@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures.Simple
 {
     [CustomEditor(typeof(SimplePanGesture), true)]
-    public class SimplePanGestureEditor : Transform2DGestureBaseEditor
+    internal sealed class SimplePanGestureEditor : Transform2DGestureBaseEditor
     {
         private static readonly GUIContent MOVEMENT_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
 

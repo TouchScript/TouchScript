@@ -6,7 +6,7 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
 {
 
     [CustomPropertyDrawer(typeof(ToggleLeftAttribute))]
-    public class ToggleLeftDrawer : PropertyDrawer
+    internal sealed class ToggleLeftDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

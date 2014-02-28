@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(FlickGesture), true)]
-    public class FlickGestureEditor : GestureEditor
+    internal sealed class FlickGestureEditor : GestureEditor
     {
 
         private static readonly GUIContent DIRECTION = new GUIContent("Direction", "Flick direction.");

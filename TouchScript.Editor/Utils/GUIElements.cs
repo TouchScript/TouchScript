@@ -2,12 +2,11 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using UnityEditor;
 using UnityEngine;
 
 namespace TouchScript.Editor.Utils
 {
-    public class GUIElements
+    internal static class GUIElements
     {
         public static GUIStyle BoxStyle
         {

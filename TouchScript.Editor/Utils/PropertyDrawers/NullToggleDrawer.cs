@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Utils.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(NullToggleAttribute))]
-    public class NullToggleDrawer : PropertyDrawer
+    internal sealed class NullToggleDrawer : PropertyDrawer
     {
         private bool? expanded = null;
 

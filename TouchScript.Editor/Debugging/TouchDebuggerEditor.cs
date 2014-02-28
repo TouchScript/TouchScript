@@ -7,7 +7,7 @@ namespace TouchScript.Editor.Debugging
 {
 
     [CustomEditor(typeof(TouchDebugger))]
-    public class TouchDebuggerEditor : UnityEditor.Editor
+    internal sealed class TouchDebuggerEditor : UnityEditor.Editor
     {
 
         private TouchDebugger instance;

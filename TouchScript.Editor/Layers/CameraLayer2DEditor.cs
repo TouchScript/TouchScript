@@ -11,7 +11,7 @@ namespace TouchScript.Editor.Layers
 {
 
     [CustomEditor(typeof(CameraLayer2D))]
-    public class CameraLayer2DEditor : UnityEditor.Editor
+    internal sealed class CameraLayer2DEditor : UnityEditor.Editor
     {
 
         public const string TEXT_REBUILD = "Unity doesn't expose actual 2d layers sorting, so if you change 2d layers you must manually rebuild layers by pressing this button.";

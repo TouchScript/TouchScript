@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Editor.Gestures.Simple
 {
     [CustomEditor(typeof(TwoPointTransform2DGestureBase), true)]
-    public class TwoPointTransform2DGestureBaseEditor : Transform2DGestureBaseEditor
+    internal class TwoPointTransform2DGestureBaseEditor : Transform2DGestureBaseEditor
     {
         private static readonly GUIContent MIN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two points (clusters) in cm to consider this gesture started. Used to prevent fake touch points spawned near real ones on cheap multitouch hardware to mess everything up.");
 
