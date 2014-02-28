@@ -24,12 +24,12 @@ private function doSpawn()
     }
 }
 
-function OnTouchPointBegan(touch:ITouchPoint)
+function OnTouchPointBegan(touch:ITouch)
 {
 	spawn(touch);
 }
 
-function OnTouchPointMoved(touch:ITouchPoint)
+function OnTouchPointMoved(touch:ITouch)
 {
 	spawn(touch);
 }
@@ -44,7 +44,7 @@ function OnTouchPointCancelled()
 	shouldSpawn = false;
 }
 
-private function spawn(touch:ITouchPoint)
+private function spawn(touch:ITouch)
 {
 	shouldSpawn = true;
     spawnCoords = camera.ScreenToWorldPoint(new Vector3(touch.Position.x, touch.Position.y, camera.farClipPlane));

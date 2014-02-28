@@ -29,7 +29,7 @@ public class InputExample : MonoBehaviour
 
     private void touchBeganHandler(object sender, TouchEventArgs e)
     {
-        foreach (var point in e.TouchPoints)
+        foreach (var point in e.Touches)
         {
             spawnPrefabAt(point.Position);
         }

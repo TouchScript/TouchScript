@@ -182,29 +182,29 @@ namespace TouchScript.Debugging
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            foreach (var touchPoint in e.TouchPoints)
+            foreach (var touch in e.Touches)
             {
-                dummies.Add(touchPoint.Id, touchPoint);
+                dummies.Add(touch.Id, touch);
             }
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            foreach (var touchPoint in e.TouchPoints)
+            foreach (var touch in e.Touches)
             {
                 ITouch dummy;
-                if (!dummies.TryGetValue(touchPoint.Id, out dummy)) return;
-                updateDummy(touchPoint);
+                if (!dummies.TryGetValue(touch.Id, out dummy)) return;
+                updateDummy(touch);
             }
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            foreach (var touchPoint in e.TouchPoints)
+            foreach (var touch in e.Touches)
             {
                 ITouch dummy;
-                if (!dummies.TryGetValue(touchPoint.Id, out dummy)) return;
-                dummies.Remove(touchPoint.Id);
+                if (!dummies.TryGetValue(touch.Id, out dummy)) return;
+                dummies.Remove(touch.Id);
             }
         }
 

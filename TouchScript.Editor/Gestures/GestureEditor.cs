@@ -23,32 +23,27 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
 
-        protected bool shouldDrawCombineTouchPoints = false;
+        protected bool shouldDrawCombineTouches = false;
 
-        private Gesture gestureInstance;
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
-        private SerializedProperty combineTouchPoints, combineTouchPointsInterval;
+        private SerializedProperty combineTouches, combineTouchesInterval;
         private SerializedProperty useSendMessage, sendMessageTarget, sendStateChangeMessages;
-
-        private bool friendlyShown, requireToFailShown, requireToFailChecked;
 
         protected virtual void OnEnable()
         {
             hideFlags = HideFlags.HideAndDontSave;
-            gestureInstance = target as Gesture;
 
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
 
-            combineTouchPoints = serializedObject.FindProperty("combineTouchPoints");
-            combineTouchPointsInterval = serializedObject.FindProperty("combineTouchPointsInterval");
+            combineTouches = serializedObject.FindProperty("combineTouches");
+            combineTouchesInterval = serializedObject.FindProperty("combineTouchesInterval");
 
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
 
-            requireToFailChecked = requireGestureToFail.objectReferenceValue != null;
         }
 
         public override void OnInspectorGUI()
@@ -56,7 +51,7 @@ namespace TouchScript.Editor.Gestures
             serializedObject.UpdateIfDirtyOrScript();
 
             drawSendMessage();
-            drawCombineTouchPoints();
+            drawCombineTouches();
             drawRequireToFail();
             drawFriendlyGestures();
 
@@ -80,18 +75,18 @@ namespace TouchScript.Editor.Gestures
             }
         }
 
-        private void drawCombineTouchPoints()
+        private void drawCombineTouches()
         {
-            if (shouldDrawCombineTouchPoints)
+            if (shouldDrawCombineTouches)
             {
-                EditorGUILayout.PropertyField(combineTouchPoints, COMBINE_TOUCH_POINTS);
-                if (combineTouchPoints.boolValue)
+                EditorGUILayout.PropertyField(combineTouches, COMBINE_TOUCH_POINTS);
+                if (combineTouches.boolValue)
                 {
                     EditorGUIUtility.labelWidth = 160;
                     EditorGUILayout.BeginHorizontal();
                     GUILayout.Label(GUIContent.none, GUILayout.Width(10));
                     EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-                    EditorGUILayout.PropertyField(combineTouchPointsInterval, COMBINE_TOUCH_POINTS_INTERVAL);
+                    EditorGUILayout.PropertyField(combineTouchesInterval, COMBINE_TOUCH_POINTS_INTERVAL);
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.EndHorizontal();
                 }

@@ -49,7 +49,7 @@ namespace TouchScript
         public const float INCH_TO_CM = 1/CM_TO_INCH;
 
         /// <summary>
-        /// The value of TouchPoint.Position in an unkown state.
+        /// The value of Touch.Position in an unkown state.
         /// </summary>
         public static readonly Vector2 INVALID_POSITION = new Vector2(float.NaN, float.NaN);
 
@@ -206,22 +206,22 @@ namespace TouchScript
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.TouchPoints, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameStartedhandler(object sender, EventArgs e)

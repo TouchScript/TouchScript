@@ -89,7 +89,7 @@ namespace TouchScript.Gestures.Simple
         /// Checks if gesture has enough touch points to be recognized.
         /// </summary>
         /// <returns>True if there are two or more active touch points, False otherwise.</returns>
-        protected virtual bool gotEnoughTouchPoints()
+        protected virtual bool gotEnoughTouches()
         {
             return activeTouches.Count >= 2;
         }
@@ -99,13 +99,13 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         /// <param name="touches">List of touch points</param>
         /// <returns>True if there are relevant touch points, False otherwise.</returns>
-        protected virtual bool relevantTouchPoints(IList<ITouch> touches)
+        protected virtual bool relevantTouches(IList<ITouch> touches)
         {
             var result = false;
             // We care only about the first and the second touch points
-            foreach (var touchPoint in touches)
+            foreach (var touch in touches)
             {
-                if (touchPoint == activeTouches[0] || touchPoint == activeTouches[1])
+                if (touch == activeTouches[0] || touch == activeTouches[1])
                 {
                     result = true;
                     break;

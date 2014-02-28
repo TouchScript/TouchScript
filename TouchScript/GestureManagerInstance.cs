@@ -173,31 +173,31 @@ namespace TouchScript
 
         #region Private functions
 
-        private void updateBegan(IList<ITouch> points)
+        private void updateBegan(IList<ITouch> touches)
         {
-            update(points, processTargetBegan,
+            update(touches, processTargetBegan,
                 (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
         }
 
-        private void updateMoved(IList<ITouch> points)
+        private void updateMoved(IList<ITouch> touches)
         {
-            update(points, processTarget,
+            update(touches, processTarget,
                 (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
         }
 
-        private void updateEnded(IList<ITouch> points)
+        private void updateEnded(IList<ITouch> touches)
         {
-            update(points, processTarget,
+            update(touches, processTarget,
                 (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
         }
 
-        private void updateCancelled(IList<ITouch> points)
+        private void updateCancelled(IList<ITouch> touches)
         {
-            update(points, processTarget,
+            update(touches, processTarget,
                 (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
         }
 
-        private void update(IList<ITouch> points, Action<Transform> process, Action<Gesture, IList<ITouch>> dispatch)
+        private void update(IList<ITouch> touches, Action<Transform> process, Action<Gesture, IList<ITouch>> dispatch)
         {
             // WARNING! Arcane magic ahead!
 
@@ -209,7 +209,7 @@ namespace TouchScript
             // needed because there's no order in dictionary
             activeGestures.Clear();
 
-            foreach (var touch in points)
+            foreach (var touch in touches)
             {
                 if (touch.Target != null)
                 {
@@ -240,7 +240,7 @@ namespace TouchScript
             {
                 if (!gestureIsActive(gesture)) continue;
 
-                distributePointsByGestures(target, gesture, gesture.HasTouchPoint);
+                distributePointsByGestures(target, gesture, gesture.HasTouch);
             }
         }
 
@@ -417,22 +417,22 @@ namespace TouchScript
 
         private void touchBeganHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateBegan(touchEventArgs.TouchPoints);
+            updateBegan(touchEventArgs.Touches);
         }
 
         private void touchMovedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateMoved(touchEventArgs.TouchPoints);
+            updateMoved(touchEventArgs.Touches);
         }
 
         private void touchEndedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateEnded(touchEventArgs.TouchPoints);
+            updateEnded(touchEventArgs.Touches);
         }
 
         private void touchCancelledHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateCancelled(touchEventArgs.TouchPoints);
+            updateCancelled(touchEventArgs.Touches);
         }
 
         #endregion

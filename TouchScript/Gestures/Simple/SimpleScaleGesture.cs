@@ -57,8 +57,8 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
         {
-            if (!gotEnoughTouchPoints()) return;
-            if (!relevantTouchPoints(touches)) return;
+            if (!gotEnoughTouches()) return;
+            if (!relevantTouches(touches)) return;
 
             Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
             var deltaScale = 1f;

@@ -93,19 +93,19 @@ namespace TouchScript.Gestures
             }
         }
 
-        public bool CombineTouchPoints
+        public bool CombineTouches
         {
-            get { return combineTouchPoints; }
-            set { combineTouchPoints = value; }
+            get { return combineTouches; }
+            set { combineTouches = value; }
         }
 
         /// <summary>
         /// Time interval before gesture is recognized to combine all lifted touch points into a cluster and calculate their screen positions.
         /// </summary>
-        public float CombineTouchPointsInterval
+        public float CombineTouchesInterval
         {
-            get { return combineTouchPointsInterval; }
-            set { combineTouchPointsInterval = value; }
+            get { return combineTouchesInterval; }
+            set { combineTouchesInterval = value; }
         }
 
         public bool UseSendMessage
@@ -269,10 +269,10 @@ namespace TouchScript.Gestures
 
         [SerializeField]
         [ToggleLeft]
-        private bool combineTouchPoints = false;
+        private bool combineTouches = false;
 
         [SerializeField]
-        private float combineTouchPointsInterval = .3f;
+        private float combineTouchesInterval = .3f;
 
         [SerializeField]
         [ToggleLeft]
@@ -381,7 +381,7 @@ namespace TouchScript.Gestures
         /// <returns>
         ///   <c>true</c> if gesture controls the touch point; otherwise, <c>false</c>.
         /// </returns>
-        public bool HasTouchPoint(ITouch touch)
+        public bool HasTouch(ITouch touch)
         {
             return activeTouches.Contains(touch);
         }
@@ -544,7 +544,7 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
-        protected virtual bool shouldCacheTouchPointPosition(ITouch value)
+        protected virtual bool shouldCacheTouchPosition(ITouch value)
         {
             return true;
         }
@@ -605,7 +605,7 @@ namespace TouchScript.Gestures
         /// <param name="touches">The touches.</param>
         protected virtual void touchesEnded(IList<ITouch> touches)
         {
-            if (combineTouchPoints)
+            if (combineTouches)
             {
                 foreach (var touch in touches)
                 {
@@ -615,7 +615,7 @@ namespace TouchScript.Gestures
                 if (activeTouches.Count == 0)
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                    var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
+                    var cluster = touchSequence.FindTouchesLaterThan(Time.time - combineTouchesInterval, shouldCacheTouchPosition);
                     cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
                     cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
                 }
@@ -624,7 +624,7 @@ namespace TouchScript.Gestures
                 if (activeTouches.Count == 0)
                 {
                     var lastPoint = touches[touches.Count - 1];
-                    if (shouldCacheTouchPointPosition(lastPoint))
+                    if (shouldCacheTouchPosition(lastPoint))
                     {
                         cachedScreenPosition = lastPoint.Position;
                         cachedPreviousScreenPosition = lastPoint.PreviousPosition;

@@ -23,7 +23,7 @@ namespace TouchScript.Utils
             timestamps.Clear();
         }
 
-        public IList<ITouch> FindTouchPointsLaterThan(float time)
+        public IList<ITouch> FindTouchesLaterThan(float time)
         {
             var list = new List<ITouch>();
             for (var i = points.Count - 1; i >= 0; i--)
@@ -35,7 +35,7 @@ namespace TouchScript.Utils
             return list;
         }
 
-        public IList<ITouch> FindTouchPointsLaterThan(float time, Predicate<ITouch> predicate)
+        public IList<ITouch> FindTouchesLaterThan(float time, Predicate<ITouch> predicate)
         {
             var list = new List<ITouch>();
             for (var i = points.Count - 1; i >= 0; i--)

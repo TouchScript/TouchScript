@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures.Simple
 {
     /// <summary>
-    /// Converts touchpoint events for target object into separate events to be used somewhere else.
+    /// Converts touch events for target object into separate events to be used somewhere else.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Meta Gesture")]
     public sealed class MetaGesture : Gesture
@@ -152,15 +152,15 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// Current touch point.
         /// </summary>
-        public ITouch TouchPoint { get; private set; }
+        public ITouch Touch { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.
         /// </summary>
-        /// <param name="touchPoint">Touch point the event is for.</param>
-        public MetaGestureEventArgs(ITouch touchPoint)
+        /// <param name="touch">Touch point the event is for.</param>
+        public MetaGestureEventArgs(ITouch touch)
         {
-            TouchPoint = touchPoint;
+            Touch = touch;
         }
     }
 }

@@ -160,7 +160,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override bool shouldCacheTouchPointPosition(ITouch value)
+        protected override bool shouldCacheTouchPosition(ITouch value)
         {
             // Points must be over target when released
             return GetTargetHitResult(value.Position);

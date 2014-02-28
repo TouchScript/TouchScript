@@ -92,13 +92,13 @@ namespace TouchScript.Gestures
         #region Protected functions
 
         /// <inheritdoc />
-        protected override bool gotEnoughTouchPoints()
+        protected override bool gotEnoughTouches()
         {
             return clusters.HasClusters;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouchPoints(IList<ITouch> touches)
+        protected override bool relevantTouches(IList<ITouch> touches)
         {
             // every touch point is relevant for us
             return true;

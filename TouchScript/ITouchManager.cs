@@ -63,12 +63,12 @@ namespace TouchScript
         /// <summary>
         /// Number of active touches.
         /// </summary>
-        int TouchPointsCount { get; }
+        int NumberOfTouches { get; }
 
         /// <summary>
         /// List of active touches.
         /// </summary>
-        IList<ITouch> TouchPoints { get; }
+        IList<ITouch> ActiveTouches { get; }
 
         /// <summary>
         /// Adds a layer.
@@ -141,15 +141,15 @@ namespace TouchScript
         /// <summary>
         /// List of touch points participating in the event.
         /// </summary>
-        public IList<ITouch> TouchPoints { get; private set; }
+        public IList<ITouch> Touches { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
         /// </summary>
-        /// <param name="touchPoints">List of touch points.</param>
-        public TouchEventArgs(IList<ITouch> touchPoints)
+        /// <param name="Touches">List of touch points.</param>
+        public TouchEventArgs(IList<ITouch> touches)
         {
-            TouchPoints = touchPoints;
+            Touches = touches;
         }
     }
 }

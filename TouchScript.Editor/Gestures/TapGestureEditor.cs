@@ -27,7 +27,7 @@ namespace TouchScript.Editor.Gestures
             timeLimit = serializedObject.FindProperty("timeLimit");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
 
-            shouldDrawCombineTouchPoints = true;
+            shouldDrawCombineTouches = true;
         }
 
         public override void OnInspectorGUI()
