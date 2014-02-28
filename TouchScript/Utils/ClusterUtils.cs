@@ -10,19 +10,6 @@ namespace TouchScript.Utils
         private static StringBuilder hashString = new StringBuilder();
 
         /// <summary>
-        /// Returns a camera which was used to capture cluster's points.
-        /// </summary>
-        /// <param name="touches">List of touch points.</param>
-        /// <returns>Camera instance.</returns>
-        public static Camera GetClusterCamera(IList<ITouch> touches)
-        {
-            if (touches.Count == 0) return Camera.main;
-            var cam = touches[0].Layer.Camera;
-            if (cam == null) return Camera.main;
-            return cam;
-        }
-
-        /// <summary>
         /// Calculates the centroid of touch points' positions.
         /// </summary>
         /// <param name="touches">List of touch points.</param>
