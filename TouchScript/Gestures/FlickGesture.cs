@@ -132,7 +132,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count == touches.Count)
+            if (touchPoints.Count == touches.Count)
             {
                 isActive = true;
             }
@@ -159,7 +159,7 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (touchPoints.Count == 0)
             {
                 isActive = false;
 

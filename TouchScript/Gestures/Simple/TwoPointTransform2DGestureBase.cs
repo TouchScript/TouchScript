@@ -91,7 +91,7 @@ namespace TouchScript.Gestures.Simple
         /// <returns>True if there are two or more active touch points, False otherwise.</returns>
         protected virtual bool gotEnoughTouchPoints()
         {
-            return activeTouches.Count >= 2;
+            return touchPoints.Count >= 2;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace TouchScript.Gestures.Simple
             // We care only about the first and the second touch points
             foreach (var touchPoint in touches)
             {
-                if (touchPoint == activeTouches[0] || touchPoint == activeTouches[1])
+                if (touchPoint == touchPoints[0] || touchPoint == touchPoints[1])
                 {
                     result = true;
                     break;
@@ -123,7 +123,7 @@ namespace TouchScript.Gestures.Simple
         {
             if (index < 0) index = 0;
             else if (index > 1) index = 1;
-            return activeTouches[index].Position;
+            return touchPoints[index].Position;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace TouchScript.Gestures.Simple
         {
             if (index < 0) index = 0;
             else if (index > 1) index = 1;
-            return activeTouches[index].PreviousPosition;
+            return touchPoints[index].PreviousPosition;
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
+            if (touchPoints.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
             {
                 restart();
             }

@@ -180,12 +180,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0)
+                if (touchPoints.Count == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return ClusterUtils.Get2DCenterPosition(activeTouches);
+                return ClusterUtils.Get2DCenterPosition(touchPoints);
             }
         }
 
@@ -196,12 +196,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0)
+                if (touchPoints.Count == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
+                return ClusterUtils.GetPrevious2DCenterPosition(touchPoints);
             }
         }
 
@@ -234,9 +234,9 @@ namespace TouchScript.Gestures
         /// <summary>
         /// List of gesture's active touch points.
         /// </summary>
-        public IList<ITouchPoint> ActiveTouches
+        public IList<ITouchPoint> TouchPoints
         {
-            get { return activeTouches.AsReadOnly(); }
+            get { return touchPoints.AsReadOnly(); }
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Touch points the gesture currently owns and works with.
         /// </summary>
-        protected List<ITouchPoint> activeTouches = new List<ITouchPoint>();
+        protected List<ITouchPoint> touchPoints = new List<ITouchPoint>();
 
         [SerializeField]
         [ToggleLeft]
@@ -383,7 +383,7 @@ namespace TouchScript.Gestures
         /// </returns>
         public bool HasTouchPoint(ITouchPoint touch)
         {
-            return activeTouches.Contains(touch);
+            return touchPoints.Contains(touch);
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace TouchScript.Gestures
 
         internal void Reset()
         {
-            activeTouches.Clear();
+            touchPoints.Clear();
             delayedStateChange = GestureState.Possible;
             requiredGestureFailed = false;
             reset();
@@ -506,7 +506,7 @@ namespace TouchScript.Gestures
 
         internal void TouchesBegan(IList<ITouchPoint> touches)
         {
-            activeTouches.AddRange(touches);
+            touchPoints.AddRange(touches);
             touchesBegan(touches);
         }
 
@@ -517,13 +517,13 @@ namespace TouchScript.Gestures
 
         internal void TouchesEnded(IList<ITouchPoint> touches)
         {
-            activeTouches.RemoveAll(touches.Contains);
+            touchPoints.RemoveAll(touches.Contains);
             touchesEnded(touches);
         }
 
         internal void TouchesCancelled(IList<ITouchPoint> touches)
         {
-            activeTouches.RemoveAll(touches.Contains);
+            touchPoints.RemoveAll(touches.Contains);
             touchesCancelled(touches);
         }
 
@@ -612,7 +612,7 @@ namespace TouchScript.Gestures
                     touchSequence.Add(touch, Time.time);
                 }
 
-                if (activeTouches.Count == 0)
+                if (touchPoints.Count == 0)
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
                     var cluster = touchSequence.FindTouchPointsLaterThan(Time.time - combineTouchPointsInterval, shouldCacheTouchPointPosition);
@@ -621,7 +621,7 @@ namespace TouchScript.Gestures
                 }
             } else
             {
-                if (activeTouches.Count == 0)
+                if (touchPoints.Count == 0)
                 {
                     var lastPoint = touches[touches.Count - 1];
                     if (shouldCacheTouchPointPosition(lastPoint))

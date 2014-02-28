@@ -49,9 +49,9 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
-                if (activeTouches.Count == 1) return activeTouches[0].Position;
-                return (activeTouches[0].Position + activeTouches[1].Position)*.5f;
+                if (touchPoints.Count == 0) return TouchManager.INVALID_POSITION;
+                if (touchPoints.Count == 1) return touchPoints[0].Position;
+                return (touchPoints[0].Position + touchPoints[1].Position)*.5f;
             }
         }
 
@@ -60,9 +60,9 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
-                if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
-                return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition)*.5f;
+                if (touchPoints.Count == 0) return TouchManager.INVALID_POSITION;
+                if (touchPoints.Count == 1) return touchPoints[0].PreviousPosition;
+                return (touchPoints[0].PreviousPosition + touchPoints[1].PreviousPosition)*.5f;
             }
         }
 

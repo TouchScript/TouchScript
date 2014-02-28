@@ -110,7 +110,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && touchPoints.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
             if (touchPointEndedInvoker != null)
@@ -128,7 +128,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesCancelled(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && touchPoints.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
             if (touchPointCancelledInvoker != null)

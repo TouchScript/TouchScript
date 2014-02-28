@@ -70,7 +70,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
+            if (touchPoints.Count == touches.Count) setState(GestureState.Recognized);
         }
 
         /// <inheritdoc />

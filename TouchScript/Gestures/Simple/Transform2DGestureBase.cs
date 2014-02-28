@@ -151,7 +151,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (touchPoints.Count == 0)
             {
                 switch (State)
                 {
@@ -205,8 +205,8 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         protected void updateProjectionCamera()
         {
-            if (activeTouches.Count == 0) projectionCamera = Camera.main;
-            else projectionCamera = ClusterUtils.GetClusterCamera(activeTouches);
+            if (touchPoints.Count == 0) projectionCamera = Camera.main;
+            else projectionCamera = ClusterUtils.GetClusterCamera(touchPoints);
         }
 
         /// <summary>
