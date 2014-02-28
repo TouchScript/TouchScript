@@ -3,7 +3,6 @@
  */
 
 using System.Collections.Generic;
-using TouchScript.Events;
 using UnityEngine;
 
 namespace TouchScript.Debugging

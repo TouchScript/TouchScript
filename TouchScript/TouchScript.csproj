@@ -53,7 +53,6 @@
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Devices\Display\GenericDisplayDevice.cs" />
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
-    <Compile Include="Events\TouchEventArgs.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
     <Compile Include="Gestures\FlickGesture.cs" />

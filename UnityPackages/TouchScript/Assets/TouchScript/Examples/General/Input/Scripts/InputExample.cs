@@ -1,5 +1,4 @@
 using TouchScript;
-using TouchScript.Events;
 using UnityEngine;
 
 public class InputExample : MonoBehaviour

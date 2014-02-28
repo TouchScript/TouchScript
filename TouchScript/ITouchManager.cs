@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
-using TouchScript.Events;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
@@ -136,4 +135,22 @@ namespace TouchScript
         /// <param name="id">Internal touch id.</param>
         void CancelTouch(int id);
     }
+
+    public class TouchEventArgs : EventArgs
+    {
+        /// <summary>
+        /// List of touch points participating in the event.
+        /// </summary>
+        public IList<ITouchPoint> TouchPoints { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
+        /// </summary>
+        /// <param name="touchPoints">List of touch points.</param>
+        public TouchEventArgs(IList<ITouchPoint> touchPoints)
+        {
+            TouchPoints = touchPoints;
+        }
+    }
+
 }

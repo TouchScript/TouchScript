@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 
