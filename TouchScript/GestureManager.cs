@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace TouchScript
 {
-    [AddComponentMenu("TouchScript/Gesture Manager")]
-    public sealed class GestureManager : MonoBehaviour
+    //[AddComponentMenu("TouchScript/Gesture Manager")]
+    internal sealed class GestureManager : MonoBehaviour
     {
         #region Public properties
 
