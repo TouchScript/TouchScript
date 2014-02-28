@@ -12,7 +12,7 @@ namespace TouchScript.Gestures.Simple
     /// Converts touchpoint events for target object into separate events to be used somewhere else.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Meta Gesture")]
-    public class MetaGesture : Gesture
+    public sealed class MetaGesture : Gesture
     {
         #region Constants
 

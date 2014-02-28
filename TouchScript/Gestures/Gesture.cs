@@ -253,6 +253,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected IGestureManager gestureManager
         {
+            // implemented as a property because it returns IGestureManager but we need to reference GestureManagerInstance to access internal methods
             get { return gestureManagerInstance; }
         }
 

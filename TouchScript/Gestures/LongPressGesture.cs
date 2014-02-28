@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using TouchScript.Hit;
 using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 

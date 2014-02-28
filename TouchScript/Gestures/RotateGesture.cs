@@ -3,7 +3,6 @@
  */
 
 using System.Collections.Generic;
-using TouchScript.Clusters;
 using TouchScript.Gestures.Simple;
 using UnityEngine;
 

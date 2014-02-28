@@ -3,7 +3,7 @@
 namespace TouchScript.Hit
 {
     [AddComponentMenu("TouchScript/Behaviors/Ignore Trigger")]
-    public class IgnoreTrigger : HitTest
+    public sealed class IgnoreTrigger : HitTest
     {
         public override ObjectHitResult IsHit(ITouchHit hit)
         {
