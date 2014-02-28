@@ -11,9 +11,11 @@ namespace TouchScript
     {
         #region Public properties
 
-        public static IGestureManager Instance { get { return GestureManagerInstance.Instance; } }
+        public static IGestureManager Instance
+        {
+            get { return GestureManagerInstance.Instance; }
+        }
 
         #endregion
-
     }
 }

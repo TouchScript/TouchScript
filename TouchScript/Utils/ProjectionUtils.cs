@@ -9,7 +9,7 @@ namespace TouchScript.Utils
     /// <summary>
     /// Projection utils.
     /// </summary>
-    public class ProjectionUtils
+    public static class ProjectionUtils
     {
         /// <summary>
         /// Projects a screen point to a plane.

@@ -152,5 +152,4 @@ namespace TouchScript
             TouchPoints = touchPoints;
         }
     }
-
 }

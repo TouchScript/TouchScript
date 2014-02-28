@@ -7,7 +7,6 @@ namespace TouchScript.Utils
 {
     public static class ClusterUtils
     {
-
         private static StringBuilder hashString = new StringBuilder();
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace TouchScript.Utils
 
             var position = new Vector2();
             foreach (var point in touches) position += point.Position;
-            return position / (float)length;
+            return position/(float)length;
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace TouchScript.Utils
 
             var position = new Vector2();
             foreach (var point in touches) position += point.PreviousPosition;
-            return position / (float)length;
+            return position/(float)length;
         }
 
         /// <summary>
@@ -67,10 +66,8 @@ namespace TouchScript.Utils
             {
                 hashString.Append("#");
                 hashString.Append(touches[i].Id);
-
             }
             return hashString.ToString();
         }
-
     }
 }

@@ -11,7 +11,6 @@ namespace TouchScript
 {
     internal sealed class GestureManagerInstance : MonoBehaviour, IGestureManager
     {
-
         #region Public properties
 
         public static IGestureManager Instance
@@ -29,8 +28,7 @@ namespace TouchScript
                         go.hideFlags = HideFlags.HideInHierarchy;
                         DontDestroyOnLoad(go);
                         instance = go.AddComponent<GestureManagerInstance>();
-                    }
-                    else if (objects.Length >= 1)
+                    } else if (objects.Length >= 1)
                     {
                         instance = objects[0];
                     }
@@ -116,14 +114,13 @@ namespace TouchScript
                         case Gesture.GestureState.Possible:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] { gesture, state, gesture.State }));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
                             break;
                     }
                     if (gestureCanRecognize(gesture))
                     {
                         recognizeGesture(gesture);
-                    }
-                    else
+                    } else
                     {
                         if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
                         return Gesture.GestureState.Failed;
@@ -136,7 +133,7 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] { gesture, state, gesture.State }));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
                             break;
                     }
                     break;
@@ -151,8 +148,7 @@ namespace TouchScript
                             if (gestureCanRecognize(gesture))
                             {
                                 recognizeGesture(gesture);
-                            }
-                            else
+                            } else
                             {
                                 return Gesture.GestureState.Failed;
                             }
@@ -161,7 +157,7 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] { gesture, state, gesture.State }));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
                             break;
                     }
                     break;
@@ -285,8 +281,7 @@ namespace TouchScript
                 if (gestureTouches.ContainsKey(gesture))
                 {
                     gestureTouches[gesture].AddRange(touchesToReceive);
-                }
-                else
+                } else
                 {
                     activeGestures.Add(gesture);
                     gestureTouches.Add(gesture, touchesToReceive);
@@ -441,6 +436,5 @@ namespace TouchScript
         }
 
         #endregion
-
     }
 }

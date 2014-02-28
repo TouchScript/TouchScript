@@ -6,7 +6,6 @@ namespace TouchScript
 {
     public interface ITouchPoint
     {
-
         /// <summary>
         /// Internal unique touch point id.
         /// </summary>
@@ -36,6 +35,5 @@ namespace TouchScript
         /// Original camera through which the target was seen.
         /// </summary>
         TouchLayer Layer { get; }
-
     }
 }
