@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Events;
-using TouchScript.Clusters;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Utils;
@@ -728,4 +727,29 @@ namespace TouchScript.Gestures
 
         #endregion
     }
+
+    public class GestureStateChangeEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Previous gesture state.
+        /// </summary>
+        public Gesture.GestureState PreviousState { get; private set; }
+
+        /// <summary>
+        /// Current gesture state.
+        /// </summary>
+        public Gesture.GestureState State { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GestureStateChangeEventArgs"/> class.
+        /// </summary>
+        /// <param name="state">Current gesture state.</param>
+        /// <param name="previousState">Previous gesture state.</param>
+        public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
+        {
+            State = state;
+            PreviousState = previousState;
+        }
+    }
+
 }

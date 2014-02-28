@@ -36,7 +36,7 @@ public class BasicExample_Breaker : MonoBehaviour
         }
     }
 
-    private void tapStateChangedhandler(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
+    private void tapStateChangedhandler(object sender, GestureStateChangeEventArgs e)
     {
         var tap = sender as TapGesture;
 

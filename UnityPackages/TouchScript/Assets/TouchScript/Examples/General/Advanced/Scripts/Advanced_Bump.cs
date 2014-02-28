@@ -1,4 +1,3 @@
-using TouchScript.Events;
 using TouchScript.Gestures;
 using UnityEngine;
 

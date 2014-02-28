@@ -18,7 +18,7 @@ public class BasicExample_Spawner : MonoBehaviour
         GetComponent<TapGesture>().StateChanged -= tapStateChangedHandler;
     }
 
-    private void tapStateChangedHandler(object sender, TouchScript.Events.GestureStateChangeEventArgs e)
+    private void tapStateChangedHandler(object sender, GestureStateChangeEventArgs e)
     {
         if (e.State == Gesture.GestureState.Recognized)
         {
