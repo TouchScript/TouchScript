@@ -79,11 +79,12 @@ namespace TouchScript.Layers
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>
             {
-                if (a.transform == b.transform) return 0;
+                if (a.collider.transform == b.collider.transform) return 0;
                 var distA = (a.point - cameraPos).sqrMagnitude;
                 var distB = (b.point - cameraPos).sqrMagnitude;
                 return distA < distB ? -1 : 1;
             });
+
             return sortedHits.ToArray();
         }
 

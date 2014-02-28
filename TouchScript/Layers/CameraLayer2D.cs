@@ -74,7 +74,7 @@ namespace TouchScript.Layers
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>
             {
-                if (a.transform == b.transform) return 0;
+                if (a.collider.transform == b.collider.transform) return 0;
 
                 var sprite1 = a.transform.GetComponent<SpriteRenderer>();
                 var sprite2 = b.transform.GetComponent<SpriteRenderer>();
