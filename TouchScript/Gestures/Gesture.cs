@@ -570,6 +570,8 @@ namespace TouchScript.Gestures
                         }
                         break;
                     case GestureState.Possible:
+                    case GestureState.Failed:
+                    case GestureState.Cancelled:
                         delayedStateChange = GestureState.Possible;
                         break;
                 }
@@ -712,14 +714,18 @@ namespace TouchScript.Gestures
             switch (e.State)
             {
                 case GestureState.Failed:
-                    requiredGestureFailed = true;
                     if (delayedStateChange != GestureState.Possible)
                     {
+                        requiredGestureFailed = true;
                         setState(delayedStateChange);
+                    } else
+                    {
+                        setState(GestureState.Failed);
                     }
                     break;
                 case GestureState.Began:
                 case GestureState.Recognized:
+                case GestureState.Cancelled:
                     setState(GestureState.Failed);
                     break;
             }
