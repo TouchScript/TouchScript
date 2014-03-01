@@ -23,7 +23,8 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 minPointsDistance = value;
-                minPointsDistanceInPixels = value * touchManager.DotsPerCentimeter;
+                minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
+                minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
             }
         }
 
@@ -57,7 +58,8 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// <see cref="MinPointsDistance"/> in pixels for internal use.
         /// </summary>
-        protected float minPointsDistanceInPixels;
+        protected float minPixelDistance;
+        protected float minPixelDistanceSquared;
 
         /// <summary>
         /// Transform's center point screen position.
@@ -78,7 +80,8 @@ namespace TouchScript.Gestures.Simple
         {
             base.OnEnable();
 
-            minPointsDistanceInPixels = minPointsDistance * touchManager.DotsPerCentimeter;
+            minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
+            minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
         }
 
         #endregion

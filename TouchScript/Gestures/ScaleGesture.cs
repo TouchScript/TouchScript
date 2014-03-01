@@ -25,7 +25,7 @@ namespace TouchScript.Gestures
                 base.MinPointsDistance = value;
                 if (Application.isPlaying)
                 {
-                    clusters.MinPointsDistance = minPointsDistanceInPixels;
+                    clusters.MinPointsDistance = minPixelDistance;
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace TouchScript.Gestures
         {
             base.OnEnable();
 
-            clusters.MinPointsDistance = minPointsDistanceInPixels;
+            clusters.MinPointsDistance = minPixelDistance;
         }
 
         #endregion

@@ -60,26 +60,27 @@ namespace TouchScript.Gestures.Simple
             if (!gotEnoughTouches()) return;
             if (!relevantTouches(touches)) return;
 
-            Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
+            Vector3 oldWorldCenter, newWorldCenter;
             var deltaRotation = 0f;
             
-            var new2DPos1 = getPointScreenPosition(0);
-            var new2DPos2 = getPointScreenPosition(1);
-            if (Vector2.Distance(new2DPos1, new2DPos2) < minPointsDistanceInPixels) return;
+            var newScreenPos1 = getPointScreenPosition(0);
+            var newScreenPos2 = getPointScreenPosition(1);
+            var newScreenDelta = newScreenPos2 - newScreenPos1;
+            if (newScreenDelta.sqrMagnitude < minPixelDistanceSquared) return;
 
             base.touchesMoved(touches);
 
-            var old2DPos1 = getPointPreviousScreenPosition(0);
-            var old2DPos2 = getPointPreviousScreenPosition(1);
-            var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, WorldTransformPlane);
-            var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, WorldTransformPlane);
-            var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, WorldTransformPlane);
-            var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, WorldTransformPlane);
-            var newVector = new3DPos2 - new3DPos1;
-            var oldVector = old3DPos2 - old3DPos1;
+            var oldScreenPos1 = getPointPreviousScreenPosition(0);
+            var oldScreenPos2 = getPointPreviousScreenPosition(1);
+            var oldWorldPos1 = ProjectionUtils.CameraToPlaneProjection(oldScreenPos1, projectionCamera, WorldTransformPlane);
+            var oldWorldPos2 = ProjectionUtils.CameraToPlaneProjection(oldScreenPos2, projectionCamera, WorldTransformPlane);
+            var newWorldPos1 = ProjectionUtils.CameraToPlaneProjection(newScreenPos1, projectionCamera, WorldTransformPlane);
+            var newWorldPos2 = ProjectionUtils.CameraToPlaneProjection(newScreenPos2, projectionCamera, WorldTransformPlane);
+            var newVector = newWorldPos2 - newWorldPos1;
+            var oldVector = oldWorldPos2 - oldWorldPos1;
 
-            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2)*.5f;
-            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2)*.5f;
+            Vector2 oldScreenCenter = (oldScreenPos1 + oldScreenPos2)*.5f;
+            Vector2 newScreenCenter = (newScreenPos1 + newScreenPos2)*.5f;
 
             var angle = Vector3.Angle(oldVector, newVector);
             if (Vector3.Dot(Vector3.Cross(oldVector, newVector), WorldTransformPlane.normal) < 0) angle = -angle;
@@ -96,10 +97,8 @@ namespace TouchScript.Gestures.Simple
                 }
             }
 
-            oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);
-            newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
-            oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
-            newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
+            oldWorldCenter = ProjectionUtils.CameraToPlaneProjection(oldScreenCenter, projectionCamera, WorldTransformPlane);
+            newWorldCenter = ProjectionUtils.CameraToPlaneProjection(newScreenCenter, projectionCamera, WorldTransformPlane);
 
             if (Math.Abs(deltaRotation) > 0.00001)
             {
@@ -108,13 +107,11 @@ namespace TouchScript.Gestures.Simple
                     case GestureState.Possible:
                     case GestureState.Began:
                     case GestureState.Changed:
-                        screenPosition = newCenter2DPos;
-                        previousScreenPosition = oldCenter2DPos;
-                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
-                        WorldTransformCenter = newGlobalCenter3DPos;
-                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
-                        LocalTransformCenter = newLocalCenter3DPos;
-                        PreviousLocalTransformCenter = oldLocalCenter3DPos;
+                        screenPosition = newScreenCenter;
+                        previousScreenPosition = oldScreenCenter;
+                        PreviousWorldTransformCenter = oldWorldCenter;
+                        WorldTransformCenter = newWorldCenter;
+                        PreviousWorldTransformCenter = oldWorldCenter;
 
                         LocalDeltaRotation = deltaRotation;
 

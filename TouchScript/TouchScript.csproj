@@ -103,6 +103,7 @@
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
     <Compile Include="Utils\TimedTouchSequence.cs" />
+    <Compile Include="Utils\TransformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Devices\Input\" />

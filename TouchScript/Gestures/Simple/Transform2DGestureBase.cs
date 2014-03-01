@@ -3,7 +3,6 @@
  */
 
 using System.Collections.Generic;
-using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
@@ -72,6 +71,7 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 if (projection == ProjectionType.Camera) projection = ProjectionType.Local;
+                value.Normalize();
                 if (projectionNormal == value) return;
                 projectionNormal = value;
                 if (Application.isPlaying) updateProjectionPlane();
@@ -89,19 +89,12 @@ namespace TouchScript.Gestures.Simple
         public Vector3 WorldTransformCenter { get; protected set; }
 
         /// <summary>
-        /// Previous local transform center in 3D.
-        /// </summary>
-        public Vector3 PreviousLocalTransformCenter { get; protected set; }
-
-        /// <summary>
-        /// Local transform center in 3D.
-        /// </summary>
-        public Vector3 LocalTransformCenter { get; protected set; }
-
-        /// <summary>
         /// Plane where transformation occured.
         /// </summary>
-        public Plane WorldTransformPlane { get; private set; }
+        public Plane WorldTransformPlane
+        {
+            get { return new Plane(worldTransformPlane.normal, worldTransformPlane.distance); }
+        }
 
         #endregion
 
@@ -112,6 +105,8 @@ namespace TouchScript.Gestures.Simple
 
         [SerializeField]
         private Vector3 projectionNormal = Vector3.forward;
+
+        private Plane worldTransformPlane;
 
         private Collider cachedCollider;
 
@@ -124,13 +119,19 @@ namespace TouchScript.Gestures.Simple
 
         #region Unity methods
 
+        protected override void Awake()
+        {
+            base.Awake();
+            worldTransformPlane = new Plane();
+        }
+
         /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();
 
             cachedCollider = collider;
-            updateProjectionCamera();
+            projectionCamera = Camera.main;
             updateProjectionPlane();
         }
 
@@ -139,11 +140,22 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
+        protected override void touchesBegan(IList<ITouch> touches)
+        {
+            base.touchesMoved(touches);
+
+            if (touches.Count == activeTouches.Count)
+            {
+                projectionCamera = activeTouches[0].Layer.Camera;
+                updateProjectionPlane();
+            }
+        }
+
+        /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
 
-            updateProjectionCamera();
             updateProjectionPlane();
         }
 
@@ -179,37 +191,11 @@ namespace TouchScript.Gestures.Simple
 
             WorldTransformCenter = TouchManager.INVALID_POSITION;
             PreviousWorldTransformCenter = TouchManager.INVALID_POSITION;
-            LocalTransformCenter = TouchManager.INVALID_POSITION;
-            PreviousLocalTransformCenter = TouchManager.INVALID_POSITION;
         }
 
         #endregion
 
         #region Private functions
-
-        /// <summary>
-        /// Converts a vector from global space to object's local space.
-        /// </summary>
-        /// <param name="global">Global vector to convert.</param>
-        /// <returns>Vector in local space.</returns>
-        protected virtual Vector3 globalToLocalPosition(Vector3 global)
-        {
-            if (transform.parent != null)
-            {
-                return transform.parent.InverseTransformPoint(global);
-            }
-            return global;
-        }
-
-        /// <summary>
-        /// Updates projection camera.
-        /// </summary>
-        protected void updateProjectionCamera()
-        {
-            if (activeTouches.Count == 0) projectionCamera = Camera.main;
-            else projectionCamera = activeTouches[0].Layer.Camera;
-            if (projectionCamera == null) projectionCamera = Camera.main;
-        }
 
         /// <summary>
         /// Updates projection plane based on options set.
@@ -225,13 +211,13 @@ namespace TouchScript.Gestures.Simple
             switch (projection)
             {
                 case ProjectionType.Camera:
-                    WorldTransformPlane = new Plane(projectionCamera.transform.forward, center);
+                    worldTransformPlane = new Plane(projectionCamera.transform.forward, center);
                     break;
                 case ProjectionType.Local:
-                    WorldTransformPlane = new Plane(transform.TransformDirection(projectionNormal).normalized, center);
+                    worldTransformPlane = new Plane(transform.TransformDirection(projectionNormal), center);
                     break;
                 case ProjectionType.Global:
-                    WorldTransformPlane = new Plane(projectionNormal.normalized, center);
+                    worldTransformPlane = new Plane(projectionNormal, center);
                     break;
             }
         }
