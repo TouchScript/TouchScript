@@ -3,7 +3,7 @@
 printf "\e[32mSynchronizing TouchScript folder...\e[39m\n"
 for i in $(ls -d */); do 
 	name=${i%%/}
-	if [ "$name" != "TouchScript" ]; then 
+	if [[ "$name" != "TouchScript" && "$name" != _* ]]; then 
 		./sync_examples.sh "$name" 
 	fi
 done
