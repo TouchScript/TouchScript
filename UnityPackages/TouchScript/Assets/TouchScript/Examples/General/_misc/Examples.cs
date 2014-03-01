@@ -13,7 +13,7 @@ public class Examples : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        if (Application.loadedLevelName == "Examples") loadNextLevel();
+        if (Application.loadedLevelName == "Examples" && Application.levelCount > 0) loadNextLevel();
     }
 
     private void OnGUI()

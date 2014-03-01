@@ -180,6 +180,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2051652173}
   - 114: {fileID: 2051652172}
+  - 114: {fileID: 2051652174}
   m_Layer: 0
   m_Name: Examples
   m_TagString: Untagged
@@ -209,3 +210,17 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &2051652174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2051652171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Text: 'You need to add all example scenes to Build Settings / Scenes In Build
+
+    in order for this scene to work.'
