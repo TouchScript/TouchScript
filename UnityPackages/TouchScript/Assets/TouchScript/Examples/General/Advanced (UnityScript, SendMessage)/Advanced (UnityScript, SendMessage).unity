@@ -190,8 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 29650220}
@@ -210,8 +210,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 29650220}
@@ -429,8 +429,8 @@ MonoBehaviour:
   m_Script: {fileID: -1142697980, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 55916773}
@@ -475,8 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 2105402742, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 55916773}
@@ -531,8 +531,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 85253948}
@@ -551,8 +551,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 85253948}
@@ -648,6 +648,10 @@ Prefab:
     - target: {fileID: 400000, guid: 2520587862bc5294586dece48a763d52, type: 2}
       propertyPath: m_LocalRotation.w
       value: .707106829
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 2520587862bc5294586dece48a763d52, type: 2}
+      propertyPath: projection
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2520587862bc5294586dece48a763d52, type: 2}
@@ -1171,6 +1175,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: -4.37113883e-08
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 2520587862bc5294586dece48a763d52, type: 2}
+      propertyPath: projection
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2520587862bc5294586dece48a763d52, type: 2}
   m_RootGameObject: {fileID: 1981862720}
@@ -1217,8 +1225,8 @@ MonoBehaviour:
   m_Script: {fileID: -1142697980, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 606920412}
@@ -1348,6 +1356,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: .707106829
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 2520587862bc5294586dece48a763d52, type: 2}
+      propertyPath: projection
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2520587862bc5294586dece48a763d52, type: 2}
   m_RootGameObject: {fileID: 1585189937}
@@ -1387,6 +1399,10 @@ Prefab:
     - target: {fileID: 400000, guid: 2520587862bc5294586dece48a763d52, type: 2}
       propertyPath: m_LocalRotation.w
       value: .707106829
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 2520587862bc5294586dece48a763d52, type: 2}
+      propertyPath: projection
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2520587862bc5294586dece48a763d52, type: 2}
@@ -1437,8 +1453,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1023181599}
@@ -1457,8 +1473,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1023181599}
@@ -1666,14 +1682,14 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1147511325}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  projection: 1
+  projection: 0
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
 --- !u!114 &1147511328
@@ -1723,6 +1739,10 @@ Prefab:
     - target: {fileID: 400000, guid: 2520587862bc5294586dece48a763d52, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 2520587862bc5294586dece48a763d52, type: 2}
+      propertyPath: projection
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2520587862bc5294586dece48a763d52, type: 2}
@@ -1787,8 +1807,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
@@ -1807,8 +1827,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
@@ -1827,8 +1847,8 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1279678965}
@@ -1936,8 +1956,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1318505542}
@@ -1956,8 +1976,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1318505542}
@@ -2089,8 +2109,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
@@ -2109,8 +2129,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
@@ -2129,8 +2149,8 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1425271478}
@@ -2238,8 +2258,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1534987188}
@@ -2258,8 +2278,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1534987188}
@@ -2365,8 +2385,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1562923258}
@@ -2385,8 +2405,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1562923258}
@@ -2558,7 +2578,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 30.7681065, y: 23.0940094, z: .00999999978}
+  m_Size: {x: 30.8079834, y: 23.0940094, z: .00999999978}
   m_Center: {x: 0, y: 0, z: 20}
 --- !u!114 &1573308017
 MonoBehaviour:
@@ -2583,8 +2603,8 @@ MonoBehaviour:
   m_Script: {fileID: 1700093535, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1573308009}
@@ -2645,14 +2665,14 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1585189937}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  projection: 1
+  projection: 0
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
 --- !u!114 &1585189940
@@ -2772,14 +2792,14 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1746090350}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  projection: 1
+  projection: 0
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
 --- !u!114 &1746090353
@@ -2929,14 +2949,14 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1981862720}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  projection: 1
+  projection: 0
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
 --- !u!114 &1981862723
@@ -2987,6 +3007,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: .707106829
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 2520587862bc5294586dece48a763d52, type: 2}
+      propertyPath: projection
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2520587862bc5294586dece48a763d52, type: 2}
   m_RootGameObject: {fileID: 1147511325}
@@ -3034,14 +3058,14 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 1997631761}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  projection: 1
+  projection: 0
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
 --- !u!114 &1997631764
@@ -3147,14 +3171,14 @@ MonoBehaviour:
   m_Script: {fileID: 1423175855, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2037494010}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  projection: 1
+  projection: 0
   projectionNormal: {x: 1, y: 0, z: 0}
   movementThreshold: .5
 --- !u!114 &2037494013
@@ -3271,8 +3295,8 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
@@ -3291,8 +3315,8 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
@@ -3311,8 +3335,8 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouchPoints: 0
-  combineTouchPointsInterval: .300000012
+  combineTouches: 0
+  combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 2142444254}
