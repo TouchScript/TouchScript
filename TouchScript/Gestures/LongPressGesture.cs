@@ -48,7 +48,11 @@ namespace TouchScript.Gestures
         public float DistanceLimit
         {
             get { return distanceLimit; }
-            set { distanceLimit = value; }
+            set
+            {
+                distanceLimit = value;
+                distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
+            }
         }
 
         #endregion
@@ -66,11 +70,20 @@ namespace TouchScript.Gestures
         [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float distanceLimit = float.PositiveInfinity;
 
-        private Vector2 startPosition;
+        private float distanceLimitInPixelsSquared;
+
+        private Vector2 totalMovement;
 
         #endregion
 
         #region Unity methods
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
+        }
 
         #endregion
 
@@ -89,7 +102,6 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == touches.Count)
             {
-                startPosition = touches[0].Position;
                 StartCoroutine("wait");
             }
         }
@@ -99,9 +111,10 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            if (distanceLimit < float.PositiveInfinity && (ScreenPosition - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
+            if (distanceLimit < float.PositiveInfinity)
             {
-                setState(GestureState.Failed);
+                totalMovement += ScreenPosition - PreviousScreenPosition;
+                if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
         }
 
@@ -129,6 +142,7 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
+            totalMovement = Vector2.zero;
             StopCoroutine("wait");
         }
 

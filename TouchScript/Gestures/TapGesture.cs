@@ -49,7 +49,11 @@ namespace TouchScript.Gestures
         public float DistanceLimit
         {
             get { return distanceLimit; }
-            set { distanceLimit = value; }
+            set
+            {
+                distanceLimit = value;
+                distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
+            }
         }
 
         #endregion
@@ -66,9 +70,22 @@ namespace TouchScript.Gestures
         [SerializeField]
         [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float distanceLimit = float.PositiveInfinity;
+        private float distanceLimitInPixelsSquared;
 
         private int tapsDone;
         private Vector2 startPosition;
+        private Vector2 totalMovement;
+
+        #endregion
+
+        #region Unity methods
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
+        }
 
         #endregion
 
@@ -94,7 +111,10 @@ namespace TouchScript.Gestures
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
                 } else
                 {
-                    if (distanceLimit < float.PositiveInfinity && (touches[0].Position - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit) setState(GestureState.Failed);
+                    if (distanceLimit < float.PositiveInfinity)
+                    {
+                        if ((touches[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
+                    }
                 }
             }
         }
@@ -104,9 +124,10 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            if (distanceLimit < float.PositiveInfinity && (ScreenPosition - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
+            if (distanceLimit < float.PositiveInfinity)
             {
-                setState(GestureState.Failed);
+                totalMovement += ScreenPosition - PreviousScreenPosition;
+                if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
         }
 
@@ -122,11 +143,6 @@ namespace TouchScript.Gestures
                     setState(GestureState.Failed);
                 } else
                 {
-                    if ((ScreenPosition - startPosition).magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
-                    {
-                        setState(GestureState.Failed);
-                        return;
-                    }
                     tapsDone++;
                     if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
                 }
@@ -155,6 +171,7 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
+            totalMovement = Vector2.zero;
             StopCoroutine("wait");
             tapsDone = 0;
         }
