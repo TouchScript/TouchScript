@@ -71,6 +71,7 @@ namespace TouchScript.Gestures.Simple
             }
             set
             {
+                if (projection == ProjectionType.Camera) projection = ProjectionType.Local;
                 if (projectionNormal == value) return;
                 projectionNormal = value;
                 if (Application.isPlaying) updateProjectionPlane();
