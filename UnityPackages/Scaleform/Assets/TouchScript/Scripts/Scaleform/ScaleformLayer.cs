@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Scaleform;
 using Scaleform.GFx;
 using TouchScript;
+using TouchScript.Hit;
 using UnityEngine;
 using System.Collections;
 using TouchScript.Layers;
@@ -130,23 +131,24 @@ public class ScaleformLayer : TouchLayer
         Name = "Scaleform Layer";
     }
 
-    protected override LayerHitResult beginTouch(TouchPoint touch)
+    protected override LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
     {
         var result = Movie.BeginTouch(touch.Id, touch.Position.x, touch.Position.y);
+        hit = null;
         return (LayerHitResult)result;
     }
 
-    protected override void moveTouch(TouchPoint touch)
+    protected override void moveTouch(ITouch touch)
     {
         Movie.MoveTouch(touch.Id, touch.Position.x, touch.Position.y);
     }
 
-    protected override void endTouch(TouchPoint touch)
+    protected override void endTouch(ITouch touch)
     {
         Movie.EndTouch(touch.Id);
     }
 
-    protected override void cancelTouch(TouchPoint touch)
+    protected override void cancelTouch(ITouch touch)
     {
         Movie.CancelTouch(touch.Id);
     }
