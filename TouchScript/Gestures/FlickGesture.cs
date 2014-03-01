@@ -107,9 +107,7 @@ namespace TouchScript.Gestures
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
         private bool isActive = false;
-
-        private List<Vector2> positionDeltas = new List<Vector2>();
-        private List<float> timeDeltas = new List<float>();
+        private TimedSequence<Vector2> deltaSequence = new TimedSequence<Vector2>();
 
         #endregion
 
@@ -119,8 +117,7 @@ namespace TouchScript.Gestures
         {
             if (!isActive) return;
 
-            positionDeltas.Add(ScreenPosition - PreviousScreenPosition);
-            timeDeltas.Add(Time.deltaTime);
+            deltaSequence.Add(ScreenPosition - PreviousScreenPosition);
         }
 
         #endregion
@@ -169,18 +166,12 @@ namespace TouchScript.Gestures
                     return;
                 }
 
-                positionDeltas.Add(ClusterUtils.Get2DCenterPosition(touches) - ClusterUtils.GetPrevious2DCenterPosition(touches));
-                timeDeltas.Add(Time.deltaTime);
+                deltaSequence.Add(ScreenPosition - PreviousScreenPosition);
 
-                var totalTime = 0f;
+                float lastTime;
+                var deltas = deltaSequence.FindElementsLaterThan(Time.time - FlickTime, out lastTime);
                 var totalMovement = Vector2.zero;
-                var i = timeDeltas.Count - 1;
-                while (i >= 0 && totalTime < FlickTime)
-                {
-                    totalTime += timeDeltas[i];
-                    totalMovement += positionDeltas[i];
-                    i--;
-                }
+                foreach (var delta in deltas) totalMovement += delta;
 
                 switch (Direction)
                 {
@@ -198,7 +189,7 @@ namespace TouchScript.Gestures
                 } else
                 {
                     ScreenFlickVector = totalMovement;
-                    ScreenFlickTime = totalTime;
+                    ScreenFlickTime = Time.time - lastTime;
                     setState(GestureState.Recognized);
                 }
             }
@@ -227,8 +218,6 @@ namespace TouchScript.Gestures
             isActive = false;
             moving = false;
             movementBuffer = Vector2.zero;
-            positionDeltas.Clear();
-            timeDeltas.Clear();
         }
 
         #endregion
