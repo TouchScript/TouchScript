@@ -294,7 +294,7 @@ namespace TouchScript.Gestures
 
         private List<int> friendlyGestureIds = new List<int>();
 
-        private TimedTouchSequence touchSequence = new TimedTouchSequence();
+        private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
         private GestureManagerInstance gestureManagerInstance;
         private GestureState delayedStateChange = GestureState.Possible;
         private bool requiredGestureFailed = false;
@@ -609,13 +609,13 @@ namespace TouchScript.Gestures
             {
                 foreach (var touch in touches)
                 {
-                    touchSequence.Add(touch, Time.time);
+                    touchSequence.Add(touch);
                 }
 
                 if (activeTouches.Count == 0)
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                    var cluster = touchSequence.FindTouchesLaterThan(Time.time - combineTouchesInterval, shouldCacheTouchPosition);
+                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval, shouldCacheTouchPosition);
                     cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
                     cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
                 }
