@@ -17,10 +17,13 @@ for i in $(ls -d */); do
 	if [[ $name != _* ]]; then
 		printf "\e[32mBuilding $name.\e[39m\n" 
 		if [ $name == TouchScript.WindowsPhone ] ; then
-			"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage $exportFolders Assets/Plugins "$folder\\_AssetStore\\Assets\\TouchScript\\Packages\\$name.unitypackage" -quit
+			toExport="$exportFolders Assets/Plugins"
+		elif [ $name == Scaleform ] ; then
+			toExport="$exportFolders Assets/StreamingAssets"
 		else
-			"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage $exportFolders "$folder\\_AssetStore\\Assets\\TouchScript\\Packages\\$name.unitypackage" -quit
+			toExport=$exportFolders
 		fi
+		"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage $toExport "$folder\\_AssetStore\\Assets\\TouchScript\\Packages\\$name.unitypackage" -quit
 		"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage Assets/TouchScript/Examples "$folder\\_AssetStore\\Assets\\TouchScript\\Examples\\$name.Examples.unitypackage" -quit
 	fi
 done
