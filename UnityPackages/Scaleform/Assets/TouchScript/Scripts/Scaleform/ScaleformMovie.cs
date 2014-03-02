@@ -1,5 +1,4 @@
 using Scaleform;
-using Scaleform.GFx;
 using UnityEngine;
 
 public class ScaleformMovie : Movie
@@ -21,7 +20,7 @@ public class ScaleformMovie : Movie
     public int BeginTouch(int id, float x, float y)
     {
         var result = Invoke("root.Scaleform_beginTouch", id, x / Screen.width, 1 - y / Screen.height);
-        if (result != null && result.IsInt()) return result.GetInt();
+        if (result != null && result.IsInt()) return result;
         return 0;
     }
 

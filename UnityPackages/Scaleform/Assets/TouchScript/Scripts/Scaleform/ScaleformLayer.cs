@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Scaleform;
-using Scaleform.GFx;
 using TouchScript;
 using TouchScript.Hit;
 using UnityEngine;
