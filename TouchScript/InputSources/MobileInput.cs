@@ -1,7 +1,9 @@
 /*
  * @author Michael Holub
+ * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -11,8 +13,16 @@ namespace TouchScript.InputSources
     /// Mobile Input Source
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
-    public class MobileInput : InputSource
+    public sealed class MobileInput : InputSource
     {
+
+        #region Public properties
+
+        [ToggleLeft]
+        public bool DisableOnNonTouchPlatforms = true;
+
+        #endregion
+
         #region Private variables
 
         private Dictionary<int, TouchState> touchStates = new Dictionary<int, TouchState>();
@@ -21,6 +31,42 @@ namespace TouchScript.InputSources
         #endregion
 
         #region Unity methods
+
+        protected override void OnEnable()
+        {
+            if (DisableOnNonTouchPlatforms)
+            {
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.Android:
+                    case RuntimePlatform.IPhonePlayer:
+                    case RuntimePlatform.MetroPlayerARM:
+                    case RuntimePlatform.MetroPlayerX64:
+                    case RuntimePlatform.MetroPlayerX86:
+                    case RuntimePlatform.WP8Player:
+                        break;
+                    default:
+                        // don't need mobile touch here
+                        enabled = false;
+                        return;
+                }
+            }
+
+            base.OnEnable();
+
+            touchStates.Clear();
+            touchIds.Clear();
+        }
+
+        protected override void OnDisable()
+        {
+            foreach (var touchState in touchStates)
+            {
+                cancelTouch(touchState.Value.Id);
+            }
+
+            base.OnDisable();
+        }
 
         /// <inheritdoc />
         protected override void Update()

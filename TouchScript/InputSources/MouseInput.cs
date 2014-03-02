@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -10,8 +11,16 @@ namespace TouchScript.InputSources
     /// Input source to grab mouse clicks as touch points.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
-    public class MouseInput : InputSource
+    public sealed class MouseInput : InputSource
     {
+
+        #region Public properties
+
+        [ToggleLeft]
+        public bool DisableOnMobilePlatforms = true;
+
+        #endregion
+
         #region Private variables
 
         private int mousePointId = -1;
@@ -23,16 +32,34 @@ namespace TouchScript.InputSources
         #region Unity methods
 
         /// <inheritdoc />
-        protected override void Start()
+        protected override void OnEnable()
         {
-            switch (Application.platform)
+            if (DisableOnMobilePlatforms)
             {
-                case RuntimePlatform.Android:
-                case RuntimePlatform.IPhonePlayer:
-                    Destroy(this);
-                    return;
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.Android:
+                    case RuntimePlatform.IPhonePlayer:
+                    case RuntimePlatform.WP8Player:
+                        // don't need mouse here
+                        enabled = false;
+                        return;
+                }
             }
-            base.Start();
+
+            base.OnEnable();
+
+            mousePointId = -1;
+            fakeMousePointId = -1;
+        }
+
+        /// <inheritdoc />
+        protected override void OnDisable()
+        {
+            if (mousePointId != -1) cancelTouch(mousePointId);
+            if (fakeMousePointId != -1) cancelTouch(fakeMousePointId);
+
+            base.OnDisable();
         }
 
         /// <inheritdoc />

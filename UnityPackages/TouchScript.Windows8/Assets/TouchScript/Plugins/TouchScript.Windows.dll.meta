@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: bb6056dc800c1084da7273cb9f23f5cb
+MonoAssemblyImporter:
+  serializedVersion: 1
+  iconMap: {}
+  executionOrder:
+    TouchScript.InputSources.Win7TouchInput: -1130
+    TouchScript.InputSources.Win8TouchInput: -1140
+  userData: 

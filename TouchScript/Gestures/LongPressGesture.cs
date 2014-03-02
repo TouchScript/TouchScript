@@ -4,7 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using TouchScript.Hit;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -15,6 +15,13 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
+
+        #region Constants
+
+        public const string LONG_PRESSED_MESSAGE = "OnLongPressed";
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
@@ -41,7 +48,11 @@ namespace TouchScript.Gestures
         public float DistanceLimit
         {
             get { return distanceLimit; }
-            set { distanceLimit = value; }
+            set
+            {
+                distanceLimit = value;
+                distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
+            }
         }
 
         #endregion
@@ -49,35 +60,29 @@ namespace TouchScript.Gestures
         #region Private variables
 
         [SerializeField]
+        [NullToggle(NullIntValue = int.MaxValue)]
         private int maxTouches = int.MaxValue;
 
         [SerializeField]
         private float timeToPress = 1;
 
         [SerializeField]
+        [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float distanceLimit = float.PositiveInfinity;
 
+        private float distanceLimitInPixelsSquared;
+
         private Vector2 totalMovement;
-        private float recognizeTime;
-        private bool fireRecognizedNextUpdate = false;
 
         #endregion
 
         #region Unity methods
 
-        /// <inheritdoc />
-        protected void Update()
+        protected override void OnEnable()
         {
-            if (fireRecognizedNextUpdate)
-            {
-                if (base.GetTargetHitResult())
-                {
-                    setState(GestureState.Recognized);
-                } else
-                {
-                    setState(GestureState.Failed);
-                }
-            }
+            base.OnEnable();
+
+            distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
         }
 
         #endregion
@@ -85,7 +90,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
@@ -94,6 +99,7 @@ namespace TouchScript.Gestures
                 setState(GestureState.Failed);
                 return;
             }
+
             if (activeTouches.Count == touches.Count)
             {
                 StartCoroutine("wait");
@@ -101,19 +107,19 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
 
-            totalMovement += ScreenPosition - PreviousScreenPosition;
-            if (totalMovement.magnitude / touchManager.DotsPerCentimeter >= DistanceLimit)
+            if (distanceLimit < float.PositiveInfinity)
             {
-                setState(GestureState.Failed);
+                totalMovement += ScreenPosition - PreviousScreenPosition;
+                if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
@@ -125,11 +131,10 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void onFailed()
+        protected override void onRecognized()
         {
-            base.onFailed();
-
-            reset();
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(LONG_PRESSED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />
@@ -137,7 +142,7 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
-            fireRecognizedNextUpdate = false;
+            totalMovement = Vector2.zero;
             StopCoroutine("wait");
         }
 
@@ -147,12 +152,18 @@ namespace TouchScript.Gestures
 
         private IEnumerator wait()
         {
-            recognizeTime = Time.time + TimeToPress;
-            while (Time.time < recognizeTime)
+            yield return new WaitForSeconds(TimeToPress);
+
+            if (State == GestureState.Possible)
             {
-                yield return null;
+                if (base.GetTargetHitResult())
+                {
+                    setState(GestureState.Recognized);
+                } else
+                {
+                    setState(GestureState.Failed);
+                }
             }
-            fireRecognizedNextUpdate = true;
         }
 
         #endregion

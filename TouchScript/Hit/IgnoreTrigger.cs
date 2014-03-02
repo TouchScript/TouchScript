@@ -3,20 +3,24 @@
 namespace TouchScript.Hit
 {
     [AddComponentMenu("TouchScript/Behaviors/Ignore Trigger")]
-    public class IgnoreTrigger : HitTest
+    public sealed class IgnoreTrigger : HitTest
     {
-        public override ObjectHitResult IsHit(TouchHit hit)
+        public override ObjectHitResult IsHit(ITouchHit hit)
         {
-            if (hit.Collider != null)
+            var hit3d = hit as ITouchHit3D;
+            if (hit3d != null && hit3d.Collider != null)
             {
-                if (hit.Collider.isTrigger) return ObjectHitResult.Miss;
+                if (hit3d.Collider.isTrigger) return ObjectHitResult.Miss;
                 return ObjectHitResult.Hit;
             }
-            if (hit.Collider2d != null)
+
+            var hit2d = hit as ITouchHit2D;
+            if (hit2d.Collider2D != null)
             {
-                if (hit.Collider2d.isTrigger) return ObjectHitResult.Miss;
+                if (hit2d.Collider2D.isTrigger) return ObjectHitResult.Miss;
                 return ObjectHitResult.Hit;
             }
+
             return ObjectHitResult.Hit;
         }
     }

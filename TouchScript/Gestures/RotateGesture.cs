@@ -3,7 +3,6 @@
  */
 
 using System.Collections.Generic;
-using TouchScript.Clusters;
 using TouchScript.Gestures.Simple;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace TouchScript.Gestures
                 base.MinPointsDistance = value;
                 if (Application.isPlaying)
                 {
-                    clusters.MinPointsDistance = minPointsDistanceInPixels;
+                    clusters.MinPointsDistance = minPixelDistance;
                 }
             }
         }
@@ -38,7 +37,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Cluster object
         /// </summary>
-        protected Clusters2 clusters = new Clusters2();
+        protected Clusters.Clusters clusters = new Clusters.Clusters();
 
         #endregion
 
@@ -49,7 +48,7 @@ namespace TouchScript.Gestures
         {
             base.OnEnable();
 
-            clusters.MinPointsDistance = minPointsDistanceInPixels;
+            clusters.MinPointsDistance = minPixelDistance;
         }
 
         #endregion
@@ -57,7 +56,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             clusters.AddPoints(touches);
 
@@ -65,7 +64,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             clusters.Invalidate();
 
@@ -73,7 +72,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             clusters.RemovePoints(touches);
 
@@ -93,13 +92,13 @@ namespace TouchScript.Gestures
         #region Protected functions
 
         /// <inheritdoc />
-        protected override bool gotEnoughTouchPoints()
+        protected override bool gotEnoughTouches()
         {
             return clusters.HasClusters;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouchPoints(IList<TouchPoint> touches)
+        protected override bool relevantTouches(IList<ITouch> touches)
         {
             // every touch point is relevant for us
             return true;

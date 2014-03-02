@@ -1,0 +1,16 @@
+TouchScript/*
+!TouchScript/Examples.meta
+!TouchScript/Examples
+TouchScript/Examples/General
+TouchScript/Examples/General/*
+TouchScript/Examples/General.meta
+
+!TouchScript/Editor.meta
+!TouchScript/Editor
+TouchScript/Editor/*
+!TouchScript/Editor/*.cs
+!TouchScript/Editor/*.cs.meta
+
+!TouchScript/Scripts.meta
+!TouchScript/Scripts
+!TouchScript/Scripts/*

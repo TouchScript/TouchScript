@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -15,8 +16,14 @@ namespace TouchScript.Gestures
     public class PressGesture : Gesture
     {
 
+        #region Constants
+
+        public const string PRESSED_MESSAGE = "OnPressed";
+
+        #endregion
+
         #region Public properties
-        
+
         public bool IgnoreChildren
         {
             get { return ignoreChildren; }
@@ -28,13 +35,14 @@ namespace TouchScript.Gestures
         #region Private variables
         
         [SerializeField]
+        [ToggleLeft]
         private bool ignoreChildren = false;
         
         #endregion
         
         #region Gesture callbacks
-        
-        public override bool ShouldReceiveTouch(TouchPoint touch)
+
+        public override bool ShouldReceiveTouch(ITouch touch)
         {
             if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
             if (!base.ShouldReceiveTouch(touch)) return false;
@@ -58,11 +66,18 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
             if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(PRESSED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

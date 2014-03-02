@@ -3,7 +3,7 @@
  */
 
 using System.Collections.Generic;
-using TouchScript.Clusters;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -16,6 +16,8 @@ namespace TouchScript.Gestures
     public class FlickGesture : Gesture
     {
         #region Constants
+
+        public const string FLICKED_MESSAGE = "OnFlicked";
 
         /// <summary>
         /// Direction of a flick.
@@ -105,9 +107,7 @@ namespace TouchScript.Gestures
         private bool moving = false;
         private Vector2 movementBuffer = Vector2.zero;
         private bool isActive = false;
-
-        private List<Vector2> positionDeltas = new List<Vector2>();
-        private List<float> timeDeltas = new List<float>();
+        private TimedSequence<Vector2> deltaSequence = new TimedSequence<Vector2>();
 
         #endregion
 
@@ -117,8 +117,7 @@ namespace TouchScript.Gestures
         {
             if (!isActive) return;
 
-            positionDeltas.Add(ScreenPosition - PreviousScreenPosition);
-            timeDeltas.Add(Time.deltaTime);
+            deltaSequence.Add(ScreenPosition - PreviousScreenPosition);
         }
 
         #endregion
@@ -126,7 +125,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
@@ -137,7 +136,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
 
@@ -153,7 +152,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
@@ -167,18 +166,12 @@ namespace TouchScript.Gestures
                     return;
                 }
 
-                positionDeltas.Add(Cluster.Get2DCenterPosition(touches) - Cluster.GetPrevious2DCenterPosition(touches));
-                timeDeltas.Add(Time.deltaTime);
+                deltaSequence.Add(ScreenPosition - PreviousScreenPosition);
 
-                var totalTime = 0f;
+                float lastTime;
+                var deltas = deltaSequence.FindElementsLaterThan(Time.time - FlickTime, out lastTime);
                 var totalMovement = Vector2.zero;
-                var i = timeDeltas.Count - 1;
-                while (i >= 0 && totalTime < FlickTime)
-                {
-                    totalTime += timeDeltas[i];
-                    totalMovement += positionDeltas[i];
-                    i--;
-                }
+                foreach (var delta in deltas) totalMovement += delta;
 
                 switch (Direction)
                 {
@@ -196,18 +189,25 @@ namespace TouchScript.Gestures
                 } else
                 {
                     ScreenFlickVector = totalMovement;
-                    ScreenFlickTime = totalTime;
+                    ScreenFlickTime = Time.time - lastTime;
                     setState(GestureState.Recognized);
                 }
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
+        protected override void touchesCancelled(IList<ITouch> touches)
         {
             base.touchesCancelled(touches);
 
             touchesEnded(touches);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(FLICKED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />
@@ -218,8 +218,6 @@ namespace TouchScript.Gestures
             isActive = false;
             moving = false;
             movementBuffer = Vector2.zero;
-            positionDeltas.Clear();
-            timeDeltas.Clear();
         }
 
         #endregion

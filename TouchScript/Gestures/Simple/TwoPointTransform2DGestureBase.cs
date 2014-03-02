@@ -23,7 +23,8 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 minPointsDistance = value;
-                minPointsDistanceInPixels = value * touchManager.DotsPerCentimeter;
+                minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
+                minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
             }
         }
 
@@ -32,7 +33,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (TouchPoint.IsInvalidPosition(screenPosition)) return base.ScreenPosition;
+                if (TouchManager.IsInvalidPosition(screenPosition)) return base.ScreenPosition;
                 return screenPosition;
             }
         }
@@ -42,7 +43,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (TouchPoint.IsInvalidPosition(previousScreenPosition)) return base.PreviousScreenPosition;
+                if (TouchManager.IsInvalidPosition(previousScreenPosition)) return base.PreviousScreenPosition;
                 return previousScreenPosition;
             }
         }
@@ -57,7 +58,8 @@ namespace TouchScript.Gestures.Simple
         /// <summary>
         /// <see cref="MinPointsDistance"/> in pixels for internal use.
         /// </summary>
-        protected float minPointsDistanceInPixels;
+        protected float minPixelDistance;
+        protected float minPixelDistanceSquared;
 
         /// <summary>
         /// Transform's center point screen position.
@@ -78,7 +80,8 @@ namespace TouchScript.Gestures.Simple
         {
             base.OnEnable();
 
-            minPointsDistanceInPixels = minPointsDistance * touchManager.DotsPerCentimeter;
+            minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
+            minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
         }
 
         #endregion
@@ -89,7 +92,7 @@ namespace TouchScript.Gestures.Simple
         /// Checks if gesture has enough touch points to be recognized.
         /// </summary>
         /// <returns>True if there are two or more active touch points, False otherwise.</returns>
-        protected virtual bool gotEnoughTouchPoints()
+        protected virtual bool gotEnoughTouches()
         {
             return activeTouches.Count >= 2;
         }
@@ -99,13 +102,13 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         /// <param name="touches">List of touch points</param>
         /// <returns>True if there are relevant touch points, False otherwise.</returns>
-        protected virtual bool relevantTouchPoints(IList<TouchPoint> touches)
+        protected virtual bool relevantTouches(IList<ITouch> touches)
         {
             var result = false;
             // We care only about the first and the second touch points
-            foreach (var touchPoint in touches)
+            foreach (var touch in touches)
             {
-                if (touchPoint == activeTouches[0] || touchPoint == activeTouches[1])
+                if (touch == activeTouches[0] || touch == activeTouches[1])
                 {
                     result = true;
                     break;
@@ -142,8 +145,8 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         protected virtual void restart()
         {
-            screenPosition = TouchPoint.InvalidPosition;
-            previousScreenPosition = TouchPoint.InvalidPosition;
+            screenPosition = TouchManager.INVALID_POSITION;
+            previousScreenPosition = TouchManager.INVALID_POSITION;
         }
 
         #endregion
@@ -151,7 +154,7 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 

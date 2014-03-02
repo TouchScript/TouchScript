@@ -1,0 +1,24 @@
+*.dll
+Editor
+Editor.meta
+
+TouchScript/*
+!TouchScript/Examples.meta
+!TouchScript/Examples
+TouchScript/Examples/General
+TouchScript/Examples/General/*
+TouchScript/Examples/General.meta
+
+!TouchScript/Plugins.meta
+!TouchScript/Plugins
+TouchScript/Plugins/*
+!TouchScript/Plugins/TouchScript.WindowsPhone.dll.meta
+!TouchScript/Plugins/TouchScript.WindowsPhone.Plugin.dll.meta
+!TouchScript/Plugins/WP8.meta
+!TouchScript/Plugins/WP8
+TouchScript/Plugins/WP8/*
+!TouchScript/Plugins/WP8/TouchScript.WindowsPhone.Plugin.dll.meta
+
+!TouchScript/Devices
+TouchScript/Devices/Display/*
+!TouchScript/Devices/Display/Windows Phone.*

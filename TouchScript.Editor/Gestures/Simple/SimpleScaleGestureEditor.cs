@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.Simple
 {
-    [CustomEditor(typeof(SimpleScaleGesture))]
-    public class SimpleScaleGestureEditor : TwoPointTransform2DGestureBaseEditor
+    [CustomEditor(typeof(SimpleScaleGesture), true)]
+    internal sealed class SimpleScaleGestureEditor : TwoPointTransform2DGestureBaseEditor
     {
-        public const string TEXT_SCALINGTHRESHOLD = "Minimum distance in cm touch points must move for the gesture to begin.";
+        private static readonly GUIContent SCALING_THRESHOLD = new GUIContent("Scaling Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
 
         private SerializedProperty scalingThreshold;
 
@@ -26,7 +26,8 @@ namespace TouchScript.Editor.Gestures.Simple
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            EditorGUILayout.PropertyField(scalingThreshold, new GUIContent("Scaling Threshold (cm)", TEXT_SCALINGTHRESHOLD));
+            EditorGUIUtility.labelWidth = 160;
+            EditorGUILayout.PropertyField(scalingThreshold, SCALING_THRESHOLD);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();

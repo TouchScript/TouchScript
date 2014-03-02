@@ -5,9 +5,13 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
-    public class CameraLayer2D : CameraLayerBase
+    public sealed class CameraLayer2D : CameraLayerBase
     {
         #region Private variables
+
+        [SerializeField]
+        [HideInInspector]
+        private int[] sortedLayerIds = new int[0];
 
         private List<RaycastHit2D> sortedHits;
 
@@ -24,9 +28,9 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
-        protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
+        protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
             var hits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
 
             if (hits.Length == 0) return LayerHitResult.Miss;
@@ -35,7 +39,7 @@ namespace TouchScript.Layers
             var success = false;
             foreach (var raycastHit in hits)
             {
-                hit = TouchHit.FromRaycastHit2D(raycastHit);
+                hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
                 var hitTests = raycastHit.transform.GetComponents<HitTest>();
                 if (hitTests.Length == 0)
                 {
@@ -70,14 +74,16 @@ namespace TouchScript.Layers
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>
             {
-                if (a.transform == b.transform) return 0;
+                if (a.collider.transform == b.collider.transform) return 0;
 
                 var sprite1 = a.transform.GetComponent<SpriteRenderer>();
                 var sprite2 = b.transform.GetComponent<SpriteRenderer>();
                 if (sprite1 == null || sprite2 == null) return 0;
 
-                if (sprite1.sortingLayerID < sprite2.sortingLayerID) return 1;
-                if (sprite1.sortingLayerID > sprite2.sortingLayerID) return -1;
+                var s1Id = sprite1.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite1.sortingLayerID] : 0;
+                var s2Id = sprite2.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite2.sortingLayerID] : 0;
+                if (s1Id < s2Id) return 1;
+                if (s1Id > s2Id) return -1;
                 if (sprite1.sortingOrder < sprite2.sortingOrder) return 1;
                 if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
                 return 0;

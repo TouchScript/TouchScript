@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 20c2a163775f09b4cafa29b19d0c9204
+MonoAssemblyImporter:
+  serializedVersion: 1
+  iconMap: {}
+  executionOrder:
+    TouchScript.GestureManagerInstance: -1000
+    TouchScript.InputSources.MouseInput: -1101
+    TouchScript.TouchManagerInstance: -900
+  userData: 

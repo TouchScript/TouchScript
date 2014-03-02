@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
 
@@ -36,9 +35,9 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out ITouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
 
             if (camera == null) return LayerHitResult.Error;
             if (camera.enabled == false || camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
@@ -53,15 +52,9 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult beginTouch(TouchPoint touch)
+        protected override LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
         {
-            TouchHit hit;
             var result = Hit(touch.Position, out hit);
-            if (result == LayerHitResult.Hit)
-            {
-                touch.Hit = hit;
-                touch.Target = hit.Transform;
-            }
             return result;
         }
 
@@ -71,7 +64,7 @@ namespace TouchScript.Layers
             if (String.IsNullOrEmpty(Name) && Camera != null) Name = Camera.name;
         }
 
-        protected abstract LayerHitResult castRay(Ray ray, out TouchHit hit);
+        protected abstract LayerHitResult castRay(Ray ray, out ITouchHit hit);
 
         #endregion
     }

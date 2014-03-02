@@ -4,10 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using TouchScript.Events;
-using TouchScript.Clusters;
 using TouchScript.Hit;
 using TouchScript.Layers;
+using TouchScript.Utils;
+using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -19,10 +19,7 @@ namespace TouchScript.Gestures
     {
         #region Constants
 
-        /// <summary>
-        /// Invalid 3d position. Some properties return this constant when their result doesn't make sense.
-        /// </summary>
-        public static readonly Vector3 InvalidPosition = new Vector3(float.NaN, float.NaN, float.NaN);
+        public const string STATE_CHANGED_MESSAGE = "OnGestureStateChanged";
 
         /// <summary>
         /// Possible states of a gesture.
@@ -85,6 +82,54 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        public Gesture RequireGestureToFail
+        {
+            get { return requireGestureToFail; }
+            set
+            {
+                if (requireGestureToFail != null) requireGestureToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
+                requireGestureToFail = value;
+                if (requireGestureToFail != null) requireGestureToFail.StateChanged += requiredToFailGestureStateChangedHandler;
+            }
+        }
+
+        public bool CombineTouches
+        {
+            get { return combineTouches; }
+            set { combineTouches = value; }
+        }
+
+        /// <summary>
+        /// Time interval before gesture is recognized to combine all lifted touch points into a cluster and calculate their screen positions.
+        /// </summary>
+        public float CombineTouchesInterval
+        {
+            get { return combineTouchesInterval; }
+            set { combineTouchesInterval = value; }
+        }
+
+        public bool UseSendMessage
+        {
+            get { return useSendMessage; }
+            set { useSendMessage = value; }
+        }
+
+        public bool SendStateChangeMessages
+        {
+            get { return sendStateChangeMessages; }
+            set { sendStateChangeMessages = value; }
+        }
+
+        public GameObject SendMessageTarget
+        {
+            get { return sendMessageTarget; }
+            set
+            {
+                sendMessageTarget = value;
+                if (value == null) sendMessageTarget = gameObject;
+            }
+        }
+
         /// <summary>
         /// Current gesture state.
         /// </summary>
@@ -119,6 +164,7 @@ namespace TouchScript.Gestures
                 }
 
                 if (stateChangedInvoker != null) stateChangedInvoker(this, new GestureStateChangeEventArgs(state, PreviousState));
+                if (useSendMessage && sendStateChangeMessages) sendMessageTarget.SendMessage(STATE_CHANGED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -134,8 +180,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return Cluster.Get2DCenterPosition(activeTouches);
+                if (activeTouches.Count == 0)
+                {
+                    if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
+                    return TouchManager.INVALID_POSITION;
+                }
+                return ClusterUtils.Get2DCenterPosition(activeTouches);
             }
         }
 
@@ -146,8 +196,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
-                return Cluster.GetPrevious2DCenterPosition(activeTouches);
+                if (activeTouches.Count == 0)
+                {
+                    if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
+                    return TouchManager.INVALID_POSITION;
+                }
+                return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
             }
         }
 
@@ -158,8 +212,8 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 var position = ScreenPosition;
+                if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
@@ -171,8 +225,8 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchPoint.InvalidPosition;
                 var position = PreviousScreenPosition;
+                if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
@@ -180,7 +234,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// List of gesture's active touch points.
         /// </summary>
-        public IList<TouchPoint> ActiveTouches
+        public IList<ITouch> ActiveTouches
         {
             get { return activeTouches.AsReadOnly(); }
         }
@@ -197,81 +251,70 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Reference to global GestureManager.
         /// </summary>
-        protected GestureManager gestureManager { get; private set; }
+        protected IGestureManager gestureManager
+        {
+            // implemented as a property because it returns IGestureManager but we need to reference GestureManagerInstance to access internal methods
+            get { return gestureManagerInstance; }
+        }
 
         /// <summary>
         /// Reference to global TouchManager.
         /// </summary>
-        protected TouchManager touchManager { get; private set; }
+        protected ITouchManager touchManager { get; private set; }
 
         /// <summary>
         /// Touch points the gesture currently owns and works with.
         /// </summary>
-        protected List<TouchPoint> activeTouches = new List<TouchPoint>();
+        protected List<ITouch> activeTouches = new List<ITouch>();
+
+        [SerializeField]
+        [ToggleLeft]
+        private bool combineTouches = false;
+
+        [SerializeField]
+        private float combineTouchesInterval = .3f;
+
+        [SerializeField]
+        [ToggleLeft]
+        private bool useSendMessage = false;
+
+        [SerializeField]
+        [ToggleLeft]
+        private bool sendStateChangeMessages = false;
+
+        [SerializeField]
+        private GameObject sendMessageTarget;
+
+        [SerializeField]
+        [NullToggle]
+        private Gesture requireGestureToFail;
 
         [SerializeField]
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private List<int> friendlyGestureIds = new List<int>();
+
+        private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
+        private GestureManagerInstance gestureManagerInstance;
+        private GestureState delayedStateChange = GestureState.Possible;
+        private bool requiredGestureFailed = false;
         private GestureState state = GestureState.Possible;
 
-        #endregion
-
-        #region Unity methods
+        /// <summary>
+        /// Cached screen position. 
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// </summary>
+        private Vector2 cachedScreenPosition;
 
         /// <summary>
-        /// Unity3d Start handler.
+        /// Cached previous screen position.
+        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
-        protected virtual void OnEnable()
-        {
-            touchManager = TouchManager.Instance;
-            gestureManager = GestureManager.Instance;
-
-            if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
-            if (gestureManager == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
-
-            foreach (var gesture in friendlyGestures)
-            {
-                AddFriendlyGesture(gesture);
-            }
-
-            Reset();
-        }
-
-        /// <summary>
-        /// Unity3d OnDisable handler.
-        /// </summary>
-        protected virtual void OnDisable()
-        {
-            setState(GestureState.Failed);
-
-            gestureManager = null;
-            touchManager = null;
-        }
-
-        /// <summary>
-        /// Unity3d OnDestroy handler.
-        /// </summary>
-        protected virtual void OnDestroy()
-        {
-            
-        }
+        private Vector2 cachedPreviousScreenPosition;
 
         #endregion
 
         #region Public methods
-
-        /// <summary>
-        /// Determines whether position is invalid.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>
-        ///   <c>true</c> if position is invalid; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsInvalidPosition(Vector3 position)
-        {
-            return position.Equals(InvalidPosition);
-        }
 
         /// <summary>
         /// Adds a friendly gesture.
@@ -281,32 +324,8 @@ namespace TouchScript.Gestures
         {
             if (gesture == null || gesture == this) return;
 
-            RegisterFriendlyGesture(gesture);
-            gesture.RegisterFriendlyGesture(this);
-        }
-
-        /// <summary>
-        /// Removes a friendly gesture.
-        /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        public virtual void RemoveFriendlyGesture(Gesture gesture)
-        {
-            if (gesture == null || gesture == this) return;
-
-            UnregisterFriendlyGesture(gesture);
-            gesture.UnregisterFriendlyGesture(this);
-        }
-
-        /// <summary>
-        /// Determines whether the specified gesture is friendly.
-        /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified gesture is friendly; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsFriendly(Gesture gesture)
-        {
-            return friendlyGestureIds.Contains(gesture.GetInstanceID());
+            registerFriendlyGesture(gesture);
+            gesture.registerFriendlyGesture(this);
         }
 
         /// <summary>
@@ -315,7 +334,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult()
         {
-            TouchHit hit;
+            ITouchHit hit;
             return GetTargetHitResult(ScreenPosition, out hit);
         }
 
@@ -324,7 +343,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="hit">Raycast result</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(out TouchHit hit)
+        public virtual bool GetTargetHitResult(out ITouchHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
         }
@@ -336,7 +355,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(Vector2 position)
         {
-            TouchHit hit;
+            ITouchHit hit;
             return GetTargetHitResult(position, out hit);
         }
 
@@ -346,7 +365,7 @@ namespace TouchScript.Gestures
         /// <param name="position">The position.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
+        public virtual bool GetTargetHitResult(Vector2 position, out ITouchHit hit)
         {
             TouchLayer layer = null;
             if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;
@@ -362,7 +381,7 @@ namespace TouchScript.Gestures
         /// <returns>
         ///   <c>true</c> if gesture controls the touch point; otherwise, <c>false</c>.
         /// </returns>
-        public bool HasTouchPoint(TouchPoint touch)
+        public bool HasTouch(ITouch touch)
         {
             return activeTouches.Contains(touch);
         }
@@ -402,7 +421,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="touch">The touch.</param>
         /// <returns><c>true</c> if this touch should be received by the gesture; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldReceiveTouch(TouchPoint touch)
+        public virtual bool ShouldReceiveTouch(ITouch touch)
         {
             if (Delegate == null) return true;
             return Delegate.ShouldReceiveTouch(this, touch);
@@ -420,6 +439,56 @@ namespace TouchScript.Gestures
 
         #endregion
 
+        #region Unity methods
+
+        protected virtual void Awake()
+        {
+            foreach (var gesture in friendlyGestures)
+            {
+                AddFriendlyGesture(gesture);
+            }
+            RequireGestureToFail = requireGestureToFail;
+        }
+
+        /// <summary>
+        /// Unity3d Start handler.
+        /// </summary>
+        protected virtual void OnEnable()
+        {
+            // TouchManager might be different in another scene
+            touchManager = TouchManager.Instance;
+            gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
+
+            if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
+            if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
+
+            if (sendMessageTarget == null) sendMessageTarget = gameObject;
+            Reset();
+        }
+
+        /// <summary>
+        /// Unity3d OnDisable handler.
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            setState(GestureState.Failed);
+
+            gestureManagerInstance = null;
+            touchManager = null;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            var copy = new List<Gesture>(friendlyGestures);
+            foreach (var gesture in copy)
+            {
+                RemoveFriendlyGesture(gesture);
+            }
+            RequireGestureToFail = null;
+        }
+
+        #endregion
+
         #region Internal functions
 
         internal void SetState(GestureState value)
@@ -430,47 +499,55 @@ namespace TouchScript.Gestures
         internal void Reset()
         {
             activeTouches.Clear();
+            delayedStateChange = GestureState.Possible;
+            requiredGestureFailed = false;
             reset();
         }
 
-        internal void TouchesBegan(IList<TouchPoint> touches)
+        internal void TouchesBegan(IList<ITouch> touches)
         {
             activeTouches.AddRange(touches);
             touchesBegan(touches);
         }
 
-        internal void TouchesMoved(IList<TouchPoint> touches)
+        internal void TouchesMoved(IList<ITouch> touches)
         {
             touchesMoved(touches);
         }
 
-        internal void TouchesEnded(IList<TouchPoint> touches)
+        internal void TouchesEnded(IList<ITouch> touches)
         {
             activeTouches.RemoveAll(touches.Contains);
             touchesEnded(touches);
         }
 
-        internal void TouchesCancelled(IList<TouchPoint> touches)
+        internal void TouchesCancelled(IList<ITouch> touches)
         {
             activeTouches.RemoveAll(touches.Contains);
             touchesCancelled(touches);
         }
 
-        internal void RegisterFriendlyGesture(Gesture gesture)
+        internal virtual void RemoveFriendlyGesture(Gesture gesture)
         {
-            if (gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+            if (gesture == null || gesture == this) return;
 
-            friendlyGestureIds.Add(gesture.GetInstanceID());
+            unregisterFriendlyGesture(gesture);
+            gesture.unregisterFriendlyGesture(this);
         }
 
-        internal void UnregisterFriendlyGesture(Gesture gesture)
+        internal bool IsFriendly(Gesture gesture)
         {
-            friendlyGestureIds.Remove(gesture.GetInstanceID());
+            return friendlyGestureIds.Contains(gesture.GetInstanceID());
         }
 
         #endregion
 
-        #region Misc methods
+        #region Protected methods
+
+        protected virtual bool shouldCacheTouchPosition(ITouch value)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Tries to change gesture state.
@@ -479,22 +556,31 @@ namespace TouchScript.Gestures
         /// <returns><c>true</c> if state was changed; otherwise, <c>false</c>.</returns>
         protected bool setState(GestureState value)
         {
-            if (gestureManager == null) return false;
-            if (value == state && state != GestureState.Changed) return false;
+            if (gestureManagerInstance == null) return false;
+            if (requireGestureToFail != null)
+            {
+                switch (value)
+                {
+                    case GestureState.Recognized:
+                    case GestureState.Began:
+                        if (!requiredGestureFailed)
+                        {
+                            delayedStateChange = value;
+                            return false;
+                        }
+                        break;
+                    case GestureState.Possible:
+                    case GestureState.Failed:
+                    case GestureState.Cancelled:
+                        delayedStateChange = GestureState.Possible;
+                        break;
+                }
+            }
 
-            var newState = gestureManager.GestureChangeState(this, value);
+            var newState = gestureManagerInstance.GestureChangeState(this, value);
             State = newState;
 
             return value == newState;
-        }
-
-        /// <summary>
-        /// Manually ignore touch.
-        /// </summary>
-        /// <param name="touch">Touch to ignore.</param>
-        protected void ignoreTouch(TouchPoint touch)
-        {
-            activeTouches.Remove(touch);
         }
 
         #endregion
@@ -505,28 +591,59 @@ namespace TouchScript.Gestures
         /// Called when new touches appear.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesBegan(IList<TouchPoint> touches)
+        protected virtual void touchesBegan(IList<ITouch> touches)
         {}
 
         /// <summary>
         /// Called for moved touches.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesMoved(IList<TouchPoint> touches)
+        protected virtual void touchesMoved(IList<ITouch> touches)
         {}
 
         /// <summary>
         /// Called if touches are removed.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesEnded(IList<TouchPoint> touches)
-        {}
+        protected virtual void touchesEnded(IList<ITouch> touches)
+        {
+            if (combineTouches)
+            {
+                foreach (var touch in touches)
+                {
+                    touchSequence.Add(touch);
+                }
+
+                if (activeTouches.Count == 0)
+                {
+                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
+                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval, shouldCacheTouchPosition);
+                    cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
+                    cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
+                }
+            } else
+            {
+                if (activeTouches.Count == 0)
+                {
+                    var lastPoint = touches[touches.Count - 1];
+                    if (shouldCacheTouchPosition(lastPoint))
+                    {
+                        cachedScreenPosition = lastPoint.Position;
+                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
+                    } else
+                    {
+                        cachedScreenPosition = TouchManager.INVALID_POSITION;
+                        cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Called when touches are cancelled.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesCancelled(IList<TouchPoint> touches)
+        protected virtual void touchesCancelled(IList<ITouch> touches)
         {}
 
         /// <summary>
@@ -572,5 +689,73 @@ namespace TouchScript.Gestures
         {}
 
         #endregion
+
+        #region Private functions
+
+        private void registerFriendlyGesture(Gesture gesture)
+        {
+            if (gesture == null || gesture == this || friendlyGestures.Contains(gesture)) return;
+
+            friendlyGestures.Add(gesture);
+        }
+
+        private void unregisterFriendlyGesture(Gesture gesture)
+        {
+            friendlyGestures.Remove(gesture);
+        }
+
+        #endregion
+
+        #region Event handlers
+
+        private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs e)
+        {
+            if (sender != requireGestureToFail) return;
+            switch (e.State)
+            {
+                case GestureState.Failed:
+                    if (delayedStateChange != GestureState.Possible)
+                    {
+                        requiredGestureFailed = true;
+                        setState(delayedStateChange);
+                    } else
+                    {
+                        setState(GestureState.Failed);
+                    }
+                    break;
+                case GestureState.Began:
+                case GestureState.Recognized:
+                case GestureState.Cancelled:
+                    setState(GestureState.Failed);
+                    break;
+            }
+        }
+
+        #endregion
     }
+
+    public class GestureStateChangeEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Previous gesture state.
+        /// </summary>
+        public Gesture.GestureState PreviousState { get; private set; }
+
+        /// <summary>
+        /// Current gesture state.
+        /// </summary>
+        public Gesture.GestureState State { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GestureStateChangeEventArgs"/> class.
+        /// </summary>
+        /// <param name="state">Current gesture state.</param>
+        /// <param name="previousState">Previous gesture state.</param>
+        public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
+        {
+            State = state;
+            PreviousState = previousState;
+        }
+    }
+
 }

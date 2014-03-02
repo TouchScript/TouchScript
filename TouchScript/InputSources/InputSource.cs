@@ -3,6 +3,7 @@
  */
 
 using System;
+using TouchScript.Devices.Display;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -26,16 +27,16 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Reference to global touch manager.
         /// </summary>
-        protected TouchManager manager;
+        protected ITouchManager manager;
 
         #endregion
 
         #region Unity methods
 
         /// <summary>
-        /// Unity Start callback.
+        /// Unity OnEnable callback.
         /// </summary>
-        protected virtual void Start()
+        protected virtual void OnEnable()
         {
             manager = TouchManager.Instance;
             if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
@@ -44,7 +45,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Unity OnDestroy callback.
         /// </summary>
-        protected virtual void OnDestroy()
+        protected virtual void OnDisable()
         {
             manager = null;
         }
@@ -60,7 +61,7 @@ namespace TouchScript.InputSources
         #region Callbacks
 
         /// <summary>
-        /// Start touch in given screen position.
+        /// OnEnable touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>

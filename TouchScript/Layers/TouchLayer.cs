@@ -78,9 +78,9 @@ namespace TouchScript.Layers
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>Hit, if an object is hit, Miss or Error otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out ITouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
             return LayerHitResult.Miss;
         }
 
@@ -94,7 +94,7 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying) TouchManager.AddLayer(this);
+            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.AddLayer(this);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void OnDestroy()
         {
-            if (Application.isPlaying) TouchManager.RemoveLayer(this);
+            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.RemoveLayer(this);
         }
 
         #endregion
@@ -111,27 +111,30 @@ namespace TouchScript.Layers
 
         internal bool BeginTouch(TouchPoint touch)
         {
-            var result = beginTouch(touch);
+            ITouchHit hit;
+            var result = beginTouch(touch, out hit);
             if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
+                touch.Hit = hit;
+                touch.Target = hit.Transform;
                 if (touchBeganInvoker != null) touchBeganInvoker(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
         }
 
-        internal void MoveTouch(TouchPoint touch)
+        internal void MoveTouch(ITouch touch)
         {
             moveTouch(touch);
         }
 
-        internal void EndTouch(TouchPoint touch)
+        internal void EndTouch(ITouch touch)
         {
             endTouch(touch);
         }
 
-        internal void CancelTouch(TouchPoint touch)
+        internal void CancelTouch(ITouch touch)
         {
             cancelTouch(touch);
         }
@@ -153,8 +156,9 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch point.</param>
         /// <returns>If this touch hit anything in the layer.</returns>
-        protected virtual LayerHitResult beginTouch(TouchPoint touch)
+        protected virtual LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
         {
+            hit = null;
             return LayerHitResult.Error;
         }
 
@@ -162,21 +166,21 @@ namespace TouchScript.Layers
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void moveTouch(TouchPoint touch)
+        protected virtual void moveTouch(ITouch touch)
         {}
 
         /// <summary>
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void endTouch(TouchPoint touch)
+        protected virtual void endTouch(ITouch touch)
         {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch point.</param>
-        protected virtual void cancelTouch(TouchPoint touch)
+        protected virtual void cancelTouch(ITouch touch)
         {}
 
         #endregion
@@ -184,11 +188,12 @@ namespace TouchScript.Layers
 
     public class TouchLayerEventArgs : EventArgs
     {
-        public TouchPoint TouchPoint { get; private set; }
+        public ITouch Touch { get; private set; }
 
-        public TouchLayerEventArgs(TouchPoint touchPoint) : base()
+        public TouchLayerEventArgs(ITouch touch)
+            : base()
         {
-            TouchPoint = touchPoint;
+            Touch = touch;
         }
     }
 }

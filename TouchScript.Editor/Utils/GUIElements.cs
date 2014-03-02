@@ -2,85 +2,66 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
-using UnityEditor;
 using UnityEngine;
 
 namespace TouchScript.Editor.Utils
 {
-    public class GUIElements
+    internal static class GUIElements
     {
-        private static GUIStyle foldoutStyle, headerStyle;
-
         public static GUIStyle BoxStyle
         {
-            get
-            {
-                if (boxStyle == null)
-                {
-                    boxStyle = new GUIStyle(GUI.skin.box);
-                    boxStyle.margin = new RectOffset(0, 0, 1, 0);
-                    boxStyle.padding = new RectOffset(0, 0, 0, 0);
-                    boxStyle.contentOffset = new Vector2(0, 0);
-                    boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
-                    boxStyle.alignment = TextAnchor.MiddleCenter;
-                }
-                return boxStyle;
-            }
+            get { return boxStyle; }
         }
 
         public static GUIStyle BoxLabelStyle
         {
-            get
-            {
-                if (boxLabelStyle == null)
-                {
-                    boxLabelStyle = new GUIStyle(GUI.skin.label);
-                    boxLabelStyle.fontSize = 9;
-                    boxLabelStyle.padding = new RectOffset(0, 0, 5, 0);
-                }
-                return boxLabelStyle;
-            }
+            get { return boxLabelStyle; }
+        }
+
+        public static GUIStyle FoldoutStyle
+        {
+            get { return foldoutStyle; }
+        }
+
+        public static GUIStyle HeaderStyle
+        {
+            get { return foldoutStyle; }
         }
 
         private static GUIStyle boxStyle, boxLabelStyle;
+        private static GUIStyle foldoutStyle, headerStyle;
 
-        public static bool Foldout(bool open, GUIContent header, Action content)
+        static GUIElements()
         {
-            if (foldoutStyle == null)
-            {
-                foldoutStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleBg"));
-                foldoutStyle.padding = new RectOffset(10, 10, 10, 10);
+            boxStyle = new GUIStyle(GUI.skin.box);
+            boxStyle.margin = new RectOffset(0, 0, 1, 0);
+            boxStyle.padding = new RectOffset(0, 0, 0, 0);
+            boxStyle.contentOffset = new Vector2(0, 0);
+            boxStyle.normal.textColor = GUI.skin.label.normal.textColor;
+            boxStyle.alignment = TextAnchor.MiddleCenter;
 
-                headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
-                headerStyle.contentOffset = new Vector2(3, -2);
-            }
+            boxLabelStyle = new GUIStyle(GUI.skin.label);
+            boxLabelStyle.fontSize = 9;
+            boxLabelStyle.padding = new RectOffset(0, 0, 5, 0);
 
-            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(1f));
+            foldoutStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleBg"));
+            foldoutStyle.padding = new RectOffset(10, 10, 10, 10);
 
-            open = GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);
-            if (open)
-            {
-                GUILayout.BeginVertical(foldoutStyle);
+            headerStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"));
+            headerStyle.contentOffset = new Vector2(3, -2);
+        }
 
-                content();
+        public static bool BeginFoldout(bool open, GUIContent header)
+        {
+            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(16f));
 
-                GUILayout.EndVertical();
-            }
+            return GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, headerStyle);
+        }
+
+        public static void EndFoldout()
+        {
             GUILayout.EndVertical();
-
-            return open;
         }
 
-        public static void CompactVector3(GUIContent content, SerializedProperty property)
-        {
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(content);
-            var x = EditorGUILayout.FloatField(property.vector3Value.x, GUILayout.MaxWidth(80), GUILayout.MinWidth(40));
-            var y = EditorGUILayout.FloatField(property.vector3Value.y, GUILayout.MaxWidth(80), GUILayout.MinWidth(40));
-            var z = EditorGUILayout.FloatField(property.vector3Value.z, GUILayout.MaxWidth(80), GUILayout.MinWidth(40));
-            property.vector3Value = new Vector3(x, y, z);
-            GUILayout.EndHorizontal();
-        }
     }
 }

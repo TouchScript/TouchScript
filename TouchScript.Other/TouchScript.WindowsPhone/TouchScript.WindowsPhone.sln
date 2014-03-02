@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WP Plugin", "WP Plugin\WP Plugin.csproj", "{A9404328-5BF9-4646-A44F-482B3EA500A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor Plugin", "Editor Plugin\Editor Plugin.csproj", "{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.WindowsPhone", "TouchScript.WindowsPhone\TouchScript.WindowsPhone.csproj", "{F43D5A65-520C-4017-8829-97BB62DC493E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Debug|ARM.Build.0 = Debug|ARM
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Debug|x86.ActiveCfg = Debug|x86
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Debug|x86.Build.0 = Debug|x86
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Release|ARM.ActiveCfg = Release|ARM
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Release|ARM.Build.0 = Release|ARM
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Release|x86.ActiveCfg = Release|x86
+		{A9404328-5BF9-4646-A44F-482B3EA500A6}.Release|x86.Build.0 = Release|x86
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Release|ARM.ActiveCfg = Release|Any CPU
+		{EF9BC808-0A3C-4C3B-84CF-98D7C2C8B3AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F43D5A65-520C-4017-8829-97BB62DC493E}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

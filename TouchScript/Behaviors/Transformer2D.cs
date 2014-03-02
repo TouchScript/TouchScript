@@ -3,9 +3,9 @@
  */
 
 using System;
-using TouchScript.Events;
 using TouchScript.Gestures;
 using TouchScript.Gestures.Simple;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Behaviors
@@ -100,9 +100,9 @@ namespace TouchScript.Behaviors
                 case Gesture.GestureState.Changed:
                     var gesture = (SimplePanGesture)sender;
 
-                    if (gesture.LocalDeltaPosition != Vector3.zero)
+                    if (gesture.WorldDeltaPosition != Vector3.zero)
                     {
-                        localPositionToGo += gesture.LocalDeltaPosition;
+                        localPositionToGo += TransformUtils.GlobalToLocalPosition(transform, gesture.WorldDeltaPosition);
                     }
                     break;
             }

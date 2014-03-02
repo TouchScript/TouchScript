@@ -24,7 +24,7 @@ namespace TouchScript.Hit
         #region Public methods
 
         /// <inheritdoc />
-        public override ObjectHitResult IsHit(TouchHit hit)
+        public override ObjectHitResult IsHit(ITouchHit hit)
         {
             return DiscardTouch ? ObjectHitResult.Discard : ObjectHitResult.Miss;
         }

@@ -8,74 +8,37 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures
 {
-    [CustomEditor(typeof(TapGesture))]
-    public class TapGestureEditor : GestureEditor
+    [CustomEditor(typeof(TapGesture), true)]
+    internal sealed class TapGestureEditor : GestureEditor
     {
-        public const string TEXT_TIMELIMIT = "Gesture fails if it is being pressed for more than <Value> seconds.";
-        public const string TEXT_DISTANCELIMIT = "Gesture fails if fingers move more than <Value> cm.";
+        private static readonly GUIContent TIME_LIMIT = new GUIContent("Limit Time (sec)", "Gesture fails if in <value> seconds user didn't do the required number of taps.");
+        private static readonly GUIContent DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if taps are made more than <value> cm away from the first touch position.");
+        private static readonly GUIContent NUMBER_OF_TAPS_REQUIRED = new GUIContent("Number of Taps Required", "Number of taps required for this gesture to be recognized.");
 
-        public const string TEXT_COMBINETOUCHPOINTSINTERVAL = "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.";
-
-        private SerializedProperty combineTouchPoints;
-        private SerializedProperty combineTouchPointsInterval;
+        private SerializedProperty numberOfTapsRequired;
         private SerializedProperty distanceLimit;
         private SerializedProperty timeLimit;
-        private bool useDistanceLimit;
-        private bool useTimeLimit;
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
+            numberOfTapsRequired = serializedObject.FindProperty("numberOfTapsRequired");
             timeLimit = serializedObject.FindProperty("timeLimit");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
-            combineTouchPoints = serializedObject.FindProperty("combineTouchPoints");
-            combineTouchPointsInterval = serializedObject.FindProperty("combineTouchPointsInterval");
 
-            useTimeLimit = !float.IsInfinity(timeLimit.floatValue);
-            useDistanceLimit = !float.IsInfinity(distanceLimit.floatValue);
+            shouldDrawCombineTouches = true;
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            bool newTimelimit = GUILayout.Toggle(useTimeLimit, new GUIContent("Limit Press Time", TEXT_TIMELIMIT));
-            if (newTimelimit)
-            {
-                if (newTimelimit != useTimeLimit) timeLimit.floatValue = 0;
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(timeLimit, new GUIContent("Value (sec)", TEXT_TIMELIMIT));
-                EditorGUI.indentLevel--;
-            } else
-            {
-                timeLimit.floatValue = float.PositiveInfinity;
-            }
-            useTimeLimit = newTimelimit;
+            EditorGUIUtility.labelWidth = 180;
+            EditorGUILayout.IntPopup(numberOfTapsRequired, new[] {new GUIContent("One"), new GUIContent("Two"), new GUIContent("Three")}, new[] {1, 2, 3}, NUMBER_OF_TAPS_REQUIRED, GUILayout.ExpandWidth(true));
 
-            bool newDistanceLimit = GUILayout.Toggle(useDistanceLimit,
-                new GUIContent("Limit Movement", TEXT_DISTANCELIMIT));
-            if (newDistanceLimit)
-            {
-                if (newDistanceLimit != useDistanceLimit) distanceLimit.floatValue = 0;
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(distanceLimit, new GUIContent("Value (cm)", TEXT_DISTANCELIMIT));
-                EditorGUI.indentLevel--;
-            } else
-            {
-                distanceLimit.floatValue = float.PositiveInfinity;
-            }
-            useDistanceLimit = newDistanceLimit;
-
-            combineTouchPoints.boolValue = GUILayout.Toggle(combineTouchPoints.boolValue, new GUIContent("Combine Touch Points", TEXT_COMBINETOUCHPOINTSINTERVAL));
-            if (combineTouchPoints.boolValue)
-            {
-                // making float field smaller
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(new GUIContent("Combine Interval (sec)", TEXT_COMBINETOUCHPOINTSINTERVAL), GUILayout.MinWidth(200));
-                combineTouchPointsInterval.floatValue = EditorGUILayout.FloatField(GUIContent.none, combineTouchPointsInterval.floatValue, GUILayout.MinWidth(50));
-                EditorGUILayout.EndHorizontal();
-            }
+            EditorGUILayout.PropertyField(timeLimit, TIME_LIMIT);
+            EditorGUILayout.PropertyField(distanceLimit, DISTANCE_LIMIT);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();

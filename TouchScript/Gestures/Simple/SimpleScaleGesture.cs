@@ -14,6 +14,15 @@ namespace TouchScript.Gestures.Simple
     [AddComponentMenu("TouchScript/Gestures/Simple Scale Gesture")]
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
     {
+
+        #region Constants
+
+        public const string SCALE_STARTED_MESSAGE = "OnScaleStarted";
+        public const string SCALED_MESSAGE = "OnScaled";
+        public const string SCALE_STOPPED_MESSAGE = "OnScaleStopped";
+
+        #endregion
+
         #region Private variables
 
         [SerializeField]
@@ -46,55 +55,54 @@ namespace TouchScript.Gestures.Simple
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void touchesMoved(IList<ITouch> touches)
         {
-            if (!gotEnoughTouchPoints()) return;
-            if (!relevantTouchPoints(touches)) return;
+            if (!gotEnoughTouches()) return;
+            if (!relevantTouches(touches)) return;
 
-            Vector3 oldGlobalCenter3DPos, oldLocalCenter3DPos, newGlobalCenter3DPos, newLocalCenter3DPos;
+            Vector3 oldWorldCenter, newWorldCenter;
             var deltaScale = 1f;
 
-            var new2DPos1 = getPointScreenPosition(0);
-            var new2DPos2 = getPointScreenPosition(1);
-            if (Vector2.Distance(new2DPos1, new2DPos2) < minPointsDistanceInPixels) return;
+            var newScreenPos1 = getPointScreenPosition(0);
+            var newScreenPos2 = getPointScreenPosition(1);
+            var newScreenDelta = newScreenPos2 - newScreenPos1;
+            if (newScreenDelta.sqrMagnitude < minPixelDistanceSquared) return;
 
             base.touchesMoved(touches);
 
-            var old2DPos1 = getPointPreviousScreenPosition(0);
-            var old2DPos2 = getPointPreviousScreenPosition(1);
-            var old3DPos1 = ProjectionUtils.CameraToPlaneProjection(old2DPos1, projectionCamera, WorldTransformPlane);
-            var old3DPos2 = ProjectionUtils.CameraToPlaneProjection(old2DPos2, projectionCamera, WorldTransformPlane);
-            var new3DPos1 = ProjectionUtils.CameraToPlaneProjection(new2DPos1, projectionCamera, WorldTransformPlane);
-            var new3DPos2 = ProjectionUtils.CameraToPlaneProjection(new2DPos2, projectionCamera, WorldTransformPlane);
-            var newVector = new3DPos2 - new3DPos1;
+            var oldScreenPos1 = getPointPreviousScreenPosition(0);
+            var oldScreenPos2 = getPointPreviousScreenPosition(1);
+            var oldWorldPos1 = ProjectionUtils.CameraToPlaneProjection(oldScreenPos1, projectionCamera, WorldTransformPlane);
+            var oldWorldPos2 = ProjectionUtils.CameraToPlaneProjection(oldScreenPos2, projectionCamera, WorldTransformPlane);
+            var newWorldPos1 = ProjectionUtils.CameraToPlaneProjection(newScreenPos1, projectionCamera, WorldTransformPlane);
+            var newWorldPos2 = ProjectionUtils.CameraToPlaneProjection(newScreenPos2, projectionCamera, WorldTransformPlane);
+            var newVector = newWorldPos2 - newWorldPos1;
 
-            Vector2 oldCenter2DPos = (old2DPos1 + old2DPos2)*.5f;
-            Vector2 newCenter2DPos = (new2DPos1 + new2DPos2)*.5f;
+            Vector2 oldScreenCenter = (oldScreenPos1 + oldScreenPos2) * .5f;
+            Vector2 newScreenCenter = (newScreenPos1 + newScreenPos2) * .5f;
 
             if (isScaling)
             {
-                deltaScale = newVector.magnitude/Vector3.Distance(old3DPos2, old3DPos1);
+                deltaScale = newVector.magnitude/Vector3.Distance(oldWorldPos2, oldWorldPos1);
             } else
             {
-                var old2DDist = Vector2.Distance(old2DPos1, old2DPos2);
-                var new2DDist = Vector2.Distance(new2DPos1, new2DPos2);
-                var delta2DDist = new2DDist - old2DDist;
-                scalingBuffer += delta2DDist;
+                var oldScreenDistance = Vector2.Distance(oldScreenPos1, oldScreenPos2);
+                var newScreenDistance = newScreenDelta.magnitude;
+                var screenDeltaDistance = newScreenDistance - oldScreenDistance;
+                scalingBuffer += screenDeltaDistance;
                 var dpiScalingThreshold = ScalingThreshold*touchManager.DotsPerCentimeter;
                 if (scalingBuffer*scalingBuffer >= dpiScalingThreshold*dpiScalingThreshold)
                 {
                     isScaling = true;
-                    var oldVector2D = (old2DPos2 - old2DPos1).normalized;
-                    var startScale = (new2DDist - scalingBuffer)*.5f;
-                    var startVector = oldVector2D*startScale;
-                    deltaScale = newVector.magnitude/(ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos + startVector, projectionCamera, WorldTransformPlane) - ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos - startVector, projectionCamera, WorldTransformPlane)).magnitude;
+                    var oldScreenDirection = (oldScreenPos2 - oldScreenPos1).normalized;
+                    var startScale = (newScreenDistance - scalingBuffer)*.5f;
+                    var startVector = oldScreenDirection*startScale;
+                    deltaScale = newVector.magnitude/(ProjectionUtils.CameraToPlaneProjection(oldScreenCenter + startVector, projectionCamera, WorldTransformPlane) - ProjectionUtils.CameraToPlaneProjection(oldScreenCenter - startVector, projectionCamera, WorldTransformPlane)).magnitude;
                 }
             }
 
-            oldGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(oldCenter2DPos, projectionCamera, WorldTransformPlane);
-            newGlobalCenter3DPos = ProjectionUtils.CameraToPlaneProjection(newCenter2DPos, projectionCamera, WorldTransformPlane);
-            oldLocalCenter3DPos = globalToLocalPosition(oldGlobalCenter3DPos);
-            newLocalCenter3DPos = globalToLocalPosition(newGlobalCenter3DPos);
+            oldWorldCenter = ProjectionUtils.CameraToPlaneProjection(oldScreenCenter, projectionCamera, WorldTransformPlane);
+            newWorldCenter = ProjectionUtils.CameraToPlaneProjection(newScreenCenter, projectionCamera, WorldTransformPlane);
 
             if (Mathf.Abs(deltaScale - 1f) > 0.00001)
             {
@@ -103,13 +111,10 @@ namespace TouchScript.Gestures.Simple
                     case GestureState.Possible:
                     case GestureState.Began:
                     case GestureState.Changed:
-                        screenPosition = newCenter2DPos;
-                        previousScreenPosition = oldCenter2DPos;
-                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
-                        WorldTransformCenter = newGlobalCenter3DPos;
-                        PreviousWorldTransformCenter = oldGlobalCenter3DPos;
-                        LocalTransformCenter = newLocalCenter3DPos;
-                        PreviousLocalTransformCenter = oldLocalCenter3DPos;
+                        screenPosition = newScreenCenter;
+                        previousScreenPosition = oldScreenCenter;
+                        PreviousWorldTransformCenter = oldWorldCenter;
+                        WorldTransformCenter = newWorldCenter;
 
                         LocalDeltaScale = deltaScale;
 
@@ -123,6 +128,45 @@ namespace TouchScript.Gestures.Simple
                         break;
                 }
             }
+        }
+
+        /// <inheritdoc />
+        protected override void onBegan()
+        {
+            base.onBegan();
+            if (UseSendMessage)
+            {
+                SendMessageTarget.SendMessage(SCALE_STARTED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                SendMessageTarget.SendMessage(SCALED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onChanged()
+        {
+            base.onChanged();
+            if (UseSendMessage) SendMessageTarget.SendMessage(SCALED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (UseSendMessage) SendMessageTarget.SendMessage(SCALE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onFailed()
+        {
+            base.onFailed();
+            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(SCALE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onCancelled()
+        {
+            base.onCancelled();
+            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(SCALE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

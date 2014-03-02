@@ -13,7 +13,7 @@ namespace TouchScript.Layers
     /// Touch layer for a camera. Used to test if specific camera sees an object which should be hit by a touch point.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
-    public class CameraLayer : CameraLayerBase
+    public sealed class CameraLayer : CameraLayerBase
     {
         #region Private variables
 
@@ -32,9 +32,9 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
-        protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
+        protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
-            hit = new TouchHit();
+            hit = null;
             var hits = Physics.RaycastAll(ray, float.PositiveInfinity, LayerMask);
 
             if (hits.Length == 0) return LayerHitResult.Miss;
@@ -43,7 +43,7 @@ namespace TouchScript.Layers
             var success = false;
             foreach (var raycastHit in hits)
             {
-                hit = TouchHit.FromRaycastHit(raycastHit);
+                hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
                 var hitTests = raycastHit.transform.GetComponents<HitTest>();
                 if (hitTests.Length == 0)
                 {
@@ -79,11 +79,12 @@ namespace TouchScript.Layers
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>
             {
-                if (a.transform == b.transform) return 0;
+                if (a.collider.transform == b.collider.transform) return 0;
                 var distA = (a.point - cameraPos).sqrMagnitude;
                 var distB = (b.point - cameraPos).sqrMagnitude;
                 return distA < distB ? -1 : 1;
             });
+
             return sortedHits.ToArray();
         }
 
