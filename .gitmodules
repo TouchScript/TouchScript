@@ -1,0 +1,3 @@
+[submodule "TouchScript.Inputs/TUIOsharp"]
+	path = TouchScript.Inputs/TUIOsharp
+	url = https://github.com/valyard/TUIOsharp.git
