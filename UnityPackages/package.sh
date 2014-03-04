@@ -19,7 +19,7 @@ for i in $(ls -d */); do
 		if [ $name == TouchScript.WindowsPhone ] ; then
 			toExport="$exportFolders Assets/Plugins"
 		elif [ $name == Scaleform ] ; then
-			toExport="$exportFolders Assets/StreamingAssets"
+			toExport="$exportFolders Assets/StreamingAssets Assets/TouchScript/Scripts"
 		else
 			toExport=$exportFolders
 		fi
