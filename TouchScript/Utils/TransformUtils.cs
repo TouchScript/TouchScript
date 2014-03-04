@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using UnityEngine;
 
 namespace TouchScript.Utils
 {
-    public static class TransformUtils
+    internal static class TransformUtils
     {
-
         public static Vector3 GlobalToLocalPosition(Transform transform, Vector3 global)
         {
             if (transform.parent != null)
@@ -13,6 +16,5 @@ namespace TouchScript.Utils
             }
             return global;
         }
-
     }
 }

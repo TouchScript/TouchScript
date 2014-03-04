@@ -13,6 +13,9 @@ using UnityEngine;
 
 namespace TouchScript
 {
+    /// <summary>
+    /// Default implementation of <see cref="ITouchManager"/>.
+    /// </summary>
     internal sealed class TouchManagerInstance : MonoBehaviour, ITouchManager
     {
         #region Events
@@ -93,6 +96,7 @@ namespace TouchScript
             }
         }
 
+        /// <inheritdoc />
         public IDisplayDevice DisplayDevice
         {
             get
@@ -185,6 +189,7 @@ namespace TouchScript
             return true;
         }
 
+        /// <inheritdoc />
         public bool AddLayer(TouchLayer layer, int index)
         {
             if (layer == null) return false;

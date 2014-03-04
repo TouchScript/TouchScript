@@ -1,16 +1,22 @@
-﻿using System;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using System;
 using TouchScript.Hit;
 using UnityEngine;
 
 namespace TouchScript.Layers
 {
+    /// <summary>
+    /// Abstract base class for camera-based layers.
+    /// </summary>
     public abstract class CameraLayerBase : TouchLayer
     {
         #region Public properties
 
-        /// <summary>
-        /// Layer mask to select layers which should be touchable from this CameraLayer.
-        /// </summary>
+        /// <summary>Gets or sets the layer mask which is used to select layers which should be touchable from this layer.</summary>
+        /// <value>A mask to exclude objects from possibly touchable list.</value>
         public LayerMask LayerMask
         {
             get { return layerMask; }
@@ -64,6 +70,12 @@ namespace TouchScript.Layers
             if (String.IsNullOrEmpty(Name) && Camera != null) Name = Camera.name;
         }
 
+        /// <summary>
+        /// Casts a ray from camera position.
+        /// </summary>
+        /// <param name="ray">The ray.</param>
+        /// <param name="hit">Hit information if the ray has hit something.</param>
+        /// <returns>Hit result.</returns>
         protected abstract LayerHitResult castRay(Ray ray, out ITouchHit hit);
 
         #endregion

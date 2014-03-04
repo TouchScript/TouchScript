@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace TouchScript
 {
+    /// <summary>
+    /// Internal implementation of <see cref="IGestureManager"/>.
+    /// </summary>
     internal sealed class GestureManagerInstance : MonoBehaviour, IGestureManager
     {
         #region Public properties

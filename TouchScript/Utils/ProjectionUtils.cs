@@ -11,13 +11,11 @@ namespace TouchScript.Utils
     /// </summary>
     public static class ProjectionUtils
     {
-        /// <summary>
-        /// Projects a screen point to a plane.
-        /// </summary>
+        /// <summary>Projects a screen point to a plane.</summary>
         /// <param name="position">Screen point.</param>
         /// <param name="camera">The camera.</param>
         /// <param name="projectionPlane">The projection plane.</param>
-        /// <returns></returns>
+        /// <returns>Projected point on the plane in World coordinates.</returns>
         public static Vector3 CameraToPlaneProjection(Vector2 position, Camera camera, Plane projectionPlane)
         {
             var ray = camera.ScreenPointToRay(position);

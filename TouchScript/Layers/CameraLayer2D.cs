@@ -1,9 +1,16 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
 
 namespace TouchScript.Layers
 {
+    /// <summary>
+    /// Touch layer which works with Unity 4.3+ 2d physics. Can pick 2d objects hit by touches in right order.
+    /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
     public sealed class CameraLayer2D : CameraLayerBase
     {
@@ -28,6 +35,7 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
+        /// <inheritdoc />
         protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
             hit = null;

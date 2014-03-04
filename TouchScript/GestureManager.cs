@@ -6,7 +6,9 @@ using UnityEngine;
 
 namespace TouchScript
 {
-    //[AddComponentMenu("TouchScript/Gesture Manager")]
+    /// <summary>
+    /// Internal facade for current instance of <see cref="ITouchManager"/>.
+    /// </summary>
     internal sealed class GestureManager : MonoBehaviour
     {
         #region Public properties

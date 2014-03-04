@@ -9,16 +9,19 @@ using UnityEngine;
 namespace TouchScript
 {
     /// <summary>
-    /// Touch point.
+    /// Class which internally represents a touch.
     /// </summary>
     internal sealed class TouchPoint : ITouch
     {
         #region Public properties
 
+        /// <inheritdoc />
         public int Id { get; private set; }
 
+        /// <inheritdoc />
         public Transform Target { get; internal set; }
 
+        /// <inheritdoc />
         public Vector2 Position
         {
             get { return position; }
@@ -29,10 +32,13 @@ namespace TouchScript
             }
         }
 
+        /// <inheritdoc />
         public Vector2 PreviousPosition { get; private set; }
 
+        /// <inheritdoc />
         public ITouchHit Hit { get; internal set; }
 
+        /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
 
         #endregion
@@ -43,11 +49,9 @@ namespace TouchScript
 
         #endregion
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TouchPoint"/> class.
-        /// </summary>
-        /// <param name="id">Touch point id.</param>
-        /// <param name="position">Screen position.</param>
+        /// <summary>Initializes a new instance of the <see cref="TouchPoint"/> class.</summary>
+        /// <param name="id">Unique id of the touch.</param>
+        /// <param name="position">Screen position of the touch.</param>
         internal TouchPoint(int id, Vector2 position)
         {
             Id = id;
@@ -57,6 +61,7 @@ namespace TouchScript
 
         #region Internal methods
 
+        /// <summary>Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.</summary>
         internal void ResetPosition()
         {
             PreviousPosition = Position;

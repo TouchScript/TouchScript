@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
@@ -10,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// Touch layer for a camera. Used to test if specific camera sees an object which should be hit by a touch point.
+    /// Touch layer which represents a 3d camera looking into the world. Determines which objects may be hit in the view of a camera attached to parent GameObject.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
     public sealed class CameraLayer : CameraLayerBase
@@ -32,6 +31,7 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
+        /// <inheritdoc />
         protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
             hit = null;
