@@ -472,9 +472,6 @@ namespace TouchScript.Gestures
         protected virtual void OnDisable()
         {
             setState(GestureState.Failed);
-
-            gestureManagerInstance = null;
-            touchManager = null;
         }
 
         protected virtual void OnDestroy()
