@@ -16,5 +16,14 @@ namespace TouchScript.Utils
             }
             return global;
         }
+
+        public static Vector3 GlobalToLocalDirection(Transform transform, Vector3 global)
+        {
+            if (transform.parent != null)
+            {
+                return transform.parent.InverseTransformDirection(global);
+            }
+            return global;
+        }
     }
 }

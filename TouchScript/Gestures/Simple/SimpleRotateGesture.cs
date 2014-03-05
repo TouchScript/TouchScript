@@ -24,16 +24,6 @@ namespace TouchScript.Gestures.Simple
 
         #endregion
 
-        #region Private variables
-
-        [SerializeField]
-        private float rotationThreshold = 3f;
-
-        private float rotationBuffer;
-        private bool isRotating = false;
-
-        #endregion
-
         #region Public properties
 
         /// <summary>
@@ -49,6 +39,16 @@ namespace TouchScript.Gestures.Simple
         /// Local delta rotation in degrees. Changes every Begin or Changed state.
         /// </summary>
         public float LocalDeltaRotation { get; private set; }
+
+        #endregion
+
+        #region Private variables
+
+        [SerializeField]
+        private float rotationThreshold = 3f;
+
+        private float rotationBuffer;
+        private bool isRotating = false;
 
         #endregion
 

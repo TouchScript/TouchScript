@@ -39,6 +39,14 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         public Vector3 WorldDeltaPosition { get; private set; }
 
+        public Vector3 LocalDeltaPosition
+        {
+            get
+            {
+                return TransformUtils.GlobalToLocalDirection(transform, WorldDeltaPosition);
+            }
+        }
+
         /// <inheritdoc />
         public override Vector2 ScreenPosition
         {
