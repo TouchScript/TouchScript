@@ -18,6 +18,10 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        /// <summary>
+        /// Gets or sets the number of taps required for the gesture to recognize.
+        /// </summary>
+        /// <value>The number of taps required for this gesture to recognize. <c>1</c> — dingle tap, <c>2</c> — double tap.</value>
         public int NumberOfTapsRequired
         {
             get { return numberOfTapsRequired; }
@@ -29,8 +33,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Maximum time to hold touches until gesture fails.
+        /// Gets or sets maximum hold time before gesture fails.
         /// </summary>
+        /// <value>Number of seconds a user should hold their fingers before gesture fails.</value>
         public float TimeLimit
         {
             get { return timeLimit; }
@@ -38,8 +43,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Maximum distance for touch cluster to move until gesture fails.
+        /// Gets or sets maximum distance for touch cluster must move for the gesture to fail.
         /// </summary>
+        /// <value>Distance in cm touches must move before gesture fails.</value>
         public float DistanceLimit
         {
             get { return distanceLimit; }
@@ -74,6 +80,7 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();

@@ -29,6 +29,12 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        /// <summary>
+        /// Indicates if this input source should disable <see cref="MouseInput"/> in scene.
+        /// </summary>
+        /// <remarks>
+        /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated touch points in exactly the same coordinates. This affects clusters and multitouch gestures.
+        /// </remarks>
         [ToggleLeft]
         public bool DisableMouseInputInBuilds = true;
 

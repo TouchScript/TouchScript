@@ -16,9 +16,24 @@ namespace TouchScript.Gestures.Simple
     {
         #region Constants
 
+        /// <summary>
+        /// Message dispatched when a touch begins.
+        /// </summary>
         public const string TOUCH_BEGAN_MESSAGE = "OnTouchBegan";
+
+        /// <summary>
+        /// Message dispatched when a touch moves.
+        /// </summary>
         public const string TOUCH_MOVED_MESSAGE = "OnTouchMoved";
+
+        /// <summary>
+        /// Message dispatched when a touch ends.
+        /// </summary>
         public const string TOUCH_ENDED_MESSAGE = "OnTouchEnded";
+
+        /// <summary>
+        /// Message dispatched when a touch is cancelled.
+        /// </summary>
         public const string TOUCH_CANCELLED_MESSAGE = "OnTouchCancelled";
 
         #endregion

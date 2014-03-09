@@ -463,6 +463,7 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected virtual void Awake()
         {
             foreach (var gesture in friendlyGestures)
@@ -496,6 +497,9 @@ namespace TouchScript.Gestures
             setState(GestureState.Failed);
         }
 
+        /// <summary>
+        /// Unity3d OnDestroy handler.
+        /// </summary>
         protected virtual void OnDestroy()
         {
             var copy = new List<Gesture>(friendlyGestures);
@@ -563,6 +567,11 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
+        /// <summary>
+        /// Should the gesture cache this touch to use it later in calculation of <see cref="ScreenPosition"/>.
+        /// </summary>
+        /// <param name="value">Touch to cache.</param>
+        /// <returns><c>true</c> if touch should be cached; <c>false</c> otherwise.</returns>
         protected virtual bool shouldCacheTouchPosition(ITouch value)
         {
             return true;
@@ -729,7 +738,7 @@ namespace TouchScript.Gestures
 
         private void requiredToFailGestureStateChangedHandler(object sender, GestureStateChangeEventArgs e)
         {
-            if (sender != requireGestureToFail) return;
+            if ((sender as Gesture) != requireGestureToFail) return;
             switch (e.State)
             {
                 case GestureState.Failed:

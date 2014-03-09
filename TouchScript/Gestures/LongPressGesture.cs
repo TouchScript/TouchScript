@@ -72,6 +72,7 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();

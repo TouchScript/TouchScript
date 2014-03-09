@@ -19,8 +19,9 @@ namespace TouchScript.Gestures.Simple
         #region Public properties
 
         /// <summary>
-        /// Minimum distance in cm for touch points to move for gesture to begin. 
+        /// Gets or sets minimum distance in cm for touch points to move for gesture to begin. 
         /// </summary>
+        /// <value>Minimum value in cm user must move their fingers to start this gesture.</value>
         public float MovementThreshold
         {
             get { return movementThreshold; }
@@ -28,16 +29,18 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <summary>
-        /// 3D delta position in global coordinates.
+        /// Gets delta position in world coordinates.
         /// </summary>
+        /// <value>Delta position between this frame and the last frame in world coordinates.</value>
         public Vector3 WorldDeltaPosition { get; private set; }
 
+        /// <summary>
+        /// Gets delta position in local coordinates.
+        /// </summary>
+        /// <value>Delta position between this frame and the last frame in local coordinates.</value>
         public Vector3 LocalDeltaPosition
         {
-            get
-            {
-                return TransformUtils.GlobalToLocalDirection(transform, WorldDeltaPosition);
-            }
+            get { return TransformUtils.GlobalToLocalDirection(transform, WorldDeltaPosition); }
         }
 
         /// <inheritdoc />

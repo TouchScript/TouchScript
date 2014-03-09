@@ -9,8 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Recognizes fast movement before releasing touches.
-    /// Doesn't care how much time touch points were on surface and how much they moved.
+    /// Recognizes fast movement before releasing touches. Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
     public class FlickGesture : Gesture
@@ -43,8 +42,9 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Time interval in seconds in which touch points must move by <see cref="MinDistance"/>.
+        /// Gets or sets time interval in seconds in which touch points must move by <see cref="MinDistance"/> for gesture to succeed.
         /// </summary>
+        /// <value>Interval in seconds in which touch points must move by <see cref="MinDistance"/> for gesture to succeed.</value>
         public float FlickTime
         {
             get { return flickTime; }
@@ -52,8 +52,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.
+        /// Gets or sets minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.
         /// </summary>
+        /// <value>Minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.</value>
         public float MinDistance
         {
             get { return minDistance; }
@@ -61,9 +62,10 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Minimum distance in cm for touch points to move for gesture to be recognized. 
-        /// Prevents misinterpreting taps.
+        /// Gets or sets minimum distance in cm touches must move to start recognizing this gesture.
         /// </summary>
+        /// <value>Minimum distance in cm touches must move to start recognizing this gesture.</value>
+        /// <remarks>Prevents misinterpreting taps.</remarks>
         public float MovementThreshold
         {
             get { return movementThreshold; }
@@ -71,8 +73,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Direction to look for.
+        /// Gets or sets direction to look for.
         /// </summary>
+        /// <value>Direction of movement.</value>
         public GestureDirection Direction
         {
             get { return direction; }
@@ -80,10 +83,13 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Contains flick direction (not normalized) when gesture is recognized.
+        /// Gets flick direction (not normalized) when gesture is recognized.
         /// </summary>
         public Vector2 ScreenFlickVector { get; private set; }
 
+        /// <summary>
+        /// Gets flick time in seconds touches moved by <see cref="ScreenFlickVector"/>.
+        /// </summary>
         public float ScreenFlickTime { get; private set; }
 
         #endregion
@@ -111,6 +117,7 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected void LateUpdate()
         {
             if (!isActive) return;

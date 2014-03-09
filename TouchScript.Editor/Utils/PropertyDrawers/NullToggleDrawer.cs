@@ -152,7 +152,7 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             switch (property.propertyType)
             {
                 case SerializedPropertyType.ObjectReference:
-                    return property.objectReferenceValue == getNullValue(property);
+                    return ReferenceEquals(property.objectReferenceValue, getNullValue(property));
                 case SerializedPropertyType.Integer:
                     return property.intValue == (int)getNullValue(property);
                 case SerializedPropertyType.Float:

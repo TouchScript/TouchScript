@@ -119,6 +119,7 @@ namespace TouchScript.Gestures.Simple
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();

@@ -17,7 +17,11 @@ namespace TouchScript.Gestures
     {
 
         #region Public properties
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether actions coming from children should be ingored.
+        /// </summary>
+        /// <value><c>true</c> if actions from children should be ignored; otherwise, <c>false</c>.</value>
         public bool IgnoreChildren
         {
             get { return ignoreChildren; }
@@ -36,6 +40,7 @@ namespace TouchScript.Gestures
         
         #region Gesture callbacks
 
+        /// <inheritdoc />
         public override bool ShouldReceiveTouch(ITouch touch)
         {
             if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);

@@ -30,6 +30,7 @@ namespace TouchScript.Devices.Display
 
         private static bool? isLaptop = null;
 
+        /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();

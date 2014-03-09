@@ -23,7 +23,7 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 minPointsDistance = value;
-                minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
+                minPixelDistance = minPointsDistance*touchManager.DotsPerCentimeter;
                 minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
             }
         }
@@ -59,6 +59,10 @@ namespace TouchScript.Gestures.Simple
         /// <see cref="MinPointsDistance"/> in pixels for internal use.
         /// </summary>
         protected float minPixelDistance;
+
+        /// <summary>
+        /// <see cref="MinPointsDistance"/> squared in pixels for internal use.
+        /// </summary>
         protected float minPixelDistanceSquared;
 
         /// <summary>
@@ -80,7 +84,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.OnEnable();
 
-            minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
+            minPixelDistance = minPointsDistance*touchManager.DotsPerCentimeter;
             minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
         }
 
