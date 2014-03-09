@@ -65,9 +65,9 @@ public class Advanced_Cubes : MonoBehaviour
             case Gesture.GestureState.Changed:
                 var gesture = (RotateGesture)sender;
 
-                if (Mathf.Abs(gesture.LocalDeltaRotation) > 0.01)
+                if (Mathf.Abs(gesture.DeltaRotation) > 0.01)
                 {
-                    targetRotation = Quaternion.AngleAxis(gesture.LocalDeltaRotation, gesture.WorldTransformPlane.normal)*targetRotation;
+                    targetRotation = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * targetRotation;
                 }
                 break;
         }

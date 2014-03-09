@@ -19,8 +19,9 @@ namespace TouchScript.Gestures.Simple
         #region Public properties
 
         /// <summary>
-        /// Minimum rotation in degrees for gesture to begin.
+        /// Gets or sets minimum rotation in degrees for gesture to begin.
         /// </summary>
+        /// <value>Minimum degrees to turn for gesture to begin.</value>
         public float RotationThreshold
         {
             get { return rotationThreshold; }
@@ -28,9 +29,19 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <summary>
-        /// Local delta rotation in degrees. Changes every Begin or Changed state.
+        /// Gets delta rotation in degrees around <see cref="RotationAxis"/>. Changes every Begin or Changed state.
         /// </summary>
-        public float LocalDeltaRotation { get; private set; }
+        /// <value>Delta rotation around <see cref="RotationAxis"/> since the last frame in degrees.</value>
+        public float DeltaRotation { get; private set; }
+
+        /// <summary>
+        /// Gets rotation axis of the gesture in world coordinates.
+        /// </summary>
+        /// <value>Rotation axis of the gesture in world coordinates.</value>
+        public Vector3 RotationAxis
+        {
+            get { return worldTransformPlane.normal; }
+        }
 
         #endregion
 
@@ -103,9 +114,8 @@ namespace TouchScript.Gestures.Simple
                         previousScreenPosition = oldScreenCenter;
                         PreviousWorldTransformCenter = oldWorldCenter;
                         WorldTransformCenter = newWorldCenter;
-                        PreviousWorldTransformCenter = oldWorldCenter;
 
-                        LocalDeltaRotation = deltaRotation;
+                        DeltaRotation = deltaRotation;
 
                         if (State == GestureState.Possible)
                         {
@@ -133,7 +143,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.restart();
 
-            LocalDeltaRotation = 0f;
+            DeltaRotation = 0f;
         }
 
         #endregion

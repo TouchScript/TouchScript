@@ -106,14 +106,17 @@ namespace TouchScript.Gestures.Simple
         [SerializeField]
         private Vector3 projectionNormal = Vector3.forward;
 
-        private Plane worldTransformPlane;
-
         private Collider cachedCollider;
 
         /// <summary>
         /// Camera which is used to project touch points from screen space to a 3d plane.
         /// </summary>
         protected Camera projectionCamera;
+
+        /// <summary>
+        /// The world transform plane.
+        /// </summary>
+        protected Plane worldTransformPlane;
 
         #endregion
 
