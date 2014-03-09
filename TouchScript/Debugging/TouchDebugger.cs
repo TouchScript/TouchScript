@@ -15,9 +15,7 @@ namespace TouchScript.Debugging
     {
         #region Public properties
 
-        /// <summary>
-        /// Texture to use.
-        /// </summary>
+        /// <summary>Gets or sets the texture to use.</summary>
         public Texture2D TouchTexture
         {
             get { return texture; }
@@ -28,15 +26,15 @@ namespace TouchScript.Debugging
             }
         }
 
-        /// <summary>
-        /// Font color for touch ids.
-        /// </summary>
+        /// <summary>Gets or sets font color for touch ids.</summary>
         public Color FontColor
         {
             get { return fontColor; }
             set { fontColor = value; }
         }
 
+        /// <summary>Gets or sets whether <see cref="TouchDebugger"/> is using DPI to scale touch cursors.</summary>
+        /// <value><c>true</c> if dpi value is used; otherwise, <c>false</c>.</value>
         public bool UseDPI
         {
             get { return useDPI; }
@@ -47,6 +45,8 @@ namespace TouchScript.Debugging
             }
         }
 
+        /// <summary>Gets or sets the size of touch cursors in cm.</summary>
+        /// <value>The size of touch cursors in cm.</value>
         public float TouchSize
         {
             get { return touchSize; }

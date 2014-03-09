@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TouchScript.Hit
 {
     /// <summary>
-    /// Parent class for all hit test handlers.
+    /// Base class for all hit test handlers.
     /// </summary>
     public abstract class HitTest : MonoBehaviour
     {

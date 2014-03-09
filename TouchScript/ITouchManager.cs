@@ -39,68 +39,102 @@ namespace TouchScript
     /// </example>
     public interface ITouchManager
     {
-        /// <summary>Occurs when a new frame is started before all other events.</summary>
+        /// <summary>
+        /// Occurs when a new frame is started before all other events.
+        /// </summary>
         event EventHandler FrameStarted;
 
-        /// <summary>Occurs when a frame is finished. After all other events.</summary>
+        /// <summary>
+        /// Occurs when a frame is finished. After all other events.
+        /// </summary>
         event EventHandler FrameFinished;
 
-        /// <summary>Occurs when new touch points are added.</summary>
+        /// <summary>
+        /// Occurs when new touch points are added.
+        /// </summary>
         event EventHandler<TouchEventArgs> TouchesBegan;
 
-        /// <summary>Occurs when touch points are updated.</summary>
+        /// <summary>
+        /// Occurs when touch points are updated.
+        /// </summary>
         event EventHandler<TouchEventArgs> TouchesMoved;
 
-        /// <summary>Occurs when touch points are removed.</summary>
+        /// <summary>
+        /// Occurs when touch points are removed.
+        /// </summary>
         event EventHandler<TouchEventArgs> TouchesEnded;
 
-        /// <summary>Occurs when touch points are cancelled.</summary>
+        /// <summary>
+        /// Occurs when touch points are cancelled.
+        /// </summary>
         event EventHandler<TouchEventArgs> TouchesCancelled;
 
-        /// <summary>Gets or sets current display device.</summary>
+        /// <summary>
+        /// Gets or sets current display device.
+        /// </summary>
         /// <value>Object which holds properties of current display device, like DPI and others.</value>
         IDisplayDevice DisplayDevice { get; set; }
 
-        /// <summary>Gets current DPI.</summary>
+        /// <summary>
+        /// Gets current DPI.
+        /// </summary>
         /// <remarks>Shortcut for <see cref="IDisplayDevice.DPI"/>.</remarks>
         float DPI { get; }
 
-        /// <summary>Gets the list of touch layers.</summary>
+        /// <summary>
+        /// Gets the list of touch layers.
+        /// </summary>
         /// <value>A sorted list of currently active touch layers.</value>
         IList<TouchLayer> Layers { get; }
 
-        /// <summary>Gets number of pixels in a cm with current DPI.</summary>
+        /// <summary>
+        /// Gets number of pixels in a cm with current DPI.
+        /// </summary>
         float DotsPerCentimeter { get; }
 
-        /// <summary>Gets number of active touches.</summary>
+        /// <summary>
+        /// Gets number of active touches.
+        /// </summary>
         int NumberOfTouches { get; }
 
-        /// <summary>Gets the list of active touches.</summary>
+        /// <summary>
+        /// Gets the list of active touches.
+        /// </summary>
         /// <value>An unsorted list of all touches which began but have not ended yet.</value>
         IList<ITouch> ActiveTouches { get; }
 
-        /// <summary>Adds a touch layer.</summary>
+        /// <summary>
+        /// Adds a touch layer.
+        /// </summary>
         /// <param name="layer">The layer to add.</param>
         /// <returns>True if the layer was added.</returns>
         bool AddLayer(TouchLayer layer);
 
-        /// <summary>Adds a touch layer in a specific position.</summary>
+        /// <summary>
+        /// Adds a touch layer in a specific position.
+        /// </summary>
         /// <param name="layer">The layer to add.</param>
         /// <param name="index">Layer index to add the layer to.</param>
         /// <returns>True if the layer was added.</returns>
         bool AddLayer(TouchLayer layer, int index);
 
-        /// <summary>Removes a touch layer.</summary>
+        /// <summary>
+        /// Removes a touch layer.
+        /// </summary>
         /// <param name="layer">The layer to remove.</param>
         /// <returns>True if the layer was removed.</returns>
         bool RemoveLayer(TouchLayer layer);
 
-        /// <summary>Swaps layers.</summary>
+        /// <summary>
+        /// Swaps layers.
+        /// </summary>
         /// <param name="at">Layer index 1.</param>
         /// <param name="to">Layer index 2.</param>
         void ChangeLayerIndex(int at, int to);
 
-        /// <summary>Checks if a touch hits anything.</summary>
+        /// <summary>
+        /// Checks if a touch hits anything.
+        /// </summary>
         /// <param name="position">Screen position of the touch.</param>
         /// <returns>Transform which has been hit or null otherwise.</returns>
         Transform GetHitTarget(Vector2 position);
@@ -152,11 +186,15 @@ namespace TouchScript
     /// </summary>
     public class TouchEventArgs : EventArgs
     {
-        /// <summary>Gets list of touches participating in the event.</summary>
+        /// <summary>
+        /// Gets list of touches participating in the event.
+        /// </summary>
         /// <value>List of touches added, changed or removed this frame.</value>
         public IList<ITouch> Touches { get; private set; }
 
-        /// <summary>Initializes a new instance of the <see cref="TouchEventArgs"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
+        /// </summary>
         /// <param name="touches">List of touches for an event.</param>
         public TouchEventArgs(IList<ITouch> touches)
         {

@@ -15,7 +15,9 @@ namespace TouchScript.Layers
     {
         #region Public properties
 
-        /// <summary>Gets or sets the layer mask which is used to select layers which should be touchable from this layer.</summary>
+        /// <summary>
+        /// Gets or sets the layer mask which is used to select layers which should be touchable from this layer.
+        /// </summary>
         /// <value>A mask to exclude objects from possibly touchable list.</value>
         public LayerMask LayerMask
         {

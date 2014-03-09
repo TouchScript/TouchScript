@@ -15,8 +15,11 @@ namespace TouchScript.Hit
         #region Public properties
 
         /// <summary>
-        /// If <c>true</c> touch point not only prevented but discarded making it impossible for other gestures to get it.
+        /// Indicates if instead of not reacting to touches the object should completely discard them making it impossible for other gestures to receive them.
         /// </summary>
+        /// <value>
+        /// If <c>true</c> touch points are not only prevented but discarded making it impossible for other gestures to receive them.
+        /// </value>
         public bool DiscardTouch = false;
 
         #endregion

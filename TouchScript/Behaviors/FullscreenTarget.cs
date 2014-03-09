@@ -20,19 +20,13 @@ namespace TouchScript.Behaviors
     {
         #region Constants
 
-        /// <summary>
-        /// Type of the Fullscreen Target.
-        /// </summary>
+        /// <summary>Type of the Fullscreen Target.</summary>
         public enum TargetType
         {
-            /// <summary>
-            /// The target is attached to camera's far plane.
-            /// </summary>
+            /// <summary>The target is attached to camera's far plane.</summary>
             Background,
 
-            /// <summary>
-            /// The target is attached to camera's near plane.
-            /// </summary>
+            /// <summary>The target is attached to camera's near plane.</summary>
             Foreground
         }
 
@@ -40,9 +34,7 @@ namespace TouchScript.Behaviors
 
         #region Public properties
 
-        /// <summary>
-        /// Type of the Fullscreen Target.
-        /// </summary>
+        /// <summary>Type of the Fullscreen Target.</summary>
         public TargetType Type = TargetType.Background;
 
         #endregion

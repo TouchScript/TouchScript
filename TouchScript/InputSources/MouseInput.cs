@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Input source to grab mouse clicks as touch points.
+    /// Input source which transfers mouse clicks to touches.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public sealed class MouseInput : InputSource
@@ -16,6 +16,12 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        /// <summary>
+        /// Indicates if this input source should be disabled on mobile platforms.
+        /// </summary>
+        /// <remarks>
+        /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated touch points in exactly the same coordinates. This affects clusters and multitouch gestures.
+        /// </remarks>
         [ToggleLeft]
         public bool DisableOnMobilePlatforms = true;
 

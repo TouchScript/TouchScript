@@ -16,7 +16,9 @@ namespace TouchScript.Utils
     {
         private static StringBuilder hashString = new StringBuilder();
 
-        /// <summary>Calculates the centroid of touch positions.</summary>
+        /// <summary>
+        /// Calculates the centroid of touch positions.
+        /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Centroid of touch points' positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
         public static Vector2 Get2DCenterPosition(IList<ITouch> touches)
@@ -30,7 +32,9 @@ namespace TouchScript.Utils
             return position/(float)length;
         }
 
-        /// <summary>Calculates the centroid of previous touch positions.</summary>
+        /// <summary>
+        /// Calculates the centroid of previous touch positions.
+        /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Centroid of previous touch point's positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
         public static Vector2 GetPrevious2DCenterPosition(IList<ITouch> touches)
@@ -44,7 +48,9 @@ namespace TouchScript.Utils
             return position/(float)length;
         }
 
-        /// <summary>Computes a unique hash for a list of touches.</summary>
+        /// <summary>
+        /// Computes a unique hash for a list of touches.
+        /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>A unique string for a list of touches.</returns>
         public static String GetPointsHash(IList<ITouch> touches)

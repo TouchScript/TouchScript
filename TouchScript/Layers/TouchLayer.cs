@@ -25,16 +25,24 @@ namespace TouchScript.Layers
     {
         #region Constants
 
-        /// <summary>Result of a touch's hit test with a layer.</summary>
+        /// <summary>
+        /// Result of a touch's hit test with a layer.
+        /// </summary>
         public enum LayerHitResult
         {
-            /// <summary>Something wrong happened.</summary>
+            /// <summary>
+            /// Something wrong happened.
+            /// </summary>
             Error = 0,
 
-            /// <summary>Touch hit an object.</summary>
+            /// <summary>
+            /// Touch hit an object.
+            /// </summary>
             Hit = 1,
 
-            /// <summary>Touch didn't hit any object.</summary>
+            /// <summary>
+            /// Touch didn't hit any object.
+            /// </summary>
             Miss = 2
         }
 
@@ -42,7 +50,9 @@ namespace TouchScript.Layers
 
         #region Events
 
-        /// <summary>Occurs when layer determines that a touch has hit something.</summary>
+        /// <summary>
+        /// Occurs when layer determines that a touch has hit something.
+        /// </summary>
         public event EventHandler<TouchLayerEventArgs> TouchBegan
         {
             add { touchBeganInvoker += value; }
@@ -56,10 +66,14 @@ namespace TouchScript.Layers
 
         #region Public properties
 
-        /// <summary>Touch layer's name.</summary>
+        /// <summary>
+        /// Touch layer's name.
+        /// </summary>
         public String Name;
 
-        /// <summary>Gets the camera a touch layer is using. Null if layer doesn't support cameras.</summary>
+        /// <summary>
+        /// Gets the camera a touch layer is using. Null if layer doesn't support cameras.
+        /// </summary>
         public virtual Camera Camera
         {
             get { return null; }
@@ -69,7 +83,9 @@ namespace TouchScript.Layers
 
         #region Public methods
 
-        /// <summary>Checks if a point in screen coordinates hits something in this layer.</summary>
+        /// <summary>
+        /// Checks if a point in screen coordinates hits something in this layer.
+        /// </summary>
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
@@ -83,14 +99,18 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
-        /// <summary>Unity Awake callback.</summary>
+        /// <summary>
+        /// Unity Awake callback.
+        /// </summary>
         protected virtual void Awake()
         {
             setName();
             if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.AddLayer(this);
         }
 
-        /// <summary>Unity OnDestroy callback.</summary>
+        /// <summary>
+        /// Unity OnDestroy callback.
+        /// </summary>
         protected virtual void OnDestroy()
         {
             if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.RemoveLayer(this);
@@ -134,13 +154,17 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
-        /// <summary>Updates touch layers's name.</summary>
+        /// <summary>
+        /// Updates touch layers's name.
+        /// </summary>
         protected virtual void setName()
         {
             Name = "undefined";
         }
 
-        /// <summary>Called when a layer is touched to query the layer if this touch hits something.</summary>
+        /// <summary>
+        /// Called when a layer is touched to query the layer if this touch hits something.
+        /// </summary>
         /// <param name="touch">Touch.</param>
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
@@ -151,19 +175,25 @@ namespace TouchScript.Layers
             return LayerHitResult.Error;
         }
 
-        /// <summary>Called when a touch is moved.</summary>
+        /// <summary>
+        /// Called when a touch is moved.
+        /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
         protected virtual void moveTouch(ITouch touch)
         {}
 
-        /// <summary>Called when a touch ends.</summary>
+        /// <summary>
+        /// Called when a touch ends.
+        /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
         protected virtual void endTouch(ITouch touch)
         {}
 
-        /// <summary>Called when a touch is cancelled.</summary>
+        /// <summary>
+        /// Called when a touch is cancelled.
+        /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
         protected virtual void cancelTouch(ITouch touch)
@@ -177,10 +207,14 @@ namespace TouchScript.Layers
     /// </summary>
     public class TouchLayerEventArgs : EventArgs
     {
-        /// <summary>Gets the touch associated with the event.</summary>
+        /// <summary>
+        /// Gets the touch associated with the event.
+        /// </summary>
         public ITouch Touch { get; private set; }
 
-        /// <summary>Initializes a new instance of the <see cref="TouchLayerEventArgs"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchLayerEventArgs"/> class.
+        /// </summary>
         /// <param name="touch">The touch associated with the event.</param>
         public TouchLayerEventArgs(ITouch touch)
             : base()

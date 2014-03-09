@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Mobile Input Source
+    /// Mobile Input Source. Gathers touch input from built-in Unity's Input.Touches API. Though, should be used on mobile devices.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
     public sealed class MobileInput : InputSource
@@ -18,6 +18,9 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        /// <summary>
+        /// Indicates if this input source should be disabled on platforms which don't support touch input with Input.Touches.
+        /// </summary>
         [ToggleLeft]
         public bool DisableOnNonTouchPlatforms = true;
 
@@ -32,6 +35,7 @@ namespace TouchScript.InputSources
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void OnEnable()
         {
             if (DisableOnNonTouchPlatforms)
@@ -58,6 +62,7 @@ namespace TouchScript.InputSources
             touchIds.Clear();
         }
 
+        /// <inheritdoc />
         protected override void OnDisable()
         {
             foreach (var touchState in touchStates)

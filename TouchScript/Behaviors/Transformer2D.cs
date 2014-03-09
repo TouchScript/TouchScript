@@ -18,9 +18,7 @@ namespace TouchScript.Behaviors
     {
         #region Public properties
 
-        /// <summary>
-        /// Max movement speed
-        /// </summary>
+        /// <summary>Max movement speed</summary>
         public float Speed = 10f;
 
         #endregion

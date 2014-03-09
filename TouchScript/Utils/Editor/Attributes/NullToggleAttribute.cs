@@ -12,13 +12,19 @@ namespace TouchScript.Utils.Editor.Attributes
     /// </summary>
     public class NullToggleAttribute : PropertyAttribute
     {
-        /// <summary>Int value</summary>
+        /// <summary>
+        /// Int value
+        /// </summary>
         public int NullIntValue = 0;
 
-        /// <summary>Float value</summary>
+        /// <summary>
+        /// Float value
+        /// </summary>
         public float NullFloatValue = 0f;
 
-        /// <summary>Object value</summary>
+        /// <summary>
+        /// Object value
+        /// </summary>
         public Object NullObjectValue = null;
     }
 }

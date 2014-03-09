@@ -3,21 +3,21 @@
  */
 
 using System;
-using TouchScript.Devices.Display;
 using UnityEngine;
 
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Base class for all touch input sources
+    /// Base class for all touch input sources.
     /// </summary>
     public abstract class InputSource : MonoBehaviour, IInputSource
     {
         #region Public properties
 
         /// <summary>
-        /// Optional remapper to use to change screen coordinates which go into the TouchManager.
+        /// Gets or sets current remapper.
         /// </summary>
+        /// <value>Optional remapper to use to change screen coordinates which go into the TouchManager.</value>
         public ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
         #endregion

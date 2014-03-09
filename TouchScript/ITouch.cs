@@ -15,16 +15,24 @@ namespace TouchScript
     /// </summary>
     public interface ITouch
     {
-        /// <summary>Internal unique touch point id.</summary>
+        /// <summary>
+        /// Internal unique touch point id.
+        /// </summary>
         int Id { get; }
 
-        /// <summary>Original hit target.</summary>
+        /// <summary>
+        /// Original hit target.
+        /// </summary>
         Transform Target { get; }
 
-        /// <summary>Current position in screen coordinates.</summary>
+        /// <summary>
+        /// Current position in screen coordinates.
+        /// </summary>
         Vector2 Position { get; }
 
-        /// <summary>Previous position (during last frame) in screen coordinates.</summary>
+        /// <summary>
+        /// Previous position (during last frame) in screen coordinates.
+        /// </summary>
         Vector2 PreviousPosition { get; }
 
         /// <summary>

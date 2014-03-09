@@ -1,8 +1,15 @@
-﻿using System.Text.RegularExpressions;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace TouchScript.Devices.Display
 {
+    /// <summary>
+    /// Display device which tries to guess current DPI if it's not set by platform.
+    /// </summary>
     public class GenericDisplayDevice : DisplayDevice
     {
 

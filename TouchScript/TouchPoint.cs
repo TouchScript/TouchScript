@@ -49,7 +49,9 @@ namespace TouchScript
 
         #endregion
 
-        /// <summary>Initializes a new instance of the <see cref="TouchPoint"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchPoint"/> class.
+        /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
         internal TouchPoint(int id, Vector2 position)
@@ -61,7 +63,9 @@ namespace TouchScript
 
         #region Internal methods
 
-        /// <summary>Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.</summary>
+        /// <summary>
+        /// Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.
+        /// </summary>
         internal void ResetPosition()
         {
             PreviousPosition = Position;

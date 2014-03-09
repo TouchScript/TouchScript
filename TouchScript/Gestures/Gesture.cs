@@ -19,6 +19,9 @@ namespace TouchScript.Gestures
     {
         #region Constants
 
+        /// <summary>
+        /// Message sent when gesture changes state if SendMessage is used.
+        /// </summary>
         public const string STATE_CHANGED_MESSAGE = "OnGestureStateChanged";
 
         /// <summary>
@@ -27,37 +30,37 @@ namespace TouchScript.Gestures
         public enum GestureState
         {
             /// <summary>
-            /// Gesture is possible
+            /// Gesture is possible.
             /// </summary>
             Possible,
 
             /// <summary>
-            /// Continuous gesture has just begun
+            /// Continuous gesture has just begun.
             /// </summary>
             Began,
 
             /// <summary>
-            /// Started continuous gesture is updated
+            /// Started continuous gesture is updated.
             /// </summary>
             Changed,
 
             /// <summary>
-            /// Continuous gesture is ended
+            /// Continuous gesture is ended.
             /// </summary>
             Ended,
 
             /// <summary>
-            /// Gesture is cancelled
+            /// Gesture is cancelled.
             /// </summary>
             Cancelled,
 
             /// <summary>
-            /// Gesture is failed by itself or by another recognized gesture
+            /// Gesture is failed by itself or by another recognized gesture.
             /// </summary>
             Failed,
 
             /// <summary>
-            /// Gesture is recognized
+            /// Gesture is recognized.
             /// </summary>
             Recognized = Ended
         }
@@ -82,6 +85,12 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        /// <summary>
+        /// Gets or sets another gesture which must fail before this gesture can be recognized.
+        /// </summary>
+        /// <value>
+        /// The gesture which must fail before this gesture can be recognized;
+        /// </value>
         public Gesture RequireGestureToFail
         {
             get { return requireGestureToFail; }
@@ -93,6 +102,13 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <summary>
+        /// Gets or sets the flag if touches should be treated as a cluster.
+        /// </summary>
+        /// <value><c>true</c> if touches should be treated as a cluster; otherwise, <c>false</c>.</value>
+        /// <remarks>
+        /// At the end of a gesture when touches are lifted off due to the fact that computers are faster than humans the very last touch's position will be gesture's <see cref="ScreenPosition"/> after that. This flag is used to combine several touches which from the point of a user were lifted off simultaneously and set their centroid as gesture's <see cref="ScreenPosition"/>.
+        /// </remarks>
         public bool CombineTouches
         {
             get { return combineTouches; }
@@ -100,14 +116,19 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Time interval before gesture is recognized to combine all lifted touch points into a cluster and calculate their screen positions.
+        /// Gets or sets time interval before gesture is recognized to combine all lifted touch points into a cluster to use its center as <see cref="ScreenPosition"/>.
         /// </summary>
+        /// <value>Time in seconds to treat touches lifted off during this interval as a single gesture.</value>
         public float CombineTouchesInterval
         {
             get { return combineTouchesInterval; }
             set { combineTouchesInterval = value; }
         }
 
+        /// <summary>
+        /// Gets or sets whether gesture should use Unity's SendMessage in addition to C# events.
+        /// </summary>
+        /// <value><c>true</c> if gesture uses SendMessage; otherwise, <c>false</c>.</value>
         public bool UseSendMessage
         {
             get { return useSendMessage; }
@@ -120,6 +141,10 @@ namespace TouchScript.Gestures
             set { sendStateChangeMessages = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the target of Unity messages sent from this gesture.
+        /// </summary>
+        /// <value>The target of Unity messages.</value>
         public GameObject SendMessageTarget
         {
             get { return sendMessageTarget; }
@@ -131,8 +156,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Current gesture state.
+        /// Gets current gesture state.
         /// </summary>
+        /// <value>Current state of the gesture.</value>
         public GestureState State
         {
             get { return state; }
@@ -169,13 +195,15 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Previous gesture state.
+        /// Gets previous gesture state.
         /// </summary>
+        /// <value>Previous state of the gesture.</value>
         public GestureState PreviousState { get; private set; }
 
         /// <summary>
-        /// Transformation center in screen coordinates.
+        /// Gets current screen position.
         /// </summary>
+        /// <value>Gesture's position in screen coordinates.</value>
         public virtual Vector2 ScreenPosition
         {
             get
@@ -190,8 +218,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Previous transformation center in screen coordinates.
+        /// Gets previous screen position.
         /// </summary>
+        /// <value>Gesture's previous position in screen coordinates.</value>
         public virtual Vector2 PreviousScreenPosition
         {
             get
@@ -206,8 +235,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Transformation center in normalized screen coordinates.
+        /// Gets normalized screen position.
         /// </summary>
+        /// <value>Gesture's position in normalized screen coordinates.</value>
         public Vector2 NormalizedScreenPosition
         {
             get
@@ -219,8 +249,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Previous center in screen coordinates.
+        /// Gets previous screen position.
         /// </summary>
+        /// <value>Gesture's previous position in normalized screen coordinates.</value>
         public Vector2 PreviousNormalizedScreenPosition
         {
             get
@@ -232,8 +263,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// List of gesture's active touch points.
+        /// Gets list of gesture's active touch points.
         /// </summary>
+        /// <value>The list of touches owned by this gesture.</value>
         public IList<ITouch> ActiveTouches
         {
             get { return activeTouches.AsReadOnly(); }
@@ -731,6 +763,9 @@ namespace TouchScript.Gestures
         #endregion
     }
 
+    /// <summary>
+    /// Event arguments for Gesture events
+    /// </summary>
     public class GestureStateChangeEventArgs : EventArgs
     {
         /// <summary>

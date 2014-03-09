@@ -71,7 +71,6 @@
     <Compile Include="Gestures\Simple\Transform2DGestureBase.cs" />
     <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
-    <Compile Include="Hit\IgnoreTrigger.cs" />
     <Compile Include="Hit\ITouchHit.cs" />
     <Compile Include="Hit\ITouchHit2D.cs" />
     <Compile Include="Hit\ITouchHit3D.cs" />
@@ -105,9 +104,7 @@
     <Compile Include="Utils\TimedSequence.cs" />
     <Compile Include="Utils\TransformUtils.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Devices\Input\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Plugins\"
