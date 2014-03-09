@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Hit;
+using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -358,6 +359,7 @@ namespace TouchScript
 
             updateLayers();
             createCameraLayer();
+            //createTouchInput(); Disabled till Unity 4.5
         }
 
         private void Update()
@@ -393,6 +395,42 @@ namespace TouchScript
             {
                 Debug.Log("No camera layers. Adding one for the main camera.");
                 if (Camera.main != null) Camera.main.gameObject.AddComponent<CameraLayer>();
+            }
+        }
+
+        private void createTouchInput()
+        {
+            var inputs = FindObjectsOfType(typeof(InputSource));
+            if (inputs.Length == 0)
+            {
+                GameObject obj = null;
+                var objects = FindObjectsOfType<TouchManager>();
+                if (objects.Length == 0)
+                {
+                    obj = GameObject.Find("TouchScript");
+                    if (obj == null) obj = new GameObject("TouchScript");
+                }
+                else
+                {
+                    obj = objects[0].gameObject;
+                }
+
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.IPhonePlayer:
+                    case RuntimePlatform.Android:
+                    case RuntimePlatform.BB10Player:
+                    case RuntimePlatform.MetroPlayerARM:
+                    case RuntimePlatform.MetroPlayerX64:
+                    case RuntimePlatform.MetroPlayerX86:
+                    case RuntimePlatform.WP8Player:
+                        obj.AddComponent<MobileInput>();
+                        break;
+                    default:
+                        obj.AddComponent<MouseInput>();
+                        break;
+
+                }
             }
         }
 
