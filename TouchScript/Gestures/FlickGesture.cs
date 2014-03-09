@@ -17,8 +17,6 @@ namespace TouchScript.Gestures
     {
         #region Constants
 
-        public const string FLICKED_MESSAGE = "OnFlicked";
-
         /// <summary>
         /// Direction of a flick.
         /// </summary>
@@ -201,13 +199,6 @@ namespace TouchScript.Gestures
             base.touchesCancelled(touches);
 
             touchesEnded(touches);
-        }
-
-        /// <inheritdoc />
-        protected override void onRecognized()
-        {
-            base.onRecognized();
-            if (UseSendMessage) SendMessageTarget.SendMessage(FLICKED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

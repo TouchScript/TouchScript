@@ -16,12 +16,6 @@ namespace TouchScript.Gestures
     public class PressGesture : Gesture
     {
 
-        #region Constants
-
-        public const string PRESSED_MESSAGE = "OnPressed";
-
-        #endregion
-
         #region Public properties
 
         public bool IgnoreChildren
@@ -71,13 +65,6 @@ namespace TouchScript.Gestures
             base.touchesBegan(touches);
 
             if (activeTouches.Count == touches.Count) setState(GestureState.Recognized);
-        }
-
-        /// <inheritdoc />
-        protected override void onRecognized()
-        {
-            base.onRecognized();
-            if (UseSendMessage) SendMessageTarget.SendMessage(PRESSED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

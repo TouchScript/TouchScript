@@ -15,13 +15,6 @@ namespace TouchScript.Gestures.Simple
     public class SimplePanGesture : Transform2DGestureBase
     {
 
-        #region Constants
-
-        public const string PAN_STARTED_MESSAGE = "OnPanStarted";
-        public const string PANNED_MESSAGE = "OnPanned";
-        public const string PAN_STOPPED_MESSAGE = "OnPanStopped";
-
-        #endregion
 
         #region Public properties
 
@@ -137,44 +130,6 @@ namespace TouchScript.Gestures.Simple
                         break;
                 }
             }
-        }
-
-        /// <inheritdoc />
-        protected override void onBegan()        {
-            base.onBegan();
-            if (UseSendMessage)
-            {
-                SendMessageTarget.SendMessage(PAN_STARTED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-                SendMessageTarget.SendMessage(PANNED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onChanged()
-        {
-            base.onChanged();
-            if (UseSendMessage) SendMessageTarget.SendMessage(PANNED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onRecognized()
-        {
-            base.onRecognized();
-            if (UseSendMessage) SendMessageTarget.SendMessage(PAN_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(PAN_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(PAN_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

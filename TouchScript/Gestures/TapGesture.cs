@@ -16,12 +16,6 @@ namespace TouchScript.Gestures
     public class TapGesture : Gesture
     {
 
-        #region Constants
-
-        public const string TAPPED_MESSAGE = "OnTapped";
-
-        #endregion
-
         #region Public properties
 
         public int NumberOfTapsRequired
@@ -163,7 +157,6 @@ namespace TouchScript.Gestures
             base.onRecognized();
 
             StopCoroutine("wait");
-            if (UseSendMessage) SendMessageTarget.SendMessage(TAPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

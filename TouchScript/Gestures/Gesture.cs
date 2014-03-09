@@ -135,12 +135,6 @@ namespace TouchScript.Gestures
             set { useSendMessage = value; }
         }
 
-        public bool SendStateChangeMessages
-        {
-            get { return sendStateChangeMessages; }
-            set { sendStateChangeMessages = value; }
-        }
-
         /// <summary>
         /// Gets or sets the target of Unity messages sent from this gesture.
         /// </summary>
@@ -190,7 +184,7 @@ namespace TouchScript.Gestures
                 }
 
                 if (stateChangedInvoker != null) stateChangedInvoker(this, new GestureStateChangeEventArgs(state, PreviousState));
-                if (useSendMessage && sendStateChangeMessages) sendMessageTarget.SendMessage(STATE_CHANGED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                if (useSendMessage) sendMessageTarget.SendMessage(STATE_CHANGED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -309,10 +303,6 @@ namespace TouchScript.Gestures
         [SerializeField]
         [ToggleLeft]
         private bool useSendMessage = false;
-
-        [SerializeField]
-        [ToggleLeft]
-        private bool sendStateChangeMessages = false;
 
         [SerializeField]
         private GameObject sendMessageTarget;

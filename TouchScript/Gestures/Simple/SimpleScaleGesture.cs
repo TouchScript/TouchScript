@@ -15,14 +15,6 @@ namespace TouchScript.Gestures.Simple
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
     {
 
-        #region Constants
-
-        public const string SCALE_STARTED_MESSAGE = "OnScaleStarted";
-        public const string SCALED_MESSAGE = "OnScaled";
-        public const string SCALE_STOPPED_MESSAGE = "OnScaleStopped";
-
-        #endregion
-
         #region Private variables
 
         [SerializeField]
@@ -128,45 +120,6 @@ namespace TouchScript.Gestures.Simple
                         break;
                 }
             }
-        }
-
-        /// <inheritdoc />
-        protected override void onBegan()
-        {
-            base.onBegan();
-            if (UseSendMessage)
-            {
-                SendMessageTarget.SendMessage(SCALE_STARTED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-                SendMessageTarget.SendMessage(SCALED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onChanged()
-        {
-            base.onChanged();
-            if (UseSendMessage) SendMessageTarget.SendMessage(SCALED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onRecognized()
-        {
-            base.onRecognized();
-            if (UseSendMessage) SendMessageTarget.SendMessage(SCALE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(SCALE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (UseSendMessage && PreviousState != GestureState.Possible) SendMessageTarget.SendMessage(SCALE_STOPPED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />
