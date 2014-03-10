@@ -6,7 +6,7 @@ using TouchScript.Gestures;
 using UnityEditor;
 using UnityEngine;
 
-namespace TouchScript.Editor.Gestures.Simple
+namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(PressGesture), true)]
     internal sealed class PressGestureEditor : GestureEditor

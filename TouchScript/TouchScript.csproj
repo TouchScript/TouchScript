@@ -61,9 +61,9 @@
     <Compile Include="Gestures\PanGesture.cs" />
     <Compile Include="Gestures\RotateGesture.cs" />
     <Compile Include="Gestures\ScaleGesture.cs" />
-    <Compile Include="Gestures\Simple\MetaGesture.cs" />
-    <Compile Include="Gestures\Simple\PressGesture.cs" />
-    <Compile Include="Gestures\Simple\ReleaseGesture.cs" />
+    <Compile Include="Gestures\MetaGesture.cs" />
+    <Compile Include="Gestures\PressGesture.cs" />
+    <Compile Include="Gestures\ReleaseGesture.cs" />
     <Compile Include="Gestures\Simple\SimplePanGesture.cs" />
     <Compile Include="Gestures\Simple\SimpleRotateGesture.cs" />
     <Compile Include="Gestures\Simple\SimpleScaleGesture.cs" />
