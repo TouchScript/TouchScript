@@ -79,7 +79,7 @@
     <Compile Include="Hit\TouchHit3D.cs" />
     <Compile Include="Hit\TouchHitFactory.cs" />
     <Compile Include="Hit\Untouchable.cs" />
-    <Compile Include="IGestureDelegate.cs" />
+    <Compile Include="Gestures\IGestureDelegate.cs" />
     <Compile Include="IGestureManager.cs" />
     <Compile Include="Devices\Display\DisplayDevice.cs" />
     <Compile Include="InputSources\ICoordinatesRemapper.cs" />
