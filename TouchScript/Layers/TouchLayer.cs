@@ -128,7 +128,7 @@ namespace TouchScript.Layers
             {
                 touch.Layer = this;
                 touch.Hit = hit;
-                touch.Target = hit.Transform;
+                if (hit != null) touch.Target = hit.Transform;
                 if (touchBeganInvoker != null) touchBeganInvoker(this, new TouchLayerEventArgs(touch));
                 return true;
             }
