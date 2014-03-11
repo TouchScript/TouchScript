@@ -1,9 +1,9 @@
-﻿using TouchScript.Gestures;
+﻿using System;
+using TouchScript.Gestures;
 using UnityEngine;
 
 public class Pan_Object : MonoBehaviour
 {
-
     private Quaternion targetRotation;
 
 	private void Awake()
@@ -13,12 +13,12 @@ public class Pan_Object : MonoBehaviour
 
     private void OnEnable()
     {
-        transform.FindChild("Button").GetComponent<TapGesture>().StateChanged += tapStateChangeHandler;
+        transform.FindChild("Button").GetComponent<TapGesture>().Tapped += tapStateChangeHandler;
     }
 
     private void OnDisable()
     {
-        transform.FindChild("Button").GetComponent<TapGesture>().StateChanged -= tapStateChangeHandler;
+        transform.FindChild("Button").GetComponent<TapGesture>().Tapped -= tapStateChangeHandler;
     }
 	
 	void Update ()
@@ -26,12 +26,8 @@ public class Pan_Object : MonoBehaviour
 	    transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, .1f);
 	}
 
-    private void tapStateChangeHandler(object sender, GestureStateChangeEventArgs e)
+    private void tapStateChangeHandler(object sender, EventArgs e)
     {
-        if (e.State == Gesture.GestureState.Recognized)
-        {
-            targetRotation = Quaternion.Euler(0, 90, 0)*targetRotation;
-        }
+        targetRotation = Quaternion.Euler(0, 90, 0) * targetRotation;
     }
-
 }

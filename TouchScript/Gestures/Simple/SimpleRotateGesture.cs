@@ -16,6 +16,59 @@ namespace TouchScript.Gestures.Simple
     public class SimpleRotateGesture : TwoPointTransform2DGestureBase
     {
 
+        #region Constants
+
+        /// <summary>
+        /// Message name when gesture starts
+        /// </summary>
+        public const string ROTATE_START_MESSAGE = "OnRotateStart";
+
+        /// <summary>
+        /// Message name when gesture updates
+        /// </summary>
+        public const string ROTATE_MESSAGE = "OnRotate";
+
+        /// <summary>
+        /// Message name when gesture ends
+        /// </summary>
+        public const string ROTATE_COMPLETE_MESSAGE = "OnRotateComplete";
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture starts.
+        /// </summary>
+        public event EventHandler<EventArgs> RotateStarted
+        {
+            add { rotateStartedInvoker += value; }
+            remove { rotateStartedInvoker -= value; }
+        }
+
+        /// <summary>
+        /// Occurs when gesture updates.
+        /// </summary>
+        public event EventHandler<EventArgs> Rotated
+        {
+            add { rotatedInvoker += value; }
+            remove { rotatedInvoker -= value; }
+        }
+
+        /// <summary>
+        /// Occurs when gesture ends.
+        /// </summary>
+        public event EventHandler<EventArgs> RotateCompleted
+        {
+            add { rotateCompletedInvoker += value; }
+            remove { rotateCompletedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> rotateStartedInvoker, rotatedInvoker, rotateCompletedInvoker;
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
@@ -136,6 +189,57 @@ namespace TouchScript.Gestures.Simple
 
             rotationBuffer = 0f;
             isRotating = false;
+        }
+
+        /// <inheritdoc />
+        protected override void onBegan()
+        {
+            base.onBegan();
+            if (rotateStartedInvoker != null) rotateStartedInvoker(this, EventArgs.Empty);
+            if (rotatedInvoker != null) rotatedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage)
+            {
+                SendMessageTarget.SendMessage(ROTATE_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                SendMessageTarget.SendMessage(ROTATE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onChanged()
+        {
+            base.onChanged();
+            if (rotatedInvoker != null) rotatedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (rotateCompletedInvoker != null) rotateCompletedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onFailed()
+        {
+            base.onFailed();
+            if (PreviousState != GestureState.Possible)
+            {
+                if (rotateCompletedInvoker != null) rotateCompletedInvoker(this, EventArgs.Empty);
+                if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onCancelled()
+        {
+            base.onCancelled();
+            if (PreviousState != GestureState.Possible)
+            {
+                if (rotateCompletedInvoker != null) rotateCompletedInvoker(this, EventArgs.Empty);
+                if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         /// <inheritdoc />

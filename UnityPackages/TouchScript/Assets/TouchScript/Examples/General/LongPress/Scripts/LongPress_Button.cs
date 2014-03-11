@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TouchScript.Gestures;
 using UnityEngine;
 
@@ -23,16 +24,16 @@ public class LongPress_Button : MonoBehaviour
 	{
 	    timeToPress = GetComponent<LongPressGesture>().TimeToPress;
 
-	    GetComponent<PressGesture>().StateChanged += pressStateChanged;
-        GetComponent<ReleaseGesture>().StateChanged += releaseStateChanged;
-        GetComponent<LongPressGesture>().StateChanged += longPressStateChanged;
+	    GetComponent<PressGesture>().Pressed += pressedHandler;
+        GetComponent<ReleaseGesture>().Released += releasedHandler;
+        GetComponent<LongPressGesture>().StateChanged += longPressStateChangedHandler;
 	}
 
     private void OnDisable()
     {
-        GetComponent<PressGesture>().StateChanged -= pressStateChanged;
-        GetComponent<ReleaseGesture>().StateChanged -= releaseStateChanged;
-        GetComponent<LongPressGesture>().StateChanged -= longPressStateChanged;
+        GetComponent<PressGesture>().Pressed -= pressedHandler;
+        GetComponent<ReleaseGesture>().Released -= releasedHandler;
+        GetComponent<LongPressGesture>().StateChanged -= longPressStateChangedHandler;
     }
 
     private void press()
@@ -67,7 +68,7 @@ public class LongPress_Button : MonoBehaviour
         }
     }
 
-    private void longPressStateChanged(object sender, GestureStateChangeEventArgs e)
+    private void longPressStateChangedHandler(object sender, GestureStateChangeEventArgs e)
     {
         switch (e.State)
         {
@@ -84,21 +85,15 @@ public class LongPress_Button : MonoBehaviour
         }
     }
 
-    private void pressStateChanged(object sender, GestureStateChangeEventArgs e)
+    private void pressedHandler(object sender, EventArgs e)
     {
-        if (e.State == Gesture.GestureState.Recognized)
-        {
-            press();
-            StartCoroutine("grow");
-        }
+        press();
+        StartCoroutine("grow");
     }
 
-    private void releaseStateChanged(object sender, GestureStateChangeEventArgs e)
+    private void releasedHandler(object sender, EventArgs e)
     {
-        if (e.State == Gesture.GestureState.Recognized)
-        {
-            release();
-        }
+        release();
     }
 
 }

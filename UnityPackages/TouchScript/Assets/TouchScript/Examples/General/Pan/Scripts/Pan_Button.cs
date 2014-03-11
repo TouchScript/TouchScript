@@ -1,4 +1,5 @@
-﻿using TouchScript.Gestures;
+﻿using System;
+using TouchScript.Gestures;
 using UnityEngine;
 
 public class Pan_Button : MonoBehaviour
@@ -13,30 +14,24 @@ public class Pan_Button : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<PressGesture>().StateChanged += pressStateChangeHandler;
-        GetComponent<ReleaseGesture>().StateChanged += releaseStateChangeHandler;
+        GetComponent<PressGesture>().Pressed += pressedHandler;
+        GetComponent<ReleaseGesture>().Released += releasedHandler;
     }
 
     private void OnDisable()
     {
-        GetComponent<PressGesture>().StateChanged -= pressStateChangeHandler;
-        GetComponent<ReleaseGesture>().StateChanged -= releaseStateChangeHandler;
+        GetComponent<PressGesture>().Pressed -= pressedHandler;
+        GetComponent<ReleaseGesture>().Released -= releasedHandler;
     }
 
-    private void releaseStateChangeHandler(object sender, GestureStateChangeEventArgs e)
+    private void releasedHandler(object sender, EventArgs e)
     {
-        if (e.State == Gesture.GestureState.Recognized)
-        {
-            transform.localPosition = new Vector3(0, startY, 0);
-        }
+        transform.localPosition = new Vector3(0, startY, 0);
     }
 
-    private void pressStateChangeHandler(object sender, GestureStateChangeEventArgs e)
+    private void pressedHandler(object sender, EventArgs e)
     {
-        if (e.State == Gesture.GestureState.Recognized)
-        {
-            transform.localPosition = new Vector3(0, startY - transform.localScale.y * .9f, 0);
-        }
+        transform.localPosition = new Vector3(0, startY - transform.localScale.y * .9f, 0);
     }
 
 }

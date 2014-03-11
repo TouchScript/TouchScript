@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
@@ -15,6 +16,31 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Release Gesture")]
     public class ReleaseGesture : Gesture
     {
+
+        #region Constants
+
+        /// <summary>
+        /// Message name when gesture is recognized
+        /// </summary>
+        public const string RELEASE_MESSAGE = "OnRelease";
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture is recognized.
+        /// </summary>
+        public event EventHandler<EventArgs> Released
+        {
+            add { releasedInvoker += value; }
+            remove { releasedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> releasedInvoker;
+
+        #endregion
 
         #region Public properties
 
@@ -70,6 +96,14 @@ namespace TouchScript.Gestures
             base.touchesEnded(touches);
 
             if (activeTouches.Count == 0) setState(GestureState.Recognized);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (releasedInvoker != null) releasedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(RELEASE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

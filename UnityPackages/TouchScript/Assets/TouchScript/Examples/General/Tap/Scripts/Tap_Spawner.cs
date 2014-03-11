@@ -1,6 +1,8 @@
+using System;
 using TouchScript.Gestures;
 using TouchScript.Hit;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Tap_Spawner : MonoBehaviour
 {
@@ -10,31 +12,28 @@ public class Tap_Spawner : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<TapGesture>().StateChanged += tapStateChangedHandler;
+        GetComponent<TapGesture>().Tapped += tappedHandler;
     }
 
     private void OnDisable()
     {
-        GetComponent<TapGesture>().StateChanged -= tapStateChangedHandler;
+        GetComponent<TapGesture>().Tapped -= tappedHandler;
     }
 
-    private void tapStateChangedHandler(object sender, GestureStateChangeEventArgs e)
+    private void tappedHandler(object sender, EventArgs e)
     {
-        if (e.State == Gesture.GestureState.Recognized)
-        {
-            var gesture = sender as TapGesture;
-            ITouchHit hit;
-            gesture.GetTargetHitResult(out hit);
-            var hit3d = hit as ITouchHit3D;
-            if (hit3d == null) return;
+        var gesture = sender as TapGesture;
+        ITouchHit hit;
+        gesture.GetTargetHitResult(out hit);
+        var hit3d = hit as ITouchHit3D;
+        if (hit3d == null) return;
 
-            Color color = new Color(Random.value, Random.value, Random.value);
-            var cube = Instantiate(CubePrefab) as Transform;
-            cube.parent = Container;
-            cube.name = "Cube";
-            cube.localScale = Vector3.one*Scale*cube.localScale.x;
-            cube.position = hit3d.Point + hit3d.Normal*2;
-            cube.renderer.material.color = color;
-        }
+        Color color = new Color(Random.value, Random.value, Random.value);
+        var cube = Instantiate(CubePrefab) as Transform;
+        cube.parent = Container;
+        cube.name = "Cube";
+        cube.localScale = Vector3.one*Scale*cube.localScale.x;
+        cube.position = hit3d.Point + hit3d.Normal*2;
+        cube.renderer.material.color = color;
     }
 }

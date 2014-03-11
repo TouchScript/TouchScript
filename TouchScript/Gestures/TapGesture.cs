@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils.Editor.Attributes;
@@ -15,6 +16,30 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
     public class TapGesture : Gesture
     {
+
+        #region Constants
+        /// <summary>
+        /// Message name when gesture is recognized
+        /// </summary>
+        public const string TAP_MESSAGE = "OnTap";
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture is recognized.
+        /// </summary>
+        public event EventHandler<EventArgs> Tapped
+        {
+            add { tappedInvoker += value; }
+            remove { tappedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> tappedInvoker;
+
+        #endregion
 
         #region Public properties
 
@@ -164,6 +189,8 @@ namespace TouchScript.Gestures
             base.onRecognized();
 
             StopCoroutine("wait");
+            if (tappedInvoker != null) tappedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(TAP_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

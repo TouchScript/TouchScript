@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils.Editor.Attributes;
@@ -15,6 +16,31 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
+
+        #region Constants
+
+        /// <summary>
+        /// Message name when gesture is recognized
+        /// </summary>
+        public const string LONG_PRESS_MESSAGE = "OnLongPress";
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture is recognized.
+        /// </summary>
+        public event EventHandler<EventArgs> LongPressed
+        {
+            add { longPressedInvoker += value; }
+            remove { longPressedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> longPressedInvoker;
+
+        #endregion
 
         #region Public properties
 
@@ -123,6 +149,14 @@ namespace TouchScript.Gestures
                 StopCoroutine("wait");
                 setState(GestureState.Failed);
             }
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (longPressedInvoker != null) longPressedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

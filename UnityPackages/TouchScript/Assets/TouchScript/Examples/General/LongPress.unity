@@ -373,6 +373,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -394,6 +395,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -426,6 +428,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -940,6 +943,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -961,6 +965,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -993,6 +998,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -1186,6 +1192,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -1207,6 +1214,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
@@ -1239,6 +1247,7 @@ MonoBehaviour:
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
+  sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []

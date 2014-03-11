@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
@@ -15,6 +16,11 @@ namespace TouchScript.Gestures
     public class FlickGesture : Gesture
     {
         #region Constants
+
+        /// <summary>
+        /// Message name when gesture is recognized
+        /// </summary>
+        public const string FLICK_MESSAGE = "OnFlick";
 
         /// <summary>
         /// Direction of a flick.
@@ -36,6 +42,22 @@ namespace TouchScript.Gestures
             /// </summary>
             Vertical,
         }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture is recognized.
+        /// </summary>
+        public event EventHandler<EventArgs> Flicked
+        {
+            add { flickedInvoker += value; }
+            remove { flickedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> flickedInvoker;
 
         #endregion
 
@@ -206,6 +228,14 @@ namespace TouchScript.Gestures
             base.touchesCancelled(touches);
 
             touchesEnded(touches);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (flickedInvoker != null) flickedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(FLICK_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

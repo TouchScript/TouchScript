@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
@@ -14,6 +15,59 @@ namespace TouchScript.Gestures.Simple
     [AddComponentMenu("TouchScript/Gestures/Simple Scale Gesture")]
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
     {
+
+        #region Constants
+
+        /// <summary>
+        /// Message name when gesture starts
+        /// </summary>
+        public const string SCALE_START_MESSAGE = "OnScaleStart";
+
+        /// <summary>
+        /// Message name when gesture updates
+        /// </summary>
+        public const string SCALE_MESSAGE = "OnScale";
+
+        /// <summary>
+        /// Message name when gesture ends
+        /// </summary>
+        public const string SCALE_COMPLETE_MESSAGE = "OnScaleComplete";
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture starts.
+        /// </summary>
+        public event EventHandler<EventArgs> ScaleStarted
+        {
+            add { scaleStartedInvoker += value; }
+            remove { scaleStartedInvoker -= value; }
+        }
+
+        /// <summary>
+        /// Occurs when gesture updates.
+        /// </summary>
+        public event EventHandler<EventArgs> Scaled
+        {
+            add { scaledInvoker += value; }
+            remove { scaledInvoker -= value; }
+        }
+
+        /// <summary>
+        /// Occurs when gesture ends.
+        /// </summary>
+        public event EventHandler<EventArgs> ScaleCompleted
+        {
+            add { scaleCompletedInvoker += value; }
+            remove { scaleCompletedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> scaleStartedInvoker, scaledInvoker, scaleCompletedInvoker;
+
+        #endregion
 
         #region Private variables
 
@@ -119,6 +173,57 @@ namespace TouchScript.Gestures.Simple
                         }
                         break;
                 }
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onBegan()
+        {
+            base.onBegan();
+            if (scaleStartedInvoker != null) scaleStartedInvoker(this, EventArgs.Empty);
+            if (scaledInvoker != null) scaledInvoker(this, EventArgs.Empty);
+            if (UseSendMessage)
+            {
+                SendMessageTarget.SendMessage(SCALE_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                SendMessageTarget.SendMessage(SCALE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onChanged()
+        {
+            base.onChanged();
+            if (scaledInvoker != null) scaledInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(SCALE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (scaleCompletedInvoker != null) scaleCompletedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onFailed()
+        {
+            base.onFailed();
+            if (PreviousState != GestureState.Possible)
+            {
+                if (scaleCompletedInvoker != null) scaleCompletedInvoker(this, EventArgs.Empty);
+                if (UseSendMessage) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onCancelled()
+        {
+            base.onCancelled();
+            if (PreviousState != GestureState.Possible)
+            {
+                if (scaleCompletedInvoker != null) scaleCompletedInvoker(this, EventArgs.Empty);
+                if (UseSendMessage) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 

@@ -22,7 +22,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Message sent when gesture changes state if SendMessage is used.
         /// </summary>
-        public const string STATE_CHANGED_MESSAGE = "OnGestureStateChanged";
+        public const string STATE_CHANGE_MESSAGE = "OnGestureStateChange";
 
         /// <summary>
         /// Possible states of a gesture.
@@ -136,6 +136,16 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseSendMessage"/> is true..
+        /// </summary>
+        /// <value><c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>.</value>
+        public bool SendStateChangeMessages
+        {
+            get { return sendStateChangeMessages; }
+            set { sendStateChangeMessages = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the target of Unity messages sent from this gesture.
         /// </summary>
         /// <value>The target of Unity messages.</value>
@@ -184,7 +194,7 @@ namespace TouchScript.Gestures
                 }
 
                 if (stateChangedInvoker != null) stateChangedInvoker(this, new GestureStateChangeEventArgs(state, PreviousState));
-                if (useSendMessage) sendMessageTarget.SendMessage(STATE_CHANGED_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                if (useSendMessage && sendStateChangeMessages) sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -303,6 +313,10 @@ namespace TouchScript.Gestures
         [SerializeField]
         [ToggleLeft]
         private bool useSendMessage = false;
+
+        [SerializeField]
+        [ToggleLeft]
+        private bool sendStateChangeMessages = false;
 
         [SerializeField]
         private GameObject sendMessageTarget;

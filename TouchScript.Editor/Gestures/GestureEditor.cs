@@ -17,6 +17,7 @@ namespace TouchScript.Editor.Gestures
         private const string FRIENDLY_GESTURES_PROP = "friendlyGestures";
 
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
+        private static readonly GUIContent SEND_STATE_CHANGE_MESSAGES = new GUIContent("Send State Change Messages", "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
         private static readonly GUIContent COMBINE_TOUCH_POINTS = new GUIContent("Combine Touch Points", "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
         private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
@@ -27,7 +28,7 @@ namespace TouchScript.Editor.Gestures
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
         private SerializedProperty combineTouches, combineTouchesInterval;
-        private SerializedProperty useSendMessage, sendMessageTarget;
+        private SerializedProperty useSendMessage, sendMessageTarget, sendStateChangeMessages;
 
         protected virtual void OnEnable()
         {
@@ -41,7 +42,7 @@ namespace TouchScript.Editor.Gestures
 
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
-
+            sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
         }
 
         public override void OnInspectorGUI()
@@ -67,6 +68,7 @@ namespace TouchScript.Editor.Gestures
                 GUILayout.Label(GUIContent.none, GUILayout.Width(10));
                 EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
                 EditorGUILayout.PropertyField(sendMessageTarget, SEND_MESSAGE_TARGET);
+                EditorGUILayout.PropertyField(sendStateChangeMessages, SEND_STATE_CHANGE_MESSAGES);
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndHorizontal();
             }

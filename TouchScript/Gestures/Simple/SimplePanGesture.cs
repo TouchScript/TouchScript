@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
@@ -15,6 +16,58 @@ namespace TouchScript.Gestures.Simple
     public class SimplePanGesture : Transform2DGestureBase
     {
 
+        #region Constants
+
+        /// <summary>
+        /// Message name when gesture starts
+        /// </summary>
+        public const string PAN_START_MESSAGE = "OnPanStart";
+
+        /// <summary>
+        /// Message name when gesture updates
+        /// </summary>
+        public const string PAN_MESSAGE = "OnPan";
+
+        /// <summary>
+        /// Message name when gesture ends
+        /// </summary>
+        public const string PAN_COMPLETE_MESSAGE = "OnPanComplete";
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when gesture starts.
+        /// </summary>
+        public event EventHandler<EventArgs> PanStarted
+        {
+            add { panStartedInvoker += value; }
+            remove { panStartedInvoker -= value; }
+        }
+
+        /// <summary>
+        /// Occurs when gesture updates.
+        /// </summary>
+        public event EventHandler<EventArgs> Panned
+        {
+            add { pannedInvoker += value; }
+            remove { pannedInvoker -= value; }
+        }
+
+        /// <summary>
+        /// Occurs when gesture ends.
+        /// </summary>
+        public event EventHandler<EventArgs> PanCompleted
+        {
+            add { panCompletedInvoker += value; }
+            remove { panCompletedInvoker -= value; }
+        }
+
+        // iOS Events AOT hack
+        private EventHandler<EventArgs> panStartedInvoker, pannedInvoker, panCompletedInvoker;
+
+        #endregion
 
         #region Public properties
 
@@ -132,6 +185,57 @@ namespace TouchScript.Gestures.Simple
                         }
                         break;
                 }
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onBegan()
+        {
+            base.onBegan();
+            if (panStartedInvoker != null) panStartedInvoker(this, EventArgs.Empty);
+            if (pannedInvoker != null) pannedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage)
+            {
+                SendMessageTarget.SendMessage(PAN_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                SendMessageTarget.SendMessage(PAN_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onChanged()
+        {
+            base.onChanged();
+            if (pannedInvoker != null) pannedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(PAN_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onRecognized()
+        {
+            base.onRecognized();
+            if (panCompletedInvoker != null) panCompletedInvoker(this, EventArgs.Empty);
+            if (UseSendMessage) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onFailed()
+        {
+            base.onFailed();
+            if (PreviousState != GestureState.Possible)
+            {
+                if (panCompletedInvoker != null) panCompletedInvoker(this, EventArgs.Empty);
+                if (UseSendMessage) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void onCancelled()
+        {
+            base.onCancelled();
+            if (PreviousState != GestureState.Possible)
+            {
+                if (panCompletedInvoker != null) panCompletedInvoker(this, EventArgs.Empty);
+                if (UseSendMessage) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
