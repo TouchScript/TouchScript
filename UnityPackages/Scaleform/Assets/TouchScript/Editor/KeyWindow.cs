@@ -20,7 +20,7 @@ public class KeyWindow : EditorWindow
         key = EditorGUILayout.TextField(key);
         if (GUILayout.Button("Set Key"))
         {
-            Property.FindPropertyRelative("Key").stringValue = key;
+            Property.stringValue = key;
             Property.serializedObject.ApplyModifiedProperties();
             Close();
         }

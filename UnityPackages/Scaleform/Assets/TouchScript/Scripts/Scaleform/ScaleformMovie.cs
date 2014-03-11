@@ -1,18 +1,18 @@
-using Scaleform;
+﻿using Scaleform;
 using UnityEngine;
 
 public class ScaleformMovie : Movie
 {
     
     public ScaleformLayer Layer { get; private set; }
-    public SFManager SFManager { get; private set; }
+    public SFCamera Camera { get; private set; }
     public Value SWF { get; private set; }
 
-    public ScaleformMovie(ScaleformLayer layer, SFManager sfmgr, SFMovieCreationParams creationParams) :
-        base(sfmgr, creationParams)
+    public ScaleformMovie(ScaleformLayer layer, SFCamera cam, SFMovieCreationParams creationParams) :
+        base(cam.GetSFManager(), creationParams)
     {
         Layer = layer;
-        SFManager = sfmgr;
+        Camera = cam;
 
         SetFocus(true);
     }
