@@ -1,10 +1,13 @@
 ﻿using System.IO;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ScaleformKey : ScriptableObject
 {
 
+#if UNITY_EDITOR
     [MenuItem("Assets/TouchScript/Create Scaleform Key Asset")]
     public static void CreateAsset()
     {
@@ -28,6 +31,7 @@ public class ScaleformKey : ScriptableObject
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = asset;
     }
+#endif
 
     public string Key = "";
 
