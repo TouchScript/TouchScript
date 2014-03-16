@@ -92,7 +92,8 @@ namespace TouchScript.Layers
         public virtual LayerHitResult Hit(Vector2 position, out ITouchHit hit)
         {
             hit = null;
-            return LayerHitResult.Miss;
+            if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
+            return LayerHitResult.Error;
         }
 
         #endregion
@@ -168,18 +169,18 @@ namespace TouchScript.Layers
         /// <param name="touch">Touch.</param>
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
-        /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
         {
-            hit = null;
-            return LayerHitResult.Error;
+            var result = Hit(touch.Position, out hit);
+            return result;
         }
 
         /// <summary>
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch">Touch.</param>
-        /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void moveTouch(ITouch touch)
         {}
 
@@ -187,7 +188,7 @@ namespace TouchScript.Layers
         /// Called when a touch ends.
         /// </summary>
         /// <param name="touch">Touch.</param>
-        /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void endTouch(ITouch touch)
         {}
 
@@ -195,7 +196,7 @@ namespace TouchScript.Layers
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch.</param>
-        /// <remarks>This method may also be used to updated update some internal state or resend this event somewhere.</remarks>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void cancelTouch(ITouch touch)
         {}
 

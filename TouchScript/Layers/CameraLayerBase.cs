@@ -45,7 +45,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         public override LayerHitResult Hit(Vector2 position, out ITouchHit hit)
         {
-            hit = null;
+            if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
             if (camera == null) return LayerHitResult.Error;
             if (camera.enabled == false || camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
@@ -58,13 +58,6 @@ namespace TouchScript.Layers
         #endregion
 
         #region Protected functions
-
-        /// <inheritdoc />
-        protected override LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
-        {
-            var result = Hit(touch.Position, out hit);
-            return result;
-        }
 
         /// <inheritdoc />
         protected override void setName()

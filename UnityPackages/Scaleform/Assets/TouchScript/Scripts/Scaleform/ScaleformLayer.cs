@@ -10,7 +10,7 @@ public class ScaleformLayer : TouchLayer
     public string FlashMovieFile = "main.swf";
     public int MovieDepth = 1;
     public Color32 BackgroundColor = new Color32(0, 0, 0, 0);
-    public bool OverrideBackgroundColor = false;
+    public bool OverrideBackgroundColor = true;
     public bool InitFirstFrame = false;
     public ScaleModeType ScaleMode = ScaleModeType.SM_ExactFit;
 
@@ -58,8 +58,10 @@ public class ScaleformLayer : TouchLayer
 
     protected override LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
     {
-        var result = movie.BeginTouch(touch.Id, touch.Position.x, touch.Position.y);
         hit = null;
+        if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
+
+        var result = movie.BeginTouch(touch.Id, touch.Position.x, touch.Position.y);
         return (LayerHitResult)result;
     }
 
