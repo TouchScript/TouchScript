@@ -23,6 +23,11 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/TouchScript.Windows.dll &quot;${SolutionDir}/UnityPackages/TouchScript.Windows7/Assets/TouchScript/Plugins/&quot; | cp ${TargetDir}/TouchScript.Windows.dll &quot;${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Plugins/&quot;'" workingdir="" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
