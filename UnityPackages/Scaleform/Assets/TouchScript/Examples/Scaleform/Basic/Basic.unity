@@ -199,7 +199,7 @@ MonoBehaviour:
   BackgroundColor:
     serializedVersion: 2
     rgba: 0
-  OverrideBackgroundColor: 0
+  OverrideBackgroundColor: 1
   InitFirstFrame: 0
   ScaleMode: 2
 --- !u!114 &955994192
