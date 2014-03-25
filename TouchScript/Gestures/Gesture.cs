@@ -756,19 +756,16 @@ namespace TouchScript.Gestures
             switch (e.State)
             {
                 case GestureState.Failed:
+                    requiredGestureFailed = true;
                     if (delayedStateChange != GestureState.Possible)
                     {
-                        requiredGestureFailed = true;
                         setState(delayedStateChange);
-                    } else
-                    {
-                        setState(GestureState.Failed);
                     }
                     break;
                 case GestureState.Began:
                 case GestureState.Recognized:
                 case GestureState.Cancelled:
-                    setState(GestureState.Failed);
+                    if (state != GestureState.Failed) setState(GestureState.Failed);
                     break;
             }
         }
