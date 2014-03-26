@@ -20,14 +20,6 @@ namespace TouchScript.Hit
         Collider2D Collider2D { get; }
 
         /// <summary>
-        /// Gets distance to 2d collider of the object.
-        /// </summary>
-        /// <value>
-        /// The distance to the hit 2d collider.
-        /// </value>
-        float Fraction { get; }
-
-        /// <summary>
         /// Gets the coordinates where the touch hits the object.
         /// </summary>
         /// <value>
