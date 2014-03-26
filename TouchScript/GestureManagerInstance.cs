@@ -48,16 +48,16 @@ namespace TouchScript
         private static bool shuttingDown = false;
 
         // Upcoming changes
-        private List<Gesture> gesturesToReset = new List<Gesture>();
+        private List<Gesture> gesturesToReset = new List<Gesture>(10);
 
         #endregion
 
         #region Temporary variables
 
         // Temporary variables for update methods.
-        private Dictionary<Transform, List<ITouch>> targetTouches = new Dictionary<Transform, List<ITouch>>();
-        private Dictionary<Gesture, List<ITouch>> gestureTouches = new Dictionary<Gesture, List<ITouch>>();
-        private List<Gesture> activeGestures = new List<Gesture>();
+        private Dictionary<Transform, List<ITouch>> targetTouches = new Dictionary<Transform, List<ITouch>>(10);
+        private Dictionary<Gesture, List<ITouch>> gestureTouches = new Dictionary<Gesture, List<ITouch>>(10);
+        private List<Gesture> activeGestures = new List<Gesture>(10);
 
         #endregion
 
@@ -306,7 +306,7 @@ namespace TouchScript
 
         private List<Gesture> getHierarchyEndingWith(Transform target)
         {
-            var hierarchy = new List<Gesture>();
+            var hierarchy = new List<Gesture>(10);
             while (target != null)
             {
                 hierarchy.AddRange(getEnabledGesturesOnTarget(target));
@@ -317,7 +317,7 @@ namespace TouchScript
 
         private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf)
         {
-            var hierarchy = new List<Gesture>();
+            var hierarchy = new List<Gesture>(10);
             if (includeSelf)
             {
                 hierarchy.AddRange(getEnabledGesturesOnTarget(target));
@@ -338,7 +338,7 @@ namespace TouchScript
 
         private List<Gesture> getEnabledGesturesOnTarget(Transform target)
         {
-            var result = new List<Gesture>();
+            var result = new List<Gesture>(10);
             if (target.gameObject.activeInHierarchy)
             {
                 var gestures = target.GetComponents<Gesture>();

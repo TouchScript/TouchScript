@@ -162,18 +162,18 @@ namespace TouchScript
         private float dpi = 96;
         private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
 
-        private List<TouchLayer> layers = new List<TouchLayer>();
-        private List<TouchPoint> touches = new List<TouchPoint>();
-        private Dictionary<int, ITouch> idToTouch = new Dictionary<int, ITouch>();
+        private List<TouchLayer> layers = new List<TouchLayer>(5);
+        private List<TouchPoint> touches = new List<TouchPoint>(10);
+        private Dictionary<int, ITouch> idToTouch = new Dictionary<int, ITouch>(10);
 
         // Upcoming changes
-        private List<ITouch> touchesBegan = new List<ITouch>();
-        private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>();
-        private List<ITouch> touchesEnded = new List<ITouch>();
-        private List<ITouch> touchesCancelled = new List<ITouch>();
+        private List<ITouch> touchesBegan = new List<ITouch>(10);
+        private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>(10);
+        private List<ITouch> touchesEnded = new List<ITouch>(10);
+        private List<ITouch> touchesCancelled = new List<ITouch>(10);
 
         // Temporary variables for update methods.
-        private List<ITouch> reallyMoved = new List<ITouch>();
+        private List<ITouch> reallyMoved = new List<ITouch>(10);
 
         private int nextTouchId = 0;
 
@@ -451,7 +451,6 @@ namespace TouchScript
 
                 if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesBegan));
                 touchesBegan.Clear();
-
                 return true;
             }
             return false;
