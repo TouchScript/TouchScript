@@ -11,13 +11,12 @@ namespace TouchScript.Editor.Debugging
     {
 
         private TouchDebugger instance;
-        private SerializedProperty texture, fontColor, useDPI, touchSize;
+        private SerializedProperty texture, useDPI, touchSize;
 
         private void OnEnable()
         {
             instance = target as TouchDebugger;
             texture = serializedObject.FindProperty("texture");
-            fontColor = serializedObject.FindProperty("fontColor");
             useDPI = serializedObject.FindProperty("useDPI");
             touchSize = serializedObject.FindProperty("touchSize");
         }
@@ -29,13 +28,6 @@ namespace TouchScript.Editor.Debugging
             if (EditorGUI.EndChangeCheck() && Application.isPlaying)
             {
                 instance.TouchTexture = texture.objectReferenceValue as Texture2D;
-            }
-
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(fontColor, new GUIContent("Font color"));
-            if (EditorGUI.EndChangeCheck() && Application.isPlaying)
-            {
-                instance.FontColor = fontColor.colorValue;
             }
 
             EditorGUI.BeginChangeCheck();

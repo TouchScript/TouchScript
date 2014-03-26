@@ -26,13 +26,6 @@ namespace TouchScript.Debugging
             }
         }
 
-        /// <summary>Gets or sets font color for touch ids.</summary>
-        public Color FontColor
-        {
-            get { return fontColor; }
-            set { fontColor = value; }
-        }
-
         /// <summary>Gets or sets whether <see cref="TouchDebugger"/> is using DPI to scale touch cursors.</summary>
         /// <value><c>true</c> if dpi value is used; otherwise, <c>false</c>.</value>
         public bool UseDPI
@@ -64,15 +57,13 @@ namespace TouchScript.Debugging
         [SerializeField]
         private Texture2D texture;
         [SerializeField]
-        private Color fontColor = new Color(0, 1, 1, 1);
-        [SerializeField]
         private bool useDPI = true;
         [SerializeField]
         private float touchSize = 1f;
 
-        private Dictionary<int, ITouch> dummies = new Dictionary<int, ITouch>();
-        private float textureDPI, scale, dpi, shadowOffset;
-        private int width, height, halfWidth, halfHeight, xOffset, yOffset, labelWidth, labelHeight, fontSize;
+        private Dictionary<int, ITouch> dummies = new Dictionary<int, ITouch>(10);
+        private float textureDPI, scale, dpi;
+        private int width, height, halfWidth, halfHeight;
         private GUIStyle style;
 
         #endregion
@@ -112,22 +103,13 @@ namespace TouchScript.Debugging
         private void OnGUI()
         {
             if (TouchTexture == null) return;
-            if (style == null) style = new GUIStyle(GUI.skin.label);
             checkDPI();
-
-            style.fontSize = fontSize;
 
             foreach (KeyValuePair<int, ITouch> dummy in dummies)
             {
                 var x = dummy.Value.Position.x;
                 var y = Screen.height - dummy.Value.Position.y;
                 GUI.DrawTexture(new Rect(x - halfWidth, y - halfHeight, width, height), TouchTexture, ScaleMode.ScaleToFit);
-
-                var id = dummy.Value.Id.ToString();
-                GUI.color = Color.black;
-                GUI.Label(new Rect(x + xOffset + shadowOffset, y + yOffset + shadowOffset, labelWidth, labelHeight), id, style);
-                GUI.color = fontColor;
-                GUI.Label(new Rect(x + xOffset, y + yOffset, labelWidth, labelHeight), id, style);
             }
         }
 
@@ -163,12 +145,6 @@ namespace TouchScript.Debugging
         {
             halfWidth = width / 2;
             halfHeight = height / 2;
-            xOffset = (int)(width*.3f);
-            yOffset = (int)(height*.3f);
-            fontSize = (int)(32 * scale);
-            shadowOffset = 2*scale;
-            labelWidth = 10*fontSize;
-            labelHeight = 2*fontSize;
         }
 
         private void updateDummy(ITouch dummy)
