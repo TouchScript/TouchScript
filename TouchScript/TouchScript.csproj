@@ -23,6 +23,11 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/Scaleform/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Android/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.iOS/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript.TUIO/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript.Windows7/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsPhone/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsStore/Assets/TouchScript/Plugins/TouchScript.dll&quot;'" workingdir="" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

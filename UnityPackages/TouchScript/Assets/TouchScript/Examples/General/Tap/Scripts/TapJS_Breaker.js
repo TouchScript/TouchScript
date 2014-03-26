@@ -1,4 +1,5 @@
 ﻿#pragma strict
+import TouchScript.Gestures;
 
 var Power:float = 10.0f;
 
