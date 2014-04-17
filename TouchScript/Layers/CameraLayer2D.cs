@@ -39,44 +39,53 @@ namespace TouchScript.Layers
         protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
             hit = null;
-            var hits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
+            var raycastHits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
 
-            if (hits.Length == 0) return LayerHitResult.Miss;
-            if (hits.Length > 1) hits = sortHits(hits);
-
-            var success = false;
-            foreach (var raycastHit in hits)
+            if (raycastHits.Length == 0) return LayerHitResult.Miss;
+            if (raycastHits.Length > 1)
             {
-                hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
-                var hitTests = raycastHit.transform.GetComponents<HitTest>();
-                if (hitTests.Length == 0)
+                sortHits(raycastHits);
+                
+                RaycastHit2D raycastHit = default(RaycastHit2D);
+                var i = 0;
+                while (i < sortedHits.Count)
                 {
-                    success = true;
-                    break;
+                    raycastHit = sortedHits[i];
+                    if (doHit(raycastHit, out hit) == LayerHitResult.Hit)
+                    {
+                        if (hit == null) hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
+                        return LayerHitResult.Hit;
+                    }
+                    i++;
                 }
-
-                var hitResult = HitTest.ObjectHitResult.Hit;
-                foreach (var test in hitTests)
-                {
-                    if (!test.enabled) continue;
-                    hitResult = test.IsHit(hit);
-                    if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
-                }
-
-                if (hitResult == HitTest.ObjectHitResult.Hit)
-                {
-                    success = true;
-                    break;
-                }
-                if (hitResult == HitTest.ObjectHitResult.Discard) break;
+            } else
+            {
+                return doHit(raycastHits[0], out hit);
             }
-
-            if (success) return LayerHitResult.Hit;
 
             return LayerHitResult.Miss;
         }
 
-        private RaycastHit2D[] sortHits(RaycastHit2D[] hits)
+        private LayerHitResult doHit(RaycastHit2D raycastHit, out ITouchHit hit)
+        {
+            hit = null;
+            var hitTests = raycastHit.transform.GetComponents<HitTest>();
+            if (hitTests.Length == 0) return LayerHitResult.Hit;
+            
+            var hitResult = HitTest.ObjectHitResult.Hit;
+            hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
+            foreach (var test in hitTests)
+            {
+                if (!test.enabled) continue;
+                hitResult = test.IsHit(hit);
+                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) return LayerHitResult.Miss;
+            }
+            
+            if (hitResult == HitTest.ObjectHitResult.Hit) return LayerHitResult.Hit;
+            return LayerHitResult.Miss;
+        }
+
+        private void sortHits(RaycastHit2D[] hits)
         {
             sortedHits.Clear();
             sortedHits.AddRange(hits);
@@ -96,7 +105,6 @@ namespace TouchScript.Layers
                 if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
                 return 0;
             });
-            return sortedHits.ToArray();
         }
 
         #endregion
