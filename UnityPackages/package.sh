@@ -1,5 +1,3 @@
-#!bash
-
 printf "\e[32mBuilding packages...\e[39m\n"
 
 # Windows path

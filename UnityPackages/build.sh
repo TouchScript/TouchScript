@@ -1,5 +1,3 @@
-#!bash
-
 printf "\e[32mSynchronizing TouchScript folder...\e[39m\n"
 for i in $(ls -d */); do 
 	name=${i%%/}

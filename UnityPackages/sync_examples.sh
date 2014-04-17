@@ -1,5 +1,3 @@
-#!bash
-
 if [[ $# -eq 0 ]] ; then
     echo '\e[31mError! Please supply project root folder.\e[39m'
     exit 0

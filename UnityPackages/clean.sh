@@ -1,5 +1,3 @@
-#!bash
-
 printf "\e[32mCleaning Projects...\e[39m\n"
 for i in $(ls -d */); do 
 	echo $i
