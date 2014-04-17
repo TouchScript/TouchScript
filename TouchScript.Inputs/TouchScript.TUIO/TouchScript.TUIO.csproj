@@ -37,7 +37,7 @@
     <DocumentationFile>bin\Release\TouchScript.TUIO.XML</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/*.dll&quot; &quot;${SolutionDir}/Unitypackages/TouchScript.TUIO/Assets/TouchScript/Plugins/&quot;'" workingdir="" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/TouchScript.TUIO.dll&quot; &quot;${SolutionDir}/Unitypackages/TouchScript.TUIO/Assets/TouchScript/Plugins/TouchScript.TUIO.dll&quot; | cp &quot;${TargetDir}/TUIOsharp.dll&quot; &quot;${SolutionDir}/Unitypackages/TouchScript.TUIO/Assets/TouchScript/Plugins/TUIOsharp.dll&quot; | cp &quot;${TargetDir}/OSCsharp.dll&quot; &quot;${SolutionDir}/Unitypackages/TouchScript.TUIO/Assets/TouchScript/Plugins/OSCsharp.dll&quot;'" workingdir="" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
