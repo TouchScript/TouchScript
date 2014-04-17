@@ -49,7 +49,6 @@ namespace TouchScript.Layers
                     raycastHit = sortedHits[i];
                     if (doHit(raycastHit, out hit) == LayerHitResult.Hit)
                     {
-                        if (hit == null) hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
                         return LayerHitResult.Hit;
                     }
                     i++;
@@ -64,12 +63,11 @@ namespace TouchScript.Layers
 
         private LayerHitResult doHit(RaycastHit raycastHit, out ITouchHit hit)
         {
-            hit = null;
+            hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
             var hitTests = raycastHit.transform.GetComponents<HitTest>();
             if (hitTests.Length == 0) return LayerHitResult.Hit;
 
             var hitResult = HitTest.ObjectHitResult.Hit;
-            hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
             foreach (var test in hitTests)
             {
                 if (!test.enabled) continue;
