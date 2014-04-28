@@ -87,7 +87,6 @@ GameObject:
   - 124: {fileID: 289928239}
   - 81: {fileID: 289928237}
   - 114: {fileID: 289928240}
-  - 114: {fileID: 289928241}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -171,23 +170,6 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967039
---- !u!114 &289928241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 289928234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Text: "An example to illustrate different object filtering techniques:\n1. 'Untouchable
-    Discarding Behavior' \u2014 doesn't let other colliders behind the red cube get
-    touch points.\n2. 'Untouchable Behavior' \u2014 doesn't recieve touch input and
-    lets other colliders behind the red cube get touch points.\n3. 'Untouchable Layer'
-    \u2014 the whole layer is ignored during hit test calculations.\n\nTry to drag
-    green and red cubes."
 --- !u!1 &302423102
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,6 +309,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 431791961}
+  - 114: {fileID: 431791962}
   m_Layer: 0
   m_Name: Scene
   m_TagString: Untagged
@@ -348,6 +331,23 @@ Transform:
   - {fileID: 289928235}
   - {fileID: 302423103}
   m_Father: {fileID: 0}
+--- !u!114 &431791962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431791960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Text: "<b>Example of different object filtering techniques</b>\n\n<b>1.</b> 'Untouchable
+    Discarding Behavior' \u2014 doesn't let other colliders behind the red cube get
+    touch points.\n<b>2.</b> 'Untouchable Behavior' \u2014 doesn't recieve touch input
+    and lets other colliders behind the red cube get touch points.\n<b>3.</b> 'Untouchable
+    Layer' \u2014 the whole layer is ignored during hit test calculations.\n\nTry
+    to drag green and red cubes."
 --- !u!1 &432655349
 GameObject:
   m_ObjectHideFlags: 0

@@ -82,6 +82,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 121610923}
+  - 114: {fileID: 121610924}
   m_Layer: 0
   m_Name: Scene
   m_TagString: Untagged
@@ -102,6 +103,24 @@ Transform:
   - {fileID: 273709371}
   - {fileID: 528081759}
   m_Father: {fileID: 0}
+--- !u!114 &121610924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 121610922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Text: '<b>Example of touch input without gestures</b>
+
+
+    <b>1.</b> Click on the screen to spawn white spheres.
+
+    <b>2.</b> There''s no gesture logic in the scene, TouchScript is used just to
+    capture touch points from an input device.'
 --- !u!1 &273709370
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +134,6 @@ GameObject:
   - 124: {fileID: 273709375}
   - 81: {fileID: 273709373}
   - 114: {fileID: 273709376}
-  - 114: {fileID: 273709377}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -196,24 +214,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 100000, guid: f733be5377863f64f9ad352b05bdb77d, type: 2}
---- !u!114 &273709377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 273709370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Text: 'Touch input without gestures example.
-
-
-    Click on the screen to spawn white spheres.
-
-    There''s no gesture logic in the scene, TouchScript is used just to capture touch
-    points from an input device.'
 --- !u!1 &528081758
 GameObject:
   m_ObjectHideFlags: 0

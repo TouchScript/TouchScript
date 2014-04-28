@@ -698,12 +698,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: 'This is an example of working with 2D objects and tap/double tap handling.
+  Text: '<b>Example of working with 2D objects and tap/double tap handling</b>
 
 
-    Tap on objects to randomly change their color.
+    <b>1.</b> Tap objects to randomly change their color.
 
-    Double tap on objects to break them into smaller ones.'
+    <b>2.</b> Double tap objects to break them into smaller ones.'
 --- !u!1 &1324806696
 GameObject:
   m_ObjectHideFlags: 0
