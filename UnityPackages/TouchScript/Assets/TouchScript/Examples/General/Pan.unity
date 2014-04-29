@@ -909,14 +909,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: 'An example of Pan gesture in hierarchy.
+  Text: '<b>Example of Pan gesture in hierarchy</b>
 
 
-    Drag objects around and press green buttons.
+    <b>1.</b> Drag objects around and press green buttons.
 
-    Notice how you can press and drag holding the buttons.
+    <b>2.</b> Notice how you can press and drag holding the buttons.
 
-    Also, all three of the objects are completely independent.'
+    <b>3.</b> Also, all three of the objects are completely independent.'
 --- !u!54 &930800603
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1499,7 +1499,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2135305919}
-  m_LocalRotation: {x: .422268182, y: -.484720379, z: -.0171990041, w: .765793562}
+  m_LocalRotation: {x: .422268242, y: -.484720439, z: -.0171990059, w: .765793681}
   m_LocalPosition: {x: 6.10041475, y: 15.5403843, z: -20.5662251}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []

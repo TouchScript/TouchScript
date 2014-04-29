@@ -51,36 +51,45 @@ namespace TouchScript.Layers
                 while (i < sortedHits.Count)
                 {
                     raycastHit = sortedHits[i];
-                    if (doHit(raycastHit, out hit) == LayerHitResult.Hit)
+                    switch (doHit(raycastHit, out hit))
                     {
-                        return LayerHitResult.Hit;
+                        case HitTest.ObjectHitResult.Hit:
+                            return LayerHitResult.Hit;
+                        case HitTest.ObjectHitResult.Discard:
+                            return LayerHitResult.Miss;
                     }
                     i++;
                 }
             } else
             {
-                return doHit(raycastHits[0], out hit);
+                switch (doHit(raycastHits[0], out hit)) {
+                    case HitTest.ObjectHitResult.Hit:
+                        return LayerHitResult.Hit;
+                    case HitTest.ObjectHitResult.Error:
+                        return LayerHitResult.Error;
+                    default:
+                        return LayerHitResult.Miss;
+                }
             }
-
+            
             return LayerHitResult.Miss;
         }
 
-        private LayerHitResult doHit(RaycastHit2D raycastHit, out ITouchHit hit)
+        private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out ITouchHit hit)
         {
             hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
             var hitTests = raycastHit.transform.GetComponents<HitTest>();
-            if (hitTests.Length == 0) return LayerHitResult.Hit;
+            if (hitTests.Length == 0) return HitTest.ObjectHitResult.Hit;
             
             var hitResult = HitTest.ObjectHitResult.Hit;
             foreach (var test in hitTests)
             {
                 if (!test.enabled) continue;
                 hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) return LayerHitResult.Miss;
+                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
             }
             
-            if (hitResult == HitTest.ObjectHitResult.Hit) return LayerHitResult.Hit;
-            return LayerHitResult.Miss;
+            return hitResult;
         }
 
         private void sortHits(RaycastHit2D[] hits)

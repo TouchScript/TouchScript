@@ -736,14 +736,16 @@ namespace TouchScript.Gestures
 
         private void registerFriendlyGesture(Gesture gesture)
         {
-            if (gesture == null || gesture == this || friendlyGestures.Contains(gesture)) return;
+            if (gesture == null || gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
 
-            friendlyGestures.Add(gesture);
+            friendlyGestureIds.Add(gesture.GetInstanceID());
         }
 
         private void unregisterFriendlyGesture(Gesture gesture)
         {
-            friendlyGestures.Remove(gesture);
+            if (gesture == null || gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+
+            friendlyGestureIds.Remove(gesture.GetInstanceID());
         }
 
         #endregion

@@ -424,9 +424,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: "Tap example.\n\nTap on white plane to spawn new cubes. \nTap on cubes to
-    break them.\nNotice, all the cubes have a TapGesture attached. \nCheck out <Breaker>
-    script to find out how to handle taps."
+  Text: "<b>Tap gesture example</b>\n\n<b>1.</b> Tap on white plane to spawn new cubes.
+    \n<b>2.</b> Tap on cubes to break them.\n<b>3.</b> Notice, all the cubes have
+    a TapGesture attached. \n<b>4.</b> Check out <Breaker> script to find out how
+    to handle taps."
 --- !u!1001 &1196477337
 Prefab:
   m_ObjectHideFlags: 0

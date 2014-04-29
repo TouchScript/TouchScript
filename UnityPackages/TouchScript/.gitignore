@@ -26,3 +26,7 @@ _ReSharper*
 
 Assets/TouchScript/Editor/*.dll
 Assets/TouchScript/Plugins/*.dll
+
+*.pdb*
+*.mdb*
+pdb2mdb.bat*
