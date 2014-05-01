@@ -5,9 +5,8 @@ Editor.meta
 TouchScript/*
 !TouchScript/Examples.meta
 !TouchScript/Examples
-TouchScript/Examples/General
-TouchScript/Examples/General/*
-TouchScript/Examples/General.meta
+TouchScript/Examples/General*
+TouchScript/Examples/_misc*
 
 !TouchScript/Plugins.meta
 !TouchScript/Plugins
