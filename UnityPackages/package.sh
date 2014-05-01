@@ -1,7 +1,7 @@
 printf "\e[32mBuilding packages...\e[39m\n"
 
 # Windows path
-folder=$(pwd | sed -e 's/\/d/d:/gi' -e 's/\//\\/gi')
+folder=$(pwd | sed -e 's/^\/\(\w\)/\1:/gi' -e 's/\//\\/gi')
 exportFolders="Assets/TouchScript/Devices Assets/TouchScript/Editor Assets/TouchScript/Plugins Assets/TouchScript/Prefabs Assets/TouchScript/Textures"
 
 rm -rf _AssetStore/Assets/TouchScript
