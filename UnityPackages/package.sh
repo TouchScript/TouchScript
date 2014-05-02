@@ -26,4 +26,5 @@ for i in $(ls -d */); do
 	fi
 done
 
+printf "\e[32mBuilding $folder\\TouchScript.unitypackage.\e[39m\n" 
 "/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\_AssetStore" -exportPackage Assets/TouchScript "$folder\\TouchScript.unitypackage" -quit
