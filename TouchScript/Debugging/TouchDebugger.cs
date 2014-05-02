@@ -64,7 +64,6 @@ namespace TouchScript.Debugging
         private Dictionary<int, ITouch> dummies = new Dictionary<int, ITouch>(10);
         private float textureDPI, scale, dpi;
         private int width, height, halfWidth, halfHeight;
-        private GUIStyle style;
 
         #endregion
 
