@@ -25,6 +25,7 @@ namespace TouchScript.Editor.Gestures
 
         protected bool shouldDrawCombineTouches = false;
 
+        private SerializedProperty advanced;
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
         private SerializedProperty combineTouches, combineTouchesInterval;
@@ -33,6 +34,8 @@ namespace TouchScript.Editor.Gestures
         protected virtual void OnEnable()
         {
             hideFlags = HideFlags.HideAndDontSave;
+
+            advanced = serializedObject.FindProperty("adnvacedProps");
 
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
@@ -49,9 +52,7 @@ namespace TouchScript.Editor.Gestures
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            drawSendMessage();
-            drawCombineTouches();
-            drawRequireToFail();
+            drawAdvanced();
             drawFriendlyGestures();
 
             serializedObject.ApplyModifiedProperties();
@@ -97,15 +98,34 @@ namespace TouchScript.Editor.Gestures
             EditorGUILayout.PropertyField(requireGestureToFail, REQUIRE_GESTURE_TO_FAIL);
         }
 
+        private void drawAdvanced()
+        {
+            EditorGUI.BeginChangeCheck();
+            var expanded = GUIElements.BeginFoldout(advanced.isExpanded, new GUIContent("Advanced", TEXT_FRIENDLY_HEADER));
+            if (EditorGUI.EndChangeCheck())
+            {
+                advanced.isExpanded = expanded;
+            }
+            if (expanded)
+            {
+                GUILayout.BeginVertical(GUIElements.FoldoutStyle);
+                drawSendMessage();
+                drawCombineTouches();
+                drawRequireToFail();
+                GUILayout.EndVertical();
+            }
+            GUIElements.EndFoldout();
+        }
+
         private void drawFriendlyGestures()
         {
             EditorGUI.BeginChangeCheck();
-            var _friendlyGestures_expanded = GUIElements.BeginFoldout(friendlyGestures.isExpanded, new GUIContent(string.Format("Friendly gestures ({0})", friendlyGestures.arraySize), TEXT_FRIENDLY_HEADER));
+            var expanded = GUIElements.BeginFoldout(friendlyGestures.isExpanded, new GUIContent(string.Format("Friendly gestures ({0})", friendlyGestures.arraySize), TEXT_FRIENDLY_HEADER));
             if (EditorGUI.EndChangeCheck())
             {
-                friendlyGestures.isExpanded = _friendlyGestures_expanded;
+                friendlyGestures.isExpanded = expanded;
             }
-            if (_friendlyGestures_expanded)
+            if (expanded)
             {
                 GUILayout.BeginVertical(GUIElements.FoldoutStyle);
                 drawGestureList(friendlyGestures, addFriendlyGesture, removeFriendlyGestureAt);

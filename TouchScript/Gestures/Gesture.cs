@@ -304,6 +304,9 @@ namespace TouchScript.Gestures
         protected List<ITouch> activeTouches = new List<ITouch>();
 
         [SerializeField]
+        private bool adnvacedProps; // is used to save if advanced properties are opened or closed
+
+        [SerializeField]
         [ToggleLeft]
         private bool combineTouches = false;
 
