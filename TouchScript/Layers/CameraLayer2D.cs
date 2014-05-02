@@ -102,15 +102,20 @@ namespace TouchScript.Layers
 
                 var sprite1 = a.transform.GetComponent<SpriteRenderer>();
                 var sprite2 = b.transform.GetComponent<SpriteRenderer>();
-                if (sprite1 == null || sprite2 == null) return 0;
+                if (sprite1 != null && sprite2 != null)
+                {
+                    var s1Id = sprite1.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite1.sortingLayerID] : 0;
+                    var s2Id = sprite2.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite2.sortingLayerID] : 0;
+                    if (s1Id < s2Id) return 1;
+                    if (s1Id > s2Id) return -1;
+                    if (sprite1.sortingOrder < sprite2.sortingOrder) return 1;
+                    if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
+                }
 
-                var s1Id = sprite1.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite1.sortingLayerID] : 0;
-                var s2Id = sprite2.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite2.sortingLayerID] : 0;
-                if (s1Id < s2Id) return 1;
-                if (s1Id > s2Id) return -1;
-                if (sprite1.sortingOrder < sprite2.sortingOrder) return 1;
-                if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
-                return 0;
+                var cameraPos = camera.transform.position;
+                var distA = (a.transform.position - cameraPos).sqrMagnitude;
+                var distB = (b.transform.position - cameraPos).sqrMagnitude;
+                return distA < distB ? -1 : 1;
             });
         }
 
