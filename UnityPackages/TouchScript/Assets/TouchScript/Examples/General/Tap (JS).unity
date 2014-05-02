@@ -196,7 +196,8 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combineTouches: 1
+  adnvacedProps: 0
+  combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 1
   sendStateChangeMessages: 0
@@ -582,6 +583,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  adnvacedProps: 0
   combineTouches: 1
   combineTouchesInterval: .300000012
   useSendMessage: 1
