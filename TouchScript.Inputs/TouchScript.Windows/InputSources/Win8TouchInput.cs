@@ -29,15 +29,6 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
-        /// <summary>
-        /// Indicates if this input source should disable <see cref="MouseInput"/> in scene.
-        /// </summary>
-        /// <remarks>
-        /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated touch points in exactly the same coordinates. This affects clusters and multitouch gestures.
-        /// </remarks>
-        [ToggleLeft]
-        public bool DisableMouseInputInBuilds = true;
-
         #endregion
 
         #region Private variables
@@ -64,13 +55,11 @@ namespace TouchScript.InputSources
                 return;
             }
 
-            if (DisableMouseInputInBuilds)
+            // disable mouse
+            var inputs = FindObjectsOfType<MouseInput>();
+            foreach (var mouseInput in inputs)
             {
-                var inputs = FindObjectsOfType<MouseInput>();
-                foreach (var mouseInput in inputs)
-                {
-                    mouseInput.enabled = false;
-                }
+                mouseInput.enabled = false;
             }
 
             base.OnEnable();
@@ -111,6 +100,8 @@ namespace TouchScript.InputSources
             newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
             oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
 
+            EnableMouseInPointer(true);
+
             isInitialized = true;
         }
 
@@ -125,7 +116,7 @@ namespace TouchScript.InputSources
                     break;
                 case WM_CLOSE:
                     SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    //SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
                     return IntPtr.Zero;
             }
             return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
@@ -133,8 +124,6 @@ namespace TouchScript.InputSources
 
         private void decodeTouches(uint msg, IntPtr wParam, IntPtr lParam)
         {
-            int xPos = LOWORD(lParam.ToInt32());
-            int yPos = HIWORD(lParam.ToInt32());
             int pointerId = LOWORD(wParam.ToInt32());
 
             POINTER_INFO pointerInfo = new POINTER_INFO();
@@ -144,8 +133,8 @@ namespace TouchScript.InputSources
             }
 
             POINT p = new POINT();
-            p.X = xPos;
-            p.Y = yPos;
+            p.X = pointerInfo.ptPixelLocation.X;
+            p.Y = pointerInfo.ptPixelLocation.Y;
             ScreenToClient(hMainWindow, ref p);
 
             int existingId;
@@ -255,12 +244,15 @@ namespace TouchScript.InputSources
         [DllImport("user32.dll")]
         private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
 
-        [DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+        //[DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)] 
+        //private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GetPointerInfo(int pointerID, ref POINTER_INFO pPointerInfo);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr EnableMouseInPointer(bool value);
 
         private int HIWORD(int value)
         {
