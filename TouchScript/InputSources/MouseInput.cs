@@ -47,6 +47,9 @@ namespace TouchScript.InputSources
                     case RuntimePlatform.Android:
                     case RuntimePlatform.IPhonePlayer:
                     case RuntimePlatform.WP8Player:
+                    case RuntimePlatform.MetroPlayerARM:
+                    case RuntimePlatform.MetroPlayerX64:
+                    case RuntimePlatform.MetroPlayerX86:
                         // don't need mouse here
                         enabled = false;
                         return;
