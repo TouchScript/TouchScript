@@ -116,7 +116,7 @@ namespace TouchScript.InputSources
                     break;
                 case WM_CLOSE:
                     SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    //SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    Application.Quit();
                     return IntPtr.Zero;
             }
             return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
@@ -243,9 +243,6 @@ namespace TouchScript.InputSources
 
         [DllImport("user32.dll")]
         private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
-
-        //[DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)] 
-        //private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
