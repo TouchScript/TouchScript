@@ -359,7 +359,7 @@ namespace TouchScript
 
             updateLayers();
             createCameraLayer();
-            //createTouchInput(); Disabled till Unity 4.5
+            createTouchInput();
         }
 
         private void Update()
