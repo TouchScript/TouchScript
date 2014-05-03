@@ -19,7 +19,7 @@ namespace TouchScript.InputSources
     /// </list>
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Windows 7 Touch Input")]
-    public sealed class Win7TouchInput : InputSourceWindows
+    public sealed class Win7TouchInput : InputSource
     {
         #region Constants
 

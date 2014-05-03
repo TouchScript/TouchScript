@@ -50,7 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InputSources\InputSourcePro.cs" />
     <Compile Include="InputSources\TuioInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
