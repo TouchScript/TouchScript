@@ -38,7 +38,7 @@ namespace TouchScript.Modules.Playmaker.Actions
 
         public override void OnEnter()
         {
-            gesture = GestureUtils.GetGesture<Gesture>(Fsm, GameObject, Gesture, Component);
+            gesture = GestureUtils.GetGesture<Gesture>(Fsm, GameObject, Gesture, Component, false);
             if (gesture == null)
             {
                 LogError("Gesture is missing");
@@ -56,7 +56,7 @@ namespace TouchScript.Modules.Playmaker.Actions
 
         public override string ErrorCheck()
         {
-            if (GestureUtils.GetGesture<Gesture>(Fsm, GameObject, Gesture, Component) == null) return "Gesture is missing";
+            if (GestureUtils.GetGesture<Gesture>(Fsm, GameObject, Gesture, Component, false) == null) return "Gesture is missing";
             return null;
         }
 
