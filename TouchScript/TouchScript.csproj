@@ -112,15 +112,15 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\Scaleform\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.Android\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.iOS\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.TUIO\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.Windows7\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.Windows8\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.WindowsPhone\Assets\TouchScript\Plugins\"
-xcopy /y $(ProjectDir)$(OutDir)TouchScript.dll "$(SolutionDir)UnityPackages\TouchScript.WindowsStore\Assets\TouchScript\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\Scaleform\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.Android\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.iOS\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.TUIO\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.Windows7\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.Windows8\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.WindowsPhone\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.WindowsStore\Assets\TouchScript\Plugins\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
