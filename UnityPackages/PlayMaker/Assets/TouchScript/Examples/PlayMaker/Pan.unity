@@ -1835,7 +1835,6 @@ GameObject:
   - 33: {fileID: 1175324901}
   - 65: {fileID: 1175324900}
   - 23: {fileID: 1175324899}
-  - 114: {fileID: 1175324895}
   - 114: {fileID: 1175324896}
   - 114: {fileID: 1175324898}
   - 114: {fileID: 1175324897}
@@ -1846,19 +1845,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1175324895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: 8784cda9ecb2bfb458e22409dfbff689,
-    type: 2}
-  m_PrefabInternal: {fileID: 491222329}
-  m_GameObject: {fileID: 1175324894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63cb391ad48d2b242967a0ad4c2a6140, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startY: 0
 --- !u!114 &1175324896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2212,7 +2198,7 @@ Prefab:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 11400006, guid: 8784cda9ecb2bfb458e22409dfbff689, type: 2}
+    - {fileID: 0}
     m_DeprecatedTransformRoot: {fileID: 0}
     m_DeprecatedTransformMap: {}
     m_DeprecatedTransformComplete: 1
@@ -2324,7 +2310,6 @@ GameObject:
   - 33: {fileID: 1736700069}
   - 65: {fileID: 1736700068}
   - 23: {fileID: 1736700067}
-  - 114: {fileID: 1736700063}
   - 114: {fileID: 1736700064}
   - 114: {fileID: 1736700066}
   - 114: {fileID: 1736700065}
@@ -2335,19 +2320,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1736700063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400006, guid: 8784cda9ecb2bfb458e22409dfbff689,
-    type: 2}
-  m_PrefabInternal: {fileID: 689982239}
-  m_GameObject: {fileID: 1736700062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63cb391ad48d2b242967a0ad4c2a6140, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startY: 0
 --- !u!114 &1736700064
 MonoBehaviour:
   m_ObjectHideFlags: 0
