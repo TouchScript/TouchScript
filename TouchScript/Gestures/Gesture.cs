@@ -695,7 +695,10 @@ namespace TouchScript.Gestures
         /// Called to reset gesture state after it fails or recognizes.
         /// </summary>
         protected virtual void reset()
-        {}
+        {
+            cachedScreenPosition = TouchManager.INVALID_POSITION;
+            cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
+        }
 
         /// <summary>
         /// Called when state is changed to Possible.
