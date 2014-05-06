@@ -164,6 +164,8 @@ namespace TouchScript.Gestures
 
             if (activeTouches.Count == 0)
             {
+                // touches outside of gesture target are ignored in shouldCacheTouchPosition()
+                // if all touches are outside ScreenPosition will be invalid
                 if (TouchManager.IsInvalidPosition(ScreenPosition))
                 {
                     setState(GestureState.Failed);
