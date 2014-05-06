@@ -101,8 +101,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
-                if (activeTouches.Count == 1) return activeTouches[0].Position;
+                if (activeTouches.Count < 2) return base.ScreenPosition;
                 return (activeTouches[0].Position + activeTouches[1].Position)*.5f;
             }
         }
@@ -112,8 +111,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count == 0) return TouchManager.INVALID_POSITION;
-                if (activeTouches.Count == 1) return activeTouches[0].PreviousPosition;
+                if (activeTouches.Count < 2) return base.PreviousScreenPosition;
                 return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition)*.5f;
             }
         }
