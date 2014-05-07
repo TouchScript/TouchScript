@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Utils;
@@ -547,6 +548,11 @@ namespace TouchScript.Gestures
         internal void TouchesBegan(IList<ITouch> touches)
         {
             activeTouches.AddRange(touches);
+            foreach (var touch in touches)
+            {
+                var tags = (touch.Tags as List<string>).Aggregate("", (x, y) => x + " " + y);
+                Debug.Log("Touch " + touch.Id + " " + tags);
+            }
             touchesBegan(touches);
         }
 

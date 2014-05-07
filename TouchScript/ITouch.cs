@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
@@ -50,5 +51,7 @@ namespace TouchScript
         /// <seealso cref="CameraLayer2D"/>
         /// </summary>
         TouchLayer Layer { get; }
+
+        ICollection<string> Tags { get; }
     }
 }

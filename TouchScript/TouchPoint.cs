@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
@@ -41,11 +42,14 @@ namespace TouchScript
         /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
 
+        public ICollection<string> Tags { get { return tags; } }
+
         #endregion
 
         #region Private variables
 
         private Vector2 position = Vector2.zero;
+        private List<string> tags;
 
         #endregion
 
@@ -54,11 +58,13 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
-        internal TouchPoint(int id, Vector2 position)
+        internal TouchPoint(int id, Vector2 position, ICollection<string> tags)
         {
             Id = id;
             Position = position;
             PreviousPosition = position;
+            if (tags == null) this.tags = new List<string>();
+            else this.tags = new List<string>(tags);
         }
 
         #region Internal methods

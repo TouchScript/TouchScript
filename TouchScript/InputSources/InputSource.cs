@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -60,18 +61,23 @@ namespace TouchScript.InputSources
 
         #region Callbacks
 
+        protected int beginTouch(Vector2 position)
+        {
+            return beginTouch(position, null);
+        }
+
         /// <summary>
         /// OnEnable touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected int beginTouch(Vector2 position)
+        protected int beginTouch(Vector2 position, ICollection<string> tags)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return manager.BeginTouch(position);
+            return manager.BeginTouch(position, tags);
         }
 
         /// <summary>

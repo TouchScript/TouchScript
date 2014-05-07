@@ -142,7 +142,20 @@ namespace TouchScript.InputSources
             switch (msg)
             {
                 case WM_POINTERDOWN:
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y)));
+                    var tags = new List<string>();
+                    switch (pointerInfo.pointerType)
+                    {
+                        case POINTER_INPUT_TYPE.PT_TOUCH:
+                            tags.Add(Tags.INPUT_TOUCH);
+                            break;
+                        case POINTER_INPUT_TYPE.PT_PEN:
+                            tags.Add(Tags.INPUT_PEN);
+                            break;
+                        case POINTER_INPUT_TYPE.PT_MOUSE:
+                            tags.Add(Tags.INPUT_MOUSE);
+                            break;
+                    }
+                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags));
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))

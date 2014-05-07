@@ -257,13 +257,18 @@ namespace TouchScript
             return false;
         }
 
-        /// <inheritdoc />
         public int BeginTouch(Vector2 position)
+        {
+            return BeginTouch(position, null);
+        }
+
+        /// <inheritdoc />
+        public int BeginTouch(Vector2 position, ICollection<string> tags)
         {
             TouchPoint touch;
             lock (touchesBegan)
             {
-                touch = new TouchPoint(nextTouchId++, position);
+                touch = new TouchPoint(nextTouchId++, position, tags);
                 touchesBegan.Add(touch);
             }
             return touch.Id;
