@@ -30,13 +30,11 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
-        public Tags Tags { get { return tags; } }
+        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
 
         #endregion
 
         #region Private variables
-
-        private Tags tags = new Tags(Tags.INPUT_TOUCH);
 
         private TuioServer server;
         private Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();

@@ -24,12 +24,10 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnNonTouchPlatforms = true;
 
-        public Tags Tags { get { return tags; } }
+        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
         #endregion
 
         #region Private variables
-
-        private Tags tags = new Tags(Tags.INPUT_TOUCH);
 
         private Dictionary<int, TouchState> touchStates = new Dictionary<int, TouchState>();
         private HashSet<int> touchIds = new HashSet<int>();

@@ -49,13 +49,11 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableMouseInputInBuilds = true;
 
-        public Tags Tags { get { return tags; } }
+        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
 
         #endregion
 
         #region Private variables
-
-        private Tags tags = new Tags(Tags.INPUT_TOUCH);
 
         private IntPtr hMainWindow;
         private IntPtr oldWndProcPtr;

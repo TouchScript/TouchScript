@@ -29,17 +29,13 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
-        public Tags TouchTags { get { return touchTags; } }
-        public Tags MouseTags { get { return mouseTags; } }
-        public Tags PenTags { get { return penTags; } }
+        public Tags TouchTags = new Tags(Tags.INPUT_TOUCH);
+        public Tags MouseTags = new Tags(Tags.INPUT_MOUSE);
+        public Tags PenTags = new Tags(Tags.INPUT_PEN);
 
         #endregion
 
         #region Private variables
-
-        private Tags touchTags = new Tags(Tags.INPUT_TOUCH);
-        private Tags mouseTags = new Tags(Tags.INPUT_MOUSE);
-        private Tags penTags = new Tags(Tags.INPUT_PEN);
 
         private IntPtr hMainWindow;
         private IntPtr oldWndProcPtr;

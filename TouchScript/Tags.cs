@@ -23,7 +23,11 @@ namespace TouchScript
 
         public Tags(Tags tags) : this()
         {
-            tagList = tags.tagList;
+            if (tags == null) return;
+            foreach (var tag in tags.tagList)
+            {
+                AddTag(tag);
+            }
         }
 
         public Tags(IEnumerable<string> tags) : this()
