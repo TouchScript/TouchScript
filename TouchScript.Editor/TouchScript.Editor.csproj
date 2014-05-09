@@ -82,6 +82,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Editor\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\PlayMaker\Assets\TouchScript\Editor\"
 xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\Scaleform\Assets\TouchScript\Editor\"
 xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.Android\Assets\TouchScript\Editor\"
 xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.iOS\Assets\TouchScript\Editor\"
