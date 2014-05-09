@@ -24,9 +24,12 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnNonTouchPlatforms = true;
 
+        public Tags Tags { get { return tags; } }
         #endregion
 
         #region Private variables
+
+        private Tags tags = new Tags(Tags.INPUT_TOUCH);
 
         private Dictionary<int, TouchState> touchStates = new Dictionary<int, TouchState>();
         private HashSet<int> touchIds = new HashSet<int>();
@@ -155,7 +158,7 @@ namespace TouchScript.InputSources
 
         protected override int beginTouch(Vector2 position)
         {
-            return beginTouch(position, new List<string>() { Tags.INPUT_TOUCH });
+            return beginTouch(position, new Tags(Tags));
         }
 
         #endregion

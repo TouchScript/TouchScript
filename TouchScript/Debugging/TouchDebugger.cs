@@ -220,11 +220,10 @@ namespace TouchScript.Debugging
         {
             foreach (var touch in e.Touches)
             {
-                var tagList = touch.Tags as List<string>;
                 dummies.Add(touch.Id, touch);
-                if (tagList != null && tagList.Count > 0)
+                if (touch.Tags.Count > 0)
                 {
-                    tags.Add(touch.Id, tagList.Aggregate("", (x, y) => x + y + " "));
+                    tags.Add(touch.Id, touch.Tags.ToString());
                 }
             }
         }

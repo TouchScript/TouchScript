@@ -28,7 +28,15 @@ namespace TouchScript.InputSources
 
         #endregion
 
+        #region Public properties
+
+        public Tags Tags { get { return tags; } }
+
+        #endregion
+
         #region Private variables
+
+        private Tags tags = new Tags(Tags.INPUT_TOUCH);
 
         private TuioServer server;
         private Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();
@@ -90,7 +98,7 @@ namespace TouchScript.InputSources
             {
                 var x = cursor.X*screenWidth;
                 var y = (1 - cursor.Y)*screenHeight;
-                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y), new List<string>() { Tags.INPUT_TOUCH }));
+                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y), new Tags(Tags)));
             }
         }
 

@@ -49,9 +49,13 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableMouseInputInBuilds = true;
 
+        public Tags Tags { get { return tags; } }
+
         #endregion
 
         #region Private variables
+
+        private Tags tags = new Tags(Tags.INPUT_TOUCH);
 
         private IntPtr hMainWindow;
         private IntPtr oldWndProcPtr;
@@ -166,7 +170,7 @@ namespace TouchScript.InputSources
                     p.Y = touch.y/100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new List<string>() { Tags.INPUT_TOUCH }));
+                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(Tags)));
                 } else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;

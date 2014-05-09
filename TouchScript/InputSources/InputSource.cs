@@ -66,7 +66,7 @@ namespace TouchScript.InputSources
             return beginTouch(position, null, null);
         }
 
-        protected virtual int beginTouch(Vector2 position, ICollection<string> tags)
+        protected virtual int beginTouch(Vector2 position, Tags tags)
         {
             return beginTouch(position, tags, null);
         }
@@ -76,7 +76,7 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected virtual int beginTouch(Vector2 position, ICollection<string> tags, IDictionary<string, System.Object> properties)
+        protected virtual int beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
         {
             if (CoordinatesRemapper != null)
             {

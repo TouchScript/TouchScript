@@ -26,10 +26,13 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnMobilePlatforms = true;
 
+        public Tags Tags { get { return tags; } }
+
         #endregion
 
         #region Private variables
 
+        private Tags tags = new Tags(Tags.INPUT_MOUSE);
         private int mousePointId = -1;
         private int fakeMousePointId = -1;
         private Vector3 mousePointPos = Vector3.zero;
@@ -133,7 +136,7 @@ namespace TouchScript.InputSources
 
         protected override int beginTouch(Vector2 position)
         {
-            return beginTouch(position, new List<string>() { Tags.INPUT_MOUSE });
+            return beginTouch(position, new Tags(Tags));
         }
 
         #endregion

@@ -29,9 +29,17 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        public Tags TouchTags { get { return touchTags; } }
+        public Tags MouseTags { get { return mouseTags; } }
+        public Tags PenTags { get { return penTags; } }
+
         #endregion
 
         #region Private variables
+
+        private Tags touchTags = new Tags(Tags.INPUT_TOUCH);
+        private Tags mouseTags = new Tags(Tags.INPUT_MOUSE);
+        private Tags penTags = new Tags(Tags.INPUT_PEN);
 
         private IntPtr hMainWindow;
         private IntPtr oldWndProcPtr;
@@ -142,17 +150,17 @@ namespace TouchScript.InputSources
             switch (msg)
             {
                 case WM_POINTERDOWN:
-                    var tags = new List<string>();
+                    Tags tags = null;
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_TOUCH:
-                            tags.Add(Tags.INPUT_TOUCH);
+                            tags = new Tags(TouchTags);
                             break;
                         case POINTER_INPUT_TYPE.PT_PEN:
-                            tags.Add(Tags.INPUT_PEN);
+                            tags = new Tags(PenTags);
                             break;
                         case POINTER_INPUT_TYPE.PT_MOUSE:
-                            tags.Add(Tags.INPUT_MOUSE);
+                            tags = new Tags(MouseTags);
                             break;
                     }
                     winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags));
