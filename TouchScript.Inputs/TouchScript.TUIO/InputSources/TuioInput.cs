@@ -90,7 +90,7 @@ namespace TouchScript.InputSources
             {
                 var x = cursor.X*screenWidth;
                 var y = (1 - cursor.Y)*screenHeight;
-                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y)));
+                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y), new List<string>() { Tags.INPUT_TOUCH }));
             }
         }
 

@@ -53,5 +53,7 @@ namespace TouchScript
         TouchLayer Layer { get; }
 
         ICollection<string> Tags { get; }
+
+        IDictionary<string, System.Object> Properties { get; } 
     }
 }

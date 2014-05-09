@@ -61,9 +61,14 @@ namespace TouchScript.InputSources
 
         #region Callbacks
 
-        protected int beginTouch(Vector2 position)
+        protected virtual int beginTouch(Vector2 position)
         {
-            return beginTouch(position, null);
+            return beginTouch(position, null, null);
+        }
+
+        protected virtual int beginTouch(Vector2 position, ICollection<string> tags)
+        {
+            return beginTouch(position, tags, null);
         }
 
         /// <summary>
@@ -71,20 +76,20 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected int beginTouch(Vector2 position, ICollection<string> tags)
+        protected virtual int beginTouch(Vector2 position, ICollection<string> tags, IDictionary<string, System.Object> properties)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return manager.BeginTouch(position, tags);
+            return manager.BeginTouch(position, tags, properties);
         }
 
         /// <summary>
         /// End touch with id.
         /// </summary>
         /// <param name="id">Touch point id.</param>
-        protected void endTouch(int id)
+        protected virtual void endTouch(int id)
         {
             manager.EndTouch(id);
         }
@@ -94,7 +99,7 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="id">Touch id.</param>
         /// <param name="position">New screen position.</param>
-        protected void moveTouch(int id, Vector2 position)
+        protected virtual void moveTouch(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
@@ -107,7 +112,7 @@ namespace TouchScript.InputSources
         /// Cancel touch with id.
         /// </summary>
         /// <param name="id">Touch id.</param>
-        protected void cancelTouch(int id)
+        protected virtual void cancelTouch(int id)
         {
             manager.CancelTouch(id);
         }

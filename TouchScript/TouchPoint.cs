@@ -44,12 +44,15 @@ namespace TouchScript
 
         public ICollection<string> Tags { get { return tags; } }
 
+        public IDictionary<string, System.Object> Properties { get { return properties; } } 
+
         #endregion
 
         #region Private variables
 
         private Vector2 position = Vector2.zero;
         private List<string> tags;
+        private Dictionary<string, System.Object> properties; 
 
         #endregion
 
@@ -58,13 +61,14 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
-        internal TouchPoint(int id, Vector2 position, ICollection<string> tags)
+        internal TouchPoint(int id, Vector2 position, IEnumerable<string> tags, IDictionary<string, object> properties)
         {
             Id = id;
             Position = position;
             PreviousPosition = position;
-            if (tags == null) this.tags = new List<string>();
-            else this.tags = new List<string>(tags);
+
+            this.tags = (tags == null) ? new List<string>() : new List<string>(tags);
+            this.properties = (properties == null) ? new Dictionary<string, object>() : new Dictionary<string, object>(properties);
         }
 
         #region Internal methods

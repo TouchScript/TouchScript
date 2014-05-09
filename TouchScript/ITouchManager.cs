@@ -158,7 +158,9 @@ namespace TouchScript
         /// <returns>Internal id of the new touch.</returns>
         int BeginTouch(Vector2 position);
 
-        int BeginTouch(Vector2 position, ICollection<string> tags);
+        int BeginTouch(Vector2 position, IEnumerable<string> tags);
+
+        int BeginTouch(Vector2 position, IEnumerable<string> tags, IDictionary<string, System.Object> properties);
 
         /// <summary>
         /// Updates screen position of a touch registered with Touch Manager.

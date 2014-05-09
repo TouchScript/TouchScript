@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 
@@ -127,5 +128,15 @@ namespace TouchScript.InputSources
         }
 
         #endregion
+
+        #region Protected methods
+
+        protected override int beginTouch(Vector2 position)
+        {
+            return beginTouch(position, new List<string>() { Tags.INPUT_MOUSE });
+        }
+
+        #endregion
+
     }
 }

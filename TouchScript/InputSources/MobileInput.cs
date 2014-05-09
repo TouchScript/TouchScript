@@ -153,6 +153,11 @@ namespace TouchScript.InputSources
             }
         }
 
+        protected override int beginTouch(Vector2 position)
+        {
+            return beginTouch(position, new List<string>() { Tags.INPUT_TOUCH });
+        }
+
         #endregion
     }
 
