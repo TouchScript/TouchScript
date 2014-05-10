@@ -368,6 +368,11 @@ namespace TouchScript.Gestures
             gesture.registerFriendlyGesture(this);
         }
 
+        public bool IsFriendly(Gesture gesture)
+        {
+            return friendlyGestureIds.Contains(gesture.GetInstanceID());
+        }
+
         /// <summary>
         /// Gets result of casting a ray from gesture touch points' centroid screen position.
         /// </summary>
@@ -574,11 +579,6 @@ namespace TouchScript.Gestures
 
             unregisterFriendlyGesture(gesture);
             gesture.unregisterFriendlyGesture(this);
-        }
-
-        internal bool IsFriendly(Gesture gesture)
-        {
-            return friendlyGestureIds.Contains(gesture.GetInstanceID());
         }
 
         #endregion
