@@ -10,6 +10,7 @@ namespace TouchScript
         public const string INPUT_TOUCH = "Touch";
         public const string INPUT_MOUSE = "Mouse";
         public const string INPUT_PEN = "Pen";
+        public const string INPUT_OBJECT = "Object";
 
         public const string SOURCE_WINDOWS = "Windows";
         public const string SOURCE_TUIO = "TUIO";

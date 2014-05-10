@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Utils.PropertyDrawers
 {
-    [CustomPropertyDrawer(typeof(Tags))]
+    //[CustomPropertyDrawer(typeof(Tags))]
     internal sealed class TagsDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
