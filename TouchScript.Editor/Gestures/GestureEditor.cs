@@ -35,7 +35,7 @@ namespace TouchScript.Editor.Gestures
         {
             hideFlags = HideFlags.HideAndDontSave;
 
-            advanced = serializedObject.FindProperty("adnvacedProps");
+            advanced = serializedObject.FindProperty("advancedProps");
 
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
