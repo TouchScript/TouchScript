@@ -304,6 +304,7 @@ namespace TouchScript
             gesturesToReset.Clear();
         }
 
+        // parent <- parent <- target
         private List<Gesture> getHierarchyEndingWith(Transform target)
         {
             var hierarchy = new List<Gesture>(10);
@@ -315,6 +316,7 @@ namespace TouchScript
             return hierarchy;
         }
 
+        // target <- child*
         private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf)
         {
             var hierarchy = new List<Gesture>(10);
