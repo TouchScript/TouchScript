@@ -23,6 +23,8 @@ namespace TouchScript.InputSources
     {
         #region Constants
 
+        private const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
+
         private enum TouchEvent : int
         {
             TOUCHEVENTF_MOVE = 0x0001,
@@ -58,6 +60,7 @@ namespace TouchScript.InputSources
         private IntPtr newWndProcPtr;
 
         private WndProcDelegate newWndProc;
+        private ushort pressAndHoldAtomID;
 
         private Dictionary<int, int> winToInternalId = new Dictionary<int, int>();
         private bool isInitialized = false;
@@ -93,6 +96,12 @@ namespace TouchScript.InputSources
         {
             if (isInitialized)
             {
+                if (pressAndHoldAtomID != 0)
+                {
+                    RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
+                    GlobalDeleteAtom(pressAndHoldAtomID);
+                }
+
                 SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
                 UnregisterTouchWindow(hMainWindow);
 
@@ -125,6 +134,9 @@ namespace TouchScript.InputSources
             newWndProc = wndProc;
             newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
             oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
+
+            pressAndHoldAtomID = GlobalAddAtom(PRESS_AND_HOLD_ATOM);
+            SetProp(hMainWindow, PRESS_AND_HOLD_ATOM, 1);
 
             isInitialized = true;
         }
@@ -263,6 +275,18 @@ namespace TouchScript.InputSources
 
         [DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)]
         private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("Kernel32.dll")]
+        static extern ushort GlobalAddAtom(string lpString);
+
+        [DllImport("Kernel32.dll")]
+        static extern ushort GlobalDeleteAtom(ushort nAtom);
+
+        [DllImport("user32.dll")]
+        static extern int SetProp(IntPtr hWnd, string lpString, int hData);
+
+        [DllImport("user32.dll")]
+        static extern int RemoveProp(IntPtr hWnd, string lpString);
 
         private int touchInputSize;
 
