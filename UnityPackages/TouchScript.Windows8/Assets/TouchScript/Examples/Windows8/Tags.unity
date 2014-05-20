@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b59087a17532774e95d9791c6e52839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CubePrefab: {fileID: 400000, guid: 55e9425c4b7a442528aa45f550c7099c, type: 2}
+  CubePrefab: {fileID: 400000, guid: 9592a454db74b12408e17c8eaf17e2a3, type: 2}
   Container: {fileID: 532835005}
   Scale: .5
 --- !u!23 &114877649
@@ -443,10 +443,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b83465fdec27ec4e908d2d54b28cf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: "<b>Tap gesture example</b>\n\n<b>1.</b> Tap on white plane to spawn new cubes.
-    \n<b>2.</b> Tap on cubes to break them.\n<b>3.</b> Notice, all the cubes have
-    a TapGesture attached. \n<b>4.</b> Check out <Breaker> script to find out how
-    to handle taps."
+  Text: "<b>Tags example</b>\n\nThis example is identical to Tap example. \nBut Cubes
+    can't now be broken with mouse because special delegate filters touches with tag
+    \"Mouse\".\nClicking on white plane still spawns Cubes since the plane doesn't
+    have this delegate.\n"
 --- !u!1 &1324806696
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,7 +639,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 11400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
+      propertyPath: showTags
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
   m_RootGameObject: {fileID: 2144056002}
@@ -789,7 +793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showTouchId: 1
-  showTags: 0
+  showTags: 1
   texture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
   useDPI: 1
   touchSize: 1
