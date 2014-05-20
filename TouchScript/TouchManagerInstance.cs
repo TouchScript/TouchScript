@@ -237,6 +237,13 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
+        public bool GetHitTarget(Vector2 position, out ITouchHit hit)
+        {
+            TouchLayer layer;
+            return GetHitTarget(position, out hit, out layer);
+        }
+
+        /// <inheritdoc />
         public bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer)
         {
             hit = null;
