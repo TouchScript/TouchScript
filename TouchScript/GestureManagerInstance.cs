@@ -107,6 +107,7 @@ namespace TouchScript
 
         internal Gesture.GestureState GestureChangeState(Gesture gesture, Gesture.GestureState state)
         {
+            bool canRecognize = false;
             switch (state)
             {
                 case Gesture.GestureState.Possible:
@@ -120,10 +121,8 @@ namespace TouchScript
                             print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
                             break;
                     }
-                    if (gestureCanRecognize(gesture))
-                    {
-                        recognizeGesture(gesture);
-                    } else
+                    canRecognize = recognizeGestureIfNotPrevented(gesture);
+                    if (!canRecognize)
                     {
                         if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
                         return Gesture.GestureState.Failed;
@@ -148,10 +147,8 @@ namespace TouchScript
                     switch (gesture.State)
                     {
                         case Gesture.GestureState.Possible:
-                            if (gestureCanRecognize(gesture))
-                            {
-                                recognizeGesture(gesture);
-                            } else
+                            canRecognize = recognizeGestureIfNotPrevented(gesture);
+                            if (!canRecognize)
                             {
                                 return Gesture.GestureState.Failed;
                             }
@@ -365,38 +362,45 @@ namespace TouchScript
             }
         }
 
-        private bool gestureCanRecognize(Gesture gesture)
+        private bool recognizeGestureIfNotPrevented(Gesture gesture)
         {
             if (!gesture.ShouldBegin()) return false;
 
+            bool canRecognize = true;
+            List<Gesture> gesturesToFail = new List<Gesture>(10);
             var gestures = getHierarchyContaining(gesture.transform);
+
             foreach (var otherGesture in gestures)
             {
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
-                if ((otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed) &&
-                    otherGesture.CanPreventGesture(gesture))
+
+                if (otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed)
                 {
-                    return false;
+                    if (otherGesture.CanPreventGesture(gesture))
+                    {
+                        canRecognize = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (gesture.CanPreventGesture(otherGesture))
+                    {
+                        gesturesToFail.Add(otherGesture);
+                    }
                 }
             }
 
-            return true;
-        }
-
-        private void recognizeGesture(Gesture gesture)
-        {
-            var gestures = getHierarchyContaining(gesture.transform);
-            foreach (var otherGesture in gestures)
+            if (canRecognize)
             {
-                if (gesture == otherGesture) continue;
-                if (!gestureIsActive(otherGesture)) continue;
-                if (!(otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed) &&
-                    gesture.CanPreventGesture(otherGesture))
+                foreach (var otherGesture in gesturesToFail)
                 {
                     failGesture(otherGesture);
                 }
             }
+
+            return canRecognize;
         }
 
         private void failGesture(Gesture gesture)
