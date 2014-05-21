@@ -14,9 +14,7 @@ for i in $(ls -d */); do
 	name=${i%%/}
 	if [[ $name != _* ]]; then
 		printf "\e[32mBuilding $name.\e[39m\n" 
-		if [ $name == TouchScript.WindowsPhone ] ; then
-			toExport="$exportFolders Assets/Plugins"
-		elif [ $name == Scaleform ] ; then
+		if [ $name == Scaleform ] ; then
 			toExport="$exportFolders Assets/StreamingAssets Assets/TouchScript/Scripts"
 		else
 			toExport=$exportFolders
