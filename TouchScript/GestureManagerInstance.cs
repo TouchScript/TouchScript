@@ -107,7 +107,7 @@ namespace TouchScript
 
         internal Gesture.GestureState GestureChangeState(Gesture gesture, Gesture.GestureState state)
         {
-            bool canRecognize = false;
+            bool recognized = false;
             switch (state)
             {
                 case Gesture.GestureState.Possible:
@@ -121,8 +121,8 @@ namespace TouchScript
                             print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
                             break;
                     }
-                    canRecognize = recognizeGestureIfNotPrevented(gesture);
-                    if (!canRecognize)
+                    recognized = recognizeGestureIfNotPrevented(gesture);
+                    if (!recognized)
                     {
                         if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
                         return Gesture.GestureState.Failed;
@@ -147,8 +147,8 @@ namespace TouchScript
                     switch (gesture.State)
                     {
                         case Gesture.GestureState.Possible:
-                            canRecognize = recognizeGestureIfNotPrevented(gesture);
-                            if (!canRecognize)
+                            recognized = recognizeGestureIfNotPrevented(gesture);
+                            if (!recognized)
                             {
                                 return Gesture.GestureState.Failed;
                             }
