@@ -142,6 +142,15 @@ namespace TouchScript
         /// <summary>
         /// Checks if a touch hits anything.
         /// <seealso cref="ITouchHit"/>
+        /// </summary>
+        /// <param name="position">Screen position of the touch.</param>
+        /// <param name="hit">An object which represents hit information.</param>
+        /// <returns>True if the touch hits any Transform.</returns>
+        bool GetHitTarget(Vector2 position, out ITouchHit hit);
+
+        /// <summary>
+        /// Checks if a touch hits anything.
+        /// <seealso cref="ITouchHit"/>
         /// <seealso cref="TouchLayer"/>
         /// </summary>
         /// <param name="position">Screen position of the touch.</param>
