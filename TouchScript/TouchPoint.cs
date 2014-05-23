@@ -29,6 +29,7 @@ namespace TouchScript
             {
                 PreviousPosition = position;
                 position = value;
+                isDirty = true;
             }
         }
 
@@ -36,7 +37,24 @@ namespace TouchScript
         public Vector2 PreviousPosition { get; private set; }
 
         /// <inheritdoc />
-        public ITouchHit Hit { get; internal set; }
+        public ITouchHit Hit
+        {
+            get
+            {
+                if (isDirty)
+                {
+                    Debug.Log("!!!!!");
+                    TouchManager.Instance.GetHitTarget(position, out hit);
+                    isDirty = false;
+                }
+                return hit;
+            }
+            internal set
+            {
+                hit = value;
+                isDirty = false;
+            }
+        }
 
         /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
@@ -46,6 +64,8 @@ namespace TouchScript
         #region Private variables
 
         private Vector2 position = Vector2.zero;
+        private ITouchHit hit;
+        private bool isDirty = false;
 
         #endregion
 
@@ -69,6 +89,7 @@ namespace TouchScript
         internal void ResetPosition()
         {
             PreviousPosition = Position;
+            isDirty = true;
         }
 
         #endregion

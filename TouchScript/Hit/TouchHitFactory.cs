@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TouchScript.Hit
 {
-    internal sealed class TouchHitFactory
+    public sealed class TouchHitFactory
     {
 
         public static TouchHitFactory Instance

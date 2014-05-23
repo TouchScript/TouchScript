@@ -98,10 +98,8 @@ namespace TouchScript.Behaviors
                 case Gesture.GestureState.Changed:
                     var gesture = (SimplePanGesture)sender;
 
-                    if (gesture.WorldDeltaPosition != Vector3.zero)
-                    {
-                        localPositionToGo += TransformUtils.GlobalToLocalPosition(transform, gesture.WorldDeltaPosition);
-                    }
+                    var deltaPos = gesture.LocalDeltaPosition;
+                    if (deltaPos != Vector3.zero) localPositionToGo += deltaPos;
                     break;
             }
         }
@@ -118,7 +116,7 @@ namespace TouchScript.Behaviors
                     {
                         if (transform.parent == null)
                         {
-                            localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis)*localRotationToGo;
+                            localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * localRotationToGo;
                         } else
                         {
                             localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, transform.parent.InverseTransformDirection(gesture.RotationAxis)) * localRotationToGo;

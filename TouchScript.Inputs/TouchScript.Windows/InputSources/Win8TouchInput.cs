@@ -23,6 +23,8 @@ namespace TouchScript.InputSources
     {
         #region Constants
 
+        private const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
+
         private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         #endregion
@@ -38,6 +40,7 @@ namespace TouchScript.InputSources
         private IntPtr newWndProcPtr;
 
         private WndProcDelegate newWndProc;
+        private ushort pressAndHoldAtomID;
 
         private Dictionary<int, int> winToInternalId = new Dictionary<int, int>();
         private bool isInitialized = false;
@@ -49,6 +52,7 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnEnable()
         {
+            // "WindowsEditor" in the Editor
             if (Application.platform != RuntimePlatform.WindowsPlayer)
             {
                 enabled = false;
@@ -71,6 +75,12 @@ namespace TouchScript.InputSources
         {
             if (isInitialized)
             {
+                if (pressAndHoldAtomID != 0)
+                {
+                    RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
+                    GlobalDeleteAtom(pressAndHoldAtomID);
+                }
+                
                 SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
 
                 hMainWindow = IntPtr.Zero;
@@ -101,6 +111,9 @@ namespace TouchScript.InputSources
             oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
 
             EnableMouseInPointer(true);
+
+            pressAndHoldAtomID = GlobalAddAtom(PRESS_AND_HOLD_ATOM);
+            SetProp(hMainWindow, PRESS_AND_HOLD_ATOM, 1);
 
             isInitialized = true;
         }
@@ -250,6 +263,18 @@ namespace TouchScript.InputSources
 
         [DllImport("user32.dll")]
         private static extern IntPtr EnableMouseInPointer(bool value);
+
+        [DllImport("Kernel32.dll")]
+        static extern ushort GlobalAddAtom(string lpString);
+
+        [DllImport("Kernel32.dll")]
+        static extern ushort GlobalDeleteAtom(ushort nAtom);
+
+        [DllImport("user32.dll")]
+        static extern int SetProp(IntPtr hWnd, string lpString, int hData);
+
+        [DllImport("user32.dll")]
+        static extern int RemoveProp(IntPtr hWnd, string lpString);
 
         private int HIWORD(int value)
         {
