@@ -14,6 +14,7 @@ namespace TouchScript.Editor.Gestures
     internal class GestureEditor : UnityEditor.Editor
     {
         private const string TEXT_FRIENDLY_HEADER = "List gestures which can work together with this gesture.";
+        private const string TEXT_ADVANCED_HEADER = "Advanced properties.";
         private const string FRIENDLY_GESTURES_PROP = "friendlyGestures";
 
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
@@ -35,7 +36,7 @@ namespace TouchScript.Editor.Gestures
         {
             hideFlags = HideFlags.HideAndDontSave;
 
-            advanced = serializedObject.FindProperty("adnvacedProps");
+            advanced = serializedObject.FindProperty("advancedProps");
 
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
@@ -52,13 +53,25 @@ namespace TouchScript.Editor.Gestures
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            drawAdvanced();
+            EditorGUI.BeginChangeCheck();
+            var expanded = GUIElements.BeginFoldout(advanced.isExpanded, new GUIContent("Advanced", TEXT_ADVANCED_HEADER));
+            if (EditorGUI.EndChangeCheck())
+            {
+                advanced.isExpanded = expanded;
+            }
+            if (expanded)
+            {
+                GUILayout.BeginVertical(GUIElements.FoldoutStyle);
+                drawAdvanced();
+                GUILayout.EndVertical();
+            }
+            GUIElements.EndFoldout();
             drawFriendlyGestures();
 
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void drawSendMessage()
+        protected virtual void drawSendMessage()
         {
             EditorGUILayout.PropertyField(useSendMessage, USE_SEND_MESSAGE);
             if (useSendMessage.boolValue)
@@ -75,7 +88,7 @@ namespace TouchScript.Editor.Gestures
             }
         }
 
-        private void drawCombineTouches()
+        protected virtual void drawCombineTouches()
         {
             if (shouldDrawCombineTouches)
             {
@@ -93,31 +106,19 @@ namespace TouchScript.Editor.Gestures
             }
         }
 
-        private void drawRequireToFail()
+        protected virtual void drawRequireToFail()
         {
             EditorGUILayout.PropertyField(requireGestureToFail, REQUIRE_GESTURE_TO_FAIL);
         }
 
-        private void drawAdvanced()
+        protected virtual void drawAdvanced()
         {
-            EditorGUI.BeginChangeCheck();
-            var expanded = GUIElements.BeginFoldout(advanced.isExpanded, new GUIContent("Advanced", TEXT_FRIENDLY_HEADER));
-            if (EditorGUI.EndChangeCheck())
-            {
-                advanced.isExpanded = expanded;
-            }
-            if (expanded)
-            {
-                GUILayout.BeginVertical(GUIElements.FoldoutStyle);
-                drawSendMessage();
-                drawCombineTouches();
-                drawRequireToFail();
-                GUILayout.EndVertical();
-            }
-            GUIElements.EndFoldout();
+            drawSendMessage();
+            drawCombineTouches();
+            drawRequireToFail();
         }
 
-        private void drawFriendlyGestures()
+        protected virtual void drawFriendlyGestures()
         {
             EditorGUI.BeginChangeCheck();
             var expanded = GUIElements.BeginFoldout(friendlyGestures.isExpanded, new GUIContent(string.Format("Friendly gestures ({0})", friendlyGestures.arraySize), TEXT_FRIENDLY_HEADER));
