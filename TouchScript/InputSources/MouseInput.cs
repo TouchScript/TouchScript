@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System.Collections.Generic;
 using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 

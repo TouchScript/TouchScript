@@ -25,6 +25,9 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
+        [SerializeField]
+        private bool advancedProps; // is used to save if advanced properties are opened or closed
+
         /// <summary>
         /// Reference to global touch manager.
         /// </summary>
