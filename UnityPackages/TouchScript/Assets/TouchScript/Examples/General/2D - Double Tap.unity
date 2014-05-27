@@ -105,6 +105,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 930800601}
+  m_RootOrder: 2
 --- !u!114 &62216953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,8 +170,11 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
 --- !u!1001 &81915478
 Prefab:
   m_ObjectHideFlags: 0
@@ -240,6 +244,7 @@ Transform:
   - {fileID: 2089380319}
   - {fileID: 2006039368}
   m_Father: {fileID: 930800601}
+  m_RootOrder: 0
 --- !u!1001 &487517228
 Prefab:
   m_ObjectHideFlags: 0
@@ -313,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -335,6 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -376,9 +383,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 06183c9e584cc714c9b11eb30bf7aa6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &538357433
@@ -392,6 +398,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 301848822}
+  m_RootOrder: 0
 --- !u!60 &538357434
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -559,6 +566,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 930800601}
+  m_RootOrder: 1
 --- !u!61 &657562194
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -631,6 +639,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1324806698}
+  m_RootOrder: 0
 --- !u!114 &906624106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,7 +652,11 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnMobilePlatforms: 1
+  Tags:
+    tagList:
+    - Mouse
 --- !u!114 &906624107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,7 +669,11 @@ MonoBehaviour:
   m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnNonTouchPlatforms: 1
+  Tags:
+    tagList:
+    - Touch
 --- !u!1 &930800600
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +704,7 @@ Transform:
   - {fileID: 657562193}
   - {fileID: 62216952}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &930800602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,6 +767,7 @@ Transform:
   m_Children:
   - {fileID: 906624105}
   m_Father: {fileID: 0}
+  m_RootOrder: 2
 --- !u!1001 &1597442614
 Prefab:
   m_ObjectHideFlags: 0
@@ -837,6 +856,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 301848822}
+  m_RootOrder: 2
 --- !u!50 &2006039369
 Rigidbody2D:
   m_ObjectHideFlags: 0
@@ -946,6 +966,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -968,6 +989,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1009,9 +1031,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 06183c9e584cc714c9b11eb30bf7aa6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &2089380318
@@ -1046,6 +1067,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 301848822}
+  m_RootOrder: 1
 --- !u!50 &2089380320
 Rigidbody2D:
   m_ObjectHideFlags: 0
@@ -1155,6 +1177,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1177,6 +1200,7 @@ MonoBehaviour:
   m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1218,9 +1242,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 06183c9e584cc714c9b11eb30bf7aa6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &2144056002
@@ -1251,9 +1274,12 @@ MonoBehaviour:
   m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showTouchId: 1
+  showTags: 0
   texture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
   useDPI: 1
   touchSize: 1
+  fontColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!4 &2144056004
 Transform:
   m_ObjectHideFlags: 0
@@ -1265,3 +1291,4 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 1

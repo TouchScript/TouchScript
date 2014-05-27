@@ -104,6 +104,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 930800601}
+  m_RootOrder: 1
 --- !u!81 &62216954
 AudioListener:
   m_ObjectHideFlags: 0
@@ -152,8 +153,11 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
 --- !u!1 &114877645
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +186,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 930800601}
+  m_RootOrder: 2
 --- !u!23 &114877649
 Renderer:
   m_ObjectHideFlags: 0
@@ -200,9 +205,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &114877651
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -358,6 +362,7 @@ Transform:
   - {fileID: 981144893}
   - {fileID: 1736700070}
   m_Father: {fileID: 930800601}
+  m_RootOrder: 3
 --- !u!114 &532835006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,6 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -392,6 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -425,6 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -502,6 +510,7 @@ Transform:
   m_LocalScale: {x: 5, y: 2, z: 5}
   m_Children: []
   m_Father: {fileID: 1663414042}
+  m_RootOrder: 1
 --- !u!23 &597475016
 Renderer:
   m_ObjectHideFlags: 0
@@ -521,9 +530,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!65 &597475017
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -573,6 +581,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 8}
   m_Children: []
   m_Father: {fileID: 1780798434}
+  m_RootOrder: 0
 --- !u!23 &802550088
 Renderer:
   m_ObjectHideFlags: 0
@@ -592,9 +601,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &802550089
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -631,6 +639,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1324806698}
+  m_RootOrder: 0
 --- !u!114 &906624106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,7 +652,11 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnMobilePlatforms: 1
+  Tags:
+    tagList:
+    - Mouse
 --- !u!114 &906624107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,7 +669,11 @@ MonoBehaviour:
   m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnNonTouchPlatforms: 1
+  Tags:
+    tagList:
+    - Touch
 --- !u!1 &930800600
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,13 +701,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 532835005}
-  - {fileID: 1780798434}
-  - {fileID: 1663414042}
   - {fileID: 2135305920}
   - {fileID: 62216952}
   - {fileID: 114877646}
+  - {fileID: 532835005}
+  - {fileID: 1780798434}
+  - {fileID: 1663414042}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &930800602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,6 +767,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 8}
   m_Children: []
   m_Father: {fileID: 532835005}
+  m_RootOrder: 0
 --- !u!23 &981144894
 Renderer:
   m_ObjectHideFlags: 0
@@ -768,9 +787,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &981144895
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -824,6 +842,7 @@ Transform:
   m_Children:
   - {fileID: 906624105}
   m_Father: {fileID: 0}
+  m_RootOrder: 2
 --- !u!1 &1632034498
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,6 +872,7 @@ Transform:
   m_LocalScale: {x: 5, y: 2, z: 5}
   m_Children: []
   m_Father: {fileID: 1780798434}
+  m_RootOrder: 1
 --- !u!23 &1632034500
 Renderer:
   m_ObjectHideFlags: 0
@@ -872,9 +892,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!65 &1632034501
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -928,6 +947,7 @@ Transform:
   - {fileID: 1671601417}
   - {fileID: 597475015}
   m_Father: {fileID: 930800601}
+  m_RootOrder: 5
 --- !u!114 &1663414043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,6 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -962,6 +983,7 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -995,6 +1017,7 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1031,6 +1054,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 8}
   m_Children: []
   m_Father: {fileID: 1663414042}
+  m_RootOrder: 0
 --- !u!23 &1671601418
 Renderer:
   m_ObjectHideFlags: 0
@@ -1050,9 +1074,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &1671601419
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1098,9 +1121,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!65 &1736700068
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1133,6 +1155,7 @@ Transform:
   m_LocalScale: {x: 5, y: 2, z: 5}
   m_Children: []
   m_Father: {fileID: 532835005}
+  m_RootOrder: 1
 --- !u!1001 &1772227325
 Prefab:
   m_ObjectHideFlags: 0
@@ -1177,6 +1200,7 @@ Transform:
   - {fileID: 802550087}
   - {fileID: 1632034499}
   m_Father: {fileID: 930800601}
+  m_RootOrder: 4
 --- !u!114 &1780798435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1189,6 +1213,7 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1211,6 +1236,7 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1244,6 +1270,7 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1339,6 +1366,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 930800601}
+  m_RootOrder: 0
 --- !u!108 &2135305921
 Light:
   m_ObjectHideFlags: 0
@@ -1402,9 +1430,12 @@ MonoBehaviour:
   m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showTouchId: 1
+  showTags: 0
   texture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
   useDPI: 1
   touchSize: 1
+  fontColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!4 &2144056004
 Transform:
   m_ObjectHideFlags: 0
@@ -1416,3 +1447,4 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 1
