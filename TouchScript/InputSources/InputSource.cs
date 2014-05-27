@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -23,6 +24,9 @@ namespace TouchScript.InputSources
         #endregion
 
         #region Private variables
+
+        [SerializeField]
+        private bool advancedProps; // is used to save if advanced properties are opened or closed
 
         /// <summary>
         /// Reference to global touch manager.
@@ -60,25 +64,35 @@ namespace TouchScript.InputSources
 
         #region Callbacks
 
+        protected virtual int beginTouch(Vector2 position)
+        {
+            return beginTouch(position, null, null);
+        }
+
+        protected virtual int beginTouch(Vector2 position, Tags tags)
+        {
+            return beginTouch(position, tags, null);
+        }
+
         /// <summary>
         /// OnEnable touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected int beginTouch(Vector2 position)
+        protected virtual int beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return manager.BeginTouch(position);
+            return manager.BeginTouch(position, tags, properties);
         }
 
         /// <summary>
         /// End touch with id.
         /// </summary>
         /// <param name="id">Touch point id.</param>
-        protected void endTouch(int id)
+        protected virtual void endTouch(int id)
         {
             manager.EndTouch(id);
         }
@@ -88,7 +102,7 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="id">Touch id.</param>
         /// <param name="position">New screen position.</param>
-        protected void moveTouch(int id, Vector2 position)
+        protected virtual void moveTouch(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
@@ -101,7 +115,7 @@ namespace TouchScript.InputSources
         /// Cancel touch with id.
         /// </summary>
         /// <param name="id">Touch id.</param>
-        protected void cancelTouch(int id)
+        protected virtual void cancelTouch(int id)
         {
             manager.CancelTouch(id);
         }

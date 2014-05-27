@@ -24,6 +24,7 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnNonTouchPlatforms = true;
 
+        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
         #endregion
 
         #region Private variables
@@ -151,6 +152,11 @@ namespace TouchScript.InputSources
                         break;
                 }
             }
+        }
+
+        protected override int beginTouch(Vector2 position)
+        {
+            return beginTouch(position, new Tags(Tags));
         }
 
         #endregion

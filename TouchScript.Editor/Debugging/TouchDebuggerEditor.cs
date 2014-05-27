@@ -11,11 +11,13 @@ namespace TouchScript.Editor.Debugging
     {
 
         private TouchDebugger instance;
-        private SerializedProperty texture, useDPI, touchSize;
+        private SerializedProperty texture, useDPI, touchSize, showTouchId, showTags;
 
         private void OnEnable()
         {
             instance = target as TouchDebugger;
+            showTouchId = serializedObject.FindProperty("showTouchId");
+            showTags = serializedObject.FindProperty("showTags");
             texture = serializedObject.FindProperty("texture");
             useDPI = serializedObject.FindProperty("useDPI");
             touchSize = serializedObject.FindProperty("touchSize");
@@ -23,6 +25,8 @@ namespace TouchScript.Editor.Debugging
 
         public override void OnInspectorGUI()
         {
+            serializedObject.Update();
+
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(texture, new GUIContent("Touch Texture"));
             if (EditorGUI.EndChangeCheck() && Application.isPlaying)
@@ -45,6 +49,20 @@ namespace TouchScript.Editor.Debugging
                 {
                     instance.TouchSize = touchSize.floatValue;
                 }
+            }
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(showTouchId, new GUIContent("Show Touch Id"));
+            if (EditorGUI.EndChangeCheck() && Application.isPlaying)
+            {
+                instance.ShowTouchId = showTouchId.boolValue;
+            }
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(showTags, new GUIContent("Show Tags"));
+            if (EditorGUI.EndChangeCheck() && Application.isPlaying)
+            {
+                instance.ShowTags = showTags.boolValue;
             }
 
             serializedObject.ApplyModifiedProperties();

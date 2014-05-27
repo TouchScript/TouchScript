@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using UnityEngine;
@@ -43,7 +44,6 @@ namespace TouchScript
             {
                 if (isDirty)
                 {
-                    Debug.Log("!!!!!");
                     TouchManager.Instance.GetHitTarget(position, out hit);
                     isDirty = false;
                 }
@@ -59,6 +59,10 @@ namespace TouchScript
         /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
 
+        public Tags Tags { get; private set; }
+
+        public IDictionary<string, System.Object> Properties { get { return properties; } } 
+
         #endregion
 
         #region Private variables
@@ -66,6 +70,7 @@ namespace TouchScript
         private Vector2 position = Vector2.zero;
         private ITouchHit hit;
         private bool isDirty = false;
+        private Dictionary<string, System.Object> properties; 
 
         #endregion
 
@@ -74,11 +79,14 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
-        internal TouchPoint(int id, Vector2 position)
+        internal TouchPoint(int id, Vector2 position, Tags tags, IDictionary<string, object> properties)
         {
             Id = id;
             Position = position;
             PreviousPosition = position;
+
+            Tags = tags ?? new Tags();
+            this.properties = (properties == null) ? new Dictionary<string, object>() : new Dictionary<string, object>(properties);
         }
 
         #region Internal methods

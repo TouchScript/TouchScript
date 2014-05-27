@@ -99,6 +99,7 @@
     <Compile Include="Layers\FullscreenLayer.cs" />
     <Compile Include="Layers\TouchLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tags.cs" />
     <Compile Include="TouchManager.cs" />
     <Compile Include="TouchManagerInstance.cs" />
     <Compile Include="TouchPoint.cs" />

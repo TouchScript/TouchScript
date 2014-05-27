@@ -2,7 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TouchScript.Debugging
@@ -13,7 +15,20 @@ namespace TouchScript.Debugging
     [AddComponentMenu("TouchScript/Touch Debugger")]
     public class TouchDebugger : MonoBehaviour
     {
+
         #region Public properties
+
+        public bool ShowTouchId
+        {
+            get { return showTouchId; }
+            set { showTouchId = value; }
+        }
+
+        public bool ShowTags
+        {
+            get { return showTags; }
+            set { showTags = value; }
+        }
 
         /// <summary>Gets or sets the texture to use.</summary>
         public Texture2D TouchTexture
@@ -23,7 +38,7 @@ namespace TouchScript.Debugging
             {
                 texture = value;
                 update();
-            }
+            } 
         }
 
         /// <summary>Gets or sets whether <see cref="TouchDebugger"/> is using DPI to scale touch cursors.</summary>
@@ -50,20 +65,35 @@ namespace TouchScript.Debugging
             }
         }
 
+        /// <summary>Gets or sets font color for touch ids.</summary>
+        public Color FontColor
+        {
+            get { return fontColor; }
+            set { fontColor = value; }
+        }
+
         #endregion
 
         #region Private variables
 
+        [SerializeField]
+        private bool showTouchId = true;
+        [SerializeField]
+        private bool showTags = false;
         [SerializeField]
         private Texture2D texture;
         [SerializeField]
         private bool useDPI = true;
         [SerializeField]
         private float touchSize = 1f;
+        [SerializeField]
+        private Color fontColor = new Color(0, 1, 1, 1);
 
         private Dictionary<int, ITouch> dummies = new Dictionary<int, ITouch>(10);
-        private float textureDPI, scale, dpi;
-        private int width, height, halfWidth, halfHeight;
+        private Dictionary<int, string> tags = new Dictionary<int, string>(10); 
+        private float textureDPI, scale, dpi, shadowOffset;
+        private int textureWidth, textureHeight, halfTextureWidth, halfTextureHeight, xOffset, yOffset, labelWidth, labelHeight, fontSize;
+        private GUIStyle style;
 
         #endregion
 
@@ -102,13 +132,38 @@ namespace TouchScript.Debugging
         private void OnGUI()
         {
             if (TouchTexture == null) return;
+            if (style == null) style = new GUIStyle(GUI.skin.label);
             checkDPI();
+
+            style.fontSize = fontSize;
 
             foreach (KeyValuePair<int, ITouch> dummy in dummies)
             {
                 var x = dummy.Value.Position.x;
                 var y = Screen.height - dummy.Value.Position.y;
-                GUI.DrawTexture(new Rect(x - halfWidth, y - halfHeight, width, height), TouchTexture, ScaleMode.ScaleToFit);
+                GUI.DrawTexture(new Rect(x - halfTextureWidth, y - halfTextureHeight, textureWidth, textureHeight), TouchTexture, ScaleMode.ScaleToFit);
+
+                string text;
+                int id = dummy.Value.Id;
+                int line = 0;
+                if (ShowTouchId)
+                {
+                    text = "id: " + id;
+                    GUI.color = Color.black;
+                    GUI.Label(new Rect(x + xOffset + shadowOffset, y + yOffset + shadowOffset, labelWidth, labelHeight), text, style);
+                    GUI.color = fontColor;
+                    GUI.Label(new Rect(x + xOffset, y + yOffset, labelWidth, labelHeight), text, style);
+                    line++;
+                }
+
+                if (ShowTags && tags.ContainsKey(id))
+                {
+                    text = "tags: " + tags[id];
+                    GUI.color = Color.black;
+                    GUI.Label(new Rect(x + xOffset + shadowOffset, y + yOffset + fontSize * line + shadowOffset, labelWidth, labelHeight), text, style);
+                    GUI.color = fontColor;
+                    GUI.Label(new Rect(x + xOffset, y + yOffset + fontSize * line, labelWidth, labelHeight), text, style);
+                }
             }
         }
 
@@ -123,27 +178,33 @@ namespace TouchScript.Debugging
 
         private void update()
         {
-            if (!useDPI)
-            {
-                width = 32;
-                height = 32;
-                scale = 1/4f;
-                computeConsts();
-            } else
+            if (useDPI)
             {
                 dpi = TouchManager.Instance.DPI;
                 textureDPI = texture.width * TouchManager.INCH_TO_CM / touchSize;
                 scale = dpi / textureDPI;
-                width = (int)(texture.width * scale);
-                height = (int)(texture.height * scale);
+                textureWidth = (int)(texture.width * scale);
+                textureHeight = (int)(texture.height * scale);
+                computeConsts();
+            } else
+            {
+                textureWidth = 32;
+                textureHeight = 32;
+                scale = 1 / 4f;
                 computeConsts();
             }
         }
 
         private void computeConsts()
         {
-            halfWidth = width / 2;
-            halfHeight = height / 2;
+            halfTextureWidth = textureWidth / 2;
+            halfTextureHeight = textureHeight / 2;
+            xOffset = (int)(textureWidth * .35f);
+            yOffset = (int)(textureHeight * .35f);
+            fontSize = (int)(32 * scale);
+            shadowOffset = 2 * scale;
+            labelWidth = 20 * fontSize;
+            labelHeight = 2 * fontSize;
         }
 
         private void updateDummy(ITouch dummy)
@@ -160,6 +221,10 @@ namespace TouchScript.Debugging
             foreach (var touch in e.Touches)
             {
                 dummies.Add(touch.Id, touch);
+                if (touch.Tags.Count > 0)
+                {
+                    tags.Add(touch.Id, touch.Tags.ToString());
+                }
             }
         }
 

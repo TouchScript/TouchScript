@@ -28,6 +28,12 @@ namespace TouchScript.InputSources
 
         #endregion
 
+        #region Public properties
+
+        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
+
+        #endregion
+
         #region Private variables
 
         private TuioServer server;
@@ -90,7 +96,7 @@ namespace TouchScript.InputSources
             {
                 var x = cursor.X*screenWidth;
                 var y = (1 - cursor.Y)*screenHeight;
-                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y)));
+                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y), new Tags(Tags)));
             }
         }
 

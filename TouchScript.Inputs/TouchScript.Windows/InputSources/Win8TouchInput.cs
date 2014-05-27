@@ -31,6 +31,10 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        public Tags TouchTags = new Tags(Tags.INPUT_TOUCH);
+        public Tags MouseTags = new Tags(Tags.INPUT_MOUSE);
+        public Tags PenTags = new Tags(Tags.INPUT_PEN);
+
         #endregion
 
         #region Private variables
@@ -155,7 +159,20 @@ namespace TouchScript.InputSources
             switch (msg)
             {
                 case WM_POINTERDOWN:
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y)));
+                    Tags tags = null;
+                    switch (pointerInfo.pointerType)
+                    {
+                        case POINTER_INPUT_TYPE.PT_TOUCH:
+                            tags = new Tags(TouchTags);
+                            break;
+                        case POINTER_INPUT_TYPE.PT_PEN:
+                            tags = new Tags(PenTags);
+                            break;
+                        case POINTER_INPUT_TYPE.PT_MOUSE:
+                            tags = new Tags(MouseTags);
+                            break;
+                    }
+                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags));
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
