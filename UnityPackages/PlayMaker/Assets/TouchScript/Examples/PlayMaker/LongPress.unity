@@ -104,7 +104,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 930800601}
-  m_RootOrder: 4
+  m_RootOrder: 1
 --- !u!81 &62216954
 AudioListener:
   m_ObjectHideFlags: 0
@@ -186,7 +186,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 930800601}
-  m_RootOrder: 5
+  m_RootOrder: 2
 --- !u!23 &114877649
 Renderer:
   m_ObjectHideFlags: 0
@@ -290,9 +290,6 @@ Prefab:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_DeprecatedTransformRoot: {fileID: 0}
-    m_DeprecatedTransformMap: {}
-    m_DeprecatedTransformComplete: 1
   m_ParentPrefab: {fileID: 100100000, guid: f6750d3f11bc6c740b71f4a7c7d3f056, type: 2}
   m_RootGameObject: {fileID: 532835004}
   m_IsPrefabParent: 0
@@ -361,9 +358,6 @@ Prefab:
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_DeprecatedTransformRoot: {fileID: 0}
-    m_DeprecatedTransformMap: {}
-    m_DeprecatedTransformComplete: 1
   m_ParentPrefab: {fileID: 100100000, guid: f6750d3f11bc6c740b71f4a7c7d3f056, type: 2}
   m_RootGameObject: {fileID: 1663414041}
   m_IsPrefabParent: 0
@@ -400,7 +394,7 @@ Transform:
   - {fileID: 981144893}
   - {fileID: 1736700070}
   m_Father: {fileID: 930800601}
-  m_RootOrder: 0
+  m_RootOrder: 3
 --- !u!114 &532835006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,7 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -436,7 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -457,7 +451,7 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -886,9 +880,6 @@ Prefab:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_DeprecatedTransformRoot: {fileID: 0}
-    m_DeprecatedTransformMap: {}
-    m_DeprecatedTransformComplete: 1
   m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
   m_RootGameObject: {fileID: 1324806696}
   m_IsPrefabParent: 0
@@ -1064,7 +1055,11 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnMobilePlatforms: 1
+  Tags:
+    tagList:
+    - Mouse
 --- !u!114 &906624107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1077,7 +1072,11 @@ MonoBehaviour:
   m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnNonTouchPlatforms: 1
+  Tags:
+    tagList:
+    - Touch
 --- !u!1 &930800600
 GameObject:
   m_ObjectHideFlags: 0
@@ -1105,12 +1104,12 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 532835005}
-  - {fileID: 1780798434}
-  - {fileID: 1663414042}
   - {fileID: 2135305920}
   - {fileID: 62216952}
   - {fileID: 114877646}
+  - {fileID: 532835005}
+  - {fileID: 1780798434}
+  - {fileID: 1663414042}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!114 &930800602
@@ -1351,7 +1350,7 @@ Transform:
   - {fileID: 1671601417}
   - {fileID: 597475015}
   m_Father: {fileID: 930800601}
-  m_RootOrder: 2
+  m_RootOrder: 5
 --- !u!114 &1663414043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1364,7 +1363,7 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1387,7 +1386,7 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1408,7 +1407,7 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1939,9 +1938,6 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications: []
     m_RemovedComponents: []
-    m_DeprecatedTransformRoot: {fileID: 0}
-    m_DeprecatedTransformMap: {}
-    m_DeprecatedTransformComplete: 1
   m_ParentPrefab: {fileID: 100100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
   m_RootGameObject: {fileID: 2144056002}
   m_IsPrefabParent: 0
@@ -1978,7 +1974,7 @@ Transform:
   - {fileID: 802550087}
   - {fileID: 1632034499}
   m_Father: {fileID: 930800601}
-  m_RootOrder: 1
+  m_RootOrder: 4
 --- !u!114 &1780798435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1991,7 +1987,7 @@ MonoBehaviour:
   m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -2014,7 +2010,7 @@ MonoBehaviour:
   m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -2035,7 +2031,7 @@ MonoBehaviour:
   m_Script: {fileID: 438491968, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adnvacedProps: 0
+  advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -2504,9 +2500,6 @@ Prefab:
       value: 
       objectReference: {fileID: 114877645}
     m_RemovedComponents: []
-    m_DeprecatedTransformRoot: {fileID: 0}
-    m_DeprecatedTransformMap: {}
-    m_DeprecatedTransformComplete: 1
   m_ParentPrefab: {fileID: 100100000, guid: f6750d3f11bc6c740b71f4a7c7d3f056, type: 2}
   m_RootGameObject: {fileID: 1780798433}
   m_IsPrefabParent: 0
@@ -2585,7 +2578,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 930800601}
-  m_RootOrder: 3
+  m_RootOrder: 0
 --- !u!108 &2135305921
 Light:
   m_ObjectHideFlags: 0
@@ -2649,9 +2642,12 @@ MonoBehaviour:
   m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showTouchId: 1
+  showTags: 0
   texture: {fileID: 2800000, guid: f5c75ed8c6bed0f489d9003aa739aff7, type: 3}
   useDPI: 1
   touchSize: 1
+  fontColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!4 &2144056004
 Transform:
   m_ObjectHideFlags: 0
