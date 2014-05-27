@@ -17,6 +17,7 @@
 - Highly efficient and optimized.
 - Has very easy and intuitive API.
 - Uses events in C# and SendMessage in UnityScript.
+- Has PlayMaker actions.
 - Takes into account DPI differences between a large touch surface and an iPad.
 - Comes with many examples, is heavily documented with step-by-step tutorials.
 - Groups touch points into clusters on big touch surfaces.
