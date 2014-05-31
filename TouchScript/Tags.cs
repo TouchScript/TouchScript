@@ -49,6 +49,7 @@ namespace TouchScript
 
         public void AddTag(string tag)
         {
+            if (string.IsNullOrEmpty(tag)) return;
             if (tagList.Contains(tag)) return;
             tagList.Add(tag);
         }
