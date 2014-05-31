@@ -100,10 +100,10 @@ namespace TouchScript.InputSources
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
                 {
-                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
                 } else
                 {
-                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
                 }
             } else if (Input.GetMouseButton(0))
             {
@@ -132,7 +132,7 @@ namespace TouchScript.InputSources
 
         #region Protected methods
 
-        protected override int beginTouch(Vector2 position)
+        protected override ITouch beginTouch(Vector2 position)
         {
             return beginTouch(position, new Tags(Tags));
         }

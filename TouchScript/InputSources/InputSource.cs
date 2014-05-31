@@ -64,12 +64,12 @@ namespace TouchScript.InputSources
 
         #region Callbacks
 
-        protected virtual int beginTouch(Vector2 position)
+        protected virtual ITouch beginTouch(Vector2 position)
         {
             return beginTouch(position, null, null);
         }
 
-        protected virtual int beginTouch(Vector2 position, Tags tags)
+        protected virtual ITouch beginTouch(Vector2 position, Tags tags)
         {
             return beginTouch(position, tags, null);
         }
@@ -79,22 +79,13 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected virtual int beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
+        protected virtual ITouch beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
             return manager.BeginTouch(position, tags, properties);
-        }
-
-        /// <summary>
-        /// End touch with id.
-        /// </summary>
-        /// <param name="id">Touch point id.</param>
-        protected virtual void endTouch(int id)
-        {
-            manager.EndTouch(id);
         }
 
         /// <summary>
@@ -109,6 +100,15 @@ namespace TouchScript.InputSources
                 position = CoordinatesRemapper.Remap(position);
             }
             manager.MoveTouch(id, position);
+        }
+
+        /// <summary>
+        /// End touch with id.
+        /// </summary>
+        /// <param name="id">Touch point id.</param>
+        protected virtual void endTouch(int id)
+        {
+            manager.EndTouch(id);
         }
 
         /// <summary>

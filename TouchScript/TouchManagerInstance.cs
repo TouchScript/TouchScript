@@ -264,18 +264,18 @@ namespace TouchScript
             return false;
         }
 
-        public int BeginTouch(Vector2 position)
+        public ITouch BeginTouch(Vector2 position)
         {
             return BeginTouch(position, null, null);
         }
 
-        public int BeginTouch(Vector2 position, Tags tags)
+        public ITouch BeginTouch(Vector2 position, Tags tags)
         {
             return BeginTouch(position, tags, null);
         }
 
         /// <inheritdoc />
-        public int BeginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
+        public ITouch BeginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
         {
             TouchPoint touch;
             lock (touchesBegan)
@@ -283,7 +283,7 @@ namespace TouchScript
                 touch = new TouchPoint(nextTouchId++, position, tags, properties);
                 touchesBegan.Add(touch);
             }
-            return touch.Id;
+            return touch;
         }
 
         /// <inheritdoc />

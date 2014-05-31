@@ -180,7 +180,7 @@ namespace TouchScript.InputSources
                     p.Y = touch.y/100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(Tags)));
+                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(Tags)).Id);
                 } else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;

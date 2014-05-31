@@ -172,7 +172,7 @@ namespace TouchScript.InputSources
                             tags = new Tags(MouseTags);
                             break;
                     }
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags));
+                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags).Id);
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
