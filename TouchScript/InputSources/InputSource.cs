@@ -66,12 +66,7 @@ namespace TouchScript.InputSources
 
         protected virtual ITouch beginTouch(Vector2 position)
         {
-            return beginTouch(position, null, null);
-        }
-
-        protected virtual ITouch beginTouch(Vector2 position, Tags tags)
-        {
-            return beginTouch(position, tags, null);
+            return beginTouch(position, null);
         }
 
         /// <summary>
@@ -79,13 +74,13 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected virtual ITouch beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
+        protected virtual ITouch beginTouch(Vector2 position, Tags tags)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return manager.BeginTouch(position, tags, properties);
+            return manager.BeginTouch(position, tags);
         }
 
         /// <summary>

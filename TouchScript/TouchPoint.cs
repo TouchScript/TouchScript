@@ -79,14 +79,14 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
-        internal TouchPoint(int id, Vector2 position, Tags tags, IDictionary<string, object> properties)
+        internal TouchPoint(int id, Vector2 position, Tags tags)
         {
             Id = id;
             Position = position;
             PreviousPosition = position;
 
             Tags = tags ?? new Tags();
-            this.properties = (properties == null) ? new Dictionary<string, object>() : new Dictionary<string, object>(properties);
+            properties = new Dictionary<string, object>();
         }
 
         #region Internal methods

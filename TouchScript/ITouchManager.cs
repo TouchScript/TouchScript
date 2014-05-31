@@ -169,8 +169,6 @@ namespace TouchScript
 
         ITouch BeginTouch(Vector2 position, Tags tags);
 
-        ITouch BeginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties);
-
         /// <summary>
         /// Updates screen position of a touch registered with Touch Manager.
         /// <seealso cref="ITouch"/>
