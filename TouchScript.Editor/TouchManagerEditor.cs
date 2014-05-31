@@ -2,11 +2,10 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using TouchScript.Devices.Display;
-using TouchScript.Editor.Utils;
 using TouchScript.Layers;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -19,13 +18,11 @@ namespace TouchScript.Editor
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("SendMessage Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
         private static readonly GUIContent SEND_MESSAGE_EVENTS = new GUIContent("SendMessage Events", "Which events should be sent as Unity Messages.");
-        private static readonly GUIContent MOVE_DOWN = new GUIContent("v", "Move down");
-
-        private GUIStyle layerButtonStyle;
+        private static readonly GUIContent LAYERS_HEADER = new GUIContent("Touch Layers", "Sorted array of Touch Layers in the scene.");
 
         private TouchManager instance;
+        private ReorderableList layersList;
         private SerializedProperty layers, displayDevice, useSendMessage, sendMessageTarget, sendMessageEvents;
-        private bool showLayers;
 
         private void OnEnable()
         {
@@ -35,17 +32,21 @@ namespace TouchScript.Editor
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendMessageEvents = serializedObject.FindProperty("sendMessageEvents");
+
+            layersList = new ReorderableList(serializedObject, layers, true, true, false, false);
+            layersList.drawHeaderCallback += rect => GUI.Label(rect, LAYERS_HEADER);
+            layersList.drawElementCallback += (rect, index, active, focused) =>
+            {
+                rect.height = 16;
+                rect.y += 2;
+                EditorGUI.LabelField(rect, (layersList.serializedProperty.GetArrayElementAtIndex(index).objectReferenceValue as TouchLayer).Name);
+            };
+
+            refresh();
         }
 
         public override void OnInspectorGUI()
         {
-            if (layerButtonStyle == null)
-            {
-                layerButtonStyle = new GUIStyle(EditorStyles.miniButton);
-                layerButtonStyle.fontSize = 9;
-                layerButtonStyle.contentOffset = new Vector2(0, 0);
-            }
-
             serializedObject.Update();
 
             var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
@@ -81,35 +82,7 @@ namespace TouchScript.Editor
 
             if (Application.isPlaying) GUI.enabled = false;
 
-            showLayers = GUIElements.BeginFoldout(showLayers, new GUIContent(String.Format("Layers ({0})", layers.arraySize)));
-            if (showLayers)
-            {
-                EditorGUILayout.BeginVertical();
-                for (int i = 0; i < layers.arraySize; i++)
-                {
-                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
-                    string name;
-                    if (layer == null) name = "Unknown";
-                    else name = layer.Name;
-
-                    var rect = EditorGUILayout.BeginHorizontal(GUIElements.BoxStyle, GUILayout.Height(23));
-
-                    EditorGUILayout.LabelField(name, GUIElements.BoxLabelStyle, GUILayout.ExpandWidth(true));
-                    if (GUILayout.Button(MOVE_DOWN, layerButtonStyle, GUILayout.Width(20), GUILayout.Height(18)))
-                    {
-                        layers.MoveArrayElement(i, i + 1);
-                    } else if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-                    {
-                        EditorGUIUtility.PingObject(layer);
-                    }
-                    EditorGUILayout.EndHorizontal();
-                }
-                EditorGUILayout.EndVertical();
-
-                GUILayout.Space(5f);
-                if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100))) refresh();
-            }
-            GUIElements.EndFoldout();
+            layersList.DoLayoutList();
 
             GUI.enabled = true;
             serializedObject.ApplyModifiedProperties();
@@ -126,6 +99,8 @@ namespace TouchScript.Editor
                 layers.GetArrayElementAtIndex(i).objectReferenceValue = l;
                 i++;
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
