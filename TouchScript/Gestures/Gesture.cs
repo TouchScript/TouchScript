@@ -330,8 +330,10 @@ namespace TouchScript.Gestures
         private Gesture requireGestureToFail;
 
         [SerializeField]
+        // Serialized list of gestures for Unity IDE.
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
+        // List of gestures for realtime.
         private List<int> friendlyGestureIds = new List<int>();
 
         private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
@@ -743,15 +745,30 @@ namespace TouchScript.Gestures
 
         private void registerFriendlyGesture(Gesture gesture)
         {
-            if (gesture == null || gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+            if (gesture == null || gesture == this) return;
 
-            friendlyGestureIds.Add(gesture.GetInstanceID());
+            addFriendlyGestureId(gesture);
+            if (!friendlyGestures.Contains(gesture)) friendlyGestures.Add(gesture);
+        }
+
+        // Gets also called by the custom inspector.
+        private void addFriendlyGestureId(Gesture gesture)
+        {
+            var id = gesture.GetInstanceID();
+            if (!friendlyGestureIds.Contains(id)) friendlyGestureIds.Add(id);
         }
 
         private void unregisterFriendlyGesture(Gesture gesture)
         {
-            if (gesture == null || gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+            if (gesture == null || gesture == this) return;
 
+            removeFriendlyGestureId(gesture);
+            friendlyGestures.Remove(gesture);
+        }
+
+        // Gets also called by the custom inspector.
+        private void removeFriendlyGestureId(Gesture gesture)
+        {
             friendlyGestureIds.Remove(gesture.GetInstanceID());
         }
 
