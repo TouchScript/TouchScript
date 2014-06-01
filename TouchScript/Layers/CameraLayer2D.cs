@@ -36,6 +36,18 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
+        protected override void updateCamera()
+        {
+            base.updateCamera();
+            if (_camera == null) _camera = Camera.main;
+            if (_camera == null)
+            {
+                Debug.LogError("No camera detected for CameraLayer2D at " + name + ".");
+                enabled = false;
+            }
+        }
+
+        /// <inheritdoc />
         protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
         {
             hit = null;

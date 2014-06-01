@@ -4,6 +4,7 @@
 
 using System;
 using TouchScript.Hit;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -71,13 +72,7 @@ namespace TouchScript.Layers
         /// </summary>
         public String Name;
 
-        /// <summary>
-        /// Gets the camera a touch layer is using. Null if layer doesn't support cameras.
-        /// </summary>
-        public virtual Camera Camera
-        {
-            get { return null; }
-        }
+        public virtual Vector3 WorldProjectionNormal { get { return transform.forward; } }
 
         #endregion
 
@@ -94,6 +89,11 @@ namespace TouchScript.Layers
             hit = null;
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             return LayerHitResult.Error;
+        }
+
+        public virtual Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        {
+            return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
         }
 
         #endregion
