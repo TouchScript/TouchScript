@@ -118,10 +118,10 @@ namespace TouchScript.Gestures.Simple
 
             var oldScreenPos1 = getPointPreviousScreenPosition(0);
             var oldScreenPos2 = getPointPreviousScreenPosition(1);
-            var oldWorldPos1 = ProjectionUtils.CameraToPlaneProjection(oldScreenPos1, projectionCamera, WorldTransformPlane);
-            var oldWorldPos2 = ProjectionUtils.CameraToPlaneProjection(oldScreenPos2, projectionCamera, WorldTransformPlane);
-            var newWorldPos1 = ProjectionUtils.CameraToPlaneProjection(newScreenPos1, projectionCamera, WorldTransformPlane);
-            var newWorldPos2 = ProjectionUtils.CameraToPlaneProjection(newScreenPos2, projectionCamera, WorldTransformPlane);
+            var oldWorldPos1 = projectionLayer.ProjectTo(oldScreenPos1, WorldTransformPlane);
+            var oldWorldPos2 = projectionLayer.ProjectTo(oldScreenPos2, WorldTransformPlane);
+            var newWorldPos1 = projectionLayer.ProjectTo(newScreenPos1, WorldTransformPlane);
+            var newWorldPos2 = projectionLayer.ProjectTo(newScreenPos2, WorldTransformPlane);
             var newVector = newWorldPos2 - newWorldPos1;
 
             Vector2 oldScreenCenter = (oldScreenPos1 + oldScreenPos2) * .5f;
@@ -143,12 +143,12 @@ namespace TouchScript.Gestures.Simple
                     var oldScreenDirection = (oldScreenPos2 - oldScreenPos1).normalized;
                     var startScale = (newScreenDistance - scalingBuffer)*.5f;
                     var startVector = oldScreenDirection*startScale;
-                    deltaScale = newVector.magnitude/(ProjectionUtils.CameraToPlaneProjection(oldScreenCenter + startVector, projectionCamera, WorldTransformPlane) - ProjectionUtils.CameraToPlaneProjection(oldScreenCenter - startVector, projectionCamera, WorldTransformPlane)).magnitude;
+                    deltaScale = newVector.magnitude / (projectionLayer.ProjectTo(oldScreenCenter + startVector, WorldTransformPlane) - projectionLayer.ProjectTo(oldScreenCenter - startVector, WorldTransformPlane)).magnitude;
                 }
             }
 
-            oldWorldCenter = ProjectionUtils.CameraToPlaneProjection(oldScreenCenter, projectionCamera, WorldTransformPlane);
-            newWorldCenter = ProjectionUtils.CameraToPlaneProjection(newScreenCenter, projectionCamera, WorldTransformPlane);
+            oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter, WorldTransformPlane);
+            newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
 
             if (Mathf.Abs(deltaScale - 1f) > 0.00001)
             {

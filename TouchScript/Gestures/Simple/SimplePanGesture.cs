@@ -143,8 +143,8 @@ namespace TouchScript.Gestures.Simple
 
             if (isMoving)
             {
-                oldWorldCenter = ProjectionUtils.CameraToPlaneProjection(oldScreenCenter, projectionCamera, WorldTransformPlane);
-                newWorldCenter = ProjectionUtils.CameraToPlaneProjection(newScreenCenter, projectionCamera, WorldTransformPlane);
+                oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter, WorldTransformPlane);
+                newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
                 worldDelta = newWorldCenter - oldWorldCenter;
             } else
             {
@@ -153,12 +153,12 @@ namespace TouchScript.Gestures.Simple
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold)
                 {
                     isMoving = true;
-                    oldWorldCenter = ProjectionUtils.CameraToPlaneProjection(oldScreenCenter - movementBuffer, projectionCamera, WorldTransformPlane);
-                    newWorldCenter = ProjectionUtils.CameraToPlaneProjection(newScreenCenter, projectionCamera, WorldTransformPlane);
+                    oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter - movementBuffer, WorldTransformPlane);
+                    newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
                     worldDelta = newWorldCenter - oldWorldCenter;
                 } else
                 {
-                    newWorldCenter = ProjectionUtils.CameraToPlaneProjection(newScreenCenter - movementBuffer, projectionCamera, WorldTransformPlane);
+                    newWorldCenter = projectionLayer.ProjectTo(newScreenCenter - movementBuffer, WorldTransformPlane);
                     oldWorldCenter = newWorldCenter;
                 }
             }

@@ -30,7 +30,7 @@ namespace TouchScript.Editor.Gestures.Simple
             serializedObject.UpdateIfDirtyOrScript();
 
             EditorGUILayout.PropertyField(projection, PROJECTION);
-            if (projection.enumValueIndex != (int)Transform2DGestureBase.ProjectionType.Camera)
+            if (projection.enumValueIndex != (int)Transform2DGestureBase.ProjectionType.Layer)
             {
                 EditorGUILayout.PropertyField(projectionNormal, PROJECTION_NORMAL);
             }
