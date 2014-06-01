@@ -5,19 +5,21 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Examples.unity
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Basic.unity
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Advanced.unity
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Basic 2D.unity
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Flick.unity
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Input.unity
-  - enabled: 0
-    path: Assets/TouchScript/Examples/General/Hit Test.unity
   - enabled: 1
     path: Assets/TouchScript/Examples/General/Tap.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Pan.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/LongPress.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Friendly Gestures.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Hierarchy.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/2D - Double Tap.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Hit Test.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Input.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Layers.unity
