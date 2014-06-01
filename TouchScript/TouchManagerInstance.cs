@@ -436,7 +436,7 @@ namespace TouchScript
                 {
                     case RuntimePlatform.IPhonePlayer:
                     case RuntimePlatform.Android:
-                    case RuntimePlatform.BB10Player:
+                    case RuntimePlatform.BlackBerryPlayer:
                     case RuntimePlatform.MetroPlayerARM:
                     case RuntimePlatform.MetroPlayerX64:
                     case RuntimePlatform.MetroPlayerX86:
