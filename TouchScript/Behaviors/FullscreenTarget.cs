@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using UnityEngine;
 
 namespace TouchScript.Behaviors
@@ -12,7 +13,7 @@ namespace TouchScript.Behaviors
     /// <remarks>
     /// Creates a fullscreen collider and changes its parameters dynamically with Camera it is attached to. Can be either at far clipping plane or near clipping plane of the Camera.
     /// </remarks>
-    [AddComponentMenu("TouchScript/Behaviors/Fullscreen Target")]
+    [Obsolete("FullscreenTarget is obsolete. Please use FullscreenLayer instead.")]
     [ExecuteInEditMode]
     [RequireComponent(typeof(BoxCollider))]
     [RequireComponent(typeof(Camera))]
@@ -40,6 +41,11 @@ namespace TouchScript.Behaviors
         #endregion
 
         #region Unity methods
+
+        private void Awake()
+        {
+            Debug.LogWarning("FullscreenTarget is obsolete. Please use FullscreenLayer instead.");
+        }
 
         private void Update()
         {
