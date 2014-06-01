@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Layers
 {
-    [CustomEditor(typeof(CameraLayer2D))]
+    [CustomEditor(typeof(FullscreenLayer))]
     internal sealed class FullscreenLayerEditor : UnityEditor.Editor
     {
 
