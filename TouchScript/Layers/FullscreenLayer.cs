@@ -46,6 +46,7 @@ namespace TouchScript.Layers
                 _camera = value;
                 if (_camera == null) Type = LayerType.Global;
                 else Type = LayerType.Camera;
+                setName();
             }
         }
 
@@ -127,7 +128,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void setName()
         {
-            if (_camera == null || _camera == Camera.main) Name = "Global Fullscreen";
+            if (_camera == null) Name = "Global Fullscreen"; 
             else Name = "Fullscreen @ " + _camera.name;
         }
 
@@ -147,6 +148,7 @@ namespace TouchScript.Layers
                     if (_camera == null) Debug.LogError("No Main camera found!");
                     break;
             }
+            setName();
         }
 
         private void cacheCameraTransform()

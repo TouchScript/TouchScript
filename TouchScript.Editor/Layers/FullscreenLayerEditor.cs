@@ -32,7 +32,6 @@ namespace TouchScript.Editor.Layers
             if (EditorGUI.EndChangeCheck())
             {
                 instance.Type = (FullscreenLayer.LayerType)type.enumValueIndex;
-                serializedObject.ApplyModifiedProperties();
             }
 
             if (type.enumValueIndex == (int)FullscreenLayer.LayerType.Camera)
@@ -44,8 +43,6 @@ namespace TouchScript.Editor.Layers
                     instance.Camera = camera.objectReferenceValue as Camera;
                 }
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

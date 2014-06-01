@@ -2,6 +2,8 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
 using UnityEditor;
@@ -33,16 +35,23 @@ namespace TouchScript.Editor
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendMessageEvents = serializedObject.FindProperty("sendMessageEvents");
 
+            refresh();
+
             layersList = new ReorderableList(serializedObject, layers, true, true, false, false);
             layersList.drawHeaderCallback += rect => GUI.Label(rect, LAYERS_HEADER);
             layersList.drawElementCallback += (rect, index, active, focused) =>
             {
                 rect.height = 16;
                 rect.y += 2;
-                EditorGUI.LabelField(rect, (layersList.serializedProperty.GetArrayElementAtIndex(index).objectReferenceValue as TouchLayer).Name);
+                if (index >= layers.arraySize) return;
+                var layer = layers.GetArrayElementAtIndex(index).objectReferenceValue as TouchLayer;
+                if (layer == null)
+                {
+                    EditorGUI.LabelField(rect, "null");
+                    return;
+                }
+                EditorGUI.LabelField(rect, layer.Name);
             };
-
-            refresh();
         }
 
         public override void OnInspectorGUI()
@@ -90,14 +99,26 @@ namespace TouchScript.Editor
 
         private void refresh()
         {
-            layers.ClearArray();
-            Object[] allLayers = FindObjectsOfType(typeof(TouchLayer));
-            int i = 0;
-            layers.arraySize = allLayers.Length;
-            foreach (TouchLayer l in allLayers)
+            var allLayers = FindObjectsOfType(typeof(TouchLayer)).Cast<TouchLayer>().ToList();
+            var toRemove = new List<int>();
+            for (var i = 0; i < layers.arraySize; i++)
             {
-                layers.GetArrayElementAtIndex(i).objectReferenceValue = l;
-                i++;
+                var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
+                if (layer == null || allLayers.IndexOf(layer) == -1) toRemove.Add(i);
+                else allLayers.Remove(layer);
+            }
+
+            for (var i = toRemove.Count - 1; i >= 0; i--)
+            {
+                var index = toRemove[i];
+                layers.GetArrayElementAtIndex(index).objectReferenceValue = null;
+                layers.DeleteArrayElementAtIndex(index);
+            }
+
+            for (var i = 0; i < allLayers.Count; i++)
+            {
+                layers.arraySize++;
+                layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = allLayers[i];
             }
 
             serializedObject.ApplyModifiedProperties();
