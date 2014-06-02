@@ -401,17 +401,21 @@ namespace TouchScript
 
         private void updateLayers()
         {
-            layers = layers.FindAll(l => l != null); // filter empty ones
-            var unknownLayers = FindObjectsOfType(typeof(TouchLayer));
-            foreach (TouchLayer unknownLayer in unknownLayers) AddLayer(unknownLayer);
+            // filter empty layers
+            layers = layers.FindAll(l => l != null); 
         }
 
         private void createCameraLayer()
         {
             if (layers.Count == 0)
             {
-                Debug.Log("No camera layers. Adding one for the main camera.");
-                if (Camera.main != null) Camera.main.gameObject.AddComponent<CameraLayer>();
+                Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
+                if (Camera.main != null)
+                {
+                    var layer = Camera.main.GetComponent<TouchLayer>();
+                    if (layer == null) layer = Camera.main.gameObject.AddComponent<CameraLayer>();
+                    AddLayer(layer);
+                }
             }
         }
 

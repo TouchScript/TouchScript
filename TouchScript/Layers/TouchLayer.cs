@@ -106,7 +106,6 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.AddLayer(this);
         }
 
         /// <summary>
