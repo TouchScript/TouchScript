@@ -8,16 +8,33 @@ using UnityEngine;
 
 namespace TouchScript.Layers
 {
+    /// <summary>
+    /// Layer which gets all input from a camera. Should be used instead of a background object getting all the touches which come through.
+    /// </summary>
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
     public sealed class FullscreenLayer : TouchLayer
     {
 
         #region Constants
 
+        /// <summary>
+        /// The type of FullscreenLayer.
+        /// </summary>
         public enum LayerType
         {
+            /// <summary>
+            /// Get touches from main camera.
+            /// </summary>
             MainCamera,
+
+            /// <summary>
+            /// Get touches from specific camera.
+            /// </summary>
             Camera,
+
+            /// <summary>
+            /// Get all touches on Z=0 plane without a camera.
+            /// </summary>
             Global
         }
 
@@ -25,6 +42,9 @@ namespace TouchScript.Layers
 
         #region Public properties
 
+        /// <summary>
+        /// Layer type.
+        /// </summary>
         public LayerType Type
         {
             get { return type; }
@@ -37,6 +57,9 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <summary>
+        /// Target camera if <see cref="LayerType.Camera"/> or <see cref="LayerType.MainCamera"/> is used.
+        /// </summary>
         public Camera Camera
         {
             get { return _camera; }
@@ -99,6 +122,7 @@ namespace TouchScript.Layers
             return LayerHitResult.Hit;
         }
 
+        /// <inheritdoc />
         public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
             if (_camera == null) return base.ProjectTo(screenPosition, projectionPlane);
@@ -109,6 +133,7 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             updateCamera();

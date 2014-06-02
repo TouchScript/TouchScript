@@ -25,8 +25,10 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
+        #pragma warning disable 0169
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
+        #pragma warning restore 0169
 
         /// <summary>
         /// Reference to global touch manager.
@@ -64,20 +66,33 @@ namespace TouchScript.InputSources
 
         #region Callbacks
 
+        /// <summary>
+        /// Begin touch in given screen position.
+        /// </summary>
+        /// <param name="position">Screen position.</param>
+        /// <returns>Internal touch id.</returns>
         protected virtual int beginTouch(Vector2 position)
         {
             return beginTouch(position, null, null);
         }
 
+        /// <summary>
+        /// Begin touch in given screen position.
+        /// </summary>
+        /// <param name="position">Screen position.</param>
+        /// <param name="tags">Initial tags.</param>
+        /// <returns>Internal touch id.</returns>
         protected virtual int beginTouch(Vector2 position, Tags tags)
         {
             return beginTouch(position, tags, null);
         }
 
         /// <summary>
-        /// OnEnable touch in given screen position.
+        /// Begin touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
+        /// <param name="tags">Initial tags.</param>
+        /// <param name="properties">Initial properties.</param>
         /// <returns>Internal touch id.</returns>
         protected virtual int beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
         {

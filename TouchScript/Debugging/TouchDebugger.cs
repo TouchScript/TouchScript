@@ -2,9 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace TouchScript.Debugging
@@ -18,12 +16,18 @@ namespace TouchScript.Debugging
 
         #region Public properties
 
+        /// <summary>
+        /// Show touch id near touch circles.
+        /// </summary>
         public bool ShowTouchId
         {
             get { return showTouchId; }
             set { showTouchId = value; }
         }
 
+        /// <summary>
+        /// Show tag list near touch circles.
+        /// </summary>
         public bool ShowTags
         {
             get { return showTags; }

@@ -304,8 +304,10 @@ namespace TouchScript.Gestures
         /// </summary>
         protected List<ITouch> activeTouches = new List<ITouch>();
 
+        #pragma warning disable 0169
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
+        #pragma warning restore 0169
 
         [SerializeField]
         [ToggleLeft]
@@ -370,6 +372,11 @@ namespace TouchScript.Gestures
             gesture.registerFriendlyGesture(this);
         }
 
+        /// <summary>
+        /// Checks if a gesture is friendly with this gesture.
+        /// </summary>
+        /// <param name="gesture">A gesture to check.</param>
+        /// <returns>True if gestures are friendly; false otherwise.</returns>
         public bool IsFriendly(Gesture gesture)
         {
             return friendlyGestureIds.Contains(gesture.GetInstanceID());

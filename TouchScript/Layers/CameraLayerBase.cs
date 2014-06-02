@@ -43,6 +43,9 @@ namespace TouchScript.Layers
         [SerializeField]
         private LayerMask layerMask = -1;
 
+        /// <summary>
+        /// Camera.
+        /// </summary>
         protected Camera _camera;
 
         #endregion
@@ -62,6 +65,7 @@ namespace TouchScript.Layers
             return castRay(ray, out hit);
         }
 
+        /// <inheritdoc />
         public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
             return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
@@ -71,6 +75,7 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             updateCamera();
@@ -88,6 +93,9 @@ namespace TouchScript.Layers
             if (String.IsNullOrEmpty(Name) && _camera != null) Name = _camera.name;
         }
 
+        /// <summary>
+        /// Finds a camera.
+        /// </summary>
         protected virtual void updateCamera()
         {
             _camera = camera;

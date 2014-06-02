@@ -104,6 +104,9 @@ namespace TouchScript.Gestures.Simple
 
         private Collider cachedCollider;
 
+        /// <summary>
+        /// Touch layer used in projection.
+        /// </summary>
         protected TouchLayer projectionLayer;
 
         /// <summary>

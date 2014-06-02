@@ -167,8 +167,23 @@ namespace TouchScript
         /// <returns>Internal id of the new touch.</returns>
         int BeginTouch(Vector2 position);
 
+        /// <summary>
+        /// Registers a touch with global Touch Manager.
+        /// <seealso cref="ITouch"/>
+        /// </summary>
+        /// <param name="position">Screen position of the touch.</param>
+        /// <param name="tags">Initial tags.</param>
+        /// <returns>Internal id of the new touch.</returns>
         int BeginTouch(Vector2 position, Tags tags);
 
+        /// <summary>
+        /// Registers a touch with global Touch Manager.
+        /// <seealso cref="ITouch"/>
+        /// </summary>
+        /// <param name="position">Screen position of the touch.</param>
+        /// <param name="tags">Initial tags.</param>
+        /// <param name="properties">Initial properties.</param>
+        /// <returns>Internal id of the new touch.</returns>
         int BeginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties);
 
         /// <summary>

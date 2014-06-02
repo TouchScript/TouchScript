@@ -264,11 +264,13 @@ namespace TouchScript
             return false;
         }
 
+        /// <inheritdoc />
         public int BeginTouch(Vector2 position)
         {
             return BeginTouch(position, null, null);
         }
 
+        /// <inheritdoc />
         public int BeginTouch(Vector2 position, Tags tags)
         {
             return BeginTouch(position, tags, null);
