@@ -20,7 +20,7 @@ for i in $(ls -d */); do
 			toExport=$exportFolders
 		fi
 		"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage $toExport "$folder\\_AssetStore\\Assets\\TouchScript\\Packages\\$name.unitypackage" -quit
-		"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage Assets/TouchScript/Examples "$folder\\_AssetStore\\Assets\\TouchScript\\Examples\\$name.Examples.unitypackage" -quit
+		"/c/Program Files (x86)/Unity/Editor/Unity.exe" -batchmode -projectPath "$folder\\$name" -exportPackage $toExport Assets/TouchScript/Examples "$folder\\_AssetStore\\Assets\\TouchScript\\Examples\\$name.Examples.unitypackage" -quit
 	fi
 done
 
