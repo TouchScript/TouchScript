@@ -79,6 +79,7 @@
     <Compile Include="Hit\ITouchHit.cs" />
     <Compile Include="Hit\ITouchHit2D.cs" />
     <Compile Include="Hit\ITouchHit3D.cs" />
+    <Compile Include="Hit\ITouchHitFactory.cs" />
     <Compile Include="Hit\TouchHit.cs" />
     <Compile Include="Hit\TouchHit2D.cs" />
     <Compile Include="Hit\TouchHit3D.cs" />
