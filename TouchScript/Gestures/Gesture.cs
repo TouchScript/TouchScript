@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TouchScript.Hit;
 using TouchScript.Layers;
@@ -273,7 +274,7 @@ namespace TouchScript.Gestures
         /// <value>The list of touches owned by this gesture.</value>
         public IList<ITouch> ActiveTouches
         {
-            get { return activeTouches.AsReadOnly(); }
+            get { return new ReadOnlyCollection<ITouch>(activeTouches); }
         }
 
         /// <summary>

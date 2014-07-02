@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace TouchScript
@@ -47,7 +48,7 @@ namespace TouchScript
         /// <summary>
         /// List of tags.
         /// </summary>
-        public ICollection<string> TagList { get { return tagList.AsReadOnly(); }}
+        public ICollection<string> TagList { get { return new ReadOnlyCollection<string>(tagList); } }
 
         /// <summary>
         /// Number of tags in this collection.

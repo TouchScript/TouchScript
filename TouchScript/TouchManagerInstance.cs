@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Hit;
@@ -130,7 +131,7 @@ namespace TouchScript
         /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
-            get { return layers.AsReadOnly(); }
+            get { return new ReadOnlyCollection<TouchLayer>(layers); }
         }
 
         /// <inheritdoc />
