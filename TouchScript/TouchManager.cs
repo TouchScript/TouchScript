@@ -4,12 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+[assembly: InternalsVisibleTo("TouchScript.Windows")]
 namespace TouchScript
 {
     /// <summary>

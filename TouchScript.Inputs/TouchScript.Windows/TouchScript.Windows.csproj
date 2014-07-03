@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="InputSources\Win7TouchInput.cs" />
     <Compile Include="InputSources\Win8TouchInput.cs" />
+    <Compile Include="InputSources\WindowsInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
