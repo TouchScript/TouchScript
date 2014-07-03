@@ -129,7 +129,8 @@ namespace TouchScript.Gestures.Simple
 
             if (isScaling)
             {
-                deltaScale = newVector.magnitude/Vector3.Distance(oldWorldPos2, oldWorldPos1);
+                var distance = Vector3.Distance(oldWorldPos2, oldWorldPos1);
+                deltaScale = distance > 0 ? newVector.magnitude/distance : 1;
             } else
             {
                 var oldScreenDistance = Vector2.Distance(oldScreenPos1, oldScreenPos2);
