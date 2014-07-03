@@ -30,8 +30,8 @@ for i in $(ls -d */); do
 		fi
 
 		package="$folder/_AssetStore/Assets/TouchScript/Packages/$name.unitypackage"
-		$unityPath -batchmode -projectPath "$folder/$name" -exportPackage $toExport $package -quit
-		$unityPath -batchmode -projectPath "$folder/$name" -exportPackage $toExport Assets/TouchScript/Examples "$folder/_AssetStore/Assets/TouchScript/Examples/$name.Examples.unitypackage" -quit
+		"$unityPath" -batchmode -projectPath "$folder/$name" -exportPackage $toExport $package -quit
+		"$unityPath" -batchmode -projectPath "$folder/$name" -exportPackage $toExport Assets/TouchScript/Examples "$folder/_AssetStore/Assets/TouchScript/Examples/$name.Examples.unitypackage" -quit
 		if [ ! -f $package ]; then
 			printf "\e[31mFailed to build package!\e[39m\n"
 		fi
@@ -39,4 +39,4 @@ for i in $(ls -d */); do
 done
 
 printf "\e[32mBuilding $folder/TouchScript.unitypackage.\e[39m\n" 
-$unityPath -batchmode -projectPath "$folder/_AssetStore" -exportPackage Assets/TouchScript "$folder/TouchScript.unitypackage" -quit
+"$unityPath" -batchmode -projectPath "$folder/_AssetStore" -exportPackage Assets/TouchScript "$folder/TouchScript.unitypackage" -quit
