@@ -4,7 +4,7 @@
 
 **TouchScript** is a multitouch library for Unity. Inspired by iOS, **TouchScript** makes handling complex gesture interactions on any touch surface much easier. 
 
-> Warning! [Please read before upgrading](https://github.com/InteractiveLab/TouchScript/wiki/Upgrading).
+> Warning! [Please read before upgrading](https://github.com/InteractiveLab/TouchScript/wiki/Upgrading).  
 > Please ask all questions on [the Forum](http://touchprefab.com/index.php).
 
 ## Features
