@@ -102,7 +102,7 @@ namespace TouchScript.Layers
 
         private void sortHits(RaycastHit[] hits)
         {
-            var cameraPos = camera.transform.position;
+            var cameraPos = _camera.transform.position;
             sortedHits.Clear();
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>
