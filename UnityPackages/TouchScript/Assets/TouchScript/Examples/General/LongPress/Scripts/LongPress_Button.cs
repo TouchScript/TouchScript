@@ -9,7 +9,7 @@ public class LongPress_Button : MonoBehaviour
 
     private Transform button, thebase;
     private float timeToPress;
-    private Vector3 startScale, targetScale;
+    private Vector3 startPosition, startScale, targetScale;
 
     private void Awake()
     {
@@ -17,6 +17,7 @@ public class LongPress_Button : MonoBehaviour
         thebase = transform.FindChild("Base");
         startScale = button.localScale;
         targetScale = thebase.localScale;
+		startPosition = button.localPosition;
     }
 
     private void OnEnable()
@@ -37,12 +38,12 @@ public class LongPress_Button : MonoBehaviour
 
     private void press()
     {
-        button.transform.localPosition = new Vector3(0, -button.transform.localScale.y*.4f, 0);
+        button.transform.localPosition = startPosition - new Vector3(0, button.transform.localScale.y*.8f, 0);
     }
 
     private void release()
     {
-        button.transform.localPosition = new Vector3(0, 0, 0);
+		button.transform.localPosition = startPosition;
     }
 
     private void reset()
