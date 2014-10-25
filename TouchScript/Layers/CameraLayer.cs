@@ -18,18 +18,9 @@ namespace TouchScript.Layers
 
         private List<RaycastHit> sortedHits;
 
-        private Transform cachedTransform;
-
         #endregion
 
         #region Unity methods
-
-        /// <inheritdoc />
-        protected override void Awake()
-        {
-            base.Awake();
-            cachedTransform = GetComponent<Transform>();
-        }
 
         private void OnEnable()
         {

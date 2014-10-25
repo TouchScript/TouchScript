@@ -32,7 +32,7 @@ namespace TouchScript.Layers
             get
             {
                 if (_camera == null) return Vector3.forward;
-                return _camera.transform.forward;
+                return cachedTransform.forward;
             }
         }
 
@@ -44,9 +44,14 @@ namespace TouchScript.Layers
         private LayerMask layerMask = -1;
 
         /// <summary>
-        /// Camera.
+        /// Camera component.
         /// </summary>
         protected Camera _camera;
+
+        /// <summary>
+        /// Cached transform component.
+        /// </summary>
+        protected Transform cachedTransform;
 
         #endregion
 
@@ -78,6 +83,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void Awake()
         {
+            cachedTransform = GetComponent<Transform>();
             updateCamera();
 
             base.Awake();
@@ -98,8 +104,7 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void updateCamera()
         {
-            _camera = GetComponent<Camera>();
-            if (_camera == null) _camera = Camera.main;
+            _camera = GetComponent<Camera>() ?? Camera.main;
             if (_camera != null) return;
             Debug.LogError("No Camera found for CameraLayer '" + name + "'.");
             enabled = false;
