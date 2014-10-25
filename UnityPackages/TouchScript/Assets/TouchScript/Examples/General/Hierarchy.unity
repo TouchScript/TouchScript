@@ -169,6 +169,30 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: .100000001
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
   m_RootGameObject: {fileID: 1477029794}
@@ -483,6 +507,42 @@ Prefab:
     - target: {fileID: 11400014, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
       propertyPath: MaxHeight
       value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6500000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
@@ -946,6 +1006,30 @@ Prefab:
       propertyPath: MaxHeight
       value: .5
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6500000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
     - {fileID: 3300000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
@@ -1054,6 +1138,7 @@ MonoBehaviour:
   - {fileID: 578079242}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   rotationThreshold: 1
 --- !u!114 &578079242
@@ -1080,6 +1165,7 @@ MonoBehaviour:
   - {fileID: 578079241}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   scalingThreshold: .200000003
 --- !u!114 &578079243
@@ -1106,6 +1192,7 @@ MonoBehaviour:
   - {fileID: 578079241}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .400000006
 --- !u!114 &578079244
 MonoBehaviour:
@@ -1257,6 +1344,30 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: .100000001
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
   m_RootGameObject: {fileID: 2108837776}
@@ -1365,6 +1476,30 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: .100000001
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
   m_RootGameObject: {fileID: 1369919437}
@@ -1430,6 +1565,7 @@ MonoBehaviour:
   - {fileID: 680407628}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   rotationThreshold: 1
 --- !u!114 &680407628
@@ -1456,6 +1592,7 @@ MonoBehaviour:
   - {fileID: 680407627}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   scalingThreshold: .200000003
 --- !u!114 &680407629
@@ -1482,6 +1619,7 @@ MonoBehaviour:
   - {fileID: 680407627}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .400000006
 --- !u!114 &680407630
 MonoBehaviour:
@@ -2011,6 +2149,7 @@ MonoBehaviour:
   - {fileID: 957147039}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   rotationThreshold: 2
 --- !u!114 &957147039
@@ -2037,6 +2176,7 @@ MonoBehaviour:
   - {fileID: 957147038}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   scalingThreshold: .300000012
 --- !u!114 &957147040
@@ -2063,6 +2203,7 @@ MonoBehaviour:
   - {fileID: 957147038}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!114 &957147041
 MonoBehaviour:
@@ -2123,6 +2264,7 @@ MonoBehaviour:
   - {fileID: 1081393829}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   rotationThreshold: 1
 --- !u!114 &1081393829
@@ -2149,6 +2291,7 @@ MonoBehaviour:
   - {fileID: 1081393828}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   scalingThreshold: .200000003
 --- !u!114 &1081393830
@@ -2175,6 +2318,7 @@ MonoBehaviour:
   - {fileID: 1081393828}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .400000006
 --- !u!114 &1081393831
 MonoBehaviour:
@@ -2524,6 +2668,7 @@ MonoBehaviour:
   - {fileID: 1341906191}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   rotationThreshold: 2
 --- !u!114 &1341906191
@@ -2550,6 +2695,7 @@ MonoBehaviour:
   - {fileID: 1341906190}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   scalingThreshold: .300000012
 --- !u!114 &1341906192
@@ -2576,6 +2722,7 @@ MonoBehaviour:
   - {fileID: 1341906190}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!114 &1341906193
 MonoBehaviour:
@@ -2898,6 +3045,30 @@ Prefab:
       propertyPath: MaxHeight
       value: .5
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6500000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
     - {fileID: 3300000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
@@ -3209,6 +3380,7 @@ MonoBehaviour:
   - {fileID: 1759334841}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   rotationThreshold: 2
 --- !u!114 &1759334841
@@ -3235,6 +3407,7 @@ MonoBehaviour:
   - {fileID: 1759334840}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   minPointsDistance: .5
   scalingThreshold: .300000012
 --- !u!114 &1759334842
@@ -3261,6 +3434,7 @@ MonoBehaviour:
   - {fileID: 1759334840}
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!114 &1759334846
 MonoBehaviour:

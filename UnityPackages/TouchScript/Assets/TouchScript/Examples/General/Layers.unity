@@ -121,6 +121,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c3e915c7ec2e6584fa72aac950d75420, type: 2}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
   m_RootGameObject: {fileID: 765421284}
@@ -325,6 +333,14 @@ Prefab:
     - target: {fileID: 400000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
@@ -642,6 +658,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 1}
+  localProjectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5
 --- !u!1 &727775544
 GameObject:
@@ -766,6 +783,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &765421288
 Renderer:
@@ -924,6 +942,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &838357731
 Renderer:
@@ -1153,6 +1172,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c3e915c7ec2e6584fa72aac950d75420, type: 2}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
   m_RootGameObject: {fileID: 1335755584}
@@ -1225,6 +1252,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &1018515709
 Renderer:
@@ -1436,6 +1464,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &1060878728
 Renderer:
@@ -1526,6 +1555,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c3e915c7ec2e6584fa72aac950d75420, type: 2}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
   m_RootGameObject: {fileID: 1060878724}
@@ -1578,6 +1615,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c3e915c7ec2e6584fa72aac950d75420, type: 2}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
   m_RootGameObject: {fileID: 838357727}
@@ -1701,6 +1746,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &1335755588
 Renderer:
@@ -1786,6 +1832,14 @@ Prefab:
     - target: {fileID: 400000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
@@ -1960,6 +2014,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &1487266978
 Renderer:
@@ -2114,6 +2169,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &1568546696
 Renderer:
@@ -2272,6 +2328,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
+  localProjectionNormal: {x: 0, y: 1, z: 0}
   movementThreshold: .5
 --- !u!23 &1612922369
 Renderer:
@@ -2433,6 +2490,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
   m_RootGameObject: {fileID: 1612922365}
@@ -2480,6 +2545,14 @@ Prefab:
     - target: {fileID: 400000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
+      propertyPath: localProjectionNormal.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15510aa885158f4e98f21bce3ca819b, type: 2}
@@ -2644,6 +2717,7 @@ MonoBehaviour:
   friendlyGestures: []
   projection: 0
   projectionNormal: {x: 0, y: 0, z: 1}
+  localProjectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5
 --- !u!1 &2096873803
 GameObject:
@@ -2667,7 +2741,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2096873803}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -31.6996002, y: 28.2192383, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 501236165}
