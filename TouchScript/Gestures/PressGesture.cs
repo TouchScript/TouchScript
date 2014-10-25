@@ -71,8 +71,8 @@ namespace TouchScript.Gestures
         {
             if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
             if (!base.ShouldReceiveTouch(touch)) return false;
-            
-            if (touch.Target != transform) return false;
+
+            if (touch.Target != cachedTransform) return false;
             return true;
         }
 

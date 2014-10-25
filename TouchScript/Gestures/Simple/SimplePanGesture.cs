@@ -93,7 +93,7 @@ namespace TouchScript.Gestures.Simple
         /// <value>Delta position between this frame and the last frame in local coordinates.</value>
         public Vector3 LocalDeltaPosition
         {
-            get { return TransformUtils.GlobalToLocalDirection(transform, WorldDeltaPosition); }
+            get { return TransformUtils.GlobalToLocalDirection(cachedTransform, WorldDeltaPosition); }
         }
 
         /// <inheritdoc />

@@ -205,16 +205,16 @@ namespace TouchScript.Gestures.Simple
 
             Vector3 center;
             if (cachedCollider != null) center = cachedCollider.bounds.center;
-            else center = transform.position;
+            else center = cachedTransform.position;
 
             switch (projection)
             {
                 case ProjectionType.Layer:
-                    if (projectionLayer == null) worldTransformPlane = new Plane(transform.TransformDirection(Vector3.forward), center);
+                    if (projectionLayer == null) worldTransformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), center);
                     else worldTransformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
                     break;
                 case ProjectionType.Local:
-                    worldTransformPlane = new Plane(transform.TransformDirection(projectionNormal), center);
+                    worldTransformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
                     break;
                 case ProjectionType.Global:
                     worldTransformPlane = new Plane(projectionNormal, center);

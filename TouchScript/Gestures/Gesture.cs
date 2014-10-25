@@ -305,6 +305,11 @@ namespace TouchScript.Gestures
         /// </summary>
         protected List<ITouch> activeTouches = new List<ITouch>();
 
+        /// <summary>
+        /// Cached transform of the parent object.
+        /// </summary>
+        protected Transform cachedTransform;
+
         #pragma warning disable 0169
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
@@ -425,7 +430,7 @@ namespace TouchScript.Gestures
             TouchLayer layer = null;
             if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;
 
-            if (transform == hit.Transform || hit.Transform.IsChildOf(transform)) return true;
+            if (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform)) return true;
             return false;
         }
 
@@ -499,6 +504,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected virtual void Awake()
         {
+            cachedTransform = GetComponent<Transform>();
+
             foreach (var gesture in friendlyGestures)
             {
                 AddFriendlyGesture(gesture);
