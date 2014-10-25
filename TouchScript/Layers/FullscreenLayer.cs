@@ -14,7 +14,6 @@ namespace TouchScript.Layers
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
     public sealed class FullscreenLayer : TouchLayer
     {
-
         #region Constants
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace TouchScript.Layers
                 if (value == type) return;
                 type = value;
                 updateCamera();
-                cacheCameraTransform();
+                updateCachedTransform();
             }
         }
 
@@ -78,8 +77,8 @@ namespace TouchScript.Layers
         {
             get
             {
-                if (cameraTransform == null) return transform.forward;
-                return cameraTransform.forward;
+                if (cachedTransform == null) return base.WorldProjectionNormal;
+                return cachedTransform.forward;
             }
         }
 
@@ -89,10 +88,11 @@ namespace TouchScript.Layers
 
         [SerializeField]
         private LayerType type = LayerType.MainCamera;
+
         [SerializeField]
         private Camera _camera;
 
-        private Transform cameraTransform;
+        private Transform cachedTransform;
 
         #endregion
 
@@ -123,10 +123,17 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        public override Vector3 ProjectTo(Vector2 screenPosition)
         {
-            if (_camera == null) return base.ProjectTo(screenPosition, projectionPlane);
-            else return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+            return ProjectionUtils.NormalizeScreenPosition(screenPosition);
+        }
+
+        /// <inheritdoc />
+        public override Vector3 ProjectTo(Vector2 screenPosition, Vector3 origin, Vector3 normal)
+        {
+            if (_camera == null)
+                return ProjectionUtils.ScreenToPlaneProjection(ProjectionUtils.NormalizeScreenPosition(screenPosition), origin, normal);
+            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, origin, normal);
         }
 
         #endregion
@@ -137,14 +144,13 @@ namespace TouchScript.Layers
         protected override void Awake()
         {
             updateCamera();
-            cacheCameraTransform();
+            updateCachedTransform();
 
             base.Awake();
         }
 
         // To be able to turn it off
-        private void OnEnable()
-        {}
+        private void OnEnable() {}
 
         #endregion
 
@@ -153,7 +159,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void setName()
         {
-            if (_camera == null) Name = "Global Fullscreen"; 
+            if (_camera == null) Name = "Global Fullscreen";
             else Name = "Fullscreen @ " + _camera.name;
         }
 
@@ -176,10 +182,10 @@ namespace TouchScript.Layers
             setName();
         }
 
-        private void cacheCameraTransform()
+        private void updateCachedTransform()
         {
-            if (_camera == null) cameraTransform = null;
-            else cameraTransform = _camera.transform;
+            if (_camera == null) cachedTransform = transform;
+            else cachedTransform = _camera.transform;
         }
 
         #endregion

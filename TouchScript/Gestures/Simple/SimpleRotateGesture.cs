@@ -93,7 +93,7 @@ namespace TouchScript.Gestures.Simple
         /// <value>Rotation axis of the gesture in world coordinates.</value>
         public Vector3 RotationAxis
         {
-            get { return worldTransformPlane.normal; }
+            get { return WorldProjectionNormal; }
         }
 
         #endregion
@@ -128,10 +128,10 @@ namespace TouchScript.Gestures.Simple
 
             var oldScreenPos1 = getPointPreviousScreenPosition(0);
             var oldScreenPos2 = getPointPreviousScreenPosition(1);
-            var oldWorldPos1 = projectionLayer.ProjectTo(oldScreenPos1, WorldTransformPlane);
-            var oldWorldPos2 = projectionLayer.ProjectTo(oldScreenPos2, WorldTransformPlane);
-            var newWorldPos1 = projectionLayer.ProjectTo(newScreenPos1, WorldTransformPlane);
-            var newWorldPos2 = projectionLayer.ProjectTo(newScreenPos2, WorldTransformPlane);
+            var oldWorldPos1 = projectTo(oldScreenPos1);
+            var oldWorldPos2 = projectTo(oldScreenPos2);
+            var newWorldPos1 = projectTo(newScreenPos1);
+            var newWorldPos2 = projectTo(newScreenPos2);
             var newVector = newWorldPos2 - newWorldPos1;
             var oldVector = oldWorldPos2 - oldWorldPos1;
 
@@ -139,7 +139,7 @@ namespace TouchScript.Gestures.Simple
             Vector2 newScreenCenter = (newScreenPos1 + newScreenPos2)*.5f;
 
             var angle = Vector3.Angle(oldVector, newVector);
-            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), WorldTransformPlane.normal) < 0) angle = -angle;
+            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), RotationAxis) < 0) angle = -angle;
             if (isRotating)
             {
                 deltaRotation = angle;
@@ -153,8 +153,8 @@ namespace TouchScript.Gestures.Simple
                 }
             }
 
-            oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter, WorldTransformPlane);
-            newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
+            oldWorldCenter = projectTo(oldScreenCenter);
+            newWorldCenter = projectTo(newScreenCenter);
 
             if (Math.Abs(deltaRotation) > 0.00001)
             {

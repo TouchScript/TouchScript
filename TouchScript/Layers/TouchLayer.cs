@@ -75,7 +75,7 @@ namespace TouchScript.Layers
         /// <summary>
         /// Layers screen to world projection normal.
         /// </summary>
-        public virtual Vector3 WorldProjectionNormal { get { return transform.forward; } }
+        public virtual Vector3 WorldProjectionNormal { get { return Vector3.forward; } }
 
         #endregion
 
@@ -95,15 +95,20 @@ namespace TouchScript.Layers
         }
 
         /// <summary>
-        /// Projects a screen point on a plane using this layer's parameters.
+        /// Projects a screen point on a plane defined by layer.
         /// </summary>
         /// <param name="screenPosition">Screen point to project.</param>
-        /// <param name="projectionPlane">3D plane to project to.</param>
         /// <returns>Projected point in world coordinates.</returns>
-        public virtual Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
-        {
-            return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
-        }
+        public abstract Vector3 ProjectTo(Vector2 screenPosition);
+
+        /// <summary>
+        /// Projects a screen point on a plane defined by origin and normal.
+        /// </summary>
+        /// <param name="screenPosition">Screen point to project.</param>
+        /// <param name="origin">Projection plane's (0,0,0).</param>
+        /// <param name="normal">Projection plane's normal.</param>
+        /// <returns>Projected point in world coordinates.</returns>
+        public abstract Vector3 ProjectTo(Vector2 screenPosition, Vector3 origin, Vector3 normal);
 
         #endregion
 

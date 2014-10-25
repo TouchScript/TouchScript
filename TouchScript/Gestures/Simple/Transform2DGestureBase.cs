@@ -49,28 +49,52 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 if (projection == value) return;
+                switch (projection)
+                {
+                    case ProjectionType.Layer:
+                        if (value == ProjectionType.Local)
+                        {
+                            localProjectionNormal = cachedTransform.InverseTransformDirection(projectionLayer.WorldProjectionNormal);
+                        }
+                        else
+                        {
+                            projectionNormal = projectionLayer.WorldProjectionNormal;
+                        }
+                        break;
+                    case ProjectionType.Local:
+                        if (value == ProjectionType.Global) projectionNormal = cachedTransform.TransformDirection(localProjectionNormal);
+                        break;
+                    case ProjectionType.Global:
+                        if (value == ProjectionType.Local) localProjectionNormal = cachedTransform.InverseTransformDirection(projectionNormal);
+                        break;
+                }
                 projection = value;
-                if (Application.isPlaying) updateProjectionPlane();
             }
         }
 
         /// <summary>
         /// Transform's projection plane normal.
         /// </summary>
-        public Vector3 ProjectionNormal
+        public Vector3 WorldProjectionNormal
         {
             get
             {
-                if (projection == ProjectionType.Layer) return projectionLayer.WorldProjectionNormal;
-                return projectionNormal;
+                switch (projection)
+                {
+                    case ProjectionType.Layer:
+                        return projectionLayer.WorldProjectionNormal;
+                    case ProjectionType.Local:
+                        return cachedTransform.TransformDirection(localProjectionNormal);
+                    default:
+                        return projectionNormal;
+                }
             }
             set
             {
                 if (projection == ProjectionType.Layer) projection = ProjectionType.Local;
                 value.Normalize();
-                if (projectionNormal == value) return;
-                projectionNormal = value;
-                if (Application.isPlaying) updateProjectionPlane();
+                if (projection == ProjectionType.Local) localProjectionNormal = cachedTransform.InverseTransformDirection(value);
+                else projectionNormal = value;
             }
         }
 
@@ -84,14 +108,6 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         public Vector3 WorldTransformCenter { get; protected set; }
 
-        /// <summary>
-        /// Plane where transformation occured.
-        /// </summary>
-        public Plane WorldTransformPlane
-        {
-            get { return worldTransformPlane; }
-        }
-
         #endregion
 
         #region Private variables
@@ -99,8 +115,14 @@ namespace TouchScript.Gestures.Simple
         [SerializeField]
         private ProjectionType projection = ProjectionType.Layer;
 
+        // world projection normal
+        // don't rename! or many people lose data
         [SerializeField]
         private Vector3 projectionNormal = Vector3.forward;
+
+        // Need both in case object is turned by another script or user.
+        [SerializeField]
+        private Vector3 localProjectionNormal = Vector3.forward;
 
         private Collider cachedCollider;
 
@@ -109,21 +131,9 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         protected TouchLayer projectionLayer;
 
-        /// <summary>
-        /// The world transform plane.
-        /// </summary>
-        protected Plane worldTransformPlane;
-
         #endregion
 
         #region Unity methods
-
-        /// <inheritdoc />
-        protected override void Awake()
-        {
-            base.Awake();
-            worldTransformPlane = new Plane();
-        }
 
         /// <inheritdoc />
         protected override void OnEnable()
@@ -131,7 +141,6 @@ namespace TouchScript.Gestures.Simple
             base.OnEnable();
 
             cachedCollider = collider;
-            updateProjectionPlane();
         }
 
         #endregion
@@ -146,7 +155,6 @@ namespace TouchScript.Gestures.Simple
             if (touches.Count == activeTouches.Count)
             {
                 projectionLayer = activeTouches[0].Layer;
-                updateProjectionPlane();
             }
         }
 
@@ -154,8 +162,6 @@ namespace TouchScript.Gestures.Simple
         protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
-
-            updateProjectionPlane();
         }
 
         /// <inheritdoc />
@@ -194,32 +200,25 @@ namespace TouchScript.Gestures.Simple
 
         #endregion
 
-        #region Private functions
+        #region Protected functions
 
-        /// <summary>
-        /// Updates projection plane based on options set.
-        /// </summary>
-        protected void updateProjectionPlane()
+        protected Vector3 projectTo(Vector2 screenPosition)
         {
-            if (!Application.isPlaying) return;
-
-            Vector3 center;
-            if (cachedCollider != null) center = cachedCollider.bounds.center;
-            else center = cachedTransform.position;
-
             switch (projection)
             {
                 case ProjectionType.Layer:
-                    if (projectionLayer == null) worldTransformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), center);
-                    else worldTransformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
-                    break;
+                    return projectionLayer.ProjectTo(screenPosition);
                 case ProjectionType.Local:
-                    worldTransformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
-                    break;
-                case ProjectionType.Global:
-                    worldTransformPlane = new Plane(projectionNormal, center);
-                    break;
+                    return projectionLayer.ProjectTo(screenPosition, getCenter(), cachedTransform.TransformDirection(localProjectionNormal));
+                default:
+                    return projectionLayer.ProjectTo(screenPosition, getCenter(), projectionNormal);
             }
+        }
+
+        protected Vector3 getCenter()
+        {
+            if (cachedCollider != null) return cachedCollider.bounds.center;
+            return cachedTransform.position;
         }
 
         #endregion
