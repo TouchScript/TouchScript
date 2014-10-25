@@ -98,7 +98,11 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void updateCamera()
         {
-            _camera = camera;
+            _camera = GetComponent<Camera>();
+            if (_camera == null) _camera = Camera.main;
+            if (_camera != null) return;
+            Debug.LogError("No Camera found for CameraLayer '" + name + "'.");
+            enabled = false;
         }
 
         /// <summary>

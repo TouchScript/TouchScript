@@ -18,9 +18,18 @@ namespace TouchScript.Layers
 
         private List<RaycastHit> sortedHits;
 
+        private Transform cachedTransform;
+
         #endregion
 
         #region Unity methods
+
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            base.Awake();
+            cachedTransform = GetComponent<Transform>();
+        }
 
         private void OnEnable()
         {
@@ -30,18 +39,6 @@ namespace TouchScript.Layers
         #endregion
 
         #region Protected functions
-
-        /// <inheritdoc />
-        protected override void updateCamera()
-        {
-            base.updateCamera();
-            if (_camera == null) _camera = Camera.main;
-            if (_camera == null)
-            {
-                Debug.LogError("No camera detected for CameraLayer at " + name + ".");
-                enabled = false;
-            }
-        }
 
         /// <inheritdoc />
         protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
@@ -102,7 +99,7 @@ namespace TouchScript.Layers
 
         private void sortHits(RaycastHit[] hits)
         {
-            var cameraPos = _camera.transform.position;
+            var cameraPos = cachedTransform.position;
             sortedHits.Clear();
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>
