@@ -79,10 +79,10 @@ namespace TouchScript.Clusters
 
         /// <summary>Calculates the center position of one of the clusters.</summary>
         /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
+        /// <returns>Cluster's centroid position or <see cref="TouchManager.INVALID_2D_POSITION"/> if cluster contains no points.</returns>
         public Vector2 GetCenterPosition(int id)
         {
-            if (!HasClusters) return TouchManager.INVALID_POSITION;
+            if (!HasClusters) return TouchManager.INVALID_2D_POSITION;
 
             Vector2 result;
             switch (id)
@@ -94,17 +94,17 @@ namespace TouchScript.Clusters
                     result = ClusterUtils.Get2DCenterPosition(cluster2);
                     break;
                 default:
-                    return TouchManager.INVALID_POSITION;
+                    return TouchManager.INVALID_2D_POSITION;
             }
             return result;
         }
 
         /// <summary>Calculates previous center position of one of the clusters.</summary>
         /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid previous position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
+        /// <returns>Cluster's centroid previous position or <see cref="TouchManager.INVALID_2D_POSITION"/> if cluster contains no points.</returns>
         public Vector2 GetPreviousCenterPosition(int id)
         {
-            if (!HasClusters) return TouchManager.INVALID_POSITION;
+            if (!HasClusters) return TouchManager.INVALID_2D_POSITION;
 
             Vector2 result;
             switch (id)
@@ -116,7 +116,7 @@ namespace TouchScript.Clusters
                     result = ClusterUtils.GetPrevious2DCenterPosition(cluster2);
                     break;
                 default:
-                    return TouchManager.INVALID_POSITION;
+                    return TouchManager.INVALID_2D_POSITION;
             }
             return result;
         }

@@ -120,7 +120,12 @@ namespace TouchScript
         /// <summary>
         /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
         /// </summary>
-        public static readonly Vector2 INVALID_POSITION = new Vector2(float.NaN, float.NaN);
+        public static readonly Vector2 INVALID_2D_POSITION = new Vector2(float.NaN, float.NaN);
+
+        /// <summary>
+        /// The value used to represent an unknown state of a world position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
+        /// </summary>
+        public static readonly Vector3 INVALID_3D_POSITION = new Vector3(float.NaN, float.NaN, float.NaN);
 
         #endregion
 
@@ -208,13 +213,23 @@ namespace TouchScript
         #region Public methods
 
         /// <summary>
-        /// Determines whether a Vector2 represents an invalid position, i.e. if it is equal to <see cref="INVALID_POSITION"/>.
+        /// Determines whether a Vector2 represents an invalid position, i.e. if it is equal to <see cref="INVALID_2D_POSITION"/>.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns><c>true</c> if position is invalid; otherwise, <c>false</c>.</returns>
         public static bool IsInvalidPosition(Vector2 position)
         {
-            return position.Equals(INVALID_POSITION);
+            return position.Equals(INVALID_2D_POSITION);
+        }
+
+        /// <summary>
+        /// Determines whether a Vector3 represents an invalid position, i.e. if it is equal to <see cref="INVALID_3D_POSITION"/>.
+        /// </summary>
+        /// <param name="position">World position.</param>
+        /// <returns><c>true</c> if position is invalid; otherwise, <c>false</c>.</returns>
+        public static bool IsInvalidPosition(Vector3 position)
+        {
+            return position.Equals(INVALID_3D_POSITION);
         }
 
         #endregion

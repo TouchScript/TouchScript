@@ -217,7 +217,7 @@ namespace TouchScript.Gestures
                 if (activeTouches.Count == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
-                    return TouchManager.INVALID_POSITION;
+                    return TouchManager.INVALID_2D_POSITION;
                 }
                 return ClusterUtils.Get2DCenterPosition(activeTouches);
             }
@@ -234,7 +234,7 @@ namespace TouchScript.Gestures
                 if (activeTouches.Count == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
-                    return TouchManager.INVALID_POSITION;
+                    return TouchManager.INVALID_2D_POSITION;
                 }
                 return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
             }
@@ -249,7 +249,7 @@ namespace TouchScript.Gestures
             get
             {
                 var position = ScreenPosition;
-                if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
+                if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_2D_POSITION;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
@@ -263,7 +263,7 @@ namespace TouchScript.Gestures
             get
             {
                 var position = PreviousScreenPosition;
-                if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
+                if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_2D_POSITION;
                 return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
@@ -355,11 +355,6 @@ namespace TouchScript.Gestures
         /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
         /// </summary>
         private Vector2 cachedScreenPosition;
-
-        /// <summary>
-        /// Cached previous screen position.
-        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
-        /// </summary>
         private Vector2 cachedPreviousScreenPosition;
 
         #endregion
@@ -695,8 +690,8 @@ namespace TouchScript.Gestures
                         cachedPreviousScreenPosition = lastPoint.PreviousPosition;
                     } else
                     {
-                        cachedScreenPosition = TouchManager.INVALID_POSITION;
-                        cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
+                        cachedScreenPosition = TouchManager.INVALID_2D_POSITION;
+                        cachedPreviousScreenPosition = TouchManager.INVALID_2D_POSITION;
                     }
                 }
             }
@@ -714,8 +709,8 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void reset()
         {
-            cachedScreenPosition = TouchManager.INVALID_POSITION;
-            cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
+            cachedScreenPosition = TouchManager.INVALID_2D_POSITION;
+            cachedPreviousScreenPosition = TouchManager.INVALID_2D_POSITION;
         }
 
         /// <summary>

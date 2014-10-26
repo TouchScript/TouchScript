@@ -194,8 +194,8 @@ namespace TouchScript.Gestures.Simple
         {
             base.reset();
 
-            WorldTransformCenter = TouchManager.INVALID_POSITION;
-            PreviousWorldTransformCenter = TouchManager.INVALID_POSITION;
+            WorldTransformCenter = TouchManager.INVALID_2D_POSITION;
+            PreviousWorldTransformCenter = TouchManager.INVALID_2D_POSITION;
         }
 
         #endregion
