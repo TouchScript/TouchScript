@@ -107,7 +107,7 @@ namespace TouchScript.InputSources
                         {
                             var ts = touchStates[t.fingerId];
                             touchStates[t.fingerId] = new TouchState(ts.Id, t.phase, t.position);
-                            moveTouch(ts.Id, t.position);
+                            updateTouch(ts.Id, t.position);
                         } else
                         {
                             // maybe we missed began phase

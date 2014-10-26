@@ -116,10 +116,10 @@ namespace TouchScript.InputSources
                     mousePointPos = pos;
                     if (fakeMousePointId > -1 && mousePointId == -1)
                     {
-                        moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
+                        updateTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
                     } else
                     {
-                        moveTouch(mousePointId, new Vector2(pos.x, pos.y));
+                        updateTouch(mousePointId, new Vector2(pos.x, pos.y));
                     }
                 }
             }

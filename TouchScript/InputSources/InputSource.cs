@@ -94,13 +94,13 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="id">Touch id.</param>
         /// <param name="position">New screen position.</param>
-        protected virtual void moveTouch(int id, Vector2 position)
+        protected virtual void updateTouch(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            manager.MoveTouch(id, position);
+            manager.UpdateTouch(id, position);
         }
 
         /// <summary>

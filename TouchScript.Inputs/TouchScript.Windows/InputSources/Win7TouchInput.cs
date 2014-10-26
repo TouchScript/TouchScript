@@ -202,7 +202,7 @@ namespace TouchScript.InputSources
                         p.Y = touch.y/100;
                         ScreenToClient(hMainWindow, ref p);
 
-                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        updateTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
                     }
                 }
             }

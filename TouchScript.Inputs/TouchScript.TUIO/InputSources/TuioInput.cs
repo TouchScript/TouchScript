@@ -231,7 +231,7 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(touch.Id, new Vector2(x, y));
+                updateTouch(touch.Id, new Vector2(x, y));
             }
         }
 
@@ -272,7 +272,7 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(touch.Id, new Vector2(x, y));
+                updateTouch(touch.Id, new Vector2(x, y));
                 updateBlobProperties(touch, entity);
             }
         }
@@ -315,7 +315,7 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(touch.Id, new Vector2(x, y));
+                updateTouch(touch.Id, new Vector2(x, y));
                 updateObjectProperties(touch, entity);
             }
         }

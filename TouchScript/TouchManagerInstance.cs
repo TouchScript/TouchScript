@@ -288,7 +288,7 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        internal void MoveTouch(int id, Vector2 position)
+        internal void UpdateTouch(int id, Vector2 position)
         {
             lock (touchesMoved)
             {

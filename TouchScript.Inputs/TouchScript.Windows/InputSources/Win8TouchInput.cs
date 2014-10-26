@@ -195,7 +195,7 @@ namespace TouchScript.InputSources
                 case WM_POINTERUPDATE:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
                     {
-                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        updateTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
                     }
                     break;
             }
