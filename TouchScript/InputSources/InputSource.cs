@@ -27,13 +27,10 @@ namespace TouchScript.InputSources
 
         #pragma warning disable 0169
         [SerializeField]
-        private bool advancedProps; // is used to save if advanced properties are opened or closed
+        private bool advancedProps; // is used to save whether advanced properties are opened or closed
         #pragma warning restore 0169
 
-        /// <summary>
-        /// Reference to global touch manager.
-        /// </summary>
-        protected ITouchManager manager;
+        private TouchManagerInstance manager;
 
         #endregion
 
@@ -44,7 +41,7 @@ namespace TouchScript.InputSources
         /// </summary>
         protected virtual void OnEnable()
         {
-            manager = TouchManager.Instance;
+            manager = TouchManagerInstance.Instance;
             if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
         }
 

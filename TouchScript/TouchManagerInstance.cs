@@ -74,7 +74,7 @@ namespace TouchScript
 
         #region Public properties
 
-        public static ITouchManager Instance
+        public static TouchManagerInstance Instance
         {
             get
             {
@@ -265,14 +265,18 @@ namespace TouchScript
             return false;
         }
 
+        #endregion
+
+        #region Internal methods
+
         /// <inheritdoc />
-        public ITouch BeginTouch(Vector2 position)
+        internal ITouch BeginTouch(Vector2 position)
         {
             return BeginTouch(position, null);
         }
 
         /// <inheritdoc />
-        public ITouch BeginTouch(Vector2 position, Tags tags)
+        internal ITouch BeginTouch(Vector2 position, Tags tags)
         {
             TouchPoint touch;
             lock (touchesBegan)
@@ -284,7 +288,7 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void MoveTouch(int id, Vector2 position)
+        internal void MoveTouch(int id, Vector2 position)
         {
             lock (touchesMoved)
             {
@@ -292,7 +296,8 @@ namespace TouchScript
                 if (touchesMoved.TryGetValue(id, out update))
                 {
                     touchesMoved[id] = position;
-                } else
+                }
+                else
                 {
                     touchesMoved.Add(id, position);
                 }
@@ -300,7 +305,7 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void EndTouch(int id)
+        internal void EndTouch(int id)
         {
             lock (touchesEnded)
             {
@@ -324,7 +329,7 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void CancelTouch(int id)
+        internal void CancelTouch(int id)
         {
             lock (touchesCancelled)
             {

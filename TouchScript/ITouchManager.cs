@@ -158,45 +158,6 @@ namespace TouchScript
         /// <param name="layer">A layer which was hit.</param>
         /// <returns>True if the touch hits any Transform.</returns>
         bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer);
-
-        /// <summary>
-        /// Registers a touch with global Touch Manager.
-        /// <seealso cref="ITouch"/>
-        /// </summary>
-        /// <param name="position">Screen position of the touch.</param>
-        /// <returns>Internal id of the new touch.</returns>
-        ITouch BeginTouch(Vector2 position);
-
-        /// <summary>
-        /// Registers a touch with global Touch Manager.
-        /// <seealso cref="ITouch"/>
-        /// </summary>
-        /// <param name="position">Screen position of the touch.</param>
-        /// <param name="tags">Initial tags.</param>
-        /// <returns>Internal id of the new touch.</returns>
-        ITouch BeginTouch(Vector2 position, Tags tags);
-
-        /// <summary>
-        /// Updates screen position of a touch registered with Touch Manager.
-        /// <seealso cref="ITouch"/>
-        /// </summary>
-        /// <param name="id">Internal touch id.</param>
-        /// <param name="position">New screen position.</param>
-        void MoveTouch(int id, Vector2 position);
-
-        /// <summary>
-        /// Ends a touch registered with Touch Manager.
-        /// <seealso cref="ITouch"/>
-        /// </summary>
-        /// <param name="id">Internal touch id.</param>
-        void EndTouch(int id);
-
-        /// <summary>
-        /// Cancels a touch registered with Touch Manager.
-        /// <seealso cref="ITouch"/>
-        /// </summary>
-        /// <param name="id">Internal touch id.</param>
-        void CancelTouch(int id);
     }
 
     /// <summary>
