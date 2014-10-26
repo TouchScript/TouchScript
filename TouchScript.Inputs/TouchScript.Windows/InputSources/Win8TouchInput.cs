@@ -31,8 +31,19 @@ namespace TouchScript.InputSources
 
         #region Public properties
 
+        /// <summary>
+        /// Tags added to touches coming from this input.
+        /// </summary>
         public Tags TouchTags = new Tags(Tags.INPUT_TOUCH);
+
+        /// <summary>
+        /// Tags added to mouse touches coming from this input.
+        /// </summary>
         public Tags MouseTags = new Tags(Tags.INPUT_MOUSE);
+
+        /// <summary>
+        /// Tags added to pen touches coming from this input.
+        /// </summary>
         public Tags PenTags = new Tags(Tags.INPUT_PEN);
 
         #endregion

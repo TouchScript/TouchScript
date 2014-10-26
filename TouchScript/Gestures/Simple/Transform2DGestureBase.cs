@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Layers;
 using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
@@ -20,9 +21,9 @@ namespace TouchScript.Gestures.Simple
         public enum ProjectionType
         {
             /// <summary>
-            /// Use a plane parallel to camera viewport.
+            /// Use a plane with normal vector defined by layer.
             /// </summary>
-            Camera,
+            Layer,
 
             /// <summary>
             /// Use a plane with certain normal vector in local coordinates.
@@ -60,17 +61,12 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (projection == ProjectionType.Camera)
-                {
-                    return projectionCamera.transform.forward;
-                } else
-                {
-                    return projectionNormal;
-                }
+                if (projection == ProjectionType.Layer) return projectionLayer.WorldProjectionNormal;
+                return projectionNormal;
             }
             set
             {
-                if (projection == ProjectionType.Camera) projection = ProjectionType.Local;
+                if (projection == ProjectionType.Layer) projection = ProjectionType.Local;
                 value.Normalize();
                 if (projectionNormal == value) return;
                 projectionNormal = value;
@@ -93,7 +89,7 @@ namespace TouchScript.Gestures.Simple
         /// </summary>
         public Plane WorldTransformPlane
         {
-            get { return new Plane(worldTransformPlane.normal, worldTransformPlane.distance); }
+            get { return worldTransformPlane; }
         }
 
         #endregion
@@ -101,7 +97,7 @@ namespace TouchScript.Gestures.Simple
         #region Private variables
 
         [SerializeField]
-        private ProjectionType projection = ProjectionType.Camera;
+        private ProjectionType projection = ProjectionType.Layer;
 
         [SerializeField]
         private Vector3 projectionNormal = Vector3.forward;
@@ -109,9 +105,9 @@ namespace TouchScript.Gestures.Simple
         private Collider cachedCollider;
 
         /// <summary>
-        /// Camera which is used to project touch points from screen space to a 3d plane.
+        /// Touch layer used in projection.
         /// </summary>
-        protected Camera projectionCamera;
+        protected TouchLayer projectionLayer;
 
         /// <summary>
         /// The world transform plane.
@@ -135,7 +131,6 @@ namespace TouchScript.Gestures.Simple
             base.OnEnable();
 
             cachedCollider = collider;
-            projectionCamera = Camera.main;
             updateProjectionPlane();
         }
 
@@ -150,7 +145,7 @@ namespace TouchScript.Gestures.Simple
 
             if (touches.Count == activeTouches.Count)
             {
-                projectionCamera = activeTouches[0].Layer.Camera;
+                projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
             }
         }
@@ -210,15 +205,16 @@ namespace TouchScript.Gestures.Simple
 
             Vector3 center;
             if (cachedCollider != null) center = cachedCollider.bounds.center;
-            else center = transform.position;
+            else center = cachedTransform.position;
 
             switch (projection)
             {
-                case ProjectionType.Camera:
-                    worldTransformPlane = new Plane(projectionCamera.transform.forward, center);
+                case ProjectionType.Layer:
+                    if (projectionLayer == null) worldTransformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), center);
+                    else worldTransformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
                     break;
                 case ProjectionType.Local:
-                    worldTransformPlane = new Plane(transform.TransformDirection(projectionNormal), center);
+                    worldTransformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
                     break;
                 case ProjectionType.Global:
                     worldTransformPlane = new Plane(projectionNormal, center);

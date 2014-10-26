@@ -218,7 +218,9 @@ namespace TouchScript.Gestures
 
         private IEnumerator wait()
         {
-            yield return new WaitForSeconds(TimeLimit);
+            // WaitForSeconds is affected by time scale!
+            var targetTime = Time.unscaledTime + TimeLimit;
+            while (targetTime > Time.unscaledTime) yield return null;
 
             if (State == GestureState.Possible) setState(GestureState.Failed);
         }

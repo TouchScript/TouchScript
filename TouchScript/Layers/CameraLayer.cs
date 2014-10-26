@@ -18,9 +18,18 @@ namespace TouchScript.Layers
 
         private List<RaycastHit> sortedHits;
 
+        private Transform cachedTransform;
+
         #endregion
 
         #region Unity methods
+
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            base.Awake();
+            cachedTransform = GetComponent<Transform>();
+        }
 
         private void OnEnable()
         {
@@ -90,7 +99,7 @@ namespace TouchScript.Layers
 
         private void sortHits(RaycastHit[] hits)
         {
-            var cameraPos = camera.transform.position;
+            var cameraPos = cachedTransform.position;
             sortedHits.Clear();
             sortedHits.AddRange(hits);
             sortedHits.Sort((a, b) =>

@@ -4,6 +4,7 @@
 
 using System;
 using TouchScript.Hit;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -26,17 +27,26 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override Camera Camera
+        public override Vector3 WorldProjectionNormal
         {
-            get { return camera; }
+            get
+            {
+                if (_camera == null) return Vector3.forward;
+                return _camera.transform.forward;
+            }
         }
 
         #endregion
 
-        #region Private fields
+        #region Private variables
 
         [SerializeField]
         private LayerMask layerMask = -1;
+
+        /// <summary>
+        /// Camera.
+        /// </summary>
+        protected Camera _camera;
 
         #endregion
 
@@ -47,12 +57,30 @@ namespace TouchScript.Layers
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
-            if (camera == null) return LayerHitResult.Error;
-            if (camera.enabled == false || camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
-            if (!camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
+            if (_camera == null) return LayerHitResult.Error;
+            if (_camera.enabled == false || _camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
+            if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
 
-            var ray = camera.ScreenPointToRay(new Vector3(position.x, position.y, camera.nearClipPlane));
+            var ray = _camera.ScreenPointToRay(position);
             return castRay(ray, out hit);
+        }
+
+        /// <inheritdoc />
+        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        {
+            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+        }
+
+        #endregion
+
+        #region Unity methods
+
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            updateCamera();
+
+            base.Awake();
         }
 
         #endregion
@@ -62,7 +90,19 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void setName()
         {
-            if (String.IsNullOrEmpty(Name) && Camera != null) Name = Camera.name;
+            if (String.IsNullOrEmpty(Name) && _camera != null) Name = _camera.name;
+        }
+
+        /// <summary>
+        /// Finds a camera.
+        /// </summary>
+        protected virtual void updateCamera()
+        {
+            _camera = GetComponent<Camera>();
+            if (_camera == null) _camera = Camera.main;
+            if (_camera != null) return;
+            Debug.LogError("No Camera found for CameraLayer '" + name + "'.");
+            enabled = false;
         }
 
         /// <summary>

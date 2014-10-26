@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class LongPress_Button : MonoBehaviour
 {
-
     public GameObject Plane;
 
     private Transform button, thebase;
@@ -20,14 +19,14 @@ public class LongPress_Button : MonoBehaviour
         targetScale = thebase.localScale;
     }
 
-	private void OnEnable()
-	{
-	    timeToPress = GetComponent<LongPressGesture>().TimeToPress;
+    private void OnEnable()
+    {
+        timeToPress = GetComponent<LongPressGesture>().TimeToPress;
 
-	    GetComponent<PressGesture>().Pressed += pressedHandler;
+        GetComponent<PressGesture>().Pressed += pressedHandler;
         GetComponent<ReleaseGesture>().Released += releasedHandler;
         GetComponent<LongPressGesture>().StateChanged += longPressStateChangedHandler;
-	}
+    }
 
     private void OnDisable()
     {
@@ -38,7 +37,7 @@ public class LongPress_Button : MonoBehaviour
 
     private void press()
     {
-        button.transform.localPosition = new Vector3(0, -button.transform.localScale.y * .4f, 0);
+        button.transform.localPosition = new Vector3(0, -button.transform.localScale.y*.4f, 0);
     }
 
     private void release()
@@ -63,7 +62,7 @@ public class LongPress_Button : MonoBehaviour
     {
         while (true)
         {
-            button.transform.localScale += (targetScale.x - startScale.x) / timeToPress * Time.deltaTime * new Vector3(1, 0, 1);
+            button.transform.localScale += (targetScale.x - startScale.x)/timeToPress*Time.unscaledDeltaTime*new Vector3(1, 0, 1);
             yield return null;
         }
     }
@@ -95,5 +94,4 @@ public class LongPress_Button : MonoBehaviour
     {
         release();
     }
-
 }

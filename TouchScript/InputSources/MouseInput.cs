@@ -25,6 +25,9 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnMobilePlatforms = true;
 
+        /// <summary>
+        /// Tags added to touches coming from this input.
+        /// </summary>
         public Tags Tags = new Tags(Tags.INPUT_MOUSE);
 
         #endregion
@@ -132,6 +135,7 @@ namespace TouchScript.InputSources
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override ITouch beginTouch(Vector2 position)
         {
             return beginTouch(position, new Tags(Tags));

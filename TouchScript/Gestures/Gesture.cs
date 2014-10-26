@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TouchScript.Hit;
 using TouchScript.Layers;
@@ -273,7 +274,7 @@ namespace TouchScript.Gestures
         /// <value>The list of touches owned by this gesture.</value>
         public IList<ITouch> ActiveTouches
         {
-            get { return activeTouches.AsReadOnly(); }
+            get { return new ReadOnlyCollection<ITouch>(activeTouches); }
         }
 
         /// <summary>
@@ -304,8 +305,15 @@ namespace TouchScript.Gestures
         /// </summary>
         protected List<ITouch> activeTouches = new List<ITouch>();
 
+        /// <summary>
+        /// Cached transform of the parent object.
+        /// </summary>
+        protected Transform cachedTransform;
+
+        #pragma warning disable 0169
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
+        #pragma warning restore 0169
 
         [SerializeField]
         [ToggleLeft]
@@ -330,8 +338,10 @@ namespace TouchScript.Gestures
         private Gesture requireGestureToFail;
 
         [SerializeField]
+        // Serialized list of gestures for Unity IDE.
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
+        // List of gestures for realtime.
         private List<int> friendlyGestureIds = new List<int>();
 
         private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
@@ -368,6 +378,11 @@ namespace TouchScript.Gestures
             gesture.registerFriendlyGesture(this);
         }
 
+        /// <summary>
+        /// Checks if a gesture is friendly with this gesture.
+        /// </summary>
+        /// <param name="gesture">A gesture to check.</param>
+        /// <returns>True if gestures are friendly; false otherwise.</returns>
         public bool IsFriendly(Gesture gesture)
         {
             return friendlyGestureIds.Contains(gesture.GetInstanceID());
@@ -415,7 +430,7 @@ namespace TouchScript.Gestures
             TouchLayer layer = null;
             if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;
 
-            if (transform == hit.Transform || hit.Transform.IsChildOf(transform)) return true;
+            if (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform)) return true;
             return false;
         }
 
@@ -489,6 +504,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected virtual void Awake()
         {
+            cachedTransform = GetComponent<Transform>();
+
             foreach (var gesture in friendlyGestures)
             {
                 AddFriendlyGesture(gesture);
@@ -743,15 +760,30 @@ namespace TouchScript.Gestures
 
         private void registerFriendlyGesture(Gesture gesture)
         {
-            if (gesture == null || gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+            if (gesture == null || gesture == this) return;
 
-            friendlyGestureIds.Add(gesture.GetInstanceID());
+            addFriendlyGestureId(gesture);
+            if (!friendlyGestures.Contains(gesture)) friendlyGestures.Add(gesture);
+        }
+
+        // Gets also called by the custom inspector.
+        private void addFriendlyGestureId(Gesture gesture)
+        {
+            var id = gesture.GetInstanceID();
+            if (!friendlyGestureIds.Contains(id)) friendlyGestureIds.Add(id);
         }
 
         private void unregisterFriendlyGesture(Gesture gesture)
         {
-            if (gesture == null || gesture == this || friendlyGestureIds.Contains(gesture.GetInstanceID())) return;
+            if (gesture == null || gesture == this) return;
 
+            removeFriendlyGestureId(gesture);
+            friendlyGestures.Remove(gesture);
+        }
+
+        // Gets also called by the custom inspector.
+        private void removeFriendlyGestureId(Gesture gesture)
+        {
             friendlyGestureIds.Remove(gesture.GetInstanceID());
         }
 

@@ -6,16 +6,18 @@ using UnityEngine;
 
 namespace TouchScript.Hit
 {
-    public sealed class TouchHitFactory
+    /// <summary>
+    /// A factory which is used to create instances of ITouchHit.
+    /// </summary>
+    public sealed class TouchHitFactory : ITouchHitFactory
     {
 
-        public static TouchHitFactory Instance
+        /// <summary>
+        /// A static instance of a TouchHitFactory which is used to create instances of ITouchHit.
+        /// </summary>
+        public static ITouchHitFactory Instance
         {
-            get
-            {
-                if (instance == null) instance = new TouchHitFactory();
-                return instance;
-            }
+            get { return instance ?? (instance = new TouchHitFactory()); }
         }
 
         private static TouchHitFactory instance;
@@ -23,6 +25,7 @@ namespace TouchScript.Hit
         private TouchHitFactory()
         {}
 
+        /// <inheritdoc />
         public ITouchHit GetTouchHit(RaycastHit value)
         {
             var result = new TouchHit3D();
@@ -30,6 +33,7 @@ namespace TouchScript.Hit
             return result;
         }
 
+        /// <inheritdoc />
         public ITouchHit GetTouchHit(RaycastHit2D value)
         {
             var result = new TouchHit2D();
@@ -37,6 +41,7 @@ namespace TouchScript.Hit
             return result;
         }
 
+        /// <inheritdoc />
         public ITouchHit GetTouchHit(Transform value)
         {
             var result = new TouchHit();

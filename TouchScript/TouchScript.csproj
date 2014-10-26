@@ -25,7 +25,7 @@
     </DocumentationFile>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/Scaleform/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Android/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.iOS/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript.TUIO/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript.Windows7/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsPhone/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsStore/Assets/TouchScript/Plugins/TouchScript.dll&quot;'" workingdir="" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/Scaleform/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/Playmaker/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.Android/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.iOS/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.TUIO/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.Windows7/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.WindowsPhone/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.WindowsStore/Assets/TouchScript/Plugins/'" workingdir="" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -39,7 +39,7 @@
     <DocumentationFile>bin\Release\TouchScript.XML</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="/bin/sh -c 'cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/PlayMaker/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/Scaleform/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Android/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.iOS/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript.TUIO/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript.Windows7/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsPhone/Assets/TouchScript/Plugins/TouchScript.dll&quot; | cp &quot;${TargetDir}/TouchScript.dll&quot; &quot;${SolutionDir}/UnityPackages/TouchScript.WindowsStore/Assets/TouchScript/Plugins/TouchScript.dll&quot;'" workingdir="" />
+        <Command type="AfterBuild" command="/bin/sh -c 'cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/Scaleform/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/Playmaker/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.Android/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.iOS/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.TUIO/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.Windows7/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.Windows8/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.WindowsPhone/Assets/TouchScript/Plugins/ | cp ${TargetDir}/*.dll ${SolutionDir}/UnityPackages/TouchScript.WindowsStore/Assets/TouchScript/Plugins/'" workingdir="" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -79,6 +79,7 @@
     <Compile Include="Hit\ITouchHit.cs" />
     <Compile Include="Hit\ITouchHit2D.cs" />
     <Compile Include="Hit\ITouchHit3D.cs" />
+    <Compile Include="Hit\ITouchHitFactory.cs" />
     <Compile Include="Hit\TouchHit.cs" />
     <Compile Include="Hit\TouchHit2D.cs" />
     <Compile Include="Hit\TouchHit3D.cs" />
@@ -114,16 +115,16 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\Scaleform\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\Playmaker\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.Android\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.iOS\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.TUIO\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.Windows7\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.Windows8\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.WindowsPhone\Assets\TouchScript\Plugins\"
-xcopy /y "$(ProjectDir)$(OutDir)TouchScript.dll" "$(SolutionDir)UnityPackages\TouchScript.WindowsStore\Assets\TouchScript\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\Scaleform\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\Playmaker\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.Android\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.iOS\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.TUIO\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.Windows7\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.Windows8\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.WindowsPhone\Assets\TouchScript\Plugins\"
+xcopy /y "$(ProjectDir)$(OutDir)*.dll" "$(SolutionDir)UnityPackages\TouchScript.WindowsStore\Assets\TouchScript\Plugins\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

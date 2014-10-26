@@ -7,6 +7,8 @@ TouchScript/Examples/_misc*
 !TouchScript/Examples/Playmaker/*
 !TouchScript/Modules*
 !TouchScript/Modules/*
+!PlaymakerUnity2D*
+!PlaymakerUnity2D/*
 
 # Playmaker
 Gizmos*

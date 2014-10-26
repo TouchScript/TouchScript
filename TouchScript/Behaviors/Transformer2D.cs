@@ -3,9 +3,7 @@
  */
 
 using System;
-using TouchScript.Gestures;
 using TouchScript.Gestures.Simple;
-using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Behaviors
@@ -18,8 +16,11 @@ namespace TouchScript.Behaviors
     {
         #region Public properties
 
-        /// <summary>Max movement speed</summary>
+        /// <summary>Max movement speed.</summary>
         public float Speed = 10f;
+
+        /// <summary>Controls pan speed.</summary>
+        public float PanMultiplier = 1f;
 
         #endregion
 
@@ -42,16 +43,16 @@ namespace TouchScript.Behaviors
 
         private void OnEnable()
         {
-            if (GetComponent<SimplePanGesture>() != null) GetComponent<SimplePanGesture>().StateChanged += panStateChanged;
-            if (GetComponent<SimpleScaleGesture>() != null) GetComponent<SimpleScaleGesture>().StateChanged += scaleStateChanged;
-            if (GetComponent<SimpleRotateGesture>() != null) GetComponent<SimpleRotateGesture>().StateChanged += rotateStateChanged;
+            if (GetComponent<SimplePanGesture>() != null) GetComponent<SimplePanGesture>().Panned += panHandler;
+            if (GetComponent<SimpleScaleGesture>() != null) GetComponent<SimpleScaleGesture>().Scaled += scaleHandler;
+            if (GetComponent<SimpleRotateGesture>() != null) GetComponent<SimpleRotateGesture>().Rotated += rotateHandler;
         }
 
         private void OnDisable()
         {
-            if (GetComponent<SimplePanGesture>() != null) GetComponent<SimplePanGesture>().StateChanged -= panStateChanged;
-            if (GetComponent<SimpleScaleGesture>() != null) GetComponent<SimpleScaleGesture>().StateChanged -= scaleStateChanged;
-            if (GetComponent<SimpleRotateGesture>() != null) GetComponent<SimpleRotateGesture>().StateChanged -= rotateStateChanged;
+            if (GetComponent<SimplePanGesture>() != null) GetComponent<SimplePanGesture>().Panned -= panHandler;
+            if (GetComponent<SimpleScaleGesture>() != null) GetComponent<SimpleScaleGesture>().Scaled -= scaleHandler;
+            if (GetComponent<SimpleRotateGesture>() != null) GetComponent<SimpleRotateGesture>().Rotated -= rotateHandler;
         }
 
         private void Update()
@@ -90,55 +91,36 @@ namespace TouchScript.Behaviors
 
         #region Event handlers
 
-        private void panStateChanged(object sender, GestureStateChangeEventArgs e)
+        private void panHandler(object sender, EventArgs e)
         {
-            switch (e.State)
-            {
-                case Gesture.GestureState.Began:
-                case Gesture.GestureState.Changed:
-                    var gesture = (SimplePanGesture)sender;
+            var gesture = (SimplePanGesture)sender;
 
-                    var deltaPos = gesture.LocalDeltaPosition;
-                    if (deltaPos != Vector3.zero) localPositionToGo += deltaPos;
-                    break;
+            localPositionToGo += gesture.LocalDeltaPosition * PanMultiplier;
+        }
+
+        private void rotateHandler(object sender, EventArgs e)
+        {
+            var gesture = (SimpleRotateGesture)sender;
+
+            if (Math.Abs(gesture.DeltaRotation) > 0.01)
+            {
+                if (transform.parent == null)
+                {
+                    localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * localRotationToGo;
+                } else
+                {
+                    localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, transform.parent.InverseTransformDirection(gesture.RotationAxis)) * localRotationToGo;
+                }
             }
         }
 
-        private void rotateStateChanged(object sender, GestureStateChangeEventArgs e)
+        private void scaleHandler(object sender, EventArgs e)
         {
-            switch (e.State)
+            var gesture = (SimpleScaleGesture)sender;
+
+            if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001)
             {
-                case Gesture.GestureState.Began:
-                case Gesture.GestureState.Changed:
-                    var gesture = (SimpleRotateGesture)sender;
-
-                    if (Math.Abs(gesture.DeltaRotation) > 0.01)
-                    {
-                        if (transform.parent == null)
-                        {
-                            localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * localRotationToGo;
-                        } else
-                        {
-                            localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, transform.parent.InverseTransformDirection(gesture.RotationAxis)) * localRotationToGo;
-                        }
-                    }
-                    break;
-            }
-        }
-
-        private void scaleStateChanged(object sender, GestureStateChangeEventArgs e)
-        {
-            switch (e.State)
-            {
-                case Gesture.GestureState.Began:
-                case Gesture.GestureState.Changed:
-                    var gesture = (SimpleScaleGesture)sender;
-
-                    if (Math.Abs(gesture.LocalDeltaScale - 1) > 0.00001)
-                    {
-                        localScaleToGo *= gesture.LocalDeltaScale;
-                    }
-                    break;
+                localScaleToGo *= gesture.LocalDeltaScale;
             }
         }
 

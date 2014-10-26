@@ -119,6 +119,7 @@ Transform:
   m_Children:
   - {fileID: 1867197387}
   m_Father: {fileID: 0}
+  m_RootOrder: 1
 --- !u!1 &1867197386
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +148,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1752395579}
+  m_RootOrder: 0
 --- !u!114 &1867197388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +161,11 @@ MonoBehaviour:
   m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnMobilePlatforms: 1
+  Tags:
+    tagList:
+    - Mouse
 --- !u!114 &1867197389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,7 +178,11 @@ MonoBehaviour:
   m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  advancedProps: 0
   DisableOnNonTouchPlatforms: 1
+  Tags:
+    tagList:
+    - Touch
 --- !u!1001 &1953388433
 Prefab:
   m_ObjectHideFlags: 0
@@ -224,6 +234,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &2051652174
 MonoBehaviour:
   m_ObjectHideFlags: 0

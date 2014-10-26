@@ -4,6 +4,7 @@
 
 using System;
 using TouchScript.Hit;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -72,12 +73,9 @@ namespace TouchScript.Layers
         public String Name;
 
         /// <summary>
-        /// Gets the camera a touch layer is using. Null if layer doesn't support cameras.
+        /// Layers screen to world projection normal.
         /// </summary>
-        public virtual Camera Camera
-        {
-            get { return null; }
-        }
+        public virtual Vector3 WorldProjectionNormal { get { return transform.forward; } }
 
         #endregion
 
@@ -96,6 +94,17 @@ namespace TouchScript.Layers
             return LayerHitResult.Error;
         }
 
+        /// <summary>
+        /// Projects a screen point on a plane using this layer's parameters.
+        /// </summary>
+        /// <param name="screenPosition">Screen point to project.</param>
+        /// <param name="projectionPlane">3D plane to project to.</param>
+        /// <returns>Projected point in world coordinates.</returns>
+        public virtual Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        {
+            return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
+        }
+
         #endregion
 
         #region Unity methods
@@ -106,7 +115,6 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.AddLayer(this);
         }
 
         /// <summary>

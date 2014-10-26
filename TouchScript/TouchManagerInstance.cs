@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Hit;
@@ -130,7 +131,7 @@ namespace TouchScript
         /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
-            get { return layers.AsReadOnly(); }
+            get { return new ReadOnlyCollection<TouchLayer>(layers); }
         }
 
         /// <inheritdoc />
@@ -264,6 +265,7 @@ namespace TouchScript
             return false;
         }
 
+        /// <inheritdoc />
         public ITouch BeginTouch(Vector2 position)
         {
             return BeginTouch(position, null);
@@ -396,17 +398,21 @@ namespace TouchScript
 
         private void updateLayers()
         {
-            layers = layers.FindAll(l => l != null); // filter empty ones
-            var unknownLayers = FindObjectsOfType(typeof(TouchLayer));
-            foreach (TouchLayer unknownLayer in unknownLayers) AddLayer(unknownLayer);
+            // filter empty layers
+            layers = layers.FindAll(l => l != null); 
         }
 
         private void createCameraLayer()
         {
             if (layers.Count == 0)
             {
-                Debug.Log("No camera layers. Adding one for the main camera.");
-                if (Camera.main != null) Camera.main.gameObject.AddComponent<CameraLayer>();
+                Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
+                if (Camera.main != null)
+                {
+                    var layer = Camera.main.GetComponent<TouchLayer>();
+                    if (layer == null) layer = Camera.main.gameObject.AddComponent<CameraLayer>();
+                    AddLayer(layer);
+                }
             }
         }
 
@@ -431,7 +437,7 @@ namespace TouchScript
                 {
                     case RuntimePlatform.IPhonePlayer:
                     case RuntimePlatform.Android:
-                    case RuntimePlatform.BB10Player:
+                    case RuntimePlatform.BlackBerryPlayer:
                     case RuntimePlatform.MetroPlayerARM:
                     case RuntimePlatform.MetroPlayerX64:
                     case RuntimePlatform.MetroPlayerX86:

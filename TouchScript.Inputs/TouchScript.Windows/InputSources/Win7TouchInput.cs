@@ -51,6 +51,9 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableMouseInputInBuilds = true;
 
+        /// <summary>
+        /// Tags added to touches coming from this input.
+        /// </summary>
         public Tags Tags = new Tags(Tags.INPUT_TOUCH);
 
         #endregion

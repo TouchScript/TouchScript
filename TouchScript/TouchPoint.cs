@@ -79,6 +79,8 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
+        /// <param name="tags">Initial tags.</param>
+        /// <param name="properties">Initial properties.</param>
         internal TouchPoint(int id, Vector2 position, Tags tags)
         {
             Id = id;

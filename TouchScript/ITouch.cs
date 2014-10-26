@@ -52,8 +52,14 @@ namespace TouchScript
         /// </summary>
         TouchLayer Layer { get; }
 
+        /// <summary>
+        /// Tags collection for this touch object.
+        /// </summary>
         Tags Tags { get; }
 
+        /// <summary>
+        /// List of custom properties (key-value pairs) for this touch object.
+        /// </summary>
         IDictionary<string, System.Object> Properties { get; } 
     }
 }
