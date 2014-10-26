@@ -36,6 +36,16 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <inheritdoc />
+        public override Vector3 LayerOrigin
+        {
+            get
+            {
+                if (_camera == null) return Vector3.zero;
+                return cachedTransform.position;
+            }
+        }
+
         #endregion
 
         #region Private variables
@@ -71,15 +81,9 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition)
-        {
-            return cachedTransform.TransformPoint(ProjectionUtils.NormalizeScreenPosition(screenPosition));
-        }
-
-        /// <inheritdoc />
         public override Vector3 ProjectTo(Vector2 screenPosition, Vector3 origin, Vector3 normal)
         {
-            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, origin, normal);
+            return ProjectionUtils.ProjectOnPlaneFromCamera(screenPosition, _camera, origin, normal);
         }
 
         #endregion

@@ -73,9 +73,14 @@ namespace TouchScript.Layers
         public String Name;
 
         /// <summary>
-        /// Layers screen to world projection normal.
+        /// Layer's screen to world projection normal.
         /// </summary>
         public virtual Vector3 WorldProjectionNormal { get { return Vector3.forward; } }
+
+        /// <summary>
+        /// Layer's world projection origin.
+        /// </summary>
+        public virtual Vector3 LayerOrigin { get { return Vector3.zero; } }
 
         #endregion
 
@@ -93,13 +98,6 @@ namespace TouchScript.Layers
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             return LayerHitResult.Error;
         }
-
-        /// <summary>
-        /// Projects a screen point on a plane defined by layer.
-        /// </summary>
-        /// <param name="screenPosition">Screen point to project.</param>
-        /// <returns>Projected point in world coordinates.</returns>
-        public abstract Vector3 ProjectTo(Vector2 screenPosition);
 
         /// <summary>
         /// Projects a screen point on a plane defined by origin and normal.

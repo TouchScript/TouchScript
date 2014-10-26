@@ -124,7 +124,7 @@ namespace TouchScript.Gestures.Simple
         [SerializeField]
         private Vector3 localProjectionNormal = Vector3.forward;
 
-        private Collider cachedCollider;
+        private float layerProjectionDistance = 0f;
 
         /// <summary>
         /// Touch layer used in projection.
@@ -139,8 +139,6 @@ namespace TouchScript.Gestures.Simple
         protected override void OnEnable()
         {
             base.OnEnable();
-
-            cachedCollider = collider;
         }
 
         #endregion
@@ -155,6 +153,19 @@ namespace TouchScript.Gestures.Simple
             if (touches.Count == activeTouches.Count)
             {
                 projectionLayer = activeTouches[0].Layer;
+                switch (projection)
+                {
+                    case ProjectionType.Layer:
+                        layerProjectionDistance = Vector3.Project(activeTouches[0].Hit.Point - projectionLayer.LayerOrigin, projectionLayer.WorldProjectionNormal).magnitude;
+                        break;
+                    case ProjectionType.Global:
+                        layerProjectionDistance = Vector3.Project(activeTouches[0].Hit.Point, projectionNormal).magnitude;
+                        break;
+                    case ProjectionType.Local:
+                        projectionNormal = cachedTransform.TransformDirection(localProjectionNormal);
+                        layerProjectionDistance = Vector3.Project(activeTouches[0].Hit.Point, projectionNormal).magnitude;
+                        break;
+                }
             }
         }
 
@@ -204,21 +215,24 @@ namespace TouchScript.Gestures.Simple
 
         protected Vector3 projectTo(Vector2 screenPosition)
         {
+            Vector3 proj;
+
             switch (projection)
             {
                 case ProjectionType.Layer:
-                    return projectionLayer.ProjectTo(screenPosition);
-                case ProjectionType.Local:
-                    return projectionLayer.ProjectTo(screenPosition, getCenter(), cachedTransform.TransformDirection(localProjectionNormal));
+                    proj = projectionLayer.ProjectTo(screenPosition, projectionLayer.LayerOrigin + projectionLayer.WorldProjectionNormal * layerProjectionDistance, projectionLayer.WorldProjectionNormal);
+                    Debug.DrawLine(activeTouches[0].Layer.LayerOrigin, proj, Color.red);
+                    return proj;
                 default:
-                    return projectionLayer.ProjectTo(screenPosition, getCenter(), projectionNormal);
+                    proj = projectionLayer.ProjectTo(screenPosition, projectionNormal * layerProjectionDistance, projectionNormal);
+                    Debug.DrawLine(activeTouches[0].Layer.LayerOrigin, proj, Color.red);
+                    return proj;
             }
         }
 
         protected Vector3 getCenter()
         {
-            if (cachedCollider != null) return cachedCollider.bounds.center;
-            return cachedTransform.position;
+            return Vector3.zero;
         }
 
         #endregion

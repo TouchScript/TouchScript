@@ -29,12 +29,7 @@ namespace TouchScript.Layers
             /// <summary>
             /// Get touches from specific camera.
             /// </summary>
-            Camera,
-
-            /// <summary>
-            /// Get all touches on Z=0 plane without a camera.
-            /// </summary>
-            Global
+            Camera
         }
 
         #endregion
@@ -52,7 +47,6 @@ namespace TouchScript.Layers
                 if (value == type) return;
                 type = value;
                 updateCamera();
-                updateCachedTransform();
             }
         }
 
@@ -65,10 +59,15 @@ namespace TouchScript.Layers
             set
             {
                 if (value == _camera) return;
+                if (_camera == null) return;
+                if (_camera == Camera.main)
+                {
+                    Type = LayerType.MainCamera;
+                    return;
+                }
+
                 _camera = value;
-                if (_camera == null) Type = LayerType.Global;
-                else Type = LayerType.Camera;
-                setName();
+                Type = LayerType.Camera;
             }
         }
 
@@ -77,8 +76,18 @@ namespace TouchScript.Layers
         {
             get
             {
-                if (cachedTransform == null) return base.WorldProjectionNormal;
+                if (_camera == null) return Vector3.forward;
                 return cachedTransform.forward;
+            }
+        }
+
+        /// <inheritdoc />
+        public override Vector3 LayerOrigin
+        {
+            get
+            {
+                if (_camera == null) return Vector3.zero;
+                return cachedTransform.position;
             }
         }
 
@@ -103,12 +112,11 @@ namespace TouchScript.Layers
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
-            if (_camera != null)
-            {
-                if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
-            }
+            if (_camera == null) return LayerHitResult.Error;
+            if (_camera.enabled == false || _camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
+            if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
 
-            hit = TouchHitFactory.Instance.GetTouchHit(transform);
+            hit = TouchHitFactory.Instance.GetTouchHit(transform, ProjectTo(position, LayerOrigin + WorldProjectionNormal * _camera.farClipPlane, WorldProjectionNormal));
             var hitTests = transform.GetComponents<HitTest>();
             if (hitTests.Length == 0) return LayerHitResult.Hit;
 
@@ -123,17 +131,11 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition)
-        {
-            return ProjectionUtils.NormalizeScreenPosition(screenPosition);
-        }
-
-        /// <inheritdoc />
         public override Vector3 ProjectTo(Vector2 screenPosition, Vector3 origin, Vector3 normal)
         {
-            if (_camera == null)
-                return ProjectionUtils.ScreenToPlaneProjection(ProjectionUtils.NormalizeScreenPosition(screenPosition), origin, normal);
-            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, origin, normal);
+            if (_camera == null) return TouchManager.INVALID_3D_POSITION;
+
+            return ProjectionUtils.ProjectOnPlaneFromCamera(screenPosition, _camera, origin, normal);
         }
 
         #endregion
@@ -144,7 +146,6 @@ namespace TouchScript.Layers
         protected override void Awake()
         {
             updateCamera();
-            updateCachedTransform();
 
             base.Awake();
         }
@@ -159,8 +160,9 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void setName()
         {
-            if (_camera == null) Name = "Global Fullscreen";
-            else Name = "Fullscreen @ " + _camera.name;
+            if (_camera == null) return;
+
+            Name = "Fullscreen @ " + _camera.name;
         }
 
         #endregion
@@ -169,23 +171,19 @@ namespace TouchScript.Layers
 
         private void updateCamera()
         {
-            switch (type)
+            if (type == LayerType.MainCamera) 
             {
-                case LayerType.Global:
-                    _camera = null;
-                    break;
-                case LayerType.MainCamera:
-                    _camera = Camera.main;
-                    if (_camera == null) Debug.LogError("No Main camera found!");
-                    break;
+                _camera = Camera.main;
             }
-            setName();
-        }
+            if (_camera == null)
+            {
+                Debug.LogError("Fullscreen layer couldn't find camera!");
+                enabled = false;
+                return;
+            }
 
-        private void updateCachedTransform()
-        {
-            if (_camera == null) cachedTransform = transform;
-            else cachedTransform = _camera.transform;
+            cachedTransform = _camera.transform;
+            setName();
         }
 
         #endregion
