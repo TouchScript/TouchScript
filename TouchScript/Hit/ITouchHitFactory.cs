@@ -29,8 +29,8 @@ namespace TouchScript.Hit
         /// <summary>
         /// Creates an instance of ITouchHit from value.
         /// </summary>
-        /// <param name="value">Transform which has been hit.</param>
+        /// <param name="transform">Transform which has been hit.</param>
         /// <returns>An instance of ITouchHit.</returns>
-        ITouchHit GetTouchHit(Transform value);
+        ITouchHit GetTouchHit(Transform transform, Vector3 point);
     }
 }

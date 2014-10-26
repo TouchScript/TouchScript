@@ -13,15 +13,13 @@ namespace TouchScript.Hit
 
         public Vector3 Normal { get { return hit.normal; } }
 
-        public Vector3 Point { get { return hit.point; } }
-
         public Rigidbody Rigidbody { get { return hit.rigidbody; } }
 
         private RaycastHit hit;
 
         internal void InitWith(RaycastHit value)
         {
-            InitWith(value.collider.transform);
+            InitWith(value.collider.transform, value.point);
             hit = value;
         }
 

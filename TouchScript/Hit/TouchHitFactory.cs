@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using UnityEngine;
 
 namespace TouchScript.Hit
@@ -42,10 +43,10 @@ namespace TouchScript.Hit
         }
 
         /// <inheritdoc />
-        public ITouchHit GetTouchHit(Transform value)
+        public ITouchHit GetTouchHit(Transform transform, Vector3 point)
         {
             var result = new TouchHit();
-            result.InitWith(value);
+            result.InitWith(transform, point);
             return result;
         }
 

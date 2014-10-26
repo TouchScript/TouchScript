@@ -18,5 +18,13 @@ namespace TouchScript.Hit
         /// The object hit by touch.
         /// </value>
         Transform Transform { get; }
+
+        /// <summary>
+        /// Gets the coordinates where the touch hits the object.
+        /// </summary>
+        /// <value>
+        /// World coordinates of the point where the object was touched.
+        /// </value>
+        Vector3 Point { get; }
     }
 }

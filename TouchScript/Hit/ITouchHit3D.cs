@@ -30,14 +30,6 @@ namespace TouchScript.Hit
         Vector3 Normal { get; }
 
         /// <summary>
-        /// Gets the world coordinate of the point where the object was hit.
-        /// </summary>
-        /// <value>
-        /// World coordinate of the point where the object was hit.
-        /// </value>
-        Vector3 Point { get; }
-
-        /// <summary>
         /// Gets the rigidbody of the hit object.
         /// </summary>
         /// <value>

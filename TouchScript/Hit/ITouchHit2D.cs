@@ -20,14 +20,6 @@ namespace TouchScript.Hit
         Collider2D Collider2D { get; }
 
         /// <summary>
-        /// Gets the coordinates where the touch hits the object.
-        /// </summary>
-        /// <value>
-        /// World coordinates of the point where the object was touched.
-        /// </value>
-        Vector3 Point { get; }
-
-        /// <summary>
         /// Gets the Rigidbidy2D which was touched.
         /// </summary>
         /// <value>

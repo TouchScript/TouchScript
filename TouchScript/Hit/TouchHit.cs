@@ -13,6 +13,14 @@ namespace TouchScript.Hit
 
         public Transform Transform { get; private set; }
 
+        public Vector3 Point { get { return point; } }
+
+        #endregion
+
+        #region Private variables
+
+        private Vector3 point;
+
         #endregion
 
         #region Constructors
@@ -24,9 +32,10 @@ namespace TouchScript.Hit
 
         #region Internal methods
 
-        internal void InitWith(Transform value)
+        internal void InitWith(Transform transform, Vector3 point)
         {
-            Transform = value;
+            Transform = transform;
+            this.point = point;
         }
 
         #endregion
