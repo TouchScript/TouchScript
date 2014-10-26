@@ -61,7 +61,7 @@ namespace TouchScript.InputSources
 
         #endregion
 
-        #region Callbacks
+        #region Protected methods
 
         /// <summary>
         /// Begin touch in given screen position.
@@ -90,17 +90,21 @@ namespace TouchScript.InputSources
         }
 
         /// <summary>
-        /// Move touch with id.
+        /// Mark touch as updated.
         /// </summary>
         /// <param name="id">Touch id.</param>
-        /// <param name="position">New screen position.</param>
-        protected virtual void updateTouch(int id, Vector2 position)
+        protected virtual void updateTouch(int id)
+        {
+            manager.UpdateTouch(id);
+        }
+
+        protected virtual void moveTouch(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            manager.UpdateTouch(id, position);
+            manager.MoveTouch(id, position);
         }
 
         /// <summary>

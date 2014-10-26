@@ -24,7 +24,7 @@ public class ScaleformMovie : Movie
         return 0;
     }
 
-    public void MoveTouch(int id, float x, float y)
+    public void UpdateTouch(int id, float x, float y)
     {
         Invoke("root.Scaleform_moveTouch", id, x / Screen.width, 1 - y / Screen.height);
     }

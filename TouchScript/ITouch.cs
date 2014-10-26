@@ -60,6 +60,6 @@ namespace TouchScript
         /// <summary>
         /// List of custom properties (key-value pairs) for this touch object.
         /// </summary>
-        IDictionary<string, System.Object> Properties { get; } 
+        IDictionary<string, System.Object> Properties { get; }
     }
 }

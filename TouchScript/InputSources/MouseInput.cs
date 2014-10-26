@@ -13,7 +13,6 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public sealed class MouseInput : InputSource
     {
-
         #region Public properties
 
         /// <summary>
@@ -104,11 +103,13 @@ namespace TouchScript.InputSources
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
                 {
                     if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
-                } else
+                }
+                else
                 {
                     if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
                 }
-            } else if (Input.GetMouseButton(0))
+            }
+            else if (Input.GetMouseButton(0))
             {
                 var pos = Input.mousePosition;
                 if (mousePointPos != pos)
@@ -116,10 +117,11 @@ namespace TouchScript.InputSources
                     mousePointPos = pos;
                     if (fakeMousePointId > -1 && mousePointId == -1)
                     {
-                        updateTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
-                    } else
+                        moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
+                    }
+                    else
                     {
-                        updateTouch(mousePointId, new Vector2(pos.x, pos.y));
+                        moveTouch(mousePointId, new Vector2(pos.x, pos.y));
                     }
                 }
             }
@@ -142,6 +144,5 @@ namespace TouchScript.InputSources
         }
 
         #endregion
-
     }
 }

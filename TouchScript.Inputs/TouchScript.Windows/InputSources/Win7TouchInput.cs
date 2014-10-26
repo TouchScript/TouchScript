@@ -131,7 +131,7 @@ namespace TouchScript.InputSources
 
         private void init()
         {
-            touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
+            touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
 
             hMainWindow = GetForegroundWindow();
             RegisterTouchWindow(hMainWindow, 0);
@@ -176,7 +176,7 @@ namespace TouchScript.InputSources
             {
                 TOUCHINPUT touch = inputs[i];
 
-                if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_DOWN) != 0)
+                if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_DOWN) != 0)
                 {
                     POINT p = new POINT();
                     p.X = touch.x/100;
@@ -184,7 +184,8 @@ namespace TouchScript.InputSources
                     ScreenToClient(hMainWindow, ref p);
 
                     winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(Tags)).Id);
-                } else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_UP) != 0)
+                }
+                else if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
@@ -192,7 +193,8 @@ namespace TouchScript.InputSources
                         winToInternalId.Remove(touch.dwID);
                         endTouch(existingId);
                     }
-                } else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_MOVE) != 0)
+                }
+                else if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_MOVE) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
@@ -202,7 +204,7 @@ namespace TouchScript.InputSources
                         p.Y = touch.y/100;
                         ScreenToClient(hMainWindow, ref p);
 
-                        updateTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
                     }
                 }
             }
@@ -282,27 +284,27 @@ namespace TouchScript.InputSources
         private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("Kernel32.dll")]
-        static extern ushort GlobalAddAtom(string lpString);
+        private static extern ushort GlobalAddAtom(string lpString);
 
         [DllImport("Kernel32.dll")]
-        static extern ushort GlobalDeleteAtom(ushort nAtom);
+        private static extern ushort GlobalDeleteAtom(ushort nAtom);
 
         [DllImport("user32.dll")]
-        static extern int SetProp(IntPtr hWnd, string lpString, int hData);
+        private static extern int SetProp(IntPtr hWnd, string lpString, int hData);
 
         [DllImport("user32.dll")]
-        static extern int RemoveProp(IntPtr hWnd, string lpString);
+        private static extern int RemoveProp(IntPtr hWnd, string lpString);
 
         private int touchInputSize;
 
         private int HIWORD(int value)
         {
-            return (int)(value >> 0xf);
+            return (int) (value >> 0xf);
         }
 
         private int LOWORD(int value)
         {
-            return (int)(value & 0xffff);
+            return (int) (value & 0xffff);
         }
 
         #endregion

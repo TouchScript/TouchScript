@@ -65,7 +65,7 @@ public class ScaleformLayer : TouchLayer
         return (LayerHitResult)result;
     }
 
-    protected override void moveTouch(ITouch touch)
+    protected override void updateTouch(ITouch touch)
     {
         movie.MoveTouch(touch.Id, touch.Position.x, touch.Position.y);
     }

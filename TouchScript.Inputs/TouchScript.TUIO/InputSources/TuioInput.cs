@@ -56,11 +56,25 @@ namespace TouchScript.InputSources
             }
         }
 
-        public List<TuioObjectMapping> TuioObjectMappings { get { return tuioObjectMappings; } }
+        public List<TuioObjectMapping> TuioObjectMappings
+        {
+            get { return tuioObjectMappings; }
+        }
 
-        public Tags CursorTags { get { return cursorTags; }}
-        public Tags BlobTags { get { return blobTags; }}
-        public Tags ObjectTags { get { return objectTags; } }
+        public Tags CursorTags
+        {
+            get { return cursorTags; }
+        }
+
+        public Tags BlobTags
+        {
+            get { return blobTags; }
+        }
+
+        public Tags ObjectTags
+        {
+            get { return objectTags; }
+        }
 
         #endregion
 
@@ -68,15 +82,19 @@ namespace TouchScript.InputSources
 
         [SerializeField]
         private int tuioPort = 3333;
+
         [SerializeField]
         private InputType supportedInputs = InputType.Cursors | InputType.Blobs | InputType.Objects;
 
         [SerializeField]
         private List<TuioObjectMapping> tuioObjectMappings = new List<TuioObjectMapping>();
+
         [SerializeField]
-        private Tags cursorTags  = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+        private Tags cursorTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+
         [SerializeField]
         private Tags blobTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+
         [SerializeField]
         private Tags objectTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_OBJECT});
 
@@ -113,7 +131,7 @@ namespace TouchScript.InputSources
             objectProcessor = new ObjectProcessor();
             objectProcessor.ObjectAdded += OnObjectAdded;
             objectProcessor.ObjectUpdated += OnObjectUpdated;
-            objectProcessor.ObjectRemoved += OnObjectRemoved;           
+            objectProcessor.ObjectRemoved += OnObjectRemoved;
 
             connect();
         }
@@ -166,7 +184,7 @@ namespace TouchScript.InputSources
         {
             if (server == null) return;
 
-            if ((supportedInputs & InputType.Cursors) != 0) server.AddDataProcessor(cursorProcessor);    
+            if ((supportedInputs & InputType.Cursors) != 0) server.AddDataProcessor(cursorProcessor);
             else server.RemoveDataProcessor(cursorProcessor);
             if ((supportedInputs & InputType.Blobs) != 0) server.AddDataProcessor(blobProcessor);
             else server.RemoveDataProcessor(blobProcessor);
@@ -214,8 +232,8 @@ namespace TouchScript.InputSources
             var entity = e.Cursor;
             lock (this)
             {
-                var x = entity.X * screenWidth;
-                var y = (1 - entity.Y) * screenHeight;
+                var x = entity.X*screenWidth;
+                var y = (1 - entity.Y)*screenHeight;
                 cursorToInternalId.Add(entity, beginTouch(new Vector2(x, y), new Tags(CursorTags)));
             }
         }
@@ -228,10 +246,10 @@ namespace TouchScript.InputSources
                 ITouch touch;
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = entity.X * screenWidth;
-                var y = (1 - entity.Y) * screenHeight;
+                var x = entity.X*screenWidth;
+                var y = (1 - entity.Y)*screenHeight;
 
-                updateTouch(touch.Id, new Vector2(x, y));
+                moveTouch(touch.Id, new Vector2(x, y));
             }
         }
 
@@ -253,8 +271,8 @@ namespace TouchScript.InputSources
             var entity = e.Blob;
             lock (this)
             {
-                var x = entity.X * screenWidth;
-                var y = (1 - entity.Y) * screenHeight;
+                var x = entity.X*screenWidth;
+                var y = (1 - entity.Y)*screenHeight;
                 var touch = beginTouch(new Vector2(x, y), new Tags(BlobTags));
                 updateBlobProperties(touch, entity);
                 blobToInternalId.Add(entity, touch);
@@ -269,10 +287,10 @@ namespace TouchScript.InputSources
                 ITouch touch;
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = entity.X * screenWidth;
-                var y = (1 - entity.Y) * screenHeight;
+                var x = entity.X*screenWidth;
+                var y = (1 - entity.Y)*screenHeight;
 
-                updateTouch(touch.Id, new Vector2(x, y));
+                moveTouch(touch.Id, new Vector2(x, y));
                 updateBlobProperties(touch, entity);
             }
         }
@@ -295,8 +313,8 @@ namespace TouchScript.InputSources
             var entity = e.Object;
             lock (this)
             {
-                var x = entity.X * screenWidth;
-                var y = (1 - entity.Y) * screenHeight;
+                var x = entity.X*screenWidth;
+                var y = (1 - entity.Y)*screenHeight;
                 var touch = beginTouch(new Vector2(x, y), new Tags(ObjectTags));
                 updateObjectProperties(touch, entity);
                 objectToInternalId.Add(entity, touch);
@@ -312,10 +330,10 @@ namespace TouchScript.InputSources
                 ITouch touch;
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = entity.X * screenWidth;
-                var y = (1 - entity.Y) * screenHeight;
+                var x = entity.X*screenWidth;
+                var y = (1 - entity.Y)*screenHeight;
 
-                updateTouch(touch.Id, new Vector2(x, y));
+                moveTouch(touch.Id, new Vector2(x, y));
                 updateObjectProperties(touch, entity);
             }
         }
@@ -342,5 +360,4 @@ namespace TouchScript.InputSources
         public int Id;
         public string Tag;
     }
-
 }

@@ -144,9 +144,9 @@ namespace TouchScript.Layers
             return false;
         }
 
-        internal void MoveTouch(ITouch touch)
+        internal void UpdateTouch(ITouch touch)
         {
-            moveTouch(touch);
+            updateTouch(touch);
         }
 
         internal void EndTouch(ITouch touch)
@@ -189,7 +189,7 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void moveTouch(ITouch touch)
+        protected virtual void updateTouch(ITouch touch)
         {}
 
         /// <summary>

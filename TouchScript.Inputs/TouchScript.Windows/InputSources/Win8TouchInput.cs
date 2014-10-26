@@ -3,7 +3,6 @@
  * @author Andrew David Griffiths
  */
 
-using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -95,7 +94,7 @@ namespace TouchScript.InputSources
                     RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
                     GlobalDeleteAtom(pressAndHoldAtomID);
                 }
-                
+
                 SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
 
                 hMainWindow = IntPtr.Zero;
@@ -195,7 +194,7 @@ namespace TouchScript.InputSources
                 case WM_POINTERUPDATE:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
                     {
-                        updateTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
                     }
                     break;
             }
@@ -293,25 +292,25 @@ namespace TouchScript.InputSources
         private static extern IntPtr EnableMouseInPointer(bool value);
 
         [DllImport("Kernel32.dll")]
-        static extern ushort GlobalAddAtom(string lpString);
+        private static extern ushort GlobalAddAtom(string lpString);
 
         [DllImport("Kernel32.dll")]
-        static extern ushort GlobalDeleteAtom(ushort nAtom);
+        private static extern ushort GlobalDeleteAtom(ushort nAtom);
 
         [DllImport("user32.dll")]
-        static extern int SetProp(IntPtr hWnd, string lpString, int hData);
+        private static extern int SetProp(IntPtr hWnd, string lpString, int hData);
 
         [DllImport("user32.dll")]
-        static extern int RemoveProp(IntPtr hWnd, string lpString);
+        private static extern int RemoveProp(IntPtr hWnd, string lpString);
 
         private int HIWORD(int value)
         {
-            return (int)(value >> 0xf);
+            return (int) (value >> 0xf);
         }
 
         private int LOWORD(int value)
         {
-            return (int)(value & 0xffff);
+            return (int) (value & 0xffff);
         }
 
         #endregion
