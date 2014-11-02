@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -115,6 +116,7 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
+            if (Application.isPlaying) StartCoroutine(lateAwake());
         }
 
         /// <summary>
@@ -207,6 +209,16 @@ namespace TouchScript.Layers
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void cancelTouch(ITouch touch)
         {}
+
+        #endregion
+
+        #region Private functions
+
+        private IEnumerator lateAwake()
+        {
+            yield return new WaitForEndOfFrame();
+            TouchManager.Instance.AddLayer(this);
+        }
 
         #endregion
     }
