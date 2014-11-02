@@ -9,7 +9,7 @@ using System.Linq;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Utils;
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures

@@ -3,7 +3,6 @@
  * @author Andrew David Griffiths
  */
 
-using TouchScript.Utils.Editor.Attributes;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
