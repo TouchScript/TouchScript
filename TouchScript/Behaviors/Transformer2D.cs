@@ -57,22 +57,33 @@ namespace TouchScript.Behaviors
 
         private void Update()
         {
-            var fraction = Speed*Time.deltaTime;
-            if (transform.localPosition != lastLocalPosition)
-            {
-                // changed by someone else
-                localPositionToGo = transform.localPosition;
-            }
+            var fraction = Speed * Time.deltaTime;
+
+            // changed by someone else
+            if (!Mathf.Approximately(transform.localPosition.x, lastLocalPosition.x))
+                localPositionToGo.x = transform.localPosition.x;
+            if (!Mathf.Approximately(transform.localPosition.y, lastLocalPosition.y))
+                localPositionToGo.y = transform.localPosition.y;
+            if (!Mathf.Approximately(transform.localPosition.z, lastLocalPosition.z))
+                localPositionToGo.z = transform.localPosition.z;
             transform.localPosition = lastLocalPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);
-            if (transform.localScale != lastLocalScale)
-            {
-                localScaleToGo = transform.localScale;
-            }
+
+            // changed by someone else
+            if (!Mathf.Approximately(transform.localScale.x, lastLocalScale.x))
+                localScaleToGo.x = transform.localScale.x;
+            if (!Mathf.Approximately(transform.localScale.y, lastLocalScale.y))
+                localScaleToGo.y = transform.localScale.y;
+            if (!Mathf.Approximately(transform.localScale.z, lastLocalScale.z))
+                localScaleToGo.z = transform.localScale.z;
             transform.localScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
-            if (transform.localRotation != lastLocalRotation)
-            {
-                localRotationToGo = transform.localRotation;
-            }
+
+            // changed by someone else
+            if (!Mathf.Approximately(transform.localRotation.x, lastLocalRotation.x))
+                localRotationToGo.x = transform.localRotation.x;
+            if (!Mathf.Approximately(transform.localRotation.y, lastLocalRotation.y))
+                localRotationToGo.y = transform.localRotation.y;
+            if (!Mathf.Approximately(transform.localRotation.z, lastLocalRotation.z))
+                localRotationToGo.z = transform.localRotation.z;
             transform.localRotation = lastLocalRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
         }
 
@@ -107,7 +118,8 @@ namespace TouchScript.Behaviors
                 if (transform.parent == null)
                 {
                     localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * localRotationToGo;
-                } else
+                }
+                else
                 {
                     localRotationToGo = Quaternion.AngleAxis(gesture.DeltaRotation, transform.parent.InverseTransformDirection(gesture.RotationAxis)) * localRotationToGo;
                 }
