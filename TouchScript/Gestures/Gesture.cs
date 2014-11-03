@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Utils;

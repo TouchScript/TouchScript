@@ -1,4 +1,4 @@
-﻿using TouchScript.Utils.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEditor;
 using UnityEngine;
 

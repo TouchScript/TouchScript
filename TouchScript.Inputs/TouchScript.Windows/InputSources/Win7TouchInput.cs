@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Frolov
  * @author Valentin Simonov / http://va.lent.in/
  */
