@@ -362,7 +362,7 @@ namespace TouchScript
 
         private IEnumerator lateAwake()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             updateLayers();
             createCameraLayer();

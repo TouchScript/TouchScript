@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

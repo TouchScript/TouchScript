@@ -5,7 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
