@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -6,13 +6,11 @@ using UnityEngine;
 
 namespace TouchScript.Hit
 {
-
     /// <summary>
     /// An object representing metadata for touches hitting 3d objects with 3d colliders.
     /// </summary>
     public interface ITouchHit3D : ITouchHit
     {
-
         /// <summary>
         /// Gets the collider which was hit by the touch.
         /// </summary>
@@ -44,6 +42,5 @@ namespace TouchScript.Hit
         /// The rigidbody on the object which was hit.
         /// </value>
         Rigidbody Rigidbody { get; }
-
     }
 }

@@ -62,6 +62,5 @@ namespace TouchScript.Editor.Utils
         {
             GUILayout.EndVertical();
         }
-
     }
 }

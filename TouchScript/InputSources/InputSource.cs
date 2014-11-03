@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -24,10 +24,10 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-        #pragma warning disable 0169
+#pragma warning disable 0169
         [SerializeField]
         private bool advancedProps; // is used to save whether advanced properties are opened or closed
-        #pragma warning restore 0169
+#pragma warning restore 0169
 
         private TouchManagerInstance manager;
 
@@ -55,8 +55,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Unity Update callback.
         /// </summary>
-        protected virtual void Update()
-        {}
+        protected virtual void Update() {}
 
         #endregion
 

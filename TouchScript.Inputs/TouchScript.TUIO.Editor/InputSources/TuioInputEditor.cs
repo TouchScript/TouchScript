@@ -1,4 +1,4 @@
-﻿using TouchScript.InputSources;
+using TouchScript.InputSources;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -37,13 +37,17 @@ namespace TouchScript.Editor.InputSources
                 var element = instance.TuioObjectMappings[index];
                 rect.height = 16;
                 rect.y += 2;
-                var r = rect; r.width = 20;
+                var r = rect;
+                r.width = 20;
                 GUI.Label(r, "id:");
-                r.x += r.width; r.width = 50;
+                r.x += r.width;
+                r.width = 50;
                 var newId = EditorGUI.IntField(r, element.Id);
-                r.x += r.width; r.width = 40;
+                r.x += r.width;
+                r.width = 40;
                 GUI.Label(r, "  tag:");
-                r.x += r.width; r.width = rect.width - r.x + rect.x;
+                r.x += r.width;
+                r.width = rect.width - r.x + rect.x;
                 var newTag = GUI.TextField(r, element.Tag);
 
                 if (EditorGUI.EndChangeCheck())
@@ -90,6 +94,5 @@ namespace TouchScript.Editor.InputSources
             EditorGUILayout.PropertyField(objectTags);
             EditorGUI.indentLevel--;
         }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -9,11 +9,9 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Layers
 {
-
     [CustomEditor(typeof(CameraLayer2D))]
     internal sealed class CameraLayer2DEditor : UnityEditor.Editor
     {
-
         public const string TEXT_REBUILD = "Unity doesn't expose actual 2d layers sorting, so if you change 2d layers you must manually rebuild layers by pressing this button.";
 
         private SerializedProperty sortedLayerIds;
@@ -62,7 +60,7 @@ namespace TouchScript.Editor.Layers
             int maxUserId = 0;
             for (int i = 0; i < count; i++)
             {
-                var userId = (int)getSortingLayerUserID.Invoke(null, new object[] { i });
+                var userId = (int)getSortingLayerUserID.Invoke(null, new object[] {i});
                 maxUserId = Math.Max(maxUserId, userId);
                 if (maxUserId >= layerIdsToSortOrder.Length)
                 {
@@ -73,6 +71,5 @@ namespace TouchScript.Editor.Layers
 
             return layerIdsToSortOrder;
         }
-
     }
 }

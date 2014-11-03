@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -115,7 +115,7 @@ namespace TouchScript
         /// <summary>
         /// Inch to centimeter ratio to be used in DPI calculations.
         /// </summary>
-        public const float INCH_TO_CM = 1/CM_TO_INCH;
+        public const float INCH_TO_CM = 1 / CM_TO_INCH;
 
         /// <summary>
         /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.

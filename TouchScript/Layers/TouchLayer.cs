@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -76,7 +76,10 @@ namespace TouchScript.Layers
         /// <summary>
         /// Layers screen to world projection normal.
         /// </summary>
-        public virtual Vector3 WorldProjectionNormal { get { return transform.forward; } }
+        public virtual Vector3 WorldProjectionNormal
+        {
+            get { return transform.forward; }
+        }
 
         #endregion
 
@@ -191,24 +194,21 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void updateTouch(ITouch touch)
-        {}
+        protected virtual void updateTouch(ITouch touch) {}
 
         /// <summary>
         /// Called when a touch ends.
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void endTouch(ITouch touch)
-        {}
+        protected virtual void endTouch(ITouch touch) {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void cancelTouch(ITouch touch)
-        {}
+        protected virtual void cancelTouch(ITouch touch) {}
 
         #endregion
 

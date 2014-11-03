@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -31,7 +31,8 @@ namespace TouchScript
                         go.hideFlags = HideFlags.HideInHierarchy;
                         DontDestroyOnLoad(go);
                         instance = go.AddComponent<GestureManagerInstance>();
-                    } else if (objects.Length >= 1)
+                    }
+                    else if (objects.Length >= 1)
                     {
                         instance = objects[0];
                     }
@@ -281,7 +282,8 @@ namespace TouchScript
                 if (gestureTouches.ContainsKey(gesture))
                 {
                     gestureTouches[gesture].AddRange(touchesToReceive);
-                } else
+                }
+                else
                 {
                     activeGestures.Add(gesture);
                     gestureTouches.Add(gesture, touchesToReceive);

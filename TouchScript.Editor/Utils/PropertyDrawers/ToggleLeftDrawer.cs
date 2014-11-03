@@ -1,10 +1,9 @@
-﻿using TouchScript.Utils.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEditor;
 using UnityEngine;
 
 namespace TouchScript.Editor.Utils.PropertyDrawers
 {
-
     [CustomPropertyDrawer(typeof(ToggleLeftAttribute))]
     internal sealed class ToggleLeftDrawer : PropertyDrawer
     {
@@ -20,5 +19,4 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             EditorGUI.EndProperty();
         }
     }
-
 }

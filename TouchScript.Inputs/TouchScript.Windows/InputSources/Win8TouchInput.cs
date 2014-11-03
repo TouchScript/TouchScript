@@ -305,12 +305,12 @@ namespace TouchScript.InputSources
 
         private int HIWORD(int value)
         {
-            return (int) (value >> 0xf);
+            return (int)(value >> 0xf);
         }
 
         private int LOWORD(int value)
         {
-            return (int) (value & 0xffff);
+            return (int)(value & 0xffff);
         }
 
         #endregion

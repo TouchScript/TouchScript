@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -16,7 +16,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
     public class LongPressGesture : Gesture
     {
-
         #region Constants
 
         /// <summary>
@@ -183,7 +182,8 @@ namespace TouchScript.Gestures
                 if (base.GetTargetHitResult())
                 {
                     setState(GestureState.Recognized);
-                } else
+                }
+                else
                 {
                     setState(GestureState.Failed);
                 }

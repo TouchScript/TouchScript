@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -11,7 +11,6 @@ namespace TouchScript.Hit
     /// </summary>
     public sealed class TouchHitFactory : ITouchHitFactory
     {
-
         /// <summary>
         /// A static instance of a TouchHitFactory which is used to create instances of ITouchHit.
         /// </summary>
@@ -22,8 +21,7 @@ namespace TouchScript.Hit
 
         private static TouchHitFactory instance;
 
-        private TouchHitFactory()
-        {}
+        private TouchHitFactory() {}
 
         /// <inheritdoc />
         public ITouchHit GetTouchHit(RaycastHit value)
@@ -48,6 +46,5 @@ namespace TouchScript.Hit
             result.InitWith(value);
             return result;
         }
-
     }
 }

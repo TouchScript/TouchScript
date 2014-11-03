@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -163,7 +163,7 @@ namespace TouchScript
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
-        private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
+        private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private List<TouchPoint> touches = new List<TouchPoint>(30);
@@ -386,7 +386,7 @@ namespace TouchScript
         private void updateDPI()
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
-            dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
+            dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
         }
 
         private void updateLayers()
@@ -411,7 +411,7 @@ namespace TouchScript
 
         private void createTouchInput()
         {
-            var inputs = FindObjectsOfType(typeof (InputSource));
+            var inputs = FindObjectsOfType(typeof(InputSource));
             if (inputs.Length == 0)
             {
                 GameObject obj = null;

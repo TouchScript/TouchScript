@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -10,6 +10,5 @@ namespace TouchScript.Utils.Attributes
     /// <para>An attribute to use with ToggleLeft item drawer.</para>
     /// <para><b>For internal use only!</b></para>
     /// </summary>
-    public class ToggleLeftAttribute : PropertyAttribute
-    {}
+    public class ToggleLeftAttribute : PropertyAttribute {}
 }

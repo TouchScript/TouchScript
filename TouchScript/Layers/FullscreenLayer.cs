@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -14,7 +14,6 @@ namespace TouchScript.Layers
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
     public sealed class FullscreenLayer : TouchLayer
     {
-
         #region Constants
 
         /// <summary>
@@ -89,6 +88,7 @@ namespace TouchScript.Layers
 
         [SerializeField]
         private LayerType type = LayerType.MainCamera;
+
         [SerializeField]
         private Camera _camera;
 
@@ -143,8 +143,7 @@ namespace TouchScript.Layers
         }
 
         // To be able to turn it off
-        private void OnEnable()
-        {}
+        private void OnEnable() {}
 
         #endregion
 
@@ -153,7 +152,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void setName()
         {
-            if (_camera == null) Name = "Global Fullscreen"; 
+            if (_camera == null) Name = "Global Fullscreen";
             else Name = "Fullscreen @ " + _camera.name;
         }
 

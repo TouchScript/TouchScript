@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -15,7 +15,6 @@ namespace TouchScript.Gestures.Simple
     [AddComponentMenu("TouchScript/Gestures/Simple Pan Gesture")]
     public class SimplePanGesture : Transform2DGestureBase
     {
-
         #region Constants
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace TouchScript.Gestures.Simple
             get
             {
                 if (activeTouches.Count < 2) return base.ScreenPosition;
-                return (activeTouches[0].Position + activeTouches[1].Position)*.5f;
+                return (activeTouches[0].Position + activeTouches[1].Position) * .5f;
             }
         }
 
@@ -112,7 +111,7 @@ namespace TouchScript.Gestures.Simple
             get
             {
                 if (activeTouches.Count < 2) return base.PreviousScreenPosition;
-                return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition)*.5f;
+                return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition) * .5f;
             }
         }
 
@@ -146,17 +145,19 @@ namespace TouchScript.Gestures.Simple
                 oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter, WorldTransformPlane);
                 newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
                 worldDelta = newWorldCenter - oldWorldCenter;
-            } else
+            }
+            else
             {
                 movementBuffer += newScreenCenter - oldScreenCenter;
-                var dpiMovementThreshold = MovementThreshold*touchManager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude > dpiMovementThreshold*dpiMovementThreshold)
+                var dpiMovementThreshold = MovementThreshold * touchManager.DotsPerCentimeter;
+                if (movementBuffer.sqrMagnitude > dpiMovementThreshold * dpiMovementThreshold)
                 {
                     isMoving = true;
                     oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter - movementBuffer, WorldTransformPlane);
                     newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
                     worldDelta = newWorldCenter - oldWorldCenter;
-                } else
+                }
+                else
                 {
                     newWorldCenter = projectionLayer.ProjectTo(newScreenCenter - movementBuffer, WorldTransformPlane);
                     oldWorldCenter = newWorldCenter;
@@ -177,7 +178,8 @@ namespace TouchScript.Gestures.Simple
                         if (State == GestureState.Possible)
                         {
                             setState(GestureState.Began);
-                        } else
+                        }
+                        else
                         {
                             setState(GestureState.Changed);
                         }

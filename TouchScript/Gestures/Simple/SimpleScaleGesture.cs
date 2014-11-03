@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -14,7 +14,6 @@ namespace TouchScript.Gestures.Simple
     [AddComponentMenu("TouchScript/Gestures/Simple Scale Gesture")]
     public class SimpleScaleGesture : TwoPointTransform2DGestureBase
     {
-
         #region Constants
 
         /// <summary>
@@ -129,20 +128,21 @@ namespace TouchScript.Gestures.Simple
             if (isScaling)
             {
                 var distance = Vector3.Distance(oldWorldPos2, oldWorldPos1);
-                deltaScale = distance > 0 ? newVector.magnitude/distance : 1;
-            } else
+                deltaScale = distance > 0 ? newVector.magnitude / distance : 1;
+            }
+            else
             {
                 var oldScreenDistance = Vector2.Distance(oldScreenPos1, oldScreenPos2);
                 var newScreenDistance = newScreenDelta.magnitude;
                 var screenDeltaDistance = newScreenDistance - oldScreenDistance;
                 scalingBuffer += screenDeltaDistance;
-                var dpiScalingThreshold = ScalingThreshold*touchManager.DotsPerCentimeter;
-                if (scalingBuffer*scalingBuffer >= dpiScalingThreshold*dpiScalingThreshold)
+                var dpiScalingThreshold = ScalingThreshold * touchManager.DotsPerCentimeter;
+                if (scalingBuffer * scalingBuffer >= dpiScalingThreshold * dpiScalingThreshold)
                 {
                     isScaling = true;
                     var oldScreenDirection = (oldScreenPos2 - oldScreenPos1).normalized;
-                    var startScale = (newScreenDistance - scalingBuffer)*.5f;
-                    var startVector = oldScreenDirection*startScale;
+                    var startScale = (newScreenDistance - scalingBuffer) * .5f;
+                    var startVector = oldScreenDirection * startScale;
                     deltaScale = newVector.magnitude / (projectionLayer.ProjectTo(oldScreenCenter + startVector, WorldTransformPlane) - projectionLayer.ProjectTo(oldScreenCenter - startVector, WorldTransformPlane)).magnitude;
                 }
             }
@@ -167,7 +167,8 @@ namespace TouchScript.Gestures.Simple
                         if (State == GestureState.Possible)
                         {
                             setState(GestureState.Began);
-                        } else
+                        }
+                        else
                         {
                             setState(GestureState.Changed);
                         }

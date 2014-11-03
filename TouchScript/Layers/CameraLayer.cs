@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -65,9 +65,11 @@ namespace TouchScript.Layers
                     }
                     i++;
                 }
-            } else
+            }
+            else
             {
-                switch (doHit(raycastHits[0], out hit)) {
+                switch (doHit(raycastHits[0], out hit))
+                {
                     case HitTest.ObjectHitResult.Hit:
                         return LayerHitResult.Hit;
                     case HitTest.ObjectHitResult.Error:

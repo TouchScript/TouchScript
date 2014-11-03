@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -40,7 +40,7 @@ namespace TouchScript.Clusters
             set
             {
                 minPointDistance = value;
-                minPointDistanceSqr = value*value;
+                minPointDistanceSqr = value * value;
             }
         }
 
@@ -222,9 +222,10 @@ namespace TouchScript.Clusters
                 // If it is the same point it means that this point is too far away from both clusters and has to be in a separate cluster
                 if (obj1 == obj2)
                 {
-                    center1 = (center1 + center2)*.5f;
+                    center1 = (center1 + center2) * .5f;
                     center2 = obj2.Position;
-                } else
+                }
+                else
                 {
                     center1 = obj1.Position;
                     center2 = obj2.Position;
@@ -239,7 +240,8 @@ namespace TouchScript.Clusters
                     if ((center1 - obj.Position).sqrMagnitude < (center2 - obj.Position).sqrMagnitude)
                     {
                         cluster1.Add(obj);
-                    } else
+                    }
+                    else
                     {
                         cluster2.Add(obj);
                     }

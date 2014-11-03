@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -13,7 +13,6 @@ namespace TouchScript.Debugging
     [AddComponentMenu("TouchScript/Touch Debugger")]
     public class TouchDebugger : MonoBehaviour
     {
-
         #region Public properties
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace TouchScript.Debugging
             {
                 texture = value;
                 update();
-            } 
+            }
         }
 
         /// <summary>Gets or sets whether <see cref="TouchDebugger"/> is using DPI to scale touch cursors.</summary>
@@ -82,19 +81,24 @@ namespace TouchScript.Debugging
 
         [SerializeField]
         private bool showTouchId = true;
+
         [SerializeField]
         private bool showTags = false;
+
         [SerializeField]
         private Texture2D texture;
+
         [SerializeField]
         private bool useDPI = true;
+
         [SerializeField]
         private float touchSize = 1f;
+
         [SerializeField]
         private Color fontColor = new Color(0, 1, 1, 1);
 
         private Dictionary<int, ITouch> dummies = new Dictionary<int, ITouch>(10);
-        private Dictionary<int, string> tags = new Dictionary<int, string>(10); 
+        private Dictionary<int, string> tags = new Dictionary<int, string>(10);
         private float textureDPI, scale, dpi, shadowOffset;
         private int textureWidth, textureHeight, halfTextureWidth, halfTextureHeight, xOffset, yOffset, labelWidth, labelHeight, fontSize;
         private GUIStyle style;
@@ -190,7 +194,8 @@ namespace TouchScript.Debugging
                 textureWidth = (int)(texture.width * scale);
                 textureHeight = (int)(texture.height * scale);
                 computeConsts();
-            } else
+            }
+            else
             {
                 textureWidth = 32;
                 textureHeight = 32;

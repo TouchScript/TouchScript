@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -249,7 +249,7 @@ namespace TouchScript.Gestures
             {
                 var position = ScreenPosition;
                 if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
-                return new Vector2(position.x/Screen.width, position.y/Screen.height);
+                return new Vector2(position.x / Screen.width, position.y / Screen.height);
             }
         }
 
@@ -263,7 +263,7 @@ namespace TouchScript.Gestures
             {
                 var position = PreviousScreenPosition;
                 if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
-                return new Vector2(position.x/Screen.width, position.y/Screen.height);
+                return new Vector2(position.x / Screen.width, position.y / Screen.height);
             }
         }
 
@@ -309,10 +309,10 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Transform cachedTransform;
 
-        #pragma warning disable 0169
+#pragma warning disable 0169
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
-        #pragma warning restore 0169
+#pragma warning restore 0169
 
         [SerializeField]
         [ToggleLeft]
@@ -653,15 +653,13 @@ namespace TouchScript.Gestures
         /// Called when new touches appear.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesBegan(IList<ITouch> touches)
-        {}
+        protected virtual void touchesBegan(IList<ITouch> touches) {}
 
         /// <summary>
         /// Called for moved touches.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesMoved(IList<ITouch> touches)
-        {}
+        protected virtual void touchesMoved(IList<ITouch> touches) {}
 
         /// <summary>
         /// Called if touches are removed.
@@ -683,7 +681,8 @@ namespace TouchScript.Gestures
                     cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
                     cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
                 }
-            } else
+            }
+            else
             {
                 if (activeTouches.Count == 0)
                 {
@@ -692,7 +691,8 @@ namespace TouchScript.Gestures
                     {
                         cachedScreenPosition = lastPoint.Position;
                         cachedPreviousScreenPosition = lastPoint.PreviousPosition;
-                    } else
+                    }
+                    else
                     {
                         cachedScreenPosition = TouchManager.INVALID_POSITION;
                         cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
@@ -705,8 +705,7 @@ namespace TouchScript.Gestures
         /// Called when touches are cancelled.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesCancelled(IList<ITouch> touches)
-        {}
+        protected virtual void touchesCancelled(IList<ITouch> touches) {}
 
         /// <summary>
         /// Called to reset gesture state after it fails or recognizes.
@@ -720,38 +719,32 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Called when state is changed to Possible.
         /// </summary>
-        protected virtual void onPossible()
-        {}
+        protected virtual void onPossible() {}
 
         /// <summary>
         /// Called when state is changed to Began.
         /// </summary>
-        protected virtual void onBegan()
-        {}
+        protected virtual void onBegan() {}
 
         /// <summary>
         /// Called when state is changed to Changed.
         /// </summary>
-        protected virtual void onChanged()
-        {}
+        protected virtual void onChanged() {}
 
         /// <summary>
         /// Called when state is changed to Recognized.
         /// </summary>
-        protected virtual void onRecognized()
-        {}
+        protected virtual void onRecognized() {}
 
         /// <summary>
         /// Called when state is changed to Failed.
         /// </summary>
-        protected virtual void onFailed()
-        {}
+        protected virtual void onFailed() {}
 
         /// <summary>
         /// Called when state is changed to Cancelled.
         /// </summary>
-        protected virtual void onCancelled()
-        {}
+        protected virtual void onCancelled() {}
 
         #endregion
 
@@ -839,5 +832,4 @@ namespace TouchScript.Gestures
             PreviousState = previousState;
         }
     }
-
 }

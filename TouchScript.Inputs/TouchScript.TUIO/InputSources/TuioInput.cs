@@ -232,8 +232,8 @@ namespace TouchScript.InputSources
             var entity = e.Cursor;
             lock (this)
             {
-                var x = entity.X*screenWidth;
-                var y = (1 - entity.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
                 cursorToInternalId.Add(entity, beginTouch(new Vector2(x, y), new Tags(CursorTags)));
             }
         }
@@ -246,8 +246,8 @@ namespace TouchScript.InputSources
                 ITouch touch;
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = entity.X*screenWidth;
-                var y = (1 - entity.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
 
                 moveTouch(touch.Id, new Vector2(x, y));
             }
@@ -271,8 +271,8 @@ namespace TouchScript.InputSources
             var entity = e.Blob;
             lock (this)
             {
-                var x = entity.X*screenWidth;
-                var y = (1 - entity.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
                 var touch = beginTouch(new Vector2(x, y), new Tags(BlobTags));
                 updateBlobProperties(touch, entity);
                 blobToInternalId.Add(entity, touch);
@@ -287,8 +287,8 @@ namespace TouchScript.InputSources
                 ITouch touch;
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = entity.X*screenWidth;
-                var y = (1 - entity.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
 
                 moveTouch(touch.Id, new Vector2(x, y));
                 updateBlobProperties(touch, entity);
@@ -313,8 +313,8 @@ namespace TouchScript.InputSources
             var entity = e.Object;
             lock (this)
             {
-                var x = entity.X*screenWidth;
-                var y = (1 - entity.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
                 var touch = beginTouch(new Vector2(x, y), new Tags(ObjectTags));
                 updateObjectProperties(touch, entity);
                 objectToInternalId.Add(entity, touch);
@@ -330,8 +330,8 @@ namespace TouchScript.InputSources
                 ITouch touch;
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = entity.X*screenWidth;
-                var y = (1 - entity.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
 
                 moveTouch(touch.Id, new Vector2(x, y));
                 updateObjectProperties(touch, entity);

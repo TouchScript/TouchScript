@@ -38,7 +38,6 @@ namespace TouchScript.Editor.InputSources
             serializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual void drawAdvanced()
-        {}
+        protected virtual void drawAdvanced() {}
     }
 }

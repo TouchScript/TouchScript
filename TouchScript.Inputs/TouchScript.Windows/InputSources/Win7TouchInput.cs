@@ -131,7 +131,7 @@ namespace TouchScript.InputSources
 
         private void init()
         {
-            touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
+            touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
 
             hMainWindow = GetForegroundWindow();
             RegisterTouchWindow(hMainWindow, 0);
@@ -176,16 +176,16 @@ namespace TouchScript.InputSources
             {
                 TOUCHINPUT touch = inputs[i];
 
-                if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_DOWN) != 0)
+                if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_DOWN) != 0)
                 {
                     POINT p = new POINT();
-                    p.X = touch.x/100;
-                    p.Y = touch.y/100;
+                    p.X = touch.x / 100;
+                    p.Y = touch.y / 100;
                     ScreenToClient(hMainWindow, ref p);
 
                     winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(Tags)).Id);
                 }
-                else if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_UP) != 0)
+                else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
@@ -194,14 +194,14 @@ namespace TouchScript.InputSources
                         endTouch(existingId);
                     }
                 }
-                else if ((touch.dwFlags & (int) TouchEvent.TOUCHEVENTF_MOVE) != 0)
+                else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_MOVE) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
                     {
                         POINT p = new POINT();
-                        p.X = touch.x/100;
-                        p.Y = touch.y/100;
+                        p.X = touch.x / 100;
+                        p.Y = touch.y / 100;
                         ScreenToClient(hMainWindow, ref p);
 
                         moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
@@ -299,12 +299,12 @@ namespace TouchScript.InputSources
 
         private int HIWORD(int value)
         {
-            return (int) (value >> 0xf);
+            return (int)(value >> 0xf);
         }
 
         private int LOWORD(int value)
         {
-            return (int) (value & 0xffff);
+            return (int)(value & 0xffff);
         }
 
         #endregion

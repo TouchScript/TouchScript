@@ -1,4 +1,4 @@
-﻿using TouchScript.InputSources;
+using TouchScript.InputSources;
 using UnityEditor;
 
 namespace TouchScript.Editor.InputSources
@@ -25,6 +25,5 @@ namespace TouchScript.Editor.InputSources
             EditorGUILayout.PropertyField(penTags);
             EditorGUI.indentLevel--;
         }
-
     }
 }
