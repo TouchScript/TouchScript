@@ -11,7 +11,7 @@ if [ -f "$include" ]; then
     exportFolders="$exportFolders $value"
 fi
 
-"${DIR}"/package.sh "$1" "$2" "\"$exportFolders\""
+"${DIR}"/package_project.sh "$1" "$2" "\"$exportFolders\""
 if [[ $# -eq 3 ]] ; then
-    "${DIR}"/package.sh "$1" "$3" "\"$exportFolders Assets/TouchScript/Examples\""
+    "${DIR}"/package_project.sh "$1" "$3" "\"$exportFolders Assets/TouchScript/Examples\""
 fi
