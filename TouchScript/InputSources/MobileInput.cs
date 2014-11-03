@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @author Michael Holub
  * @author Valentin Simonov / http://va.lent.in/
  */

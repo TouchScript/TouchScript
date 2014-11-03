@@ -1,4 +1,4 @@
-﻿using TouchScript.Editor.Utils;
+using TouchScript.Editor.Utils;
 using TouchScript.InputSources;
 using UnityEditor;
 using UnityEngine;

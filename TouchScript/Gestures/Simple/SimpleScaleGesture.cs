@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures.Simple
