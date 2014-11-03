@@ -1,0 +1,4 @@
+:: custom_postbuild.bat <solution> <Plugins/Editor> <file name>
+
+xcopy /y "%3" "%1..\Playmaker\Assets\TouchScript\%2\"
+xcopy /y "%3" "%1..\Scaleform\Assets\TouchScript\%2\"
