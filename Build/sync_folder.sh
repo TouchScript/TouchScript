@@ -20,7 +20,6 @@ fi
 printf "\n\e[32mSynchronizing $1 with $2.\e[39m\n"
 
 cd "$2"
-pwd
 tmp="./___tmp"
 rm -rf $tmp
 mkdir $tmp
