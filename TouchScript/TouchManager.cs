@@ -118,12 +118,12 @@ namespace TouchScript
         public const float INCH_TO_CM = 1 / CM_TO_INCH;
 
         /// <summary>
-        /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
+        /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition(Vector2)"/> to check if a point has unknown value.
         /// </summary>
         public static readonly Vector2 INVALID_2D_POSITION = new Vector2(float.NaN, float.NaN);
 
         /// <summary>
-        /// The value used to represent an unknown state of a world position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
+        /// The value used to represent an unknown state of a world position. Use <see cref="TouchManager.IsInvalidPosition(Vector3)"/> to check if a point has unknown value.
         /// </summary>
         public static readonly Vector3 INVALID_3D_POSITION = new Vector3(float.NaN, float.NaN, float.NaN);
 
