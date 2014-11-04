@@ -122,6 +122,8 @@ namespace TouchScript
         /// </summary>
         public static readonly Vector2 INVALID_POSITION = new Vector2(float.NaN, float.NaN);
 
+        public static readonly Version VERSION = new Version(6, 1);
+
         #endregion
 
         #region Public properties
