@@ -38,6 +38,7 @@ log="${projectFolder}${separator}${log}"
 if [ ! -f $2 ]; then
 	cat "$log"
 	printf "\e[31mFailed to build $2!\e[39m\n"
+    rm "$log"
     exit 0
 fi
 

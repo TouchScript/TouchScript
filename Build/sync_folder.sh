@@ -31,10 +31,19 @@ for f in $(git ls-tree -r --name-only HEAD | grep "^$rootfolder/") ; do
 	filename=$(basename "$f")
 	tmpfolder="$tmp/${folder##$rootfolder/}"
 	mkdir -p "$tmpfolder"
-	cp "./$f" "$tmpfolder$filename"
+	if (! cp "./$f" "$tmpfolder$filename") ; then
+		printf "\e[31mERROR BUILDING!\e[39m\n"
+		exit 0;
+	fi 
 done
 
 rm -rf ./$rootfolder
-cp -rf "$1/Assets/TouchScript" "./Assets/"
-cp -r "$tmp/." "./$rootfolder/"
+if (! cp -rf "$1/Assets/TouchScript" "./Assets/") ; then
+	printf "\e[31mERROR BUILDING!\e[39m\n"
+	exit 0;
+fi 
+if (! cp -r "$tmp/." "./$rootfolder/") ; then
+	printf "\e[31mERROR BUILDING!\e[39m\n"
+	exit 0;
+fi
 rm -rf $tmp
