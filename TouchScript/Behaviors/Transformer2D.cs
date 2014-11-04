@@ -78,12 +78,7 @@ namespace TouchScript.Behaviors
             transform.localScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
 
             // changed by someone else
-            if (!Mathf.Approximately(transform.localRotation.x, lastLocalRotation.x))
-                localRotationToGo.x = transform.localRotation.x;
-            if (!Mathf.Approximately(transform.localRotation.y, lastLocalRotation.y))
-                localRotationToGo.y = transform.localRotation.y;
-            if (!Mathf.Approximately(transform.localRotation.z, lastLocalRotation.z))
-                localRotationToGo.z = transform.localRotation.z;
+            if (transform.localRotation != lastLocalRotation) localRotationToGo = transform.localRotation;
             transform.localRotation = lastLocalRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
         }
 
