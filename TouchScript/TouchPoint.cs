@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -26,12 +26,6 @@ namespace TouchScript
         public Vector2 Position
         {
             get { return position; }
-            internal set
-            {
-                PreviousPosition = position;
-                position = value;
-                isDirty = true;
-            }
         }
 
         /// <inheritdoc />
@@ -61,16 +55,20 @@ namespace TouchScript
 
         public Tags Tags { get; private set; }
 
-        public IDictionary<string, System.Object> Properties { get { return properties; } } 
+        public IDictionary<string, System.Object> Properties
+        {
+            get { return properties; }
+        }
 
         #endregion
 
         #region Private variables
 
         private Vector2 position = Vector2.zero;
+        private Vector2 newPosition = Vector2.zero;
         private ITouchHit hit;
         private bool isDirty = false;
-        private Dictionary<string, System.Object> properties; 
+        private Dictionary<string, System.Object> properties;
 
         #endregion
 
@@ -80,15 +78,13 @@ namespace TouchScript
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
         /// <param name="tags">Initial tags.</param>
-        /// <param name="properties">Initial properties.</param>
-        internal TouchPoint(int id, Vector2 position, Tags tags, IDictionary<string, object> properties)
+        internal TouchPoint(int id, Vector2 position, Tags tags)
         {
             Id = id;
-            Position = position;
-            PreviousPosition = position;
+            this.position = PreviousPosition = newPosition = position;
 
             Tags = tags ?? new Tags();
-            this.properties = (properties == null) ? new Dictionary<string, object>() : new Dictionary<string, object>(properties);
+            properties = new Dictionary<string, object>();
         }
 
         #region Internal methods
@@ -98,8 +94,15 @@ namespace TouchScript
         /// </summary>
         internal void ResetPosition()
         {
-            PreviousPosition = Position;
-            isDirty = true;
+            PreviousPosition = position;
+            position = newPosition;
+            newPosition = position;
+            if (PreviousPosition != position) isDirty = true;
+        }
+
+        internal void SetPosition(Vector2 value)
+        {
+            newPosition = value;
         }
 
         #endregion

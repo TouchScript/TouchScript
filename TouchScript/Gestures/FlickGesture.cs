@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -170,8 +170,8 @@ namespace TouchScript.Gestures
             if (!moving)
             {
                 movementBuffer += ScreenPosition - PreviousScreenPosition;
-                var dpiMovementThreshold = MovementThreshold*touchManager.DotsPerCentimeter;
-                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold*dpiMovementThreshold)
+                var dpiMovementThreshold = MovementThreshold * touchManager.DotsPerCentimeter;
+                if (movementBuffer.sqrMagnitude >= dpiMovementThreshold * dpiMovementThreshold)
                 {
                     moving = true;
                 }
@@ -213,7 +213,8 @@ namespace TouchScript.Gestures
                 if (totalMovement.magnitude < MinDistance * touchManager.DotsPerCentimeter)
                 {
                     setState(GestureState.Failed);
-                } else
+                }
+                else
                 {
                     ScreenFlickVector = totalMovement;
                     ScreenFlickTime = Time.time - lastTime;

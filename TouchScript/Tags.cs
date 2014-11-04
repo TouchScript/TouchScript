@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -24,7 +24,7 @@ namespace TouchScript
         /// Mouse.
         /// </summary>
         public const string INPUT_MOUSE = "Mouse";
-        
+
         /// <summary>
         /// Pen.
         /// </summary>
@@ -48,12 +48,18 @@ namespace TouchScript
         /// <summary>
         /// List of tags.
         /// </summary>
-        public ICollection<string> TagList { get { return new ReadOnlyCollection<string>(tagList); } }
+        public ICollection<string> TagList
+        {
+            get { return new ReadOnlyCollection<string>(tagList); }
+        }
 
         /// <summary>
         /// Number of tags in this collection.
         /// </summary>
-        public int Count { get { return tagList.Count; } }
+        public int Count
+        {
+            get { return tagList.Count; }
+        }
 
         [SerializeField]
         private List<string> tagList = new List<string>();
@@ -95,8 +101,7 @@ namespace TouchScript
         /// <summary>
         /// Creates an instance of Tags.
         /// </summary>
-        public Tags()
-        {}
+        public Tags() {}
 
         /// <summary>
         /// Adds a tag to this collection.
@@ -104,6 +109,7 @@ namespace TouchScript
         /// <param name="tag">Tag to add.</param>
         public void AddTag(string tag)
         {
+            if (string.IsNullOrEmpty(tag)) return;
             if (tagList.Contains(tag)) return;
             tagList.Add(tag);
         }

@@ -1,4 +1,4 @@
-﻿using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,8 +13,8 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
         {
             updateExpanded(property);
             if (expanded == false) return 16;
-            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null) return 16*3 + 2*2;
-            return 16*2 + 2;
+            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null) return 16 * 3 + 2 * 2;
+            return 16 * 2 + 2;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -37,7 +37,8 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                         property.floatValue = (float)getNullValue(property);
                         break;
                 }
-            } else
+            }
+            else
             {
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.LabelField(new Rect(position.x + 14, position.y + 18, 40, 16), new GUIContent("Value", label.tooltip));

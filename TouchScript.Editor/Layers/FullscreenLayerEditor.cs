@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -11,7 +11,6 @@ namespace TouchScript.Editor.Layers
     [CustomEditor(typeof(FullscreenLayer))]
     internal sealed class FullscreenLayerEditor : UnityEditor.Editor
     {
-
         private SerializedProperty type, camera;
         private FullscreenLayer instance;
 

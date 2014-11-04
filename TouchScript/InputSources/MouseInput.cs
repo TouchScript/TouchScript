@@ -1,8 +1,8 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -13,7 +13,6 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public sealed class MouseInput : InputSource
     {
-
         #region Public properties
 
         /// <summary>
@@ -103,12 +102,14 @@ namespace TouchScript.InputSources
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
                 {
-                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y));
-                } else
-                {
-                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
                 }
-            } else if (Input.GetMouseButton(0))
+                else
+                {
+                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
+                }
+            }
+            else if (Input.GetMouseButton(0))
             {
                 var pos = Input.mousePosition;
                 if (mousePointPos != pos)
@@ -117,7 +118,8 @@ namespace TouchScript.InputSources
                     if (fakeMousePointId > -1 && mousePointId == -1)
                     {
                         moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
-                    } else
+                    }
+                    else
                     {
                         moveTouch(mousePointId, new Vector2(pos.x, pos.y));
                     }
@@ -136,12 +138,11 @@ namespace TouchScript.InputSources
         #region Protected methods
 
         /// <inheritdoc />
-        protected override int beginTouch(Vector2 position)
+        protected override ITouch beginTouch(Vector2 position)
         {
             return beginTouch(position, new Tags(Tags));
         }
 
         #endregion
-
     }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -51,17 +51,18 @@ namespace TouchScript.Behaviors
         {
             var box = GetComponent<BoxCollider>();
 
-            var h = 2*Mathf.Tan(camera.fieldOfView/360*Mathf.PI);
+            var h = 2 * Mathf.Tan(camera.fieldOfView / 360 * Mathf.PI);
             if (Type == TargetType.Background)
             {
                 h *= camera.farClipPlane;
                 box.center = new Vector3(0, 0, camera.farClipPlane);
-            } else if (Type == TargetType.Foreground)
+            }
+            else if (Type == TargetType.Foreground)
             {
                 h *= camera.nearClipPlane + .0051f;
                 box.center = new Vector3(0, 0, camera.nearClipPlane + .0051f);
             }
-            var w = (float)Screen.width/Screen.height*h;
+            var w = (float)Screen.width / Screen.height * h;
 
             box.size = new Vector3(w, h, .01f);
         }

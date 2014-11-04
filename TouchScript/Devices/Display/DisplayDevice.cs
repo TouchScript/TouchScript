@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -11,7 +11,6 @@ namespace TouchScript.Devices.Display
     /// </summary>
     public class DisplayDevice : ScriptableObject, IDisplayDevice
     {
-
         /// <inheritdoc />
         public string Name
         {
@@ -43,6 +42,5 @@ namespace TouchScript.Devices.Display
         {
             base.name = name;
         }
-
     }
 }

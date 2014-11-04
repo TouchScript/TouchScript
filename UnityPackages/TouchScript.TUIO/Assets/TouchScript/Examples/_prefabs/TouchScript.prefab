@@ -102,11 +102,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  TuioPort: 3333
-  MovementThreshold: 0
-  Tags:
+  tuioPort: 3333
+  supportedInputs: 7
+  tuioObjectMappings: []
+  cursorTags:
     tagList:
+    - TUIO
     - Touch
+  blobTags:
+    tagList:
+    - TUIO
+    - Touch
+  objectTags:
+    tagList:
+    - TUIO
+    - Object
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

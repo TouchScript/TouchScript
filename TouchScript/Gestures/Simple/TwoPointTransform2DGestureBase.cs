@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -23,7 +23,7 @@ namespace TouchScript.Gestures.Simple
             set
             {
                 minPointsDistance = value;
-                minPixelDistance = minPointsDistance*touchManager.DotsPerCentimeter;
+                minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
                 minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
             }
         }
@@ -84,7 +84,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.OnEnable();
 
-            minPixelDistance = minPointsDistance*touchManager.DotsPerCentimeter;
+            minPixelDistance = minPointsDistance * touchManager.DotsPerCentimeter;
             minPixelDistanceSquared = Mathf.Pow(minPixelDistance, 2);
         }
 

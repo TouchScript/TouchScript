@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -62,6 +62,5 @@ namespace TouchScript.Editor.Utils
         {
             GUILayout.EndVertical();
         }
-
     }
 }

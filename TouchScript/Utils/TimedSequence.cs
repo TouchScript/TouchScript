@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -66,7 +66,8 @@ namespace TouchScript.Utils
                 if (timestamps[i] > time)
                 {
                     if (predicate(points[i])) list.Add(points[i]);
-                } else break;
+                }
+                else break;
             }
             list.Reverse();
             return list;

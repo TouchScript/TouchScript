@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -29,7 +29,7 @@ namespace TouchScript.Utils
 
             var position = new Vector2();
             foreach (var point in touches) position += point.Position;
-            return position/(float)length;
+            return position / (float)length;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace TouchScript.Utils
 
             var position = new Vector2();
             foreach (var point in touches) position += point.PreviousPosition;
-            return position/(float)length;
+            return position / (float)length;
         }
 
         /// <summary>

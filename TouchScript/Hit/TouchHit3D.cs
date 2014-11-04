@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -8,8 +8,10 @@ namespace TouchScript.Hit
 {
     internal sealed class TouchHit3D : TouchHit, ITouchHit3D
     {
-
-        public Collider Collider { get { return hit.collider; } }
+        public Collider Collider
+        {
+            get { return hit.collider; }
+        }
 
         public Vector3 Normal { get { return hit.normal; } }
 
@@ -22,6 +24,5 @@ namespace TouchScript.Hit
             InitWith(value.collider.transform, value.point);
             hit = value;
         }
-
     }
 }

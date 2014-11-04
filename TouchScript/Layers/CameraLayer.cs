@@ -18,9 +18,18 @@ namespace TouchScript.Layers
 
         private List<RaycastHit> sortedHits;
 
+        private Transform cachedTransform;
+
         #endregion
 
         #region Unity methods
+
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            base.Awake();
+            cachedTransform = GetComponent<Transform>();
+        }
 
         private void OnEnable()
         {
@@ -56,9 +65,11 @@ namespace TouchScript.Layers
                     }
                     i++;
                 }
-            } else
+            }
+            else
             {
-                switch (doHit(raycastHits[0], out hit)) {
+                switch (doHit(raycastHits[0], out hit))
+                {
                     case HitTest.ObjectHitResult.Hit:
                         return LayerHitResult.Hit;
                     case HitTest.ObjectHitResult.Error:

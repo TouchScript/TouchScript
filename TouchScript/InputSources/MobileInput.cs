@@ -3,7 +3,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -15,7 +15,6 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
     public sealed class MobileInput : InputSource
     {
-
         #region Public properties
 
         /// <summary>
@@ -28,6 +27,7 @@ namespace TouchScript.InputSources
         /// Tags added to touches coming from this input.
         /// </summary>
         public Tags Tags = new Tags(Tags.INPUT_TOUCH);
+
         #endregion
 
         #region Private variables
@@ -93,12 +93,13 @@ namespace TouchScript.InputSources
                         {
                             // ending previous touch (maybe we missed a frame)
                             endTouch(t.fingerId);
-                            int id = beginTouch(t.position);
+                            int id = beginTouch(t.position).Id;
                             touchStates[t.fingerId] = new TouchState(id, t.phase, t.position);
-                        } else
+                        }
+                        else
                         {
                             touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position);
+                            int id = beginTouch(t.position).Id;
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
                         }
                         break;
@@ -108,11 +109,12 @@ namespace TouchScript.InputSources
                             var ts = touchStates[t.fingerId];
                             touchStates[t.fingerId] = new TouchState(ts.Id, t.phase, t.position);
                             moveTouch(ts.Id, t.position);
-                        } else
+                        }
+                        else
                         {
                             // maybe we missed began phase
                             touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position);
+                            int id = beginTouch(t.position).Id;
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
                         }
                         break;
@@ -123,10 +125,11 @@ namespace TouchScript.InputSources
                             touchIds.Remove(t.fingerId);
                             touchStates.Remove(t.fingerId);
                             endTouch(ts.Id);
-                        } else
+                        }
+                        else
                         {
                             // maybe we totally missed one finger begin-end transition
-                            int id = beginTouch(t.position);
+                            int id = beginTouch(t.position).Id;
                             endTouch(id);
                         }
                         break;
@@ -137,19 +140,20 @@ namespace TouchScript.InputSources
                             touchIds.Remove(t.fingerId);
                             touchStates.Remove(t.fingerId);
                             endTouch(ts.Id);
-                        } else
+                        }
+                        else
                         {
                             // maybe we totally missed one finger begin-end transition
-                            int id = beginTouch(t.position);
+                            int id = beginTouch(t.position).Id;
                             cancelTouch(id);
                         }
                         break;
                     case TouchPhase.Stationary:
-                        if (touchIds.Contains(t.fingerId))
-                        {} else
+                        if (touchIds.Contains(t.fingerId)) {}
+                        else
                         {
                             touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position);
+                            int id = beginTouch(t.position).Id;
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
                         }
                         break;
@@ -158,7 +162,7 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        protected override int beginTouch(Vector2 position)
+        protected override ITouch beginTouch(Vector2 position)
         {
             return beginTouch(position, new Tags(Tags));
         }

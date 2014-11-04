@@ -1,4 +1,4 @@
-﻿using TouchScript.Editor.Utils;
+using TouchScript.Editor.Utils;
 using TouchScript.InputSources;
 using UnityEditor;
 using UnityEngine;
@@ -38,7 +38,6 @@ namespace TouchScript.Editor.InputSources
             serializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual void drawAdvanced()
-        {}
+        protected virtual void drawAdvanced() {}
     }
 }

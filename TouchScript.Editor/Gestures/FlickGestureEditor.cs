@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -11,7 +11,6 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(FlickGesture), true)]
     internal sealed class FlickGestureEditor : GestureEditor
     {
-
         private static readonly GUIContent DIRECTION = new GUIContent("Direction", "Flick direction.");
         private static readonly GUIContent MOVEMENT_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
         private static readonly GUIContent FLICK_TIME = new GUIContent("Flick Time (sec)", "Time interval in seconds during which touch points must move by <Minimum Distance> for the gesture to be recognized.");

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -115,7 +115,7 @@ namespace TouchScript
         /// <summary>
         /// Inch to centimeter ratio to be used in DPI calculations.
         /// </summary>
-        public const float INCH_TO_CM = 1/CM_TO_INCH;
+        public const float INCH_TO_CM = 1 / CM_TO_INCH;
 
         /// <summary>
         /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
@@ -126,6 +126,11 @@ namespace TouchScript
         /// The value used to represent an unknown state of a world position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
         /// </summary>
         public static readonly Vector3 INVALID_3D_POSITION = new Vector3(float.NaN, float.NaN, float.NaN);
+
+        /// <summary>
+        /// TouchScript version.
+        /// </summary>
+        public static readonly Version VERSION = new Version(6, 2);
 
         #endregion
 

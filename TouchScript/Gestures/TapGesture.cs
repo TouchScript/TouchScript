@@ -1,11 +1,11 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TouchScript.Utils.Editor.Attributes;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -16,8 +16,8 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
     public class TapGesture : Gesture
     {
-
         #region Constants
+
         /// <summary>
         /// Message name when gesture is recognized
         /// </summary>
@@ -95,6 +95,7 @@ namespace TouchScript.Gestures
         [SerializeField]
         [NullToggle(NullFloatValue = float.PositiveInfinity)]
         private float distanceLimit = float.PositiveInfinity;
+
         private float distanceLimitInPixelsSquared;
 
         private int tapsDone;
@@ -135,7 +136,8 @@ namespace TouchScript.Gestures
                     reset();
                     startPosition = touches[0].Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
-                } else
+                }
+                else
                 {
                     if (distanceLimit < float.PositiveInfinity)
                     {
@@ -169,7 +171,8 @@ namespace TouchScript.Gestures
                 if (TouchManager.IsInvalidPosition(ScreenPosition))
                 {
                     setState(GestureState.Failed);
-                } else
+                }
+                else
                 {
                     tapsDone++;
                     if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
@@ -226,6 +229,5 @@ namespace TouchScript.Gestures
         }
 
         #endregion
-
     }
 }

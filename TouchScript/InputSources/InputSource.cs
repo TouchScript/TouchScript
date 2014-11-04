@@ -1,9 +1,8 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -25,15 +24,12 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-        #pragma warning disable 0169
+#pragma warning disable 0169
         [SerializeField]
-        private bool advancedProps; // is used to save if advanced properties are opened or closed
-        #pragma warning restore 0169
+        private bool advancedProps; // is used to save whether advanced properties are opened or closed
+#pragma warning restore 0169
 
-        /// <summary>
-        /// Reference to global touch manager.
-        /// </summary>
-        protected ITouchManager manager;
+        private TouchManagerInstance manager;
 
         #endregion
 
@@ -44,7 +40,7 @@ namespace TouchScript.InputSources
         /// </summary>
         protected virtual void OnEnable()
         {
-            manager = TouchManager.Instance;
+            manager = TouchManagerInstance.Instance;
             if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
         }
 
@@ -59,21 +55,20 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Unity Update callback.
         /// </summary>
-        protected virtual void Update()
-        {}
+        protected virtual void Update() {}
 
         #endregion
 
-        #region Callbacks
+        #region Protected methods
 
         /// <summary>
         /// Begin touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns>Internal touch id.</returns>
-        protected virtual int beginTouch(Vector2 position)
+        protected virtual ITouch beginTouch(Vector2 position)
         {
-            return beginTouch(position, null, null);
+            return beginTouch(position, null);
         }
 
         /// <summary>
@@ -82,25 +77,36 @@ namespace TouchScript.InputSources
         /// <param name="position">Screen position.</param>
         /// <param name="tags">Initial tags.</param>
         /// <returns>Internal touch id.</returns>
-        protected virtual int beginTouch(Vector2 position, Tags tags)
-        {
-            return beginTouch(position, tags, null);
-        }
-
-        /// <summary>
-        /// Begin touch in given screen position.
-        /// </summary>
-        /// <param name="position">Screen position.</param>
-        /// <param name="tags">Initial tags.</param>
-        /// <param name="properties">Initial properties.</param>
-        /// <returns>Internal touch id.</returns>
-        protected virtual int beginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
+        protected virtual ITouch beginTouch(Vector2 position, Tags tags)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return manager.BeginTouch(position, tags, properties);
+            return manager.BeginTouch(position, tags);
+        }
+
+        /// <summary>
+        /// Mark touch as updated.
+        /// </summary>
+        /// <param name="id">Touch id.</param>
+        protected virtual void updateTouch(int id)
+        {
+            manager.UpdateTouch(id);
+        }
+
+        /// <summary>
+        /// Mark touch as moved.
+        /// </summary>
+        /// <param name="id">Touch id.</param>
+        /// <param name="position">Screen position.</param>
+        protected virtual void moveTouch(int id, Vector2 position)
+        {
+            if (CoordinatesRemapper != null)
+            {
+                position = CoordinatesRemapper.Remap(position);
+            }
+            manager.MoveTouch(id, position);
         }
 
         /// <summary>
@@ -110,20 +116,6 @@ namespace TouchScript.InputSources
         protected virtual void endTouch(int id)
         {
             manager.EndTouch(id);
-        }
-
-        /// <summary>
-        /// Move touch with id.
-        /// </summary>
-        /// <param name="id">Touch id.</param>
-        /// <param name="position">New screen position.</param>
-        protected virtual void moveTouch(int id, Vector2 position)
-        {
-            if (CoordinatesRemapper != null)
-            {
-                position = CoordinatesRemapper.Remap(position);
-            }
-            manager.MoveTouch(id, position);
         }
 
         /// <summary>

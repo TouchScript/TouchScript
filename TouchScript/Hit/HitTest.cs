@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -57,8 +57,7 @@ namespace TouchScript.Hit
 
         #region Unity methods
 
-        private void OnEnable()
-        {}
+        private void OnEnable() {}
 
         #endregion
     }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */ 
 
@@ -15,7 +15,6 @@ namespace TouchScript.Gestures.Simple
     [AddComponentMenu("TouchScript/Gestures/Simple Rotate Gesture")]
     public class SimpleRotateGesture : TwoPointTransform2DGestureBase
     {
-
         #region Constants
 
         /// <summary>
@@ -118,7 +117,7 @@ namespace TouchScript.Gestures.Simple
 
             Vector3 oldWorldCenter, newWorldCenter;
             var deltaRotation = 0f;
-            
+
             var newScreenPos1 = getPointScreenPosition(0);
             var newScreenPos2 = getPointScreenPosition(1);
             var newScreenDelta = newScreenPos2 - newScreenPos1;
@@ -135,18 +134,19 @@ namespace TouchScript.Gestures.Simple
             var newVector = newWorldPos2 - newWorldPos1;
             var oldVector = oldWorldPos2 - oldWorldPos1;
 
-            Vector2 oldScreenCenter = (oldScreenPos1 + oldScreenPos2)*.5f;
-            Vector2 newScreenCenter = (newScreenPos1 + newScreenPos2)*.5f;
+            Vector2 oldScreenCenter = (oldScreenPos1 + oldScreenPos2) * .5f;
+            Vector2 newScreenCenter = (newScreenPos1 + newScreenPos2) * .5f;
 
             var angle = Vector3.Angle(oldVector, newVector);
             if (Vector3.Dot(Vector3.Cross(oldVector, newVector), RotationAxis) < 0) angle = -angle;
             if (isRotating)
             {
                 deltaRotation = angle;
-            } else
+            }
+            else
             {
                 rotationBuffer += angle;
-                if (rotationBuffer*rotationBuffer >= RotationThreshold*RotationThreshold)
+                if (rotationBuffer * rotationBuffer >= RotationThreshold * RotationThreshold)
                 {
                     isRotating = true;
                     deltaRotation = rotationBuffer;
@@ -173,7 +173,8 @@ namespace TouchScript.Gestures.Simple
                         if (State == GestureState.Possible)
                         {
                             setState(GestureState.Began);
-                        } else
+                        }
+                        else
                         {
                             setState(GestureState.Changed);
                         }

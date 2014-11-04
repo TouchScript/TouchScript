@@ -1,8 +1,9 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System;
+using System.Collections;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -118,6 +119,7 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
+            if (Application.isPlaying) StartCoroutine(lateAwake());
         }
 
         /// <summary>
@@ -147,9 +149,9 @@ namespace TouchScript.Layers
             return false;
         }
 
-        internal void MoveTouch(ITouch touch)
+        internal void UpdateTouch(ITouch touch)
         {
-            moveTouch(touch);
+            updateTouch(touch);
         }
 
         internal void EndTouch(ITouch touch)
@@ -192,24 +194,31 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void moveTouch(ITouch touch)
-        {}
+        protected virtual void updateTouch(ITouch touch) {}
 
         /// <summary>
         /// Called when a touch ends.
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void endTouch(ITouch touch)
-        {}
+        protected virtual void endTouch(ITouch touch) {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void cancelTouch(ITouch touch)
-        {}
+        protected virtual void cancelTouch(ITouch touch) {}
+
+        #endregion
+
+        #region Private functions
+
+        private IEnumerator lateAwake()
+        {
+            yield return new WaitForEndOfFrame();
+            TouchManager.Instance.AddLayer(this);
+        }
 
         #endregion
     }

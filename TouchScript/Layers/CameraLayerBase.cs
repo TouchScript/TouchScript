@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -58,11 +58,6 @@ namespace TouchScript.Layers
         /// </summary>
         protected Camera _camera;
 
-        /// <summary>
-        /// Cached transform component.
-        /// </summary>
-        protected Transform cachedTransform;
-
         #endregion
 
         #region Public methods
@@ -93,7 +88,6 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void Awake()
         {
-            cachedTransform = GetComponent<Transform>();
             updateCamera();
 
             base.Awake();

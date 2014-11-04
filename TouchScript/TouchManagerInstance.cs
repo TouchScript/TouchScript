@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -74,7 +74,7 @@ namespace TouchScript
 
         #region Public properties
 
-        public static ITouchManager Instance
+        public static TouchManagerInstance Instance
         {
             get
             {
@@ -89,7 +89,8 @@ namespace TouchScript
                         go.hideFlags = HideFlags.HideInHierarchy;
                         DontDestroyOnLoad(go);
                         instance = go.AddComponent<TouchManagerInstance>();
-                    } else if (objects.Length >= 1)
+                    }
+                    else if (objects.Length >= 1)
                     {
                         instance = objects[0];
                     }
@@ -114,7 +115,8 @@ namespace TouchScript
                 if (value == null)
                 {
                     displayDevice = ScriptableObject.CreateInstance<GenericDisplayDevice>();
-                } else
+                }
+                else
                 {
                     displayDevice = value;
                 }
@@ -161,20 +163,17 @@ namespace TouchScript
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
-        private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
+        private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
-        private List<TouchLayer> layers = new List<TouchLayer>(5);
-        private List<TouchPoint> touches = new List<TouchPoint>(10);
-        private Dictionary<int, ITouch> idToTouch = new Dictionary<int, ITouch>(10);
+        private List<TouchLayer> layers = new List<TouchLayer>(10);
+        private List<TouchPoint> touches = new List<TouchPoint>(30);
+        private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
 
         // Upcoming changes
-        private List<ITouch> touchesBegan = new List<ITouch>(10);
-        private Dictionary<int, Vector2> touchesMoved = new Dictionary<int, Vector2>(10);
-        private List<ITouch> touchesEnded = new List<ITouch>(10);
-        private List<ITouch> touchesCancelled = new List<ITouch>(10);
-
-        // Temporary variables for update methods.
-        private List<ITouch> reallyMoved = new List<ITouch>(10);
+        private List<TouchPoint> touchesBegan = new List<TouchPoint>(30);
+        private HashSet<int> touchesUpdated = new HashSet<int>();
+        private HashSet<int> touchesEnded = new HashSet<int>();
+        private HashSet<int> touchesCancelled = new HashSet<int>();
 
         private int nextTouchId = 0;
 
@@ -200,7 +199,8 @@ namespace TouchScript
             if (i == -1)
             {
                 layers.Insert(index, layer);
-            } else
+            }
+            else
             {
                 if (index == i || i == index - 1) return true;
                 layers.RemoveAt(i);
@@ -265,91 +265,78 @@ namespace TouchScript
             return false;
         }
 
-        /// <inheritdoc />
-        public int BeginTouch(Vector2 position)
+        #endregion
+
+        #region Internal methods
+
+        internal ITouch BeginTouch(Vector2 position)
         {
-            return BeginTouch(position, null, null);
+            return BeginTouch(position, null);
         }
 
-        /// <inheritdoc />
-        public int BeginTouch(Vector2 position, Tags tags)
-        {
-            return BeginTouch(position, tags, null);
-        }
-
-        /// <inheritdoc />
-        public int BeginTouch(Vector2 position, Tags tags, IDictionary<string, System.Object> properties)
+        internal ITouch BeginTouch(Vector2 position, Tags tags)
         {
             TouchPoint touch;
             lock (touchesBegan)
             {
-                touch = new TouchPoint(nextTouchId++, position, tags, properties);
+                touch = new TouchPoint(nextTouchId++, position, tags);
                 touchesBegan.Add(touch);
             }
-            return touch.Id;
+            return touch;
         }
 
-        /// <inheritdoc />
-        public void MoveTouch(int id, Vector2 position)
+        internal void UpdateTouch(int id)
         {
-            lock (touchesMoved)
+            lock (touchesUpdated)
             {
-                Vector2 update;
-                if (touchesMoved.TryGetValue(id, out update))
+                if (idToTouch.ContainsKey(id)) touchesUpdated.Add(id);
+            }
+        }
+
+        internal void MoveTouch(int id, Vector2 position)
+        {
+            lock (touchesUpdated)
+            {
+                TouchPoint touch;
+                if (idToTouch.TryGetValue(id, out touch))
                 {
-                    touchesMoved[id] = position;
-                } else
-                {
-                    touchesMoved.Add(id, position);
+                    touch.SetPosition(position);
+                    touchesUpdated.Add(id);
                 }
             }
         }
 
         /// <inheritdoc />
-        public void EndTouch(int id)
+        internal void EndTouch(int id)
         {
             lock (touchesEnded)
             {
-                ITouch touch;
+                TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
                     // This touch was added this frame
-                    foreach (var addedTouch in touchesBegan)
-                    {
-                        if (addedTouch.Id == id)
-                        {
-                            touch = addedTouch;
-                            break;
-                        }
-                    }
+                    touch = touchesBegan.Find((t) => t.Id == id);
                     // No touch with such id
                     if (touch == null) return;
                 }
-                touchesEnded.Add(touch);
+                touchesEnded.Add(touch.Id);
             }
         }
 
         /// <inheritdoc />
-        public void CancelTouch(int id)
+        internal void CancelTouch(int id)
         {
             lock (touchesCancelled)
             {
-                ITouch touch;
+                TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
                     // This touch was added this frame
-                    foreach (var addedTouch in touchesBegan)
-                    {
-                        if (addedTouch.Id == id)
-                        {
-                            touch = addedTouch;
-                            break;
-                        }
-                    }
+                    touch = touchesBegan.Find((t) => t.Id == id);
                     // No touch with such id
                     if (touch == null) return;
                 }
-                touchesCancelled.Add(touch);
+                touchesCancelled.Add(touch.Id);
             }
         }
 
@@ -375,7 +362,7 @@ namespace TouchScript
 
         private IEnumerator lateAwake()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             updateLayers();
             createCameraLayer();
@@ -399,13 +386,13 @@ namespace TouchScript
         private void updateDPI()
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
-            dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
+            dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
         }
 
         private void updateLayers()
         {
             // filter empty layers
-            layers = layers.FindAll(l => l != null); 
+            layers = layers.FindAll(l => l != null);
         }
 
         private void createCameraLayer()
@@ -453,114 +440,97 @@ namespace TouchScript
                     default:
                         obj.AddComponent<MouseInput>();
                         break;
-
                 }
             }
         }
 
-        private bool updateBegan()
+        private void updateBegan()
         {
             if (touchesBegan.Count > 0)
             {
                 foreach (var touch in touchesBegan)
                 {
-                    touches.Add(touch as TouchPoint);
+                    touches.Add(touch);
                     idToTouch.Add(touch.Id, touch);
                     foreach (var touchLayer in layers)
                     {
                         if (touchLayer == null) continue;
-                        if (touchLayer.BeginTouch(touch as TouchPoint)) break;
+                        if (touchLayer.BeginTouch(touch)) break;
                     }
                 }
 
-                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesBegan));
+                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesBegan.ConvertAll((t) => t as ITouch)));
                 touchesBegan.Clear();
-                return true;
             }
-            return false;
         }
 
-        private bool updateMoved()
+        private void updateUpdated()
         {
-            if (touchesMoved.Count > 0)
+            if (touchesUpdated.Count > 0)
             {
-                reallyMoved.Clear();
-
+                var updated = new List<ITouch>(touchesUpdated.Count);
+                // Need to loop through all touches to reset those which did not move
                 foreach (var touch in touches)
                 {
-                    if (touchesMoved.ContainsKey(touch.Id))
+                    touch.ResetPosition();
+                    if (touchesUpdated.Contains(touch.Id))
                     {
-                        var position = touchesMoved[touch.Id];
-                        if (position != touch.Position)
-                        {
-                            touch.Position = position;
-                            reallyMoved.Add(touch);
-                            if (touch.Layer != null) touch.Layer.MoveTouch(touch);
-                        } else
-                        {
-                            touch.ResetPosition();
-                        }
-                    } else
-                    {
-                        touch.ResetPosition();
+                        updated.Add(touch);
+                        if (touch.Layer != null) touch.Layer.UpdateTouch(touch);
                     }
                 }
 
-                if (reallyMoved.Count > 0 && touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(new List<ITouch>(reallyMoved)));
-                touchesMoved.Clear();
-
-                return reallyMoved.Count > 0;
+                if (touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(updated));
+                touchesUpdated.Clear();
             }
-            return false;
         }
 
-        private bool updateEnded()
+        private void updateEnded()
         {
             if (touchesEnded.Count > 0)
             {
-                foreach (var touch in touchesEnded)
+                var updated = new List<ITouch>(touchesEnded.Count);
+                foreach (var id in touchesEnded)
                 {
+                    var touch = idToTouch[id];
                     idToTouch.Remove(touch.Id);
-                    touches.Remove(touch as TouchPoint);
+                    touches.Remove(touch);
+                    updated.Add(touch);
                     if (touch.Layer != null) touch.Layer.EndTouch(touch);
                 }
 
-                if (touchesEndedInvoker != null) touchesEndedInvoker(this, new TouchEventArgs(new List<ITouch>(touchesEnded)));
+                if (touchesEndedInvoker != null) touchesEndedInvoker(this, new TouchEventArgs(updated));
                 touchesEnded.Clear();
-
-                return true;
             }
-            return false;
         }
 
-        private bool updateCancelled()
+        private void updateCancelled()
         {
             if (touchesCancelled.Count > 0)
             {
-                foreach (var touch in touchesCancelled)
+                var updated = new List<ITouch>(touchesCancelled.Count);
+                foreach (var id in touchesCancelled)
                 {
+                    var touch = idToTouch[id];
                     idToTouch.Remove(touch.Id);
-                    touches.Remove(touch as TouchPoint);
+                    touches.Remove(touch);
+                    updated.Add(touch);
                     if (touch.Layer != null) touch.Layer.CancelTouch(touch);
                 }
 
-                if (touchesCancelledInvoker != null) touchesCancelledInvoker(this, new TouchEventArgs(new List<ITouch>(touchesCancelled)));
+                if (touchesCancelledInvoker != null) touchesCancelledInvoker(this, new TouchEventArgs(updated));
                 touchesCancelled.Clear();
-
-                return true;
             }
-            return false;
         }
 
         private void updateTouches()
         {
             if (frameStartedInvoker != null) frameStartedInvoker(this, EventArgs.Empty);
 
-            bool updated;
-            lock (touchesBegan) updated = updateBegan();
-            lock (touchesMoved) updated = updateMoved() || updated;
-            lock (touchesEnded) updated = updateEnded() || updated;
-            lock (touchesCancelled) updated = updateCancelled() || updated;
+            lock (touchesBegan) updateBegan();
+            lock (touchesUpdated) updateUpdated();
+            lock (touchesEnded) updateEnded();
+            lock (touchesCancelled) updateCancelled();
 
             if (frameFinishedInvoker != null) frameFinishedInvoker(this, EventArgs.Empty);
         }

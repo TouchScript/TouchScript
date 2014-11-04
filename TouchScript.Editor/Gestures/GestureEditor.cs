@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -260,7 +260,7 @@ namespace TouchScript.Editor.Gestures
                 p.GetArrayElementAtIndex(p.arraySize - 1).objectReferenceValue = target;
                 so.ApplyModifiedProperties();
                 EditorUtility.SetDirty(value);
-                addFriendlyGestureId.Invoke(value, new object[] { instance });
+                addFriendlyGestureId.Invoke(value, new object[] {instance});
             }
         }
 
@@ -271,7 +271,7 @@ namespace TouchScript.Editor.Gestures
             removeFromArray(prop, index);
 
             if (gesture == null) return null;
-            removeFriendlyGestureId.Invoke(instance, new object[] { gesture });
+            removeFriendlyGestureId.Invoke(instance, new object[] {gesture});
 
             // Removing this gesture from that gesture.
             var so = new SerializedObject(gesture);
@@ -288,7 +288,7 @@ namespace TouchScript.Editor.Gestures
 
             so.ApplyModifiedProperties();
             EditorUtility.SetDirty(gesture);
-            removeFriendlyGestureId.Invoke(gesture, new object[] { instance });
+            removeFriendlyGestureId.Invoke(gesture, new object[] {instance});
 
             return gesture;
         }
@@ -306,6 +306,5 @@ namespace TouchScript.Editor.Gestures
         }
 
         #endregion
-
     }
 }

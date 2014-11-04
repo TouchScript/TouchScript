@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -45,7 +45,7 @@ namespace TouchScript.Layers
             if (raycastHits.Length > 1)
             {
                 sortHits(raycastHits);
-                
+
                 RaycastHit2D raycastHit = default(RaycastHit2D);
                 var i = 0;
                 while (i < sortedHits.Count)
@@ -60,9 +60,11 @@ namespace TouchScript.Layers
                     }
                     i++;
                 }
-            } else
+            }
+            else
             {
-                switch (doHit(raycastHits[0], out hit)) {
+                switch (doHit(raycastHits[0], out hit))
+                {
                     case HitTest.ObjectHitResult.Hit:
                         return LayerHitResult.Hit;
                     case HitTest.ObjectHitResult.Error:
@@ -71,7 +73,7 @@ namespace TouchScript.Layers
                         return LayerHitResult.Miss;
                 }
             }
-            
+
             return LayerHitResult.Miss;
         }
 
@@ -80,7 +82,7 @@ namespace TouchScript.Layers
             hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
             var hitTests = raycastHit.transform.GetComponents<HitTest>();
             if (hitTests.Length == 0) return HitTest.ObjectHitResult.Hit;
-            
+
             var hitResult = HitTest.ObjectHitResult.Hit;
             foreach (var test in hitTests)
             {
@@ -88,7 +90,7 @@ namespace TouchScript.Layers
                 hitResult = test.IsHit(hit);
                 if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
             }
-            
+
             return hitResult;
         }
 

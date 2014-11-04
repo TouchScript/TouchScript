@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -8,7 +8,6 @@ namespace TouchScript.Hit
 {
     internal class TouchHit : ITouchHit
     {
-
         #region Public properties
 
         public Transform Transform { get; private set; }
@@ -25,8 +24,7 @@ namespace TouchScript.Hit
 
         #region Constructors
 
-        internal TouchHit()
-        {}
+        internal TouchHit() {}
 
         #endregion
 

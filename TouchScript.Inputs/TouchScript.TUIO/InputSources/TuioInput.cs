@@ -1,46 +1,140 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TUIOsharp;
+using TUIOsharp.DataProcessors;
+using TUIOsharp.Entities;
 using UnityEngine;
 
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Processes TUIO 1.0 input.
+    /// Processes TUIO 1.1 input.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/TUIO Input")]
     public sealed class TuioInput : InputSource
     {
-        #region Unity fields
+        #region Constants
 
         /// <summary>
-        /// Port to listen to.
+        /// Type of TUIO input object.
         /// </summary>
-        public int TuioPort = 3333;
+        [Flags]
+        public enum InputType
+        {
+            /// <summary>
+            /// Touch/pointer.
+            /// </summary>
+            Cursors = 1 << 0,
 
-        /// <summary>
-        /// Minimum movement delta to ignore in cm.
-        /// </summary>
-        public float MovementThreshold = 0f;
+            /// <summary>
+            /// Shape.
+            /// </summary>
+            Blobs = 1 << 1,
+
+            /// <summary>
+            /// Tagged object.
+            /// </summary>
+            Objects = 1 << 2
+        }
 
         #endregion
 
         #region Public properties
 
         /// <summary>
-        /// Tags added to touches coming from this input.
+        /// Port to listen to.
         /// </summary>
-        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
+        public int TuioPort
+        {
+            get { return tuioPort; }
+            set
+            {
+                if (tuioPort == value) return;
+                tuioPort = value;
+                connect();
+            }
+        }
+
+        /// <summary>
+        /// What input types should the input source listen to.
+        /// </summary>
+        public InputType SupportedInputs
+        {
+            get { return supportedInputs; }
+            set
+            {
+                if (supportedInputs == value) return;
+                supportedInputs = value;
+                updateInputs();
+            }
+        }
+
+        /// <summary>
+        /// List of TUIO object ids to tag mappings.
+        /// </summary>
+        public IList<TuioObjectMapping> TuioObjectMappings
+        {
+            get { return tuioObjectMappings; }
+        }
+
+        /// <summary>
+        /// Tags for new cursors.
+        /// </summary>
+        public Tags CursorTags
+        {
+            get { return cursorTags; }
+        }
+
+        /// <summary>
+        /// Tags for new blobs.
+        /// </summary>
+        public Tags BlobTags
+        {
+            get { return blobTags; }
+        }
+
+        /// <summary>
+        /// Tags for new objects.
+        /// </summary>
+        public Tags ObjectTags
+        {
+            get { return objectTags; }
+        }
 
         #endregion
 
         #region Private variables
 
+        [SerializeField]
+        private int tuioPort = 3333;
+
+        [SerializeField]
+        private InputType supportedInputs = InputType.Cursors | InputType.Blobs | InputType.Objects;
+
+        [SerializeField]
+        private List<TuioObjectMapping> tuioObjectMappings = new List<TuioObjectMapping>();
+
+        [SerializeField]
+        private Tags cursorTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+
+        [SerializeField]
+        private Tags blobTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+
+        [SerializeField]
+        private Tags objectTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_OBJECT});
+
         private TuioServer server;
-        private Dictionary<TuioCursor, int> cursorToInternalId = new Dictionary<TuioCursor, int>();
+        private CursorProcessor cursorProcessor;
+        private ObjectProcessor objectProcessor;
+        private BlobProcessor blobProcessor;
+
+        private Dictionary<TuioCursor, ITouch> cursorToInternalId = new Dictionary<TuioCursor, ITouch>();
+        private Dictionary<TuioBlob, ITouch> blobToInternalId = new Dictionary<TuioBlob, ITouch>();
+        private Dictionary<TuioObject, ITouch> objectToInternalId = new Dictionary<TuioObject, ITouch>();
         private int screenWidth;
         private int screenHeight;
 
@@ -53,12 +147,22 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
-            server = new TuioServer(TuioPort);
-            server.MovementThreshold = MovementThreshold * manager.DotsPerCentimeter/Mathf.Max(Screen.width, Screen.height);
-            server.CursorAdded += OnCursorAdded;
-            server.CursorUpdated += OnCursorUpdated;
-            server.CursorRemoved += OnCursorRemoved;
-            server.Connect();
+            cursorProcessor = new CursorProcessor();
+            cursorProcessor.CursorAdded += OnCursorAdded;
+            cursorProcessor.CursorUpdated += OnCursorUpdated;
+            cursorProcessor.CursorRemoved += OnCursorRemoved;
+
+            blobProcessor = new BlobProcessor();
+            blobProcessor.BlobAdded += OnBlobAdded;
+            blobProcessor.BlobUpdated += OnBlobUpdated;
+            blobProcessor.BlobRemoved += OnBlobRemoved;
+
+            objectProcessor = new ObjectProcessor();
+            objectProcessor.ObjectAdded += OnObjectAdded;
+            objectProcessor.ObjectUpdated += OnObjectUpdated;
+            objectProcessor.ObjectRemoved += OnObjectRemoved;
+
+            connect();
         }
 
         /// <inheritdoc />
@@ -72,65 +176,227 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnDisable()
         {
+            disconnect();
+            base.OnDisable();
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private void connect()
+        {
+            if (!Application.isPlaying) return;
+            if (server != null) disconnect();
+
+            server = new TuioServer(TuioPort);
+            server.Connect();
+            updateInputs();
+        }
+
+        private void disconnect()
+        {
             if (server != null)
             {
-                server.CursorAdded -= OnCursorAdded;
-                server.CursorUpdated -= OnCursorUpdated;
-                server.CursorRemoved -= OnCursorRemoved;
+                server.RemoveAllDataProcessors();
                 server.Disconnect();
+                server = null;
             }
 
             foreach (var i in cursorToInternalId)
             {
-                cancelTouch(i.Value);
+                cancelTouch(i.Value.Id);
             }
+        }
 
-            base.OnDisable();
+        private void updateInputs()
+        {
+            if (server == null) return;
+
+            if ((supportedInputs & InputType.Cursors) != 0) server.AddDataProcessor(cursorProcessor);
+            else server.RemoveDataProcessor(cursorProcessor);
+            if ((supportedInputs & InputType.Blobs) != 0) server.AddDataProcessor(blobProcessor);
+            else server.RemoveDataProcessor(blobProcessor);
+            if ((supportedInputs & InputType.Objects) != 0) server.AddDataProcessor(objectProcessor);
+            else server.RemoveDataProcessor(objectProcessor);
+        }
+
+        private void updateBlobProperties(ITouch touch, TuioBlob blob)
+        {
+            var props = touch.Properties;
+
+            props["Angle"] = blob.Angle;
+            props["Width"] = blob.Width;
+            props["Height"] = blob.Height;
+            props["Area"] = blob.Area;
+            props["RotationVelocity"] = blob.RotationVelocity;
+            props["RotationAcceleration"] = blob.RotationAcceleration;
+        }
+
+        private void updateObjectProperties(ITouch touch, TuioObject obj)
+        {
+            var props = touch.Properties;
+
+            props["Angle"] = obj.Angle;
+            props["ObjectId"] = obj.ClassId;
+            props["RotationVelocity"] = obj.RotationVelocity;
+            props["RotationAcceleration"] = obj.RotationAcceleration;
+        }
+
+        private string getTagById(int id)
+        {
+            foreach (var tuioObjectMapping in tuioObjectMappings)
+            {
+                if (tuioObjectMapping.Id == id) return tuioObjectMapping.Tag;
+            }
+            return null;
         }
 
         #endregion
 
         #region Event handlers
 
-        private void OnCursorAdded(object sender, TuioCursorEventArgs tuioCursorEventArgs)
+        private void OnCursorAdded(object sender, TuioCursorEventArgs e)
         {
-            var cursor = tuioCursorEventArgs.Cursor;
+            var entity = e.Cursor;
             lock (this)
             {
-                var x = cursor.X*screenWidth;
-                var y = (1 - cursor.Y)*screenHeight;
-                cursorToInternalId.Add(cursor, beginTouch(new Vector2(x, y), new Tags(Tags)));
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
+                cursorToInternalId.Add(entity, beginTouch(new Vector2(x, y), new Tags(CursorTags)));
             }
         }
 
-        private void OnCursorUpdated(object sender, TuioCursorEventArgs tuioCursorEventArgs)
+        private void OnCursorUpdated(object sender, TuioCursorEventArgs e)
         {
-            var cursor = tuioCursorEventArgs.Cursor;
+            var entity = e.Cursor;
             lock (this)
             {
-                int existingCursor;
-                if (!cursorToInternalId.TryGetValue(cursor, out existingCursor)) return;
+                ITouch touch;
+                if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
-                var x = cursor.X*screenWidth;
-                var y = (1 - cursor.Y)*screenHeight;
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(existingCursor, new Vector2(x, y));
+                moveTouch(touch.Id, new Vector2(x, y));
             }
         }
 
-        private void OnCursorRemoved(object sender, TuioCursorEventArgs tuioCursorEventArgs)
+        private void OnCursorRemoved(object sender, TuioCursorEventArgs e)
         {
-            var cursor = tuioCursorEventArgs.Cursor;
+            var entity = e.Cursor;
             lock (this)
             {
-                int existingCursor;
-                if (!cursorToInternalId.TryGetValue(cursor, out existingCursor)) return;
+                ITouch touch;
+                if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
-                cursorToInternalId.Remove(cursor);
-                endTouch(existingCursor);
+                cursorToInternalId.Remove(entity);
+                endTouch(touch.Id);
+            }
+        }
+
+        private void OnBlobAdded(object sender, TuioBlobEventArgs e)
+        {
+            var entity = e.Blob;
+            lock (this)
+            {
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
+                var touch = beginTouch(new Vector2(x, y), new Tags(BlobTags));
+                updateBlobProperties(touch, entity);
+                blobToInternalId.Add(entity, touch);
+            }
+        }
+
+        private void OnBlobUpdated(object sender, TuioBlobEventArgs e)
+        {
+            var entity = e.Blob;
+            lock (this)
+            {
+                ITouch touch;
+                if (!blobToInternalId.TryGetValue(entity, out touch)) return;
+
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
+
+                moveTouch(touch.Id, new Vector2(x, y));
+                updateBlobProperties(touch, entity);
+            }
+        }
+
+        private void OnBlobRemoved(object sender, TuioBlobEventArgs e)
+        {
+            var entity = e.Blob;
+            lock (this)
+            {
+                ITouch touch;
+                if (!blobToInternalId.TryGetValue(entity, out touch)) return;
+
+                blobToInternalId.Remove(entity);
+                endTouch(touch.Id);
+            }
+        }
+
+        private void OnObjectAdded(object sender, TuioObjectEventArgs e)
+        {
+            var entity = e.Object;
+            lock (this)
+            {
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
+                var touch = beginTouch(new Vector2(x, y), new Tags(ObjectTags));
+                updateObjectProperties(touch, entity);
+                objectToInternalId.Add(entity, touch);
+                touch.Tags.AddTag(getTagById(entity.ClassId));
+            }
+        }
+
+        private void OnObjectUpdated(object sender, TuioObjectEventArgs e)
+        {
+            var entity = e.Object;
+            lock (this)
+            {
+                ITouch touch;
+                if (!objectToInternalId.TryGetValue(entity, out touch)) return;
+
+                var x = entity.X * screenWidth;
+                var y = (1 - entity.Y) * screenHeight;
+
+                moveTouch(touch.Id, new Vector2(x, y));
+                updateObjectProperties(touch, entity);
+            }
+        }
+
+        private void OnObjectRemoved(object sender, TuioObjectEventArgs e)
+        {
+            var entity = e.Object;
+            lock (this)
+            {
+                ITouch touch;
+                if (!objectToInternalId.TryGetValue(entity, out touch)) return;
+
+                objectToInternalId.Remove(entity);
+                endTouch(touch.Id);
             }
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// TUIO object id to tag mapping value object.
+    /// </summary>
+    [Serializable]
+    public class TuioObjectMapping
+    {
+        /// <summary>
+        /// TUIO object id.
+        /// </summary>
+        public int Id;
+
+        /// <summary>
+        /// Tag to attach to this object.
+        /// </summary>
+        public string Tag;
     }
 }

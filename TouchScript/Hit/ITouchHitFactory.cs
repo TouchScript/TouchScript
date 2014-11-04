@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace TouchScript.Hit
 {
-
     /// <summary>
     /// A factory which is used to create instances of ITouchHit.
     /// </summary>

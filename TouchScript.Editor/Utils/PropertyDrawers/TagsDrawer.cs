@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -7,7 +7,6 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
     [CustomPropertyDrawer(typeof(Tags))]
     internal sealed class TagsDrawer : PropertyDrawer
     {
-
         private ReorderableList list;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -36,6 +35,5 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                 EditorGUI.PropertyField(rect, list.serializedProperty.GetArrayElementAtIndex(index), GUIContent.none);
             };
         }
-
     }
 }
