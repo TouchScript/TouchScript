@@ -19,11 +19,25 @@ namespace TouchScript.InputSources
     {
         #region Constants
 
+        /// <summary>
+        /// Type of TUIO input object.
+        /// </summary>
         [Flags]
         public enum InputType
         {
+            /// <summary>
+            /// Touch/pointer.
+            /// </summary>
             Cursors = 1 << 0,
+
+            /// <summary>
+            /// Shape.
+            /// </summary>
             Blobs = 1 << 1,
+
+            /// <summary>
+            /// Tagged object.
+            /// </summary>
             Objects = 1 << 2
         }
 
@@ -45,6 +59,9 @@ namespace TouchScript.InputSources
             }
         }
 
+        /// <summary>
+        /// What input types should the input source listen to.
+        /// </summary>
         public InputType SupportedInputs
         {
             get { return supportedInputs; }
@@ -56,21 +73,33 @@ namespace TouchScript.InputSources
             }
         }
 
-        public List<TuioObjectMapping> TuioObjectMappings
+        /// <summary>
+        /// List of TUIO object ids to tag mappings.
+        /// </summary>
+        public IList<TuioObjectMapping> TuioObjectMappings
         {
             get { return tuioObjectMappings; }
         }
 
+        /// <summary>
+        /// Tags for new cursors.
+        /// </summary>
         public Tags CursorTags
         {
             get { return cursorTags; }
         }
 
+        /// <summary>
+        /// Tags for new blobs.
+        /// </summary>
         public Tags BlobTags
         {
             get { return blobTags; }
         }
 
+        /// <summary>
+        /// Tags for new objects.
+        /// </summary>
         public Tags ObjectTags
         {
             get { return objectTags; }
@@ -354,10 +383,20 @@ namespace TouchScript.InputSources
         #endregion
     }
 
+    /// <summary>
+    /// TUIO object id to tag mapping value object.
+    /// </summary>
     [Serializable]
     public class TuioObjectMapping
     {
+        /// <summary>
+        /// TUIO object id.
+        /// </summary>
         public int Id;
+
+        /// <summary>
+        /// Tag to attach to this object.
+        /// </summary>
         public string Tag;
     }
 }

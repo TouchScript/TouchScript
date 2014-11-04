@@ -76,7 +76,6 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <param name="tags">Initial tags.</param>
-        /// <param name="properties">Initial properties.</param>
         /// <returns>Internal touch id.</returns>
         protected virtual ITouch beginTouch(Vector2 position, Tags tags)
         {
@@ -96,6 +95,11 @@ namespace TouchScript.InputSources
             manager.UpdateTouch(id);
         }
 
+        /// <summary>
+        /// Mark touch as moved.
+        /// </summary>
+        /// <param name="id">Touch id.</param>
+        /// <param name="position">Screen position.</param>
         protected virtual void moveTouch(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
