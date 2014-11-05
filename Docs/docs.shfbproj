@@ -24,15 +24,16 @@
     <SandcastlePath>..\..\..\..\Program Files (x86)\Sandcastle\</SandcastlePath>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\TouchScript\bin\Release\TouchScript.dll" />
-<DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.TUIO\bin\Release\TouchScript.TUIO.dll" />
-<DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.TUIO\bin\Release\TouchScript.TUIO.XML" />
-<DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.Windows\bin\Release\TouchScript.Windows.dll" />
-<DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.Windows\bin\Release\TouchScript.Windows.XML" />
-<DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\TouchScript.WindowsPhone\bin\Release\TouchScript.WindowsPhone.dll" />
-<DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\Editor Plugin\bin\Release\TouchScript.WindowsPhone.Plugin.dll" />
-<DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\Editor Plugin\bin\Release\TouchScript.WindowsPhone.Plugin.XML" />
-<DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\TouchScript.WindowsPhone\bin\Release\TouchScript.WindowsPhone.XML" />
-<DocumentationSource sourceFile="..\TouchScript\bin\Release\TouchScript.XML" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.TUIO\bin\Release\TouchScript.TUIO.dll" />
+      <DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.TUIO\bin\Release\TouchScript.TUIO.XML" />
+      <DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.Windows\bin\Release\TouchScript.Windows.dll" />
+      <DocumentationSource sourceFile="..\TouchScript.Inputs\TouchScript.Windows\bin\Release\TouchScript.Windows.XML" />
+      <DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\TouchScript.WindowsPhone\bin\Release\TouchScript.WindowsPhone.dll" />
+      <DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\Editor Plugin\bin\Release\TouchScript.WindowsPhone.Plugin.dll" />
+      <DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\Editor Plugin\bin\Release\TouchScript.WindowsPhone.Plugin.XML" />
+      <DocumentationSource sourceFile="..\TouchScript.Other\TouchScript.WindowsPhone\TouchScript.WindowsPhone\bin\Release\TouchScript.WindowsPhone.XML" />
+      <DocumentationSource sourceFile="..\TouchScript\bin\Release\TouchScript.XML" />
+    </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>C#</SyntaxFilters>
     <HeaderText>
@@ -56,7 +57,7 @@
     <Preliminary>False</Preliminary>
     <HelpTitle>TouchScript — multitouch library for Unity</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <VisibleItems>Attributes, ExplicitInterfaceImplementations, Protected</VisibleItems>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
