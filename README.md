@@ -1,10 +1,10 @@
-![](https://raw.github.com/wiki/InteractiveLab/TouchScript/images/dvfu.jpg)
+![](https://raw.github.com/wiki/TouchScript/TouchScript/images/dvfu.jpg)
 
 ## TouchScript — multitouch library for Unity
 
 **TouchScript** is a multitouch library for Unity. Inspired by iOS, **TouchScript** makes handling complex gesture interactions on any touch surface much easier. 
 
-> Warning! [Please read before upgrading](https://github.com/InteractiveLab/TouchScript/wiki/Upgrading).  
+> Warning! [Please read before upgrading](https://github.com/TouchScript/TouchScript/wiki/Upgrading).  
 > Please ask all questions on [the Forum](http://touchprefab.com/index.php).
 
 ## Features
@@ -28,9 +28,9 @@
 Developed by Valentin Simonov at [Interactive Lab](http://interactivelab.ru).
 
 ## Documentation
-Please refer to [Wiki](https://github.com/InteractiveLab/TouchScript/wiki) for up-to-date documentation and tutorials.  
-If you have questions please read the [FAQ](https://github.com/InteractiveLab/TouchScript/wiki/FAQ) first. After that search [the Forum](http://touchprefab.com/index.php).  
-If you are sure that you found a bug post an [issue](https://github.com/InteractiveLab/TouchScript/issues).
+Please refer to [Wiki](https://github.com/TouchScript/TouchScript/wiki) for up-to-date documentation and tutorials.  
+If you have questions please read the [FAQ](https://github.com/TouchScript/TouchScript/wiki/FAQ) first. After that search [the Forum](http://touchprefab.com/index.php).  
+If you are sure that you found a bug post an [issue](https://github.com/TouchScript/TouchScript/issues).
 
 ## Consulting and contract work
 If you require custom functionality for your project or consulting services please contact me at **v@lent.in**.
