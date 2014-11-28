@@ -3,3 +3,7 @@ TouchScript/*
 !TouchScript/Examples
 TouchScript/Examples/General*
 TouchScript/Examples/_misc*
+
+!TouchScript/Editor.meta
+!TouchScript/Editor
+TouchScript/Editor/*

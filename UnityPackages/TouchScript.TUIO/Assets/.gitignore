@@ -10,3 +10,7 @@ TouchScript/Plugins/*
 !TouchScript/Plugins/TouchScript.TUIO.dll.meta
 !TouchScript/Plugins/TUIOSharp.dll.meta
 !TouchScript/Plugins/OSCSharp.dll.meta
+
+!TouchScript/Editor.meta
+!TouchScript/Editor
+TouchScript/Editor/*
