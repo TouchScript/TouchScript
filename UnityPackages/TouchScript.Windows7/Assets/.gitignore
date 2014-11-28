@@ -8,3 +8,7 @@ TouchScript/Examples/_misc*
 !TouchScript/Plugins
 TouchScript/Plugins/*
 !TouchScript/Plugins/TouchScript.Windows.dll.meta
+
+!TouchScript/Editor.meta
+!TouchScript/Editor
+TouchScript/Editor/*

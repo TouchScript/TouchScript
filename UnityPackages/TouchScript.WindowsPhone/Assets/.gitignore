@@ -21,3 +21,7 @@ TouchScript/Plugins/WP8/*
 !TouchScript/Devices
 TouchScript/Devices/Display/*
 !TouchScript/Devices/Display/Windows Phone.*
+
+!TouchScript/Editor.meta
+!TouchScript/Editor
+TouchScript/Editor/*
