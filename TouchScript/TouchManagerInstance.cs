@@ -448,8 +448,10 @@ namespace TouchScript
         {
             if (touchesBegan.Count > 0)
             {
+                var touchesList = new List<ITouch>(touchesBegan.Count);
                 foreach (var touch in touchesBegan)
                 {
+                    touchesList.Add(touch);
                     touches.Add(touch);
                     idToTouch.Add(touch.Id, touch);
                     foreach (var touchLayer in layers)
@@ -459,7 +461,7 @@ namespace TouchScript
                     }
                 }
 
-                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesBegan.ConvertAll((t) => t as ITouch)));
+                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesList));
                 touchesBegan.Clear();
             }
         }
