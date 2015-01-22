@@ -81,6 +81,20 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <summary>
+        /// Gets or sets the number of touches limited for the gesture to recognize and fail.
+        /// </summary>
+        /// <value>The number of touches limited for this gesture to recognize and fail. <c>0</c> — no limit, <c>1</c> — single touch, <c>2</c> — double touches.</value>
+        public int NumberOfTouchesLimited
+        {
+            get { return numberOfTouchesLimited; }
+            set
+            {
+                if (value < 0) numberOfTouchesLimited = 0;
+                else numberOfTouchesLimited = value;
+            }
+        }
+
+        /// <summary>
         /// Gets delta position in world coordinates.
         /// </summary>
         /// <value>Delta position between this frame and the last frame in world coordinates.</value>
@@ -121,6 +135,8 @@ namespace TouchScript.Gestures.Simple
 
         [SerializeField]
         private float movementThreshold = 0.5f;
+        [SerializeField]
+        private int numberOfTouchesLimited = 0;
 
         private Vector2 movementBuffer;
         private bool isMoving = false;
@@ -129,10 +145,21 @@ namespace TouchScript.Gestures.Simple
 
         #region Gesture callbacks
 
+        protected override void touchesBegan(IList<ITouch> touches)
+        {
+            base.touchesBegan(touches);
+            if (numberOfTouchesLimited > 0 && ActiveTouches.Count > numberOfTouchesLimited)
+            {
+                setState(GestureState.Failed);
+            }
+        }
+
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
         {
             base.touchesMoved(touches);
+
+            if (numberOfTouchesLimited > 0 && ActiveTouches.Count < numberOfTouchesLimited) return;
 
             var worldDelta = Vector3.zero;
             Vector3 oldWorldCenter, newWorldCenter;
