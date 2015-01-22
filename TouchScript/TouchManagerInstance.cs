@@ -86,8 +86,6 @@ namespace TouchScript
                     if (objects.Length == 0)
                     {
                         var go = new GameObject("TouchManager Instance");
-                        go.hideFlags = HideFlags.HideInHierarchy;
-                        DontDestroyOnLoad(go);
                         instance = go.AddComponent<TouchManagerInstance>();
                     }
                     else if (objects.Length >= 1)
@@ -346,7 +344,18 @@ namespace TouchScript
 
         private void Awake()
         {
-            if (instance == null) instance = this;
+            if (instance == null)
+            {
+                instance = this;
+            }
+            else if (instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            gameObject.hideFlags = HideFlags.HideInHierarchy;
+            DontDestroyOnLoad(gameObject);
 
             updateDPI();
 
