@@ -11,7 +11,7 @@ namespace TouchScript.Editor.Layers
     [CustomEditor(typeof(FullscreenLayer))]
     internal sealed class FullscreenLayerEditor : UnityEditor.Editor
     {
-        private SerializedProperty type, camera;
+        private SerializedProperty type, camera, index;
         private FullscreenLayer instance;
 
         private void OnEnable()
@@ -20,6 +20,7 @@ namespace TouchScript.Editor.Layers
 
             type = serializedObject.FindProperty("type");
             camera = serializedObject.FindProperty("_camera");
+            index = serializedObject.FindProperty("Index");
         }
 
         public override void OnInspectorGUI()
@@ -42,6 +43,10 @@ namespace TouchScript.Editor.Layers
                     instance.Camera = camera.objectReferenceValue as Camera;
                 }
             }
+
+            EditorGUILayout.PropertyField(index);
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

@@ -74,6 +74,11 @@ namespace TouchScript.Layers
         public String Name;
 
         /// <summary>
+        /// Touch layer's index.
+        /// </summary>
+        public int Index;
+
+        /// <summary>
         /// Layers screen to world projection normal.
         /// </summary>
         public virtual Vector3 WorldProjectionNormal
@@ -130,6 +135,22 @@ namespace TouchScript.Layers
             if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.RemoveLayer(this);
         }
 
+        /// <summary>
+        /// Unity OnEnable callback.
+        /// </summary>
+        protected virtual void OnEnable()
+        {
+            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.AddLayer(this);
+        }
+
+        /// <summary>
+        /// Unity OnDisable callback.
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.RemoveLayer(this);
+        }
+        
         #endregion
 
         #region Internal methods

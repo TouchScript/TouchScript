@@ -15,10 +15,12 @@ namespace TouchScript.Editor.Layers
         public const string TEXT_REBUILD = "Unity doesn't expose actual 2d layers sorting, so if you change 2d layers you must manually rebuild layers by pressing this button.";
 
         private SerializedProperty sortedLayerIds;
+        private SerializedProperty index;
 
         private void OnEnable()
         {
             sortedLayerIds = serializedObject.FindProperty("sortedLayerIds");
+            index = serializedObject.FindProperty("Index");
             if (sortedLayerIds.arraySize == 0) rebuildSortingLayers();
         }
 
@@ -26,11 +28,16 @@ namespace TouchScript.Editor.Layers
         {
             base.OnInspectorGUI();
 
+            serializedObject.Update();
+
             GUILayout.Space(10);
             if (GUILayout.Button(new GUIContent("Update Sorting Layers", TEXT_REBUILD)))
             {
                 rebuildSortingLayers();
             }
+            EditorGUILayout.PropertyField(index);
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void rebuildSortingLayers()
@@ -41,7 +48,6 @@ namespace TouchScript.Editor.Layers
             {
                 sortedLayerIds.GetArrayElementAtIndex(i).intValue = data[i];
             }
-            serializedObject.ApplyModifiedProperties();
 
             Debug.Log("CameraLayer2D: sorting layer order was rebuilt.");
         }

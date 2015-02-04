@@ -187,6 +187,7 @@ namespace TouchScript
             if (layer == null) return false;
             if (layers.Contains(layer)) return true;
             layers.Add(layer);
+            layers = layers.OrderBy(l => l.Index).ToList();
             return true;
         }
 
@@ -207,6 +208,7 @@ namespace TouchScript
                 if (index < i) layers.Insert(index, layer);
                 else layers.Insert(index - 1, layer);
             }
+            layers = layers.OrderBy(l => l.Index).ToList();
             return true;
         }
 
