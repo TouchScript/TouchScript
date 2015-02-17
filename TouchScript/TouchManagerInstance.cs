@@ -462,7 +462,12 @@ namespace TouchScript
                 {
                     touchesList.Add(touch);
                     touches.Add(touch);
-                    idToTouch.Add(touch.Id, touch);
+                    
+                    // When scene is loaded again throws Key already exists in dictionary exception
+                    // idToTouch.add(touch.Id, touch);
+                    
+                    // This works perfectly
+                    idToTouch[touch.Id] = touch;
                     foreach (var touchLayer in layers)
                     {
                         if (touchLayer == null) continue;
