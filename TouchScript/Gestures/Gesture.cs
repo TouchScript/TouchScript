@@ -579,13 +579,13 @@ namespace TouchScript.Gestures
 
         internal void TouchesEnded(IList<ITouch> touches)
         {
-            activeTouches.RemoveAll(touches.Contains);
+            for (var i = 0; i < touches.Count; i++) activeTouches.Remove(touches[i]);
             touchesEnded(touches);
         }
 
         internal void TouchesCancelled(IList<ITouch> touches)
         {
-            activeTouches.RemoveAll(touches.Contains);
+            for (var i = 0; i < touches.Count; i++) activeTouches.Remove(touches[i]);
             touchesCancelled(touches);
         }
 
