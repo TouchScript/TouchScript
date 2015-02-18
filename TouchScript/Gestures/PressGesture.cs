@@ -102,7 +102,7 @@ namespace TouchScript.Gestures
         {
             base.onRecognized();
             if (pressedInvoker != null) pressedInvoker(this, EventArgs.Empty);
-            if (UseSendMessage) SendMessageTarget.SendMessage(PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion
