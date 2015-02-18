@@ -155,7 +155,7 @@ namespace TouchScript.Gestures
         {
             base.onRecognized();
             if (longPressedInvoker != null) longPressedInvoker(this, EventArgs.Empty);
-            if (UseSendMessage) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

@@ -236,7 +236,7 @@ namespace TouchScript.Gestures
         {
             base.onRecognized();
             if (flickedInvoker != null) flickedInvoker(this, EventArgs.Empty);
-            if (UseSendMessage) SendMessageTarget.SendMessage(FLICK_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(FLICK_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />

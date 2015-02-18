@@ -198,7 +198,7 @@ namespace TouchScript.Gestures.Simple
             base.onBegan();
             if (rotateStartedInvoker != null) rotateStartedInvoker(this, EventArgs.Empty);
             if (rotatedInvoker != null) rotatedInvoker(this, EventArgs.Empty);
-            if (UseSendMessage)
+            if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(ROTATE_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
                 SendMessageTarget.SendMessage(ROTATE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -210,7 +210,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.onChanged();
             if (rotatedInvoker != null) rotatedInvoker(this, EventArgs.Empty);
-            if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />
@@ -218,7 +218,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.onRecognized();
             if (rotateCompletedInvoker != null) rotateCompletedInvoker(this, EventArgs.Empty);
-            if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <inheritdoc />
@@ -228,7 +228,7 @@ namespace TouchScript.Gestures.Simple
             if (PreviousState != GestureState.Possible)
             {
                 if (rotateCompletedInvoker != null) rotateCompletedInvoker(this, EventArgs.Empty);
-                if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -239,7 +239,7 @@ namespace TouchScript.Gestures.Simple
             if (PreviousState != GestureState.Possible)
             {
                 if (rotateCompletedInvoker != null) rotateCompletedInvoker(this, EventArgs.Empty);
-                if (UseSendMessage) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 

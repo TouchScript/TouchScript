@@ -96,7 +96,7 @@ namespace TouchScript.Gestures
             {
                 for (var i = 0; i < length; i++) touchBeganInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
-            if (UseSendMessage)
+            if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_BEGAN_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
@@ -114,7 +114,7 @@ namespace TouchScript.Gestures
             {
                 for (var i = 0; i < length; i++) touchMovedInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
-            if (UseSendMessage)
+            if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_MOVED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
@@ -132,7 +132,7 @@ namespace TouchScript.Gestures
             {
                 for (var i = 0; i < length; i++) touchEndedInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
-            if (UseSendMessage)
+            if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_ENDED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
@@ -150,7 +150,7 @@ namespace TouchScript.Gestures
             {
                 for (var i = 0; i < length; i++) touchCancelledInvoker(this, new MetaGestureEventArgs(touches[i]));
             }
-            if (UseSendMessage)
+            if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_CANCELLED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
             }
