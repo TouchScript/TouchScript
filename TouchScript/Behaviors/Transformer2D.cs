@@ -29,6 +29,7 @@ namespace TouchScript.Behaviors
         private Vector3 localPositionToGo, localScaleToGo;
         private Quaternion localRotationToGo;
 
+        // last* variables are needed to detect when Transform's properties were changed outside of this script
         private Vector3 lastLocalPosition, lastLocalScale;
         private Quaternion lastLocalRotation;
 
@@ -75,8 +76,10 @@ namespace TouchScript.Behaviors
                 localScaleToGo.y = transform.localScale.y;
             if (!Mathf.Approximately(transform.localScale.z, lastLocalScale.z))
                 localScaleToGo.z = transform.localScale.z;
-            transform.localScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
-
+            var newLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
+            // prevent recalculating colliders when no scale occurs
+            if (newLocalScale != transform.localScale) transform.localScale = lastLocalScale = newLocalScale;
+            
             // changed by someone else
             if (transform.localRotation != lastLocalRotation) localRotationToGo = transform.localRotation;
             transform.localRotation = lastLocalRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
