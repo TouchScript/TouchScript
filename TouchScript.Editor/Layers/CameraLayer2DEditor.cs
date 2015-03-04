@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Reflection;
 using TouchScript.Layers;
 using UnityEditor;
 using UnityEngine;
@@ -46,14 +47,23 @@ namespace TouchScript.Editor.Layers
             Debug.Log("CameraLayer2D: sorting layer order was rebuilt.");
         }
 
-        // https://github.com/InteractiveLab/TouchScript/issues/60
+        // https://github.com/TouchScript/TouchScript/issues/60
         // Based on https://gist.github.com/stuartcarnie/8511903
         private static int[] getSortingLayerIdsToSortOrder()
         {
             var type = typeof(UnityEditorInternal.InternalEditorUtility);
 
             var getSortingLayerCount = type.GetMethod("GetSortingLayerCount", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
-            var getSortingLayerUserID = type.GetMethod("GetSortingLayerUserID", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            MethodInfo getSortingLayerUserID;
+            if (Application.unityVersion.StartsWith("4"))
+            {
+                getSortingLayerUserID = type.GetMethod("GetSortingLayerUserID", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            }
+            else
+            {
+                // was renamed in 5.0
+                getSortingLayerUserID = type.GetMethod("GetSortingLayerUniqueID", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            }
 
             int count = (int)getSortingLayerCount.Invoke(null, null);
             var layerIdsToSortOrder = new int[count];
