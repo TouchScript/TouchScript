@@ -18,5 +18,5 @@ function OnTap(sender:Gesture):void
     cube.name = "Cube";
     cube.localScale = Vector3.one*Scale*cube.localScale.x;
     cube.position = hit3d.Point + hit3d.Normal*.5;
-    cube.renderer.material.color = color;
+    cube.GetComponent.<Renderer>().material.color = color;
 }

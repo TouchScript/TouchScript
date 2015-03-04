@@ -55,7 +55,7 @@ public class LongPress_Button : MonoBehaviour
     {
         if (Plane == null) return;
 
-        Plane.renderer.material.color = button.renderer.sharedMaterial.color;
+        Plane.GetComponent<Renderer>().material.color = button.GetComponent<Renderer>().sharedMaterial.color;
     }
 
     private IEnumerator grow()

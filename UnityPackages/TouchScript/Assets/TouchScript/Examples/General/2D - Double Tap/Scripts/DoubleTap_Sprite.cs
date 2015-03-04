@@ -26,9 +26,9 @@ public class DoubleTap_Sprite : MonoBehaviour
     private void changeColor()
     {
         Color newColor = COLORS[Random.Range(0, COLORS.Length)];
-        while (newColor == renderer.material.color) newColor = COLORS[Random.Range(0, COLORS.Length)];
+        while (newColor == GetComponent<Renderer>().material.color) newColor = COLORS[Random.Range(0, COLORS.Length)];
 
-        renderer.material.color = newColor;
+        GetComponent<Renderer>().material.color = newColor;
     }
 
     private void breakObject()

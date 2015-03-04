@@ -20,9 +20,9 @@ public class Heirarchy_Button : MonoBehaviour
 
     private void tappedHandler(object sender, EventArgs eventArgs)
     {
-        var parentColor = transform.parent.renderer.material.color;
-        transform.parent.renderer.material.color = renderer.material.color;
-        renderer.material.color = parentColor;
+        var parentColor = transform.parent.GetComponent<Renderer>().material.color;
+        transform.parent.GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color;
+        GetComponent<Renderer>().material.color = parentColor;
     }
 
     private void releasedHandler(object sender, EventArgs e)

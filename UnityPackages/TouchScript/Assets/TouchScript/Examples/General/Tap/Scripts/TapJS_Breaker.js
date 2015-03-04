@@ -29,8 +29,8 @@ function OnTap(sender:Gesture):void
             cube.name = "Cube";
             cube.localScale = 0.5f * transform.localScale;
             cube.position = transform.TransformPoint(directions[i] / 4);
-            cube.rigidbody.AddForce(Power * Random.insideUnitSphere, ForceMode.VelocityChange);
-            cube.renderer.material.color = color;
+            cube.GetComponent.<Rigidbody>().AddForce(Power * Random.insideUnitSphere, ForceMode.VelocityChange);
+            cube.GetComponent.<Renderer>().material.color = color;
         }
         Destroy(gameObject);
     }
