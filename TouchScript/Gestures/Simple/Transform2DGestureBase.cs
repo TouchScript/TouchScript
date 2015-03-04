@@ -130,7 +130,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.OnEnable();
 
-            cachedCollider = collider;
+            cachedCollider = GetComponent<Collider>();
             updateProjectionPlane();
         }
 

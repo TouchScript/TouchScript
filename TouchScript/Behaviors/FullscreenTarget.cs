@@ -50,6 +50,7 @@ namespace TouchScript.Behaviors
         private void Update()
         {
             var box = GetComponent<BoxCollider>();
+            var camera = GetComponent<Camera>();
 
             var h = 2 * Mathf.Tan(camera.fieldOfView / 360 * Mathf.PI);
             if (Type == TargetType.Background)
