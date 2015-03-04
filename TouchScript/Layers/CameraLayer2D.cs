@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TouchScript.Layers
 {
@@ -18,7 +19,10 @@ namespace TouchScript.Layers
 
         [SerializeField]
         [HideInInspector]
-        private int[] sortedLayerIds = new int[0];
+        [FormerlySerializedAs("sortedLayerIds")]
+        private int[] layerIds = new int[0];
+
+        private Dictionary<int, int> layerById = new Dictionary<int, int>();
 
         private List<RaycastHit2D> sortedHits;
 
@@ -29,6 +33,13 @@ namespace TouchScript.Layers
         private void OnEnable()
         {
             sortedHits = new List<RaycastHit2D>();
+            layerById.Clear();
+            for (var i = 0; i < layerIds.Length; i++)
+            {
+                var value = layerIds[i];
+                if (layerById.ContainsKey(value)) continue;
+                layerById.Add(value, i);
+            }
         }
 
         #endregion
@@ -106,8 +117,9 @@ namespace TouchScript.Layers
                 var sprite2 = b.transform.GetComponent<SpriteRenderer>();
                 if (sprite1 != null && sprite2 != null)
                 {
-                    var s1Id = sprite1.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite1.sortingLayerID] : 0;
-                    var s2Id = sprite2.sortingLayerID < sortedLayerIds.Length ? sortedLayerIds[sprite2.sortingLayerID] : 0;
+                    int s1Id, s2Id;
+                    if (!layerById.TryGetValue(sprite1.sortingLayerID, out s1Id)) s1Id = 0;
+                    if (!layerById.TryGetValue(sprite2.sortingLayerID, out s2Id)) s2Id = 0;
                     if (s1Id < s2Id) return 1;
                     if (s1Id > s2Id) return -1;
                     if (sprite1.sortingOrder < sprite2.sortingOrder) return 1;

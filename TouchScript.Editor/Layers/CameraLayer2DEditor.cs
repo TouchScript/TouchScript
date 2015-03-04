@@ -15,12 +15,12 @@ namespace TouchScript.Editor.Layers
     {
         public const string TEXT_REBUILD = "Unity doesn't expose actual 2d layers sorting, so if you change 2d layers you must manually rebuild layers by pressing this button.";
 
-        private SerializedProperty sortedLayerIds;
+        private SerializedProperty layerIds;
 
         private void OnEnable()
         {
-            sortedLayerIds = serializedObject.FindProperty("sortedLayerIds");
-            if (sortedLayerIds.arraySize == 0) rebuildSortingLayers();
+            layerIds = serializedObject.FindProperty("layerIds");
+            if (layerIds.arraySize == 0) rebuildSortingLayers();
         }
 
         public override void OnInspectorGUI()
@@ -37,10 +37,10 @@ namespace TouchScript.Editor.Layers
         private void rebuildSortingLayers()
         {
             var data = getSortingLayerIdsToSortOrder();
-            sortedLayerIds.arraySize = data.Length;
+            layerIds.arraySize = data.Length;
             for (var i = 0; i < data.Length; i++)
             {
-                sortedLayerIds.GetArrayElementAtIndex(i).intValue = data[i];
+                layerIds.GetArrayElementAtIndex(i).intValue = data[i];
             }
             serializedObject.ApplyModifiedProperties();
 
@@ -66,20 +66,13 @@ namespace TouchScript.Editor.Layers
             }
 
             int count = (int)getSortingLayerCount.Invoke(null, null);
-            var layerIdsToSortOrder = new int[count];
-            int maxUserId = 0;
+            var layerIds = new int[count];
             for (int i = 0; i < count; i++)
             {
-                var userId = (int)getSortingLayerUserID.Invoke(null, new object[] {i});
-                maxUserId = Math.Max(maxUserId, userId);
-                if (maxUserId >= layerIdsToSortOrder.Length)
-                {
-                    Array.Resize(ref layerIdsToSortOrder, maxUserId + 1);
-                }
-                layerIdsToSortOrder[userId] = i;
+                layerIds[i] = (int)getSortingLayerUserID.Invoke(null, new object[] { i });
             }
 
-            return layerIdsToSortOrder;
+            return layerIds;
         }
     }
 }
