@@ -76,6 +76,8 @@
     <Compile Include="Utils\PropertyDrawers\NullToggleDrawer.cs" />
     <Compile Include="Utils\PropertyDrawers\TagsDrawer.cs" />
     <Compile Include="Utils\PropertyDrawers\ToggleLeftDrawer.cs" />
+    <Compile Include="Gestures\Simple\MultiPointPanGestureEditor.cs" />
+    <Compile Include="Gestures\Simple\MultiPointTransform2DGestureBaseEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TouchScript\TouchScript.csproj">
