@@ -26,8 +26,9 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             sortedHits = new List<RaycastHit2D>();
         }
 

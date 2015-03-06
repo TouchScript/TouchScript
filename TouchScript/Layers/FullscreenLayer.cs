@@ -143,7 +143,7 @@ namespace TouchScript.Layers
         }
 
         // To be able to turn it off
-        private void OnEnable() {}
+        protected override void OnEnable() { base.OnEnable(); }
 
         #endregion
 

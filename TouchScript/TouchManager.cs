@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
 using TouchScript.Utils.Attributes;
@@ -251,12 +252,28 @@ namespace TouchScript
             if (Instance == null) return;
 
             Instance.DisplayDevice = displayDevice as IDisplayDevice;
-            for (var i = 0; i < layers.Count; i++)
+
+            UpdateLayers();
+
+            updateSubscription();
+        }
+
+        private void Start()
+        {
+            UpdateLayers();
+        }
+
+        #endregion
+
+        #region Public functions
+
+        public void UpdateLayers()
+        {
+            for (var i = 0; i < layers.Count; ++i)
             {
                 Instance.AddLayer(layers[i], i);
             }
-
-            updateSubscription();
+            layers = Instance.Layers.ToList();
         }
 
         #endregion
