@@ -147,6 +147,9 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
+            screenWidth = Screen.width;
+            screenHeight = Screen.height;
+
             cursorProcessor = new CursorProcessor();
             cursorProcessor.CursorAdded += OnCursorAdded;
             cursorProcessor.CursorUpdated += OnCursorUpdated;
