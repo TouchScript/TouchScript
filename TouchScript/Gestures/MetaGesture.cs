@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -92,10 +93,8 @@ namespace TouchScript.Gestures
             if (State == GestureState.Possible) setState(GestureState.Began);
 
             var length = touches.Count;
-            if (touchBeganInvoker != null)
-            {
-                for (var i = 0; i < length; i++) touchBeganInvoker(this, new MetaGestureEventArgs(touches[i]));
-            }
+            for (var i = 0; i < length; i++)
+                touchBeganInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
             if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_BEGAN_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
@@ -110,10 +109,8 @@ namespace TouchScript.Gestures
             if (State == GestureState.Began || State == GestureState.Changed) setState(GestureState.Changed);
 
             var length = touches.Count;
-            if (touchMovedInvoker != null)
-            {
-                for (var i = 0; i < length; i++) touchMovedInvoker(this, new MetaGestureEventArgs(touches[i]));
-            }
+            for (var i = 0; i < length; i++)
+                touchMovedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
             if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_MOVED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
@@ -128,10 +125,8 @@ namespace TouchScript.Gestures
             if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
-            if (touchEndedInvoker != null)
-            {
-                for (var i = 0; i < length; i++) touchEndedInvoker(this, new MetaGestureEventArgs(touches[i]));
-            }
+            for (var i = 0; i < length; i++)
+                touchEndedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
             if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_ENDED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
@@ -146,10 +141,8 @@ namespace TouchScript.Gestures
             if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
-            if (touchCancelledInvoker != null)
-            {
-                for (var i = 0; i < length; i++) touchCancelledInvoker(this, new MetaGestureEventArgs(touches[i]));
-            }
+            for (var i = 0; i < length; i++)
+                touchCancelledInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
             if (UseSendMessage && SendMessageTarget != null)
             {
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_CANCELLED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);

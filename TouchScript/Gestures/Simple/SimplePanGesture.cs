@@ -192,8 +192,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onBegan()
         {
             base.onBegan();
-            if (panStartedInvoker != null) panStartedInvoker(this, EventArgs.Empty);
-            if (pannedInvoker != null) pannedInvoker(this, EventArgs.Empty);
+            panStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            pannedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(PAN_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -205,7 +205,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onChanged()
         {
             base.onChanged();
-            if (pannedInvoker != null) pannedInvoker(this, EventArgs.Empty);
+            pannedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -213,7 +213,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onRecognized()
         {
             base.onRecognized();
-            if (panCompletedInvoker != null) panCompletedInvoker(this, EventArgs.Empty);
+            panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -223,7 +223,7 @@ namespace TouchScript.Gestures.Simple
             base.onFailed();
             if (PreviousState != GestureState.Possible)
             {
-                if (panCompletedInvoker != null) panCompletedInvoker(this, EventArgs.Empty);
+                panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
                 if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
@@ -234,7 +234,7 @@ namespace TouchScript.Gestures.Simple
             base.onCancelled();
             if (PreviousState != GestureState.Possible)
             {
-                if (panCompletedInvoker != null) panCompletedInvoker(this, EventArgs.Empty);
+                panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
                 if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }

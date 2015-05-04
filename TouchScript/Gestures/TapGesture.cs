@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
 
@@ -194,7 +195,7 @@ namespace TouchScript.Gestures
             base.onRecognized();
 
             StopCoroutine("wait");
-            if (tappedInvoker != null) tappedInvoker(this, EventArgs.Empty);
+            tappedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TAP_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

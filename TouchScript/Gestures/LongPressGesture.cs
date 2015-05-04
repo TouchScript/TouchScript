@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
 
@@ -154,7 +155,7 @@ namespace TouchScript.Gestures
         protected override void onRecognized()
         {
             base.onRecognized();
-            if (longPressedInvoker != null) longPressedInvoker(this, EventArgs.Empty);
+            longPressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

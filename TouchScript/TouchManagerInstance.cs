@@ -11,6 +11,7 @@ using TouchScript.Devices.Display;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript
@@ -470,7 +471,7 @@ namespace TouchScript
                     }
                 }
 
-                if (touchesBeganInvoker != null) touchesBeganInvoker(this, new TouchEventArgs(touchesList));
+                touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(touchesList));
                 touchesBegan.Clear();
             }
         }
@@ -491,7 +492,7 @@ namespace TouchScript
                     }
                 }
 
-                if (touchesMovedInvoker != null) touchesMovedInvoker(this, new TouchEventArgs(updated));
+                touchesMovedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesUpdated.Clear();
             }
         }
@@ -510,7 +511,7 @@ namespace TouchScript
                     if (touch.Layer != null) touch.Layer.EndTouch(touch);
                 }
 
-                if (touchesEndedInvoker != null) touchesEndedInvoker(this, new TouchEventArgs(updated));
+                touchesEndedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesEnded.Clear();
             }
         }
@@ -529,21 +530,21 @@ namespace TouchScript
                     if (touch.Layer != null) touch.Layer.CancelTouch(touch);
                 }
 
-                if (touchesCancelledInvoker != null) touchesCancelledInvoker(this, new TouchEventArgs(updated));
+                touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesCancelled.Clear();
             }
         }
 
         private void updateTouches()
         {
-            if (frameStartedInvoker != null) frameStartedInvoker(this, EventArgs.Empty);
+            frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
             lock (touchesBegan) updateBegan();
             lock (touchesUpdated) updateUpdated();
             lock (touchesEnded) updateEnded();
             lock (touchesCancelled) updateCancelled();
 
-            if (frameFinishedInvoker != null) frameFinishedInvoker(this, EventArgs.Empty);
+            frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
 
         #endregion
