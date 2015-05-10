@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace TouchScript.Hit
 {
@@ -91,7 +92,12 @@ namespace TouchScript.Hit
         public TouchHit(RaycastResult value) :
             this(value.gameObject.transform, value.worldPosition, value.worldNormal)
         {
-            if (value.module != null) canvas = value.module.GetComponent<Canvas>();
+            if (value.module == null) return;
+
+            var graphicRaycaster = value.module as GraphicRaycaster;
+            if (graphicRaycaster == null) return;
+
+            canvas = graphicRaycaster.GetComponent<Canvas>();
         }
 
         #endregion
