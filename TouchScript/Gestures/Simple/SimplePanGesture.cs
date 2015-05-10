@@ -134,6 +134,8 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesMoved(touches);
 
+            var projectionParams = ActiveTouches[0].ProjectionParams;
+
             var worldDelta = Vector3.zero;
             Vector3 oldWorldCenter, newWorldCenter;
 
@@ -142,8 +144,8 @@ namespace TouchScript.Gestures.Simple
 
             if (isMoving)
             {
-                oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter, WorldTransformPlane);
-                newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
+                oldWorldCenter = ProjectionUtils.Project(oldScreenCenter, projectionParams, WorldTransformPlane);
+                newWorldCenter = ProjectionUtils.Project(newScreenCenter, projectionParams, WorldTransformPlane);
                 worldDelta = newWorldCenter - oldWorldCenter;
             }
             else
@@ -153,13 +155,13 @@ namespace TouchScript.Gestures.Simple
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold * dpiMovementThreshold)
                 {
                     isMoving = true;
-                    oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter - movementBuffer, WorldTransformPlane);
-                    newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
+                    oldWorldCenter = ProjectionUtils.Project(oldScreenCenter - movementBuffer, projectionParams, WorldTransformPlane);
+                    newWorldCenter = ProjectionUtils.Project(newScreenCenter, projectionParams, WorldTransformPlane);
                     worldDelta = newWorldCenter - oldWorldCenter;
                 }
                 else
                 {
-                    newWorldCenter = projectionLayer.ProjectTo(newScreenCenter - movementBuffer, WorldTransformPlane);
+                    newWorldCenter = ProjectionUtils.Project(newScreenCenter - movementBuffer, projectionParams, WorldTransformPlane);
                     oldWorldCenter = newWorldCenter;
                 }
             }

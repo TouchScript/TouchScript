@@ -61,7 +61,11 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (projection == ProjectionType.Layer) return projectionLayer.WorldProjectionNormal;
+                if (projection == ProjectionType.Layer)
+                {
+                    if (projectionLayer == null) return cachedTransform.TransformDirection(Vector3.forward);
+                    return projectionLayer.WorldProjectionNormal;
+                }
                 return projectionNormal;
             }
             set
@@ -104,9 +108,6 @@ namespace TouchScript.Gestures.Simple
 
         private Collider cachedCollider;
 
-        /// <summary>
-        /// Touch layer used in projection.
-        /// </summary>
         protected TouchLayer projectionLayer;
 
         /// <summary>
@@ -188,6 +189,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.reset();
 
+            projectionLayer = null;
             WorldTransformCenter = TouchManager.INVALID_POSITION;
             PreviousWorldTransformCenter = TouchManager.INVALID_POSITION;
         }

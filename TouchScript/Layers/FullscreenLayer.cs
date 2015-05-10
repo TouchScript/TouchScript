@@ -122,13 +122,6 @@ namespace TouchScript.Layers
             return LayerHitResult.Hit;
         }
 
-        /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
-        {
-            if (_camera == null) return base.ProjectTo(screenPosition, projectionPlane);
-            else return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
-        }
-
         #endregion
 
         #region Unity methods

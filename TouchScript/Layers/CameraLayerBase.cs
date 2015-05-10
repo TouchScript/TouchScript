@@ -65,10 +65,9 @@ namespace TouchScript.Layers
             return castRay(ray, out hit);
         }
 
-        /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        public override ProjectionParams GetProjectionParams(ITouch touch)
         {
-            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+            return new ProjectionParams(_camera);
         }
 
         #endregion
