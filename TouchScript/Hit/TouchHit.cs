@@ -47,9 +47,9 @@ namespace TouchScript.Hit
             get { return rigidbody2D; }
         }
 
-        public Canvas Canvas
+        public Graphic Graphic
         {
-            get { return canvas; }
+            get { return graphic; }
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace TouchScript.Hit
         private readonly Rigidbody rigidbody;
         private readonly Collider2D collider2D;
         private readonly Rigidbody2D rigidbody2D;
-        private readonly Canvas canvas;
+        private readonly Graphic graphic;
 
         #endregion
 
@@ -71,7 +71,7 @@ namespace TouchScript.Hit
 
         public TouchHit(Transform transform, Vector3 point = default(Vector3), Vector3 normal = default(Vector3),
             Collider collider = null, Rigidbody rigidbody = null,
-            Collider2D collider2D = null, Rigidbody2D rigidbody2D = null, Canvas canvas = null)
+            Collider2D collider2D = null, Rigidbody2D rigidbody2D = null, Graphic graphic = null)
         {
             this.transform = transform;
             this.point = point;
@@ -80,7 +80,7 @@ namespace TouchScript.Hit
             this.rigidbody = rigidbody;
             this.collider2D = collider2D;
             this.rigidbody2D = rigidbody2D;
-            this.canvas = canvas;
+            this.graphic = graphic;
         }
 
         public TouchHit(RaycastHit value) :
@@ -93,11 +93,7 @@ namespace TouchScript.Hit
             this(value.gameObject.transform, value.worldPosition, value.worldNormal)
         {
             if (value.module == null) return;
-
-            var graphicRaycaster = value.module as GraphicRaycaster;
-            if (graphicRaycaster == null) return;
-
-            canvas = graphicRaycaster.GetComponent<Canvas>();
+            graphic = value.gameObject.GetComponent<Graphic>();
         }
 
         #endregion
