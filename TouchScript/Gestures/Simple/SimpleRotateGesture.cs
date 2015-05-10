@@ -129,10 +129,10 @@ namespace TouchScript.Gestures.Simple
 
             var oldScreenPos1 = getPointPreviousScreenPosition(0);
             var oldScreenPos2 = getPointPreviousScreenPosition(1);
-            var oldWorldPos1 = ProjectionUtils.Project(oldScreenPos1, projectionParams, WorldTransformPlane);
-            var oldWorldPos2 = ProjectionUtils.Project(oldScreenPos2, projectionParams, WorldTransformPlane);
-            var newWorldPos1 = ProjectionUtils.Project(newScreenPos1, projectionParams, WorldTransformPlane);
-            var newWorldPos2 = ProjectionUtils.Project(newScreenPos2, projectionParams, WorldTransformPlane);
+            var oldWorldPos1 = projectionParams.Project(oldScreenPos1, WorldTransformPlane);
+            var oldWorldPos2 = projectionParams.Project(oldScreenPos2, WorldTransformPlane);
+            var newWorldPos1 = projectionParams.Project(newScreenPos1, WorldTransformPlane);
+            var newWorldPos2 = projectionParams.Project(newScreenPos2, WorldTransformPlane);
             var newVector = newWorldPos2 - newWorldPos1;
             var oldVector = oldWorldPos2 - oldWorldPos1;
 
@@ -155,8 +155,8 @@ namespace TouchScript.Gestures.Simple
                 }
             }
 
-            oldWorldCenter = ProjectionUtils.Project(oldScreenCenter, projectionParams, WorldTransformPlane);
-            newWorldCenter = ProjectionUtils.Project(newScreenCenter, projectionParams, WorldTransformPlane);
+            oldWorldCenter = projectionParams.Project(oldScreenCenter, WorldTransformPlane);
+            newWorldCenter = projectionParams.Project(newScreenCenter, WorldTransformPlane);
 
             if (Math.Abs(deltaRotation) > 0.00001)
             {

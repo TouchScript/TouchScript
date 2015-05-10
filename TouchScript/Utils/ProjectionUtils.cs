@@ -13,16 +13,6 @@ namespace TouchScript.Utils
     public static class ProjectionUtils
     {
 
-        public static Vector3 Project(Vector2 position, ProjectionParams @params, Plane projectionPlane)
-        {
-            var ray = @params.GetRay(position);
-            float distance;
-            var result = projectionPlane.Raycast(ray, out distance);
-            if (!result && Mathf.Approximately(distance, 0f)) 
-                return -projectionPlane.normal * projectionPlane.GetDistanceToPoint(Vector3.zero); // perpendicular to the screen
-            return ray.origin + ray.direction * distance;
-        }
-
         /// <summary>
         /// Projects a screen point to a plane from a camera's point of view.
         /// </summary>

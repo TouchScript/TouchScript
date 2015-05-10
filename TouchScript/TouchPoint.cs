@@ -41,11 +41,10 @@ namespace TouchScript
         {
             get
             {
-                if (dirtyProjection)
+                if (!projection.IsValid)
                 {
                     if (Layer == null) projection = new ProjectionParams();
                     projection = Layer.GetProjectionParams(this);
-                    dirtyProjection = false;
                 }
                 return projection;
             }
@@ -66,7 +65,6 @@ namespace TouchScript
         private Vector2 newPosition = Vector2.zero;
         private ProjectionParams projection;
         private Dictionary<string, System.Object> properties;
-        private bool dirtyProjection = true;
 
         #endregion
 
@@ -94,7 +92,6 @@ namespace TouchScript
             PreviousPosition = position;
             position = newPosition;
             newPosition = position;
-            dirtyProjection = true;
         }
 
         internal void SetPosition(Vector2 value)

@@ -85,6 +85,11 @@ namespace TouchScript.Layers
 
         #region Public methods
 
+        public static Ray DefaultLayerProjection(Vector2 screenPosition)
+        {
+            return TouchManager.INVALID_RAY;
+        }
+
         /// <summary>
         /// Checks if a point in screen coordinates hits something in this layer.
         /// </summary>

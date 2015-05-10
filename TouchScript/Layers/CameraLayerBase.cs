@@ -67,7 +67,7 @@ namespace TouchScript.Layers
 
         public override ProjectionParams GetProjectionParams(ITouch touch)
         {
-            return new ProjectionParams(_camera);
+            return new ProjectionParams(cameraLayerProjection);
         }
 
         #endregion
@@ -85,6 +85,12 @@ namespace TouchScript.Layers
         #endregion
 
         #region Protected functions
+
+        protected virtual Ray cameraLayerProjection(Vector2 screenPosition)
+        {
+            if (_camera == null) return TouchManager.INVALID_RAY;
+            return _camera.ScreenPointToRay(screenPosition);
+        }
 
         /// <inheritdoc />
         protected override void setName()
