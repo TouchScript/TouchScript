@@ -91,9 +91,9 @@ namespace TouchScript.Layers
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out ITouchHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
-            hit = null;
+            hit = default(TouchHit);
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             return LayerHitResult.Error;
         }
@@ -136,13 +136,13 @@ namespace TouchScript.Layers
 
         internal bool BeginTouch(TouchPoint touch)
         {
-            ITouchHit hit;
+            TouchHit hit;
             var result = beginTouch(touch, out hit);
             if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
                 touch.Hit = hit;
-                if (hit != null) touch.Target = hit.Transform;
+                if (hit.Transform != null) touch.Target = hit.Transform;
                 touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
                 return true;
             }
@@ -183,7 +183,7 @@ namespace TouchScript.Layers
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
+        protected virtual LayerHitResult beginTouch(ITouch touch, out TouchHit hit)
         {
             var result = Hit(touch.Position, out hit);
             return result;

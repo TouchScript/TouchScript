@@ -393,7 +393,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult()
         {
-            ITouchHit hit;
+            TouchHit hit;
             return GetTargetHitResult(ScreenPosition, out hit);
         }
 
@@ -402,7 +402,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="hit">Raycast result</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(out ITouchHit hit)
+        public virtual bool GetTargetHitResult(out TouchHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
         }
@@ -414,7 +414,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public virtual bool GetTargetHitResult(Vector2 position)
         {
-            ITouchHit hit;
+            TouchHit hit;
             return GetTargetHitResult(position, out hit);
         }
 
@@ -424,7 +424,7 @@ namespace TouchScript.Gestures
         /// <param name="position">The position.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(Vector2 position, out ITouchHit hit)
+        public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
         {
             TouchLayer layer = null;
             if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;

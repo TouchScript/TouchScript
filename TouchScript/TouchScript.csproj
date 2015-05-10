@@ -50,6 +50,10 @@
       <HintPath>..\Lib\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\Lib\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\FullscreenTarget.cs" />
@@ -77,14 +81,7 @@
     <Compile Include="Gestures\Simple\Transform2DGestureBase.cs" />
     <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBase.cs" />
     <Compile Include="Hit\HitTest.cs" />
-    <Compile Include="Hit\ITouchHit.cs" />
-    <Compile Include="Hit\ITouchHit2D.cs" />
-    <Compile Include="Hit\ITouchHit3D.cs" />
-    <Compile Include="Hit\ITouchHitFactory.cs" />
     <Compile Include="Hit\TouchHit.cs" />
-    <Compile Include="Hit\TouchHit2D.cs" />
-    <Compile Include="Hit\TouchHit3D.cs" />
-    <Compile Include="Hit\TouchHitFactory.cs" />
     <Compile Include="Hit\Untouchable.cs" />
     <Compile Include="Gestures\IGestureDelegate.cs" />
     <Compile Include="IGestureManager.cs" />

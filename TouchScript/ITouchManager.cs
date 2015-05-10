@@ -146,7 +146,7 @@ namespace TouchScript
         /// <param name="position">Screen position of the touch.</param>
         /// <param name="hit">An object which represents hit information.</param>
         /// <returns>True if the touch hits any Transform.</returns>
-        bool GetHitTarget(Vector2 position, out ITouchHit hit);
+        bool GetHitTarget(Vector2 position, out TouchHit hit);
 
         /// <summary>
         /// Checks if a touch hits anything.
@@ -157,7 +157,7 @@ namespace TouchScript
         /// <param name="hit">An object which represents hit information.</param>
         /// <param name="layer">A layer which was hit.</param>
         /// <returns>True if the touch hits any Transform.</returns>
-        bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer);
+        bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer);
     }
 
     /// <summary>

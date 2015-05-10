@@ -32,7 +32,7 @@ namespace TouchScript
         public Vector2 PreviousPosition { get; private set; }
 
         /// <inheritdoc />
-        public ITouchHit Hit
+        public TouchHit Hit
         {
             get
             {
@@ -66,7 +66,7 @@ namespace TouchScript
 
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
-        private ITouchHit hit;
+        private TouchHit hit;
         private bool isDirty = false;
         private Dictionary<string, System.Object> properties;
 

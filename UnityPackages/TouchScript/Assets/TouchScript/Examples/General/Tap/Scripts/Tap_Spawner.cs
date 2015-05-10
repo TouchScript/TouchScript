@@ -23,17 +23,15 @@ public class Tap_Spawner : MonoBehaviour
     private void tappedHandler(object sender, EventArgs e)
     {
         var gesture = sender as TapGesture;
-        ITouchHit hit;
+        TouchHit hit;
         gesture.GetTargetHitResult(out hit);
-        var hit3d = hit as ITouchHit3D;
-        if (hit3d == null) return;
 
         Color color = new Color(Random.value, Random.value, Random.value);
         var cube = Instantiate(CubePrefab) as Transform;
         cube.parent = Container;
         cube.name = "Cube";
         cube.localScale = Vector3.one*Scale*cube.localScale.x;
-        cube.position = hit3d.Point + hit3d.Normal*.5f;
+        cube.position = hit.Point + hit.Normal*.5f;
         cube.GetComponent<Renderer>().material.color = color;
     }
 }
