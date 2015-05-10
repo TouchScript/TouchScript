@@ -484,7 +484,7 @@ namespace TouchScript
                 // Need to loop through all touches to reset those which did not move
                 foreach (var touch in touches)
                 {
-                    touch.ResetPosition();
+                    touch.NewFrame();
                     if (touchesUpdated.Contains(touch.Id))
                     {
                         updated.Add(touch);

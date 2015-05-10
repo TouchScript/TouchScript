@@ -49,6 +49,8 @@ namespace TouchScript
         /// </summary>
         TouchLayer Layer { get; }
 
+        ProjectionParams ProjectionParams { get; }
+
         /// <summary>
         /// Tags collection for this touch object.
         /// </summary>

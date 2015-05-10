@@ -32,26 +32,24 @@ namespace TouchScript
         public Vector2 PreviousPosition { get; private set; }
 
         /// <inheritdoc />
-        public TouchHit Hit
-        {
-            get
-            {
-                if (isDirty)
-                {
-                    TouchManager.Instance.GetHitTarget(position, out hit);
-                    isDirty = false;
-                }
-                return hit;
-            }
-            internal set
-            {
-                hit = value;
-                isDirty = false;
-            }
-        }
+        public TouchHit Hit { get; internal set; }
 
         /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
+
+        public ProjectionParams ProjectionParams
+        {
+            get
+            {
+                if (dirtyProjection)
+                {
+                    if (Layer == null) projection = new ProjectionParams();
+                    projection = Layer.GetProjectionParams(this);
+                    dirtyProjection = false;
+                }
+                return projection;
+            }
+        }
 
         public Tags Tags { get; private set; }
 
@@ -66,9 +64,9 @@ namespace TouchScript
 
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
-        private TouchHit hit;
-        private bool isDirty = false;
+        private ProjectionParams projection;
         private Dictionary<string, System.Object> properties;
+        private bool dirtyProjection = true;
 
         #endregion
 
@@ -90,14 +88,13 @@ namespace TouchScript
         #region Internal methods
 
         /// <summary>
-        /// Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.
         /// </summary>
-        internal void ResetPosition()
+        internal void NewFrame()
         {
             PreviousPosition = position;
             position = newPosition;
             newPosition = position;
-            if (PreviousPosition != position) isDirty = true;
+            dirtyProjection = true;
         }
 
         internal void SetPosition(Vector2 value)
