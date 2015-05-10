@@ -34,7 +34,7 @@ namespace TouchScript.Layers
 
         public ProjectionParams(Func<Vector2, Ray> func = null)
         {
-            if (func == null) this.func = TouchLayer.DefaultLayerProjection;
+            if (func == null) this.func = TouchLayer.InvalidLayerProjection;
             else this.func = func;
         }
 

@@ -87,6 +87,11 @@ namespace TouchScript.Layers
 
         public static Ray DefaultLayerProjection(Vector2 screenPosition)
         {
+            return new Ray(new Vector3(screenPosition.x, screenPosition.y), Vector3.forward);
+        }
+
+        public static Ray InvalidLayerProjection(Vector2 screenPosition)
+        {
             return TouchManager.INVALID_RAY;
         }
 

@@ -122,6 +122,12 @@ namespace TouchScript.Layers
             return LayerHitResult.Hit;
         }
 
+        public override ProjectionParams GetProjectionParams(ITouch touch)
+        {
+            if (_camera == null) return new ProjectionParams(DefaultLayerProjection);
+            return new ProjectionParams(cameraLayerProjection);
+        }
+
         #endregion
 
         #region Unity methods
@@ -152,6 +158,12 @@ namespace TouchScript.Layers
         #endregion
 
         #region Private functions
+
+        private Ray cameraLayerProjection(Vector2 screenPosition)
+        {
+            if (_camera == null) return TouchManager.INVALID_RAY;
+            return _camera.ScreenPointToRay(screenPosition);
+        }
 
         private void updateCamera()
         {
