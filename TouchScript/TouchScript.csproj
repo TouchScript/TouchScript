@@ -64,6 +64,7 @@
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
+    <Compile Include="Gestures\UI\UIGesture.cs" />
     <Compile Include="Layers\ProjectionParams.cs" />
     <Compile Include="Layers\UILayer.cs" />
     <Compile Include="Utils\EventHandlerExtensions.cs" />
@@ -112,9 +113,7 @@
     <Compile Include="Utils\TimedSequence.cs" />
     <Compile Include="Utils\TransformUtils.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gestures\UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd $(ProjectDir)..\Build
