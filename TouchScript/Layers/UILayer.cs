@@ -104,7 +104,7 @@ namespace TouchScript.Layers
                 return new ProjectionParams((screenPosition) =>
                     new Ray(new Vector3(screenPosition.x, screenPosition.y, canvasRect.position.z - ScreenSpaceZOffset), Vector3.forward));
             }
-            var c = canvas.worldCamera;
+            var c = canvas.worldCamera ?? Camera.main;
             return new ProjectionParams((screenPosition) => c.ScreenPointToRay(screenPosition));
         }
 
