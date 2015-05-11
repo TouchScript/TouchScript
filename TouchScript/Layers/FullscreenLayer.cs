@@ -124,7 +124,7 @@ namespace TouchScript.Layers
 
         public override ProjectionParams GetProjectionParams(ITouch touch)
         {
-            if (_camera == null) return new ProjectionParams(DefaultLayerProjection);
+            if (_camera == null) return DEFAULT_PROJECTION_PARAMS;
             return new ProjectionParams(cameraLayerProjection);
         }
 

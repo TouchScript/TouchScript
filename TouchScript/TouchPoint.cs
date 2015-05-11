@@ -43,7 +43,7 @@ namespace TouchScript
             {
                 if (!projection.IsValid)
                 {
-                    if (Layer == null) projection = new ProjectionParams();
+                    if (Layer == null) projection = TouchLayer.INVALID_PROJECTION_PARAMS;
                     projection = Layer.GetProjectionParams(this);
                 }
                 return projection;

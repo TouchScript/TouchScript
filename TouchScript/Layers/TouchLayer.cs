@@ -48,6 +48,9 @@ namespace TouchScript.Layers
             Miss = 2
         }
 
+        public static ProjectionParams DEFAULT_PROJECTION_PARAMS = new ProjectionParams(DefaultLayerProjection);
+        public static ProjectionParams INVALID_PROJECTION_PARAMS = new ProjectionParams(InvalidLayerProjection);
+
         #endregion
 
         #region Events
@@ -110,7 +113,7 @@ namespace TouchScript.Layers
 
         public virtual ProjectionParams GetProjectionParams(ITouch touch)
         {
-            return new ProjectionParams();
+            return INVALID_PROJECTION_PARAMS;
         }
 
         #endregion
