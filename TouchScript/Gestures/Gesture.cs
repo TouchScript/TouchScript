@@ -387,6 +387,14 @@ namespace TouchScript.Gestures
             return friendlyGestureIds.Contains(gesture.GetInstanceID());
         }
 
+        public bool IsTouchOnTarget(ITouch touch)
+        {
+            TouchHit hit;
+            if ((touch.Layer.Hit(touch.Position, out hit) == TouchLayer.LayerHitResult.Hit) &&
+                (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform))) return true;
+            return false;
+        }
+
         /// <summary>
         /// Gets result of casting a ray from gesture touch points' centroid screen position.
         /// </summary>
