@@ -94,7 +94,7 @@ namespace TouchScript.Layers
 
         public override ProjectionParams GetProjectionParams(ITouch touch)
         {
-            var graphic = touch.Hit.Graphic;
+            var graphic = touch.Target.GetComponent<Graphic>();
             if (graphic == null) return INVALID_PROJECTION_PARAMS;
             var canvas = graphic.canvas;
             if (canvas == null) return INVALID_PROJECTION_PARAMS;
