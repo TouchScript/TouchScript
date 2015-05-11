@@ -141,9 +141,6 @@ namespace TouchScript.Layers
             base.Awake();
         }
 
-        // To be able to turn it off
-        private void OnEnable() {}
-
         #endregion
 
         #region Protected functions

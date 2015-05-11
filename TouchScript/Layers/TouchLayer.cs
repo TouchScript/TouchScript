@@ -129,6 +129,8 @@ namespace TouchScript.Layers
             if (Application.isPlaying) StartCoroutine(lateAwake());
         }
 
+        protected virtual void OnEnable() {}
+
         /// <summary>
         /// Unity OnDestroy callback.
         /// </summary>

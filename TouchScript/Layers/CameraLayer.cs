@@ -31,8 +31,9 @@ namespace TouchScript.Layers
             cachedTransform = GetComponent<Transform>();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             sortedHits = new List<RaycastHit>(20);
         }
 
