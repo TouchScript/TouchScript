@@ -82,6 +82,13 @@ namespace TouchScript
         float DPI { get; }
 
         /// <summary>
+        /// Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene.
+        /// </summary>
+        /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
+        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.</remarks>
+        Boolean ShouldCreateCameraLayer { get; set; }
+
+        /// <summary>
         /// Gets the list of touch layers.
         /// </summary>
         /// <value>A sorted list of currently active touch layers.</value>
