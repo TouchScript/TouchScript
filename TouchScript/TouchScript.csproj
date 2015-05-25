@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\FullscreenTarget.cs" />
+    <Compile Include="Behaviors\TouchScriptInputModule.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Clusters.cs" />
     <Compile Include="Debugging\TouchDebugger.cs" />
