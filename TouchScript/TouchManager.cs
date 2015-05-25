@@ -125,7 +125,7 @@ namespace TouchScript
         /// <summary>
         /// TouchScript version.
         /// </summary>
-        public static readonly Version VERSION = new Version(6, 7);
+        public static readonly Version VERSION = new Version(6, 8);
 
         #endregion
 
