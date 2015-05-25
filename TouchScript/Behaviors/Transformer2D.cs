@@ -22,6 +22,8 @@ namespace TouchScript.Behaviors
         /// <summary>Controls pan speed.</summary>
         public float PanMultiplier = 1f;
 
+        public bool AllowChangingFromOutside = true;
+
         #endregion
 
         #region Private variables
@@ -60,28 +62,37 @@ namespace TouchScript.Behaviors
         {
             var fraction = Speed * Time.deltaTime;
 
-            // changed by someone else
-            if (!Mathf.Approximately(transform.localPosition.x, lastLocalPosition.x))
-                localPositionToGo.x = transform.localPosition.x;
-            if (!Mathf.Approximately(transform.localPosition.y, lastLocalPosition.y))
-                localPositionToGo.y = transform.localPosition.y;
-            if (!Mathf.Approximately(transform.localPosition.z, lastLocalPosition.z))
-                localPositionToGo.z = transform.localPosition.z;
+            if (AllowChangingFromOutside)
+            {
+                // changed by someone else
+                if (!Mathf.Approximately(transform.localPosition.x, lastLocalPosition.x))
+                    localPositionToGo.x = transform.localPosition.x;
+                if (!Mathf.Approximately(transform.localPosition.y, lastLocalPosition.y))
+                    localPositionToGo.y = transform.localPosition.y;
+                if (!Mathf.Approximately(transform.localPosition.z, lastLocalPosition.z))
+                    localPositionToGo.z = transform.localPosition.z;
+            }
             transform.localPosition = lastLocalPosition = Vector3.Lerp(transform.localPosition, localPositionToGo, fraction);
 
-            // changed by someone else
-            if (!Mathf.Approximately(transform.localScale.x, lastLocalScale.x))
-                localScaleToGo.x = transform.localScale.x;
-            if (!Mathf.Approximately(transform.localScale.y, lastLocalScale.y))
-                localScaleToGo.y = transform.localScale.y;
-            if (!Mathf.Approximately(transform.localScale.z, lastLocalScale.z))
-                localScaleToGo.z = transform.localScale.z;
+            if (AllowChangingFromOutside)
+            {
+                // changed by someone else
+                if (!Mathf.Approximately(transform.localScale.x, lastLocalScale.x))
+                    localScaleToGo.x = transform.localScale.x;
+                if (!Mathf.Approximately(transform.localScale.y, lastLocalScale.y))
+                    localScaleToGo.y = transform.localScale.y;
+                if (!Mathf.Approximately(transform.localScale.z, lastLocalScale.z))
+                    localScaleToGo.z = transform.localScale.z;
+            }
             var newLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
             // prevent recalculating colliders when no scale occurs
             if (newLocalScale != transform.localScale) transform.localScale = lastLocalScale = newLocalScale;
-            
-            // changed by someone else
-            if (transform.localRotation != lastLocalRotation) localRotationToGo = transform.localRotation;
+
+            if (AllowChangingFromOutside)
+            {
+                // changed by someone else
+                if (transform.localRotation != lastLocalRotation) localRotationToGo = transform.localRotation;
+            }
             transform.localRotation = lastLocalRotation = Quaternion.Lerp(transform.localRotation, localRotationToGo, fraction);
         }
 
