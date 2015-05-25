@@ -127,7 +127,7 @@ namespace TouchScript
         /// <summary>
         /// TouchScript version.
         /// </summary>
-        public static readonly Version VERSION = new Version(6, 7);
+        public static readonly Version VERSION = new Version(6, 8);
 
         #endregion
 
@@ -163,6 +163,17 @@ namespace TouchScript
                 }
                 Instance.DisplayDevice = value;
             }
+        }
+
+        /// <summary>
+        /// Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene.
+        /// </summary>
+        /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
+        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.</remarks>
+        public bool ShouldCreateCameraLayer
+        {
+            get { return shouldCreateCameraLayer; }
+            set { shouldCreateCameraLayer = value; }
         }
 
         /// <summary>
@@ -233,6 +244,10 @@ namespace TouchScript
 
         [SerializeField]
         [ToggleLeft]
+        private Boolean shouldCreateCameraLayer = true;
+
+        [SerializeField]
+        [ToggleLeft]
         private bool useSendMessage = false;
 
         [SerializeField]
@@ -253,6 +268,7 @@ namespace TouchScript
             if (Instance == null) return;
 
             Instance.DisplayDevice = displayDevice as IDisplayDevice;
+            Instance.ShouldCreateCameraLayer = ShouldCreateCameraLayer;
             for (var i = 0; i < layers.Count; i++)
             {
                 Instance.AddLayer(layers[i], i);

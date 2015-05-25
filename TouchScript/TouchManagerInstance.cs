@@ -130,6 +130,13 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
+        public bool ShouldCreateCameraLayer
+        {
+            get { return shouldCreateCameraLayer; }
+            set { shouldCreateCameraLayer = value; }
+        }
+
+        /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
             get { return new ReadOnlyCollection<TouchLayer>(layers); }
@@ -159,6 +166,7 @@ namespace TouchScript
 
         private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
+        private Boolean shouldCreateCameraLayer = true;
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
@@ -407,7 +415,7 @@ namespace TouchScript
 
         private void createCameraLayer()
         {
-            if (layers.Count == 0)
+            if (layers.Count == 0 && shouldCreateCameraLayer)
             {
                 Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
                 if (Camera.main != null)
