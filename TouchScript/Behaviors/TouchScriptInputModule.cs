@@ -9,30 +9,38 @@ using UnityEngine.EventSystems;
 
 namespace TouchScript.Behaviors
 {
+    /// <summary>
+    /// Unity UI compatible Input Module which sends all TouchScript data to UI EventSystem.
+    /// It works without any layers or gestures but can be used with for examle a CameraLayer and BoxColliders on UI elements to attach gestures to them.
+    /// </summary>
     [AddComponentMenu("Event/TouchScript Input Module")]
     public class TouchScriptInputModule : BaseInputModule
     {
 
         #region Public properties
 
+        /// <summary> Name of Unity Horizontal axis. </summary>
         public string HorizontalAxis
         {
             get { return horizontalAxis; }
             set { horizontalAxis = value; }
         }
 
+        /// <summary> Name of Unity Vertical axis. </summary>
         public string VerticalAxis
         {
             get { return verticalAxis; }
             set { verticalAxis = value; }
         }
 
+        /// <summary> Name of Unity Submit button. </summary>
         public string SubmitButton
         {
             get { return submitButton; }
             set { submitButton = value; }
         }
 
+        /// <summary> Name of Unity Cancel button. </summary>
         public string CancelButton
         {
             get { return cancelButton; }
@@ -66,11 +74,13 @@ namespace TouchScript.Behaviors
 
         #region Public methods
 
+        /// <inheritdoc />
         public override bool IsModuleSupported()
         {
             return true;
         }
 
+        /// <inheritdoc />
         public override bool ShouldActivateModule()
         {
             if (!base.ShouldActivateModule())
@@ -85,6 +95,7 @@ namespace TouchScript.Behaviors
             return true;
         }
 
+        /// <inheritdoc />
         public override bool IsPointerOverGameObject(int pointerId)
         {
             var lastPointer = getLastPointerEventData(pointerId);
@@ -93,6 +104,7 @@ namespace TouchScript.Behaviors
             return false;
         }
 
+        /// <inheritdoc />
         public override void ActivateModule()
         {
             base.ActivateModule();
@@ -113,6 +125,7 @@ namespace TouchScript.Behaviors
             eventSystem.SetSelectedGameObject(toSelect, GetBaseEventData());
         }
 
+        /// <inheritdoc />
         public override void DeactivateModule()
         {
             base.DeactivateModule();
@@ -129,6 +142,7 @@ namespace TouchScript.Behaviors
             clearSelection();
         }
 
+        /// <inheritdoc />
         public override void Process()
         {
             bool usedEvent = sendUpdateEventToSelectedObject();
@@ -143,6 +157,7 @@ namespace TouchScript.Behaviors
             }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             var sb = new StringBuilder("<b>Pointer Input Module of type: </b>" + GetType());
