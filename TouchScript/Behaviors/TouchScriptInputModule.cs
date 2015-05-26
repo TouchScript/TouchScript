@@ -13,7 +13,7 @@ namespace TouchScript.Behaviors
     /// Unity UI compatible Input Module which sends all TouchScript data to UI EventSystem.
     /// It works without any layers or gestures but can be used with for examle a CameraLayer and BoxColliders on UI elements to attach gestures to them.
     /// </summary>
-    [AddComponentMenu("Event/TouchScript Input Module")]
+    [AddComponentMenu("TouchScript/TouchScript Input Module")]
     public class TouchScriptInputModule : BaseInputModule
     {
 
