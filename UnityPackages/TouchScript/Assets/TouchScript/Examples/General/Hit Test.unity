@@ -73,6 +73,7 @@ NavMeshSettings:
     minRegionArea: 2
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
+    tileSizeHint: 0
   m_NavMesh: {fileID: 0}
 --- !u!1 &289928234
 GameObject:
@@ -592,6 +593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayDevice: {fileID: 0}
+  shouldCreateCameraLayer: 1
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
@@ -719,6 +721,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!1001 &1214069863
 Prefab:
   m_ObjectHideFlags: 0
@@ -829,8 +833,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1933173754}
-  - 114: {fileID: 1933173755}
   - 114: {fileID: 1933173756}
+  - 114: {fileID: 1933173755}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -853,20 +857,25 @@ Transform:
 --- !u!114 &1933173755
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+  m_PrefabParentObject: {fileID: 11473144, guid: 1c4dd8a13f501b04f84fe824120f70bb,
     type: 2}
   m_PrefabInternal: {fileID: 1214069863}
   m_GameObject: {fileID: 1933173753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1774995217, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  DisableOnMobilePlatforms: 1
-  Tags:
+  TouchTags:
+    tagList:
+    - Touch
+  MouseTags:
     tagList:
     - Mouse
+  PenTags:
+    tagList:
+    - Pen
 --- !u!114 &1933173756
 MonoBehaviour:
   m_ObjectHideFlags: 0

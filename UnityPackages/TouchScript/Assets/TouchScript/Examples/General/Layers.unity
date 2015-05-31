@@ -73,6 +73,7 @@ NavMeshSettings:
     minRegionArea: 2
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
+    tileSizeHint: 0
   m_NavMesh: {fileID: 0}
 --- !u!1001 &140999697
 Prefab:
@@ -621,6 +622,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &723351976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,6 +747,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &765421287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -902,6 +907,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &838357730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1051,8 +1058,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 906624105}
-  - 114: {fileID: 906624106}
   - 114: {fileID: 906624107}
+  - 114: {fileID: 906624106}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -1075,20 +1082,25 @@ Transform:
 --- !u!114 &906624106
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+  m_PrefabParentObject: {fileID: 11473144, guid: 1c4dd8a13f501b04f84fe824120f70bb,
     type: 2}
   m_PrefabInternal: {fileID: 543251036}
   m_GameObject: {fileID: 906624104}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1774995217, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  DisableOnMobilePlatforms: 1
-  Tags:
+  TouchTags:
+    tagList:
+    - Touch
+  MouseTags:
     tagList:
     - Mouse
+  PenTags:
+    tagList:
+    - Pen
 --- !u!114 &906624107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1203,6 +1215,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &1018515708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1414,6 +1428,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &1060878727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1612,6 +1628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayDevice: {fileID: 0}
+  shouldCreateCameraLayer: 1
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
@@ -1679,6 +1696,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &1335755587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1892,7 +1911,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  sortedLayerIds: 00000000
+  layerIds: 00000000
 --- !u!1 &1487266974
 GameObject:
   m_ObjectHideFlags: 0
@@ -1938,6 +1957,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &1487266977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2092,6 +2113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &1568546695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2250,6 +2273,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &1612922368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2623,6 +2648,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
+  PanMultiplier: 1
+  AllowChangingFromOutside: 1
 --- !u!114 &2041906759
 MonoBehaviour:
   m_ObjectHideFlags: 0

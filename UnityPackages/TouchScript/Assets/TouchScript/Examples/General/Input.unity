@@ -365,8 +365,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1524620353}
-  - 114: {fileID: 1524620352}
   - 114: {fileID: 1524620354}
+  - 114: {fileID: 1524620352}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -377,20 +377,25 @@ GameObject:
 --- !u!114 &1524620352
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+  m_PrefabParentObject: {fileID: 11473144, guid: 1c4dd8a13f501b04f84fe824120f70bb,
     type: 2}
   m_PrefabInternal: {fileID: 1266715276}
   m_GameObject: {fileID: 1524620351}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1774995217, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  DisableOnMobilePlatforms: 1
-  Tags:
+  TouchTags:
+    tagList:
+    - Touch
+  MouseTags:
     tagList:
     - Mouse
+  PenTags:
+    tagList:
+    - Pen
 --- !u!4 &1524620353
 Transform:
   m_ObjectHideFlags: 0

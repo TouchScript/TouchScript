@@ -498,7 +498,7 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 142216715}
-  m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106709}
+  m_LocalRotation: {x: 0, y: 0, z: .707106888, w: .707106769}
   m_LocalPosition: {x: 0, y: 0, z: -59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1731,7 +1731,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 894414301}
-  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
+  m_LocalRotation: {x: .707106888, y: 0, z: 0, w: .707106769}
   m_LocalPosition: {x: 0, y: 9.31999969, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1798,8 +1798,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 906624105}
-  - 114: {fileID: 906624106}
   - 114: {fileID: 906624107}
+  - 114: {fileID: 906624106}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -1822,20 +1822,25 @@ Transform:
 --- !u!114 &906624106
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 1c4dd8a13f501b04f84fe824120f70bb,
+  m_PrefabParentObject: {fileID: 11473144, guid: 1c4dd8a13f501b04f84fe824120f70bb,
     type: 2}
   m_PrefabInternal: {fileID: 543251036}
   m_GameObject: {fileID: 906624104}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1774995217, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  DisableOnMobilePlatforms: 1
-  Tags:
+  TouchTags:
+    tagList:
+    - Touch
+  MouseTags:
     tagList:
     - Mouse
+  PenTags:
+    tagList:
+    - Pen
 --- !u!114 &906624107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3169,7 +3174,7 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1932435998}
-  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
+  m_LocalRotation: {x: .707106888, y: 0, z: 0, w: .707106769}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: .00999999978, y: .00999999978, z: .00999999978}
   m_Children:

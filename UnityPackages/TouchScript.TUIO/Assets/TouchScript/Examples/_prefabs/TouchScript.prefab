@@ -8,8 +8,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
+  - 114: {fileID: 11464490}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -70,26 +70,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayDevice: {fileID: 0}
+  shouldCreateCameraLayer: 1
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
   layers: []
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  DisableOnMobilePlatforms: 1
-  Tags:
-    tagList:
-    - Mouse
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -117,6 +102,27 @@ MonoBehaviour:
     tagList:
     - TUIO
     - Object
+--- !u!114 &11464490
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1774995217, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  TouchTags:
+    tagList:
+    - Touch
+  MouseTags:
+    tagList:
+    - Mouse
+  PenTags:
+    tagList:
+    - Pen
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
