@@ -73,26 +73,29 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
-            if (Application.isEditor)
+            switch (Application.platform)
             {
-                mouseHandler = new MouseHandler((p) => beginTouch(p, new Tags(MouseTags)), moveTouch, endTouch, cancelTouch);
-                return;
+                case RuntimePlatform.OSXEditor:
+                case RuntimePlatform.WindowsEditor:
+                case RuntimePlatform.OSXPlayer:
+                case RuntimePlatform.OSXWebPlayer:
+                case RuntimePlatform.WindowsWebPlayer:
+                    enableMouse();
+                    break;
+                case RuntimePlatform.WindowsPlayer:
+                    if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= WIN8_VERSION) enableWindows8();
+                    else enableWindows7();
+                    break;
+                default:
+                    enabled = false;
+                    return;
             }
-
-            if (Application.platform != RuntimePlatform.WindowsPlayer)
-            {
-                enabled = false;
-                return;
-            }
-
-            init();
         }
 
         protected override void Update()
         {
             base.Update();
 
-            Debug.Log("Update started at " + Time.time);
             if (mouseHandler != null) mouseHandler.Update();
         }
 
@@ -101,38 +104,25 @@ namespace TouchScript.InputSources
         {
             if (isInitialized)
             {
-                if (pressAndHoldAtomID != 0)
+                switch (Application.platform)
                 {
-                    RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
-                    GlobalDeleteAtom(pressAndHoldAtomID);
+                    case RuntimePlatform.OSXEditor:
+                    case RuntimePlatform.WindowsEditor:
+                    case RuntimePlatform.OSXPlayer:
+                    case RuntimePlatform.OSXWebPlayer:
+                    case RuntimePlatform.WindowsWebPlayer:
+                        disableMouse();
+                        break;
+                    case RuntimePlatform.WindowsPlayer:
+                        if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= WIN8_VERSION) disableWindows8();
+                        else disableWindows7();
+                        break;
                 }
 
-                SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= WIN8_VERSION)
+                foreach (var i in winToInternalId)
                 {
-                    EnableMouseInPointer(false);
+                    cancelTouch(i.Value);
                 }
-                else
-                {
-                    UnregisterTouchWindow(hMainWindow);
-                }
-
-                hMainWindow = IntPtr.Zero;
-                oldWndProcPtr = IntPtr.Zero;
-                newWndProcPtr = IntPtr.Zero;
-
-                newWndProc = null;
-            }
-
-            foreach (var i in winToInternalId)
-            {
-                cancelTouch(i.Value);
-            }
-
-            if (mouseHandler != null)
-            {
-                mouseHandler.Destroy();
-                mouseHandler = null;
             }
 
             base.OnDisable();
@@ -142,48 +132,88 @@ namespace TouchScript.InputSources
 
         #region Private functions
 
-        private void init()
+        private void enableMouse()
         {
-            hMainWindow = GetForegroundWindow();
-
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= WIN8_VERSION)
-            {
-                newWndProc = wndProcWin8;
-                EnableMouseInPointer(true);
-            }
-            else
-            {
-                newWndProc = wndProcWin7;
-                touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
-                RegisterTouchWindow(hMainWindow, 0);
-
-                Debug.Log("Initializing mouse handling code for Windows 7.");
-                mouseHandler = new MouseHandler(
-                    (p) =>
-                    {
-                        var id = beginTouch(p, new Tags(MouseTags));
-                        Debug.Log(string.Format("Mouse input at {0} with id {1} detected.", p, id));
-                        return id;
-                    },
-                    (i, p) =>
-                    {
-                        moveTouch(i, p);
-                        Debug.Log(string.Format("Mouse cursor with id {1} moved to {0}.", p, i));
-                    },
-                    (i) =>
-                    {
-                        endTouch(i);
-                        Debug.Log(string.Format("Mouse cursor with id {0} removed.", i));
-                    }, cancelTouch);
-            }
-
-            newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
-            oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
-
-            pressAndHoldAtomID = GlobalAddAtom(PRESS_AND_HOLD_ATOM);
-            SetProp(hMainWindow, PRESS_AND_HOLD_ATOM, 1);
+            mouseHandler = new MouseHandler((p) => beginTouch(p, new Tags(MouseTags)), moveTouch, endTouch, cancelTouch);
 
             isInitialized = true;
+        }
+
+        private void disableMouse()
+        {
+            if (mouseHandler != null)
+            {
+                mouseHandler.Destroy();
+                mouseHandler = null;
+            }
+        }
+
+        private void enableWindows7()
+        {
+            touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
+
+            hMainWindow = GetForegroundWindow();
+            RegisterTouchWindow(hMainWindow, 0);
+            registerWindowProc(wndProcWin7);
+            disablePressAndHold();
+
+            isInitialized = true;
+        }
+
+        private void disableWindows7()
+        {
+            enablePressAndHold();
+            UnregisterTouchWindow(hMainWindow);
+            unregisterWindowProc();
+        }
+
+        private void enableWindows8()
+        {
+            hMainWindow = GetForegroundWindow();
+            registerWindowProc(wndProcWin8);
+            EnableMouseInPointer(true);
+            disablePressAndHold();
+
+            isInitialized = true;
+        }
+
+        private void disableWindows8()
+        {
+            enablePressAndHold();
+            EnableMouseInPointer(false);
+            unregisterWindowProc();
+        }
+
+        private void registerWindowProc(WndProcDelegate windowProc)
+        {
+            newWndProc = windowProc;
+            newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
+            oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
+        }
+
+        private void unregisterWindowProc()
+        {
+            SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
+            hMainWindow = IntPtr.Zero;
+            oldWndProcPtr = IntPtr.Zero;
+            newWndProcPtr = IntPtr.Zero;
+
+            newWndProc = null;
+        }
+
+        private void enablePressAndHold()
+        {
+            if (pressAndHoldAtomID != 0)
+            {
+                RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
+                GlobalDeleteAtom(pressAndHoldAtomID);
+            }
+        }
+
+        private void disablePressAndHold()
+        {
+            pressAndHoldAtomID = GlobalAddAtom(PRESS_AND_HOLD_ATOM);
+            SetProp(hMainWindow, PRESS_AND_HOLD_ATOM, 1);
         }
 
         private IntPtr wndProcWin7(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -233,29 +263,25 @@ namespace TouchScript.InputSources
             {
                 TOUCHINPUT touch = inputs[i];
 
-                if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_DOWN) != 0)
+                if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_DOWN) != 0)
                 {
                     POINT p = new POINT();
                     p.X = touch.x / 100;
                     p.Y = touch.y / 100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    var pos = new Vector2(p.X, Screen.height - p.Y);
-                    var id = beginTouch(pos, new Tags(TouchTags));
-                    winToInternalId.Add(touch.dwID, id);
-                    Debug.Log(string.Format("Touch input at {0} with id {1} detected.", pos, id));
+                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(TouchTags)).Id);
                 }
-                else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_UP) != 0)
+                else if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
                     {
                         winToInternalId.Remove(touch.dwID);
                         endTouch(existingId);
-                        Debug.Log(string.Format("Touch cursor with id {0} removed.", existingId));
                     }
                 }
-                else if ((touch.dwFlags & (int)TouchEvent.TOUCHEVENTF_MOVE) != 0)
+                else if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_MOVE) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
@@ -265,9 +291,7 @@ namespace TouchScript.InputSources
                         p.Y = touch.y / 100;
                         ScreenToClient(hMainWindow, ref p);
 
-                        var pos = new Vector2(p.X, Screen.height - p.Y);
-                        moveTouch(existingId, pos);
-                        Debug.Log(string.Format("Touch cursor with id {1} moved to {0}.", pos, existingId));
+                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
                     }
                 }
             }
@@ -308,7 +332,7 @@ namespace TouchScript.InputSources
                             tags = new Tags(MouseTags);
                             break;
                     }
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags));
+                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags).Id);
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
@@ -341,7 +365,7 @@ namespace TouchScript.InputSources
         private const int WM_POINTERUP = 0x0247;
         private const int WM_POINTERUPDATE = 0x0245;
 
-        private enum TouchEvent : int
+        private enum TOUCH_EVENT : int
         {
             TOUCHEVENTF_MOVE = 0x0001,
             TOUCHEVENTF_DOWN = 0x0002,

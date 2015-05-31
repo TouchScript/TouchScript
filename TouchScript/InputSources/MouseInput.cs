@@ -22,8 +22,7 @@ namespace TouchScript.InputSources
         /// <remarks>
         /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated touch points in exactly the same coordinates. This affects clusters and multitouch gestures.
         /// </remarks>
-        [ToggleLeft]
-        public bool DisableOnMobilePlatforms = true;
+        [ToggleLeft] public bool DisableOnMobilePlatforms = true;
 
         /// <summary>
         /// Tags added to touches coming from this input.
@@ -84,3 +83,4 @@ namespace TouchScript.InputSources
         #endregion
 
     }
+}

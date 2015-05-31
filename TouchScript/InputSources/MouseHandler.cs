@@ -10,7 +10,7 @@ namespace TouchScript.InputSources
     internal class MouseHandler
     {
 
-        private Func<Vector2, int> beginTouch;
+        private Func<Vector2, ITouch> beginTouch;
         private Action<int, Vector2> moveTouch;
         private Action<int> endTouch;
         private Action<int> cancelTouch;
@@ -19,7 +19,7 @@ namespace TouchScript.InputSources
         private int fakeMousePointId = -1;
         private Vector3 mousePointPos = Vector3.zero;
 
-        public MouseHandler(Func<Vector2, int> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
+        public MouseHandler(Func<Vector2, ITouch> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
             Action<int> cancelTouch)
         {
             this.beginTouch = beginTouch;
@@ -55,11 +55,11 @@ namespace TouchScript.InputSources
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
                 {
-                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
                 }
                 else
                 {
-                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y));
+                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
                 }
             }
             else if (Input.GetMouseButton(0))
