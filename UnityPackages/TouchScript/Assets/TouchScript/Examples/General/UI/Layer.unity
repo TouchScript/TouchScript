@@ -1203,6 +1203,10 @@ Prefab:
       propertyPath: layers.Array.data[1]
       value: 
       objectReference: {fileID: 62216953}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
   m_RootGameObject: {fileID: 1324806696}
@@ -2582,7 +2586,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1292123036}
   - 33: {fileID: 1292123039}
-  - 64: {fileID: 1292123038}
   - 23: {fileID: 1292123037}
   - 114: {fileID: 1292123041}
   - 114: {fileID: 1292123040}
@@ -2627,19 +2630,6 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!64 &1292123038
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1292123035}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_SmoothSphereCollisions: 0
-  m_Convex: 0
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &1292123039
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2775,6 +2765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayDevice: {fileID: 0}
+  shouldCreateCameraLayer: 1
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
@@ -3432,6 +3423,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: UI Layer
+  mode: 0
+  screenSpaceZOffset: 1000
 --- !u!4 &1879737833
 Transform:
   m_ObjectHideFlags: 0
