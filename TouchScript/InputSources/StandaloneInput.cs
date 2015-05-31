@@ -24,6 +24,12 @@ namespace TouchScript.InputSources
 
         #region Constants
 
+        public enum TouchAPIType
+        {
+            Windows8,
+            Windows7
+        }
+
         private static readonly Version WIN8_VERSION = new Version(6, 2, 9200, 0);
         private const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
 
@@ -48,6 +54,8 @@ namespace TouchScript.InputSources
         /// </summary>
         public Tags PenTags = new Tags(Tags.INPUT_PEN);
 
+        public TouchAPIType TouchAPI;
+
         #endregion
 
         #region Private variables
@@ -59,6 +67,7 @@ namespace TouchScript.InputSources
         private WndProcDelegate newWndProc;
         private ushort pressAndHoldAtomID;
         private int touchInputSize;
+        private float offsetX, offsetY, scaleX, scaleY;
 
         private MouseHandler mouseHandler;
         private Dictionary<int, int> winToInternalId = new Dictionary<int, int>();
@@ -83,8 +92,9 @@ namespace TouchScript.InputSources
                     enableMouse();
                     break;
                 case RuntimePlatform.WindowsPlayer:
-                    if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= WIN8_VERSION) enableWindows8();
+                    if (TouchAPI == TouchAPIType.Windows8 && Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= WIN8_VERSION) enableWindows8();
                     else enableWindows7();
+                    initScaling();
                     break;
                 default:
                     enabled = false;
@@ -131,6 +141,24 @@ namespace TouchScript.InputSources
         #endregion
 
         #region Private functions
+
+        private void initScaling()
+        {
+            if (!Screen.fullScreen)
+            {
+                offsetX = offsetY = 0;
+                scaleX = scaleY = 1;
+                return;
+            }
+
+            int width, height;
+            getNativeMonitorResolution(out width, out height);
+            float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
+            offsetX = (width - Screen.width/scale)*.5f;
+            offsetY = (height - Screen.height/scale)*.5f;
+            scaleX = scale;
+            scaleY = scale;
+        }
 
         private void enableMouse()
         {
@@ -276,7 +304,8 @@ namespace TouchScript.InputSources
                     p.Y = touch.y / 100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2(p.X, Screen.height - p.Y), new Tags(TouchTags)).Id);
+                    winToInternalId.Add(touch.dwID, beginTouch(
+                        new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), new Tags(TouchTags)).Id);
                 }
                 else if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
                 {
@@ -297,7 +326,7 @@ namespace TouchScript.InputSources
                         p.Y = touch.y / 100;
                         ScreenToClient(hMainWindow, ref p);
 
-                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        moveTouch(existingId, new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY));
                     }
                 }
             }
@@ -339,7 +368,8 @@ namespace TouchScript.InputSources
                             break;
                     }
                     if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags).Id);
+                    winToInternalId.Add(pointerId, 
+                        beginTouch(new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), tags).Id);
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
@@ -360,10 +390,27 @@ namespace TouchScript.InputSources
                         }
                         else
                         {
-                            moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                            moveTouch(existingId, new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY));
                         }
                     }
                     break;
+            }
+        }
+
+        private void getNativeMonitorResolution(out int width, out int height)
+        {
+            var monitor = MonitorFromWindow(GetForegroundWindow(), MONITOR_DEFAULTTONEAREST);
+            MONITORINFO monitorInfo = new MONITORINFO();
+            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
+            if (!GetMonitorInfo(monitor, ref monitorInfo))
+            {
+                width = Screen.width;
+                height = Screen.height;
+            }
+            else
+            {
+                width = monitorInfo.rcMonitor.Width;
+                height = monitorInfo.rcMonitor.Height;
             }
         }
 
@@ -388,6 +435,55 @@ namespace TouchScript.InputSources
         private const int TABLET_DISABLE_PENTAPFEEDBACK =       0x00000008;
         private const int TABLET_DISABLE_PENBARRELFEEDBACK =    0x00000010;
         private const int TABLET_DISABLE_FLICKS =               0x00010000;
+
+        private const int MONITOR_DEFAULTTONEAREST =            2;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MONITORINFO
+        {
+            public int cbSize;
+            public RECT rcMonitor;
+            public RECT rcWork;
+            public uint dwFlags;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left, Top, Right, Bottom;
+
+            public RECT(int left, int top, int right, int bottom)
+            {
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
+            }
+
+            public int X
+            {
+                get { return Left; }
+                set { Right -= (Left - value); Left = value; }
+            }
+
+            public int Y
+            {
+                get { return Top; }
+                set { Bottom -= (Top - value); Top = value; }
+            }
+
+            public int Height
+            {
+                get { return Bottom - Top; }
+                set { Bottom = value + Top; }
+            }
+
+            public int Width
+            {
+                get { return Right - Left; }
+                set { Right = value + Left; }
+            }
+        }
 
         private enum TOUCH_EVENT : int
         {
@@ -474,6 +570,12 @@ namespace TouchScript.InputSources
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
         private static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
