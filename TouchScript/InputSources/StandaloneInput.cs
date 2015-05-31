@@ -338,19 +338,30 @@ namespace TouchScript.InputSources
                             tags = new Tags(MouseTags);
                             break;
                     }
+                    if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
                     winToInternalId.Add(pointerId, beginTouch(new Vector2(p.X, Screen.height - p.Y), tags).Id);
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
                     {
                         winToInternalId.Remove(pointerId);
-                        endTouch(existingId);
+                        if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) 
+                            cancelTouch(existingId);
+                        else endTouch(existingId);
                     }
                     break;
                 case WM_POINTERUPDATE:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
                     {
-                        moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
+                        {
+                            winToInternalId.Remove(pointerId);
+                            cancelTouch(existingId);
+                        }
+                        else
+                        {
+                            moveTouch(existingId, new Vector2(p.X, Screen.height - p.Y));
+                        }
                     }
                     break;
             }
@@ -365,24 +376,18 @@ namespace TouchScript.InputSources
 
         #region p/invoke
 
-        private const int WM_CLOSE = 0x0010;
-        private const int WM_TOUCH = 0x0240;
-        private const int WM_POINTERDOWN = 0x0246;
-        private const int WM_POINTERUP = 0x0247;
-        private const int WM_POINTERUPDATE = 0x0245;
+        private const int WM_CLOSE =                            0x0010;
+        private const int WM_TOUCH =                            0x0240;
+        private const int WM_POINTERDOWN =                      0x0246;
+        private const int WM_POINTERUP =                        0x0247;
+        private const int WM_POINTERUPDATE =                    0x0245;
 
-        private const int TABLET_DISABLE_PRESSANDHOLD = 0x00000001;
-        private const int TABLET_DISABLE_PENTAPFEEDBACK = 0x00000008;
-        private const int TABLET_DISABLE_PENBARRELFEEDBACK = 0x00000010;
-        private const int TABLET_DISABLE_TOUCHUIFORCEON = 0x00000100;
-        private const int TABLET_DISABLE_TOUCHUIFORCEOFF = 0x00000200;
-        private const int TABLET_DISABLE_TOUCHSWITCH = 0x00008000;
-        private const int TABLET_DISABLE_FLICKS = 0x00010000;
-        private const int TABLET_ENABLE_FLICKSONCONTEXT = 0x00020000;
-        private const int TABLET_ENABLE_FLICKLEARNINGMODE = 0x00040000;
-        private const int TABLET_DISABLE_SMOOTHSCROLLING = 0x00080000;
-        private const int TABLET_DISABLE_FLICKFALLBACKKEYS = 0x00100000;
-        private const int TABLET_ENABLE_MULTITOUCHDATA = 0x01000000;
+        private const int POINTER_FLAG_CANCELLED =              0x00008000;
+
+        private const int TABLET_DISABLE_PRESSANDHOLD =         0x00000001;
+        private const int TABLET_DISABLE_PENTAPFEEDBACK =       0x00000008;
+        private const int TABLET_DISABLE_PENBARRELFEEDBACK =    0x00000010;
+        private const int TABLET_DISABLE_FLICKS =               0x00010000;
 
         private enum TOUCH_EVENT : int
         {
