@@ -3,7 +3,9 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using TouchScript.Behaviors;
 using TouchScript.Hit;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,10 +20,20 @@ namespace TouchScript.Layers
     {
         #region Constants
 
+        /// <summary>
+        /// Determines layer behavior.
+        /// </summary>
         public enum UILayerMode
         {
-            InputModule,
-            Layer
+            /// <summary>
+            /// Works as a touch layer using UI EventSystem to check if touch points hit any UI elements.
+            /// </summary>
+            Layer,
+
+            /// <summary>
+            /// Works as a UI input module redirecting touch points to UI EventSystem.
+            /// </summary>
+            InputModule
         }
 
         #endregion
@@ -40,6 +52,9 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <summary>
+        /// Z offset used to cast a ray from a screen space canvas.
+        /// </summary>
         public float ScreenSpaceZOffset
         {
             get { return screenSpaceZOffset; }
@@ -52,15 +67,18 @@ namespace TouchScript.Layers
 
         private static UILayer instance;
 
+        [SerializeField]
         private UILayerMode mode = UILayerMode.Layer;
+
+        [SerializeField]
         private float screenSpaceZOffset = 1000;
 
         [NonSerialized]
         private List<RaycastResult> raycastResultCache = new List<RaycastResult>();
+
         private PointerEventData pointerDataCache;
         private EventSystem eventSystem;
-
-        protected Dictionary<int, PointerEventData> pointerEvents = new Dictionary<int, PointerEventData>();
+        private InputModuleStub inputModule;
 
         #endregion
 
@@ -97,12 +115,17 @@ namespace TouchScript.Layers
             }
 
             base.Awake();
-            if (Application.isPlaying) activateMode();
+        }
+
+        protected override IEnumerator lateAwake()
+        {
+            yield return base.lateAwake();
+            activateMode();
         }
 
         protected override void OnDestroy()
         {
-            if (Application.isPlaying) deactivateMode();
+            deactivateMode();
             base.OnDestroy();
         }
 
@@ -124,7 +147,6 @@ namespace TouchScript.Layers
             if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
             pointerDataCache.position = touch.Position;
             eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
-
             var raycast = findFirstRaycast(raycastResultCache);
             raycastResultCache.Clear();
             if (raycast.gameObject == null) return LayerHitResult.Miss;
@@ -143,77 +165,37 @@ namespace TouchScript.Layers
             else
             {
                 // don't init hit, no target --> layer consumes touch
-
-                PointerEventData pointerEvent;
-                getPointerData(touch.Id, out pointerEvent, true);
-
-                pointerEvent.pointerPressRaycast = pointerEvent.pointerCurrentRaycast = raycast;
-                pointerEvent.position = touch.Position;
-                pointerEvent.button = PointerEventData.InputButton.Left;
-                pointerEvent.eligibleForClick = true;
-                pointerEvent.delta = Vector2.zero;
-                pointerEvent.dragging = false;
-                pointerEvent.useDragThreshold = true;
-                pointerEvent.pressPosition = pointerEvent.position;
-
-                var currentOverGo = pointerEvent.pointerCurrentRaycast.gameObject;
-
-                deselectIfSelectionChanged(currentOverGo, pointerEvent);
-
-                if (pointerEvent.pointerEnter != currentOverGo)
-                {
-                    // send a pointer enter to the touched element if it isn't the one to select...
-                    HandlePointerExitAndEnter(pointerEvent, currentOverGo);
-                    pointerEvent.pointerEnter = currentOverGo;
-                }
-
-                // search for the control that will receive the press
-                // if we can't find a press handler set the press
-                // handler to be what would receive a click.
-                var newPressed = ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.pointerDownHandler);
-
-                // didnt find a press handler... search for a click handler
-                if (newPressed == null)
-                    newPressed = ExecuteEvents.GetEventHandler<IPointerClickHandler>(currentOverGo);
-
-                // TODO: double-tap
-                pointerEvent.clickCount = 1;
-                pointerEvent.pointerPress = newPressed;
-                pointerEvent.rawPointerPress = currentOverGo;
-                pointerEvent.clickTime = Time.unscaledTime;
-
-                // Save the drag handler as well
-                pointerEvent.pointerDrag = ExecuteEvents.GetEventHandler<IDragHandler>(currentOverGo);
-
-                if (pointerEvent.pointerDrag != null)
-                    ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.initializePotentialDrag);
+                var pointerEvent = inputModule.InitPointerData(touch);
+                pointerEvent.pointerCurrentRaycast = raycast;
+                inputModule.InjectPointer(pointerEvent);
             }
 
             return LayerHitResult.Hit;
         }
 
-        protected bool getPointerData(int id, out PointerEventData data, bool create)
+        protected override void updateTouch(ITouch touch)
         {
-            if (!pointerEvents.TryGetValue(id, out data) && create)
-            {
-                data = new PointerEventData(eventSystem)
-                {
-                    pointerId = id,
-                };
-                pointerEvents.Add(id, data);
-                return true;
-            }
-            return false;
+            if (mode != UILayerMode.InputModule) return;
+
+            PointerEventData pointerEvent = inputModule.UpdatePointerData(touch);
+            inputModule.RaycastPointer(pointerEvent);
+            inputModule.MovePointer(pointerEvent);
         }
 
-        protected void deselectIfSelectionChanged(GameObject currentOverGo, BaseEventData pointerEvent)
+        protected override void endTouch(ITouch touch)
         {
-            // Selection tracking
-            var selectHandlerGO = ExecuteEvents.GetEventHandler<ISelectHandler>(currentOverGo);
-            // if we have clicked something new, deselect the old thing
-            // leave 'selection handling' up to the press event though.
-            if (selectHandlerGO != eventSystem.currentSelectedGameObject)
-                eventSystem.SetSelectedGameObject(null, pointerEvent);
+            if (mode != UILayerMode.InputModule) return;
+
+            PointerEventData pointerEvent = inputModule.UpdatePointerData(touch);
+            inputModule.RaycastPointer(pointerEvent);
+            inputModule.EndPointer(pointerEvent);
+        }
+
+        protected override void cancelTouch(ITouch touch)
+        {
+            if (mode != UILayerMode.InputModule) return;
+
+            endTouch(touch);
         }
 
         #endregion
@@ -234,11 +216,16 @@ namespace TouchScript.Layers
 
         private void activateMode()
         {
+            if (!Application.isPlaying) return;
+
             eventSystem = EventSystem.current;
+            if (eventSystem == null) eventSystem = gameObject.AddComponent<EventSystem>();
+
             switch (mode)
             {
                 case UILayerMode.InputModule:
-                    throw new NotImplementedException();
+                    inputModule = eventSystem.gameObject.AddComponent<InputModuleStub>();
+                    inputModule.hideFlags = HideFlags.HideAndDontSave;
                     break;
                 case UILayerMode.Layer:
                     break;
@@ -247,10 +234,16 @@ namespace TouchScript.Layers
 
         private void deactivateMode()
         {
+            if (!Application.isPlaying) return;
+
             switch (mode)
             {
                 case UILayerMode.InputModule:
-                    throw new NotImplementedException();
+                    if (inputModule)
+                    {
+                        Destroy(inputModule);
+                        inputModule = null;
+                    }
                     break;
                 case UILayerMode.Layer:
                     break;
@@ -258,5 +251,47 @@ namespace TouchScript.Layers
         }
 
         #endregion
+
+        private class InputModuleStub : TouchScriptInputModule
+        {
+            public new static RaycastResult FindFirstRaycast(List<RaycastResult> candidates)
+            {
+                return BaseInputModule.FindFirstRaycast(candidates);
+            }
+
+            public void RaycastPointer(PointerEventData pointerEvent)
+            {
+                raycastPointer(pointerEvent);
+            }
+
+            public PointerEventData InitPointerData(ITouch touch)
+            {
+                return initPointerData(touch);
+            }
+
+            public void InjectPointer(PointerEventData pointerEvent)
+            {
+                injectPointer(pointerEvent);
+            }
+
+            public PointerEventData UpdatePointerData(ITouch touch)
+            {
+                return updatePointerData(touch);
+            }
+
+            public void MovePointer(PointerEventData pointerEvent)
+            {
+                movePointer(pointerEvent);
+            }
+
+            public void EndPointer(PointerEventData pointerEvent)
+            {
+                endPointer(pointerEvent);
+            }
+
+            public override void Process() {}
+            public override void ActivateModule() {}
+            public override void DeactivateModule() {}
+        }
     }
 }

@@ -129,6 +129,12 @@ namespace TouchScript.Layers
             if (Application.isPlaying) StartCoroutine(lateAwake());
         }
 
+        protected virtual IEnumerator lateAwake()
+        {
+            yield return new WaitForEndOfFrame();
+            TouchManager.Instance.AddLayer(this);
+        }
+
         protected virtual void OnEnable() {}
 
         /// <summary>
@@ -221,15 +227,6 @@ namespace TouchScript.Layers
 
         #endregion
 
-        #region Private functions
-
-        private IEnumerator lateAwake()
-        {
-            yield return new WaitForEndOfFrame();
-            TouchManager.Instance.AddLayer(this);
-        }
-
-        #endregion
     }
 
     /// <summary>
