@@ -18,8 +18,8 @@ namespace TouchScript.InputSources
     ///     <item>Touch and pen input doesn't work in the editor.</item>
     /// </list>
     /// </summary>
-    [AddComponentMenu("TouchScript/Input Sources/Windows Input")]
-    public sealed class WindowsInput : InputSource
+    [AddComponentMenu("TouchScript/Input Sources/Standalone Input")]
+    public sealed class StandaloneInput : InputSource
     {
 
         #region Constants

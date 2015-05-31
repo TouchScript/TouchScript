@@ -65,7 +65,7 @@
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
-    <Compile Include="InputSources\WindowsInput.cs" />
+    <Compile Include="InputSources\StandaloneInput.cs" />
     <Compile Include="Utils\EventHandlerExtensions.cs" />
     <Compile Include="Gestures\FlickGesture.cs" />
     <Compile Include="Gestures\Gesture.cs" />

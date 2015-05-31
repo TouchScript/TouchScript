@@ -13,7 +13,7 @@ namespace TouchScript.InputSources
     [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
     public sealed class MouseInput : InputSource
     {
-
+        
         #region Public properties
 
         /// <summary>
@@ -44,6 +44,8 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
+            Debug.LogWarning("MouseInput is deprecated. Please use StandaloneInput.");
+
             if (DisableOnMobilePlatforms)
             {
                 switch (Application.platform)
@@ -54,6 +56,8 @@ namespace TouchScript.InputSources
                     case RuntimePlatform.MetroPlayerARM:
                     case RuntimePlatform.MetroPlayerX64:
                     case RuntimePlatform.MetroPlayerX86:
+                    case RuntimePlatform.TizenPlayer:
+                    case RuntimePlatform.BlackBerryPlayer:
                         // don't need mouse here
                         enabled = false;
                         return;
