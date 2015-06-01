@@ -33,7 +33,7 @@ namespace TouchScript.Layers
             /// <summary>
             /// Works as a UI input module redirecting touch points to UI EventSystem.
             /// </summary>
-            InputModule
+            Proxy
         }
 
         #endregion
@@ -197,7 +197,7 @@ namespace TouchScript.Layers
 
         protected override void updateTouch(ITouch touch)
         {
-            if (mode != UILayerMode.InputModule) return;
+            if (mode != UILayerMode.Proxy) return;
 
             PointerEventData pointerEvent = inputModule.UpdatePointerData(touch);
             inputModule.RaycastPointer(pointerEvent);
@@ -206,7 +206,7 @@ namespace TouchScript.Layers
 
         protected override void endTouch(ITouch touch)
         {
-            if (mode != UILayerMode.InputModule) return;
+            if (mode != UILayerMode.Proxy) return;
 
             PointerEventData pointerEvent = inputModule.UpdatePointerData(touch);
             inputModule.RaycastPointer(pointerEvent);
@@ -215,7 +215,7 @@ namespace TouchScript.Layers
 
         protected override void cancelTouch(ITouch touch)
         {
-            if (mode != UILayerMode.InputModule) return;
+            if (mode != UILayerMode.Proxy) return;
 
             endTouch(touch);
         }
@@ -256,9 +256,9 @@ namespace TouchScript.Layers
 
             switch (mode)
             {
-                case UILayerMode.InputModule:
+                case UILayerMode.Proxy:
                     inputModule = eventSystem.gameObject.AddComponent<InputModuleStub>();
-                    inputModule.hideFlags = HideFlags.HideAndDontSave;
+                    inputModule.hideFlags = HideFlags.HideInInspector;
                     break;
                 case UILayerMode.Layer:
                     break;
@@ -271,7 +271,7 @@ namespace TouchScript.Layers
 
             switch (mode)
             {
-                case UILayerMode.InputModule:
+                case UILayerMode.Proxy:
                     if (inputModule)
                     {
                         Destroy(inputModule);

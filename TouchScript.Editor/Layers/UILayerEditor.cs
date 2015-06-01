@@ -13,7 +13,7 @@ namespace TouchScript.Editor.Layers
     internal sealed class UILayerEditor : UnityEditor.Editor
     {
 
-        private static readonly GUIContent MODE = new GUIContent("Mode", "Determines layer behavior: (a) Layer - works as a touch layer using UI EventSystem to check if touch points hit any UI elements; (b) InputModule - works as a UI input module redirecting touch points to UI EventSystem.");
+        private static readonly GUIContent MODE = new GUIContent("Mode", "Determines layer behavior: (a) Layer - works as a touch layer using UI EventSystem to check if touch points hit any UI elements; (b) Proxy - works as a UI input module redirecting touch points to UI EventSystem.");
         private static readonly GUIContent Z_OFFSET = new GUIContent("Screen Space Z Offset", "Z offset used to cast a ray from a screen space canvas.");
 
         private SerializedProperty mode, zOffset;
