@@ -84,6 +84,33 @@ namespace TouchScript.Layers
 
         #region Public methods
 
+        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        {
+            // have to duplicate some code since Gesture depends on Layer.Hit but in beginTouch we need full touch info
+            if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
+            if (eventSystem == null) return LayerHitResult.Error;
+            var raycast = this.raycast(position);
+            if (raycast.gameObject == null) return LayerHitResult.Miss;
+
+            if (mode == UILayerMode.Layer)
+            {
+                if (!(raycast.module is GraphicRaycaster))
+                {
+                    if (Application.isEditor)
+                        Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
+                    return LayerHitResult.Miss;
+                }
+
+                hit = new TouchHit(raycast);
+            }
+            else
+            {
+                // don't init hit, no target --> layer consumes touch
+            }
+
+            return LayerHitResult.Hit;
+        }
+
         public override ProjectionParams GetProjectionParams(ITouch touch)
         {
             var graphic = touch.Target.GetComponent<Graphic>();
@@ -143,12 +170,7 @@ namespace TouchScript.Layers
             hit = default(TouchHit);
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             if (eventSystem == null) return LayerHitResult.Error;
-
-            if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
-            pointerDataCache.position = touch.Position;
-            eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
-            var raycast = findFirstRaycast(raycastResultCache);
-            raycastResultCache.Clear();
+            var raycast = this.raycast(touch.Position);
             if (raycast.gameObject == null) return LayerHitResult.Miss;
 
             if (mode == UILayerMode.Layer)
@@ -201,6 +223,17 @@ namespace TouchScript.Layers
         #endregion
 
         #region Private functions
+
+        private RaycastResult raycast(Vector2 position)
+        {
+            if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
+            pointerDataCache.position = position;
+            eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
+            var raycast = findFirstRaycast(raycastResultCache);
+            raycastResultCache.Clear();
+
+            return raycast;
+        }
 
         private static RaycastResult findFirstRaycast(List<RaycastResult> candidates)
         {
