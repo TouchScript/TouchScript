@@ -117,6 +117,8 @@
     <Compile Include="InputSources\MobileInput.cs" />
     <Compile Include="Utils\TimedSequence.cs" />
     <Compile Include="Utils\TransformUtils.cs" />
+    <Compile Include="Gestures\Simple\MultiPointPanGesture.cs" />
+    <Compile Include="Gestures\Simple\MultiPointTransform2DGestureBase.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
