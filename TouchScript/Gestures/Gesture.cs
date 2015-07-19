@@ -273,7 +273,10 @@ namespace TouchScript.Gestures
         /// <value>The list of touches owned by this gesture.</value>
         public IList<ITouch> ActiveTouches
         {
-            get { return new ReadOnlyCollection<ITouch>(activeTouches); }
+            get {
+                if (readonlyActiveTouches == null) readonlyActiveTouches = new ReadOnlyCollection<ITouch>(activeTouches);
+                return readonlyActiveTouches; 
+            }
         }
 
         /// <summary>
@@ -343,6 +346,7 @@ namespace TouchScript.Gestures
         // List of gestures for realtime.
         private List<int> friendlyGestureIds = new List<int>();
 
+        private ReadOnlyCollection<ITouch> readonlyActiveTouches;
         private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
         private GestureManagerInstance gestureManagerInstance;
         private GestureState delayedStateChange = GestureState.Possible;
