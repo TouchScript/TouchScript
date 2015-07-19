@@ -52,6 +52,7 @@ namespace TouchScript.InputSources
                     case RuntimePlatform.MetroPlayerX64:
                     case RuntimePlatform.MetroPlayerX86:
                     case RuntimePlatform.WP8Player:
+                    case RuntimePlatform.BlackBerryPlayer:
                         break;
                     default:
                         // don't need mobile touch here
