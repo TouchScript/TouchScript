@@ -100,7 +100,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count < 2) return base.ScreenPosition;
+                if (NumTouches < 2) return base.ScreenPosition;
                 return (activeTouches[0].Position + activeTouches[1].Position) * .5f;
             }
         }
@@ -110,7 +110,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count < 2) return base.PreviousScreenPosition;
+                if (NumTouches < 2) return base.PreviousScreenPosition;
                 return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition) * .5f;
             }
         }

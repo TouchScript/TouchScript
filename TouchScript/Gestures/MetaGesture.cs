@@ -122,7 +122,7 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
             for (var i = 0; i < length; i++)
@@ -138,7 +138,7 @@ namespace TouchScript.Gestures
         {
             base.touchesCancelled(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && activeTouches.Count == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Ended);
 
             var length = touches.Count;
             for (var i = 0; i < length; i++)

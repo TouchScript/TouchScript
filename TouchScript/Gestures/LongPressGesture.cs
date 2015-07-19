@@ -115,13 +115,13 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count > MaxTouches)
+            if (NumTouches > MaxTouches)
             {
                 setState(GestureState.Failed);
                 return;
             }
 
-            if (activeTouches.Count == touches.Count)
+            if (NumTouches == touches.Count)
             {
                 StartCoroutine("wait");
             }
@@ -144,7 +144,7 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (NumTouches == 0)
             {
                 StopCoroutine("wait");
                 setState(GestureState.Failed);

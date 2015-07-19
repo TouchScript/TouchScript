@@ -213,7 +213,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0)
+                if (NumTouches == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
                     return TouchManager.INVALID_POSITION;
@@ -230,7 +230,7 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (activeTouches.Count == 0)
+                if (NumTouches == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
                     return TouchManager.INVALID_POSITION;
@@ -277,6 +277,15 @@ namespace TouchScript.Gestures
                 if (readonlyActiveTouches == null) readonlyActiveTouches = new ReadOnlyCollection<ITouch>(activeTouches);
                 return readonlyActiveTouches; 
             }
+        }
+
+        /// <summary>
+        /// Gets the number of active touch points.
+        /// </summary>
+        /// <value>The number of touches owned by this gesture.</value>
+        public int NumTouches
+        {
+            get { return numTouches; }
         }
 
         /// <summary>
@@ -346,6 +355,7 @@ namespace TouchScript.Gestures
         // List of gestures for realtime.
         private List<int> friendlyGestureIds = new List<int>();
 
+        private int numTouches;
         private ReadOnlyCollection<ITouch> readonlyActiveTouches;
         private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
         private GestureManagerInstance gestureManagerInstance;
@@ -565,6 +575,7 @@ namespace TouchScript.Gestures
         internal void Reset()
         {
             activeTouches.Clear();
+            numTouches = 0;
             delayedStateChange = GestureState.Possible;
             requiredGestureFailed = false;
             reset();
@@ -573,6 +584,7 @@ namespace TouchScript.Gestures
         internal void TouchesBegan(IList<ITouch> touches)
         {
             activeTouches.AddRange(touches);
+            numTouches += touches.Count;
             touchesBegan(touches);
         }
 
@@ -583,13 +595,17 @@ namespace TouchScript.Gestures
 
         internal void TouchesEnded(IList<ITouch> touches)
         {
-            for (var i = 0; i < touches.Count; i++) activeTouches.Remove(touches[i]);
+            var count = touches.Count;
+            for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
+            numTouches -= count;
             touchesEnded(touches);
         }
 
         internal void TouchesCancelled(IList<ITouch> touches)
         {
-            for (var i = 0; i < touches.Count; i++) activeTouches.Remove(touches[i]);
+            var count = touches.Count;
+            for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
+            numTouches -= count;
             touchesCancelled(touches);
         }
 
@@ -678,7 +694,7 @@ namespace TouchScript.Gestures
                     touchSequence.Add(touch);
                 }
 
-                if (activeTouches.Count == 0)
+                if (NumTouches == 0)
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
                     var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval, shouldCacheTouchPosition);
@@ -688,7 +704,7 @@ namespace TouchScript.Gestures
             }
             else
             {
-                if (activeTouches.Count == 0)
+                if (NumTouches == 0)
                 {
                     var lastPoint = touches[touches.Count - 1];
                     if (shouldCacheTouchPosition(lastPoint))

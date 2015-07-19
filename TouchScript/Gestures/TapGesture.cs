@@ -124,7 +124,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count == touches.Count)
+            if (NumTouches == touches.Count)
             {
                 if (tapsDone == 0)
                 {
@@ -165,7 +165,7 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (NumTouches == 0)
             {
                 // touches outside of gesture target are ignored in shouldCacheTouchPosition()
                 // if all touches are outside ScreenPosition will be invalid

@@ -143,7 +143,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesMoved(touches);
 
-            if (touches.Count == activeTouches.Count)
+            if (touches.Count == NumTouches)
             {
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
@@ -163,7 +163,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (NumTouches == 0)
             {
                 switch (State)
                 {

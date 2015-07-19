@@ -98,7 +98,7 @@ namespace TouchScript.Gestures.Simple
         /// <returns>True if there are two or more active touch points, False otherwise.</returns>
         protected virtual bool gotEnoughTouches()
         {
-            return activeTouches.Count >= 2;
+            return NumTouches >= 2;
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
+            if (NumTouches == 1 && (State == GestureState.Began || State == GestureState.Changed))
             {
                 restart();
             }
