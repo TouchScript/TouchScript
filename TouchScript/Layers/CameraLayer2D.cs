@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
 using UnityEngine.Serialization;
+using System.Linq;
 
 namespace TouchScript.Layers
 {
@@ -126,11 +127,49 @@ namespace TouchScript.Layers
                     if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
                 }
 
+                RectTransform rect1 = a.transform.GetComponent<RectTransform>();
+                RectTransform rect2 = b.transform.GetComponent<RectTransform>();
+                if (rect1 != null && rect2 != null)
+                {
+                    List<RectTransform> parents1 = getParents(rect1);
+                    List<RectTransform> parents2 = getParents(rect2);
+                    RectTransform firstCommonParent = parents1.FirstOrDefault(p => parents2.Contains(p));
+                    if (firstCommonParent != null)
+                    {
+                        if (firstCommonParent == rect1) return +1;
+                        if (firstCommonParent == rect2) return -1;
+                        RectTransform firstChildUnderCommonParent1 = parents1[parents1.FindIndex(p => p == firstCommonParent) - 1];
+                        RectTransform firstChildUnderCommonParent2 = parents2[parents2.FindIndex(p => p == firstCommonParent) - 1];
+                        int? index1 = null;
+                        int? index2 = null;
+                        for (int i = 0; i < firstCommonParent.childCount; i++)
+                        {
+                            RectTransform rect = firstCommonParent.GetChild(i).GetComponent<RectTransform>();
+                            if (rect == firstChildUnderCommonParent1) index1 = i;
+                            else if (rect == firstChildUnderCommonParent2) index2 = i;
+                            if (index1.HasValue && index2.HasValue) break;
+                        }
+                        return index1.Value < index2.Value ? +1 : -1;
+                    }
+                }
+
                 var cameraPos = GetComponent<Camera>().transform.position;
                 var distA = (a.transform.position - cameraPos).sqrMagnitude;
                 var distB = (b.transform.position - cameraPos).sqrMagnitude;
                 return distA < distB ? -1 : 1;
             });
+        }
+
+        private List<RectTransform> getParents(RectTransform rect)
+        {
+            RectTransform current = rect;
+            List<RectTransform> result = new List<RectTransform>();
+            while (current != null)
+            {
+                result.Add(current);
+                current = current.parent.GetComponent<RectTransform>();
+            }
+            return result;
         }
 
         #endregion
