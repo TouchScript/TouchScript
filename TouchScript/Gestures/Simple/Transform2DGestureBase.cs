@@ -141,7 +141,7 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesBegan(IList<ITouch> touches)
         {
-            base.touchesMoved(touches);
+            base.touchesBegan(touches);
 
             if (touches.Count == NumTouches)
             {

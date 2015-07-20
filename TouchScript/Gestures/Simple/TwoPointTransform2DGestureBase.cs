@@ -67,11 +67,13 @@ namespace TouchScript.Gestures.Simple
 
         /// <summary>
         /// Transform's center point screen position.
+        /// This is different from Gesture.ScreenPosition since it can be not just centroid of touch points. Also we calculate it anyway so why not cache it too.
         /// </summary>
         protected Vector2 screenPosition;
 
         /// <summary>
         /// Transform's center point previous screen position.
+        /// This is different from Gesture.ScreenPosition since it can be not just centroid of touch points. Also we calculate it anyway so why not cache it too.
         /// </summary>
         protected Vector2 previousScreenPosition;
 
