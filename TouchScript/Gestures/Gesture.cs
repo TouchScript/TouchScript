@@ -86,6 +86,24 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        public bool DebugMode
+        {
+            get
+            {
+#if DEBUG 
+                return debugMode;
+#else
+                return false;
+#endif
+            }
+            set
+            {
+#if DEBUG 
+                debugMode = value;
+#endif                
+            }
+        }
+
         /// <summary>
         /// Gets or sets another gesture which must fail before this gesture can be recognized.
         /// </summary>
@@ -320,6 +338,12 @@ namespace TouchScript.Gestures
         /// Cached transform of the parent object.
         /// </summary>
         protected Transform cachedTransform;
+
+#if DEBUG
+        [SerializeField]
+        [ToggleLeft]
+        private bool debugMode = false;
+#endif
 
 #pragma warning disable 0169
         [SerializeField]

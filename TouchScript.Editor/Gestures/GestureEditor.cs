@@ -19,6 +19,7 @@ namespace TouchScript.Editor.Gestures
         private const string TEXT_FRIENDLY_HEADER = "List of gestures which can work together with this gesture.";
 
         private static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
+        private static readonly GUIContent DEBUG_MODE = new GUIContent("Debug", "Turns on gesture debug mode.");
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
         private static readonly GUIContent SEND_STATE_CHANGE_MESSAGES = new GUIContent("Send State Change Messages", "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
@@ -33,6 +34,7 @@ namespace TouchScript.Editor.Gestures
 
         private Gesture instance;
         private SerializedProperty advanced;
+        private SerializedProperty debugMode;
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
         private SerializedProperty combineTouches, combineTouchesInterval;
@@ -54,6 +56,7 @@ namespace TouchScript.Editor.Gestures
             instance = target as Gesture;
 
             advanced = serializedObject.FindProperty("advancedProps");
+            debugMode = serializedObject.FindProperty("debugMode");
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
             combineTouches = serializedObject.FindProperty("combineTouches");
@@ -102,6 +105,12 @@ namespace TouchScript.Editor.Gestures
             serializedObject.ApplyModifiedProperties();
         }
 
+        protected virtual void drawDebug()
+        {
+            if (debugMode == null) return;
+            EditorGUILayout.PropertyField(debugMode, DEBUG_MODE);
+        }
+
         protected virtual void drawSendMessage()
         {
             EditorGUILayout.PropertyField(useSendMessage, USE_SEND_MESSAGE);
@@ -144,6 +153,7 @@ namespace TouchScript.Editor.Gestures
 
         protected virtual void drawAdvanced()
         {
+            drawDebug();
             drawSendMessage();
             drawCombineTouches();
             drawRequireToFail();
