@@ -358,7 +358,7 @@ namespace TouchScript.Gestures
 
                 doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
             }
-            else if (activePoints == 2)
+            else if (activePoints >= 2)
             {
                 // Make sure that we actually care about the touches moved.
                 if (!relevantTouches(touches)) return;
