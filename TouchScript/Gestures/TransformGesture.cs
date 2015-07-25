@@ -229,8 +229,10 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (TouchManager.IsInvalidPosition(screenPosition)) return base.ScreenPosition;
-                return screenPosition;
+                if (NumTouches == 0) return TouchManager.INVALID_POSITION;
+                if (NumTouches == 1) return activeTouches[0].Position;
+                return (getPointScreenPosition(0) + getPointScreenPosition(1)) * .5f;
+
             }
         }
 
@@ -239,8 +241,9 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (TouchManager.IsInvalidPosition(previousScreenPosition)) return base.PreviousScreenPosition;
-                return previousScreenPosition;
+                if (NumTouches == 0) return TouchManager.INVALID_POSITION;
+                if (NumTouches == 1) return activeTouches[0].PreviousPosition;
+                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) * .5f;
             }
         }
 
@@ -371,7 +374,8 @@ namespace TouchScript.Gestures
 
                 doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
 #if DEBUG
-                GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, Color.green, float.PositiveInfinity);
+                var color = State == GestureState.Possible ? Color.red : Color.green;
+                GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color, float.PositiveInfinity);
                 GLDebug.RemoveFigure(debugID + 1);
                 GLDebug.RemoveFigure(debugID + 2);
                 GLDebug.RemoveFigure(debugID + 3);
@@ -386,11 +390,12 @@ namespace TouchScript.Gestures
                 var newScreenPos2 = getPointScreenPosition(1);
 
 #if DEBUG
-                GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, Color.green, float.PositiveInfinity);
-                GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, Color.green, float.PositiveInfinity);
-                GLDebug.DrawLineScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, Color.green,
+                var color = State == GestureState.Possible ? Color.red : Color.green;
+                GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, color, float.PositiveInfinity);
+                GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color, float.PositiveInfinity);
+                GLDebug.DrawLineScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, color,
                     float.PositiveInfinity);
-                GLDebug.DrawCrossScreenSpace(debugID + 3, (newScreenPos2 + newScreenPos1) / 2, 45f, debugTouchSize*.3f, Color.green, float.PositiveInfinity);
+                GLDebug.DrawCrossScreenSpace(debugID + 3, (newScreenPos2 + newScreenPos1) / 2, 45f, debugTouchSize * .3f, color, float.PositiveInfinity);
 #endif
 
                 var rotationEnabled = (Type & TransformType.Rotate) == TransformType.Rotate;
@@ -567,6 +572,9 @@ namespace TouchScript.Gestures
                     case GestureState.Began:
                     case GestureState.Changed:
                         setState(GestureState.Ended);
+                        break;
+                    default:
+                        SetState(GestureState.Failed);
                         break;
                 }
             }
