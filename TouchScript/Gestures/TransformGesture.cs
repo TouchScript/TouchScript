@@ -414,7 +414,7 @@ namespace TouchScript.Gestures
 
                 var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
                 var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
-                if (rotationEnabled && scalingEnabled)
+                if (rotationEnabled || scalingEnabled)
                 {
                     var newScreenDelta = newScreenPos2 - newScreenPos1;
                     if (newScreenDelta.sqrMagnitude > minScreenPointsPixelDistanceSquared)
