@@ -65,6 +65,7 @@
     <Compile Include="Gestures\Simple\Transform2DGestureBaseEditor.cs" />
     <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBaseEditor.cs" />
     <Compile Include="Gestures\TapGestureEditor.cs" />
+    <Compile Include="Gestures\TransformGestureEditor.cs" />
     <Compile Include="InputSources\InputSourceEditor.cs" />
     <Compile Include="InputSources\MobileInputEditor.cs" />
     <Compile Include="InputSources\MouseInputEditor.cs" />
