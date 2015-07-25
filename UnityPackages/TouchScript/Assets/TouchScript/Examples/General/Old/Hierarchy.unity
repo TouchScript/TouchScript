@@ -73,6 +73,7 @@ NavMeshSettings:
     minRegionArea: 2
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
+    tileSizeHint: 0
   m_NavMesh: {fileID: 0}
 --- !u!1001 &33278410
 Prefab:
@@ -509,7 +510,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &286651241
 Transform:
   m_ObjectHideFlags: 0
@@ -946,6 +947,10 @@ Prefab:
       propertyPath: MaxHeight
       value: .5
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6500000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
     - {fileID: 3300000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
@@ -1005,8 +1010,6 @@ GameObject:
   - 33: {fileID: 578079247}
   - 65: {fileID: 578079246}
   - 23: {fileID: 578079245}
-  - 114: {fileID: 578079244}
-  - 114: {fileID: 578079243}
   - 114: {fileID: 578079242}
   - 114: {fileID: 578079241}
   m_Layer: 0
@@ -1033,39 +1036,25 @@ Transform:
 --- !u!114 &578079241
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430816, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 33278410}
   m_GameObject: {fileID: 578079239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 578079243}
-  - {fileID: 578079242}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 1
 --- !u!114 &578079242
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 33278410}
   m_GameObject: {fileID: 578079239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -1075,51 +1064,14 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 578079243}
-  - {fileID: 578079241}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  friendlyGestures: []
+  type: 7
   minPointsDistance: .5
-  scalingThreshold: .200000003
---- !u!114 &578079243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 33278410}
-  m_GameObject: {fileID: 578079239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 578079242}
-  - {fileID: 578079241}
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .400000006
---- !u!114 &578079244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 33278410}
-  m_GameObject: {fileID: 578079239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!23 &578079245
 Renderer:
   m_ObjectHideFlags: 0
@@ -1381,8 +1333,6 @@ GameObject:
   - 33: {fileID: 680407633}
   - 65: {fileID: 680407632}
   - 23: {fileID: 680407631}
-  - 114: {fileID: 680407630}
-  - 114: {fileID: 680407629}
   - 114: {fileID: 680407628}
   - 114: {fileID: 680407627}
   m_Layer: 0
@@ -1409,39 +1359,25 @@ Transform:
 --- !u!114 &680407627
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430816, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 584607640}
   m_GameObject: {fileID: 680407625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 680407629}
-  - {fileID: 680407628}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 1
 --- !u!114 &680407628
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 584607640}
   m_GameObject: {fileID: 680407625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -1451,51 +1387,14 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 680407629}
-  - {fileID: 680407627}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  friendlyGestures: []
+  type: 7
   minPointsDistance: .5
-  scalingThreshold: .200000003
---- !u!114 &680407629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 584607640}
-  m_GameObject: {fileID: 680407625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 680407628}
-  - {fileID: 680407627}
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .400000006
---- !u!114 &680407630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 584607640}
-  m_GameObject: {fileID: 680407625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!23 &680407631
 Renderer:
   m_ObjectHideFlags: 0
@@ -1962,8 +1861,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 957147037}
-  - 114: {fileID: 957147041}
-  - 114: {fileID: 957147040}
   - 114: {fileID: 957147039}
   - 114: {fileID: 957147038}
   m_Layer: 0
@@ -1990,39 +1887,25 @@ Transform:
 --- !u!114 &957147038
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430816, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 443501066}
   m_GameObject: {fileID: 957147036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 957147040}
-  - {fileID: 957147039}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 2
 --- !u!114 &957147039
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 443501066}
   m_GameObject: {fileID: 957147036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -2032,51 +1915,14 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 957147040}
-  - {fileID: 957147038}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  friendlyGestures: []
+  type: 7
   minPointsDistance: .5
-  scalingThreshold: .300000012
---- !u!114 &957147040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 443501066}
-  m_GameObject: {fileID: 957147036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 957147039}
-  - {fileID: 957147038}
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .5
---- !u!114 &957147041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 443501066}
-  m_GameObject: {fileID: 957147036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!1 &1081393827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2088,8 +1934,6 @@ GameObject:
   - 33: {fileID: 1081393834}
   - 65: {fileID: 1081393833}
   - 23: {fileID: 1081393832}
-  - 114: {fileID: 1081393831}
-  - 114: {fileID: 1081393830}
   - 114: {fileID: 1081393829}
   - 114: {fileID: 1081393828}
   m_Layer: 0
@@ -2102,39 +1946,25 @@ GameObject:
 --- !u!114 &1081393828
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430816, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 608081978}
   m_GameObject: {fileID: 1081393827}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1081393830}
-  - {fileID: 1081393829}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 1
 --- !u!114 &1081393829
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 608081978}
   m_GameObject: {fileID: 1081393827}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -2144,51 +1974,14 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1081393830}
-  - {fileID: 1081393828}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  friendlyGestures: []
+  type: 7
   minPointsDistance: .5
-  scalingThreshold: .200000003
---- !u!114 &1081393830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 608081978}
-  m_GameObject: {fileID: 1081393827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1081393829}
-  - {fileID: 1081393828}
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .400000006
---- !u!114 &1081393831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 608081978}
-  m_GameObject: {fileID: 1081393827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!23 &1081393832
 Renderer:
   m_ObjectHideFlags: 0
@@ -2450,6 +2243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayDevice: {fileID: 0}
+  shouldCreateCameraLayer: 1
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
@@ -2475,8 +2269,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1341906189}
-  - 114: {fileID: 1341906193}
-  - 114: {fileID: 1341906192}
   - 114: {fileID: 1341906191}
   - 114: {fileID: 1341906190}
   m_Layer: 0
@@ -2503,39 +2295,25 @@ Transform:
 --- !u!114 &1341906190
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430816, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 1388510306}
   m_GameObject: {fileID: 1341906188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1341906192}
-  - {fileID: 1341906191}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 2
 --- !u!114 &1341906191
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 1388510306}
   m_GameObject: {fileID: 1341906188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -2545,51 +2323,14 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1341906192}
-  - {fileID: 1341906190}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  friendlyGestures: []
+  type: 7
   minPointsDistance: .5
-  scalingThreshold: .300000012
---- !u!114 &1341906192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 1388510306}
-  m_GameObject: {fileID: 1341906188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1341906191}
-  - {fileID: 1341906190}
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .5
---- !u!114 &1341906193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 1388510306}
-  m_GameObject: {fileID: 1341906188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!1 &1369919437
 GameObject:
   m_ObjectHideFlags: 0
@@ -2898,6 +2639,10 @@ Prefab:
       propertyPath: MaxHeight
       value: .5
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6500000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
     - {fileID: 3300000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
@@ -3082,7 +2827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1520045379
 Transform:
   m_ObjectHideFlags: 0
@@ -3160,8 +2905,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1759334839}
-  - 114: {fileID: 1759334846}
-  - 114: {fileID: 1759334842}
   - 114: {fileID: 1759334841}
   - 114: {fileID: 1759334840}
   m_Layer: 0
@@ -3188,39 +2931,25 @@ Transform:
 --- !u!114 &1759334840
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400010, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430816, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 166589374}
   m_GameObject: {fileID: 1759334838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1759334842}
-  - {fileID: 1759334841}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 2
 --- !u!114 &1759334841
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 84717517f65ca8c40abedffa373c2e42,
+  m_PrefabParentObject: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42,
     type: 2}
   m_PrefabInternal: {fileID: 166589374}
   m_GameObject: {fileID: 1759334838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -3230,51 +2959,14 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1759334842}
-  - {fileID: 1759334840}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  friendlyGestures: []
+  type: 7
   minPointsDistance: .5
-  scalingThreshold: .300000012
---- !u!114 &1759334842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 166589374}
-  m_GameObject: {fileID: 1759334838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 1759334841}
-  - {fileID: 1759334840}
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
   projection: 1
   projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .5
---- !u!114 &1759334846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 84717517f65ca8c40abedffa373c2e42,
-    type: 2}
-  m_PrefabInternal: {fileID: 166589374}
-  m_GameObject: {fileID: 1759334838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!1001 &1772227325
 Prefab:
   m_ObjectHideFlags: 0
