@@ -13,7 +13,7 @@ using TouchScript.InputSources;
 using TouchScript.Layers;
 using TouchScript.Utils;
 #if DEBUG
-using TouchScript.Utils.Graphics;
+using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
 
@@ -518,7 +518,6 @@ namespace TouchScript
                 for (var i = 0; i < updated.Count; i++)
                 {
                     var touch = updated[i];
-                    removeDebugFigureForTouch(touch);
                     addDebugFigureForTouch(touch);
                 }
 #endif

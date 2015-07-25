@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace TouchScript.Utils
 {
@@ -16,7 +15,7 @@ namespace TouchScript.Utils
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogException(ex);
+                    UnityEngine.Debug.LogException(ex);
                     return ex;
                 }
             }
@@ -33,7 +32,7 @@ namespace TouchScript.Utils
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogException(ex);
+                    UnityEngine.Debug.LogException(ex);
                     return ex;
                 }
             }
