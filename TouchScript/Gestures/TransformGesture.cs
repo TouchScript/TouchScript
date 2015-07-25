@@ -20,12 +20,26 @@ namespace TouchScript.Gestures
 
         #region Constants
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Flags]
         public enum TransformType
         {
-            Translate = 0x1,
-            Rotate = 0x2,
-            Scale = 0x4
+            /// <summary>
+            /// 
+            /// </summary>
+            Translation = 0x1,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            Rotation = 0x2,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            Scaling = 0x4
         }
 
         /// <summary>
@@ -276,8 +290,8 @@ namespace TouchScript.Gestures
         protected float screenTransformPixelThreshold;
         protected float screenTransformPixelThresholdSquared;
 
-        [SerializeField] private TransformType type = TransformType.Translate | TransformType.Scale |
-                                                      TransformType.Rotate;
+        [SerializeField] private TransformType type = TransformType.Translation | TransformType.Scaling |
+                                                      TransformType.Rotation;
 
         [SerializeField] private float minScreenPointsDistance = .5f;
         [SerializeField] private float screenTransformThreshold = 0.5f;
@@ -370,7 +384,7 @@ namespace TouchScript.Gestures
             // one touch or one cluster (points might be too close to each other for 2 clusters)
             if (activePoints == 1)
             {
-                if ((Type & TransformType.Translate) == 0) return; // don't look for translates
+                if ((Type & TransformType.Translation) == 0) return; // don't look for translates
 
                 doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
 #if DEBUG
@@ -398,8 +412,8 @@ namespace TouchScript.Gestures
                 GLDebug.DrawCrossScreenSpace(debugID + 3, (newScreenPos2 + newScreenPos1) / 2, 45f, debugTouchSize * .3f, color, float.PositiveInfinity);
 #endif
 
-                var rotationEnabled = (Type & TransformType.Rotate) == TransformType.Rotate;
-                var scalingEnabled = (Type & TransformType.Scale) == TransformType.Scale;
+                var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
+                var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
                 if (rotationEnabled && scalingEnabled)
                 {
                     var newScreenDelta = newScreenPos2 - newScreenPos1;
@@ -493,7 +507,7 @@ namespace TouchScript.Gestures
                         }
                     }
                 }
-                if ((Type & TransformType.Translate) == TransformType.Translate)
+                if ((Type & TransformType.Translation) == TransformType.Translation)
                 {
                     doTranslate((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) / 2, (newScreenPos1 + newScreenPos2) / 2);
                 }
