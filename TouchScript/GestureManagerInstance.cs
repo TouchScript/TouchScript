@@ -297,7 +297,7 @@ namespace TouchScript
             foreach (var gesture in gesturesToReset)
             {
                 if (gesture == null) continue;
-                gesture.Reset();
+                gesture.ResetGesture();
                 gesture.SetState(Gesture.GestureState.Possible);
             }
             gesturesToReset.Clear();
