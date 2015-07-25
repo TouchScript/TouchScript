@@ -55,14 +55,14 @@ namespace TouchScript.Gestures
             /// <summary>
             /// Use a plane with certain normal vector in local coordinates.
             /// </summary>
-            Local,
+            ObjectLocal,
 
             /// <summary>
             /// Use a plane with certain normal vector in global coordinates.
             /// </summary>
-            Global,
+            ObjectGlobal,
 
-            None
+            Screen
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace TouchScript.Gestures
             }
             set
             {
-                if (projection == ProjectionType.Layer) projection = ProjectionType.Local;
+                if (projection == ProjectionType.Layer) projection = ProjectionType.ObjectLocal;
                 value.Normalize();
                 if (projectionNormal == value) return;
                 projectionNormal = value;
@@ -428,7 +428,7 @@ namespace TouchScript.Gestures
                         {
                             if (isTransforming)
                             {
-                                if (projection == ProjectionType.None)
+                                if (projection == ProjectionType.Screen)
                                 {
                                     var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
                                     DeltaRotation =
@@ -447,7 +447,7 @@ namespace TouchScript.Gestures
                                     out d1, out d2);
                                 screenPixelRotationBuffer += (d1 - d2);
 
-                                if (projection == ProjectionType.None)
+                                if (projection == ProjectionType.Screen)
                                 {
                                     var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
                                     angleBuffer +=
@@ -471,7 +471,7 @@ namespace TouchScript.Gestures
 
                             if (isTransforming)
                             {
-                                if (projection == ProjectionType.None)
+                                if (projection == ProjectionType.Screen)
                                 {
                                     DeltaScale = newScreenDelta.magnitude / (oldScreenPos2 - oldScreenPos1).magnitude;
                                 }
@@ -488,7 +488,7 @@ namespace TouchScript.Gestures
                                 var oldDistance = oldScreenDelta.magnitude;
                                 screenPixelScalingBuffer += newDistance - oldDistance;
 
-                                if (projection == ProjectionType.None)
+                                if (projection == ProjectionType.Screen)
                                 {
                                     scaleBuffer *= newDistance/oldDistance;
                                 }
@@ -537,7 +537,7 @@ namespace TouchScript.Gestures
         {
             if (isTransforming)
             {
-                if (projection == ProjectionType.None)
+                if (projection == ProjectionType.Screen)
                     DeltaPosition = new Vector3(newScreenCenter.x - oldScreenCenter.x, newScreenCenter.y - oldScreenCenter.y,
                         0);
                 else
@@ -549,7 +549,7 @@ namespace TouchScript.Gestures
                 if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
                 {
                     isTransforming = true;
-                    if (projection == ProjectionType.None)
+                    if (projection == ProjectionType.Screen)
                         DeltaPosition = screenPixelTranslationBuffer;
                     else
                         DeltaPosition = projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
@@ -750,7 +750,7 @@ namespace TouchScript.Gestures
         {
             if (!Application.isPlaying) return;
 
-            if (projection == ProjectionType.None)
+            if (projection == ProjectionType.Screen)
             {
                 transformPlane = new Plane(Vector3.forward, 0);
                 return;
@@ -768,10 +768,10 @@ namespace TouchScript.Gestures
                         transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), center);
                     else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
                     break;
-                case ProjectionType.Local:
+                case ProjectionType.ObjectLocal:
                     transformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
                     break;
-                case ProjectionType.Global:
+                case ProjectionType.ObjectGlobal:
                     transformPlane = new Plane(projectionNormal, center);
                     break;
             }
