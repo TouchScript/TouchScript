@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Layers;
 using TouchScript.Utils;
+#if DEBUG
+using TouchScript.Utils.Debug;
+#endif
 using TouchScript.Utils.Geom;
 using UnityEngine;
 
@@ -292,6 +295,11 @@ namespace TouchScript.Gestures
 
         private bool isTransforming = false;
 
+#if DEBUG
+        private int debugID;
+        private Vector2 debugTouchSize;
+#endif
+
         #endregion
 
         #region Public methods
@@ -312,6 +320,11 @@ namespace TouchScript.Gestures
         {
             base.Awake();
             transformPlane = new Plane();
+
+#if DEBUG
+            debugID = DebugHelper.GetDebugId(this);
+            debugTouchSize = Vector2.one * TouchManager.Instance.DotsPerCentimeter * 1.1f;
+#endif
         }
 
         /// <inheritdoc />
@@ -357,6 +370,12 @@ namespace TouchScript.Gestures
                 if ((Type & TransformType.Translate) == 0) return; // don't look for translates
 
                 doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
+#if DEBUG
+                GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, Color.green, float.PositiveInfinity);
+                GLDebug.RemoveFigure(debugID + 1);
+                GLDebug.RemoveFigure(debugID + 2);
+                GLDebug.RemoveFigure(debugID + 3);
+#endif
             }
             else if (activePoints >= 2)
             {
@@ -365,6 +384,14 @@ namespace TouchScript.Gestures
 
                 var newScreenPos1 = getPointScreenPosition(0);
                 var newScreenPos2 = getPointScreenPosition(1);
+
+#if DEBUG
+                GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, Color.green, float.PositiveInfinity);
+                GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, Color.green, float.PositiveInfinity);
+                GLDebug.DrawLineScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, Color.green,
+                    float.PositiveInfinity);
+                GLDebug.DrawCrossScreenSpace(debugID + 3, (newScreenPos2 + newScreenPos1) / 2, 45f, debugTouchSize*.3f, Color.green, float.PositiveInfinity);
+#endif
 
                 var rotationEnabled = (Type & TransformType.Rotate) == TransformType.Rotate;
                 var scalingEnabled = (Type & TransformType.Scale) == TransformType.Scale;
@@ -615,8 +642,6 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
-            //WorldTransformCenter = TouchManager.INVALID_POSITION;
-            //PreviousWorldTransformCenter = TouchManager.INVALID_POSITION;
             screenPosition = TouchManager.INVALID_POSITION;
             previousScreenPosition = TouchManager.INVALID_POSITION;
 
@@ -631,6 +656,13 @@ namespace TouchScript.Gestures
             scaleBuffer = 1f;
 
             isTransforming = false;
+
+#if DEBUG
+            GLDebug.RemoveFigure(debugID);
+            GLDebug.RemoveFigure(debugID + 1);
+            GLDebug.RemoveFigure(debugID + 2);
+            GLDebug.RemoveFigure(debugID + 3);
+#endif
         }
 
         #endregion

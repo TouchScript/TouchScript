@@ -603,7 +603,7 @@ namespace TouchScript
 
         private void addDebugFigureForTouch(ITouch touch)
         {
-            GLDebug.DrawSquareScreenSpace(TouchManager.DEBUG_GL_TOUCH + touch.Id, touch.Position, 0, debugTouchSize, Color.white, float.PositiveInfinity);
+            GLDebug.DrawSquareScreenSpace(TouchManager.DEBUG_GL_TOUCH + touch.Id, touch.Position, 0, debugTouchSize, GLDebug.MULTIPLY, float.PositiveInfinity);
         }
 #endif
 
