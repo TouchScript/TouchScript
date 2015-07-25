@@ -539,7 +539,7 @@ namespace TouchScript.Gestures
             if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
 
             if (sendMessageTarget == null) sendMessageTarget = gameObject;
-            Reset();
+            ResetGesture();
         }
 
         /// <summary>
@@ -572,7 +572,7 @@ namespace TouchScript.Gestures
             setState(value);
         }
 
-        internal void Reset()
+        internal void ResetGesture()
         {
             activeTouches.Clear();
             numTouches = 0;
