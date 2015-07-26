@@ -998,9 +998,7 @@ MonoBehaviour:
   friendlyGestures: []
   type: 7
   minScreenPointsDistance: .5
-  screenTransformThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
+  screenTransformThreshold: .100000001
   projection: 3
   projectionNormal: {x: 0, y: 0, z: 1}
 --- !u!114 &1462230479
