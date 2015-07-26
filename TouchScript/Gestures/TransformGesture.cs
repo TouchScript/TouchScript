@@ -376,9 +376,9 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            DeltaPosition = Vector3.zero;
-            DeltaRotation = 0;
-            DeltaScale = 1f;
+            var deltaPosition = DeltaPosition = Vector3.zero;
+            var deltaRotation = DeltaRotation = 0;
+            var deltaScale = DeltaScale = 1f;
 
             var activePoints = getNumPoints();
             // one touch or one cluster (points might be too close to each other for 2 clusters)
@@ -386,7 +386,7 @@ namespace TouchScript.Gestures
             {
                 if ((Type & TransformType.Translation) == 0) return; // don't look for translates
 
-                doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
+                deltaPosition = doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
 #if DEBUG
                 var color = State == GestureState.Possible ? Color.red : Color.green;
                 GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color, float.PositiveInfinity);
@@ -431,12 +431,12 @@ namespace TouchScript.Gestures
                                 if (projection == ProjectionType.Screen)
                                 {
                                     var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
-                                    DeltaRotation =
+                                    deltaRotation =
                                         (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) - Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x)) * Mathf.Rad2Deg;
                                 }
                                 else
                                 {
-                                    DeltaRotation = doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                                    deltaRotation = doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
                                 }
                             }
                             else
@@ -461,7 +461,7 @@ namespace TouchScript.Gestures
                                 if (screenPixelRotationBuffer * screenPixelRotationBuffer >= screenTransformPixelThresholdSquared)
                                 {
                                     isTransforming = true;
-                                    DeltaRotation = angleBuffer;
+                                    deltaRotation = angleBuffer;
                                 }
                             }
                         }
@@ -473,11 +473,11 @@ namespace TouchScript.Gestures
                             {
                                 if (projection == ProjectionType.Screen)
                                 {
-                                    DeltaScale = newScreenDelta.magnitude / (oldScreenPos2 - oldScreenPos1).magnitude;
+                                    deltaScale = newScreenDelta.magnitude / (oldScreenPos2 - oldScreenPos1).magnitude;
                                 }
                                 else
                                 {
-                                    DeltaScale = doProjectedScale(oldScreenPos1, oldScreenPos2, newScreenPos1,
+                                    deltaScale = doProjectedScale(oldScreenPos1, oldScreenPos2, newScreenPos1,
                                         newScreenPos2);
                                 }
                             }
@@ -501,7 +501,7 @@ namespace TouchScript.Gestures
                                 if (screenPixelScalingBuffer * screenPixelScalingBuffer >= screenTransformPixelThresholdSquared)
                                 {
                                     isTransforming = true;
-                                    DeltaScale = scaleBuffer;
+                                    deltaScale = scaleBuffer;
                                 }
                             }
                         }
@@ -509,52 +509,44 @@ namespace TouchScript.Gestures
                 }
                 if ((Type & TransformType.Translation) == TransformType.Translation)
                 {
-                    doTranslate((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) / 2, (newScreenPos1 + newScreenPos2) / 2);
+                    deltaPosition = doTranslate((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) / 2, (newScreenPos1 + newScreenPos2) / 2);
                 }
             }
 
-            if (DeltaPosition != Vector3.zero || DeltaRotation != 0 || DeltaScale != 1)
+            if (deltaPosition != Vector3.zero || deltaRotation != 0 || deltaScale != 1)
             {
+                if (State == GestureState.Possible) setState(GestureState.Began);
                 switch (State)
                 {
-                    case GestureState.Possible:
                     case GestureState.Began:
                     case GestureState.Changed:
-                        if (State == GestureState.Possible)
-                        {
-                            setState(GestureState.Began);
-                        }
-                        else
-                        {
-                            setState(GestureState.Changed);
-                        }
+                        DeltaPosition = deltaPosition;
+                        DeltaRotation = deltaRotation;
+                        DeltaScale = deltaScale;
+                        setState(GestureState.Changed);
                         break;
                 }
             }
         }
 
-        private void doTranslate(Vector2 oldScreenCenter, Vector2 newScreenCenter)
+        private Vector3 doTranslate(Vector2 oldScreenCenter, Vector2 newScreenCenter)
         {
             if (isTransforming)
             {
                 if (projection == ProjectionType.Screen)
-                    DeltaPosition = new Vector3(newScreenCenter.x - oldScreenCenter.x, newScreenCenter.y - oldScreenCenter.y,
-                        0);
-                else
-                    DeltaPosition = projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
+                    return new Vector3(newScreenCenter.x - oldScreenCenter.x, newScreenCenter.y - oldScreenCenter.y, 0);
+                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
             }
-            else
+
+            screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
+            if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
             {
-                screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
-                if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
-                {
-                    isTransforming = true;
-                    if (projection == ProjectionType.Screen)
-                        DeltaPosition = screenPixelTranslationBuffer;
-                    else
-                        DeltaPosition = projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
-                }
+                isTransforming = true;
+                if (projection == ProjectionType.Screen) return screenPixelTranslationBuffer;
+                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
             }
+
+            return Vector3.zero;
         }
 
         private float doProjectedRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2)
@@ -607,11 +599,9 @@ namespace TouchScript.Gestures
         {
             base.onBegan();
             transformStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            transformedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(TRANSFORM_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-                SendMessageTarget.SendMessage(TRANSFORM_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
