@@ -17,7 +17,6 @@ namespace TouchScript.Gestures
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
     public class TransformGesture : Gesture
     {
-
         #region Constants
 
         /// <summary>
@@ -62,6 +61,9 @@ namespace TouchScript.Gestures
             /// </summary>
             Global,
 
+            /// <summary>
+            /// 
+            /// </summary>
             Screen
         }
 
@@ -186,16 +188,6 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Previous global transform center in 3D.
-        /// </summary>
-        //public Vector3 PreviousWorldTransformCenter { get; protected set; }
-
-        /// <summary>
-        /// Global transform center in 3D.
-        /// </summary>
-        //public Vector3 WorldTransformCenter { get; protected set; }
-
-        /// <summary>
         /// Plane where transformation occured.
         /// </summary>
         public Plane TransformPlane
@@ -232,10 +224,7 @@ namespace TouchScript.Gestures
         /// <value>Rotation axis of the gesture in world coordinates.</value>
         public Vector3 RotationAxis
         {
-            get
-            {
-                return transformPlane.normal;
-            }
+            get { return transformPlane.normal; }
         }
 
         /// <inheritdoc />
@@ -245,8 +234,7 @@ namespace TouchScript.Gestures
             {
                 if (NumTouches == 0) return TouchManager.INVALID_POSITION;
                 if (NumTouches == 1) return activeTouches[0].Position;
-                return (getPointScreenPosition(0) + getPointScreenPosition(1)) * .5f;
-
+                return (getPointScreenPosition(0) + getPointScreenPosition(1))*.5f;
             }
         }
 
@@ -257,7 +245,7 @@ namespace TouchScript.Gestures
             {
                 if (NumTouches == 0) return TouchManager.INVALID_POSITION;
                 if (NumTouches == 1) return activeTouches[0].PreviousPosition;
-                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) * .5f;
+                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1))*.5f;
             }
         }
 
@@ -275,28 +263,14 @@ namespace TouchScript.Gestures
         /// </summary>
         protected float minScreenPointsPixelDistanceSquared;
 
-        /// <summary>
-        /// Transform's center point screen position.
-        /// This is different from Gesture.ScreenPosition since it can be not just centroid of touch points. Also we calculate it anyway so why not cache it too.
-        /// </summary>
-        protected Vector2 screenPosition;
-
-        /// <summary>
-        /// Transform's center point previous screen position.
-        /// This is different from Gesture.ScreenPosition since it can be not just centroid of touch points. Also we calculate it anyway so why not cache it too.
-        /// </summary>
-        protected Vector2 previousScreenPosition;
-
         protected float screenTransformPixelThreshold;
         protected float screenTransformPixelThresholdSquared;
 
         [SerializeField] private TransformType type = TransformType.Translation | TransformType.Scaling |
                                                       TransformType.Rotation;
 
-        [SerializeField] private float minScreenPointsDistance = .5f;
-        [SerializeField] private float screenTransformThreshold = 0.5f;
-        [SerializeField] private float rotationThreshold = 3f;
-        [SerializeField] private float scalingThreshold = .5f;
+        [SerializeField] private float minScreenPointsDistance = 0.5f;
+        [SerializeField] private float screenTransformThreshold = 0.1f;
         [SerializeField] private ProjectionType projection = ProjectionType.Layer;
         [SerializeField] private Vector3 projectionNormal = Vector3.forward;
 
@@ -324,7 +298,8 @@ namespace TouchScript.Gestures
         public void ApplyTransform(Transform target)
         {
             if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
-            if (!Mathf.Approximately(DeltaRotation, 0f)) target.rotation *= Quaternion.AngleAxis(DeltaRotation, RotationAxis);
+            if (!Mathf.Approximately(DeltaRotation, 0f))
+                target.rotation *= Quaternion.AngleAxis(DeltaRotation, RotationAxis);
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
 
@@ -369,6 +344,10 @@ namespace TouchScript.Gestures
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
             }
+
+#if DEBUG
+            drawDebug(getNumPoints());
+#endif
         }
 
         /// <inheritdoc />
@@ -381,19 +360,17 @@ namespace TouchScript.Gestures
             var deltaScale = DeltaScale = 1f;
 
             var activePoints = getNumPoints();
+
+#if DEBUG
+            drawDebug(activePoints);
+#endif
+
             // one touch or one cluster (points might be too close to each other for 2 clusters)
             if (activePoints == 1)
             {
                 if ((Type & TransformType.Translation) == 0) return; // don't look for translates
 
                 deltaPosition = doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
-#if DEBUG
-                var color = State == GestureState.Possible ? Color.red : Color.green;
-                GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color, float.PositiveInfinity);
-                GLDebug.RemoveFigure(debugID + 1);
-                GLDebug.RemoveFigure(debugID + 2);
-                GLDebug.RemoveFigure(debugID + 3);
-#endif
             }
             else if (activePoints >= 2)
             {
@@ -402,15 +379,6 @@ namespace TouchScript.Gestures
 
                 var newScreenPos1 = getPointScreenPosition(0);
                 var newScreenPos2 = getPointScreenPosition(1);
-
-#if DEBUG
-                var color = State == GestureState.Possible ? Color.red : Color.green;
-                GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, color, float.PositiveInfinity);
-                GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color, float.PositiveInfinity);
-                GLDebug.DrawLineScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, color,
-                    float.PositiveInfinity);
-                GLDebug.DrawCrossScreenSpace(debugID + 3, (newScreenPos2 + newScreenPos1) / 2, 45f, debugTouchSize * .3f, color, float.PositiveInfinity);
-#endif
 
                 var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
                 var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
@@ -432,11 +400,13 @@ namespace TouchScript.Gestures
                                 {
                                     var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
                                     deltaRotation =
-                                        (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) - Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x)) * Mathf.Rad2Deg;
+                                        (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) -
+                                         Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x))*Mathf.Rad2Deg;
                                 }
                                 else
                                 {
-                                    deltaRotation = doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                                    deltaRotation = doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1,
+                                        newScreenPos2);
                                 }
                             }
                             else
@@ -451,14 +421,17 @@ namespace TouchScript.Gestures
                                 {
                                     var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
                                     angleBuffer +=
-                                        (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) - Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x)) * Mathf.Rad2Deg;
+                                        (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) -
+                                         Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x))*Mathf.Rad2Deg;
                                 }
                                 else
                                 {
-                                    angleBuffer += doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                                    angleBuffer += doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1,
+                                        newScreenPos2);
                                 }
 
-                                if (screenPixelRotationBuffer * screenPixelRotationBuffer >= screenTransformPixelThresholdSquared)
+                                if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
+                                    screenTransformPixelThresholdSquared)
                                 {
                                     isTransforming = true;
                                     deltaRotation = angleBuffer;
@@ -468,12 +441,11 @@ namespace TouchScript.Gestures
 
                         if (scalingEnabled)
                         {
-
                             if (isTransforming)
                             {
                                 if (projection == ProjectionType.Screen)
                                 {
-                                    deltaScale = newScreenDelta.magnitude / (oldScreenPos2 - oldScreenPos1).magnitude;
+                                    deltaScale = newScreenDelta.magnitude/(oldScreenPos2 - oldScreenPos1).magnitude;
                                 }
                                 else
                                 {
@@ -498,7 +470,8 @@ namespace TouchScript.Gestures
                                         newScreenPos2);
                                 }
 
-                                if (screenPixelScalingBuffer * screenPixelScalingBuffer >= screenTransformPixelThresholdSquared)
+                                if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
+                                    screenTransformPixelThresholdSquared)
                                 {
                                     isTransforming = true;
                                     deltaScale = scaleBuffer;
@@ -509,7 +482,9 @@ namespace TouchScript.Gestures
                 }
                 if ((Type & TransformType.Translation) == TransformType.Translation)
                 {
-                    deltaPosition = doTranslate((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) / 2, (newScreenPos1 + newScreenPos2) / 2);
+                    deltaPosition =
+                        doTranslate((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1))/2,
+                            (newScreenPos1 + newScreenPos2)/2);
                 }
             }
 
@@ -535,7 +510,8 @@ namespace TouchScript.Gestures
             {
                 if (projection == ProjectionType.Screen)
                     return new Vector3(newScreenCenter.x - oldScreenCenter.x, newScreenCenter.y - oldScreenCenter.y, 0);
-                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
+                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
+                       projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
             }
 
             screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
@@ -543,27 +519,34 @@ namespace TouchScript.Gestures
             {
                 isTransforming = true;
                 if (projection == ProjectionType.Screen) return screenPixelTranslationBuffer;
-                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) - projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
+                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
+                       projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
             }
 
             return Vector3.zero;
         }
 
-        private float doProjectedRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2)
+        private float doProjectedRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+            Vector2 newScreenPos2)
         {
-            var newVector = projectionLayer.ProjectTo(newScreenPos2, TransformPlane) - projectionLayer.ProjectTo(newScreenPos1, TransformPlane);
-            var oldVector = projectionLayer.ProjectTo(oldScreenPos2, TransformPlane) - projectionLayer.ProjectTo(oldScreenPos1, TransformPlane);
+            var newVector = projectionLayer.ProjectTo(newScreenPos2, TransformPlane) -
+                            projectionLayer.ProjectTo(newScreenPos1, TransformPlane);
+            var oldVector = projectionLayer.ProjectTo(oldScreenPos2, TransformPlane) -
+                            projectionLayer.ProjectTo(oldScreenPos1, TransformPlane);
             var angle = Vector3.Angle(oldVector, newVector);
             if (Vector3.Dot(Vector3.Cross(oldVector, newVector), TransformPlane.normal) < 0)
                 angle = -angle;
             return angle;
         }
 
-        private float doProjectedScale(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2)
+        private float doProjectedScale(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+            Vector2 newScreenPos2)
         {
-            var newVector = projectionLayer.ProjectTo(newScreenPos2, TransformPlane) - projectionLayer.ProjectTo(newScreenPos1, TransformPlane);
-            var oldVector = projectionLayer.ProjectTo(oldScreenPos2, TransformPlane) - projectionLayer.ProjectTo(oldScreenPos1, TransformPlane);
-            return newVector.magnitude / oldVector.magnitude;
+            var newVector = projectionLayer.ProjectTo(newScreenPos2, TransformPlane) -
+                            projectionLayer.ProjectTo(newScreenPos1, TransformPlane);
+            var oldVector = projectionLayer.ProjectTo(oldScreenPos2, TransformPlane) -
+                            projectionLayer.ProjectTo(oldScreenPos1, TransformPlane);
+            return newVector.magnitude/oldVector.magnitude;
         }
 
         /// <inheritdoc />
@@ -584,6 +567,10 @@ namespace TouchScript.Gestures
                         break;
                 }
             }
+
+#if DEBUG
+            drawDebug(getNumPoints());
+#endif
         }
 
         /// <inheritdoc />
@@ -654,9 +641,6 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
-            screenPosition = TouchManager.INVALID_POSITION;
-            previousScreenPosition = TouchManager.INVALID_POSITION;
-
             DeltaPosition = Vector3.zero;
             DeltaRotation = 0f;
             DeltaScale = 1f;
@@ -673,7 +657,6 @@ namespace TouchScript.Gestures
             GLDebug.RemoveFigure(debugID);
             GLDebug.RemoveFigure(debugID + 1);
             GLDebug.RemoveFigure(debugID + 2);
-            GLDebug.RemoveFigure(debugID + 3);
 #endif
         }
 
@@ -733,6 +716,37 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
+#if DEBUG
+        private void drawDebug(int touchPoints)
+        {
+            var color = State == GestureState.Possible ? Color.red : Color.green;
+            switch (touchPoints)
+            {
+                case 0:
+                    GLDebug.RemoveFigure(debugID);
+                    GLDebug.RemoveFigure(debugID + 1);
+                    GLDebug.RemoveFigure(debugID + 2);
+                    break;
+                case 1:
+                    GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color, float.PositiveInfinity);
+                    GLDebug.RemoveFigure(debugID + 1);
+                    GLDebug.RemoveFigure(debugID + 2);
+                    break;
+                default:
+                    var newScreenPos1 = getPointScreenPosition(0);
+                    var newScreenPos2 = getPointScreenPosition(1);
+                    GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, color, float.PositiveInfinity);
+                    GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color, float.PositiveInfinity);
+                    GLDebug.DrawLineWithCrossScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, .5f, debugTouchSize * .3f, color, float.PositiveInfinity);
+                    break;
+            }
+            
+            
+
+            
+        }
+#endif
+
         /// <summary>
         /// Updates projection plane based on options set.
         /// </summary>
@@ -770,16 +784,15 @@ namespace TouchScript.Gestures
         private void updateMinScreenPointsDistance()
         {
             minScreenPointsPixelDistance = minScreenPointsDistance*touchManager.DotsPerCentimeter;
-            minScreenPointsPixelDistanceSquared = minScreenPointsPixelDistance * minScreenPointsPixelDistance;
+            minScreenPointsPixelDistanceSquared = minScreenPointsPixelDistance*minScreenPointsPixelDistance;
         }
 
         private void updateScreenTransformThreshold()
         {
-            screenTransformPixelThreshold = screenTransformThreshold * touchManager.DotsPerCentimeter;
-            screenTransformPixelThresholdSquared = screenTransformPixelThreshold * screenTransformPixelThreshold;
+            screenTransformPixelThreshold = screenTransformThreshold*touchManager.DotsPerCentimeter;
+            screenTransformPixelThresholdSquared = screenTransformPixelThreshold*screenTransformPixelThreshold;
         }
 
-    #endregion
-
+        #endregion
     }
 }
