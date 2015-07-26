@@ -54,7 +54,7 @@ namespace TouchScript.Gestures
             /// <summary>
             /// Use a plane with certain normal vector in local coordinates.
             /// </summary>
-            ObjectLocal,
+            Object,
 
             /// <summary>
             /// Use a plane with certain normal vector in global coordinates.
@@ -152,7 +152,7 @@ namespace TouchScript.Gestures
             }
             set
             {
-                if (projection == ProjectionType.Layer) projection = ProjectionType.ObjectLocal;
+                if (projection == ProjectionType.Layer) projection = ProjectionType.Object;
                 value.Normalize();
                 if (projectionNormal == value) return;
                 projectionNormal = value;
@@ -654,9 +654,7 @@ namespace TouchScript.Gestures
             isTransforming = false;
 
 #if DEBUG
-            GLDebug.RemoveFigure(debugID);
-            GLDebug.RemoveFigure(debugID + 1);
-            GLDebug.RemoveFigure(debugID + 2);
+            drawDebug(0);
 #endif
         }
 
@@ -726,11 +724,17 @@ namespace TouchScript.Gestures
                     GLDebug.RemoveFigure(debugID);
                     GLDebug.RemoveFigure(debugID + 1);
                     GLDebug.RemoveFigure(debugID + 2);
+                    GLDebug.RemoveFigure(debugID + 3);
                     break;
                 case 1:
                     GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color, float.PositiveInfinity);
                     GLDebug.RemoveFigure(debugID + 1);
                     GLDebug.RemoveFigure(debugID + 2);
+                    if (projection == ProjectionType.Global || projection == ProjectionType.Object)
+                    {
+                        GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 4f, GLDebug.MULTIPLY,
+                            float.PositiveInfinity);
+                    }
                     break;
                 default:
                     var newScreenPos1 = getPointScreenPosition(0);
@@ -738,6 +742,11 @@ namespace TouchScript.Gestures
                     GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, color, float.PositiveInfinity);
                     GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color, float.PositiveInfinity);
                     GLDebug.DrawLineWithCrossScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, .5f, debugTouchSize * .3f, color, float.PositiveInfinity);
+                    if (projection == ProjectionType.Global || projection == ProjectionType.Object)
+                    {
+                        GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 4f, GLDebug.MULTIPLY,
+                            float.PositiveInfinity);
+                    }
                     break;
             }
             
@@ -772,7 +781,7 @@ namespace TouchScript.Gestures
                         transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), center);
                     else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
                     break;
-                case ProjectionType.ObjectLocal:
+                case ProjectionType.Object:
                     transformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
                     break;
                 case ProjectionType.Global:

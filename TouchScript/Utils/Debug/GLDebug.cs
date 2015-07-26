@@ -147,27 +147,34 @@ namespace TouchScript.Utils.Debug
 
         #region Arrow
 
-        public static int DrawLineArrow(Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20, Color? color = null, float duration = 0, bool depthTest = false)
+        public static int DrawArrow(Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20, Color? color = null, float duration = 0, bool depthTest = false)
         {
-            return DrawLineArrow(null, start, end, arrowHeadLength, arrowHeadAngle, color, duration, depthTest);
+            return DrawArrow(null, start, end, arrowHeadLength, arrowHeadAngle, color, duration, depthTest);
         }
 
-        public static int DrawLineArrow(int? id, Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20, Color? color = null, float duration = 0, bool depthTest = false)
+        public static int DrawArrow(int? id, Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20, Color? color = null, float duration = 0, bool depthTest = false)
         {
-            return DrawArrow(id, start, end - start, arrowHeadLength, arrowHeadAngle, color, duration, depthTest);
-        }
-
-        public static int DrawArrow(Vector3 start, Vector3 dir, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20, Color? color = null, float duration = 0, bool depthTest = false)
-        {
-            return DrawArrow(null, start, dir, arrowHeadLength, arrowHeadAngle, color, duration, depthTest);
-        }
-
-        public static int DrawArrow(int? id, Vector3 start, Vector3 dir, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20, Color? color = null, float duration = 0, bool depthTest = false)
-        {
-            if (dir == Vector3.zero)
+            if (start == end)
                 return 0;
 
-            return drawFigure(id, createArrowLines(start, dir, arrowHeadLength, arrowHeadAngle), color ?? Color.white, duration, depthTest);
+            return drawFigure(id, createArrowLines(start, end, arrowHeadLength, arrowHeadAngle), color ?? Color.white, duration, depthTest);
+        }
+
+        #endregion
+
+        #region Plane with normal
+
+        public static int DrawPlaneWithNormal(Vector3 pos, Vector3 normal, float scale = 1f, Color? color = null, float duration = 0, bool depthTest = false)
+        {
+            return DrawPlaneWithNormal(null, pos, normal, scale, color, duration, depthTest);
+        }
+
+        public static int DrawPlaneWithNormal(int? id, Vector3 pos, Vector3 normal, float scale = 1f, Color? color = null, float duration = 0, bool depthTest = false)
+        {
+            var lines = createArrowLines(pos, pos + normal);
+            lines.AddRange(createCrossLines(Matrix4x4.TRS(pos, Quaternion.LookRotation(normal) * Quaternion.Euler(0, 0, 45f), Vector3.one)));
+            lines.AddRange(createSquareLines(Matrix4x4.TRS(pos, Quaternion.FromToRotation(Vector3.up, normal), Vector3.one * scale)));
+            return drawFigure(id, lines, color ?? Color.white, duration, depthTest);
         }
 
         #endregion
@@ -461,17 +468,17 @@ namespace TouchScript.Utils.Debug
             };
         }
 
-        private static List<Line> createArrowLines(Vector3 start, Vector3 dir, float arrowHeadLength, float arrowHeadAngle)
+        private static List<Line> createArrowLines(Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20)
         {
+            var dir = end - start;
             Vector3 right = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * Vector3.forward;
             Vector3 left = Quaternion.LookRotation(dir) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * Vector3.forward;
-            var sd = start + dir;
 
             return new List<Line>()
             {
-                new Line(start, sd),
-                new Line(sd, sd + right * arrowHeadLength),
-                new Line(sd, sd + left * arrowHeadLength)
+                new Line(start, end),
+                new Line(end, end + right * arrowHeadLength),
+                new Line(end, end + left * arrowHeadLength)
             };
         }
 
