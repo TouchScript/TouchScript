@@ -29,10 +29,8 @@ GameObject:
   - 33: {fileID: 3300000}
   - 65: {fileID: 6500000}
   - 23: {fileID: 2300000}
-  - 114: {fileID: 11400004}
-  - 114: {fileID: 11400000}
-  - 114: {fileID: 11400002}
-  - 114: {fileID: 11400010}
+  - 114: {fileID: 11430818}
+  - 114: {fileID: 11430816}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -52,6 +50,7 @@ Transform:
   m_Children:
   - {fileID: 400002}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!4 &400002
 Transform:
   m_ObjectHideFlags: 1
@@ -63,6 +62,7 @@ Transform:
   m_LocalScale: {x: 20, y: .5, z: 15}
   m_Children: []
   m_Father: {fileID: 400000}
+  m_RootOrder: 0
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -81,9 +81,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -103,67 +102,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 11400002}
-  - {fileID: 11400010}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  movementThreshold: .5
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 11400000}
-  - {fileID: 11400010}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  scalingThreshold: .5
---- !u!114 &11400004
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -204,31 +142,6 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   ignoreChildren: 0
---- !u!114 &11400010
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 11400000}
-  - {fileID: 11400002}
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
-  minPointsDistance: .5
-  rotationThreshold: 3
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -242,6 +155,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHeight: 2
   JumpSpeed: 5
+--- !u!114 &11430816
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11430818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  combineTouches: 0
+  combineTouchesInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures: []
+  type: 7
+  minPointsDistance: .5
+  movementThreshold: .5
+  rotationThreshold: 3
+  scalingThreshold: .5
+  projection: 1
+  projectionNormal: {x: 0, y: 1, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
