@@ -60,7 +60,7 @@ namespace TouchScript.Gestures
             /// <summary>
             /// Use a plane with certain normal vector in global coordinates.
             /// </summary>
-            ObjectGlobal,
+            Global,
 
             Screen
         }
@@ -771,7 +771,7 @@ namespace TouchScript.Gestures
                 case ProjectionType.ObjectLocal:
                     transformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
                     break;
-                case ProjectionType.ObjectGlobal:
+                case ProjectionType.Global:
                     transformPlane = new Plane(projectionNormal, center);
                     break;
             }
