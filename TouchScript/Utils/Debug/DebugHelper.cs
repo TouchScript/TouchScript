@@ -12,7 +12,7 @@ namespace TouchScript.Utils.Debug
     {
         public static int GetDebugId(Object obj)
         {
-            return (obj.GetInstanceID() >> 10) << 10;
+            return int.MinValue + (obj.GetInstanceID() << 10);
         }
     }
 }
