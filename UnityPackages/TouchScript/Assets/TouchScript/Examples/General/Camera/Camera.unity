@@ -984,7 +984,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1462230476}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 681217450, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
@@ -999,8 +999,6 @@ MonoBehaviour:
   type: 7
   minScreenPointsDistance: .5
   screenTransformThreshold: .100000001
-  projection: 3
-  projectionNormal: {x: 0, y: 0, z: 1}
 --- !u!114 &1462230479
 MonoBehaviour:
   m_ObjectHideFlags: 0

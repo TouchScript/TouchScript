@@ -9,7 +9,7 @@ namespace TouchScript.Examples.Camera {
 		public float PanSpeed = 200f;
 		public float ZoomSpeed = 10f;
 
-		private TransformGesture gesture;
+		private ScreenTransformGesture gesture;
 		private Transform cam;
 
 		private void Awake() {
@@ -17,7 +17,7 @@ namespace TouchScript.Examples.Camera {
 		}
 
 		private void OnEnable() {
-			gesture = GetComponent<TransformGesture>();
+			gesture = GetComponent<ScreenTransformGesture>();
 			gesture.Transformed += transformedHandler;
 		}
 

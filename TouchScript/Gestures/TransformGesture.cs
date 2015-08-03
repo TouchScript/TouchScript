@@ -2,44 +2,21 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
+using TouchScript.Gestures.Abstract;
 using TouchScript.Layers;
 using TouchScript.Utils;
 #if DEBUG
 using TouchScript.Utils.Debug;
 #endif
-using TouchScript.Utils.Geom;
 using UnityEngine;
 
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
-    public class TransformGesture : Gesture
+    public class TransformGesture : AbstractTrasformGesture
     {
         #region Constants
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Flags]
-        public enum TransformType
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            Translation = 0x1,
-
-            /// <summary>
-            /// 
-            /// </summary>
-            Rotation = 0x2,
-
-            /// <summary>
-            /// 
-            /// </summary>
-            Scaling = 0x4
-        }
 
         /// <summary>
         /// Transform's projection type.
@@ -60,71 +37,11 @@ namespace TouchScript.Gestures
             /// Use a plane with certain normal vector in global coordinates.
             /// </summary>
             Global,
-
-            /// <summary>
-            /// 
-            /// </summary>
-            Screen
         }
-
-        /// <summary>
-        /// Message name when gesture starts
-        /// </summary>
-        public const string TRANSFORM_START_MESSAGE = "OnTransformStart";
-
-        /// <summary>
-        /// Message name when gesture updates
-        /// </summary>
-        public const string TRANSFORM_MESSAGE = "OnTransform";
-
-        /// <summary>
-        /// Message name when gesture ends
-        /// </summary>
-        public const string TRANSFORM_COMPLETE_MESSAGE = "OnTransformComplete";
-
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// Occurs when gesture starts.
-        /// </summary>
-        public event EventHandler<EventArgs> TransformStarted
-        {
-            add { transformStartedInvoker += value; }
-            remove { transformStartedInvoker -= value; }
-        }
-
-        /// <summary>
-        /// Occurs when gesture updates.
-        /// </summary>
-        public event EventHandler<EventArgs> Transformed
-        {
-            add { transformedInvoker += value; }
-            remove { transformedInvoker -= value; }
-        }
-
-        /// <summary>
-        /// Occurs when gesture ends.
-        /// </summary>
-        public event EventHandler<EventArgs> TransformCompleted
-        {
-            add { transformCompletedInvoker += value; }
-            remove { transformCompletedInvoker -= value; }
-        }
-
-        // iOS Events AOT hack
-        private EventHandler<EventArgs> transformStartedInvoker, transformedInvoker, transformCompletedInvoker;
 
         #endregion
 
         #region Public properties
-
-        public TransformType Type
-        {
-            get { return type; }
-            set { type = value; }
-        }
 
         /// <summary>
         /// Transform's projection type.
@@ -143,47 +60,20 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Transform's projection plane normal.
         /// </summary>
-        public Vector3 ProjectionNormal
+        public Vector3 ProjectionPlaneNormal
         {
             get
             {
                 if (projection == ProjectionType.Layer) return projectionLayer.WorldProjectionNormal;
-                return projectionNormal;
+                return projectionPlaneNormal;
             }
             set
             {
                 if (projection == ProjectionType.Layer) projection = ProjectionType.Object;
                 value.Normalize();
-                if (projectionNormal == value) return;
-                projectionNormal = value;
+                if (projectionPlaneNormal == value) return;
+                projectionPlaneNormal = value;
                 if (Application.isPlaying) updateProjectionPlane();
-            }
-        }
-
-        /// <summary>
-        /// Minimum distance between 2 points in cm for gesture to begin.
-        /// </summary>
-        public virtual float MinScreenPointsDistance
-        {
-            get { return minScreenPointsDistance; }
-            set
-            {
-                minScreenPointsDistance = value;
-                updateMinScreenPointsDistance();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets minimum distance in cm for touch points to move for gesture to begin. 
-        /// </summary>
-        /// <value>Minimum value in cm user must move their fingers to start this gesture.</value>
-        public float ScreenTransformThreshold
-        {
-            get { return screenTransformThreshold; }
-            set
-            {
-                screenTransformThreshold = value;
-                updateScreenTransformThreshold();
             }
         }
 
@@ -194,20 +84,6 @@ namespace TouchScript.Gestures
         {
             get { return transformPlane; }
         }
-
-        /// <summary>
-        /// Gets delta position in world coordinates.
-        /// </summary>
-        /// <value>Delta position between this frame and the last frame in world coordinates.</value>
-        public Vector3 DeltaPosition { get; private set; }
-
-        public float DeltaRotation { get; private set; }
-
-        /// <summary>
-        /// Contains local delta scale when gesture is recognized.
-        /// Value is between 0 and +infinity, where 1 is no scale, 0.5 is scaled in half, 2 scaled twice.
-        /// </summary>
-        public float DeltaScale { get; private set; }
 
         /// <summary>
         /// Gets delta position in local coordinates.
@@ -227,69 +103,15 @@ namespace TouchScript.Gestures
             get { return transformPlane.normal; }
         }
 
-        /// <inheritdoc />
-        public override Vector2 ScreenPosition
-        {
-            get
-            {
-                if (NumTouches == 0) return TouchManager.INVALID_POSITION;
-                if (NumTouches == 1) return activeTouches[0].Position;
-                return (getPointScreenPosition(0) + getPointScreenPosition(1))*.5f;
-            }
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PreviousScreenPosition
-        {
-            get
-            {
-                if (NumTouches == 0) return TouchManager.INVALID_POSITION;
-                if (NumTouches == 1) return activeTouches[0].PreviousPosition;
-                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1))*.5f;
-            }
-        }
-
         #endregion
 
         #region Private variables
 
-        /// <summary>
-        /// <see cref="MinScreenPointsDistance"/> in pixels for internal use.
-        /// </summary>
-        protected float minScreenPointsPixelDistance;
-
-        /// <summary>
-        /// <see cref="MinScreenPointsDistance"/> squared in pixels for internal use.
-        /// </summary>
-        protected float minScreenPointsPixelDistanceSquared;
-
-        protected float screenTransformPixelThreshold;
-        protected float screenTransformPixelThresholdSquared;
-
-        [SerializeField] private TransformType type = TransformType.Translation | TransformType.Scaling |
-                                                      TransformType.Rotation;
-
-        [SerializeField] private float minScreenPointsDistance = 0.5f;
-        [SerializeField] private float screenTransformThreshold = 0.1f;
         [SerializeField] private ProjectionType projection = ProjectionType.Layer;
-        [SerializeField] private Vector3 projectionNormal = Vector3.forward;
+        [SerializeField] private Vector3 projectionPlaneNormal = Vector3.forward;
 
-        private Collider cachedCollider;
         private TouchLayer projectionLayer;
         private Plane transformPlane;
-
-        private Vector2 screenPixelTranslationBuffer;
-        private float screenPixelRotationBuffer;
-        private float angleBuffer;
-        private float screenPixelScalingBuffer;
-        private float scaleBuffer;
-
-        private bool isTransforming = false;
-
-#if DEBUG
-        private int debugID;
-        private Vector2 debugTouchSize;
-#endif
 
         #endregion
 
@@ -312,21 +134,12 @@ namespace TouchScript.Gestures
         {
             base.Awake();
             transformPlane = new Plane();
-
-#if DEBUG
-            debugID = DebugHelper.GetDebugId(this);
-            debugTouchSize = Vector2.one * TouchManager.Instance.DotsPerCentimeter * 1.1f;
-#endif
         }
 
         /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();
-
-            cachedCollider = GetComponent<Collider>();
-            updateMinScreenPointsDistance();
-            updateScreenTransformThreshold();
             updateProjectionPlane();
         }
 
@@ -344,189 +157,13 @@ namespace TouchScript.Gestures
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
             }
-
-#if DEBUG
-            drawDebug(getNumPoints());
-#endif
         }
 
-        /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouch> touches)
-        {
-            base.touchesMoved(touches);
+        #endregion
 
-            var deltaPosition = DeltaPosition = Vector3.zero;
-            var deltaRotation = DeltaRotation = 0;
-            var deltaScale = DeltaScale = 1f;
+        #region Protected methods
 
-            var activePoints = getNumPoints();
-
-#if DEBUG
-            drawDebug(activePoints);
-#endif
-
-            // one touch or one cluster (points might be too close to each other for 2 clusters)
-            if (activePoints == 1)
-            {
-                if ((Type & TransformType.Translation) == 0) return; // don't look for translates
-
-                deltaPosition = doTranslate(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
-            }
-            else if (activePoints >= 2)
-            {
-                // Make sure that we actually care about the touches moved.
-                if (!relevantTouches(touches)) return;
-
-                var newScreenPos1 = getPointScreenPosition(0);
-                var newScreenPos2 = getPointScreenPosition(1);
-
-                var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
-                var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
-                if (rotationEnabled || scalingEnabled)
-                {
-                    var newScreenDelta = newScreenPos2 - newScreenPos1;
-                    if (newScreenDelta.sqrMagnitude > minScreenPointsPixelDistanceSquared)
-                    {
-                        // Here we can't reuse last frame screen positions because points 0 and 1 can change.
-                        // For example if the first of 3 fingers is lifted off.
-                        var oldScreenPos1 = getPointPreviousScreenPosition(0);
-                        var oldScreenPos2 = getPointPreviousScreenPosition(1);
-
-                        if (rotationEnabled)
-                        {
-                            if (isTransforming)
-                            {
-                                if (projection == ProjectionType.Screen)
-                                {
-                                    var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
-                                    deltaRotation =
-                                        (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) -
-                                         Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x))*Mathf.Rad2Deg;
-                                }
-                                else
-                                {
-                                    deltaRotation = doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1,
-                                        newScreenPos2);
-                                }
-                            }
-                            else
-                            {
-                                float d1, d2;
-                                // Find how much we moved perpendicular to the line (oldScreenPos1, oldScreenPos2)
-                                TwoD.PointToLineDistance2(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
-                                    out d1, out d2);
-                                screenPixelRotationBuffer += (d1 - d2);
-
-                                if (projection == ProjectionType.Screen)
-                                {
-                                    var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
-                                    angleBuffer +=
-                                        (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) -
-                                         Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x))*Mathf.Rad2Deg;
-                                }
-                                else
-                                {
-                                    angleBuffer += doProjectedRotation(oldScreenPos1, oldScreenPos2, newScreenPos1,
-                                        newScreenPos2);
-                                }
-
-                                if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
-                                    screenTransformPixelThresholdSquared)
-                                {
-                                    isTransforming = true;
-                                    deltaRotation = angleBuffer;
-                                }
-                            }
-                        }
-
-                        if (scalingEnabled)
-                        {
-                            if (isTransforming)
-                            {
-                                if (projection == ProjectionType.Screen)
-                                {
-                                    deltaScale = newScreenDelta.magnitude/(oldScreenPos2 - oldScreenPos1).magnitude;
-                                }
-                                else
-                                {
-                                    deltaScale = doProjectedScale(oldScreenPos1, oldScreenPos2, newScreenPos1,
-                                        newScreenPos2);
-                                }
-                            }
-                            else
-                            {
-                                var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
-                                var newDistance = newScreenDelta.magnitude;
-                                var oldDistance = oldScreenDelta.magnitude;
-                                screenPixelScalingBuffer += newDistance - oldDistance;
-
-                                if (projection == ProjectionType.Screen)
-                                {
-                                    scaleBuffer *= newDistance/oldDistance;
-                                }
-                                else
-                                {
-                                    scaleBuffer *= doProjectedScale(oldScreenPos1, oldScreenPos2, newScreenPos1,
-                                        newScreenPos2);
-                                }
-
-                                if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
-                                    screenTransformPixelThresholdSquared)
-                                {
-                                    isTransforming = true;
-                                    deltaScale = scaleBuffer;
-                                }
-                            }
-                        }
-                    }
-                }
-                if ((Type & TransformType.Translation) == TransformType.Translation)
-                {
-                    deltaPosition =
-                        doTranslate((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1))/2,
-                            (newScreenPos1 + newScreenPos2)/2);
-                }
-            }
-
-            if (deltaPosition != Vector3.zero || deltaRotation != 0 || deltaScale != 1)
-            {
-                if (State == GestureState.Possible) setState(GestureState.Began);
-                switch (State)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        DeltaPosition = deltaPosition;
-                        DeltaRotation = deltaRotation;
-                        DeltaScale = deltaScale;
-                        setState(GestureState.Changed);
-                        break;
-                }
-            }
-        }
-
-        private Vector3 doTranslate(Vector2 oldScreenCenter, Vector2 newScreenCenter)
-        {
-            if (isTransforming)
-            {
-                if (projection == ProjectionType.Screen)
-                    return new Vector3(newScreenCenter.x - oldScreenCenter.x, newScreenCenter.y - oldScreenCenter.y, 0);
-                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
-                       projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
-            }
-
-            screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
-            if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
-            {
-                isTransforming = true;
-                if (projection == ProjectionType.Screen) return screenPixelTranslationBuffer;
-                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
-                       projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
-            }
-
-            return Vector3.zero;
-        }
-
-        private float doProjectedRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
             Vector2 newScreenPos2)
         {
             var newVector = projectionLayer.ProjectTo(newScreenPos2, TransformPlane) -
@@ -539,7 +176,7 @@ namespace TouchScript.Gestures
             return angle;
         }
 
-        private float doProjectedScale(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
             Vector2 newScreenPos2)
         {
             var newVector = projectionLayer.ProjectTo(newScreenPos2, TransformPlane) -
@@ -549,212 +186,54 @@ namespace TouchScript.Gestures
             return newVector.magnitude/oldVector.magnitude;
         }
 
-        /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouch> touches)
+        protected override Vector3 doTranslation(Vector2 oldScreenCenter, Vector2 newScreenCenter)
         {
-            base.touchesEnded(touches);
-
-            if (NumTouches == 0)
+            if (isTransforming)
             {
-                switch (State)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        setState(GestureState.Ended);
-                        break;
-                    default:
-                        SetState(GestureState.Failed);
-                        break;
-                }
+                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
+                       projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
             }
+
+            screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
+            if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
+            {
+                isTransforming = true;
+                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
+                       projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
+            }
+
+            return Vector3.zero;
+        }
 
 #if DEBUG
-            drawDebug(getNumPoints());
-#endif
-        }
-
-        /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
+        protected override void drawDebug(int touchPoints)
         {
-            base.touchesCancelled(touches);
+            base.drawDebug(touchPoints);
 
-            touchesEnded(touches);
-        }
-
-        /// <inheritdoc />
-        protected override void onBegan()
-        {
-            base.onBegan();
-            transformStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            if (UseSendMessage && SendMessageTarget != null)
+            switch (touchPoints)
             {
-                SendMessageTarget.SendMessage(TRANSFORM_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onChanged()
-        {
-            base.onChanged();
-            transformedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            if (UseSendMessage && SendMessageTarget != null)
-                SendMessageTarget.SendMessage(TRANSFORM_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onRecognized()
-        {
-            base.onRecognized();
-            transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            if (UseSendMessage && SendMessageTarget != null)
-                SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null)
-                    SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this,
-                        SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null)
-                    SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this,
-                        SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void reset()
-        {
-            base.reset();
-
-            DeltaPosition = Vector3.zero;
-            DeltaRotation = 0f;
-            DeltaScale = 1f;
-
-            screenPixelTranslationBuffer = Vector2.zero;
-            screenPixelRotationBuffer = 0f;
-            angleBuffer = 0;
-            screenPixelScalingBuffer = 0f;
-            scaleBuffer = 1f;
-
-            isTransforming = false;
-
-#if DEBUG
-            drawDebug(0);
-#endif
-        }
-
-        #endregion
-
-        #region Protected methods
-
-        protected virtual int getNumPoints()
-        {
-            return NumTouches;
-        }
-
-        /// <summary>
-        /// Checks if there are touch points in the list which matter for the gesture.
-        /// </summary>
-        /// <param name="touches">List of touch points</param>
-        /// <returns>True if there are relevant touch points, False otherwise.</returns>
-        protected virtual bool relevantTouches(IList<ITouch> touches)
-        {
-            var result = false;
-            // We care only about the first and the second touch points
-            foreach (var touch in touches)
-            {
-                if (touch == activeTouches[0] || touch == activeTouches[1])
-                {
-                    result = true;
+                case 0:
+                    GLDebug.RemoveFigure(debugID + 3);
                     break;
-                }
+                case 1:
+                    if (projection == ProjectionType.Global || projection == ProjectionType.Object)
+                    {
+                        GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 4f, GLDebug.MULTIPLY, float.PositiveInfinity);
+                    }
+                    break;
+                default:
+                    if (projection == ProjectionType.Global || projection == ProjectionType.Object)
+                    {
+                        GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 4f, GLDebug.MULTIPLY, float.PositiveInfinity);
+                    }
+                    break;
             }
-
-            return result;
         }
-
-        /// <summary>
-        /// Returns screen position of a point with index 0 or 1
-        /// </summary>
-        /// <param name="index">The index.</param>
-        protected virtual Vector2 getPointScreenPosition(int index)
-        {
-            if (index < 0) index = 0;
-            else if (index > 1) index = 1;
-            return activeTouches[index].Position;
-        }
-
-        /// <summary>
-        /// Returns previous screen position of a point with index 0 or 1
-        /// </summary>
-        /// <param name="index">The index.</param>
-        protected virtual Vector2 getPointPreviousScreenPosition(int index)
-        {
-            if (index < 0) index = 0;
-            else if (index > 1) index = 1;
-            return activeTouches[index].PreviousPosition;
-        }
+#endif
 
         #endregion
 
         #region Private functions
-
-#if DEBUG
-        private void drawDebug(int touchPoints)
-        {
-            var color = State == GestureState.Possible ? Color.red : Color.green;
-            switch (touchPoints)
-            {
-                case 0:
-                    GLDebug.RemoveFigure(debugID);
-                    GLDebug.RemoveFigure(debugID + 1);
-                    GLDebug.RemoveFigure(debugID + 2);
-                    GLDebug.RemoveFigure(debugID + 3);
-                    break;
-                case 1:
-                    GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color, float.PositiveInfinity);
-                    GLDebug.RemoveFigure(debugID + 1);
-                    GLDebug.RemoveFigure(debugID + 2);
-                    if (projection == ProjectionType.Global || projection == ProjectionType.Object)
-                    {
-                        GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 4f, GLDebug.MULTIPLY,
-                            float.PositiveInfinity);
-                    }
-                    break;
-                default:
-                    var newScreenPos1 = getPointScreenPosition(0);
-                    var newScreenPos2 = getPointScreenPosition(1);
-                    GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, color, float.PositiveInfinity);
-                    GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color, float.PositiveInfinity);
-                    GLDebug.DrawLineWithCrossScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, .5f, debugTouchSize * .3f, color, float.PositiveInfinity);
-                    if (projection == ProjectionType.Global || projection == ProjectionType.Object)
-                    {
-                        GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 4f, GLDebug.MULTIPLY,
-                            float.PositiveInfinity);
-                    }
-                    break;
-            }
-            
-            
-
-            
-        }
-#endif
 
         /// <summary>
         /// Updates projection plane based on options set.
@@ -762,12 +241,6 @@ namespace TouchScript.Gestures
         private void updateProjectionPlane()
         {
             if (!Application.isPlaying) return;
-
-            if (projection == ProjectionType.Screen)
-            {
-                transformPlane = new Plane(Vector3.forward, 0);
-                return;
-            }
 
             Vector3 center;
             if (cachedCollider != null) center = cachedCollider.bounds.center;
@@ -782,24 +255,12 @@ namespace TouchScript.Gestures
                     else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
                     break;
                 case ProjectionType.Object:
-                    transformPlane = new Plane(cachedTransform.TransformDirection(projectionNormal), center);
+                    transformPlane = new Plane(cachedTransform.TransformDirection(projectionPlaneNormal), center);
                     break;
                 case ProjectionType.Global:
-                    transformPlane = new Plane(projectionNormal, center);
+                    transformPlane = new Plane(projectionPlaneNormal, center);
                     break;
             }
-        }
-
-        private void updateMinScreenPointsDistance()
-        {
-            minScreenPointsPixelDistance = minScreenPointsDistance*touchManager.DotsPerCentimeter;
-            minScreenPointsPixelDistanceSquared = minScreenPointsPixelDistance*minScreenPointsPixelDistance;
-        }
-
-        private void updateScreenTransformThreshold()
-        {
-            screenTransformPixelThreshold = screenTransformThreshold*touchManager.DotsPerCentimeter;
-            screenTransformPixelThresholdSquared = screenTransformPixelThreshold*screenTransformPixelThreshold;
         }
 
         #endregion

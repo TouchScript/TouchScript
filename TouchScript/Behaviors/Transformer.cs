@@ -12,8 +12,8 @@ namespace TouchScript.Behaviors
     [AddComponentMenu("TouchScript/Behaviors/Transformer")]
     public class Transformer : MonoBehaviour
     {
-
         private Transform cachedTransform;
+        private TransformGesture cachedGesture;
 
         private void Awake()
         {
@@ -22,12 +22,19 @@ namespace TouchScript.Behaviors
 
         private void OnEnable()
         {
-            if (GetComponent<TransformGesture>() != null) GetComponent<TransformGesture>().Transformed += transformHandler;
+            cachedGesture = GetComponent<TransformGesture>();
+            if (cachedGesture != null)
+            {
+                GetComponent<TransformGesture>().Transformed += transformHandler;
+            }
         }
 
         private void OnDisable()
         {
-            if (GetComponent<TransformGesture>() != null) GetComponent<TransformGesture>().Transformed -= transformHandler;
+            if (cachedGesture != null)
+            {
+                GetComponent<TransformGesture>().Transformed -= transformHandler;
+            }
         }
 
         private void transformHandler(object sender, EventArgs e)

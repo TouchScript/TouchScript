@@ -67,7 +67,10 @@
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
+    <Compile Include="Gestures\Abstract\AbstractTrasformGesture.cs" />
     <Compile Include="Gestures\Clustered\ClusteredTransformGesture.cs" />
+    <Compile Include="Gestures\PinnedTransformGesture.cs" />
+    <Compile Include="Gestures\ScreenTransformGesture.cs" />
     <Compile Include="Gestures\TransformGesture.cs" />
     <Compile Include="IDebuggable.cs" />
     <Compile Include="Utils\Debug\DebugHelper.cs" />

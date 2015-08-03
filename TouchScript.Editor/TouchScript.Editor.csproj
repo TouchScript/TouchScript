@@ -54,11 +54,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debugging\TouchDebuggerEditor.cs" />
+    <Compile Include="Gestures\Abstract\AbstractTransformGestureEditor.cs" />
     <Compile Include="Gestures\GestureEditor.cs" />
     <Compile Include="Gestures\PressGestureEditor.cs" />
     <Compile Include="Gestures\ReleaseGestureEditor.cs" />
     <Compile Include="Gestures\FlickGestureEditor.cs" />
     <Compile Include="Gestures\LongPressGestureEditor.cs" />
+    <Compile Include="Gestures\ScreenTransformGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimplePanGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleRotateGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleScaleGestureEditor.cs" />
