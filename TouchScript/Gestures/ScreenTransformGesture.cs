@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Screen Transform Gesture")]
-    public class ScreenTransformGesture : AbstractTrasformGesture
+    public class ScreenTransformGesture : AbstractTransformGesture
     {
         #region Protected methods
 

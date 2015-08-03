@@ -14,7 +14,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
-    public class TransformGesture : AbstractTrasformGesture
+    public class TransformGesture : AbstractTransformGesture
     {
         #region Constants
 
