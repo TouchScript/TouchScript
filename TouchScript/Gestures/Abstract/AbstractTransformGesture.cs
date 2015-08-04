@@ -512,18 +512,12 @@ namespace TouchScript.Gestures.Abstract
         /// <returns>True if there are relevant touch points, False otherwise.</returns>
         protected virtual bool relevantTouches(IList<ITouch> touches)
         {
-            var result = false;
             // We care only about the first and the second touch points
             foreach (var touch in touches)
             {
-                if (touch == activeTouches[0] || touch == activeTouches[1])
-                {
-                    result = true;
-                    break;
-                }
+                if (touch == activeTouches[0] || touch == activeTouches[1]) return true;
             }
-
-            return result;
+            return false;
         }
 
         /// <summary>

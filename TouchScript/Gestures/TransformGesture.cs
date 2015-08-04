@@ -243,9 +243,9 @@ namespace TouchScript.Gestures
             if (!Application.isPlaying) return;
 
             Vector3 center;
+            // TODO: revert to transform center?
             if (cachedCollider != null) center = cachedCollider.bounds.center;
             else center = cachedTransform.position;
-
 
             switch (projection)
             {
