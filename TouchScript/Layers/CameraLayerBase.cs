@@ -71,6 +71,12 @@ namespace TouchScript.Layers
             return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
         }
 
+        /// <inheritdoc />
+        public override Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            return _camera.WorldToScreenPoint(worldPosition);
+        }
+
         #endregion
 
         #region Unity methods
