@@ -252,23 +252,6 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
-        protected float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos)
-        {
-            var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
-            var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
-            var angle = Vector3.Angle(oldVector, newVector);
-            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), TransformPlane.normal) < 0)
-                angle = -angle;
-            return angle;
-        }
-
-        protected float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos)
-        {
-            var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
-            var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
-            return newVector.magnitude / oldVector.magnitude;
-        }
-
 #if DEBUG
         protected override void clearDebug()
         {
@@ -289,9 +272,23 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
-        /// <summary>
-        /// Updates projection plane based on options set.
-        /// </summary>
+        private float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos)
+        {
+            var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
+            var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
+            var angle = Vector3.Angle(oldVector, newVector);
+            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), TransformPlane.normal) < 0)
+                angle = -angle;
+            return angle;
+        }
+
+        private float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos)
+        {
+            var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
+            var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
+            return newVector.magnitude / oldVector.magnitude;
+        }
+
         private void updateProjectionPlane()
         {
             if (!Application.isPlaying) return;
