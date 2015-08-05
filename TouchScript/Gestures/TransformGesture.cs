@@ -207,15 +207,19 @@ namespace TouchScript.Gestures
         }
 
 #if DEBUG
+        protected override void clearDebug()
+        {
+            base.clearDebug();
+
+            GLDebug.RemoveFigure(debugID + 3);
+        }
+
         protected override void drawDebug(int touchPoints)
         {
             base.drawDebug(touchPoints);
 
             switch (touchPoints)
             {
-                case 0:
-                    GLDebug.RemoveFigure(debugID + 3);
-                    break;
                 case 1:
                     if (projection == ProjectionType.Global || projection == ProjectionType.Object)
                     {

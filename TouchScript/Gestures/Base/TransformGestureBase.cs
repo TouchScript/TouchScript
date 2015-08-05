@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils;
 #if DEBUG
@@ -205,11 +206,6 @@ namespace TouchScript.Gestures.Base
         [SerializeField] private float minScreenPointsDistance = 0.5f;
         [SerializeField] private float screenTransformThreshold = 0.1f;
 
-#if DEBUG
-        protected int debugID;
-        protected Vector2 debugTouchSize;
-#endif
-
         #endregion
 
         #region Unity methods
@@ -245,7 +241,7 @@ namespace TouchScript.Gestures.Base
             base.touchesBegan(touches);
 
 #if DEBUG
-            drawDebug(getNumPoints());
+            drawDebugDelayed(getNumPoints());
 #endif
         }
 
@@ -261,7 +257,7 @@ namespace TouchScript.Gestures.Base
             var activePoints = getNumPoints();
 
 #if DEBUG
-            drawDebug(activePoints);
+            drawDebugDelayed(activePoints);
 #endif
 
             // one touch or one cluster (points might be too close to each other for 2 clusters)
@@ -368,7 +364,7 @@ namespace TouchScript.Gestures.Base
             base.touchesEnded(touches);
 
 #if DEBUG
-            drawDebug(getNumPoints());
+            drawDebugDelayed(getNumPoints());
 #endif
 
             if (NumTouches == 0)
@@ -467,7 +463,7 @@ namespace TouchScript.Gestures.Base
             isTransforming = false;
 
 #if DEBUG
-            drawDebug(0);
+            clearDebug();
 #endif
         }
 
@@ -543,16 +539,33 @@ namespace TouchScript.Gestures.Base
         }
 
 #if DEBUG
+        protected int debugID;
+        protected Coroutine debugCoroutine;
+        protected Vector2 debugTouchSize;
+
+        protected virtual void clearDebug()
+        {
+            GLDebug.RemoveFigure(debugID);
+            GLDebug.RemoveFigure(debugID + 1);
+            GLDebug.RemoveFigure(debugID + 2);
+
+            if (debugCoroutine != null) StopCoroutine(debugCoroutine);
+            debugCoroutine = null;
+        }
+
+        protected void drawDebugDelayed(int touchPoints)
+        {
+            if (debugCoroutine != null) StopCoroutine(debugCoroutine);
+            debugCoroutine = StartCoroutine(doDrawDebug(touchPoints));
+        }
+
         protected virtual void drawDebug(int touchPoints)
         {
+            if (!DebugMode) return;
+
             var color = State == GestureState.Possible ? Color.red : Color.green;
             switch (touchPoints)
             {
-                case 0:
-                    GLDebug.RemoveFigure(debugID);
-                    GLDebug.RemoveFigure(debugID + 1);
-                    GLDebug.RemoveFigure(debugID + 2);
-                    break;
                 case 1:
                     GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color,
                         float.PositiveInfinity);
@@ -567,9 +580,16 @@ namespace TouchScript.Gestures.Base
                     GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color,
                         float.PositiveInfinity);
                     GLDebug.DrawLineWithCrossScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, .5f,
-                        debugTouchSize*.3f, color, float.PositiveInfinity);
+                        debugTouchSize * .3f, color, float.PositiveInfinity);
                     break;
             }
+        }
+
+        private IEnumerator doDrawDebug(int touchPoints)
+        {
+            yield return new WaitForEndOfFrame();
+
+            drawDebug(touchPoints);
         }
 #endif
 

@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Behaviors;
 using TouchScript.Gestures.Base;
 using UnityEngine;
 

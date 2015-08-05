@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils;
 #if DEBUG
@@ -164,11 +165,6 @@ namespace TouchScript.Gestures.Base
         [SerializeField]
         private float screenTransformThreshold = 0.1f;
 
-#if DEBUG
-        protected int debugID;
-        protected Vector2 debugTouchSize;
-#endif
-
         #endregion
 
         #region Unity methods
@@ -321,11 +317,24 @@ namespace TouchScript.Gestures.Base
         }
 
 #if DEBUG
+        protected int debugID;
+        protected Coroutine debugCoroutine;
+        protected Vector2 debugTouchSize;
+
         protected virtual void clearDebug()
         {
             GLDebug.RemoveFigure(debugID);
             GLDebug.RemoveFigure(debugID + 1);
             GLDebug.RemoveFigure(debugID + 2);
+
+            if (debugCoroutine != null) StopCoroutine(debugCoroutine);
+            debugCoroutine = null;
+        }
+
+        protected void drawDebugDelayed(Vector2 point1, Vector2 point2)
+        {
+            if (debugCoroutine != null) StopCoroutine(debugCoroutine);
+            debugCoroutine = StartCoroutine(doDrawDebug(point1, point2));
         }
 
         protected virtual void drawDebug(Vector2 point1, Vector2 point2)
@@ -333,6 +342,13 @@ namespace TouchScript.Gestures.Base
             var color = State == GestureState.Possible ? Color.red : Color.green;
             GLDebug.DrawSquareScreenSpace(debugID + 1, point2, 0f, debugTouchSize, color, float.PositiveInfinity);
             GLDebug.DrawLineScreenSpace(debugID + 2, point1, point2, color, float.PositiveInfinity);
+        }
+
+        private IEnumerator doDrawDebug(Vector2 point1, Vector2 point2)
+        {
+            yield return new WaitForEndOfFrame();
+
+            drawDebug(point1, point2);
         }
 #endif
 
