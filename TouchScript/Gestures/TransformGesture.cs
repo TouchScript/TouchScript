@@ -15,7 +15,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
-    public class TransformGesture : TransformGestureBase, ITransformer
+    public class TransformGesture : TransformGestureBase, ITransformGesture
     {
         #region Constants
 
@@ -120,10 +120,10 @@ namespace TouchScript.Gestures
 
         public void ApplyTransform(Transform target)
         {
-            if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
-            if (!Mathf.Approximately(DeltaRotation, 0f))
-                target.rotation *= Quaternion.AngleAxis(DeltaRotation, RotationAxis);
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
+            if (!Mathf.Approximately(DeltaRotation, 0f))
+                target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis) * target.rotation;
+            if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
         }
 
         #endregion

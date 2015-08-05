@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\FullscreenTarget.cs" />
-    <Compile Include="Behaviors\ITransformer.cs" />
+    <Compile Include="Gestures\ITransformGesture.cs" />
     <Compile Include="Behaviors\TouchScriptInputModule.cs" />
     <Compile Include="Behaviors\Transformer.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
-    <Compile Include="Gestures\Abstract\AbstractPinnedTransformGesture.cs" />
+    <Compile Include="Gestures\Abstract\PinnedTransformGestureBase.cs" />
     <Compile Include="Gestures\Abstract\TransformGestureBase.cs" />
     <Compile Include="Gestures\Clustered\ClusteredTransformGesture.cs" />
     <Compile Include="Gestures\PinnedTransformGesture.cs" />

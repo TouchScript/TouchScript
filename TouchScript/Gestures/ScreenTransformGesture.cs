@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Screen Transform Gesture")]
-    public class ScreenTransformGesture : TransformGestureBase, ITransformer
+    public class ScreenTransformGesture : TransformGestureBase, ITransformGesture
     {
 
         #region Public methods

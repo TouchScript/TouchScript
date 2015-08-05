@@ -15,7 +15,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Pinned Transform Gesture")]
-    public class PinnedTransformGesture : PinnedTrasformGestureBase, ITransformer
+    public class PinnedTransformGesture : PinnedTrasformGestureBase, ITransformGesture
     {
         #region Constants
 
