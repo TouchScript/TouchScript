@@ -9,7 +9,7 @@ using UnityEditor;
 namespace TouchScript.Editor.Gestures
 {
     [CustomEditor(typeof(ScreenTransformGesture), true)]
-    internal class ScreenTransformGestureEditor : AbstractTransformGestureEditor
+    internal class ScreenTransformGestureEditor : BaseTransformGestureEditor
     {
     }
 }

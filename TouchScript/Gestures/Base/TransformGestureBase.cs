@@ -11,7 +11,7 @@ using TouchScript.Utils.Debug;
 using TouchScript.Utils.Geom;
 using UnityEngine;
 
-namespace TouchScript.Gestures.Abstract
+namespace TouchScript.Gestures.Base
 {
     public abstract class TransformGestureBase : Gesture
     {

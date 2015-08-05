@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Behaviors;
-using TouchScript.Gestures.Abstract;
+using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 #if DEBUG

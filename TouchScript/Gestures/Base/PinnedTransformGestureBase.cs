@@ -10,7 +10,7 @@ using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
 
-namespace TouchScript.Gestures.Abstract
+namespace TouchScript.Gestures.Base
 {
     public abstract class PinnedTrasformGestureBase : Gesture
     {

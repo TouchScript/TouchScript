@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.Abstract
 {
-    internal class AbstractPinnedTransformGestureEditor : GestureEditor
+    internal class BasePinnedTransformGestureEditor : GestureEditor
     {
         public static readonly GUIContent TYPE = new GUIContent("Transform Type", "Specifies what gestures should be detected: Rotation, Scaling.");
         public static readonly GUIContent TYPE_ROTATION = new GUIContent("Rotation", "Rotating with two or more fingers.");

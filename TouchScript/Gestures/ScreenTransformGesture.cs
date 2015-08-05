@@ -3,7 +3,7 @@
  */
 
 using TouchScript.Behaviors;
-using TouchScript.Gestures.Abstract;
+using TouchScript.Gestures.Base;
 using UnityEngine;
 
 namespace TouchScript.Gestures
