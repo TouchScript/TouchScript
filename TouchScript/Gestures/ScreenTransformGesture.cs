@@ -2,14 +2,28 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Behaviors;
 using TouchScript.Gestures.Abstract;
 using UnityEngine;
 
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Screen Transform Gesture")]
-    public class ScreenTransformGesture : AbstractTransformGesture
+    public class ScreenTransformGesture : TransformGestureBase, ITransformer
     {
+
+        #region Public methods
+
+        public void ApplyTransform(Transform target)
+        {
+            if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
+            if (!Mathf.Approximately(DeltaRotation, 0f))
+                target.rotation *= Quaternion.Euler(0, 0, DeltaRotation);
+            if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
+        }
+
+        #endregion
+
         #region Protected methods
 
         protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,

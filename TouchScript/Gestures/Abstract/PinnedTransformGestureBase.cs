@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Abstract
 {
-    public abstract class AbstractPinnedTrasformGesture : Gesture
+    public abstract class PinnedTrasformGestureBase : Gesture
     {
         #region Constants
 

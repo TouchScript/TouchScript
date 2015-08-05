@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Behaviors;
 using TouchScript.Gestures.Abstract;
 using TouchScript.Layers;
 using TouchScript.Utils;
@@ -14,7 +15,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
-    public class TransformGesture : AbstractTransformGesture
+    public class TransformGesture : TransformGestureBase, ITransformer
     {
         #region Constants
 

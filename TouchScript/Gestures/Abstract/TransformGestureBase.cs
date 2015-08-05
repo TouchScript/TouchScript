@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Abstract
 {
-    public abstract class AbstractTransformGesture : Gesture
+    public abstract class TransformGestureBase : Gesture
     {
         #region Constants
 

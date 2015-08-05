@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Behaviors;
 using TouchScript.Gestures.Abstract;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
@@ -14,7 +15,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     [AddComponentMenu("TouchScript/Gestures/Pinned Transform Gesture")]
-    public class PinnedTransformGesture : AbstractPinnedTrasformGesture
+    public class PinnedTransformGesture : PinnedTrasformGestureBase, ITransformer
     {
         #region Constants
 

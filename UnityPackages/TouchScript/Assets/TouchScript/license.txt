@@ -23,4 +23,4 @@ THE SOFTWARE.
 Assets used in examples:
 1. Skybox Volume 2 (https://www.assetstore.unity3d.com/en/#!/content/3392)
 2. Planet Earth Free (https://www.assetstore.unity3d.com/en/#!/content/23399)
-3. Illustrations provided by GestureWorks® (www.gestureworks.com)
+3. Touch gesture illustrations provided by GestureWorks® (www.gestureworks.com)
