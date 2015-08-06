@@ -260,8 +260,10 @@ namespace TouchScript
             hit = null;
             layer = null;
 
-            foreach (var touchLayer in layers)
+            var count = layers.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touchLayer = layers[i];
                 if (touchLayer == null) continue;
                 ITouchHit _hit;
                 if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
@@ -474,23 +476,28 @@ namespace TouchScript
 
         private void updateBegan()
         {
-            if (touchesBegan.Count > 0)
+            var count = touchesBegan.Count;
+            if (count > 0)
             {
-                var touchesList = new List<ITouch>(touchesBegan.Count);
-                foreach (var touch in touchesBegan)
+                var touchesList = new List<ITouch>(count);
+                for (var i = 0; i < count; i++)
                 {
+                    var touch = touchesBegan[i];
                     touchesList.Add(touch);
                     touches.Add(touch);
                     idToTouch.Add(touch.Id, touch);
-                    foreach (var touchLayer in layers)
+
+                    var layerCount = layers.Count;
+                    for (var j = 0; j< layerCount; j++)
                     {
+                        var touchLayer = Layers[j];
                         if (touchLayer == null) continue;
                         if (touchLayer.BeginTouch(touch)) break;
                     }
                 }
 
 #if DEBUG
-                for (var i = 0; i < touchesList.Count; i++)
+                for (var i = 0; i < count; i++)
                 {
                     var touch = touchesList[i];
                     addDebugFigureForTouch(touch);
@@ -504,12 +511,15 @@ namespace TouchScript
 
         private void updateUpdated()
         {
-            if (touchesUpdated.Count > 0)
+            var updatedCount = touchesUpdated.Count;
+            if (updatedCount > 0)
             {
-                var updated = new List<ITouch>(touchesUpdated.Count);
+                var updated = new List<ITouch>(updatedCount);
                 // Need to loop through all touches to reset those which did not move
-                foreach (var touch in touches)
+                var count = touches.Count;
+                for (var i = 0; i < count; i++)
                 {
+                    var touch = touches[i];
                     touch.ResetPosition();
                     if (touchesUpdated.Contains(touch.Id))
                     {
@@ -519,7 +529,7 @@ namespace TouchScript
                 }
 
 #if DEBUG
-                for (var i = 0; i < updated.Count; i++)
+                for (var i = 0; i < updatedCount; i++)
                 {
                     var touch = updated[i];
                     addDebugFigureForTouch(touch);
@@ -533,9 +543,10 @@ namespace TouchScript
 
         private void updateEnded()
         {
-            if (touchesEnded.Count > 0)
+            var endedCount = touchesEnded.Count;
+            if (endedCount > 0)
             {
-                var updated = new List<ITouch>(touchesEnded.Count);
+                var updated = new List<ITouch>(endedCount);
                 foreach (var id in touchesEnded)
                 {
                     var touch = idToTouch[id];
@@ -546,7 +557,7 @@ namespace TouchScript
                 }
 
 #if DEBUG
-                for (var i = 0; i < updated.Count; i++)
+                for (var i = 0; i < endedCount; i++)
                 {
                     var touch = updated[i];
                     removeDebugFigureForTouch(touch);
@@ -560,9 +571,10 @@ namespace TouchScript
 
         private void updateCancelled()
         {
+            var cancelledCount = touchesCancelled.Count;
             if (touchesCancelled.Count > 0)
             {
-                var updated = new List<ITouch>(touchesCancelled.Count);
+                var updated = new List<ITouch>(cancelledCount);
                 foreach (var id in touchesCancelled)
                 {
                     var touch = idToTouch[id];
@@ -573,7 +585,7 @@ namespace TouchScript
                 }
 
 #if DEBUG
-                for (var i = 0; i < updated.Count; i++)
+                for (var i = 0; i < cancelledCount; i++)
                 {
                     var touch = updated[i];
                     removeDebugFigureForTouch(touch);

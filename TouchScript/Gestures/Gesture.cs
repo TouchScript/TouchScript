@@ -519,9 +519,10 @@ namespace TouchScript.Gestures
         {
             cachedTransform = GetComponent<Transform>();
 
-            foreach (var gesture in friendlyGestures)
+            var count = friendlyGestures.Count;
+            for (var i = 0; i < count; i++)
             {
-                AddFriendlyGesture(gesture);
+                AddFriendlyGesture(friendlyGestures[i]);
             }
             RequireGestureToFail = requireGestureToFail;
         }
@@ -556,9 +557,10 @@ namespace TouchScript.Gestures
         protected virtual void OnDestroy()
         {
             var copy = new List<Gesture>(friendlyGestures);
-            foreach (var gesture in copy)
+            var count = copy.Count;
+            for (var i = 0; i < count; i++)
             {
-                RemoveFriendlyGesture(gesture);
+                RemoveFriendlyGesture(copy[i]);
             }
             RequireGestureToFail = null;
         }
@@ -689,9 +691,10 @@ namespace TouchScript.Gestures
         {
             if (combineTouches)
             {
-                foreach (var touch in touches)
+                var count = touches.Count;
+                for (var i = 0; i < count; i++)
                 {
-                    touchSequence.Add(touch);
+                    touchSequence.Add(touches[i]);
                 }
 
                 if (NumTouches == 0)

@@ -112,8 +112,10 @@ namespace TouchScript.Layers
             var hitTests = transform.GetComponents<HitTest>();
             if (hitTests.Length == 0) return LayerHitResult.Hit;
 
-            foreach (var test in hitTests)
+            var count = hitTests.Length;
+            for (var i = 0; i < count; i++)
             {
+                var test = hitTests[i];
                 if (!test.enabled) continue;
                 var hitResult = test.IsHit(hit);
                 if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) return LayerHitResult.Miss;

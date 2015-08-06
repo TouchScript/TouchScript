@@ -210,8 +210,10 @@ namespace TouchScript
             // needed because there's no order in dictionary
             activeGestures.Clear();
 
-            foreach (var touch in touches)
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = touches[i];
                 if (touch.Target != null)
                 {
                     List<ITouch> list;
@@ -226,8 +228,10 @@ namespace TouchScript
             // arranged touch points by target
 
             foreach (var target in targetTouches.Keys) process(target);
-            foreach (var gesture in activeGestures)
+            count = activeGestures.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = activeGestures[i];
                 if (gestureIsActive(gesture)) dispatch(gesture, gestureTouches[gesture]);
             }
         }
@@ -237,8 +241,10 @@ namespace TouchScript
             // gestures on objects in the hierarchy from "root" to target
             var possibleGestures = getHierarchyEndingWith(target);
 
-            foreach (var gesture in possibleGestures)
+            var count = possibleGestures.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = possibleGestures[i];
                 if (!gestureIsActive(gesture)) continue;
 
                 distributePointsByGestures(target, gesture, gesture.HasTouch);
@@ -251,15 +257,20 @@ namespace TouchScript
             var mightBeActiveGestures = getHierarchyContaining(target);
             // gestures on objects in the hierarchy from "root" to target
             var possibleGestures = getHierarchyEndingWith(target);
-            foreach (var gesture in possibleGestures)
+            var count = possibleGestures.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = possibleGestures[i];
                 // WARNING! Gestures might change during this loop.
                 // For example when one of them recognizes.
                 if (!gestureIsActive(gesture)) continue;
 
                 var canReceiveTouches = true;
-                foreach (var activeGesture in mightBeActiveGestures)
+                var activeCount = mightBeActiveGestures.Count;
+                for (var j = 0; j < activeCount; j++)
                 {
+                    var activeGesture = mightBeActiveGestures[j];
+
                     if (gesture == activeGesture) continue;
                     if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture)))
                     {
@@ -294,8 +305,11 @@ namespace TouchScript
         private void resetGestures()
         {
             if (gesturesToReset.Count == 0) return;
-            foreach (var gesture in gesturesToReset)
+
+            var count = gesturesToReset.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = gesturesToReset[i];
                 if (gesture == null) continue;
                 gesture.ResetGesture();
                 gesture.SetState(Gesture.GestureState.Possible);
@@ -323,9 +337,11 @@ namespace TouchScript
             {
                 hierarchy.AddRange(getEnabledGesturesOnTarget(target));
             }
-            foreach (Transform child in target)
+
+            var count = target.childCount;
+            for (var i = 0; i < count; i++)
             {
-                hierarchy.AddRange(getHierarchyBeginningWith(child, true));
+                hierarchy.AddRange(getHierarchyBeginningWith(target.GetChild(i), true));
             }
             return hierarchy;
         }
@@ -343,8 +359,10 @@ namespace TouchScript
             if (target.gameObject.activeInHierarchy)
             {
                 var gestures = target.GetComponents<Gesture>();
-                foreach (var gesture in gestures)
+                var count = gestures.Length;
+                for (var i = 0; i < count; i++)
                 {
+                    var gesture = gestures[i];
                     if (gesture != null && gesture.enabled) result.Add(gesture);
                 }
             }
@@ -374,8 +392,10 @@ namespace TouchScript
             List<Gesture> gesturesToFail = new List<Gesture>(10);
             var gestures = getHierarchyContaining(gesture.transform);
 
-            foreach (var otherGesture in gestures)
+            var count = gestures.Count;
+            for (var i = 0; i < count; i++)
             {
+                var otherGesture = gestures[i];
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
 
@@ -398,9 +418,10 @@ namespace TouchScript
 
             if (canRecognize)
             {
-                foreach (var otherGesture in gesturesToFail)
+                count = gesturesToFail.Count;
+                for (var i = 0; i < count; i++)
                 {
-                    failGesture(otherGesture);
+                    failGesture(gesturesToFail[i]);
                 }
             }
 

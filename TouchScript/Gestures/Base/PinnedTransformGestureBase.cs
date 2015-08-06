@@ -309,9 +309,10 @@ namespace TouchScript.Gestures.Base
         protected virtual bool relevantTouches(IList<ITouch> touches)
         {
             // We care only about the first touch point
-            foreach (var touch in touches)
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
             {
-                if (touch == activeTouches[0]) return true;
+                if (touches[i] == activeTouches[0]) return true;
             }
             return false;
         }

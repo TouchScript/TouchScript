@@ -135,7 +135,8 @@ namespace TouchScript.Clusters
         /// <param name="points">List of points.</param>
         public void AddPoints(IList<ITouch> points)
         {
-            foreach (var point in points) AddPoint(point);
+            var count = points.Count;
+            for (var i = 0; i < count; i++) AddPoint(points[i]);
         }
 
         /// <summary>Removes a point from cluster.</summary>
@@ -152,7 +153,8 @@ namespace TouchScript.Clusters
         /// <param name="points">List of points.</param>
         public void RemovePoints(IList<ITouch> points)
         {
-            foreach (var point in points) RemovePoint(point);
+            var count = points.Count;
+            for (var i = 0; i < count; i++) RemovePoint(points[i]);
         }
 
         /// <summary>Removes all points from cluster.</summary>
