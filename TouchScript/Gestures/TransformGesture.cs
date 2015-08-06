@@ -205,20 +205,19 @@ namespace TouchScript.Gestures
             return Vector3.zero;
         }
 
-        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, float dR, float dS)
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
         {
             if (isTransforming)
             {
-
-                return projectionLayer.ProjectTo(newScreenPos, TransformPlane) - projectScaledRotated(oldScreenPos, dR, dS);
+                return projectionLayer.ProjectTo(newScreenPos1, TransformPlane) - projectScaledRotated(oldScreenPos1, dR, dS);
             }
 
-            screenPixelTranslationBuffer += newScreenPos - oldScreenPos;
+            screenPixelTranslationBuffer += newScreenPos1 - oldScreenPos1;
             if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
             {
                 isTransforming = true;
-                return projectionLayer.ProjectTo(newScreenPos, TransformPlane) -
-                       projectScaledRotated(newScreenPos - screenPixelTranslationBuffer, dR, dS);
+                return projectionLayer.ProjectTo(newScreenPos1, TransformPlane) -
+                       projectScaledRotated(newScreenPos1 - screenPixelTranslationBuffer, dR, dS);
             }
 
             return Vector3.zero;

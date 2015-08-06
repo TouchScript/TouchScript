@@ -337,7 +337,7 @@ namespace TouchScript.Gestures.Base
                     if (translationEnabled)
                     {
                         if (dR == 0 && dS == 1) dP = doOnePointTranslation(oldScreenPos1, newScreenPos1);
-                        else dP = doTwoPointTranslation(oldScreenPos1, newScreenPos1, dR, dS);
+                        else dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR, dS);
                     }
                 }
                 else if (translationEnabled)
@@ -501,7 +501,7 @@ namespace TouchScript.Gestures.Base
 
         /// <summary>
         /// </summary>
-        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, float dR, float dS)
+        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
         {
             return Vector3.zero;
         }

@@ -3,6 +3,7 @@
  */
 
 using TouchScript.Gestures.Base;
+using TouchScript.Utils.Geom;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -55,6 +56,38 @@ namespace TouchScript.Gestures
             }
 
             return Vector3.zero;
+        }
+
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
+        {
+            if (isTransforming)
+            {
+                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2)*.5f, dR, dS);
+                return new Vector3(newScreenPos1.x - transformedPoint.x, newScreenPos1.y - transformedPoint.y, 0);
+            }
+
+            screenPixelTranslationBuffer += newScreenPos1 - oldScreenPos1;
+            if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
+            {
+                isTransforming = true;
+                oldScreenPos1 = newScreenPos1 - screenPixelTranslationBuffer;
+                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2) * .5f, dR, dS);
+                return new Vector3(newScreenPos1.x - transformedPoint.x, newScreenPos1.y - transformedPoint.y, 0);
+            }
+
+            return Vector3.zero;
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private Vector2 scaleAndRotate(Vector2 point, Vector2 center, float dR, float dS)
+        {
+            var delta = point - center;
+            if (dR != 0) delta = TwoD.Rotate(delta, dR);
+            if (dS != 0) delta = delta * dS;
+            return center + delta;
         }
 
         #endregion
