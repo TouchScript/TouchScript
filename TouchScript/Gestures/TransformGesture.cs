@@ -243,6 +243,7 @@ namespace TouchScript.Gestures
         {
             base.drawDebug(touchPoints);
 
+            if (!DebugMode) return;
             switch (touchPoints)
             {
                 case 1:
