@@ -260,77 +260,76 @@ namespace TouchScript.Gestures.Base
             drawDebugDelayed(activePoints);
 #endif
 
+            var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
+            var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
+
             // one touch or one cluster (points might be too close to each other for 2 clusters)
-            if (activePoints == 1)
+            if (activePoints == 1 || (!rotationEnabled && !scalingEnabled))
             {
                 if ((Type & TransformType.Translation) == 0) return; // don't look for translates
+                if (!relevantTouches1(touches)) return;
 
                 dP = doTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
             }
-            else if (activePoints >= 2)
+            else
             {
                 // Make sure that we actually care about the touches moved.
-                if (!relevantTouches(touches)) return;
+                if (!relevantTouches2(touches)) return;
 
                 var newScreenPos1 = getPointScreenPosition(0);
                 var newScreenPos2 = getPointScreenPosition(1);
 
-                var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
-                var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
-                if (rotationEnabled || scalingEnabled)
+                var newScreenDelta = newScreenPos2 - newScreenPos1;
+                if (newScreenDelta.sqrMagnitude > minScreenPointsPixelDistanceSquared)
                 {
-                    var newScreenDelta = newScreenPos2 - newScreenPos1;
-                    if (newScreenDelta.sqrMagnitude > minScreenPointsPixelDistanceSquared)
+                    // Here we can't reuse last frame screen positions because points 0 and 1 can change.
+                    // For example if the first of 3 fingers is lifted off.
+                    var oldScreenPos1 = getPointPreviousScreenPosition(0);
+                    var oldScreenPos2 = getPointPreviousScreenPosition(1);
+
+                    if (rotationEnabled)
                     {
-                        // Here we can't reuse last frame screen positions because points 0 and 1 can change.
-                        // For example if the first of 3 fingers is lifted off.
-                        var oldScreenPos1 = getPointPreviousScreenPosition(0);
-                        var oldScreenPos2 = getPointPreviousScreenPosition(1);
-
-                        if (rotationEnabled)
+                        if (isTransforming)
                         {
-                            if (isTransforming)
-                            {
-                                dR = doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
-                            }
-                            else
-                            {
-                                float d1, d2;
-                                // Find how much we moved perpendicular to the line (oldScreenPos1, oldScreenPos2)
-                                TwoD.PointToLineDistance2(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
-                                    out d1, out d2);
-                                screenPixelRotationBuffer += (d1 - d2);
-                                angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                            dR = doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                        }
+                        else
+                        {
+                            float d1, d2;
+                            // Find how much we moved perpendicular to the line (oldScreenPos1, oldScreenPos2)
+                            TwoD.PointToLineDistance2(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
+                                out d1, out d2);
+                            screenPixelRotationBuffer += (d1 - d2);
+                            angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
 
-                                if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
-                                    screenTransformPixelThresholdSquared)
-                                {
-                                    isTransforming = true;
-                                    dR = angleBuffer;
-                                }
+                            if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
+                                screenTransformPixelThresholdSquared)
+                            {
+                                isTransforming = true;
+                                dR = angleBuffer;
                             }
                         }
+                    }
 
-                        if (scalingEnabled)
+                    if (scalingEnabled)
+                    {
+                        if (isTransforming)
                         {
-                            if (isTransforming)
-                            {
-                                dS *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
-                            }
-                            else
-                            {
-                                var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
-                                var newDistance = newScreenDelta.magnitude;
-                                var oldDistance = oldScreenDelta.magnitude;
-                                screenPixelScalingBuffer += newDistance - oldDistance;
-                                scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                            dS *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                        }
+                        else
+                        {
+                            var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
+                            var newDistance = newScreenDelta.magnitude;
+                            var oldDistance = oldScreenDelta.magnitude;
+                            screenPixelScalingBuffer += newDistance - oldDistance;
+                            scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
 
-                                if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
-                                    screenTransformPixelThresholdSquared)
-                                {
-                                    isTransforming = true;
-                                    dS = scaleBuffer;
-                                }
+                            if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
+                                screenTransformPixelThresholdSquared)
+                            {
+                                isTransforming = true;
+                                dS = scaleBuffer;
                             }
                         }
                     }
@@ -501,16 +500,29 @@ namespace TouchScript.Gestures.Base
             return NumTouches;
         }
 
+        protected virtual bool relevantTouches1(IList<ITouch> touches)
+        {
+            // We care only about the first touch point
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
+            {
+                if (touches[i] == activeTouches[0]) return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Checks if there are touch points in the list which matter for the gesture.
         /// </summary>
         /// <param name="touches">List of touch points</param>
         /// <returns>True if there are relevant touch points, False otherwise.</returns>
-        protected virtual bool relevantTouches(IList<ITouch> touches)
+        protected virtual bool relevantTouches2(IList<ITouch> touches)
         {
             // We care only about the first and the second touch points
-            foreach (var touch in touches)
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = touches[i];
                 if (touch == activeTouches[0] || touch == activeTouches[1]) return true;
             }
             return false;
@@ -522,8 +534,6 @@ namespace TouchScript.Gestures.Base
         /// <param name="index">The index.</param>
         protected virtual Vector2 getPointScreenPosition(int index)
         {
-            if (index < 0) index = 0;
-            else if (index > 1) index = 1;
             return activeTouches[index].Position;
         }
 
@@ -533,8 +543,6 @@ namespace TouchScript.Gestures.Base
         /// <param name="index">The index.</param>
         protected virtual Vector2 getPointPreviousScreenPosition(int index)
         {
-            if (index < 0) index = 0;
-            else if (index > 1) index = 1;
             return activeTouches[index].PreviousPosition;
         }
 

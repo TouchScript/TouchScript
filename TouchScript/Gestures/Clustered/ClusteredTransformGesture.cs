@@ -66,7 +66,13 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches(IList<ITouch> touches)
+        protected override bool relevantTouches1(IList<ITouch> touches)
+        {
+            return true;
+        }
+
+        /// <inheritdoc />
+        protected override bool relevantTouches2(IList<ITouch> touches)
         {
             return true;
         }
@@ -76,8 +82,6 @@ namespace TouchScript.Gestures.Clustered
         {
             if (!clusters.HasClusters) return ClusterUtils.Get2DCenterPosition(activeTouches);
 
-            if (index < 0) index = 0;
-            else if (index > 1) index = 1;
             return clusters.GetCenterPosition(index);
         }
 
@@ -86,8 +90,6 @@ namespace TouchScript.Gestures.Clustered
         {
             if (!clusters.HasClusters) return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
 
-            if (index < 0) index = 0;
-            else if (index > 1) index = 1;
             return clusters.GetPreviousCenterPosition(index);
         }
 

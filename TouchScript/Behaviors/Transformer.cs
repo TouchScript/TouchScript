@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Gestures;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace TouchScript.Behaviors
     public class Transformer : MonoBehaviour
     {
         private Transform cachedTransform;
-        private TransformGesture cachedGesture;
+        private List<ITransformGesture> gestures;
 
         private void Awake()
         {
@@ -22,26 +23,43 @@ namespace TouchScript.Behaviors
 
         private void OnEnable()
         {
-            cachedGesture = GetComponent<TransformGesture>();
-            if (cachedGesture != null)
+            var g = GetComponents<Gesture>();
+            gestures = new List<ITransformGesture>(g.Length);
+            for (var i = 0; i < g.Length; i++)
             {
-                GetComponent<TransformGesture>().Transformed += transformHandler;
+                var transformGesture = g[i] as ITransformGesture;
+                if (transformGesture == null) continue;
+
+                gestures.Add(transformGesture);
+                transformGesture.TransformStarted += transformStartedHandler;
+                transformGesture.Transformed += transformHandler;
+                transformGesture.TransformCompleted += transformCompletedHandler;
             }
         }
 
         private void OnDisable()
         {
-            if (cachedGesture != null)
+            for (var i = 0; i < gestures.Count; i++)
             {
-                GetComponent<TransformGesture>().Transformed -= transformHandler;
+                var transformGesture = gestures[i];
+                transformGesture.TransformStarted -= transformStartedHandler;
+                transformGesture.Transformed -= transformHandler;
+                transformGesture.TransformCompleted -= transformCompletedHandler;
             }
+        }
+
+        private void transformStartedHandler(object sender, EventArgs eventArgs)
+        {
         }
 
         private void transformHandler(object sender, EventArgs e)
         {
-            var gesture = (TransformGesture) sender;
+            var gesture = sender as ITransformGesture;
             gesture.ApplyTransform(cachedTransform);
-            //cachedTransform.position += gesture.DeltaPosition;
+        }
+
+        private void transformCompletedHandler(object sender, EventArgs eventArgs)
+        {
         }
 
     }
