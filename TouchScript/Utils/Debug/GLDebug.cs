@@ -58,6 +58,7 @@ namespace TouchScript.Utils.Debug
         private Dictionary<int, Figure> figuresMultiplyNoDepthTest;
         private Dictionary<int, Figure> figuresScreenSpace;
         private Dictionary<int, Figure> figuresMultiplyScreenSpace;
+        private Dictionary<int, Figure> figuresTmp;
 
         #region Public methods
 
@@ -285,6 +286,7 @@ namespace TouchScript.Utils.Debug
             figuresMultiplyDepthTest = new Dictionary<int, Figure>();
             figuresMultiplyNoDepthTest = new Dictionary<int, Figure>();
             figuresMultiplyScreenSpace = new Dictionary<int, Figure>();
+            figuresTmp = new Dictionary<int, Figure>();
 
             setMaterials();
         }
@@ -301,22 +303,22 @@ namespace TouchScript.Utils.Debug
 
             materialDepthTest.SetPass(0);
             GL.Begin(GL.LINES);
-            draw(figuresDepthTest);
+            figuresDepthTest = draw(figuresDepthTest);
             GL.End();
 
             materialMultiplyDepthTest.SetPass(0);
             GL.Begin(GL.LINES);
-            draw(figuresMultiplyDepthTest);
+            figuresMultiplyDepthTest = draw(figuresMultiplyDepthTest);
             GL.End();
 
             materialNoDepthTest.SetPass(0);
             GL.Begin(GL.LINES);
-            draw(figuresNoDepthTest);
+            figuresNoDepthTest = draw(figuresNoDepthTest);
             GL.End();
 
             materialMultiplyNoDepthTest.SetPass(0);
             GL.Begin(GL.LINES);
-            draw(figuresMultiplyNoDepthTest);
+            figuresMultiplyNoDepthTest = draw(figuresMultiplyNoDepthTest);
             GL.End();
 
             GL.PushMatrix();
@@ -324,12 +326,12 @@ namespace TouchScript.Utils.Debug
 
             materialNoDepthTest.SetPass(0);
             GL.Begin(GL.LINES);
-            draw(figuresScreenSpace);
+            figuresScreenSpace = draw(figuresScreenSpace);
             GL.End();
 
             materialMultiplyNoDepthTest.SetPass(0);
             GL.Begin(GL.LINES);
-            draw(figuresMultiplyScreenSpace);
+            figuresMultiplyScreenSpace = draw(figuresMultiplyScreenSpace);
             GL.End();
             GL.PopMatrix();
         }
@@ -340,17 +342,21 @@ namespace TouchScript.Utils.Debug
 
         #region Misc
 
-        private void draw(Dictionary<int, Figure> figures)
+        private Dictionary<int, Figure> draw(Dictionary<int, Figure> figures)
         {
-            var toRemove = new List<int>();
-            foreach (KeyValuePair<int, Figure> item in figures)
+            figuresTmp.Clear();
+            var newFigures = figuresTmp;
+            foreach (var key in figures.Keys)
             {
-                if (item.Value.Draw()) toRemove.Add(item.Key);
+                var value = figures[key];
+                value.Duration = value.Draw();
+                if (value.Duration > 0)
+                {
+                    newFigures[key] = value;
+                }
             }
-            foreach (var i in toRemove)
-            {
-                figures.Remove(i);
-            }
+            figuresTmp = figures;
+            return newFigures;
         }
 
         private void setMaterials()
@@ -584,17 +590,14 @@ namespace TouchScript.Utils.Debug
                 Lines = lines;
             }
 
-            public bool Draw()
+            public float Draw()
             {
-                Duration -= Time.deltaTime;
-                if (Duration < 0) return true;
-
                 GL.Color(Color);
                 for (var i = 0; i < Lines.Count; i++)
                 {
                     Lines[i].Draw();
                 }
-                return false;
+                return Duration - Time.deltaTime;
             }
         }
 
