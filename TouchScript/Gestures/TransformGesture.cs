@@ -186,23 +186,50 @@ namespace TouchScript.Gestures
             return newVector.magnitude/oldVector.magnitude;
         }
 
-        protected override Vector3 doTranslation(Vector2 oldScreenCenter, Vector2 newScreenCenter)
+        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
         {
             if (isTransforming)
             {
-                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
-                       projectionLayer.ProjectTo(oldScreenCenter, TransformPlane);
+                return projectionLayer.ProjectTo(newScreenPos, TransformPlane) -
+                       projectionLayer.ProjectTo(oldScreenPos, TransformPlane);
             }
 
-            screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
+            screenPixelTranslationBuffer += newScreenPos - oldScreenPos;
             if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
             {
                 isTransforming = true;
-                return projectionLayer.ProjectTo(newScreenCenter, TransformPlane) -
-                       projectionLayer.ProjectTo(newScreenCenter - screenPixelTranslationBuffer, TransformPlane);
+                return projectionLayer.ProjectTo(newScreenPos, TransformPlane) -
+                       projectionLayer.ProjectTo(newScreenPos - screenPixelTranslationBuffer, TransformPlane);
             }
 
             return Vector3.zero;
+        }
+
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, float dR, float dS)
+        {
+            if (isTransforming)
+            {
+
+                return projectionLayer.ProjectTo(newScreenPos, TransformPlane) - projectScaledRotated(oldScreenPos, dR, dS);
+            }
+
+            screenPixelTranslationBuffer += newScreenPos - oldScreenPos;
+            if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
+            {
+                isTransforming = true;
+                return projectionLayer.ProjectTo(newScreenPos, TransformPlane) -
+                       projectScaledRotated(newScreenPos - screenPixelTranslationBuffer, dR, dS);
+            }
+
+            return Vector3.zero;
+        }
+
+        private Vector3 projectScaledRotated(Vector2 point, float dR, float dS)
+        {
+            var delta = projectionLayer.ProjectTo(point, TransformPlane) - cachedTransform.position;
+            if (dR != 0) delta = Quaternion.AngleAxis(dR, RotationAxis) * delta;
+            if (dS != 0) delta = delta * dS;
+            return cachedTransform.position + delta;
         }
 
 #if DEBUG
@@ -246,23 +273,18 @@ namespace TouchScript.Gestures
         {
             if (!Application.isPlaying) return;
 
-            Vector3 center;
-            // TODO: revert to transform center?
-            if (cachedCollider != null) center = cachedCollider.bounds.center;
-            else center = cachedTransform.position;
-
             switch (projection)
             {
                 case ProjectionType.Layer:
                     if (projectionLayer == null)
-                        transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), center);
-                    else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, center);
+                        transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), cachedTransform.position);
+                    else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, cachedTransform.position);
                     break;
                 case ProjectionType.Object:
-                    transformPlane = new Plane(cachedTransform.TransformDirection(projectionPlaneNormal), center);
+                    transformPlane = new Plane(cachedTransform.TransformDirection(projectionPlaneNormal), cachedTransform.position);
                     break;
                 case ProjectionType.Global:
-                    transformPlane = new Plane(projectionPlaneNormal, center);
+                    transformPlane = new Plane(projectionPlaneNormal, cachedTransform.position);
                     break;
             }
         }

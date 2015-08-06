@@ -40,14 +40,14 @@ namespace TouchScript.Gestures
             return (newScreenPos2 - newScreenPos1).magnitude/(oldScreenPos2 - oldScreenPos1).magnitude;
         }
 
-        protected override Vector3 doTranslation(Vector2 oldScreenCenter, Vector2 newScreenCenter)
+        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
         {
             if (isTransforming)
             {
-                return new Vector3(newScreenCenter.x - oldScreenCenter.x, newScreenCenter.y - oldScreenCenter.y, 0);
+                return new Vector3(newScreenPos.x - oldScreenPos.x, newScreenPos.y - oldScreenPos.y, 0);
             }
 
-            screenPixelTranslationBuffer += newScreenCenter - oldScreenCenter;
+            screenPixelTranslationBuffer += newScreenPos - oldScreenPos;
             if (screenPixelTranslationBuffer.sqrMagnitude > screenTransformPixelThresholdSquared)
             {
                 isTransforming = true;

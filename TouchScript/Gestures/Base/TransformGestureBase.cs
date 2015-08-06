@@ -187,7 +187,6 @@ namespace TouchScript.Gestures.Base
 
         protected float screenTransformPixelThreshold;
         protected float screenTransformPixelThresholdSquared;
-        protected Collider cachedCollider;
 
         protected Vector3 deltaPosition;
         protected float deltaRotation;
@@ -226,7 +225,6 @@ namespace TouchScript.Gestures.Base
         {
             base.OnEnable();
 
-            cachedCollider = GetComponent<Collider>();
             updateMinScreenPointsDistance();
             updateScreenTransformThreshold();
         }
@@ -260,16 +258,18 @@ namespace TouchScript.Gestures.Base
             drawDebugDelayed(activePoints);
 #endif
 
+            var translationEnabled = (Type & TransformType.Translation) == TransformType.Translation;
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
 
             // one touch or one cluster (points might be too close to each other for 2 clusters)
             if (activePoints == 1 || (!rotationEnabled && !scalingEnabled))
             {
-                if ((Type & TransformType.Translation) == 0) return; // don't look for translates
+                if (!translationEnabled) return; // don't look for translates
                 if (!relevantTouches1(touches)) return;
 
-                dP = doTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
+                // translate using one point
+                dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
             }
             else
             {
@@ -279,14 +279,14 @@ namespace TouchScript.Gestures.Base
                 var newScreenPos1 = getPointScreenPosition(0);
                 var newScreenPos2 = getPointScreenPosition(1);
 
+                // Here we can't reuse last frame screen positions because points 0 and 1 can change.
+                // For example if the first of 3 fingers is lifted off.
+                var oldScreenPos1 = getPointPreviousScreenPosition(0);
+                var oldScreenPos2 = getPointPreviousScreenPosition(1);
+
                 var newScreenDelta = newScreenPos2 - newScreenPos1;
                 if (newScreenDelta.sqrMagnitude > minScreenPointsPixelDistanceSquared)
                 {
-                    // Here we can't reuse last frame screen positions because points 0 and 1 can change.
-                    // For example if the first of 3 fingers is lifted off.
-                    var oldScreenPos1 = getPointPreviousScreenPosition(0);
-                    var oldScreenPos2 = getPointPreviousScreenPosition(1);
-
                     if (rotationEnabled)
                     {
                         if (isTransforming)
@@ -333,11 +333,17 @@ namespace TouchScript.Gestures.Base
                             }
                         }
                     }
+
+                    if (translationEnabled)
+                    {
+                        if (dR == 0 && dS == 1) dP = doOnePointTranslation(oldScreenPos1, newScreenPos1);
+                        else dP = doTwoPointTranslation(oldScreenPos1, newScreenPos1, dR, dS);
+                    }
                 }
-                if ((Type & TransformType.Translation) == TransformType.Translation)
+                else if (translationEnabled)
                 {
-                    dP = doTranslation((getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1))/2,
-                        (newScreenPos1 + newScreenPos2)/2);
+                    // points are too close, translate using one point
+                    dP = doOnePointTranslation(oldScreenPos1, newScreenPos1);
                 }
             }
 
@@ -488,7 +494,14 @@ namespace TouchScript.Gestures.Base
 
         /// <summary>
         /// </summary>
-        protected virtual Vector3 doTranslation(Vector2 oldScreenCenter, Vector2 newScreenCenter)
+        protected virtual Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
+        {
+            return Vector3.zero;
+        }
+
+        /// <summary>
+        /// </summary>
+        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, float dR, float dS)
         {
             return Vector3.zero;
         }
