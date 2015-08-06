@@ -1066,12 +1066,10 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minPointsDistance: .5
-  movementThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
   projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!23 &578079245
 Renderer:
   m_ObjectHideFlags: 0
@@ -1317,6 +1315,18 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: .100000001
       objectReference: {fileID: 0}
+    - target: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: projection
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: projectionPlaneNormal.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11430818, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
+      propertyPath: projectionPlaneNormal.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84717517f65ca8c40abedffa373c2e42, type: 2}
   m_RootGameObject: {fileID: 1369919437}
@@ -1389,12 +1399,10 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minPointsDistance: .5
-  movementThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
   projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!23 &680407631
 Renderer:
   m_ObjectHideFlags: 0
@@ -1917,12 +1925,10 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minPointsDistance: .5
-  movementThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
   projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!1 &1081393827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1976,12 +1982,10 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minPointsDistance: .5
-  movementThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
-  projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
+  projection: 2
+  projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!23 &1081393832
 Renderer:
   m_ObjectHideFlags: 0
@@ -2325,12 +2329,10 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minPointsDistance: .5
-  movementThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
   projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!1 &1369919437
 GameObject:
   m_ObjectHideFlags: 0
@@ -2961,12 +2963,10 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minPointsDistance: .5
-  movementThreshold: .5
-  rotationThreshold: 3
-  scalingThreshold: .5
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
   projection: 1
-  projectionNormal: {x: 0, y: 1, z: 0}
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!1001 &1772227325
 Prefab:
   m_ObjectHideFlags: 0
