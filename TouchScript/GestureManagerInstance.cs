@@ -49,7 +49,7 @@ namespace TouchScript
         private static bool shuttingDown = false;
 
         // Upcoming changes
-        private List<Gesture> gesturesToReset = new List<Gesture>(10);
+        private List<Gesture> gesturesToReset = new List<Gesture>(20);
 
         #endregion
 
@@ -58,7 +58,10 @@ namespace TouchScript
         // Temporary variables for update methods.
         private Dictionary<Transform, List<ITouch>> targetTouches = new Dictionary<Transform, List<ITouch>>(10);
         private Dictionary<Gesture, List<ITouch>> gestureTouches = new Dictionary<Gesture, List<ITouch>>(10);
-        private List<Gesture> activeGestures = new List<Gesture>(10);
+        private List<Gesture> activeGestures = new List<Gesture>(20);
+        private List<Gesture> tmpList_Gesture_getEnabledGesturesOnTarget = new List<Gesture>(20);
+        private List<Gesture> tmpList_Gesture = new List<Gesture>(20); 
+        private List<Gesture> tmpList2_Gesture = new List<Gesture>(20); 
 
         #endregion
 
@@ -239,12 +242,13 @@ namespace TouchScript
         private void processTarget(Transform target)
         {
             // gestures on objects in the hierarchy from "root" to target
-            var possibleGestures = getHierarchyEndingWith(target);
+            tmpList_Gesture.Clear();
+            getHierarchyEndingWith(target, tmpList_Gesture);
 
-            var count = possibleGestures.Count;
+            var count = tmpList_Gesture.Count;
             for (var i = 0; i < count; i++)
             {
-                var gesture = possibleGestures[i];
+                var gesture = tmpList_Gesture[i];
                 if (!gestureIsActive(gesture)) continue;
 
                 distributePointsByGestures(target, gesture, gesture.HasTouch);
@@ -253,23 +257,25 @@ namespace TouchScript
 
         private void processTargetBegan(Transform target)
         {
+            tmpList_Gesture.Clear();
+            tmpList2_Gesture.Clear();
             // gestures in the target's hierarchy which might affect gesture on the target
-            var mightBeActiveGestures = getHierarchyContaining(target);
+            getHierarchyContaining(target, tmpList_Gesture);
             // gestures on objects in the hierarchy from "root" to target
-            var possibleGestures = getHierarchyEndingWith(target);
-            var count = possibleGestures.Count;
+            getHierarchyEndingWith(target, tmpList2_Gesture);
+            var count = tmpList2_Gesture.Count;
             for (var i = 0; i < count; i++)
             {
-                var gesture = possibleGestures[i];
+                var gesture = tmpList2_Gesture[i];
                 // WARNING! Gestures might change during this loop.
                 // For example when one of them recognizes.
                 if (!gestureIsActive(gesture)) continue;
 
                 var canReceiveTouches = true;
-                var activeCount = mightBeActiveGestures.Count;
+                var activeCount = tmpList_Gesture.Count;
                 for (var j = 0; j < activeCount; j++)
                 {
-                    var activeGesture = mightBeActiveGestures[j];
+                    var activeGesture = tmpList_Gesture[j];
 
                     if (gesture == activeGesture) continue;
                     if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture)))
@@ -318,55 +324,48 @@ namespace TouchScript
         }
 
         // parent <- parent <- target
-        private List<Gesture> getHierarchyEndingWith(Transform target)
+        private void getHierarchyEndingWith(Transform target, List<Gesture> outputList)
         {
-            var hierarchy = new List<Gesture>(10);
             while (target != null)
             {
-                hierarchy.AddRange(getEnabledGesturesOnTarget(target));
+                getEnabledGesturesOnTarget(target, outputList);
                 target = target.parent;
             }
-            return hierarchy;
         }
 
         // target <- child*
-        private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf)
+        private void getHierarchyBeginningWith(Transform target, List<Gesture> outputList, bool includeSelf)
         {
-            var hierarchy = new List<Gesture>(10);
             if (includeSelf)
             {
-                hierarchy.AddRange(getEnabledGesturesOnTarget(target));
+                getEnabledGesturesOnTarget(target, outputList);
             }
 
             var count = target.childCount;
             for (var i = 0; i < count; i++)
             {
-                hierarchy.AddRange(getHierarchyBeginningWith(target.GetChild(i), true));
+                getHierarchyBeginningWith(target.GetChild(i), outputList, true);
             }
-            return hierarchy;
         }
 
-        private List<Gesture> getHierarchyContaining(Transform target)
+        private void getHierarchyContaining(Transform target, List<Gesture> outputList)
         {
-            var hierarchy = getHierarchyEndingWith(target);
-            hierarchy.AddRange(getHierarchyBeginningWith(target, false));
-            return hierarchy;
+            getHierarchyEndingWith(target, outputList);
+            getHierarchyBeginningWith(target, outputList, false);
         }
 
-        private List<Gesture> getEnabledGesturesOnTarget(Transform target)
+        private void getEnabledGesturesOnTarget(Transform target, List<Gesture> outputList)
         {
-            var result = new List<Gesture>(10);
             if (target.gameObject.activeInHierarchy)
             {
-                var gestures = target.GetComponents<Gesture>();
-                var count = gestures.Length;
+                target.GetComponents(tmpList_Gesture_getEnabledGesturesOnTarget);
+                var count = tmpList_Gesture_getEnabledGesturesOnTarget.Count;
                 for (var i = 0; i < count; i++)
                 {
-                    var gesture = gestures[i];
-                    if (gesture != null && gesture.enabled) result.Add(gesture);
+                    var gesture = tmpList_Gesture_getEnabledGesturesOnTarget[i];
+                    if (gesture != null && gesture.enabled) outputList.Add(gesture);
                 }
             }
-            return result;
         }
 
         private bool gestureIsActive(Gesture gesture)
@@ -388,14 +387,15 @@ namespace TouchScript
         {
             if (!gesture.ShouldBegin()) return false;
 
+            tmpList_Gesture.Clear();
+            tmpList2_Gesture.Clear();
             bool canRecognize = true;
-            List<Gesture> gesturesToFail = new List<Gesture>(10);
-            var gestures = getHierarchyContaining(gesture.transform);
+            getHierarchyContaining(gesture.transform, tmpList2_Gesture);
 
-            var count = gestures.Count;
+            var count = tmpList2_Gesture.Count;
             for (var i = 0; i < count; i++)
             {
-                var otherGesture = gestures[i];
+                var otherGesture = tmpList2_Gesture[i];
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
 
@@ -411,17 +411,17 @@ namespace TouchScript
                 {
                     if (gesture.CanPreventGesture(otherGesture))
                     {
-                        gesturesToFail.Add(otherGesture);
+                        tmpList_Gesture.Add(otherGesture);
                     }
                 }
             }
 
             if (canRecognize)
             {
-                count = gesturesToFail.Count;
+                count = tmpList_Gesture.Count;
                 for (var i = 0; i < count; i++)
                 {
-                    failGesture(gesturesToFail[i]);
+                    failGesture(tmpList_Gesture[i]);
                 }
             }
 

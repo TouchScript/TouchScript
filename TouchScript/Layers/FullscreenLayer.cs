@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -93,6 +94,7 @@ namespace TouchScript.Layers
         private Camera _camera;
 
         private Transform cameraTransform;
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 
@@ -109,13 +111,13 @@ namespace TouchScript.Layers
             }
 
             hit = TouchHitFactory.Instance.GetTouchHit(transform);
-            var hitTests = transform.GetComponents<HitTest>();
-            if (hitTests.Length == 0) return LayerHitResult.Hit;
+            transform.GetComponents(tmpHitTestList);
+            var count = tmpHitTestList.Count;
+            if (count == 0) return LayerHitResult.Hit;
 
-            var count = hitTests.Length;
             for (var i = 0; i < count; i++)
             {
-                var test = hitTests[i];
+                var test = tmpHitTestList[i];
                 if (!test.enabled) continue;
                 var hitResult = test.IsHit(hit);
                 if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) return LayerHitResult.Miss;
