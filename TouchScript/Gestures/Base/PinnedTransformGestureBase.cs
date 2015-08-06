@@ -225,7 +225,7 @@ namespace TouchScript.Gestures.Base
         protected override void onBegan()
         {
             base.onBegan();
-            transformStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (transformStartedInvoker != null) transformStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(TRANSFORM_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -236,7 +236,7 @@ namespace TouchScript.Gestures.Base
         protected override void onChanged()
         {
             base.onChanged();
-            transformedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (transformedInvoker != null) transformedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
@@ -245,7 +245,7 @@ namespace TouchScript.Gestures.Base
         protected override void onRecognized()
         {
             base.onRecognized();
-            transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
@@ -256,7 +256,7 @@ namespace TouchScript.Gestures.Base
             base.onFailed();
             if (PreviousState != GestureState.Possible)
             {
-                transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+                if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
                 if (UseSendMessage && SendMessageTarget != null)
                     SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this,
                         SendMessageOptions.DontRequireReceiver);
@@ -269,7 +269,7 @@ namespace TouchScript.Gestures.Base
             base.onCancelled();
             if (PreviousState != GestureState.Possible)
             {
-                transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+                if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
                 if (UseSendMessage && SendMessageTarget != null)
                     SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this,
                         SendMessageOptions.DontRequireReceiver);

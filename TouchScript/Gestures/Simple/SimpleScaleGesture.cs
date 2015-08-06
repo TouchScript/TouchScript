@@ -182,8 +182,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onBegan()
         {
             base.onBegan();
-            scaleStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaleStartedInvoker != null) scaleStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaledInvoker != null) scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(SCALE_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -195,7 +195,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onChanged()
         {
             base.onChanged();
-            scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaledInvoker != null) scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -203,7 +203,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onRecognized()
         {
             base.onRecognized();
-            scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -213,7 +213,7 @@ namespace TouchScript.Gestures.Simple
             base.onFailed();
             if (PreviousState != GestureState.Possible)
             {
-                scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+                if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
                 if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
@@ -224,7 +224,7 @@ namespace TouchScript.Gestures.Simple
             base.onCancelled();
             if (PreviousState != GestureState.Possible)
             {
-                scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+                if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
                 if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }

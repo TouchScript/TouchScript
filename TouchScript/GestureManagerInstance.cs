@@ -61,7 +61,8 @@ namespace TouchScript
         private List<Gesture> activeGestures = new List<Gesture>(20);
         private List<Gesture> tmpList_Gesture_getEnabledGesturesOnTarget = new List<Gesture>(20);
         private List<Gesture> tmpList_Gesture = new List<Gesture>(20); 
-        private List<Gesture> tmpList2_Gesture = new List<Gesture>(20); 
+        private List<Gesture> tmpList2_Gesture = new List<Gesture>(20);
+        private List<ITouch> tmpList_ITouch = new List<ITouch>(20);
 
         #endregion
 
@@ -293,17 +294,24 @@ namespace TouchScript
 
         private void distributePointsByGestures(Transform target, Gesture gesture, Predicate<ITouch> condition)
         {
-            var touchesToReceive = targetTouches[target].FindAll(condition);
-            if (touchesToReceive.Count > 0)
+            tmpList_ITouch.Clear();
+            var targetList = targetTouches[target];
+            var count = targetList.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var touch = targetList[i];
+                if (condition(touch)) tmpList_ITouch.Add(touch);
+            }
+            if (tmpList_ITouch.Count > 0)
             {
                 if (gestureTouches.ContainsKey(gesture))
                 {
-                    gestureTouches[gesture].AddRange(touchesToReceive);
+                    gestureTouches[gesture].AddRange(tmpList_ITouch);
                 }
                 else
                 {
                     activeGestures.Add(gesture);
-                    gestureTouches.Add(gesture, touchesToReceive);
+                    gestureTouches.Add(gesture, new List<ITouch>(tmpList_ITouch));
                 }
             }
         }
