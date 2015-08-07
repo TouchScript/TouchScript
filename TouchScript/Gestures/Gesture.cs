@@ -101,6 +101,26 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        public int MinTouches
+        {
+            get { return minTouches; }
+            set
+            {
+                if (value < 0) return;
+                minTouches = value;
+            }
+        }
+
+        public int MaxTouches
+        {
+            get { return maxTouches; }
+            set
+            {
+                if (value < 0) return;
+                maxTouches = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets another gesture which must fail before this gesture can be recognized.
         /// </summary>
@@ -112,9 +132,11 @@ namespace TouchScript.Gestures
             get { return requireGestureToFail; }
             set
             {
-                if (requireGestureToFail != null) requireGestureToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
+                if (requireGestureToFail != null)
+                    requireGestureToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
                 requireGestureToFail = value;
-                if (requireGestureToFail != null) requireGestureToFail.StateChanged += requiredToFailGestureStateChangedHandler;
+                if (requireGestureToFail != null)
+                    requireGestureToFail.StateChanged += requiredToFailGestureStateChangedHandler;
             }
         }
 
@@ -209,8 +231,11 @@ namespace TouchScript.Gestures
                         break;
                 }
 
-                if (stateChangedInvoker != null) stateChangedInvoker.InvokeHandleExceptions(this, new GestureStateChangeEventArgs(state, PreviousState));
-                if (useSendMessage && sendStateChangeMessages && SendMessageTarget != null) sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+                if (stateChangedInvoker != null)
+                    stateChangedInvoker.InvokeHandleExceptions(this,
+                        new GestureStateChangeEventArgs(state, PreviousState));
+                if (useSendMessage && sendStateChangeMessages && SendMessageTarget != null)
+                    sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -247,7 +272,8 @@ namespace TouchScript.Gestures
             {
                 if (NumTouches == 0)
                 {
-                    if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition)) return cachedPreviousScreenPosition;
+                    if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition))
+                        return cachedPreviousScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
                 return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
@@ -264,7 +290,7 @@ namespace TouchScript.Gestures
             {
                 var position = ScreenPosition;
                 if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
-                return new Vector2(position.x / Screen.width, position.y / Screen.height);
+                return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
 
@@ -278,7 +304,7 @@ namespace TouchScript.Gestures
             {
                 var position = PreviousScreenPosition;
                 if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
-                return new Vector2(position.x / Screen.width, position.y / Screen.height);
+                return new Vector2(position.x/Screen.width, position.y/Screen.height);
             }
         }
 
@@ -288,9 +314,11 @@ namespace TouchScript.Gestures
         /// <value>The list of touches owned by this gesture.</value>
         public IList<ITouch> ActiveTouches
         {
-            get {
-                if (readonlyActiveTouches == null) readonlyActiveTouches = new ReadOnlyCollection<ITouch>(activeTouches);
-                return readonlyActiveTouches; 
+            get
+            {
+                if (readonlyActiveTouches == null)
+                    readonlyActiveTouches = new ReadOnlyCollection<ITouch>(activeTouches);
+                return readonlyActiveTouches;
             }
         }
 
@@ -337,37 +365,31 @@ namespace TouchScript.Gestures
         protected Transform cachedTransform;
 
 #pragma warning disable 0169
-        [SerializeField]
-        private bool advancedProps; // is used to save if advanced properties are opened or closed
+        [SerializeField] private bool advancedProps; // is used to save if advanced properties are opened or closed
 #pragma warning restore 0169
 
-        [SerializeField]
-        [ToggleLeft]
-        private bool combineTouches = false;
+        [SerializeField] private int minTouches = 0;
 
-        [SerializeField]
-        private float combineTouchesInterval = .3f;
+        [SerializeField] private int maxTouches = 0;
 
-        [SerializeField]
-        [ToggleLeft]
-        private bool useSendMessage = false;
+        [SerializeField] [ToggleLeft] private bool combineTouches = false;
 
-        [SerializeField]
-        [ToggleLeft]
-        private bool sendStateChangeMessages = false;
+        [SerializeField] private float combineTouchesInterval = .3f;
 
-        [SerializeField]
-        private GameObject sendMessageTarget;
+        [SerializeField] [ToggleLeft] private bool useSendMessage = false;
 
-        [SerializeField]
-        [NullToggle]
-        private Gesture requireGestureToFail;
+        [SerializeField] [ToggleLeft] private bool sendStateChangeMessages = false;
+
+        [SerializeField] private GameObject sendMessageTarget;
+
+        [SerializeField] [NullToggle] private Gesture requireGestureToFail;
 
         [SerializeField]
         // Serialized list of gestures for Unity IDE.
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private int numTouches;
+        private List<ITouch> tmpTouches = new List<ITouch>(10); 
         private ReadOnlyCollection<ITouch> readonlyActiveTouches;
         private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
         private GestureManagerInstance gestureManagerInstance;
@@ -555,8 +577,10 @@ namespace TouchScript.Gestures
             touchManager = TouchManager.Instance;
             gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
 
-            if (touchManager == null) Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
-            if (gestureManagerInstance == null) Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
+            if (touchManager == null)
+                Debug.LogError("No TouchManager found! Please add an instance of TouchManager to the scene!");
+            if (gestureManagerInstance == null)
+                Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
 
             if (sendMessageTarget == null) sendMessageTarget = gameObject;
             ResetGesture();
@@ -595,6 +619,7 @@ namespace TouchScript.Gestures
 
         internal void ResetGesture()
         {
+            tmpTouches.Clear();
             activeTouches.Clear();
             numTouches = 0;
             delayedStateChange = GestureState.Possible;
@@ -604,6 +629,33 @@ namespace TouchScript.Gestures
 
         internal void TouchesBegan(IList<ITouch> touches)
         {
+            if (minTouches > 0 && NumTouches == 0)
+            {
+                // haven't passed the threshold yet
+                tmpTouches.AddRange(touches);
+                var tmpCount = tmpTouches.Count;
+                if (tmpCount >= minTouches)
+                {
+                    activeTouches.AddRange(tmpTouches);
+                    numTouches += tmpCount;
+                    touchesBegan(tmpTouches);
+                    return;
+                }
+            }
+            if (maxTouches > 0 && numTouches + touches.Count > maxTouches)
+            {
+                switch (state)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        setState(GestureState.Ended);
+                        break;
+                    default:
+                        SetState(GestureState.Failed);
+                        break;
+                }
+                return;
+            }
             activeTouches.AddRange(touches);
             numTouches += touches.Count;
             touchesBegan(touches);
@@ -611,6 +663,7 @@ namespace TouchScript.Gestures
 
         internal void TouchesMoved(IList<ITouch> touches)
         {
+            if (minTouches > 0 && numTouches < minTouches) return;
             touchesMoved(touches);
         }
 
@@ -619,6 +672,20 @@ namespace TouchScript.Gestures
             var count = touches.Count;
             for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
             numTouches -= count;
+            if (minTouches > 0 && numTouches < minTouches)
+            {
+                switch (state)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        setState(GestureState.Ended);
+                        break;
+                    default:
+                        SetState(GestureState.Failed);
+                        break;
+                }
+                return;
+            }
             touchesEnded(touches);
         }
 
@@ -627,6 +694,20 @@ namespace TouchScript.Gestures
             var count = touches.Count;
             for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
             numTouches -= count;
+            if (minTouches > 0 && numTouches < minTouches)
+            {
+                switch (state)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        setState(GestureState.Ended);
+                        break;
+                    default:
+                        SetState(GestureState.Failed);
+                        break;
+                }
+                return;
+            }
             touchesCancelled(touches);
         }
 
@@ -694,13 +775,17 @@ namespace TouchScript.Gestures
         /// Called when new touches appear.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesBegan(IList<ITouch> touches) {}
+        protected virtual void touchesBegan(IList<ITouch> touches)
+        {
+        }
 
         /// <summary>
         /// Called for moved touches.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesMoved(IList<ITouch> touches) {}
+        protected virtual void touchesMoved(IList<ITouch> touches)
+        {
+        }
 
         /// <summary>
         /// Called if touches are removed.
@@ -708,9 +793,9 @@ namespace TouchScript.Gestures
         /// <param name="touches">The touches.</param>
         protected virtual void touchesEnded(IList<ITouch> touches)
         {
+            var count = touches.Count;
             if (combineTouches)
             {
-                var count = touches.Count;
                 for (var i = 0; i < count; i++)
                 {
                     touchSequence.Add(touches[i]);
@@ -719,7 +804,8 @@ namespace TouchScript.Gestures
                 if (NumTouches == 0)
                 {
                     // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval, shouldCacheTouchPosition);
+                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval,
+                        shouldCacheTouchPosition);
                     cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
                     cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
                 }
@@ -728,7 +814,7 @@ namespace TouchScript.Gestures
             {
                 if (NumTouches == 0)
                 {
-                    var lastPoint = touches[touches.Count - 1];
+                    var lastPoint = touches[count - 1];
                     if (shouldCacheTouchPosition(lastPoint))
                     {
                         cachedScreenPosition = lastPoint.Position;
@@ -764,27 +850,37 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Called when state is changed to Possible.
         /// </summary>
-        protected virtual void onPossible() {}
+        protected virtual void onPossible()
+        {
+        }
 
         /// <summary>
         /// Called when state is changed to Began.
         /// </summary>
-        protected virtual void onBegan() {}
+        protected virtual void onBegan()
+        {
+        }
 
         /// <summary>
         /// Called when state is changed to Changed.
         /// </summary>
-        protected virtual void onChanged() {}
+        protected virtual void onChanged()
+        {
+        }
 
         /// <summary>
         /// Called when state is changed to Recognized.
         /// </summary>
-        protected virtual void onRecognized() {}
+        protected virtual void onRecognized()
+        {
+        }
 
         /// <summary>
         /// Called when state is changed to Failed.
         /// </summary>
-        protected virtual void onFailed() {}
+        protected virtual void onFailed()
+        {
+        }
 
         /// <summary>
         /// Called when state is changed to Cancelled.
@@ -792,7 +888,7 @@ namespace TouchScript.Gestures
         protected virtual void onCancelled()
         {
             if (cancelledInvoker != null) cancelledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            if (useSendMessage && SendMessageTarget != null) 
+            if (useSendMessage && SendMessageTarget != null)
                 sendMessageTarget.SendMessage(CANCEL_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

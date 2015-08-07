@@ -54,8 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debugging\TouchDebuggerEditor.cs" />
-    <Compile Include="Gestures\Base\BasePinnedTransformGestureEditor.cs" />
-    <Compile Include="Gestures\Base\BaseTransformGestureEditor.cs" />
+    <Compile Include="Gestures\Base\PinnedTransformGestureBaseEditor.cs" />
+    <Compile Include="Gestures\Base\TransformGestureBaseEditor.cs" />
     <Compile Include="Gestures\GestureEditor.cs" />
     <Compile Include="Gestures\PinnedTransformGestureEditor.cs" />
     <Compile Include="Gestures\PressGestureEditor.cs" />
