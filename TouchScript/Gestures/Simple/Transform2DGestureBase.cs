@@ -171,6 +171,9 @@ namespace TouchScript.Gestures.Simple
                     case GestureState.Changed:
                         setState(GestureState.Ended);
                         break;
+                    default:
+                        SetState(GestureState.Failed);
+                        break;
                 }
             }
         }
