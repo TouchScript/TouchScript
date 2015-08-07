@@ -371,7 +371,7 @@ Prefab:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[0]
       value: 
-      objectReference: {fileID: 1462230480}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
   m_RootGameObject: {fileID: 1324806696}
@@ -620,7 +620,6 @@ GameObject:
   - 4: {fileID: 906624105}
   - 114: {fileID: 906624106}
   - 114: {fileID: 906624107}
-  - 114: {fileID: 906624108}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -674,33 +673,6 @@ MonoBehaviour:
   Tags:
     tagList:
     - Touch
---- !u!114 &906624108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 906624104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: b18016e63fa3941ab931a061f4cc3f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  tuioPort: 3333
-  supportedInputs: 7
-  tuioObjectMappings: []
-  cursorTags:
-    tagList:
-    - TUIO
-    - Touch
-  blobTags:
-    tagList:
-    - TUIO
-    - Touch
-  objectTags:
-    tagList:
-    - TUIO
-    - Object
 --- !u!1 &930800600
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,6 +682,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 930800601}
   - 54: {fileID: 930800603}
+  - 114: {fileID: 930800605}
+  - 114: {fileID: 930800604}
+  - 114: {fileID: 930800602}
   m_Layer: 0
   m_Name: Scene
   m_TagString: Untagged
@@ -732,6 +707,30 @@ Transform:
   - {fileID: 2072767614}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &930800602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 930800600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 681217450, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
+  combineTouches: 0
+  combineTouchesInterval: .300000012
+  useSendMessage: 0
+  sendStateChangeMessages: 0
+  sendMessageTarget: {fileID: 0}
+  requireGestureToFail: {fileID: 0}
+  friendlyGestures: []
+  type: 7
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
 --- !u!54 &930800603
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -747,6 +746,33 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &930800604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 930800600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f2ff2a908224e94b8dde12c7b83c3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PanSpeed: 200
+  ZoomSpeed: 10
+--- !u!114 &930800605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 930800600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1780265814, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Global Fullscreen
+  type: 2
+  _camera: {fileID: 0}
 --- !u!1 &1138005899
 GameObject:
   m_ObjectHideFlags: 0
@@ -842,7 +868,7 @@ MonoBehaviour:
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
   layers:
-  - {fileID: 1462230480}
+  - {fileID: 0}
 --- !u!4 &1324806698
 Transform:
   m_ObjectHideFlags: 0
@@ -1026,9 +1052,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1462230477}
-  - 114: {fileID: 1462230480}
-  - 114: {fileID: 1462230479}
-  - 114: {fileID: 1462230478}
   m_Layer: 0
   m_Name: Pivot
   m_TagString: Untagged
@@ -1049,56 +1072,6 @@ Transform:
   - {fileID: 62216952}
   m_Father: {fileID: 930800601}
   m_RootOrder: 1
---- !u!114 &1462230478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1462230476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 681217450, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugMode: 1
-  advancedProps: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures: []
-  type: 7
-  minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
---- !u!114 &1462230479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1462230476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f2ff2a908224e94b8dde12c7b83c3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PanSpeed: 200
-  ZoomSpeed: 10
---- !u!114 &1462230480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1462230476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1780265814, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Global Fullscreen
-  type: 2
-  _camera: {fileID: 0}
 --- !u!1 &1552723600
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,7 +1264,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
       propertyPath: m_IsActive
@@ -1543,7 +1516,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1772227325}
   m_GameObject: {fileID: 2144056002}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 923107734, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
