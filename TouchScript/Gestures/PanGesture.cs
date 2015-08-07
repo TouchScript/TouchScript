@@ -77,6 +77,14 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
+        protected override void touchesCancelled(IList<ITouch> touches)
+        {
+            clusters.RemovePoints(touches);
+
+            base.touchesCancelled(touches);
+        }
+
+        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

@@ -37,7 +37,7 @@ namespace TouchScript.Gestures
             remove { tappedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> tappedInvoker;
 
         #endregion
@@ -179,14 +179,6 @@ namespace TouchScript.Gestures
                     if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
                 }
             }
-        }
-
-        /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            setState(GestureState.Failed);
         }
 
         /// <inheritdoc />

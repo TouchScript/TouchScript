@@ -237,16 +237,16 @@ namespace TouchScript.Gestures
             }
         }
 
+#if DEBUG
         /// <inheritdoc />
         protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
-#if DEBUG
             if (activeTouches.Count == 0) return;
             drawDebug(projectionLayer.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
-#endif
         }
+#endif
 
         #endregion
 

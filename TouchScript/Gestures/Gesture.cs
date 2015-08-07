@@ -26,6 +26,11 @@ namespace TouchScript.Gestures
         public const string STATE_CHANGE_MESSAGE = "OnGestureStateChange";
 
         /// <summary>
+        /// Message sent when gesture is cancelled if SendMessage is used.
+        /// </summary>
+        public const string CANCEL_MESSAGE = "OnGestureCancel";
+
+        /// <summary>
         /// Possible states of a gesture.
         /// </summary>
         public enum GestureState
@@ -79,8 +84,18 @@ namespace TouchScript.Gestures
             remove { stateChangedInvoker -= value; }
         }
 
+        /// <summary>
+        /// Occurs when gesture is cancelled.
+        /// </summary>
+        public event EventHandler<EventArgs> Cancelled
+        {
+            add { cancelledInvoker += value; }
+            remove { cancelledInvoker -= value; }
+        }
+
         // Needed to overcome iOS AOT limitations
         private EventHandler<GestureStateChangeEventArgs> stateChangedInvoker;
+        private EventHandler<EventArgs> cancelledInvoker;
 
         #endregion
 
@@ -380,7 +395,7 @@ namespace TouchScript.Gestures
         /// Adds a friendly gesture.
         /// </summary>
         /// <param name="gesture">The gesture.</param>
-        public virtual void AddFriendlyGesture(Gesture gesture)
+        public void AddFriendlyGesture(Gesture gesture)
         {
             if (gesture == null || gesture == this) return;
 
@@ -402,7 +417,7 @@ namespace TouchScript.Gestures
         /// Gets result of casting a ray from gesture touch points' centroid screen position.
         /// </summary>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult()
+        public bool GetTargetHitResult()
         {
             ITouchHit hit;
             return GetTargetHitResult(ScreenPosition, out hit);
@@ -413,7 +428,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="hit">Raycast result</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(out ITouchHit hit)
+        public bool GetTargetHitResult(out ITouchHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
         }
@@ -423,7 +438,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="position">The position.</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(Vector2 position)
+        public bool GetTargetHitResult(Vector2 position)
         {
             ITouchHit hit;
             return GetTargetHitResult(position, out hit);
@@ -505,6 +520,13 @@ namespace TouchScript.Gestures
         {
             if (Delegate == null) return true;
             return Delegate.ShouldBegin(this);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void Cancel()
+        {
+            setState(GestureState.Cancelled);
         }
 
         #endregion
@@ -725,7 +747,10 @@ namespace TouchScript.Gestures
         /// Called when touches are cancelled.
         /// </summary>
         /// <param name="touches">The touches.</param>
-        protected virtual void touchesCancelled(IList<ITouch> touches) {}
+        protected virtual void touchesCancelled(IList<ITouch> touches)
+        {
+            if (NumTouches == 0) SetState(GestureState.Cancelled);
+        }
 
         /// <summary>
         /// Called to reset gesture state after it fails or recognizes.
@@ -764,7 +789,12 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Called when state is changed to Cancelled.
         /// </summary>
-        protected virtual void onCancelled() {}
+        protected virtual void onCancelled()
+        {
+            if (cancelledInvoker != null) cancelledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (useSendMessage && SendMessageTarget != null) 
+                sendMessageTarget.SendMessage(CANCEL_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
 
         #endregion
 

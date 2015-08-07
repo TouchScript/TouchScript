@@ -63,7 +63,7 @@ namespace TouchScript.Gestures.Simple
             remove { panCompletedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> panStartedInvoker, pannedInvoker, panCompletedInvoker;
 
         #endregion
@@ -215,28 +215,6 @@ namespace TouchScript.Gestures.Simple
             base.onRecognized();
             if (panCompletedInvoker != null) panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                if (panCompletedInvoker != null) panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                if (panCompletedInvoker != null) panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         /// <inheritdoc />

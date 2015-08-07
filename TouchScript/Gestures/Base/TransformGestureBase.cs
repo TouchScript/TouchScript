@@ -86,7 +86,7 @@ namespace TouchScript.Gestures.Base
             remove { transformCompletedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> transformStartedInvoker, transformedInvoker, transformCompletedInvoker;
 
         #endregion
@@ -209,16 +209,16 @@ namespace TouchScript.Gestures.Base
 
         #region Unity methods
 
+#if DEBUG
         /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();
 
-#if DEBUG
             debugID = DebugHelper.GetDebugId(this);
             debugTouchSize = Vector2.one*TouchManager.Instance.DotsPerCentimeter*1.1f;
-#endif
         }
+#endif
 
         /// <inheritdoc />
         protected override void OnEnable()
@@ -233,15 +233,15 @@ namespace TouchScript.Gestures.Base
 
         #region Gesture callbacks
 
+#if DEBUG
         /// <inheritdoc />
         protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
-#if DEBUG
             drawDebugDelayed(getNumPoints());
-#endif
         }
+#endif
 
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
@@ -388,14 +388,6 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            touchesEnded(touches);
-        }
-
-        /// <inheritdoc />
         protected override void onBegan()
         {
             base.onBegan();
@@ -422,32 +414,6 @@ namespace TouchScript.Gestures.Base
             if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null)
-                    SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this,
-                        SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null)
-                    SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this,
-                        SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         /// <inheritdoc />

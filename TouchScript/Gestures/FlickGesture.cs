@@ -56,7 +56,7 @@ namespace TouchScript.Gestures
             remove { flickedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> flickedInvoker;
 
         #endregion
@@ -222,14 +222,6 @@ namespace TouchScript.Gestures
                     setState(GestureState.Recognized);
                 }
             }
-        }
-
-        /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            touchesEnded(touches);
         }
 
         /// <inheritdoc />

@@ -100,7 +100,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 62216951}
-  m_LocalRotation: {x: .269457906, y: 0, z: 0, w: .963012218}
+  m_LocalRotation: {x: .269457936, y: 0, z: 0, w: .963012159}
   m_LocalPosition: {x: -1.11000001, y: 12, z: -20.5799999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -332,7 +332,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -649,7 +648,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -792,7 +790,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -1320,7 +1317,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -1507,7 +1503,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -1741,7 +1736,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -2152,7 +2146,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -2295,7 +2288,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -2809,7 +2801,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -2952,7 +2943,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -3139,7 +3129,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -3505,7 +3494,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -3758,7 +3746,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -4079,7 +4066,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -4177,7 +4163,6 @@ MonoBehaviour:
   m_Script: {fileID: -471660803, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -4406,7 +4391,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
@@ -4655,7 +4639,6 @@ MonoBehaviour:
   m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   advancedProps: 0
   combineTouches: 0
   combineTouchesInterval: .300000012

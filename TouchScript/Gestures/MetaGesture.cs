@@ -77,7 +77,7 @@ namespace TouchScript.Gestures
             remove { touchCancelledInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<MetaGestureEventArgs> touchBeganInvoker, touchMovedInvoker,
             touchEndedInvoker, touchCancelledInvoker;
 
@@ -147,7 +147,7 @@ namespace TouchScript.Gestures
         {
             base.touchesCancelled(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Cancelled);
 
             var length = touches.Count;
             if (touchCancelledInvoker != null)

@@ -37,7 +37,7 @@ namespace TouchScript.Gestures
             remove { pressedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> pressedInvoker;
 
         #endregion
