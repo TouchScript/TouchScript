@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Utils;
+using UnityEngine;
+
 #if DEBUG
+using System.Collections;
 using TouchScript.Utils.Debug;
 #endif
-using UnityEngine;
 
 namespace TouchScript.Gestures.Base
 {
@@ -193,11 +195,32 @@ namespace TouchScript.Gestures.Base
         #region Gesture callbacks
 
         /// <inheritdoc />
+        protected override void touchesBegan(IList<ITouch> touches)
+        {
+            base.touchesBegan(touches);
+
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            {
+                switch (State)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        setState(GestureState.Ended);
+                        break;
+                    case GestureState.Possible:
+                        setState(GestureState.Failed);
+                        break;
+                }
+            }
+        }
+
+        /// <inheritdoc />
         protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
 
-            if (NumTouches == 0)
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 switch (State)
                 {

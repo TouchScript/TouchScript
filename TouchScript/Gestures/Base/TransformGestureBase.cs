@@ -3,14 +3,15 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils;
-#if DEBUG
-using TouchScript.Utils.Debug;
-#endif
 using TouchScript.Utils.Geom;
 using UnityEngine;
+
+#if DEBUG
+using System.Collections;
+using TouchScript.Utils.Debug;
+#endif
 
 namespace TouchScript.Gestures.Base
 {
@@ -233,15 +234,30 @@ namespace TouchScript.Gestures.Base
 
         #region Gesture callbacks
 
-#if DEBUG
+
         /// <inheritdoc />
         protected override void touchesBegan(IList<ITouch> touches)
         {
             base.touchesBegan(touches);
 
-            drawDebugDelayed(getNumPoints());
-        }
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            {
+                switch (State)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        setState(GestureState.Ended);
+                        break;
+                    case GestureState.Possible:
+                        setState(GestureState.Failed);
+                        break;
+                }
+            }
+#if DEBUG
+            else drawDebugDelayed(getNumPoints());
 #endif
+        }
 
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
@@ -252,18 +268,18 @@ namespace TouchScript.Gestures.Base
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
 
-            var activePoints = getNumPoints();
-
 #if DEBUG
-            drawDebugDelayed(activePoints);
+            drawDebugDelayed(getNumPoints());
 #endif
+
+            if (touchesNumState != TouchesNumState.InRange) return;
 
             var translationEnabled = (Type & TransformType.Translation) == TransformType.Translation;
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
 
             // one touch or one cluster (points might be too close to each other for 2 clusters)
-            if (activePoints == 1 || (!rotationEnabled && !scalingEnabled))
+            if (getNumPoints() == 1 || (!rotationEnabled && !scalingEnabled))
             {
                 if (!translationEnabled) return; // don't look for translates
                 if (!relevantTouches1(touches)) return;
@@ -368,11 +384,7 @@ namespace TouchScript.Gestures.Base
         {
             base.touchesEnded(touches);
 
-#if DEBUG
-            drawDebugDelayed(getNumPoints());
-#endif
-
-            if (NumTouches == 0)
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 switch (State)
                 {
@@ -385,6 +397,10 @@ namespace TouchScript.Gestures.Base
                         break;
                 }
             }
+
+#if DEBUG
+            else drawDebugDelayed(getNumPoints());
+#endif
         }
 
         /// <inheritdoc />

@@ -144,6 +144,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
+            if (State != GestureState.Possible) return;
             if (touches.Count == NumTouches)
             {
                 projectionLayer = activeTouches[0].Layer;
@@ -163,18 +164,26 @@ namespace TouchScript.Gestures
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
 
+#if DEBUG
+            var theTouch = activeTouches[0];
+            var worldCenter = cachedTransform.position;
+            var screenCenter = projectionLayer.ProjectFrom(worldCenter);
+            var newScreenPos = theTouch.Position;
+            drawDebug(screenCenter, newScreenPos);
+#endif
+
+            if (touchesNumState != TouchesNumState.InRange) return;
+
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
             if (!rotationEnabled && !scalingEnabled) return;
             if (!relevantTouches(touches)) return;
 
+#if !DEBUG
             var theTouch = activeTouches[0];
             var worldCenter = cachedTransform.position;
             var screenCenter = projectionLayer.ProjectFrom(worldCenter);
             var newScreenPos = theTouch.Position;
-
-#if DEBUG
-            drawDebug(screenCenter, newScreenPos);
 #endif
 
             // Here we can't reuse last frame screen positions because points 0 and 1 can change.

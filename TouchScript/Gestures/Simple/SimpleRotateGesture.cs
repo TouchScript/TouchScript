@@ -112,6 +112,7 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
         {
+            if (touchesNumState != TouchesNumState.InRange) return;
             if (!gotEnoughTouches()) return;
             if (!relevantTouches(touches)) return;
 

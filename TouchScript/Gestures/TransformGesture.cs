@@ -152,6 +152,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
+            if (State != GestureState.Possible) return;
             if (touches.Count == NumTouches)
             {
                 projectionLayer = activeTouches[0].Layer;
