@@ -83,7 +83,7 @@ namespace TouchScript.InputSources
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            return manager.BeginTouch(position, tags);
+            return manager.INTERNAL_BeginTouch(position, tags);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace TouchScript.InputSources
         /// <param name="id">Touch id.</param>
         protected virtual void updateTouch(int id)
         {
-            manager.UpdateTouch(id);
+            manager.INTERNAL_UpdateTouch(id);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace TouchScript.InputSources
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            manager.MoveTouch(id, position);
+            manager.INTERNAL_MoveTouch(id, position);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace TouchScript.InputSources
         /// <param name="id">Touch point id.</param>
         protected virtual void endTouch(int id)
         {
-            manager.EndTouch(id);
+            manager.INTERNAL_EndTouch(id);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace TouchScript.InputSources
         /// <param name="id">Touch id.</param>
         protected virtual void cancelTouch(int id)
         {
-            manager.CancelTouch(id);
+            manager.INTERNAL_CancelTouch(id);
         }
 
         #endregion

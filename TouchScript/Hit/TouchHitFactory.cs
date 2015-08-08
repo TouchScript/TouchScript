@@ -27,7 +27,7 @@ namespace TouchScript.Hit
         public ITouchHit GetTouchHit(RaycastHit value)
         {
             var result = new TouchHit3D();
-            result.InitWith(value);
+            result.INTERNAL_InitWith(value);
             return result;
         }
 
@@ -35,7 +35,7 @@ namespace TouchScript.Hit
         public ITouchHit GetTouchHit(RaycastHit2D value)
         {
             var result = new TouchHit2D();
-            result.InitWith(value);
+            result.INTERNAL_InitWith(value);
             return result;
         }
 
@@ -43,7 +43,7 @@ namespace TouchScript.Hit
         public ITouchHit GetTouchHit(Transform value)
         {
             var result = new TouchHit();
-            result.InitWith(value);
+            result.INTERNAL_InitWith(value);
             return result;
         }
     }

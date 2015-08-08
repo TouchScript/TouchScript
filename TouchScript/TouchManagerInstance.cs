@@ -281,12 +281,12 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal ITouch BeginTouch(Vector2 position)
+        internal ITouch INTERNAL_BeginTouch(Vector2 position)
         {
-            return BeginTouch(position, null);
+            return INTERNAL_BeginTouch(position, null);
         }
 
-        internal ITouch BeginTouch(Vector2 position, Tags tags)
+        internal ITouch INTERNAL_BeginTouch(Vector2 position, Tags tags)
         {
             TouchPoint touch;
             lock (touchesBegan)
@@ -297,7 +297,11 @@ namespace TouchScript
             return touch;
         }
 
-        internal void UpdateTouch(int id)
+        /// <summary>
+        /// Update touch without moving it
+        /// </summary>
+        /// <param name="id">Touch id</param>
+        internal void INTERNAL_UpdateTouch(int id)
         {
             lock (touchesUpdated)
             {
@@ -305,21 +309,21 @@ namespace TouchScript
             }
         }
 
-        internal void MoveTouch(int id, Vector2 position)
+        internal void INTERNAL_MoveTouch(int id, Vector2 position)
         {
             lock (touchesUpdated)
             {
                 TouchPoint touch;
                 if (idToTouch.TryGetValue(id, out touch))
                 {
-                    touch.SetPosition(position);
+                    touch.INTERNAL_SetPosition(position);
                     touchesUpdated.Add(id);
                 }
             }
         }
 
         /// <inheritdoc />
-        internal void EndTouch(int id)
+        internal void INTERNAL_EndTouch(int id)
         {
             lock (touchesEnded)
             {
@@ -336,7 +340,7 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        internal void CancelTouch(int id)
+        internal void INTERNAL_CancelTouch(int id)
         {
             lock (touchesCancelled)
             {
@@ -492,7 +496,7 @@ namespace TouchScript
                     {
                         var touchLayer = Layers[j];
                         if (touchLayer == null) continue;
-                        if (touchLayer.BeginTouch(touch)) break;
+                        if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                     }
                 }
 
@@ -520,11 +524,11 @@ namespace TouchScript
                 for (var i = 0; i < count; i++)
                 {
                     var touch = touches[i];
-                    touch.ResetPosition();
+                    touch.INTERNAL_ResetPosition();
                     if (touchesUpdated.Contains(touch.Id))
                     {
                         updated.Add(touch);
-                        if (touch.Layer != null) touch.Layer.UpdateTouch(touch);
+                        if (touch.Layer != null) touch.Layer.INTERNAL_UpdateTouch(touch);
                     }
                 }
 
@@ -553,7 +557,7 @@ namespace TouchScript
                     idToTouch.Remove(touch.Id);
                     touches.Remove(touch);
                     updated.Add(touch);
-                    if (touch.Layer != null) touch.Layer.EndTouch(touch);
+                    if (touch.Layer != null) touch.Layer.INTERNAL_EndTouch(touch);
                 }
 
 #if DEBUG
@@ -581,7 +585,7 @@ namespace TouchScript
                     idToTouch.Remove(touch.Id);
                     touches.Remove(touch);
                     updated.Add(touch);
-                    if (touch.Layer != null) touch.Layer.CancelTouch(touch);
+                    if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
                 }
 
 #if DEBUG

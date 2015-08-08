@@ -141,7 +141,7 @@ namespace TouchScript.Layers
 
         #region Internal methods
 
-        internal bool BeginTouch(TouchPoint touch)
+        internal bool INTERNAL_BeginTouch(TouchPoint touch)
         {
             ITouchHit hit;
             var result = beginTouch(touch, out hit);
@@ -156,17 +156,17 @@ namespace TouchScript.Layers
             return false;
         }
 
-        internal void UpdateTouch(ITouch touch)
+        internal void INTERNAL_UpdateTouch(ITouch touch)
         {
             updateTouch(touch);
         }
 
-        internal void EndTouch(ITouch touch)
+        internal void INTERNAL_EndTouch(ITouch touch)
         {
             endTouch(touch);
         }
 
-        internal void CancelTouch(ITouch touch)
+        internal void INTERNAL_CancelTouch(ITouch touch)
         {
             cancelTouch(touch);
         }

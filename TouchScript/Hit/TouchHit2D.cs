@@ -25,9 +25,9 @@ namespace TouchScript.Hit
 
         private RaycastHit2D hit;
 
-        internal void InitWith(RaycastHit2D value)
+        internal void INTERNAL_InitWith(RaycastHit2D value)
         {
-            InitWith(value.collider.transform);
+            INTERNAL_InitWith(value.collider.transform);
             hit = value;
         }
     }

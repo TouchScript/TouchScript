@@ -12,7 +12,7 @@ namespace TouchScript.Devices.Display
     /// </summary>
     public class GenericDisplayDevice : DisplayDevice
     {
-        internal static bool IsLaptop
+        internal static bool INTERNAL_IsLaptop
         {
             get
             {
@@ -35,7 +35,7 @@ namespace TouchScript.Devices.Display
             base.OnEnable();
 
             Name = Application.platform.ToString();
-            if (IsLaptop) Name += " (Laptop)";
+            if (INTERNAL_IsLaptop) Name += " (Laptop)";
 
             dpi = Screen.dpi;
             if (dpi < float.Epsilon)
@@ -65,7 +65,7 @@ namespace TouchScript.Devices.Display
                         {
                             if (height >= 1600)
                             {
-                                if (IsLaptop) dpi = 226; // 13.3" retina
+                                if (INTERNAL_IsLaptop) dpi = 226; // 13.3" retina
                                 else dpi = 101; // 30" display
                             }
                             else if (height >= 1440) dpi = 109; // 27" iMac
@@ -81,7 +81,7 @@ namespace TouchScript.Devices.Display
                             else if (height >= 1200) dpi = 90; // 26-27"
                             else if (height >= 1080)
                             {
-                                if (IsLaptop) dpi = 130; // 15" - 18" laptop
+                                if (INTERNAL_IsLaptop) dpi = 130; // 15" - 18" laptop
                                 else dpi = 92; // +-24" display
                             }
                         }
