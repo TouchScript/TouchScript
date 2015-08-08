@@ -266,7 +266,7 @@ namespace TouchScript
 
         #region Unity
 
-        private void OnEnable()
+        private void Awake()
         {
             if (Instance == null) return;
 
@@ -276,7 +276,10 @@ namespace TouchScript
             {
                 Instance.AddLayer(layers[i], i);
             }
+        }
 
+        private void OnEnable()
+        {
             updateSubscription();
         }
 

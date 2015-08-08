@@ -16,7 +16,6 @@ public class Examples : MonoBehaviour
         if (Application.loadedLevelName == "_Examples" && Application.levelCount > 1)
         {
             loadNextLevel();
-            Destroy(GetComponent<Example>());
         }
     }
 
