@@ -165,6 +165,10 @@ namespace TouchScript
         /// <param name="layer">A layer which was hit.</param>
         /// <returns>True if the touch hits any Transform.</returns>
         bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer);
+
+        /// <summary>
+        /// </summary>
+        void CancelTouch(int id, bool redispatch = false);
     }
 
     /// <summary>
