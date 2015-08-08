@@ -92,7 +92,7 @@ namespace TouchScript
         /// <summary>
         /// Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.
         /// </summary>
-        internal void ResetPosition()
+        internal void INTERNAL_ResetPosition()
         {
             PreviousPosition = position;
             position = newPosition;
@@ -100,7 +100,7 @@ namespace TouchScript
             if (PreviousPosition != position) isDirty = true;
         }
 
-        internal void SetPosition(Vector2 value)
+        internal void INTERNAL_SetPosition(Vector2 value)
         {
             newPosition = value;
         }

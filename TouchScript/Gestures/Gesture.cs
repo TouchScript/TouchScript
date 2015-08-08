@@ -594,7 +594,7 @@ namespace TouchScript.Gestures
                 Debug.LogError("No GesturehManager found! Please add an instance of GesturehManager to the scene!");
 
             if (sendMessageTarget == null) sendMessageTarget = gameObject;
-            ResetGesture();
+            INTERNAL_ResetGesture();
         }
 
         /// <summary>
@@ -614,7 +614,7 @@ namespace TouchScript.Gestures
             var count = copy.Count;
             for (var i = 0; i < count; i++)
             {
-                RemoveFriendlyGesture(copy[i]);
+                INTERNAL_RemoveFriendlyGesture(copy[i]);
             }
             RequireGestureToFail = null;
         }
@@ -623,12 +623,12 @@ namespace TouchScript.Gestures
 
         #region Internal functions
 
-        internal void SetState(GestureState value)
+        internal void INTERNAL_SetState(GestureState value)
         {
             setState(value);
         }
 
-        internal void ResetGesture()
+        internal void INTERNAL_ResetGesture()
         {
             activeTouches.Clear();
             numTouches = 0;
@@ -638,7 +638,7 @@ namespace TouchScript.Gestures
             reset();
         }
 
-        internal void TouchesBegan(IList<ITouch> touches)
+        internal void INTERNAL_TouchesBegan(IList<ITouch> touches)
         {
             var count = touches.Count;
             var total = numTouches + count;
@@ -680,7 +680,7 @@ namespace TouchScript.Gestures
             touchesBegan(touches);
         }
 
-        internal void TouchesMoved(IList<ITouch> touches)
+        internal void INTERNAL_TouchesMoved(IList<ITouch> touches)
         {
             touchesNumState = TouchesNumState.InRange;
             if (minTouches > 0 && numTouches < minTouches) touchesNumState = TouchesNumState.TooFew;
@@ -688,7 +688,7 @@ namespace TouchScript.Gestures
             touchesMoved(touches);
         }
 
-        internal void TouchesEnded(IList<ITouch> touches)
+        internal void INTERNAL_TouchesEnded(IList<ITouch> touches)
         {
             var count = touches.Count;
             var total = numTouches - count;
@@ -766,7 +766,7 @@ namespace TouchScript.Gestures
             touchesEnded(touches);
         }
 
-        internal void TouchesCancelled(IList<ITouch> touches)
+        internal void INTERNAL_TouchesCancelled(IList<ITouch> touches)
         {
             var count = touches.Count;
             var total = numTouches - count;
@@ -809,7 +809,7 @@ namespace TouchScript.Gestures
             touchesCancelled(touches);
         }
 
-        internal virtual void RemoveFriendlyGesture(Gesture gesture)
+        internal virtual void INTERNAL_RemoveFriendlyGesture(Gesture gesture)
         {
             if (gesture == null || gesture == this) return;
 
@@ -859,7 +859,7 @@ namespace TouchScript.Gestures
                 }
             }
 
-            var newState = gestureManagerInstance.GestureChangeState(this, value);
+            var newState = gestureManagerInstance.INTERNAL_GestureChangeState(this, value);
             State = newState;
 
             return value == newState;

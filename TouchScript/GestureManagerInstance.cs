@@ -110,7 +110,7 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal Gesture.GestureState GestureChangeState(Gesture gesture, Gesture.GestureState state)
+        internal Gesture.GestureState INTERNAL_GestureChangeState(Gesture gesture, Gesture.GestureState state)
         {
             bool recognized = false;
             switch (state)
@@ -181,25 +181,25 @@ namespace TouchScript
         private void updateBegan(IList<ITouch> touches)
         {
             update(touches, processTargetBegan,
-                (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
+                (gesture, touchPoints) => gesture.INTERNAL_TouchesBegan(touchPoints));
         }
 
         private void updateMoved(IList<ITouch> touches)
         {
             update(touches, processTarget,
-                (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
+                (gesture, touchPoints) => gesture.INTERNAL_TouchesMoved(touchPoints));
         }
 
         private void updateEnded(IList<ITouch> touches)
         {
             update(touches, processTarget,
-                (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
+                (gesture, touchPoints) => gesture.INTERNAL_TouchesEnded(touchPoints));
         }
 
         private void updateCancelled(IList<ITouch> touches)
         {
             update(touches, processTarget,
-                (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
+                (gesture, touchPoints) => gesture.INTERNAL_TouchesCancelled(touchPoints));
         }
 
         private void update(IList<ITouch> touches, Action<Transform> process, Action<Gesture, IList<ITouch>> dispatch)
@@ -325,8 +325,8 @@ namespace TouchScript
             {
                 var gesture = gesturesToReset[i];
                 if (gesture == null) continue;
-                gesture.ResetGesture();
-                gesture.SetState(Gesture.GestureState.Possible);
+                gesture.INTERNAL_ResetGesture();
+                gesture.INTERNAL_SetState(Gesture.GestureState.Possible);
             }
             gesturesToReset.Clear();
         }
@@ -438,7 +438,7 @@ namespace TouchScript
 
         private void failGesture(Gesture gesture)
         {
-            gesture.SetState(Gesture.GestureState.Failed);
+            gesture.INTERNAL_SetState(Gesture.GestureState.Failed);
         }
 
         #endregion

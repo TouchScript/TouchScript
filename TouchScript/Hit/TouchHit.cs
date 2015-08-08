@@ -22,7 +22,7 @@ namespace TouchScript.Hit
 
         #region Internal methods
 
-        internal void InitWith(Transform value)
+        internal void INTERNAL_InitWith(Transform value)
         {
             Transform = value;
         }
