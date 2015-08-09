@@ -266,7 +266,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: m_LocalPosition.x
@@ -298,6 +298,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[0]
+      value: 
+      objectReference: {fileID: 62216953}
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.data[2]
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -406,7 +414,6 @@ GameObject:
   - 4: {fileID: 906624105}
   - 114: {fileID: 906624106}
   - 114: {fileID: 906624107}
-  - 114: {fileID: 906624108}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -460,33 +467,6 @@ MonoBehaviour:
   Tags:
     tagList:
     - Touch
---- !u!114 &906624108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 906624104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1254801617, guid: b18016e63fa3941ab931a061f4cc3f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  tuioPort: 3333
-  supportedInputs: 7
-  tuioObjectMappings: []
-  cursorTags:
-    tagList:
-    - TUIO
-    - Touch
-  blobTags:
-    tagList:
-    - TUIO
-    - Touch
-  objectTags:
-    tagList:
-    - TUIO
-    - Object
 --- !u!1 &930800600
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +604,8 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers: []
+  layers:
+  - {fileID: 62216953}
 --- !u!4 &1324806698
 Transform:
   m_ObjectHideFlags: 0
