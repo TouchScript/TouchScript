@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,6 +33,7 @@ namespace TouchScript.Layers
 
         private void OnEnable()
         {
+			layerIds = LayerUtils.GetSortingLayerUniqueIDs ();
             sortedHits = new List<RaycastHit2D>();
             layerById.Clear();
             for (var i = 0; i < layerIds.Length; i++)
