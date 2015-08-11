@@ -15,11 +15,13 @@ namespace TouchScript.Utils
     /// </summary>
     public static class LayerUtils
     {
-		// Get the sorting layer names
+    	/// <summary>
+		/// Get the sorting layer names
+    	/// </summary>
 		public static string[] GetSortingLayerNames() {
 			Type internalEditorUtilityType = typeof(InternalEditorUtility);
 			PropertyInfo sortingLayersProperty = internalEditorUtilityType.GetProperty("sortingLayerNames", BindingFlags.Static | BindingFlags.NonPublic);
-			return (string[])sortingLayersProperty.GetValue(null, new object[0]) as string[];
+			return sortingLayersProperty.GetValue(null, new object[0]) as string[];
 		}
 
 		/// <summary>
