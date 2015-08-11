@@ -33,7 +33,7 @@ namespace TouchScript.Layers
 
         private void OnEnable()
         {
-			layerIds = LayerUtils.GetSortingLayerUniqueIDs ();
+            layerIds = LayerUtils.GetSortingLayerUniqueIDs ();
             sortedHits = new List<RaycastHit2D>();
             layerById.Clear();
             for (var i = 0; i < layerIds.Length; i++)
