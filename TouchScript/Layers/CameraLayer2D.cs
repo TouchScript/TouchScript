@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,6 +33,7 @@ namespace TouchScript.Layers
 
         private void OnEnable()
         {
+            layerIds = LayerUtils.GetSortingLayerUniqueIDs ();
             sortedHits = new List<RaycastHit2D>();
             layerById.Clear();
             for (var i = 0; i < layerIds.Length; i++)
@@ -113,8 +115,8 @@ namespace TouchScript.Layers
             {
                 if (a.collider.transform == b.collider.transform) return 0;
 
-                var sprite1 = a.transform.GetComponent<SpriteRenderer>();
-                var sprite2 = b.transform.GetComponent<SpriteRenderer>();
+                var sprite1 = a.collider.transform.GetComponent<SpriteRenderer>();
+                var sprite2 = b.collider.transform.GetComponent<SpriteRenderer>();
                 if (sprite1 != null && sprite2 != null)
                 {
                     int s1Id, s2Id;
