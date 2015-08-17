@@ -186,6 +186,7 @@ namespace TouchScript
         private HashSet<int> touchesCancelled = new HashSet<int>();
         private List<CancelledTouch> touchesManuallyCancelled = new List<CancelledTouch>(10);
 
+        private static ObjectPool<TouchPoint> touchPointPool = new ObjectPool<TouchPoint>(10, null, null, (t) => t.INTERNAL_Reset()); 
         private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(2, () => new List<ITouch>(10), null, (l) => l.Clear());
         private static ObjectPool<List<TouchPoint>> touchPointListPool = new ObjectPool<List<TouchPoint>>(1, () => new List<TouchPoint>(10), null, (l) => l.Clear());
         private static ObjectPool<List<int>> intListPool = new ObjectPool<List<int>>(1, () => new List<int>(10), null, (l) => l.Clear());
@@ -303,7 +304,8 @@ namespace TouchScript
             TouchPoint touch;
             lock (touchesBegan)
             {
-                touch = new TouchPoint(nextTouchId++, position, tags);
+                touch = touchPointPool.Get();
+                touch.INTERNAL_Init(nextTouchId++, position, tags);
                 touchesBegan.Add(touch);
             }
             return touch;
@@ -452,7 +454,7 @@ namespace TouchScript
             {
                 if (Camera.main != null)
                 {
-                    Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
+                    if (Application.isEditor) Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
                     var layer = Camera.main.gameObject.AddComponent<CameraLayer>();
                     AddLayer(layer);
                 }
@@ -569,6 +571,8 @@ namespace TouchScript
             }
 
             if (touchesEndedInvoker != null) touchesEndedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+
+            for (var i = 0; i < endedCount; i++) touchPointPool.Release(list[i] as TouchPoint);
             touchListPool.Release(list);
         }
 
@@ -591,6 +595,8 @@ namespace TouchScript
             }
 
             if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+
+            for (var i = 0; i < cancelledCount; i++) touchPointPool.Release(list[i] as TouchPoint);
             touchListPool.Release(list);
         }
 
@@ -599,6 +605,7 @@ namespace TouchScript
             var cancelledCount = points.Count;
             var list = touchListPool.Get();
             var redispatchList = touchListPool.Get();
+            var releaseList = touchListPool.Get();
             for (var i = 0; i < cancelledCount; i++)
             {
                 var data = points[i];
@@ -618,6 +625,7 @@ namespace TouchScript
                 {
                     idToTouch.Remove(id);
                     touches.Remove(touch);
+                    releaseList.Add(touch);
 #if DEBUG
                 removeDebugFigureForTouch(touch);
 #endif
@@ -628,9 +636,13 @@ namespace TouchScript
             }
 
             if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
-            touchListPool.Release(list);
 
-            var count = redispatchList.Count;
+            touchListPool.Release(list);
+            var count = releaseList.Count;
+            for (var i = 0; i < count; i++) touchPointPool.Release(releaseList[i] as TouchPoint);
+            touchListPool.Release(releaseList);
+
+            count = redispatchList.Count;
             if (count > 0)
             {
                 var layerCount = layers.Count;

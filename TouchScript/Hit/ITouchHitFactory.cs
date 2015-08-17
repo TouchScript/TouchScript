@@ -31,5 +31,7 @@ namespace TouchScript.Hit
         /// <param name="value">Transform which has been hit.</param>
         /// <returns>An instance of ITouchHit.</returns>
         ITouchHit GetTouchHit(Transform value);
+
+        void ReleaseTouchHit(ITouchHit value);
     }
 }
