@@ -369,7 +369,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Touch points the gesture currently owns and works with.
         /// </summary>
-        protected List<ITouch> activeTouches = new List<ITouch>();
+        protected List<ITouch> activeTouches = new List<ITouch>(10);
 
         /// <summary>
         /// Cached transform of the parent object.

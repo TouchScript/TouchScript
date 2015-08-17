@@ -15,7 +15,7 @@ namespace TouchScript.Utils
 
         public delegate T0 UnityFunc<T0>();
 
-        private readonly Stack<T> stack = new Stack<T>();
+        private readonly Stack<T> stack;
         private readonly UnityAction<T> onGet;
         private readonly UnityAction<T> onRelease;
         private readonly UnityFunc<T> onNew;
@@ -24,11 +24,24 @@ namespace TouchScript.Utils
         public int CountActive { get { return CountAll - CountInactive; } }
         public int CountInactive { get { return stack.Count; } }
 
-        public ObjectPool(UnityFunc<T> actionNew, UnityAction<T> actionOnGet, UnityAction<T> actionOnRelease)
+        public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet, UnityAction<T> actionOnRelease)
         {
+            stack = new Stack<T>(capacity);
             onNew = actionNew;
             onGet = actionOnGet;
             onRelease = actionOnRelease;
+        }
+
+        public void WarmUp(int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                T element;
+                if (onNew != null) element = onNew();
+                else element = new T();
+                CountAll++;
+                stack.Push(element);
+            }
         }
 
         public T Get()

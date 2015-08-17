@@ -72,6 +72,28 @@ namespace TouchScript
 
         #endregion
 
+        #region Public methods
+
+        public override bool Equals(object other)
+        {
+            return Equals(other as ITouch);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+
+        public bool Equals(ITouch other)
+        {
+            if (other == null)
+                return false;
+
+            return Id == other.Id;
+        }
+
+        #endregion
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchPoint"/> class.
         /// </summary>
