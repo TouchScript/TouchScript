@@ -72,7 +72,7 @@ namespace TouchScript
         {
             if (tags == null) return;
             var count = tags.tagList.Count;
-            for (var i = 0; i < Count; i++)
+            for (var i = 0; i < count; i++)
             {
                 AddTag(tags.tagList[i]);
             }

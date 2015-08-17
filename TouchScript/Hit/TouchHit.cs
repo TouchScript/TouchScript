@@ -16,7 +16,7 @@ namespace TouchScript.Hit
 
         #region Constructors
 
-        internal TouchHit() {}
+        public TouchHit() {}
 
         #endregion
 
@@ -25,6 +25,11 @@ namespace TouchScript.Hit
         internal void INTERNAL_InitWith(Transform value)
         {
             Transform = value;
+        }
+
+        internal virtual void INTERNAL_Reset()
+        {
+            Transform = null;
         }
 
         #endregion

@@ -35,5 +35,13 @@ namespace TouchScript.Hit
             INTERNAL_InitWith(value.collider.transform);
             hit = value;
         }
+
+        internal override void INTERNAL_Reset()
+        {
+            base.INTERNAL_Reset();
+
+            hit = default(RaycastHit);
+        }
+
     }
 }
