@@ -26,6 +26,7 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent COMBINE_TOUCH_POINTS = new GUIContent("Combine Touch Points", "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
         private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
+        private static readonly GUIContent LIMIT_TOUCHES = new GUIContent("Limit touches", "");
 
         private static readonly Type GESTURE_TYPE = typeof(Gesture);
 
@@ -36,15 +37,13 @@ namespace TouchScript.Editor.Gestures
         private SerializedProperty debugMode;
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
+        private SerializedProperty minTouches, maxTouches;
         private SerializedProperty combineTouches, combineTouchesInterval;
         private SerializedProperty useSendMessage, sendMessageTarget, sendStateChangeMessages;
 
         private ReorderableList friendlyGesturesList;
         private int indexToRemove = -1;
-
-        static GestureEditor()
-        {
-        }
+        private float minTouchesFloat, maxTouchesFloat;
 
         protected virtual void OnEnable()
         {
@@ -61,6 +60,11 @@ namespace TouchScript.Editor.Gestures
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
+            minTouches = serializedObject.FindProperty("minTouches");
+            maxTouches = serializedObject.FindProperty("maxTouches");
+
+            minTouchesFloat = minTouches.intValue;
+            maxTouchesFloat = maxTouches.intValue;
 
             friendlyGesturesList = new ReorderableList(serializedObject, friendlyGestures, false, false, false, true);
             friendlyGesturesList.headerHeight = 0;
@@ -83,6 +87,32 @@ namespace TouchScript.Editor.Gestures
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
+
+            var limitTouches = (minTouches.intValue > 0) || (maxTouches.intValue > 0);
+            var newLimitTouches = EditorGUILayout.ToggleLeft(LIMIT_TOUCHES, limitTouches);
+            if (newLimitTouches)
+            {
+                if (!limitTouches)
+                {
+                    minTouchesFloat = 0;
+                    maxTouchesFloat = 10;
+                }
+                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("Min: " + (int)minTouchesFloat + ", Max: " + (int)maxTouchesFloat);
+                EditorGUILayout.MinMaxSlider(ref minTouchesFloat, ref maxTouchesFloat, 0, 10);
+                EditorGUI.indentLevel--;
+            }
+            else
+            {
+                if (limitTouches)
+                {
+                    minTouchesFloat = 0;
+                    maxTouchesFloat = 0;
+                }
+            }
+
+            minTouches.intValue = (int)minTouchesFloat;
+            maxTouches.intValue = (int)maxTouchesFloat;
 
             EditorGUI.BeginChangeCheck();
             var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);
