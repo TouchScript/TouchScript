@@ -180,11 +180,17 @@ namespace TouchScript
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
 
         // Upcoming changes
-        private List<TouchPoint> touchesBegan = new List<TouchPoint>(30);
-        private List<int> touchesUpdated = new List<int>(30);
-        private List<int> touchesEnded = new List<int>(30);
-        private List<int> touchesCancelled = new List<int>(30);
-        private List<ITouch> tmpList_ITouch = new List<ITouch>(30);
+        private List<TouchPoint> touchesBegan = new List<TouchPoint>(10);
+        private List<int> touchesUpdated = new List<int>(10);
+        private List<int> touchesEnded = new List<int>(10);
+        private List<int> touchesCancelled = new List<int>(10);
+        private List<CancelledTouch> touchesManuallyCancelled = new List<CancelledTouch>(10); 
+
+        private List<ITouch> tmpList_ITouch = new List<ITouch>(10);
+        private List<ITouch> tmpList2_ITouch = new List<ITouch>(10);
+        private List<TouchPoint> tmpList_TouchPoint = new List<TouchPoint>(10);
+        private List<int> tmpList_int = new List<int>(10);
+        private List<CancelledTouch> tmpList_CancelledTouch = new List<CancelledTouch>(10);
 
         private int nextTouchId = 0;
 
@@ -281,7 +287,7 @@ namespace TouchScript
         /// <inheritdoc />
         public void CancelTouch(int id, bool redispatch = false)
         {
-            INTERNAL_CancelTouch(id);
+            touchesManuallyCancelled.Add(new CancelledTouch(id, redispatch));
         }
 
         #endregion
@@ -385,7 +391,7 @@ namespace TouchScript
             updateDPI();
 
             StopAllCoroutines();
-            StartCoroutine("lateAwake");
+            StartCoroutine(lateAwake());
 
 #if DEBUG
             DebugMode = true;
@@ -395,7 +401,7 @@ namespace TouchScript
         private void OnLevelWasLoaded(int value)
         {
             StopAllCoroutines();
-            StartCoroutine("lateAwake");
+            StartCoroutine(lateAwake());
         }
 
         private IEnumerator lateAwake()
@@ -440,11 +446,10 @@ namespace TouchScript
         {
             if (layers.Count == 0 && shouldCreateCameraLayer)
             {
-                Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
                 if (Camera.main != null)
                 {
-                    var layer = Camera.main.GetComponent<TouchLayer>();
-                    if (layer == null) layer = Camera.main.gameObject.AddComponent<CameraLayer>();
+                    Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
+                    var layer = Camera.main.gameObject.AddComponent<CameraLayer>();
                     AddLayer(layer);
                 }
             }
@@ -485,115 +490,152 @@ namespace TouchScript
             }
         }
 
-        private void updateBegan()
+        private void updateBegan(List<TouchPoint> points)
         {
-            var count = touchesBegan.Count;
+            var count = points.Count;
+            tmpList_ITouch.Clear();
+            var layerCount = layers.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var touch = points[i];
+                tmpList_ITouch.Add(touch);
+                touches.Add(touch);
+                idToTouch.Add(touch.Id, touch);
+
+                for (var j = 0; j< layerCount; j++)
+                {
+                    var touchLayer = Layers[j];
+                    if (touchLayer == null) continue;
+                    if (touchLayer.INTERNAL_BeginTouch(touch)) break;
+                }
+
+#if DEBUG
+                addDebugFigureForTouch(touch);
+#endif
+
+            }
+
+            if (touchesBeganInvoker != null) touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
+        }
+
+        private void updateUpdated(List<int> points)
+        {
+            var updatedCount = points.Count;
+            tmpList_ITouch.Clear();
+            // Need to loop through all touches to reset those which did not move
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
+            {
+                touches[i].INTERNAL_ResetPosition();
+            }
+            for (var i = 0; i < updatedCount; i++)
+            {
+                var id = points[i];
+                var touch = idToTouch[id];
+                tmpList_ITouch.Add(touch);
+                if (touch.Layer != null) touch.Layer.INTERNAL_UpdateTouch(touch);
+
+#if DEBUG
+                addDebugFigureForTouch(touch);
+#endif
+
+            }
+
+            if (touchesMovedInvoker != null) touchesMovedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
+        }
+
+        private void updateEnded(List<int> points)
+        {
+            var endedCount = points.Count;
+            tmpList_ITouch.Clear();
+            for (var i = 0; i < endedCount; i++)
+            {
+                var id = points[i];
+                var touch = idToTouch[id];
+                idToTouch.Remove(id);
+                touches.Remove(touch);
+                tmpList_ITouch.Add(touch);
+                if (touch.Layer != null) touch.Layer.INTERNAL_EndTouch(touch);
+
+#if DEBUG
+                removeDebugFigureForTouch(touch);
+#endif
+            }
+
+            if (touchesEndedInvoker != null) touchesEndedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
+        }
+
+        private void updateCancelled(List<int> points)
+        {
+            var cancelledCount = points.Count;
+            tmpList_ITouch.Clear();
+            for (var i = 0; i < cancelledCount; i++)
+            {
+                var id = points[i];
+                var touch = idToTouch[id];
+                idToTouch.Remove(id);
+                touches.Remove(touch);
+                tmpList_ITouch.Add(touch);
+                if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
+
+#if DEBUG
+                removeDebugFigureForTouch(touch);
+#endif
+            }
+
+            if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
+        }
+
+        private void updateManuallyCancelled(List<CancelledTouch> points)
+        {
+            var cancelledCount = points.Count;
+            tmpList_ITouch.Clear();
+            tmpList2_ITouch.Clear(); // redispatch
+            for (var i = 0; i < cancelledCount; i++)
+            {
+                var data = points[i];
+                var id = data.Id;
+                TouchPoint touch;
+                if (!idToTouch.TryGetValue(id, out touch))
+                {
+                    // might be dead already
+                    continue;
+                }
+
+                if (data.Redispatch)
+                {
+                    tmpList2_ITouch.Add(touch);
+                }
+                else
+                {
+                    idToTouch.Remove(id);
+                    touches.Remove(touch);
+#if DEBUG
+                removeDebugFigureForTouch(touch);
+#endif
+                }
+
+                tmpList_ITouch.Add(touch);
+                if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
+            }
+
+            if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
+
+            var count = tmpList2_ITouch.Count;
             if (count > 0)
             {
-                tmpList_ITouch.Clear();
+                var layerCount = layers.Count;
                 for (var i = 0; i < count; i++)
                 {
-                    var touch = touchesBegan[i];
-                    tmpList_ITouch.Add(touch);
-                    touches.Add(touch);
-                    idToTouch.Add(touch.Id, touch);
-
-                    var layerCount = layers.Count;
-                    for (var j = 0; j< layerCount; j++)
+                    var touch = tmpList2_ITouch[i] as TouchPoint;
+                    for (var j = 0; j < layerCount; j++)
                     {
                         var touchLayer = Layers[j];
                         if (touchLayer == null) continue;
                         if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                     }
-
-#if DEBUG
-                    addDebugFigureForTouch(touch);
-#endif
-
                 }
-
-                if (touchesBeganInvoker != null) touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
-                touchesBegan.Clear();
-            }
-        }
-
-        private void updateUpdated()
-        {
-            var updatedCount = touchesUpdated.Count;
-            if (updatedCount > 0)
-            {
-                tmpList_ITouch.Clear();
-                // Need to loop through all touches to reset those which did not move
-                var count = touches.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    touches[i].INTERNAL_ResetPosition();
-                }
-                for (var i = 0; i < updatedCount; i++)
-                {
-                    var id = touchesUpdated[i];
-                    var touch = idToTouch[id];
-                    tmpList_ITouch.Add(touch);
-                    if (touch.Layer != null) touch.Layer.INTERNAL_UpdateTouch(touch);
-
-#if DEBUG
-                    addDebugFigureForTouch(touch);
-#endif
-
-                }
-
-                if (touchesMovedInvoker != null) touchesMovedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
-                touchesUpdated.Clear();
-            }
-        }
-
-        private void updateEnded()
-        {
-            var endedCount = touchesEnded.Count;
-            if (endedCount > 0)
-            {
-                tmpList_ITouch.Clear();
-                for (var i = 0; i < endedCount; i++)
-                {
-                    var id = touchesEnded[i];
-                    var touch = idToTouch[id];
-                    idToTouch.Remove(id);
-                    touches.Remove(touch);
-                    tmpList_ITouch.Add(touch);
-                    if (touch.Layer != null) touch.Layer.INTERNAL_EndTouch(touch);
-
-#if DEBUG
-                    removeDebugFigureForTouch(touch);
-#endif
-                }
-
-                if (touchesEndedInvoker != null) touchesEndedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
-                touchesEnded.Clear();
-            }
-        }
-
-        private void updateCancelled()
-        {
-            var cancelledCount = touchesCancelled.Count;
-            if (touchesCancelled.Count > 0)
-            {
-                tmpList_ITouch.Clear();
-                for (var i = 0; i < cancelledCount; i++)
-                {
-                    var id = touchesCancelled[i];
-                    var touch = idToTouch[id];
-                    idToTouch.Remove(id);
-                    touches.Remove(touch);
-                    tmpList_ITouch.Add(touch);
-                    if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
-
-#if DEBUG
-                    removeDebugFigureForTouch(touch);
-#endif
-                }
-
-                if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList_ITouch));
-                touchesCancelled.Clear();
+                if (touchesBeganInvoker != null) touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(tmpList2_ITouch));
             }
         }
 
@@ -601,10 +643,60 @@ namespace TouchScript
         {
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
-            lock (touchesBegan) updateBegan();
-            lock (touchesUpdated) updateUpdated();
-            lock (touchesEnded) updateEnded();
-            lock (touchesCancelled) updateCancelled();
+            if (touchesBegan.Count > 0)
+            {
+                tmpList_TouchPoint.Clear();
+                lock (touchesBegan)
+                {
+                    tmpList_TouchPoint.AddRange(touchesBegan);
+                    touchesBegan.Clear();
+                }
+                updateBegan(tmpList_TouchPoint);
+            }
+
+            if (touchesUpdated.Count > 0)
+            {
+                tmpList_int.Clear();
+                lock (touchesUpdated)
+                {
+                    tmpList_int.AddRange(touchesUpdated);
+                    touchesUpdated.Clear();
+                }
+                updateUpdated(tmpList_int);
+            }
+
+            if (touchesEnded.Count > 0)
+            {
+                tmpList_int.Clear();
+                lock (touchesEnded)
+                {
+                    tmpList_int.AddRange(touchesEnded);
+                    touchesEnded.Clear();
+                }
+                updateEnded(tmpList_int);
+            }
+
+            if (touchesCancelled.Count > 0)
+            {
+                tmpList_int.Clear();
+                lock (touchesCancelled)
+                {
+                    tmpList_int.AddRange(touchesCancelled);
+                    touchesCancelled.Clear();
+                }
+                updateCancelled(tmpList_int);
+            }
+
+            if (touchesManuallyCancelled.Count > 0)
+            {
+                tmpList_CancelledTouch.Clear();
+                lock (touchesManuallyCancelled)
+                {
+                    tmpList_CancelledTouch.AddRange(touchesManuallyCancelled);
+                    touchesManuallyCancelled.Clear();
+                }
+                updateManuallyCancelled(tmpList_CancelledTouch);
+            }
 
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
@@ -624,5 +716,23 @@ namespace TouchScript
 #endif
 
         #endregion
+
+        #region Structs
+
+        private struct CancelledTouch
+        {
+            public int Id;
+            public bool Redispatch;
+
+            public CancelledTouch(int id, bool redispatch = false)
+            {
+                Id = id;
+                Redispatch = redispatch;
+            }
+
+        }
+
+        #endregion
+
     }
 }
