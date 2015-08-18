@@ -155,7 +155,7 @@ namespace TouchScript.Gestures.Simple
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold * dpiMovementThreshold)
                 {
                     isMoving = true;
-                    oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter - movementBuffer, WorldTransformPlane);
+                    oldWorldCenter = projectionLayer.ProjectTo(newScreenCenter - movementBuffer, WorldTransformPlane);
                     newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
                     worldDelta = newWorldCenter - oldWorldCenter;
                 }
