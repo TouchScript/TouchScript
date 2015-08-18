@@ -176,19 +176,26 @@ namespace TouchScript
     /// </summary>
     public class TouchEventArgs : EventArgs
     {
+
         /// <summary>
         /// Gets list of touches participating in the event.
         /// </summary>
         /// <value>List of touches added, changed or removed this frame.</value>
         public IList<ITouch> Touches { get; private set; }
 
+        private static TouchEventArgs instance;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
         /// </summary>
-        /// <param name="touches">List of touches for an event.</param>
-        public TouchEventArgs(IList<ITouch> touches)
+        private TouchEventArgs() {}
+
+        public static TouchEventArgs GetCachedEventArgs(IList<ITouch> touches)
         {
-            Touches = touches;
+            if (instance == null) instance = new TouchEventArgs();
+            instance.Touches = touches;
+            return instance;
         }
+
     }
 }

@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Layers;
@@ -14,7 +15,7 @@ namespace TouchScript
     /// <para>An object implementing this interface is created when user touches the screen. A unique id is assigned to it which doesn't change throughout its life.</para>
     /// <para><b>Attention!</b> Do not store references to these objects beyond touch's lifetime (i.e. when target finger is lifted off). These objects may be reused internally. Store unique ids instead.</para>
     /// </summary>
-    public interface ITouch
+    public interface ITouch : IEquatable<ITouch>
     {
         /// <summary>
         /// Internal unique touch point id.
