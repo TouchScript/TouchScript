@@ -31,7 +31,7 @@ namespace TouchScript
 #if DEBUG
         [SerializeField]
         [ToggleLeft]
-        private bool debugMode = true;
+        private bool debugMode = false;
 #endif
 
     }

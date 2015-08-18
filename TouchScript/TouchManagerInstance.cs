@@ -373,6 +373,10 @@ namespace TouchScript
 
             StopAllCoroutines();
             StartCoroutine("lateAwake");
+
+#if DEBUG
+            DebugMode = true;
+#endif
         }
 
         private void OnLevelWasLoaded(int value)
