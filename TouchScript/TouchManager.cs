@@ -34,6 +34,11 @@ namespace TouchScript
     {
         #region Constants
 
+#if DEBUG
+        public const int DEBUG_GL_START = int.MinValue;
+        public const int DEBUG_GL_TOUCH = DEBUG_GL_START;
+#endif
+
         /// <summary>
         /// Values of a bit-mask representing which Unity messages an instance of <see cref="TouchManager"/> will dispatch.
         /// </summary>
@@ -275,6 +280,11 @@ namespace TouchScript
             updateSubscription();
         }
 
+        private void OnDisable()
+        {
+            removeSubscriptions();
+        }
+
         #endregion
 
         #region Private functions
@@ -286,12 +296,7 @@ namespace TouchScript
 
             if (sendMessageTarget == null) sendMessageTarget = gameObject;
 
-            Instance.FrameStarted -= frameStartedhandler;
-            Instance.FrameFinished -= frameFinishedHandler;
-            Instance.TouchesBegan -= touchesBeganHandler;
-            Instance.TouchesMoved -= touchesMovedHandler;
-            Instance.TouchesEnded -= touchesEndedHandler;
-            Instance.TouchesCancelled -= touchesCancelledHandler;
+            removeSubscriptions();
 
             if (!useSendMessage) return;
 
@@ -301,6 +306,19 @@ namespace TouchScript
             if ((SendMessageEvents & MessageType.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
             if ((SendMessageEvents & MessageType.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
             if ((SendMessageEvents & MessageType.TouchesCancelled) != 0) Instance.TouchesCancelled += touchesCancelledHandler;
+        }
+
+        private void removeSubscriptions()
+        {
+            if (!Application.isPlaying) return;
+            if (Instance == null) return;
+
+            Instance.FrameStarted -= frameStartedhandler;
+            Instance.FrameFinished -= frameFinishedHandler;
+            Instance.TouchesBegan -= touchesBeganHandler;
+            Instance.TouchesMoved -= touchesMovedHandler;
+            Instance.TouchesEnded -= touchesEndedHandler;
+            Instance.TouchesCancelled -= touchesCancelledHandler;
         }
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)

@@ -60,11 +60,13 @@
     <Compile Include="Behaviors\TouchScriptInputModule.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Clusters.cs" />
+    <Compile Include="DebuggableMonoBehaviour.cs" />
     <Compile Include="Debugging\TouchDebugger.cs" />
     <Compile Include="Devices\Display\GenericDisplayDevice.cs" />
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
+    <Compile Include="IDebuggable.cs" />
     <Compile Include="Utils\EventHandlerExtensions.cs" />
     <Compile Include="Gestures\FlickGesture.cs" />
     <Compile Include="Gestures\Gesture.cs" />
@@ -113,6 +115,8 @@
     <Compile Include="Utils\ClusterUtils.cs" />
     <Compile Include="Utils\Attributes\NullToggleAttribute.cs" />
     <Compile Include="Utils\Attributes\ToggleLeftAttribute.cs" />
+    <Compile Include="Utils\Geom\TwoD.cs" />
+    <Compile Include="Utils\Graphics\GLDebug.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
     <Compile Include="InputSources\MobileInput.cs" />
     <Compile Include="Utils\TimedSequence.cs" />

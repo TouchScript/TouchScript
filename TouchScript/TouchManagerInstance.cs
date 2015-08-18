@@ -12,6 +12,9 @@ using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
 using TouchScript.Utils;
+#if DEBUG
+using TouchScript.Utils.Graphics;
+#endif
 using UnityEngine;
 
 namespace TouchScript
@@ -19,7 +22,7 @@ namespace TouchScript
     /// <summary>
     /// Default implementation of <see cref="ITouchManager"/>.
     /// </summary>
-    internal sealed class TouchManagerInstance : MonoBehaviour, ITouchManager
+    internal sealed class TouchManagerInstance : DebuggableMonoBehaviour, ITouchManager
     {
         #region Events
 
@@ -405,6 +408,9 @@ namespace TouchScript
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
             dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
+#if DEBUG
+            debugTouchSize = Vector2.one * dotsPerCentimeter;
+#endif
         }
 
         private void updateLayers()
@@ -479,6 +485,14 @@ namespace TouchScript
                     }
                 }
 
+#if DEBUG
+                for (var i = 0; i < touchesList.Count; i++)
+                {
+                    var touch = touchesList[i];
+                    addDebugFigureForTouch(touch);
+                }
+#endif
+
                 touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(touchesList));
                 touchesBegan.Clear();
             }
@@ -500,6 +514,15 @@ namespace TouchScript
                     }
                 }
 
+#if DEBUG
+                for (var i = 0; i < updated.Count; i++)
+                {
+                    var touch = updated[i];
+                    removeDebugFigureForTouch(touch);
+                    addDebugFigureForTouch(touch);
+                }
+#endif
+
                 touchesMovedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesUpdated.Clear();
             }
@@ -518,6 +541,14 @@ namespace TouchScript
                     updated.Add(touch);
                     if (touch.Layer != null) touch.Layer.EndTouch(touch);
                 }
+
+#if DEBUG
+                for (var i = 0; i < updated.Count; i++)
+                {
+                    var touch = updated[i];
+                    removeDebugFigureForTouch(touch);
+                }
+#endif
 
                 touchesEndedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesEnded.Clear();
@@ -538,6 +569,14 @@ namespace TouchScript
                     if (touch.Layer != null) touch.Layer.CancelTouch(touch);
                 }
 
+#if DEBUG
+                for (var i = 0; i < updated.Count; i++)
+                {
+                    var touch = updated[i];
+                    removeDebugFigureForTouch(touch);
+                }
+#endif
+
                 touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesCancelled.Clear();
             }
@@ -554,6 +593,20 @@ namespace TouchScript
 
             frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
+
+#if DEBUG
+        private Vector2 debugTouchSize;
+
+        private void removeDebugFigureForTouch(ITouch touch)
+        {
+            GLDebug.RemoveFigure(TouchManager.DEBUG_GL_TOUCH + touch.Id);
+        }
+
+        private void addDebugFigureForTouch(ITouch touch)
+        {
+            GLDebug.DrawSquareScreenSpace(TouchManager.DEBUG_GL_TOUCH + touch.Id, touch.Position, 0, debugTouchSize, Color.white, float.PositiveInfinity);
+        }
+#endif
 
         #endregion
     }
