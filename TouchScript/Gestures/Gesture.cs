@@ -71,6 +71,16 @@ namespace TouchScript.Gestures
             Recognized = Ended
         }
 
+        protected enum TouchesNumState
+        {
+            InRange,
+            TooFew,
+            TooMany,
+            PassedMinThreshold,
+            PassedMaxThreshold,
+            PassedMinMaxThreshold
+        }
+
         #endregion
 
         #region Events
@@ -354,6 +364,8 @@ namespace TouchScript.Gestures
         /// </summary>
         protected ITouchManager touchManager { get; private set; }
 
+        protected TouchesNumState touchesNumState { get; private set; }
+
         /// <summary>
         /// Touch points the gesture currently owns and works with.
         /// </summary>
@@ -621,6 +633,7 @@ namespace TouchScript.Gestures
             activeTouches.Clear();
             numTouches = 0;
             delayedStateChange = GestureState.Possible;
+            touchesNumState = TouchesNumState.TooFew;
             requiredGestureFailed = false;
             reset();
         }
@@ -629,128 +642,170 @@ namespace TouchScript.Gestures
         {
             var count = touches.Count;
             var total = numTouches + count;
-            if (minTouches > 0 && numTouches < minTouches)
+            touchesNumState = TouchesNumState.InRange;
+
+            if (minTouches <= 0)
             {
-                // haven't passed the threshold yet
-                if (total < minTouches)
+                // minTouches is not set and we got our first touches
+                if (numTouches == 0) touchesNumState = TouchesNumState.PassedMinThreshold;
+            }
+            else
+            {
+                if (numTouches < minTouches)
                 {
-                    activeTouches.AddRange(touches);
-                    numTouches += count;
-                    return;
+                    // had < minTouches, got >= minTouches
+                    if (total >= minTouches) touchesNumState = TouchesNumState.PassedMinThreshold;
+                    else touchesNumState = TouchesNumState.TooFew;
                 }
-                if (maxTouches > 0 && total > maxTouches)
+            }
+
+            if (maxTouches > 0)
+            {
+                if (numTouches <= maxTouches)
                 {
-                    // passed the minimum threshold but immediately passed the maximum threshold too
-                    switch (state)
+                    if (total > maxTouches)
                     {
-                        case GestureState.Began:
-                        case GestureState.Changed:
-                            setState(GestureState.Ended);
-                            break;
-                        case GestureState.Possible:
-                            setState(GestureState.Failed);
-                            break;
+                        // this event we crossed both minTouches and maxTouches
+                        if (touchesNumState == TouchesNumState.PassedMinThreshold) touchesNumState = TouchesNumState.PassedMinMaxThreshold;
+                        // this event we crossed maxTouches
+                        else touchesNumState = TouchesNumState.PassedMaxThreshold;
                     }
-                    return;
                 }
-                activeTouches.AddRange(touches);
-                numTouches += count;
-                touchesBegan(activeTouches);
-                return;
+                // last event we already were over maxTouches
+                else touchesNumState = TouchesNumState.TooMany;
             }
-            if (maxTouches > 0 && total > maxTouches)
-            {
-                switch (state)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        setState(GestureState.Ended);
-                        break;
-                    case GestureState.Possible:
-                        setState(GestureState.Failed);
-                        break;
-                }
-                return;
-            }
+
             activeTouches.AddRange(touches);
-            numTouches += count;
+            numTouches = total;
             touchesBegan(touches);
         }
 
         internal void TouchesMoved(IList<ITouch> touches)
         {
-            // haven't passed the threshold yet
-            if (minTouches > 0 && numTouches < minTouches) return;
+            touchesNumState = TouchesNumState.InRange;
+            if (minTouches > 0 && numTouches < minTouches) touchesNumState = TouchesNumState.TooFew;
+            if (maxTouches > 0 && touchesNumState == TouchesNumState.InRange && numTouches > maxTouches) touchesNumState = TouchesNumState.TooMany;
             touchesMoved(touches);
         }
 
         internal void TouchesEnded(IList<ITouch> touches)
         {
             var count = touches.Count;
-            
-            if (minTouches > 0)
+            var total = numTouches - count;
+            touchesNumState = TouchesNumState.InRange;
+
+            if (minTouches <= 0)
             {
-                if (numTouches < minTouches)
+                // have no touches
+                if (total == 0) touchesNumState = TouchesNumState.PassedMinThreshold;
+            }
+            else
+            {
+                if (numTouches >= minTouches)
                 {
-                    // haven't passed the threshold yet
-                    for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-                    numTouches -= count;
-                    return;
+                    // had >= minTouches, got < minTouches
+                    if (total < minTouches) touchesNumState = TouchesNumState.PassedMinThreshold;
                 }
-                if (numTouches - count < minTouches)
+                // last event we already were under minTouches
+                else touchesNumState = TouchesNumState.TooFew;
+            }
+
+            if (maxTouches > 0)
+            {
+                if (numTouches > maxTouches)
                 {
-                    // moved below the threshold
-                    switch (state)
+                    if (total <= maxTouches)
                     {
-                        case GestureState.Began:
-                        case GestureState.Changed:
-                            setState(GestureState.Ended);
-                            break;
-                        case GestureState.Possible:
-                            setState(GestureState.Failed);
-                            break;
+                        // this event we crossed both minTouches and maxTouches
+                        if (touchesNumState == TouchesNumState.PassedMinThreshold) touchesNumState = TouchesNumState.PassedMinMaxThreshold;
+                        // this event we crossed maxTouches
+                        else touchesNumState = TouchesNumState.PassedMaxThreshold;
                     }
-                    return;
+                    // last event we already were over maxTouches
+                    else touchesNumState = TouchesNumState.TooMany;
                 }
             }
 
             for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-            numTouches -= count;
+            numTouches = total;
+
+            if (combineTouches)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    touchSequence.Add(touches[i]);
+                }
+
+                if (NumTouches == 0)
+                {
+                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
+                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval,
+                        shouldCacheTouchPosition);
+                    cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
+                    cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
+                }
+            }
+            else
+            {
+                if (NumTouches == 0)
+                {
+                    var lastPoint = touches[count - 1];
+                    if (shouldCacheTouchPosition(lastPoint))
+                    {
+                        cachedScreenPosition = lastPoint.Position;
+                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
+                    }
+                    else
+                    {
+                        cachedScreenPosition = TouchManager.INVALID_POSITION;
+                        cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
+                    }
+                }
+            }
+
             touchesEnded(touches);
         }
 
         internal void TouchesCancelled(IList<ITouch> touches)
         {
             var count = touches.Count;
+            var total = numTouches - count;
+            touchesNumState = TouchesNumState.InRange;
 
-            if (minTouches > 0)
+            if (minTouches <= 0)
             {
-                if (numTouches < minTouches)
+                // have no touches
+                if (total == 0) touchesNumState = TouchesNumState.PassedMinThreshold;
+            }
+            else
+            {
+                if (numTouches >= minTouches)
                 {
-                    // haven't passed the threshold yet
-                    for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-                    numTouches -= count;
-                    return;
+                    // had >= minTouches, got < minTouches
+                    if (total < minTouches) touchesNumState = TouchesNumState.PassedMinThreshold;
                 }
-                if (numTouches - count < minTouches)
+                // last event we already were under minTouches
+                else touchesNumState = TouchesNumState.TooFew;
+            }
+
+            if (maxTouches > 0)
+            {
+                if (numTouches > maxTouches)
                 {
-                    // moved below the threshold
-                    switch (state)
+                    if (total <= maxTouches)
                     {
-                        case GestureState.Began:
-                        case GestureState.Changed:
-                            setState(GestureState.Cancelled);
-                            break;
-                        case GestureState.Possible:
-                            setState(GestureState.Failed);
-                            break;
+                        // this event we crossed both minTouches and maxTouches
+                        if (touchesNumState == TouchesNumState.PassedMinThreshold) touchesNumState = TouchesNumState.PassedMinMaxThreshold;
+                        // this event we crossed maxTouches
+                        else touchesNumState = TouchesNumState.PassedMaxThreshold;
                     }
-                    return;
+                    // last event we already were over maxTouches
+                    else touchesNumState = TouchesNumState.TooMany;
                 }
             }
 
             for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-            numTouches -= count;
+            numTouches = total;
             touchesCancelled(touches);
         }
 
@@ -836,40 +891,6 @@ namespace TouchScript.Gestures
         /// <param name="touches">The touches.</param>
         protected virtual void touchesEnded(IList<ITouch> touches)
         {
-            var count = touches.Count;
-            if (combineTouches)
-            {
-                for (var i = 0; i < count; i++)
-                {
-                    touchSequence.Add(touches[i]);
-                }
-
-                if (NumTouches == 0)
-                {
-                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval,
-                        shouldCacheTouchPosition);
-                    cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
-                    cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
-                }
-            }
-            else
-            {
-                if (NumTouches == 0)
-                {
-                    var lastPoint = touches[count - 1];
-                    if (shouldCacheTouchPosition(lastPoint))
-                    {
-                        cachedScreenPosition = lastPoint.Position;
-                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
-                    }
-                    else
-                    {
-                        cachedScreenPosition = TouchManager.INVALID_POSITION;
-                        cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -878,6 +899,37 @@ namespace TouchScript.Gestures
         /// <param name="touches">The touches.</param>
         protected virtual void touchesCancelled(IList<ITouch> touches)
         {
+            var count = touches.Count;
+
+            if (minTouches > 0)
+            {
+                if (numTouches < minTouches)
+                {
+                    // haven't passed the threshold yet
+                    for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
+                    numTouches -= count;
+                    return;
+                }
+                if (numTouches - count < minTouches)
+                {
+                    // moved below the threshold
+                    switch (state)
+                    {
+                        case GestureState.Began:
+                        case GestureState.Changed:
+                            setState(GestureState.Cancelled);
+                            break;
+                        case GestureState.Possible:
+                            setState(GestureState.Failed);
+                            break;
+                    }
+                    return;
+                }
+            }
+
+            for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
+            numTouches -= count;
+            touchesCancelled(touches);
         }
 
         /// <summary>

@@ -95,7 +95,7 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (NumTouches == touches.Count) setState(GestureState.Recognized);
+            if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }
 
         /// <inheritdoc />

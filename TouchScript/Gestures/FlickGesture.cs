@@ -156,9 +156,16 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (NumTouches == touches.Count)
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
             {
-                isActive = true;
+                if (State == GestureState.Possible) setState(GestureState.Failed);
+            }
+            else if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            {
+                // Starting the gesture when it is already active? => we released one finger and pressed again while moving
+                if (isActive) setState(GestureState.Failed);
+                else isActive = true;
             }
         }
 
@@ -167,7 +174,7 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            if (!moving)
+            if (isActive || !moving)
             {
                 movementBuffer += ScreenPosition - PreviousScreenPosition;
                 var dpiMovementThreshold = MovementThreshold * touchManager.DotsPerCentimeter;
@@ -185,9 +192,7 @@ namespace TouchScript.Gestures
 
             if (NumTouches == 0)
             {
-                isActive = false;
-
-                if (!moving)
+                if (!isActive || !moving)
                 {
                     setState(GestureState.Failed);
                     return;

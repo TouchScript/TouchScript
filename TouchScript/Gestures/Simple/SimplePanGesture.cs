@@ -135,8 +135,10 @@ namespace TouchScript.Gestures.Simple
             base.touchesMoved(touches);
 
             var worldDelta = Vector3.zero;
-            Vector3 oldWorldCenter, newWorldCenter;
 
+            if (touchesNumState != TouchesNumState.InRange) return;
+
+            Vector3 oldWorldCenter, newWorldCenter;
             Vector2 oldScreenCenter = PreviousScreenPosition;
             Vector2 newScreenCenter = ScreenPosition;
 

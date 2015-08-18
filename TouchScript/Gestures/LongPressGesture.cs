@@ -45,15 +45,6 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Maximum number of simultaneous touch points.
-        /// </summary>
-        public int MaxTouches
-        {
-            get { return maxTouches; }
-            set { maxTouches = value; }
-        }
-
-        /// <summary>
         /// Total time in seconds required to hold touches still.
         /// </summary>
         public float TimeToPress
@@ -78,10 +69,6 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Private variables
-
-        [SerializeField]
-        [NullToggle(NullIntValue = int.MaxValue)]
-        private int maxTouches = int.MaxValue;
 
         [SerializeField]
         private float timeToPress = 1;
@@ -115,13 +102,11 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (NumTouches > MaxTouches)
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
-                return;
-            }
-
-            if (NumTouches == touches.Count)
+            } else if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 StartCoroutine("wait");
             }
@@ -144,7 +129,7 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (NumTouches == 0)
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 setState(GestureState.Failed);
             }
