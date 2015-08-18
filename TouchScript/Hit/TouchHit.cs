@@ -16,15 +16,20 @@ namespace TouchScript.Hit
 
         #region Constructors
 
-        internal TouchHit() {}
+        public TouchHit() {}
 
         #endregion
 
         #region Internal methods
 
-        internal void InitWith(Transform value)
+        internal void INTERNAL_InitWith(Transform value)
         {
             Transform = value;
+        }
+
+        internal virtual void INTERNAL_Reset()
+        {
+            Transform = null;
         }
 
         #endregion

@@ -227,8 +227,10 @@ namespace TouchScript.Debugging
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            foreach (var touch in e.Touches)
+            var count = e.Touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = e.Touches[i];
                 dummies.Add(touch.Id, touch);
                 if (touch.Tags.Count > 0)
                 {
@@ -239,8 +241,10 @@ namespace TouchScript.Debugging
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            foreach (var touch in e.Touches)
+            var count = e.Touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = e.Touches[i];
                 ITouch dummy;
                 if (!dummies.TryGetValue(touch.Id, out dummy)) return;
                 updateDummy(touch);
@@ -249,8 +253,10 @@ namespace TouchScript.Debugging
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            foreach (var touch in e.Touches)
+            var count = e.Touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = e.Touches[i];
                 ITouch dummy;
                 if (!dummies.TryGetValue(touch.Id, out dummy)) return;
                 dummies.Remove(touch.Id);

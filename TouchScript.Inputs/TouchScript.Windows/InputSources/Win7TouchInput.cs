@@ -86,9 +86,10 @@ namespace TouchScript.InputSources
             if (DisableMouseInputInBuilds)
             {
                 var inputs = FindObjectsOfType<MouseInput>();
-                foreach (var mouseInput in inputs)
+                var count = inputs.Length;
+                for (var i = 0; i < count; i++)
                 {
-                    mouseInput.enabled = false;
+                    inputs[i].enabled = false;
                 }
             }
 
@@ -152,14 +153,10 @@ namespace TouchScript.InputSources
             {
                 case WM_TOUCH:
                     decodeTouches(wParam, lParam);
-                    break;
-                case WM_CLOSE:
-                    UnregisterTouchWindow(hWnd);
-                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
                     return IntPtr.Zero;
+                default:
+                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
             }
-            return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
 
         private void decodeTouches(IntPtr wParam, IntPtr lParam)
@@ -218,7 +215,6 @@ namespace TouchScript.InputSources
 
         // Touch event window message constants [winuser.h]
         private const int WM_TOUCH = 0x0240;
-        private const int WM_CLOSE = 0x0010;
 
         // Touch API defined structures [winuser.h]
         [StructLayout(LayoutKind.Sequential)]
@@ -279,9 +275,6 @@ namespace TouchScript.InputSources
 
         [DllImport("user32.dll")]
         private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
-
-        [DllImport("coredll.dll", EntryPoint = "SendMessage", SetLastError = true)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("Kernel32.dll")]
         private static extern ushort GlobalAddAtom(string lpString);

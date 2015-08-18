@@ -99,7 +99,7 @@ namespace TouchScript.InputSources
 
             if (Input.GetMouseButtonDown(0))
             {
-                var pos = Input.mousePosition;
+                var pos = mousePointPos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
                 {
                     if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;

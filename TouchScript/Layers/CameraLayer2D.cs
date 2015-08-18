@@ -21,10 +21,9 @@ namespace TouchScript.Layers
         [HideInInspector]
         [FormerlySerializedAs("sortedLayerIds")]
         private int[] layerIds = new int[0];
-
         private Dictionary<int, int> layerById = new Dictionary<int, int>();
-
         private List<RaycastHit2D> sortedHits;
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10); 
 
         #endregion
 
@@ -91,12 +90,14 @@ namespace TouchScript.Layers
         private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out ITouchHit hit)
         {
             hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
-            var hitTests = raycastHit.transform.GetComponents<HitTest>();
-            if (hitTests.Length == 0) return HitTest.ObjectHitResult.Hit;
+            raycastHit.transform.GetComponents(tmpHitTestList);
+            var count = tmpHitTestList.Count;
+            if (count == 0) return HitTest.ObjectHitResult.Hit;
 
             var hitResult = HitTest.ObjectHitResult.Hit;
-            foreach (var test in hitTests)
+            for (var i = 0; i < count; i++)
             {
+                var test = tmpHitTestList[i];
                 if (!test.enabled) continue;
                 hitResult = test.IsHit(hit);
                 if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;

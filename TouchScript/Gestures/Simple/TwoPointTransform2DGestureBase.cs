@@ -67,11 +67,13 @@ namespace TouchScript.Gestures.Simple
 
         /// <summary>
         /// Transform's center point screen position.
+        /// This is different from Gesture.ScreenPosition since it can be not just centroid of touch points. Also we calculate it anyway so why not cache it too.
         /// </summary>
         protected Vector2 screenPosition;
 
         /// <summary>
         /// Transform's center point previous screen position.
+        /// This is different from Gesture.ScreenPosition since it can be not just centroid of touch points. Also we calculate it anyway so why not cache it too.
         /// </summary>
         protected Vector2 previousScreenPosition;
 
@@ -98,7 +100,7 @@ namespace TouchScript.Gestures.Simple
         /// <returns>True if there are two or more active touch points, False otherwise.</returns>
         protected virtual bool gotEnoughTouches()
         {
-            return activeTouches.Count >= 2;
+            return NumTouches >= 2;
         }
 
         /// <summary>
@@ -110,8 +112,10 @@ namespace TouchScript.Gestures.Simple
         {
             var result = false;
             // We care only about the first and the second touch points
-            foreach (var touch in touches)
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = touches[i];
                 if (touch == activeTouches[0] || touch == activeTouches[1])
                 {
                     result = true;
@@ -162,7 +166,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 1 && (State == GestureState.Began || State == GestureState.Changed))
+            if (NumTouches == 1 && (State == GestureState.Began || State == GestureState.Changed))
             {
                 restart();
             }

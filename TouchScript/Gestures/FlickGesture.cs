@@ -56,7 +56,7 @@ namespace TouchScript.Gestures
             remove { flickedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> flickedInvoker;
 
         #endregion
@@ -156,9 +156,16 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count == touches.Count)
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
             {
-                isActive = true;
+                if (State == GestureState.Possible) setState(GestureState.Failed);
+            }
+            else if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            {
+                // Starting the gesture when it is already active? => we released one finger and pressed again while moving
+                if (isActive) setState(GestureState.Failed);
+                else isActive = true;
             }
         }
 
@@ -167,7 +174,7 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            if (!moving)
+            if (isActive || !moving)
             {
                 movementBuffer += ScreenPosition - PreviousScreenPosition;
                 var dpiMovementThreshold = MovementThreshold * touchManager.DotsPerCentimeter;
@@ -183,11 +190,9 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (NumTouches == 0)
             {
-                isActive = false;
-
-                if (!moving)
+                if (!isActive || !moving)
                 {
                     setState(GestureState.Failed);
                     return;
@@ -198,7 +203,8 @@ namespace TouchScript.Gestures
                 float lastTime;
                 var deltas = deltaSequence.FindElementsLaterThan(Time.time - FlickTime, out lastTime);
                 var totalMovement = Vector2.zero;
-                foreach (var delta in deltas) totalMovement += delta;
+                var count = deltas.Count;
+                for (var i = 0; i < count; i++) totalMovement += deltas[i];
 
                 switch (Direction)
                 {
@@ -224,18 +230,10 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            touchesEnded(touches);
-        }
-
-        /// <inheritdoc />
         protected override void onRecognized()
         {
             base.onRecognized();
-            flickedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (flickedInvoker != null) flickedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(FLICK_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

@@ -23,13 +23,13 @@ namespace TouchScript.Utils
         /// <returns>Centroid of touch points' positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
         public static Vector2 Get2DCenterPosition(IList<ITouch> touches)
         {
-            var length = touches.Count;
-            if (length == 0) return TouchManager.INVALID_POSITION;
-            if (length == 1) return touches[0].Position;
+            var count = touches.Count;
+            if (count == 0) return TouchManager.INVALID_POSITION;
+            if (count == 1) return touches[0].Position;
 
             var position = new Vector2();
-            foreach (var point in touches) position += point.Position;
-            return position / (float)length;
+            for (var i = 0; i < count; i++) position += touches[i].Position;
+            return position / count;
         }
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace TouchScript.Utils
         /// <returns>Centroid of previous touch point's positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
         public static Vector2 GetPrevious2DCenterPosition(IList<ITouch> touches)
         {
-            var length = touches.Count;
-            if (length == 0) return TouchManager.INVALID_POSITION;
-            if (length == 1) return touches[0].PreviousPosition;
+            var count = touches.Count;
+            if (count == 0) return TouchManager.INVALID_POSITION;
+            if (count == 1) return touches[0].PreviousPosition;
 
             var position = new Vector2();
-            foreach (var point in touches) position += point.PreviousPosition;
-            return position / (float)length;
+            for (var i = 0; i < count; i++) position += touches[i].PreviousPosition;
+            return position / count;
         }
 
         /// <summary>

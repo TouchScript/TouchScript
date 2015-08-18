@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -93,6 +94,7 @@ namespace TouchScript.Layers
         private Camera _camera;
 
         private Transform cameraTransform;
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 
@@ -109,11 +111,13 @@ namespace TouchScript.Layers
             }
 
             hit = TouchHitFactory.Instance.GetTouchHit(transform);
-            var hitTests = transform.GetComponents<HitTest>();
-            if (hitTests.Length == 0) return LayerHitResult.Hit;
+            transform.GetComponents(tmpHitTestList);
+            var count = tmpHitTestList.Count;
+            if (count == 0) return LayerHitResult.Hit;
 
-            foreach (var test in hitTests)
+            for (var i = 0; i < count; i++)
             {
+                var test = tmpHitTestList[i];
                 if (!test.enabled) continue;
                 var hitResult = test.IsHit(hit);
                 if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) return LayerHitResult.Miss;
@@ -126,7 +130,14 @@ namespace TouchScript.Layers
         public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
             if (_camera == null) return base.ProjectTo(screenPosition, projectionPlane);
-            else return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+        }
+
+        /// <inheritdoc />
+        public override Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            if (_camera == null) return base.ProjectFrom(worldPosition);
+            return _camera.WorldToScreenPoint(worldPosition);
         }
 
         #endregion

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Gestures;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript
@@ -49,16 +50,24 @@ namespace TouchScript
         private static bool shuttingDown = false;
 
         // Upcoming changes
-        private List<Gesture> gesturesToReset = new List<Gesture>(10);
+        private List<Gesture> gesturesToReset = new List<Gesture>(20);
+
+        private Action<Gesture, IList<ITouch>> _updateBegan, _updateMoved, _updateEnded, _updateCancelled;
+        private Action<Transform> _processTarget, _processTargetBegan;
 
         #endregion
 
         #region Temporary variables
 
         // Temporary variables for update methods.
+        // Dictionary<Transform, List<ITouch>> - touch points sorted by targets
         private Dictionary<Transform, List<ITouch>> targetTouches = new Dictionary<Transform, List<ITouch>>(10);
+        // Dictionary<Gesture, List<ITouch>> - touch points sorted by gesture
         private Dictionary<Gesture, List<ITouch>> gestureTouches = new Dictionary<Gesture, List<ITouch>>(10);
-        private List<Gesture> activeGestures = new List<Gesture>(10);
+        private List<Gesture> activeGestures = new List<Gesture>(20);
+        private static ObjectPool<List<Gesture>> gestureListPool = new ObjectPool<List<Gesture>>(10, () => new List<Gesture>(20), null, (l) => l.Clear());
+        private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(20, () => new List<ITouch>(10), null, (l) => l.Clear());
+        private static ObjectPool<List<Transform>> transformListPool = new ObjectPool<List<Transform>>(10, () => new List<Transform>(10), null, (l) => l.Clear());
 
         #endregion
 
@@ -67,6 +76,17 @@ namespace TouchScript
         private void Awake()
         {
             if (instance == null) instance = this;
+
+            _processTarget = processTarget;
+            _processTargetBegan = processTargetBegan;
+            _updateBegan = doUpdateBegan;
+            _updateMoved = doUpdateMoved;
+            _updateEnded = doUpdateEnded;
+            _updateCancelled = doUpdateCancelled;
+
+            gestureListPool.WarmUp(5);
+            touchListPool.WarmUp(10);
+            transformListPool.WarmUp(5);
         }
 
         private void OnEnable()
@@ -106,7 +126,7 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal Gesture.GestureState GestureChangeState(Gesture gesture, Gesture.GestureState state)
+        internal Gesture.GestureState INTERNAL_GestureChangeState(Gesture gesture, Gesture.GestureState state)
         {
             bool recognized = false;
             switch (state)
@@ -174,92 +194,144 @@ namespace TouchScript
 
         #region Private functions
 
-        private void updateBegan(IList<ITouch> touches)
+        private void doUpdateBegan(Gesture gesture, IList<ITouch> touchPoints)
         {
-            update(touches, processTargetBegan,
-                (gesture, touchPoints) => gesture.TouchesBegan(touchPoints));
+            gesture.INTERNAL_TouchesBegan(touchPoints);
         }
 
-        private void updateMoved(IList<ITouch> touches)
+        private void doUpdateMoved(Gesture gesture, IList<ITouch> touchPoints)
         {
-            update(touches, processTarget,
-                (gesture, touchPoints) => gesture.TouchesMoved(touchPoints));
+            gesture.INTERNAL_TouchesMoved(touchPoints);
         }
 
-        private void updateEnded(IList<ITouch> touches)
+        private void doUpdateEnded(Gesture gesture, IList<ITouch> touchPoints)
         {
-            update(touches, processTarget,
-                (gesture, touchPoints) => gesture.TouchesEnded(touchPoints));
+            gesture.INTERNAL_TouchesEnded(touchPoints);
         }
 
-        private void updateCancelled(IList<ITouch> touches)
+        private void doUpdateCancelled(Gesture gesture, IList<ITouch> touchPoints)
         {
-            update(touches, processTarget,
-                (gesture, touchPoints) => gesture.TouchesCancelled(touchPoints));
+            gesture.INTERNAL_TouchesCancelled(touchPoints);
         }
 
-        private void update(IList<ITouch> touches, Action<Transform> process, Action<Gesture, IList<ITouch>> dispatch)
+        private void update(IList<ITouch> updatedTouches, Action<Transform> process, Action<Gesture, IList<ITouch>> dispatch)
         {
             // WARNING! Arcane magic ahead!
-
-            // Dictionary<Transform, List<ITouch>> - touch points sorted by targets
-            targetTouches.Clear();
-            // Dictionary<Gesture, List<ITouch>> - touch points sorted by gesture
-            gestureTouches.Clear();
             // gestures which got any touch points
             // needed because there's no order in dictionary
             activeGestures.Clear();
+            var targets = transformListPool.Get();
 
-            foreach (var touch in touches)
+            // arrange touch points by target
+            var count = updatedTouches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = updatedTouches[i];
                 if (touch.Target != null)
                 {
                     List<ITouch> list;
                     if (!targetTouches.TryGetValue(touch.Target, out list))
                     {
-                        list = new List<ITouch>();
+                        list = touchListPool.Get();
                         targetTouches.Add(touch.Target, list);
+                        targets.Add(touch.Target);
                     }
                     list.Add(touch);
                 }
             }
-            // arranged touch points by target
 
-            foreach (var target in targetTouches.Keys) process(target);
-            foreach (var gesture in activeGestures)
+            // process all targets - get and sort all gestures on targets in hierarchy
+            count = targets.Count;
+            for (var i = 0; i < count; i++)
             {
-                if (gestureIsActive(gesture)) dispatch(gesture, gestureTouches[gesture]);
+                var target = targets[i];
+                process(target);
+                touchListPool.Release(targetTouches[target]);
             }
+            transformListPool.Release(targets);
+
+            // dispatch gesture events with touches assigned to them
+            count = activeGestures.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var gesture = activeGestures[i];
+                var list = gestureTouches[gesture];
+                if (gestureIsActive(gesture)) dispatch(gesture, list);
+                touchListPool.Release(list);
+            }
+
+            targetTouches.Clear();
+            gestureTouches.Clear();
         }
 
         private void processTarget(Transform target)
         {
-            // gestures on objects in the hierarchy from "root" to target
-            var possibleGestures = getHierarchyEndingWith(target);
+            var targetList = targetTouches[target];
+            var touchCount = targetList.Count;
 
-            foreach (var gesture in possibleGestures)
+            // gestures on objects in the hierarchy from "root" to target
+            var list = gestureListPool.Get();
+            getHierarchyEndingWith(target, list);
+
+            var count = list.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = list[i];
                 if (!gestureIsActive(gesture)) continue;
 
-                distributePointsByGestures(target, gesture, gesture.HasTouch);
+                var touchList = touchListPool.Get();
+                for (var j = 0; j < touchCount; j++)
+                {
+                    var touch = targetList[j];
+                    if (gesture.HasTouch(touch)) touchList.Add(touch);
+                }
+
+                if (touchList.Count > 0)
+                {
+                    if (gestureTouches.ContainsKey(gesture))
+                    {
+                        gestureTouches[gesture].AddRange(touchList);
+                        touchListPool.Release(touchList);
+                    }
+                    else
+                    {
+                        activeGestures.Add(gesture);
+                        gestureTouches.Add(gesture, touchList);
+                    }
+                }
+                else
+                {
+                    touchListPool.Release(touchList);
+                }
             }
+            gestureListPool.Release(list);
         }
 
         private void processTargetBegan(Transform target)
         {
+            var targetList = targetTouches[target];
+            var touchCount = targetList.Count;
+
+            var containingList = gestureListPool.Get();
+            var endingList = gestureListPool.Get();
             // gestures in the target's hierarchy which might affect gesture on the target
-            var mightBeActiveGestures = getHierarchyContaining(target);
+            getHierarchyContaining(target, containingList);
             // gestures on objects in the hierarchy from "root" to target
-            var possibleGestures = getHierarchyEndingWith(target);
-            foreach (var gesture in possibleGestures)
+            getHierarchyEndingWith(target, endingList);
+            var count = endingList.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = endingList[i];
                 // WARNING! Gestures might change during this loop.
                 // For example when one of them recognizes.
                 if (!gestureIsActive(gesture)) continue;
 
                 var canReceiveTouches = true;
-                foreach (var activeGesture in mightBeActiveGestures)
+                var activeCount = containingList.Count;
+                for (var j = 0; j < activeCount; j++)
                 {
+                    var activeGesture = containingList[j];
+
                     if (gesture == activeGesture) continue;
                     if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture)))
                     {
@@ -270,85 +342,97 @@ namespace TouchScript
                 }
 
                 // check gesture's ShouldReceiveTouch callback
-                if (canReceiveTouches) distributePointsByGestures(target, gesture, gesture.ShouldReceiveTouch);
-            }
-        }
-
-        private void distributePointsByGestures(Transform target, Gesture gesture, Predicate<ITouch> condition)
-        {
-            var touchesToReceive = targetTouches[target].FindAll(condition);
-            if (touchesToReceive.Count > 0)
-            {
-                if (gestureTouches.ContainsKey(gesture))
+                if (!canReceiveTouches) continue;
+                
+                var touchList = touchListPool.Get();
+                for (var j = 0; j < touchCount; j++)
                 {
-                    gestureTouches[gesture].AddRange(touchesToReceive);
+                    var touch = targetList[j];
+                    if (gesture.ShouldReceiveTouch(touch)) touchList.Add(touch);
+                }
+                if (touchList.Count > 0)
+                {
+                    if (gestureTouches.ContainsKey(gesture))
+                    {
+                        gestureTouches[gesture].AddRange(touchList);
+                        touchListPool.Release(touchList);
+                    }
+                    else
+                    {
+                        activeGestures.Add(gesture);
+                        gestureTouches.Add(gesture, touchList);
+                    }
                 }
                 else
                 {
-                    activeGestures.Add(gesture);
-                    gestureTouches.Add(gesture, touchesToReceive);
+                    touchListPool.Release(touchList);
                 }
             }
+
+            gestureListPool.Release(containingList);
+            gestureListPool.Release(endingList);
         }
 
         private void resetGestures()
         {
             if (gesturesToReset.Count == 0) return;
-            foreach (var gesture in gesturesToReset)
+
+            var count = gesturesToReset.Count;
+            for (var i = 0; i < count; i++)
             {
+                var gesture = gesturesToReset[i];
                 if (gesture == null) continue;
-                gesture.Reset();
-                gesture.SetState(Gesture.GestureState.Possible);
+                gesture.INTERNAL_ResetGesture();
+                gesture.INTERNAL_SetState(Gesture.GestureState.Possible);
             }
             gesturesToReset.Clear();
         }
 
         // parent <- parent <- target
-        private List<Gesture> getHierarchyEndingWith(Transform target)
+        private void getHierarchyEndingWith(Transform target, List<Gesture> outputList)
         {
-            var hierarchy = new List<Gesture>(10);
             while (target != null)
             {
-                hierarchy.AddRange(getEnabledGesturesOnTarget(target));
+                getEnabledGesturesOnTarget(target, outputList);
                 target = target.parent;
             }
-            return hierarchy;
         }
 
         // target <- child*
-        private List<Gesture> getHierarchyBeginningWith(Transform target, bool includeSelf)
+        private void getHierarchyBeginningWith(Transform target, List<Gesture> outputList, bool includeSelf)
         {
-            var hierarchy = new List<Gesture>(10);
             if (includeSelf)
             {
-                hierarchy.AddRange(getEnabledGesturesOnTarget(target));
+                getEnabledGesturesOnTarget(target, outputList);
             }
-            foreach (Transform child in target)
+
+            var count = target.childCount;
+            for (var i = 0; i < count; i++)
             {
-                hierarchy.AddRange(getHierarchyBeginningWith(child, true));
+                getHierarchyBeginningWith(target.GetChild(i), outputList, true);
             }
-            return hierarchy;
         }
 
-        private List<Gesture> getHierarchyContaining(Transform target)
+        private void getHierarchyContaining(Transform target, List<Gesture> outputList)
         {
-            var hierarchy = getHierarchyEndingWith(target);
-            hierarchy.AddRange(getHierarchyBeginningWith(target, false));
-            return hierarchy;
+            getHierarchyEndingWith(target, outputList);
+            getHierarchyBeginningWith(target, outputList, false);
         }
 
-        private List<Gesture> getEnabledGesturesOnTarget(Transform target)
+        private void getEnabledGesturesOnTarget(Transform target, List<Gesture> outputList)
         {
-            var result = new List<Gesture>(10);
             if (target.gameObject.activeInHierarchy)
             {
-                var gestures = target.GetComponents<Gesture>();
-                foreach (var gesture in gestures)
+                var list = gestureListPool.Get();
+                target.GetComponents(list);
+                var count = list.Count;
+                for (var i = 0; i < count; i++)
                 {
-                    if (gesture != null && gesture.enabled) result.Add(gesture);
+                    var gesture = list[i];
+                    if (gesture != null && gesture.enabled) outputList.Add(gesture);
                 }
+                gestureListPool.Release(list);
             }
-            return result;
         }
 
         private bool gestureIsActive(Gesture gesture)
@@ -370,12 +454,15 @@ namespace TouchScript
         {
             if (!gesture.ShouldBegin()) return false;
 
+            var gesturesToFail = gestureListPool.Get();
+            var gesturesInHierarchy = gestureListPool.Get();
             bool canRecognize = true;
-            List<Gesture> gesturesToFail = new List<Gesture>(10);
-            var gestures = getHierarchyContaining(gesture.transform);
+            getHierarchyContaining(gesture.transform, gesturesInHierarchy);
 
-            foreach (var otherGesture in gestures)
+            var count = gesturesInHierarchy.Count;
+            for (var i = 0; i < count; i++)
             {
+                var otherGesture = gesturesInHierarchy[i];
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
 
@@ -398,18 +485,22 @@ namespace TouchScript
 
             if (canRecognize)
             {
-                foreach (var otherGesture in gesturesToFail)
+                count = gesturesToFail.Count;
+                for (var i = 0; i < count; i++)
                 {
-                    failGesture(otherGesture);
+                    failGesture(gesturesToFail[i]);
                 }
             }
+
+            gestureListPool.Release(gesturesToFail);
+            gestureListPool.Release(gesturesInHierarchy);
 
             return canRecognize;
         }
 
         private void failGesture(Gesture gesture)
         {
-            gesture.SetState(Gesture.GestureState.Failed);
+            gesture.INTERNAL_SetState(Gesture.GestureState.Failed);
         }
 
         #endregion
@@ -428,22 +519,22 @@ namespace TouchScript
 
         private void touchBeganHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateBegan(touchEventArgs.Touches);
+            update(touchEventArgs.Touches, _processTargetBegan, _updateBegan);
         }
 
         private void touchMovedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateMoved(touchEventArgs.Touches);
+            update(touchEventArgs.Touches, _processTarget, _updateMoved);
         }
 
         private void touchEndedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateEnded(touchEventArgs.Touches);
+            update(touchEventArgs.Touches, _processTarget, _updateEnded);
         }
 
         private void touchCancelledHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            updateCancelled(touchEventArgs.Touches);
+            update(touchEventArgs.Touches, _processTarget, _updateCancelled);
         }
 
         #endregion

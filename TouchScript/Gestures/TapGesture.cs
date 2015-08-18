@@ -37,7 +37,7 @@ namespace TouchScript.Gestures
             remove { tappedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> tappedInvoker;
 
         #endregion
@@ -99,6 +99,7 @@ namespace TouchScript.Gestures
 
         private float distanceLimitInPixelsSquared;
 
+        private bool isActive = false;
         private int tapsDone;
         private Vector2 startPosition;
         private Vector2 totalMovement;
@@ -124,8 +125,16 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count == touches.Count)
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
             {
+                setState(GestureState.Failed);
+                return;
+            }
+
+            if (NumTouches == touches.Count)
+            {
+                // the first ever touch
                 if (tapsDone == 0)
                 {
                     startPosition = touches[0].Position;
@@ -142,9 +151,19 @@ namespace TouchScript.Gestures
                 {
                     if (distanceLimit < float.PositiveInfinity)
                     {
-                        if ((touches[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
+                        if ((touches[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared)
+                        {
+                            setState(GestureState.Failed);
+                            return;
+                        }
                     }
                 }
+            }
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            {
+                // Starting the gesture when it is already active? => we released one finger and pressed again
+                if (isActive) setState(GestureState.Failed);
+                else isActive = true;
             }
         }
 
@@ -155,7 +174,7 @@ namespace TouchScript.Gestures
 
             if (distanceLimit < float.PositiveInfinity)
             {
-                totalMovement += ScreenPosition - PreviousScreenPosition;
+                totalMovement += touches[0].Position - touches[0].PreviousPosition;
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
         }
@@ -165,8 +184,14 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (NumTouches == 0)
             {
+                if (!isActive)
+                {
+                    setState(GestureState.Failed);
+                    return;
+                }
+
                 // touches outside of gesture target are ignored in shouldCacheTouchPosition()
                 // if all touches are outside ScreenPosition will be invalid
                 if (TouchManager.IsInvalidPosition(ScreenPosition))
@@ -176,17 +201,10 @@ namespace TouchScript.Gestures
                 else
                 {
                     tapsDone++;
+                    isActive = false;
                     if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
                 }
             }
-        }
-
-        /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            setState(GestureState.Failed);
         }
 
         /// <inheritdoc />
@@ -195,7 +213,7 @@ namespace TouchScript.Gestures
             base.onRecognized();
 
             StopCoroutine("wait");
-            tappedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (tappedInvoker != null) tappedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TAP_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -204,6 +222,7 @@ namespace TouchScript.Gestures
         {
             base.reset();
 
+            isActive = false;
             totalMovement = Vector2.zero;
             StopCoroutine("wait");
             tapsDone = 0;

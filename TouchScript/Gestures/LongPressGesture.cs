@@ -37,21 +37,12 @@ namespace TouchScript.Gestures
             remove { longPressedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> longPressedInvoker;
 
         #endregion
 
         #region Public properties
-
-        /// <summary>
-        /// Maximum number of simultaneous touch points.
-        /// </summary>
-        public int MaxTouches
-        {
-            get { return maxTouches; }
-            set { maxTouches = value; }
-        }
 
         /// <summary>
         /// Total time in seconds required to hold touches still.
@@ -78,10 +69,6 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Private variables
-
-        [SerializeField]
-        [NullToggle(NullIntValue = int.MaxValue)]
-        private int maxTouches = int.MaxValue;
 
         [SerializeField]
         private float timeToPress = 1;
@@ -115,13 +102,11 @@ namespace TouchScript.Gestures
         {
             base.touchesBegan(touches);
 
-            if (activeTouches.Count > MaxTouches)
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
-                return;
-            }
-
-            if (activeTouches.Count == touches.Count)
+            } else if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 StartCoroutine("wait");
             }
@@ -144,9 +129,8 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
-                StopCoroutine("wait");
                 setState(GestureState.Failed);
             }
         }
@@ -155,7 +139,7 @@ namespace TouchScript.Gestures
         protected override void onRecognized()
         {
             base.onRecognized();
-            longPressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (longPressedInvoker != null) longPressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

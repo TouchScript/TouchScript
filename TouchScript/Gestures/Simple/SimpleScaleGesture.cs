@@ -63,7 +63,7 @@ namespace TouchScript.Gestures.Simple
             remove { scaleCompletedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> scaleStartedInvoker, scaledInvoker, scaleCompletedInvoker;
 
         #endregion
@@ -102,6 +102,7 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
         {
+            if (touchesNumState != TouchesNumState.InRange) return;
             if (!gotEnoughTouches()) return;
             if (!relevantTouches(touches)) return;
 
@@ -182,8 +183,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onBegan()
         {
             base.onBegan();
-            scaleStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaleStartedInvoker != null) scaleStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaledInvoker != null) scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(SCALE_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -195,7 +196,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onChanged()
         {
             base.onChanged();
-            scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaledInvoker != null) scaledInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -203,30 +204,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onRecognized()
         {
             base.onRecognized();
-            scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         /// <inheritdoc />

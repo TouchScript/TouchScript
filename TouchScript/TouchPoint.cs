@@ -67,10 +67,49 @@ namespace TouchScript
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
         private ITouchHit hit;
-        private bool isDirty = false;
+        private bool isDirty;
         private Dictionary<string, System.Object> properties;
 
         #endregion
+
+        #region Public methods
+
+        public override bool Equals(object other)
+        {
+            return Equals(other as ITouch);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+
+        public bool Equals(ITouch other)
+        {
+            if (other == null)
+                return false;
+
+            return Id == other.Id;
+        }
+
+        #endregion
+
+        public TouchPoint()
+        {
+            properties = new Dictionary<string, object>();
+        }
+
+        #region Internal methods
+
+        internal void INTERNAL_Reset()
+        {
+            TouchHitFactory.Instance.ReleaseTouchHit(hit);
+            hit = null;
+            Target = null;
+            Layer = null;
+            Tags = null;
+            properties.Clear();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchPoint"/> class.
@@ -78,21 +117,18 @@ namespace TouchScript
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
         /// <param name="tags">Initial tags.</param>
-        internal TouchPoint(int id, Vector2 position, Tags tags)
+        internal void INTERNAL_Init(int id, Vector2 position, Tags tags)
         {
             Id = id;
             this.position = PreviousPosition = newPosition = position;
-
+            isDirty = true;
             Tags = tags ?? new Tags();
-            properties = new Dictionary<string, object>();
         }
-
-        #region Internal methods
 
         /// <summary>
         /// Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.
         /// </summary>
-        internal void ResetPosition()
+        internal void INTERNAL_ResetPosition()
         {
             PreviousPosition = position;
             position = newPosition;
@@ -100,7 +136,7 @@ namespace TouchScript
             if (PreviousPosition != position) isDirty = true;
         }
 
-        internal void SetPosition(Vector2 value)
+        internal void INTERNAL_SetPosition(Vector2 value)
         {
             newPosition = value;
         }

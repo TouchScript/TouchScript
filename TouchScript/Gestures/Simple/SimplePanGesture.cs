@@ -63,7 +63,7 @@ namespace TouchScript.Gestures.Simple
             remove { panCompletedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> panStartedInvoker, pannedInvoker, panCompletedInvoker;
 
         #endregion
@@ -100,7 +100,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count < 2) return base.ScreenPosition;
+                if (NumTouches < 2) return base.ScreenPosition;
                 return (activeTouches[0].Position + activeTouches[1].Position) * .5f;
             }
         }
@@ -110,7 +110,7 @@ namespace TouchScript.Gestures.Simple
         {
             get
             {
-                if (activeTouches.Count < 2) return base.PreviousScreenPosition;
+                if (NumTouches < 2) return base.PreviousScreenPosition;
                 return (activeTouches[0].PreviousPosition + activeTouches[1].PreviousPosition) * .5f;
             }
         }
@@ -135,8 +135,10 @@ namespace TouchScript.Gestures.Simple
             base.touchesMoved(touches);
 
             var worldDelta = Vector3.zero;
-            Vector3 oldWorldCenter, newWorldCenter;
 
+            if (touchesNumState != TouchesNumState.InRange) return;
+
+            Vector3 oldWorldCenter, newWorldCenter;
             Vector2 oldScreenCenter = PreviousScreenPosition;
             Vector2 newScreenCenter = ScreenPosition;
 
@@ -153,7 +155,7 @@ namespace TouchScript.Gestures.Simple
                 if (movementBuffer.sqrMagnitude > dpiMovementThreshold * dpiMovementThreshold)
                 {
                     isMoving = true;
-                    oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter - movementBuffer, WorldTransformPlane);
+                    oldWorldCenter = projectionLayer.ProjectTo(newScreenCenter - movementBuffer, WorldTransformPlane);
                     newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
                     worldDelta = newWorldCenter - oldWorldCenter;
                 }
@@ -192,8 +194,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onBegan()
         {
             base.onBegan();
-            panStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            pannedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (panStartedInvoker != null) panStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (pannedInvoker != null) pannedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(PAN_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -205,7 +207,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onChanged()
         {
             base.onChanged();
-            pannedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (pannedInvoker != null) pannedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -213,30 +215,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onRecognized()
         {
             base.onRecognized();
-            panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (panCompletedInvoker != null) panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                panCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PAN_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         /// <inheritdoc />

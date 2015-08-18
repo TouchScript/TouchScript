@@ -19,33 +19,31 @@ namespace TouchScript.Editor.Gestures
         private const string TEXT_FRIENDLY_HEADER = "List of gestures which can work together with this gesture.";
 
         private static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
+        private static readonly GUIContent DEBUG_MODE = new GUIContent("Debug", "Turns on gesture debug mode.");
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
         private static readonly GUIContent SEND_STATE_CHANGE_MESSAGES = new GUIContent("Send State Change Messages", "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
         private static readonly GUIContent COMBINE_TOUCH_POINTS = new GUIContent("Combine Touch Points", "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
         private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
+        private static readonly GUIContent LIMIT_TOUCHES = new GUIContent("Limit touches", "");
 
         private static readonly Type GESTURE_TYPE = typeof(Gesture);
-        private static MethodInfo addFriendlyGestureId, removeFriendlyGestureId;
 
         protected bool shouldDrawCombineTouches = false;
 
         private Gesture instance;
         private SerializedProperty advanced;
+        private SerializedProperty debugMode;
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
+        private SerializedProperty minTouches, maxTouches;
         private SerializedProperty combineTouches, combineTouchesInterval;
         private SerializedProperty useSendMessage, sendMessageTarget, sendStateChangeMessages;
 
         private ReorderableList friendlyGesturesList;
         private int indexToRemove = -1;
-
-        static GestureEditor()
-        {
-            addFriendlyGestureId = GESTURE_TYPE.GetMethod("addFriendlyGestureId", BindingFlags.NonPublic | BindingFlags.Instance);
-            removeFriendlyGestureId = GESTURE_TYPE.GetMethod("removeFriendlyGestureId", BindingFlags.NonPublic | BindingFlags.Instance);
-        }
+        private float minTouchesFloat, maxTouchesFloat;
 
         protected virtual void OnEnable()
         {
@@ -54,6 +52,7 @@ namespace TouchScript.Editor.Gestures
             instance = target as Gesture;
 
             advanced = serializedObject.FindProperty("advancedProps");
+            debugMode = serializedObject.FindProperty("debugMode");
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
             combineTouches = serializedObject.FindProperty("combineTouches");
@@ -61,6 +60,11 @@ namespace TouchScript.Editor.Gestures
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
+            minTouches = serializedObject.FindProperty("minTouches");
+            maxTouches = serializedObject.FindProperty("maxTouches");
+
+            minTouchesFloat = minTouches.intValue;
+            maxTouchesFloat = maxTouches.intValue;
 
             friendlyGesturesList = new ReorderableList(serializedObject, friendlyGestures, false, false, false, true);
             friendlyGesturesList.headerHeight = 0;
@@ -84,6 +88,32 @@ namespace TouchScript.Editor.Gestures
         {
             serializedObject.UpdateIfDirtyOrScript();
 
+            var limitTouches = (minTouches.intValue > 0) || (maxTouches.intValue > 0);
+            var newLimitTouches = EditorGUILayout.ToggleLeft(LIMIT_TOUCHES, limitTouches);
+            if (newLimitTouches)
+            {
+                if (!limitTouches)
+                {
+                    minTouchesFloat = 0;
+                    maxTouchesFloat = 10;
+                }
+                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("Min: " + (int)minTouchesFloat + ", Max: " + (int)maxTouchesFloat);
+                EditorGUILayout.MinMaxSlider(ref minTouchesFloat, ref maxTouchesFloat, 0, 10);
+                EditorGUI.indentLevel--;
+            }
+            else
+            {
+                if (limitTouches)
+                {
+                    minTouchesFloat = 0;
+                    maxTouchesFloat = 0;
+                }
+            }
+
+            minTouches.intValue = (int)minTouchesFloat;
+            maxTouches.intValue = (int)maxTouchesFloat;
+
             EditorGUI.BeginChangeCheck();
             var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);
             if (EditorGUI.EndChangeCheck())
@@ -100,6 +130,12 @@ namespace TouchScript.Editor.Gestures
             drawFriendlyGestures();
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual void drawDebug()
+        {
+            if (debugMode == null) return;
+            EditorGUILayout.PropertyField(debugMode, DEBUG_MODE);
         }
 
         protected virtual void drawSendMessage()
@@ -144,6 +180,7 @@ namespace TouchScript.Editor.Gestures
 
         protected virtual void drawAdvanced()
         {
+            drawDebug();
             drawSendMessage();
             drawCombineTouches();
             drawRequireToFail();
@@ -237,7 +274,6 @@ namespace TouchScript.Editor.Gestures
             {
                 prop.arraySize++;
                 prop.GetArrayElementAtIndex(prop.arraySize - 1).objectReferenceValue = value;
-                addFriendlyGestureId.Invoke(instance, new object[] {value});
             }
 
             // Adding this gesture to that gesture.
@@ -260,7 +296,6 @@ namespace TouchScript.Editor.Gestures
                 p.GetArrayElementAtIndex(p.arraySize - 1).objectReferenceValue = target;
                 so.ApplyModifiedProperties();
                 EditorUtility.SetDirty(value);
-                addFriendlyGestureId.Invoke(value, new object[] {instance});
             }
         }
 
@@ -271,7 +306,6 @@ namespace TouchScript.Editor.Gestures
             removeFromArray(prop, index);
 
             if (gesture == null) return null;
-            removeFriendlyGestureId.Invoke(instance, new object[] {gesture});
 
             // Removing this gesture from that gesture.
             var so = new SerializedObject(gesture);
@@ -288,7 +322,6 @@ namespace TouchScript.Editor.Gestures
 
             so.ApplyModifiedProperties();
             EditorUtility.SetDirty(gesture);
-            removeFriendlyGestureId.Invoke(gesture, new object[] {instance});
 
             return gesture;
         }

@@ -37,7 +37,7 @@ namespace TouchScript.Gestures
             remove { releasedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> releasedInvoker;
 
         #endregion
@@ -95,14 +95,14 @@ namespace TouchScript.Gestures
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0) setState(GestureState.Recognized);
+            if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }
 
         /// <inheritdoc />
         protected override void onRecognized()
         {
             base.onRecognized();
-            releasedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (releasedInvoker != null) releasedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(RELEASE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

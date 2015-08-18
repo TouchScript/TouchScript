@@ -63,7 +63,7 @@ namespace TouchScript.Gestures.Simple
             remove { rotateCompletedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> rotateStartedInvoker, rotatedInvoker, rotateCompletedInvoker;
 
         #endregion
@@ -112,6 +112,7 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesMoved(IList<ITouch> touches)
         {
+            if (touchesNumState != TouchesNumState.InRange) return;
             if (!gotEnoughTouches()) return;
             if (!relevantTouches(touches)) return;
 
@@ -196,8 +197,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onBegan()
         {
             base.onBegan();
-            rotateStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            rotatedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (rotateStartedInvoker != null) rotateStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (rotatedInvoker != null) rotatedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
             {
                 SendMessageTarget.SendMessage(ROTATE_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
@@ -209,7 +210,7 @@ namespace TouchScript.Gestures.Simple
         protected override void onChanged()
         {
             base.onChanged();
-            rotatedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (rotatedInvoker != null) rotatedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
@@ -217,30 +218,8 @@ namespace TouchScript.Gestures.Simple
         protected override void onRecognized()
         {
             base.onRecognized();
-            rotateCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (rotateCompletedInvoker != null) rotateCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                rotateCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                rotateCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(ROTATE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         /// <inheritdoc />

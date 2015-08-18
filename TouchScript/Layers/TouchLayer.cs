@@ -109,6 +109,13 @@ namespace TouchScript.Layers
             return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
         }
 
+        /// <summary>
+        /// </summary>
+        public virtual Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            return worldPosition;
+        }
+
         #endregion
 
         #region Unity methods
@@ -119,7 +126,7 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying) StartCoroutine(lateAwake());
+            if (Application.isPlaying) TouchManager.Instance.AddLayer(this);
         }
 
         /// <summary>
@@ -134,7 +141,7 @@ namespace TouchScript.Layers
 
         #region Internal methods
 
-        internal bool BeginTouch(TouchPoint touch)
+        internal bool INTERNAL_BeginTouch(TouchPoint touch)
         {
             ITouchHit hit;
             var result = beginTouch(touch, out hit);
@@ -143,23 +150,23 @@ namespace TouchScript.Layers
                 touch.Layer = this;
                 touch.Hit = hit;
                 if (hit != null) touch.Target = hit.Transform;
-                touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
+                if (touchBeganInvoker != null) touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
         }
 
-        internal void UpdateTouch(ITouch touch)
+        internal void INTERNAL_UpdateTouch(ITouch touch)
         {
             updateTouch(touch);
         }
 
-        internal void EndTouch(ITouch touch)
+        internal void INTERNAL_EndTouch(ITouch touch)
         {
             endTouch(touch);
         }
 
-        internal void CancelTouch(ITouch touch)
+        internal void INTERNAL_CancelTouch(ITouch touch)
         {
             cancelTouch(touch);
         }
@@ -213,12 +220,6 @@ namespace TouchScript.Layers
         #endregion
 
         #region Private functions
-
-        private IEnumerator lateAwake()
-        {
-            yield return new WaitForEndOfFrame();
-            TouchManager.Instance.AddLayer(this);
-        }
 
         #endregion
     }

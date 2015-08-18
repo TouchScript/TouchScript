@@ -141,9 +141,22 @@ namespace TouchScript.Gestures.Simple
         /// <inheritdoc />
         protected override void touchesBegan(IList<ITouch> touches)
         {
-            base.touchesMoved(touches);
+            base.touchesBegan(touches);
 
-            if (touches.Count == activeTouches.Count)
+            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
+                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            {
+                switch (State)
+                {
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        setState(GestureState.Ended);
+                        break;
+                    case GestureState.Possible:
+                        setState(GestureState.Failed);
+                        break;
+                }
+            } else if (touches.Count == NumTouches)
             {
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
@@ -155,6 +168,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesMoved(touches);
 
+            if (touchesNumState != TouchesNumState.InRange) return;
             updateProjectionPlane();
         }
 
@@ -163,7 +177,7 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesEnded(touches);
 
-            if (activeTouches.Count == 0)
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 switch (State)
                 {
@@ -171,16 +185,11 @@ namespace TouchScript.Gestures.Simple
                     case GestureState.Changed:
                         setState(GestureState.Ended);
                         break;
+                    case GestureState.Possible:
+                        setState(GestureState.Failed);
+                        break;
                 }
             }
-        }
-
-        /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            touchesEnded(touches);
         }
 
         /// <inheritdoc />

@@ -75,9 +75,10 @@ namespace TouchScript.InputSources
 
             // disable mouse
             var inputs = FindObjectsOfType<MouseInput>();
-            foreach (var mouseInput in inputs)
+            var count = inputs.Length;
+            for (var i = 0; i < count; i++)
             {
-                mouseInput.enabled = false;
+                inputs[i].enabled = false;
             }
 
             base.OnEnable();
@@ -136,17 +137,17 @@ namespace TouchScript.InputSources
         {
             switch (msg)
             {
+                case WM_TOUCH:
+                    CloseTouchInputHandle(lParam); // don't let Unity handle this
+                    return IntPtr.Zero;
                 case WM_POINTERDOWN:
                 case WM_POINTERUP:
                 case WM_POINTERUPDATE:
                     decodeTouches(msg, wParam, lParam);
-                    break;
-                case WM_CLOSE:
-                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    Application.Quit();
                     return IntPtr.Zero;
+                default:
+                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
             }
-            return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
 
         private void decodeTouches(uint msg, IntPtr wParam, IntPtr lParam)
@@ -205,7 +206,7 @@ namespace TouchScript.InputSources
         #region p/invoke
 
         // Touch event window message constants [winuser.h]
-        private const int WM_CLOSE = 0x0010;
+        private const int WM_TOUCH = 0x0240;
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
         private const int WM_POINTERUPDATE = 0x0245;
@@ -302,6 +303,10 @@ namespace TouchScript.InputSources
 
         [DllImport("user32.dll")]
         private static extern int RemoveProp(IntPtr hWnd, string lpString);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern void CloseTouchInputHandle(IntPtr lParam);
 
         private int HIWORD(int value)
         {
