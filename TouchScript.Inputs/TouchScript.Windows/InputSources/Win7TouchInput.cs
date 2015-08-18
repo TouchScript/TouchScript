@@ -153,14 +153,10 @@ namespace TouchScript.InputSources
             {
                 case WM_TOUCH:
                     decodeTouches(wParam, lParam);
-                    break;
-                case WM_CLOSE:
-                    UnregisterTouchWindow(hWnd);
-                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    Application.Quit();
                     return IntPtr.Zero;
+                default:
+                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
             }
-            return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
 
         private void decodeTouches(IntPtr wParam, IntPtr lParam)
@@ -219,7 +215,6 @@ namespace TouchScript.InputSources
 
         // Touch event window message constants [winuser.h]
         private const int WM_TOUCH = 0x0240;
-        private const int WM_CLOSE = 0x0010;
 
         // Touch API defined structures [winuser.h]
         [StructLayout(LayoutKind.Sequential)]
