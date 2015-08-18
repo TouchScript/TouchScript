@@ -116,7 +116,6 @@
     <Compile Include="Utils\ClusterUtils.cs" />
     <Compile Include="Utils\Attributes\NullToggleAttribute.cs" />
     <Compile Include="Utils\Attributes\ToggleLeftAttribute.cs" />
-    <Compile Include="Utils\Geom\TwoD.cs" />
     <Compile Include="Utils\Debug\GLDebug.cs" />
     <Compile Include="Utils\ObjectPool.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />
