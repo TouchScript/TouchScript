@@ -504,7 +504,7 @@ namespace TouchScript
                 }
 #endif
 
-                touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(touchesList));
+                if (touchesBeganInvoker != null) touchesBeganInvoker.InvokeHandleExceptions(this, new TouchEventArgs(touchesList));
                 touchesBegan.Clear();
             }
         }
@@ -536,7 +536,7 @@ namespace TouchScript
                 }
 #endif
 
-                touchesMovedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
+                if (touchesMovedInvoker != null) touchesMovedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesUpdated.Clear();
             }
         }
@@ -564,7 +564,7 @@ namespace TouchScript
                 }
 #endif
 
-                touchesEndedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
+                if (touchesEndedInvoker != null) touchesEndedInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesEnded.Clear();
             }
         }
@@ -592,21 +592,21 @@ namespace TouchScript
                 }
 #endif
 
-                touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
+                if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, new TouchEventArgs(updated));
                 touchesCancelled.Clear();
             }
         }
 
         private void updateTouches()
         {
-            frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
             lock (touchesBegan) updateBegan();
             lock (touchesUpdated) updateUpdated();
             lock (touchesEnded) updateEnded();
             lock (touchesCancelled) updateCancelled();
 
-            frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
 
 #if DEBUG

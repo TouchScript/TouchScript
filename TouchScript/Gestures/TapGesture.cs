@@ -195,7 +195,7 @@ namespace TouchScript.Gestures
             base.onRecognized();
 
             StopCoroutine("wait");
-            tappedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (tappedInvoker != null) tappedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TAP_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 

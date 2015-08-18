@@ -194,7 +194,7 @@ namespace TouchScript.Gestures
                         break;
                 }
 
-                stateChangedInvoker.InvokeHandleExceptions(this, new GestureStateChangeEventArgs(state, PreviousState));
+                if (stateChangedInvoker != null) stateChangedInvoker.InvokeHandleExceptions(this, new GestureStateChangeEventArgs(state, PreviousState));
                 if (useSendMessage && sendStateChangeMessages && SendMessageTarget != null) sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
         }

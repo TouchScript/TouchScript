@@ -150,7 +150,7 @@ namespace TouchScript.Layers
                 touch.Layer = this;
                 touch.Hit = hit;
                 if (hit != null) touch.Target = hit.Transform;
-                touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
+                if (touchBeganInvoker != null) touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
