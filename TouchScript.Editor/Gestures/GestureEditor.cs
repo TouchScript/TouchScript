@@ -28,7 +28,6 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
 
         private static readonly Type GESTURE_TYPE = typeof(Gesture);
-        private static MethodInfo addFriendlyGestureId, removeFriendlyGestureId;
 
         protected bool shouldDrawCombineTouches = false;
 
@@ -45,8 +44,6 @@ namespace TouchScript.Editor.Gestures
 
         static GestureEditor()
         {
-            addFriendlyGestureId = GESTURE_TYPE.GetMethod("addFriendlyGestureId", BindingFlags.NonPublic | BindingFlags.Instance);
-            removeFriendlyGestureId = GESTURE_TYPE.GetMethod("removeFriendlyGestureId", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         protected virtual void OnEnable()
@@ -247,7 +244,6 @@ namespace TouchScript.Editor.Gestures
             {
                 prop.arraySize++;
                 prop.GetArrayElementAtIndex(prop.arraySize - 1).objectReferenceValue = value;
-                addFriendlyGestureId.Invoke(instance, new object[] {value});
             }
 
             // Adding this gesture to that gesture.
@@ -270,7 +266,6 @@ namespace TouchScript.Editor.Gestures
                 p.GetArrayElementAtIndex(p.arraySize - 1).objectReferenceValue = target;
                 so.ApplyModifiedProperties();
                 EditorUtility.SetDirty(value);
-                addFriendlyGestureId.Invoke(value, new object[] {instance});
             }
         }
 
@@ -281,7 +276,6 @@ namespace TouchScript.Editor.Gestures
             removeFromArray(prop, index);
 
             if (gesture == null) return null;
-            removeFriendlyGestureId.Invoke(instance, new object[] {gesture});
 
             // Removing this gesture from that gesture.
             var so = new SerializedObject(gesture);
@@ -298,7 +292,6 @@ namespace TouchScript.Editor.Gestures
 
             so.ApplyModifiedProperties();
             EditorUtility.SetDirty(gesture);
-            removeFriendlyGestureId.Invoke(gesture, new object[] {instance});
 
             return gesture;
         }

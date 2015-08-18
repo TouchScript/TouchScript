@@ -68,7 +68,7 @@ namespace TouchScript
             remove { touchesCancelledInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<TouchEventArgs> touchesBeganInvoker, touchesMovedInvoker,
             touchesEndedInvoker, touchesCancelledInvoker;
 

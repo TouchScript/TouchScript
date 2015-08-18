@@ -63,7 +63,7 @@ namespace TouchScript.Gestures.Simple
             remove { scaleCompletedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> scaleStartedInvoker, scaledInvoker, scaleCompletedInvoker;
 
         #endregion
@@ -205,28 +205,6 @@ namespace TouchScript.Gestures.Simple
             base.onRecognized();
             if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-        }
-
-        /// <inheritdoc />
-        protected override void onFailed()
-        {
-            base.onFailed();
-            if (PreviousState != GestureState.Possible)
-            {
-                if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void onCancelled()
-        {
-            base.onCancelled();
-            if (PreviousState != GestureState.Possible)
-            {
-                if (scaleCompletedInvoker != null) scaleCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-                if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(SCALE_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         /// <inheritdoc />

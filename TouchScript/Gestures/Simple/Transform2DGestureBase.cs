@@ -176,14 +176,6 @@ namespace TouchScript.Gestures.Simple
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<ITouch> touches)
-        {
-            base.touchesCancelled(touches);
-
-            touchesEnded(touches);
-        }
-
-        /// <inheritdoc />
         protected override void reset()
         {
             base.reset();

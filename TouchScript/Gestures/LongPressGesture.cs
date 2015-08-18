@@ -37,7 +37,7 @@ namespace TouchScript.Gestures
             remove { longPressedInvoker -= value; }
         }
 
-        // iOS Events AOT hack
+        // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> longPressedInvoker;
 
         #endregion
@@ -146,7 +146,6 @@ namespace TouchScript.Gestures
 
             if (NumTouches == 0)
             {
-                StopCoroutine("wait");
                 setState(GestureState.Failed);
             }
         }
