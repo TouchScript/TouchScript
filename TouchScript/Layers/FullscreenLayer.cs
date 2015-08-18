@@ -126,7 +126,14 @@ namespace TouchScript.Layers
         public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
             if (_camera == null) return base.ProjectTo(screenPosition, projectionPlane);
-            else return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+        }
+
+        /// <inheritdoc />
+        public override Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            if (_camera == null) return base.ProjectFrom(worldPosition);
+            return _camera.WorldToScreenPoint(worldPosition);
         }
 
         #endregion

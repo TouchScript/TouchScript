@@ -109,6 +109,13 @@ namespace TouchScript.Layers
             return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
         }
 
+        /// <summary>
+        /// </summary>
+        public virtual Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            return worldPosition;
+        }
+
         #endregion
 
         #region Unity methods
