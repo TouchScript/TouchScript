@@ -389,7 +389,6 @@ namespace TouchScript.Gestures
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private int numTouches;
-        private List<ITouch> tmpTouches = new List<ITouch>(10); 
         private ReadOnlyCollection<ITouch> readonlyActiveTouches;
         private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
         private GestureManagerInstance gestureManagerInstance;
@@ -619,7 +618,6 @@ namespace TouchScript.Gestures
 
         internal void ResetGesture()
         {
-            tmpTouches.Clear();
             activeTouches.Clear();
             numTouches = 0;
             delayedStateChange = GestureState.Possible;
@@ -629,20 +627,38 @@ namespace TouchScript.Gestures
 
         internal void TouchesBegan(IList<ITouch> touches)
         {
-            if (minTouches > 0 && NumTouches == 0)
+            var count = touches.Count;
+            var total = numTouches + count;
+            if (minTouches > 0 && numTouches < minTouches)
             {
                 // haven't passed the threshold yet
-                tmpTouches.AddRange(touches);
-                var tmpCount = tmpTouches.Count;
-                if (tmpCount >= minTouches)
+                if (total < minTouches)
                 {
-                    activeTouches.AddRange(tmpTouches);
-                    numTouches += tmpCount;
-                    touchesBegan(tmpTouches);
+                    activeTouches.AddRange(touches);
+                    numTouches += count;
                     return;
                 }
+                if (maxTouches > 0 && total > maxTouches)
+                {
+                    // passed the minimum threshold but immediately passed the maximum threshold too
+                    switch (state)
+                    {
+                        case GestureState.Began:
+                        case GestureState.Changed:
+                            setState(GestureState.Ended);
+                            break;
+                        case GestureState.Possible:
+                            setState(GestureState.Failed);
+                            break;
+                    }
+                    return;
+                }
+                activeTouches.AddRange(touches);
+                numTouches += count;
+                touchesBegan(activeTouches);
+                return;
             }
-            if (maxTouches > 0 && numTouches + touches.Count > maxTouches)
+            if (maxTouches > 0 && total > maxTouches)
             {
                 switch (state)
                 {
@@ -650,19 +666,20 @@ namespace TouchScript.Gestures
                     case GestureState.Changed:
                         setState(GestureState.Ended);
                         break;
-                    default:
-                        SetState(GestureState.Failed);
+                    case GestureState.Possible:
+                        setState(GestureState.Failed);
                         break;
                 }
                 return;
             }
             activeTouches.AddRange(touches);
-            numTouches += touches.Count;
+            numTouches += count;
             touchesBegan(touches);
         }
 
         internal void TouchesMoved(IList<ITouch> touches)
         {
+            // haven't passed the threshold yet
             if (minTouches > 0 && numTouches < minTouches) return;
             touchesMoved(touches);
         }
@@ -670,44 +687,70 @@ namespace TouchScript.Gestures
         internal void TouchesEnded(IList<ITouch> touches)
         {
             var count = touches.Count;
+            
+            if (minTouches > 0)
+            {
+                if (numTouches < minTouches)
+                {
+                    // haven't passed the threshold yet
+                    for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
+                    numTouches -= count;
+                    return;
+                }
+                if (numTouches - count < minTouches)
+                {
+                    // moved below the threshold
+                    switch (state)
+                    {
+                        case GestureState.Began:
+                        case GestureState.Changed:
+                            setState(GestureState.Ended);
+                            break;
+                        case GestureState.Possible:
+                            setState(GestureState.Failed);
+                            break;
+                    }
+                    return;
+                }
+            }
+
             for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
             numTouches -= count;
-            if (minTouches > 0 && numTouches < minTouches)
-            {
-                switch (state)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        setState(GestureState.Ended);
-                        break;
-                    default:
-                        SetState(GestureState.Failed);
-                        break;
-                }
-                return;
-            }
             touchesEnded(touches);
         }
 
         internal void TouchesCancelled(IList<ITouch> touches)
         {
             var count = touches.Count;
+
+            if (minTouches > 0)
+            {
+                if (numTouches < minTouches)
+                {
+                    // haven't passed the threshold yet
+                    for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
+                    numTouches -= count;
+                    return;
+                }
+                if (numTouches - count < minTouches)
+                {
+                    // moved below the threshold
+                    switch (state)
+                    {
+                        case GestureState.Began:
+                        case GestureState.Changed:
+                            setState(GestureState.Cancelled);
+                            break;
+                        case GestureState.Possible:
+                            setState(GestureState.Failed);
+                            break;
+                    }
+                    return;
+                }
+            }
+
             for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
             numTouches -= count;
-            if (minTouches > 0 && numTouches < minTouches)
-            {
-                switch (state)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        setState(GestureState.Ended);
-                        break;
-                    default:
-                        SetState(GestureState.Failed);
-                        break;
-                }
-                return;
-            }
             touchesCancelled(touches);
         }
 
@@ -835,7 +878,6 @@ namespace TouchScript.Gestures
         /// <param name="touches">The touches.</param>
         protected virtual void touchesCancelled(IList<ITouch> touches)
         {
-            if (NumTouches == 0) SetState(GestureState.Cancelled);
         }
 
         /// <summary>
