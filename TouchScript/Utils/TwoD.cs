@@ -25,5 +25,13 @@ namespace TouchScript.Utils.Geom
             dist1 = (dy * point1.x - dx * point1.y + c) / length;
             dist2 = (dy * point2.x - dx * point2.y + c) / length;
         }
+
+        public static Vector2 Rotate(Vector2 point, float angle)
+        {
+            var rad = angle*Mathf.Deg2Rad;
+            var cos = Mathf.Cos(rad);
+            var sin = Mathf.Sin(rad);
+            return new Vector2(point.x * cos - point.y * sin, point.x * sin + point.y * cos);
+        }
     }
 }
