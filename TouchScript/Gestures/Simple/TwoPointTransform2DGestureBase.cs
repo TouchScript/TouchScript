@@ -112,8 +112,10 @@ namespace TouchScript.Gestures.Simple
         {
             var result = false;
             // We care only about the first and the second touch points
-            foreach (var touch in touches)
+            var count = touches.Count;
+            for (var i = 0; i < count; i++)
             {
+                var touch = touches[i];
                 if (touch == activeTouches[0] || touch == activeTouches[1])
                 {
                     result = true;

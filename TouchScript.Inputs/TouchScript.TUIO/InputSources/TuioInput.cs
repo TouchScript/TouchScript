@@ -248,8 +248,10 @@ namespace TouchScript.InputSources
 
         private string getTagById(int id)
         {
-            foreach (var tuioObjectMapping in tuioObjectMappings)
+            var count = TuioObjectMappings.Count;
+            for (var i = 0; i < count; i++)
             {
+                var tuioObjectMapping = tuioObjectMappings[i];
                 if (tuioObjectMapping.Id == id) return tuioObjectMapping.Tag;
             }
             return null;

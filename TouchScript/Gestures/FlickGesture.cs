@@ -198,7 +198,8 @@ namespace TouchScript.Gestures
                 float lastTime;
                 var deltas = deltaSequence.FindElementsLaterThan(Time.time - FlickTime, out lastTime);
                 var totalMovement = Vector2.zero;
-                foreach (var delta in deltas) totalMovement += delta;
+                var count = deltas.Count;
+                for (var i = 0; i < count; i++) totalMovement += deltas[i];
 
                 switch (Direction)
                 {

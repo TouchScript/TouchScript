@@ -86,9 +86,10 @@ namespace TouchScript.InputSources
             if (DisableMouseInputInBuilds)
             {
                 var inputs = FindObjectsOfType<MouseInput>();
-                foreach (var mouseInput in inputs)
+                var count = inputs.Length;
+                for (var i = 0; i < count; i++)
                 {
-                    mouseInput.enabled = false;
+                    inputs[i].enabled = false;
                 }
             }
 
