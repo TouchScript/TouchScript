@@ -1,4 +1,4 @@
-﻿Shader "Hidden/GLLineZOn" {
+﻿Shader "Hidden/DebugMultiplyNoDepthTest" {
 	SubShader {
 		Pass {
 			Blend OneMinusDstColor Zero
@@ -6,6 +6,7 @@
 			Cull Off
 			BindChannels {
 				Bind "vertex", vertex
+				Bind "color", color
 			}
 		}
 	}
