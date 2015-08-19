@@ -13,7 +13,7 @@ namespace TouchScript.Layers
     /// Layer which gets all input from a camera. Should be used instead of a background object getting all the touches which come through.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
-    public sealed class FullscreenLayer : TouchLayer
+    public class FullscreenLayer : TouchLayer
     {
         #region Constants
 
