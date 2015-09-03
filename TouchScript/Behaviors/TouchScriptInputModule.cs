@@ -66,9 +66,15 @@ namespace TouchScript.Behaviors
         private string cancelButton = "Cancel";
 
         [SerializeField]
-        private float inputActionsPerSecond = 10;
+        private float inputActionsPerSecond = 10f;
+
+        [SerializeField]
+        private float repeatDelay = 0.5f;
 
         private float nextActionTime;
+
+        private MoveDirection lastMoveDirection;
+        private float lastMoveStartTime;
 
         #endregion
 
@@ -431,8 +437,18 @@ namespace TouchScript.Behaviors
 
             Vector2 movement = getRawMoveVector();
             var axisEventData = GetAxisEventData(movement.x, movement.y, 0.6f);
-            if (!Mathf.Approximately(axisEventData.moveVector.x, 0f)
-                || !Mathf.Approximately(axisEventData.moveVector.y, 0f))
+            MoveDirection moveDir = axisEventData.moveDir;
+
+            // Repeat delay
+            if (moveDir != lastMoveDirection) {
+                lastMoveDirection = moveDir;
+                lastMoveStartTime = time;
+            } else {
+                if (time < lastMoveStartTime + repeatDelay)
+                    return false;
+            }
+
+            if (moveDir != MoveDirection.None)
             {
                 ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, ExecuteEvents.moveHandler);
             }
