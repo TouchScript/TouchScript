@@ -168,7 +168,8 @@ namespace TouchScript
 
         /// <summary>
         /// </summary>
-        void CancelTouch(int id, bool redispatch = false);
+        void CancelTouch(int id, bool redispatch);
+        void CancelTouch(int id);
     }
 
     /// <summary>
