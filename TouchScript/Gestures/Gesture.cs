@@ -557,7 +557,7 @@ namespace TouchScript.Gestures
 
         /// <summary>
         /// </summary>
-        public void Cancel(bool cancelTouches = false, bool redispatchTouches = false)
+        public void Cancel(bool cancelTouches, bool redispatchTouches)
         {
             switch (state)
             {
@@ -575,6 +575,7 @@ namespace TouchScript.Gestures
                 touchManager.CancelTouch(activeTouches[i].Id, redispatchTouches);
             }
         }
+        public void Cancel() { Cancel(false, false); }
 
         #endregion
 

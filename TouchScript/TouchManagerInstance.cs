@@ -285,10 +285,11 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void CancelTouch(int id, bool redispatch = false)
+        public void CancelTouch(int id, bool redispatch)
         {
             touchesManuallyCancelled.Add(new CancelledTouch(id, redispatch));
         }
+        public void CancelTouch(int id) { CancelTouch(id, false); }
 
         #endregion
 
@@ -752,10 +753,15 @@ namespace TouchScript
             public int Id;
             public bool Redispatch;
 
-            public CancelledTouch(int id, bool redispatch = false)
+            public CancelledTouch(int id, bool redispatch)
             {
                 Id = id;
                 Redispatch = redispatch;
+            }
+            public CancelledTouch(int id)
+            {
+                Id = id;
+                Redispatch = false;
             }
 
         }
