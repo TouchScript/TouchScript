@@ -145,6 +145,11 @@ namespace TouchScript.InputSources
                 case WM_POINTERUPDATE:
                     decodeTouches(msg, wParam, lParam);
                     return IntPtr.Zero;
+                case WM_CLOSE:
+                    // Not having this crashes app on quit
+                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
+                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    return IntPtr.Zero;
                 default:
                     return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
             }
@@ -206,6 +211,7 @@ namespace TouchScript.InputSources
         #region p/invoke
 
         // Touch event window message constants [winuser.h]
+        private const int WM_CLOSE = 0x0010;
         private const int WM_TOUCH = 0x0240;
         private const int WM_POINTERDOWN = 0x0246;
         private const int WM_POINTERUP = 0x0247;
@@ -269,6 +275,9 @@ namespace TouchScript.InputSources
             if (IntPtr.Size == 8) return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
             return new IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32()));
         }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
