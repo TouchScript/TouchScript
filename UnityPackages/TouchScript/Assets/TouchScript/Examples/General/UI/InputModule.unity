@@ -810,6 +810,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -846,6 +848,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -871,6 +875,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1335,6 +1341,7 @@ MonoBehaviour:
   submitButton: Submit
   cancelButton: Cancel
   inputActionsPerSecond: 10
+  repeatDelay: .5
 --- !u!114 &651643063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1618,6 +1625,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1643,6 +1652,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -1694,6 +1705,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
+  minTouches: 0
+  maxTouches: 0
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
