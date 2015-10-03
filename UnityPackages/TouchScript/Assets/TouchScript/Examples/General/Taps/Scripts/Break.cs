@@ -77,7 +77,6 @@ namespace TouchScript.Examples.Tap
 				// if we are not too small
 				if (transform.localScale.x > 0.05f)
 				{
-					Color color = new Color(Random.value, Random.value, Random.value);
 					// break this cube into 8 parts
 					for (int i = 0; i < 8; i++)
 					{
