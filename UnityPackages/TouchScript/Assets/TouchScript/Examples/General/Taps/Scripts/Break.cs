@@ -12,7 +12,7 @@ namespace TouchScript.Examples.Tap
 
 		private LongPressGesture longPressGesture;
 		private PressGesture pressGesture;
-		private MeshRenderer renderer;
+		private MeshRenderer rnd;
 		private bool growing = false;
 		private float growingTime = 0;
 
@@ -30,7 +30,7 @@ namespace TouchScript.Examples.Tap
 		
 		private void OnEnable()
 		{
-			renderer = GetComponent<MeshRenderer>();
+			rnd = GetComponent<MeshRenderer>();
 			longPressGesture = GetComponent<LongPressGesture>();
 			pressGesture = GetComponent<PressGesture>();
 
@@ -49,7 +49,7 @@ namespace TouchScript.Examples.Tap
 			if (growing)
 			{
 				growingTime += Time.deltaTime;
-				renderer.material.color = Color.Lerp(Color.white, Color.red, growingTime);
+				rnd.material.color = Color.Lerp(Color.white, Color.red, growingTime);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace TouchScript.Examples.Tap
 		{
 			growing = false;
 			growingTime = 0;
-			renderer.material.color = Color.white;
+			rnd.material.color = Color.white;
 		}
 
 		private void pressedHandler (object sender, EventArgs e)

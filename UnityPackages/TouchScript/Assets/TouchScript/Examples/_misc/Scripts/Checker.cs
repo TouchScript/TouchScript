@@ -3,15 +3,18 @@ using System.Collections;
 using TouchScript.Gestures;
 using TouchScript.Behaviors;
 
-namespace TouchScript.Examples.Checkers {
+namespace TouchScript.Examples 
+{
 
-	public class Checker : MonoBehaviour {
+	public class Checker : MonoBehaviour 
+	{
 
 		TransformGesture gesture;
 		Transformer transformer;
 		Rigidbody rb;
 
-		private void OnEnable() {
+		private void OnEnable() 
+		{
 			gesture = GetComponent<TransformGesture>();
 			transformer = GetComponent<Transformer>();
 			rb = GetComponent<Rigidbody>();
@@ -22,7 +25,8 @@ namespace TouchScript.Examples.Checkers {
 			gesture.TransformCompleted += transformCompletedHandler;
 		}
 
-		private void OnDisable() {
+		private void OnDisable() 
+		{
 			gesture.TransformStarted -= transformStartedHandler;
 			gesture.TransformCompleted -= transformCompletedHandler;
 		}
