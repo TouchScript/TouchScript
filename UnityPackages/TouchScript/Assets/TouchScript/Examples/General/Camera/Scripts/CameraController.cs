@@ -2,9 +2,11 @@
 using System.Collections;
 using TouchScript.Gestures;
 
-namespace TouchScript.Examples.Camera {
+namespace TouchScript.Examples.CameraControl 
+{
 
-	public class CameraController : MonoBehaviour {
+	public class CameraController : MonoBehaviour 
+	{
 
 		public float PanSpeed = 200f;
 		public float ZoomSpeed = 10f;
