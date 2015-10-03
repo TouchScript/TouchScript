@@ -84,9 +84,9 @@ namespace TouchScript.Behaviors
                 if (!Mathf.Approximately(transform.localScale.z, lastLocalScale.z))
                     localScaleToGo.z = transform.localScale.z;
             }
-            var newLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
+            var newLocalScale = lastLocalScale = Vector3.Lerp(transform.localScale, localScaleToGo, fraction);
             // prevent recalculating colliders when no scale occurs
-            if (newLocalScale != transform.localScale) transform.localScale = lastLocalScale = newLocalScale;
+            if (newLocalScale != transform.localScale) transform.localScale = newLocalScale;
 
             if (AllowChangingFromOutside)
             {

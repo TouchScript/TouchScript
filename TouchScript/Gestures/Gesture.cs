@@ -914,37 +914,18 @@ namespace TouchScript.Gestures
         /// <param name="touches">The touches.</param>
         protected virtual void touchesCancelled(IList<ITouch> touches)
         {
-            var count = touches.Count;
-
-            if (minTouches > 0)
+            if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
-                if (numTouches < minTouches)
+                // moved below the threshold
+                switch (state)
                 {
-                    // haven't passed the threshold yet
-                    for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-                    numTouches -= count;
-                    return;
-                }
-                if (numTouches - count < minTouches)
-                {
-                    // moved below the threshold
-                    switch (state)
-                    {
-                        case GestureState.Began:
-                        case GestureState.Changed:
-                            setState(GestureState.Cancelled);
-                            break;
-                        case GestureState.Possible:
-                            setState(GestureState.Failed);
-                            break;
-                    }
-                    return;
+                    case GestureState.Began:
+                    case GestureState.Changed:
+                        // cancel started gestures
+                        setState(GestureState.Cancelled);
+                        break;
                 }
             }
-
-            for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-            numTouches -= count;
-            touchesCancelled(touches);
         }
 
         /// <summary>

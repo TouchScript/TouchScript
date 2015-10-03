@@ -147,8 +147,6 @@ namespace TouchScript.Gestures
         {
             base.touchesCancelled(touches);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Cancelled);
-
             var length = touches.Count;
             if (touchCancelledInvoker != null)
             {
