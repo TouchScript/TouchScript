@@ -3,10 +3,12 @@ using System.Collections;
 using TouchScript.Gestures;
 using TouchScript.Behaviors;
 
-namespace TouchScript.Examples.Portal {
-	public class Planet : MonoBehaviour {
-
-		private enum PlanetStatus {
+namespace TouchScript.Examples.Portal 
+{
+	public class Planet : MonoBehaviour 
+	{
+		private enum PlanetStatus 
+		{
 			Free,
 			Manual,
 			Falling
@@ -21,23 +23,24 @@ namespace TouchScript.Examples.Portal {
 		public void Fall()
 		{
 			status = PlanetStatus.Falling;
-//			var transformer = GetComponent<Transformer>();
-//			if (transformer != null) transformer.enabled = false;
 			var gesture = GetComponent<TransformGesture>();
 			if (gesture != null) gesture.Cancel();
 		}
 
-		private void OnEnable() {
+		private void OnEnable() 
+		{
 			GetComponent<PressGesture>().Pressed += pressedhandler;
 			GetComponent<ReleaseGesture>().Released += releasedHandler;
 		}
 
-		private void OnDisable() {
+		private void OnDisable() 
+		{
 			GetComponent<PressGesture>().Pressed -= pressedhandler;
 			GetComponent<ReleaseGesture>().Released -= releasedHandler;
 		}
 
-		private void Update() {
+		private void Update() 
+		{
 			switch (status)
 			{
 			case PlanetStatus.Free:
@@ -65,6 +68,5 @@ namespace TouchScript.Examples.Portal {
 			if (status != PlanetStatus.Manual) return;
 			status = PlanetStatus.Free;
 		}
-		
 	}
 }

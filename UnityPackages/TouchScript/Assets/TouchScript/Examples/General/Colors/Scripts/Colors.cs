@@ -2,15 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace TouchScript.Examples.Colors {
-	public class Colors : MonoBehaviour {
-
+namespace TouchScript.Examples.Colors 
+{
+	public class Colors : MonoBehaviour 
+	{
 		public Transform Prefab;
 		public int Total = 10;
 
 		private List<Color> colors = new List<Color>() {Color.blue, Color.cyan, Color.gray, Color.green, Color.magenta, Color.red, Color.white, Color.yellow, Color.black};
 
-		void Start () {
+		void Start () 
+		{
 			var container = transform.Find("Container");
 			for (var i = 0; i < Total; i++) {
 				var obj = Instantiate(Prefab) as Transform;
@@ -19,6 +21,5 @@ namespace TouchScript.Examples.Colors {
 				obj.renderer.material.color = colors[Random.Range(0, colors.Count)];
 			}
 		}
-		
 	}
 }

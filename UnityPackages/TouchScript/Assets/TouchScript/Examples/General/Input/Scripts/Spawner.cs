@@ -5,7 +5,6 @@ namespace TouchScript.Examples.Input
 {
 	public class Spawner : MonoBehaviour 
 	{
-
 		public GameObject Prefab;
 		
 		private void OnEnable()
@@ -38,6 +37,5 @@ namespace TouchScript.Examples.Input
 				spawnPrefabAt(point.Position);
 			}
 		}
-
 	}
 }

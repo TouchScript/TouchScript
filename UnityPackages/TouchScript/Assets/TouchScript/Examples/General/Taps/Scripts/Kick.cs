@@ -6,7 +6,6 @@ namespace TouchScript.Examples.Tap
 {
 	public class Kick : MonoBehaviour 
 	{
-
 		public float Force = 3f;
 		public ParticleSystem Particles;
 
@@ -35,6 +34,5 @@ namespace TouchScript.Examples.Tap
 				Instantiate(Particles, hit.point, Quaternion.identity);
 			}
 		}
-		
 	}
 }

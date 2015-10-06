@@ -4,10 +4,8 @@ using TouchScript.Gestures;
 
 namespace TouchScript.Examples.CameraControl 
 {
-
 	public class CameraController : MonoBehaviour 
 	{
-
 		public ScreenTransformGesture TwoFingerMoveGesture;
 		public ScreenTransformGesture ManipulationGesture;
 		public float PanSpeed = 200f;
@@ -49,7 +47,5 @@ namespace TouchScript.Examples.CameraControl
 		{
 			pivot.localPosition += pivot.rotation * TwoFingerMoveGesture.DeltaPosition * PanSpeed;
 		}
-		
 	}
-
 }

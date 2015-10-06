@@ -7,7 +7,6 @@ namespace TouchScript.Examples.Tap
 {
 	public class Break : MonoBehaviour 
 	{
-
 		public float Power = 10.0f;
 
 		private LongPressGesture longPressGesture;
@@ -65,7 +64,7 @@ namespace TouchScript.Examples.Tap
 			rnd.material.color = Color.white;
 		}
 
-		private void pressedHandler (object sender, EventArgs e)
+		private void pressedHandler(object sender, EventArgs e)
 		{
 			startGrowing();
 		}

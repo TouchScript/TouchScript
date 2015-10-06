@@ -8,7 +8,6 @@ namespace TouchScript.Examples.Tap
 {
 	public class Spawn : MonoBehaviour 
 	{
-
 		public Transform CubePrefab;
 		public Transform Container;
 		public float Scale = .5f;

@@ -5,10 +5,8 @@ using TouchScript.Behaviors;
 
 namespace TouchScript.Examples 
 {
-
 	public class Checker : MonoBehaviour 
 	{
-
 		TransformGesture gesture;
 		Transformer transformer;
 		Rigidbody rb;
@@ -44,5 +42,4 @@ namespace TouchScript.Examples
 			rb.WakeUp();
 		}
 	}
-
 }

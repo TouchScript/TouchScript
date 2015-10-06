@@ -313,7 +313,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1979221413}
-        m_MethodName: AddImage
+        m_MethodName: Add
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -732,6 +732,7 @@ GameObject:
   - 114: {fileID: 238072903}
   - 114: {fileID: 238072900}
   - 65: {fileID: 238072902}
+  - 114: {fileID: 238072905}
   m_Layer: 0
   m_Name: Image 1
   m_TagString: Untagged
@@ -890,6 +891,18 @@ MonoBehaviour:
   projectionNormal: {x: 0, y: 0, z: 1}
   minPointsDistance: .5
   rotationThreshold: 3
+--- !u!114 &238072905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 238072896}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d231b90191d4ffcae71a475e432b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Delay: 0
 --- !u!1 &290456372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,7 +1088,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1979221412}
-        m_MethodName: SetColor
+        m_MethodName: Set
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1506,7 +1519,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1979221412}
-        m_MethodName: SetColor
+        m_MethodName: Set
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1561,6 +1574,7 @@ GameObject:
   - 114: {fileID: 886654115}
   - 114: {fileID: 886654114}
   - 65: {fileID: 886654113}
+  - 114: {fileID: 886654120}
   m_Layer: 0
   m_Name: Image 2
   m_TagString: Untagged
@@ -1719,6 +1733,18 @@ MonoBehaviour:
   projection: 1
   projectionNormal: {x: 0, y: 0, z: 1}
   movementThreshold: .5
+--- !u!114 &886654120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 886654111}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d231b90191d4ffcae71a475e432b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Delay: 0
 --- !u!1 &894414301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1970,7 +1996,6 @@ GameObject:
   - 222: {fileID: 994844647}
   - 114: {fileID: 994844646}
   - 114: {fileID: 994844645}
-  - 114: {fileID: 994844644}
   m_Layer: 0
   m_Name: Close
   m_TagString: Untagged
@@ -1995,17 +2020,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18, y: -18}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: .5, y: .5}
---- !u!114 &994844644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 994844642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1daa0ba5d730a4a62b68c3db1492be5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &994844645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2045,9 +2059,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 994844644}
-        m_MethodName: KillMe
-        m_Mode: 1
+      - m_Target: {fileID: 238072905}
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -2055,7 +2069,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -2295,7 +2309,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1979221412}
-        m_MethodName: SetColor
+        m_MethodName: Set
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2726,7 +2740,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1979221412}
-        m_MethodName: SetColor
+        m_MethodName: Set
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2777,7 +2791,6 @@ GameObject:
   - 222: {fileID: 1423800612}
   - 114: {fileID: 1423800611}
   - 114: {fileID: 1423800610}
-  - 114: {fileID: 1423800609}
   m_Layer: 0
   m_Name: Close
   m_TagString: Untagged
@@ -2802,17 +2815,6 @@ RectTransform:
   m_AnchoredPosition: {x: 18, y: -18}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: .5, y: .5}
---- !u!114 &1423800609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1423800607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1daa0ba5d730a4a62b68c3db1492be5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1423800610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2852,9 +2854,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1423800609}
-        m_MethodName: KillMe
-        m_Mode: 1
+      - m_Target: {fileID: 886654120}
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -2862,7 +2864,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
