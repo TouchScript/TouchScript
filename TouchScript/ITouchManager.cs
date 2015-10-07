@@ -167,8 +167,16 @@ namespace TouchScript
         bool GetHitTarget(Vector2 position, out ITouchHit hit, out TouchLayer layer);
 
         /// <summary>
+        /// Cancels a touch and returns it to the system of need.
         /// </summary>
+        /// <param name="id">Touch id to cancel.</param>
+        /// <param name="redispatch">Should the touch be returned to the system.</param>
         void CancelTouch(int id, bool redispatch);
+
+        /// <summary>
+        /// Cancels a touch.
+        /// </summary>
+        /// <param name="id">Touch id to cancel.</param>
         void CancelTouch(int id);
     }
 
@@ -177,7 +185,6 @@ namespace TouchScript
     /// </summary>
     public class TouchEventArgs : EventArgs
     {
-
         /// <summary>
         /// Gets list of touches participating in the event.
         /// </summary>
@@ -191,12 +198,17 @@ namespace TouchScript
         /// </summary>
         private TouchEventArgs() {}
 
+        /// <summary>
+        /// Returns cached instance of EventArgs.
+        /// This cached EventArgs is reused throughout the library not to alocate new ones on every call.
+        /// </summary>
+        /// <param name="touches">A list of touches for event.</param>
+        /// <returns>Cached EventArgs object.</returns>
         public static TouchEventArgs GetCachedEventArgs(IList<ITouch> touches)
         {
             if (instance == null) instance = new TouchEventArgs();
             instance.Touches = touches;
             return instance;
         }
-
     }
 }

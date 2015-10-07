@@ -53,8 +53,10 @@ namespace TouchScript
         /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
 
+        /// <inheritdoc />
         public Tags Tags { get; private set; }
 
+        /// <inheritdoc />
         public IDictionary<string, System.Object> Properties
         {
             get { return properties; }
@@ -74,16 +76,19 @@ namespace TouchScript
 
         #region Public methods
 
+        /// <inheritdoc />
         public override bool Equals(object other)
         {
             return Equals(other as ITouch);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return Id;
         }
 
+        /// <inheritdoc />
         public bool Equals(ITouch other)
         {
             if (other == null)

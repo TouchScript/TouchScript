@@ -30,10 +30,16 @@ namespace TouchScript.Editor.Gestures
             serializedObject.UpdateIfDirtyOrScript();
 
             EditorGUILayout.PropertyField(timeToPress, TIME_TO_PRESS);
-            EditorGUILayout.PropertyField(distanceLimit, DISTANCE_LIMIT);
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
+        }
+
+        protected override void drawAdvanced()
+        {
+            EditorGUILayout.PropertyField(distanceLimit, DISTANCE_LIMIT);
+
+            base.drawAdvanced();
         }
     }
 }

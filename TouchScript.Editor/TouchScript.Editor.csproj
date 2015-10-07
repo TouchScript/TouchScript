@@ -54,17 +54,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debugging\TouchDebuggerEditor.cs" />
+    <Compile Include="Gestures\Base\PinnedTransformGestureBaseEditor.cs" />
+    <Compile Include="Gestures\Base\TransformGestureBaseEditor.cs" />
     <Compile Include="Gestures\GestureEditor.cs" />
+    <Compile Include="Gestures\PinnedTransformGestureEditor.cs" />
     <Compile Include="Gestures\PressGestureEditor.cs" />
     <Compile Include="Gestures\ReleaseGestureEditor.cs" />
     <Compile Include="Gestures\FlickGestureEditor.cs" />
     <Compile Include="Gestures\LongPressGestureEditor.cs" />
+    <Compile Include="Gestures\ScreenTransformGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimplePanGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleRotateGestureEditor.cs" />
     <Compile Include="Gestures\Simple\SimpleScaleGestureEditor.cs" />
     <Compile Include="Gestures\Simple\Transform2DGestureBaseEditor.cs" />
     <Compile Include="Gestures\Simple\TwoPointTransform2DGestureBaseEditor.cs" />
     <Compile Include="Gestures\TapGestureEditor.cs" />
+    <Compile Include="Gestures\TransformGestureEditor.cs" />
     <Compile Include="InputSources\InputSourceEditor.cs" />
     <Compile Include="InputSources\MobileInputEditor.cs" />
     <Compile Include="InputSources\MouseInputEditor.cs" />

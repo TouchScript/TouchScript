@@ -6,20 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Tap.unity
+    path: Assets/TouchScript/Examples/Examples.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Pan.unity
+    path: Assets/TouchScript/Examples/General/Taps/Taps.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/LongPress.unity
+    path: Assets/TouchScript/Examples/General/Camera/Camera.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Friendly Gestures.unity
+    path: Assets/TouchScript/Examples/General/Checkers/Checkers.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Hierarchy.unity
+    path: Assets/TouchScript/Examples/General/Photos/Photos.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/2D - Double Tap.unity
+    path: Assets/TouchScript/Examples/General/Photos/Photos2D.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Hit Test.unity
+    path: Assets/TouchScript/Examples/General/Multiuser/Multiuser.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Input.unity
+    path: Assets/TouchScript/Examples/General/UI/InputModule.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/General/Layers.unity
+    path: Assets/TouchScript/Examples/General/Portal/Portal.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Colors/Colors.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/General/Input/Input.unity

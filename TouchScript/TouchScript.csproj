@@ -57,7 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\FullscreenTarget.cs" />
+    <Compile Include="Gestures\Clustered\ClusteredPinnedTransformGesture.cs" />
+    <Compile Include="Gestures\Clustered\ClusteredScreenTransformGesture.cs" />
+    <Compile Include="Gestures\ITransformGesture.cs" />
     <Compile Include="Behaviors\TouchScriptInputModule.cs" />
+    <Compile Include="Behaviors\Transformer.cs" />
     <Compile Include="Behaviors\Transformer2D.cs" />
     <Compile Include="Clusters\Clusters.cs" />
     <Compile Include="DebuggableMonoBehaviour.cs" />
@@ -66,6 +70,12 @@
     <Compile Include="Devices\Display\IDisplayDevice.cs" />
     <Compile Include="GestureManager.cs" />
     <Compile Include="GestureManagerInstance.cs" />
+    <Compile Include="Gestures\Base\PinnedTransformGestureBase.cs" />
+    <Compile Include="Gestures\Base\TransformGestureBase.cs" />
+    <Compile Include="Gestures\Clustered\ClusteredTransformGesture.cs" />
+    <Compile Include="Gestures\PinnedTransformGesture.cs" />
+    <Compile Include="Gestures\ScreenTransformGesture.cs" />
+    <Compile Include="Gestures\TransformGesture.cs" />
     <Compile Include="IDebuggable.cs" />
     <Compile Include="Utils\Debug\DebugHelper.cs" />
     <Compile Include="Utils\EventHandlerExtensions.cs" />
@@ -116,6 +126,7 @@
     <Compile Include="Utils\ClusterUtils.cs" />
     <Compile Include="Utils\Attributes\NullToggleAttribute.cs" />
     <Compile Include="Utils\Attributes\ToggleLeftAttribute.cs" />
+    <Compile Include="Utils\Geom\TwoD.cs" />
     <Compile Include="Utils\Debug\GLDebug.cs" />
     <Compile Include="Utils\ObjectPool.cs" />
     <Compile Include="Utils\ProjectionUtils.cs" />

@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Collections;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -150,7 +149,8 @@ namespace TouchScript.Layers
                 touch.Layer = this;
                 touch.Hit = hit;
                 if (hit != null) touch.Target = hit.Transform;
-                if (touchBeganInvoker != null) touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
+                if (touchBeganInvoker != null)
+                    touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
                 return true;
             }
             return false;
@@ -216,10 +216,6 @@ namespace TouchScript.Layers
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void cancelTouch(ITouch touch) {}
-
-        #endregion
-
-        #region Private functions
 
         #endregion
     }

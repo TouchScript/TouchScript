@@ -13,17 +13,14 @@ namespace TouchScript.Layers
     /// Touch layer which works with Unity 4.3+ 2d physics. Can pick 2d objects hit by touches in right order.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
-    public sealed class CameraLayer2D : CameraLayerBase
+    public class CameraLayer2D : CameraLayerBase
     {
         #region Private variables
 
-        [SerializeField]
-        [HideInInspector]
-        [FormerlySerializedAs("sortedLayerIds")]
-        private int[] layerIds = new int[0];
+        [SerializeField] [HideInInspector] [FormerlySerializedAs("sortedLayerIds")] private int[] layerIds = new int[0];
         private Dictionary<int, int> layerById = new Dictionary<int, int>();
         private List<RaycastHit2D> sortedHits;
-        private List<HitTest> tmpHitTestList = new List<HitTest>(10); 
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 

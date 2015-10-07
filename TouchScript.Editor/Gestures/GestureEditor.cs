@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Reflection;
 using TouchScript.Editor.Utils;
 using TouchScript.Gestures;
 using UnityEditor;
@@ -26,7 +25,7 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent COMBINE_TOUCH_POINTS = new GUIContent("Combine Touch Points", "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
         private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
-        private static readonly GUIContent LIMIT_TOUCHES = new GUIContent("Limit touches", "");
+        private static readonly GUIContent LIMIT_TOUCHES = new GUIContent("Limit Touches", "");
 
         private static readonly Type GESTURE_TYPE = typeof(Gesture);
 
@@ -88,32 +87,6 @@ namespace TouchScript.Editor.Gestures
         {
             serializedObject.UpdateIfDirtyOrScript();
 
-            var limitTouches = (minTouches.intValue > 0) || (maxTouches.intValue > 0);
-            var newLimitTouches = EditorGUILayout.ToggleLeft(LIMIT_TOUCHES, limitTouches);
-            if (newLimitTouches)
-            {
-                if (!limitTouches)
-                {
-                    minTouchesFloat = 0;
-                    maxTouchesFloat = 10;
-                }
-                EditorGUI.indentLevel++;
-                EditorGUILayout.LabelField("Min: " + (int)minTouchesFloat + ", Max: " + (int)maxTouchesFloat);
-                EditorGUILayout.MinMaxSlider(ref minTouchesFloat, ref maxTouchesFloat, 0, 10);
-                EditorGUI.indentLevel--;
-            }
-            else
-            {
-                if (limitTouches)
-                {
-                    minTouchesFloat = 0;
-                    maxTouchesFloat = 0;
-                }
-            }
-
-            minTouches.intValue = (int)minTouchesFloat;
-            maxTouches.intValue = (int)maxTouchesFloat;
-
             EditorGUI.BeginChangeCheck();
             var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);
             if (EditorGUI.EndChangeCheck())
@@ -127,7 +100,6 @@ namespace TouchScript.Editor.Gestures
                 GUILayout.EndVertical();
             }
             GUIElements.EndFoldout();
-            drawFriendlyGestures();
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -173,6 +145,35 @@ namespace TouchScript.Editor.Gestures
             }
         }
 
+        protected virtual void drawLimitTouches()
+        {
+            var limitTouches = (minTouches.intValue > 0) || (maxTouches.intValue > 0);
+            var newLimitTouches = EditorGUILayout.ToggleLeft(LIMIT_TOUCHES, limitTouches);
+            if (newLimitTouches)
+            {
+                if (!limitTouches)
+                {
+                    minTouchesFloat = 0;
+                    maxTouchesFloat = 10;
+                }
+                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("Min: " + (int)minTouchesFloat + ", Max: " + (int)maxTouchesFloat);
+                EditorGUILayout.MinMaxSlider(ref minTouchesFloat, ref maxTouchesFloat, 0, 10);
+                EditorGUI.indentLevel--;
+            }
+            else
+            {
+                if (limitTouches)
+                {
+                    minTouchesFloat = 0;
+                    maxTouchesFloat = 0;
+                }
+            }
+
+            minTouches.intValue = (int)minTouchesFloat;
+            maxTouches.intValue = (int)maxTouchesFloat;
+        }
+
         protected virtual void drawRequireToFail()
         {
             EditorGUILayout.PropertyField(requireGestureToFail, REQUIRE_GESTURE_TO_FAIL);
@@ -180,10 +181,12 @@ namespace TouchScript.Editor.Gestures
 
         protected virtual void drawAdvanced()
         {
-            drawDebug();
-            drawSendMessage();
+            drawLimitTouches();
             drawCombineTouches();
+            drawSendMessage();
             drawRequireToFail();
+            drawDebug();
+            drawFriendlyGestures();
         }
 
         protected virtual void drawFriendlyGestures()

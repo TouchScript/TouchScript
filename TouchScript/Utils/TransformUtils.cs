@@ -27,10 +27,10 @@ namespace TouchScript.Utils
 
             var scale = parent.localScale;
             var vector = GlobalToLocalVector(parent, global);
-            vector = Quaternion.Inverse(parent.localRotation) * vector;
-            vector.x = Mathf.Approximately(scale.x, 0) ? 0 : vector.x / scale.x;
-            vector.y = Mathf.Approximately(scale.y, 0) ? 0 : vector.y / scale.y;
-            vector.z = Mathf.Approximately(scale.z, 0) ? 0 : vector.z / scale.z;
+            vector = Quaternion.Inverse(parent.localRotation)*vector;
+            vector.x = Mathf.Approximately(scale.x, 0) ? 0 : vector.x/scale.x;
+            vector.y = Mathf.Approximately(scale.y, 0) ? 0 : vector.y/scale.y;
+            vector.z = Mathf.Approximately(scale.z, 0) ? 0 : vector.z/scale.z;
 
             return vector;
         }

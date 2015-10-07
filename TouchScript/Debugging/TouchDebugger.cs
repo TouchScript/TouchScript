@@ -232,7 +232,7 @@ namespace TouchScript.Debugging
             {
                 var touch = e.Touches[i];
                 dummies.Add(touch.Id, touch);
-                if (touch.Tags.Count > 0)
+                if (ShowTags && touch.Tags.Count > 0)
                 {
                     tags.Add(touch.Id, touch.Tags.ToString());
                 }
@@ -260,6 +260,7 @@ namespace TouchScript.Debugging
                 ITouch dummy;
                 if (!dummies.TryGetValue(touch.Id, out dummy)) return;
                 dummies.Remove(touch.Id);
+                tags.Remove(touch.Id);
             }
         }
 

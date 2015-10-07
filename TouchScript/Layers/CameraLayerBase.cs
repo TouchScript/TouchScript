@@ -40,8 +40,7 @@ namespace TouchScript.Layers
 
         #region Private variables
 
-        [SerializeField]
-        private LayerMask layerMask = -1;
+        [SerializeField] private LayerMask layerMask = -1;
 
         /// <summary>
         /// Camera.

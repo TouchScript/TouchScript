@@ -61,8 +61,7 @@ namespace TouchScript
             get { return tagList.Count; }
         }
 
-        [SerializeField]
-        private List<string> tagList = new List<string>();
+        [SerializeField] private List<string> tagList = new List<string>();
 
         /// <summary>
         /// Creates an instance of Tags.

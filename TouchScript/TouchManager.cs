@@ -120,7 +120,7 @@ namespace TouchScript
         /// <summary>
         /// Inch to centimeter ratio to be used in DPI calculations.
         /// </summary>
-        public const float INCH_TO_CM = 1 / CM_TO_INCH;
+        public const float INCH_TO_CM = 1/CM_TO_INCH;
 
         /// <summary>
         /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
@@ -242,25 +242,18 @@ namespace TouchScript
 
         #region Private variables
 
-        [SerializeField]
-        private Object displayDevice;
+        [SerializeField] private Object displayDevice;
 
-        [SerializeField]
-        [ToggleLeft]
-        private Boolean shouldCreateCameraLayer = true;
+        [SerializeField] [ToggleLeft] private Boolean shouldCreateCameraLayer = true;
 
-        [SerializeField]
-        [ToggleLeft]
-        private bool useSendMessage = false;
+        [SerializeField] [ToggleLeft] private bool useSendMessage = false;
 
-        [SerializeField]
-        private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled | MessageType.TouchesEnded | MessageType.TouchesMoved;
+        [SerializeField] private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled |
+                                                                 MessageType.TouchesEnded | MessageType.TouchesMoved;
 
-        [SerializeField]
-        private GameObject sendMessageTarget;
+        [SerializeField] private GameObject sendMessageTarget;
 
-        [SerializeField]
-        private List<TouchLayer> layers = new List<TouchLayer>();
+        [SerializeField] private List<TouchLayer> layers = new List<TouchLayer>();
 
         #endregion
 
@@ -308,7 +301,8 @@ namespace TouchScript
             if ((SendMessageEvents & MessageType.TouchesBegan) != 0) Instance.TouchesBegan += touchesBeganHandler;
             if ((SendMessageEvents & MessageType.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
             if ((SendMessageEvents & MessageType.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
-            if ((SendMessageEvents & MessageType.TouchesCancelled) != 0) Instance.TouchesCancelled += touchesCancelledHandler;
+            if ((SendMessageEvents & MessageType.TouchesCancelled) != 0)
+                Instance.TouchesCancelled += touchesCancelledHandler;
         }
 
         private void removeSubscriptions()
@@ -326,32 +320,38 @@ namespace TouchScript
 
         private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.Touches,
+                SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.Touches,
+                SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.Touches,
+                SendMessageOptions.DontRequireReceiver);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.Touches, SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.Touches,
+                SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameStartedhandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchFrameStarted.ToString(), SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchFrameStarted.ToString(),
+                SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameFinishedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchFrameFinished.ToString(), SendMessageOptions.DontRequireReceiver);
+            sendMessageTarget.SendMessage(MessageName.OnTouchFrameFinished.ToString(),
+                SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

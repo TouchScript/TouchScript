@@ -69,8 +69,10 @@ namespace TouchScript
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<TouchEventArgs> touchesBeganInvoker, touchesMovedInvoker,
-            touchesEndedInvoker, touchesCancelledInvoker;
+        private EventHandler<TouchEventArgs> touchesBeganInvoker,
+            touchesMovedInvoker,
+            touchesEndedInvoker,
+            touchesCancelledInvoker;
 
         private EventHandler frameStartedInvoker, frameFinishedInvoker;
 
@@ -78,6 +80,7 @@ namespace TouchScript
 
         #region Public properties
 
+        /// <inheritdoc />
         public static TouchManagerInstance Instance
         {
             get
@@ -173,7 +176,7 @@ namespace TouchScript
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
-        private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
+        private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private List<TouchPoint> touches = new List<TouchPoint>(30);
@@ -186,11 +189,20 @@ namespace TouchScript
         private HashSet<int> touchesCancelled = new HashSet<int>();
         private List<CancelledTouch> touchesManuallyCancelled = new List<CancelledTouch>(10);
 
-        private static ObjectPool<TouchPoint> touchPointPool = new ObjectPool<TouchPoint>(10, null, null, (t) => t.INTERNAL_Reset()); 
-        private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(2, () => new List<ITouch>(10), null, (l) => l.Clear());
-        private static ObjectPool<List<TouchPoint>> touchPointListPool = new ObjectPool<List<TouchPoint>>(1, () => new List<TouchPoint>(10), null, (l) => l.Clear());
-        private static ObjectPool<List<int>> intListPool = new ObjectPool<List<int>>(1, () => new List<int>(10), null, (l) => l.Clear());
-        private static ObjectPool<List<CancelledTouch>> cancelledListPool = new ObjectPool<List<CancelledTouch>>(1, () => new List<CancelledTouch>(10), null, (l) => l.Clear());
+        private static ObjectPool<TouchPoint> touchPointPool = new ObjectPool<TouchPoint>(10, null, null,
+            (t) => t.INTERNAL_Reset());
+
+        private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(2,
+            () => new List<ITouch>(10), null, (l) => l.Clear());
+
+        private static ObjectPool<List<TouchPoint>> touchPointListPool = new ObjectPool<List<TouchPoint>>(1,
+            () => new List<TouchPoint>(10), null, (l) => l.Clear());
+
+        private static ObjectPool<List<int>> intListPool = new ObjectPool<List<int>>(1, () => new List<int>(10), null,
+            (l) => l.Clear());
+
+        private static ObjectPool<List<CancelledTouch>> cancelledListPool = new ObjectPool<List<CancelledTouch>>(1,
+            () => new List<CancelledTouch>(10), null, (l) => l.Clear());
 
         private int nextTouchId = 0;
 
@@ -289,7 +301,12 @@ namespace TouchScript
         {
             touchesManuallyCancelled.Add(new CancelledTouch(id, redispatch));
         }
-        public void CancelTouch(int id) { CancelTouch(id, false); }
+
+        /// <inheritdoc />
+        public void CancelTouch(int id)
+        {
+            CancelTouch(id, false);
+        }
 
         #endregion
 
@@ -437,7 +454,7 @@ namespace TouchScript
         private void updateDPI()
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
-            dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
+            dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
 #if DEBUG
             debugTouchSize = Vector2.one * dotsPerCentimeter;
 #endif
@@ -455,7 +472,9 @@ namespace TouchScript
             {
                 if (Camera.main != null)
                 {
-                    if (Application.isEditor) Debug.LogWarning("No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
+                    if (Application.isEditor)
+                        Debug.LogWarning(
+                            "No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
                     var layer = Camera.main.gameObject.AddComponent<CameraLayer>();
                     AddLayer(layer);
                 }
@@ -464,7 +483,7 @@ namespace TouchScript
 
         private void createTouchInput()
         {
-            var inputs = FindObjectsOfType(typeof(InputSource));
+            var inputs = FindObjectsOfType(typeof (InputSource));
             if (inputs.Length == 0)
             {
                 GameObject obj = null;
@@ -509,7 +528,7 @@ namespace TouchScript
                 touches.Add(touch);
                 idToTouch.Add(touch.Id, touch);
 
-                for (var j = 0; j< layerCount; j++)
+                for (var j = 0; j < layerCount; j++)
                 {
                     var touchLayer = Layers[j];
                     if (touchLayer == null) continue;
@@ -519,10 +538,10 @@ namespace TouchScript
 #if DEBUG
                 addDebugFigureForTouch(touch);
 #endif
-
             }
 
-            if (touchesBeganInvoker != null) touchesBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            if (touchesBeganInvoker != null)
+                touchesBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
             touchListPool.Release(list);
         }
 
@@ -546,10 +565,10 @@ namespace TouchScript
 #if DEBUG
                 addDebugFigureForTouch(touch);
 #endif
-
             }
 
-            if (touchesMovedInvoker != null) touchesMovedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            if (touchesMovedInvoker != null)
+                touchesMovedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
             touchListPool.Release(list);
         }
 
@@ -571,7 +590,8 @@ namespace TouchScript
 #endif
             }
 
-            if (touchesEndedInvoker != null) touchesEndedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            if (touchesEndedInvoker != null)
+                touchesEndedInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
 
             for (var i = 0; i < endedCount; i++) touchPointPool.Release(list[i] as TouchPoint);
             touchListPool.Release(list);
@@ -595,7 +615,8 @@ namespace TouchScript
 #endif
             }
 
-            if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            if (touchesCancelledInvoker != null)
+                touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
 
             for (var i = 0; i < cancelledCount; i++) touchPointPool.Release(list[i] as TouchPoint);
             touchListPool.Release(list);
@@ -636,7 +657,8 @@ namespace TouchScript
                 if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
             }
 
-            if (touchesCancelledInvoker != null) touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
+            if (touchesCancelledInvoker != null)
+                touchesCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(list));
 
             touchListPool.Release(list);
             var count = releaseList.Count;
@@ -657,7 +679,8 @@ namespace TouchScript
                         if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                     }
                 }
-                if (touchesBeganInvoker != null) touchesBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(redispatchList));
+                if (touchesBeganInvoker != null)
+                    touchesBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(redispatchList));
             }
             touchListPool.Release(redispatchList);
         }
@@ -758,15 +781,14 @@ namespace TouchScript
                 Id = id;
                 Redispatch = redispatch;
             }
+
             public CancelledTouch(int id)
             {
                 Id = id;
                 Redispatch = false;
             }
-
         }
 
         #endregion
-
     }
 }
