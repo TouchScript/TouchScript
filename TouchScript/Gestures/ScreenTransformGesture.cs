@@ -21,14 +21,6 @@ namespace TouchScript.Gestures
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
 
-        /// <inheritdoc />
-        public void ApplyTransform(Transform target, out Vector3 translation, out Quaternion rotation, out Vector3 scale)
-        {
-            scale = Mathf.Approximately(DeltaScale, 1f) ? Vector3.one : new Vector3(DeltaScale, DeltaScale, DeltaScale);
-            rotation = Mathf.Approximately(DeltaRotation, 0f) ? Quaternion.identity : Quaternion.Euler(0, 0, DeltaRotation);
-            translation = DeltaPosition;
-        }
-
         #endregion
 
         #region Protected methods

@@ -125,14 +125,6 @@ namespace TouchScript.Gestures
             if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
         }
 
-        /// <inheritdoc />
-        public void ApplyTransform(Transform target, out Vector3 translation, out Quaternion rotation, out Vector3 scale)
-        {
-            scale = Mathf.Approximately(DeltaScale, 1f) ? Vector3.one : new Vector3(DeltaScale, DeltaScale, DeltaScale);
-            rotation = Mathf.Approximately(DeltaRotation, 0f) ? Quaternion.identity : Quaternion.AngleAxis(DeltaRotation, RotationAxis);
-            translation = DeltaPosition;
-        }
-
         #endregion
 
         #region Unity methods

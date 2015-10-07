@@ -13,8 +13,14 @@ namespace TouchScript.Behaviors
     [AddComponentMenu("TouchScript/Behaviors/Transformer")]
     public class Transformer : MonoBehaviour
     {
+        #region Private variables
+
         private Transform cachedTransform;
-        private List<ITransformGesture> gestures;
+        private List<ITransformGesture> gestures = new List<ITransformGesture>();
+
+        #endregion
+
+        #region Unity methods
 
         private void Awake()
         {
@@ -24,16 +30,13 @@ namespace TouchScript.Behaviors
         private void OnEnable()
         {
             var g = GetComponents<Gesture>();
-            gestures = new List<ITransformGesture>(g.Length);
             for (var i = 0; i < g.Length; i++)
             {
                 var transformGesture = g[i] as ITransformGesture;
                 if (transformGesture == null) continue;
 
                 gestures.Add(transformGesture);
-                transformGesture.TransformStarted += transformStartedHandler;
                 transformGesture.Transformed += transformHandler;
-                transformGesture.TransformCompleted += transformCompletedHandler;
             }
         }
 
@@ -42,15 +45,14 @@ namespace TouchScript.Behaviors
             for (var i = 0; i < gestures.Count; i++)
             {
                 var transformGesture = gestures[i];
-                transformGesture.TransformStarted -= transformStartedHandler;
                 transformGesture.Transformed -= transformHandler;
-                transformGesture.TransformCompleted -= transformCompletedHandler;
             }
+            gestures.Clear();
         }
 
-        private void transformStartedHandler(object sender, EventArgs eventArgs)
-        {
-        }
+        #endregion
+
+        #region Event handlers
 
         private void transformHandler(object sender, EventArgs e)
         {
@@ -58,9 +60,7 @@ namespace TouchScript.Behaviors
             gesture.ApplyTransform(cachedTransform);
         }
 
-        private void transformCompletedHandler(object sender, EventArgs eventArgs)
-        {
-        }
+        #endregion
 
     }
 }
