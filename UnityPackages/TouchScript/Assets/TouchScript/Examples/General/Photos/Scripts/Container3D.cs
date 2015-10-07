@@ -29,7 +29,7 @@ namespace TouchScript.Examples.Photos
 			for (var i = 0; i < count; i++)
 			{
 				var child = children[i];
-				child.localPosition = new Vector3(child.localPosition.x, i * 0.003f, child.localPosition.z);
+				child.localPosition = new Vector3(child.localPosition.x, child.localPosition.y, -i * 0.003f);
 			}
 		}
 
