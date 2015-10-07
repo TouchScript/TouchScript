@@ -9,11 +9,11 @@ using UnityEngine;
 namespace TouchScript.Gestures.Clustered
 {
     /// <summary>
-    /// TransformGesture which splits all touch points into 2 clusters and works with them.
+    /// ScreenTransformGesture which splits all touch points into 2 clusters and works with them.
     /// Should be used for large touch surfaces.
     /// </summary>
-    [AddComponentMenu("TouchScript/Gestures/Clustered/Transform Gesture (Clustered)")]
-    public class ClusteredTransformGesture : TransformGesture
+    [AddComponentMenu("TouchScript/Gestures/Clustered/Screen Transform Gesture (Clustered)")]
+    public class ClusteredScreenTransformGesture : ScreenTransformGesture
     {
         #region Private variables
 

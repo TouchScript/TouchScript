@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\FullscreenTarget.cs" />
+    <Compile Include="Gestures\Clustered\ClusteredScreenTransformGesture.cs" />
     <Compile Include="Gestures\ITransformGesture.cs" />
     <Compile Include="Behaviors\TouchScriptInputModule.cs" />
     <Compile Include="Behaviors\Transformer.cs" />
