@@ -167,10 +167,9 @@ namespace TouchScript.Gestures
             var dS = deltaScale = 1f;
 
 #if DEBUG
-            var theTouch = activeTouches[0];
             var worldCenter = cachedTransform.position;
             var screenCenter = projectionLayer.ProjectFrom(worldCenter);
-            var newScreenPos = theTouch.Position;
+            var newScreenPos = getPointScreenPosition();
             drawDebug(screenCenter, newScreenPos);
 #endif
 
@@ -190,7 +189,7 @@ namespace TouchScript.Gestures
 
             // Here we can't reuse last frame screen positions because points 0 and 1 can change.
             // For example if the first of 3 fingers is lifted off.
-            var oldScreenPos = theTouch.PreviousPosition;
+            var oldScreenPos = getPointPreviousScreenPosition();
 
             if (rotationEnabled)
             {

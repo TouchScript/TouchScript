@@ -307,6 +307,22 @@ namespace TouchScript.Gestures.Base
             return false;
         }
 
+        /// <summary>
+        /// Returns screen position of a point with index 0.
+        /// </summary>
+        protected virtual Vector2 getPointScreenPosition()
+        {
+            return activeTouches[0].Position;
+        }
+
+        /// <summary>
+        /// Returns previous screen position of a point with index 0.
+        /// </summary>
+        protected virtual Vector2 getPointPreviousScreenPosition()
+        {
+            return activeTouches[0].PreviousPosition;
+        }
+
 #if DEBUG
         protected int debugID;
         protected Coroutine debugCoroutine;
