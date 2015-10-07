@@ -22,14 +22,11 @@ namespace TouchScript.Editor.Gestures
             ignoreChildren = serializedObject.FindProperty("ignoreChildren");
         }
 
-        public override void OnInspectorGUI()
+        protected override void drawAdvanced()
         {
-            serializedObject.UpdateIfDirtyOrScript();
-
             EditorGUILayout.PropertyField(ignoreChildren, IGNORE_CHILDREN);
 
-            serializedObject.ApplyModifiedProperties();
-            base.OnInspectorGUI();
+            base.drawAdvanced();
         }
     }
 }

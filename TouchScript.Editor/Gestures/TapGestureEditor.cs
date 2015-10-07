@@ -37,11 +37,17 @@ namespace TouchScript.Editor.Gestures
             EditorGUIUtility.labelWidth = 180;
             EditorGUILayout.IntPopup(numberOfTapsRequired, new[] {new GUIContent("One"), new GUIContent("Two"), new GUIContent("Three")}, new[] {1, 2, 3}, NUMBER_OF_TAPS_REQUIRED, GUILayout.ExpandWidth(true));
 
+            serializedObject.ApplyModifiedProperties();
+            base.OnInspectorGUI();
+        }
+
+        protected override void drawAdvanced()
+        {
+            EditorGUIUtility.labelWidth = 160;
             EditorGUILayout.PropertyField(timeLimit, TIME_LIMIT);
             EditorGUILayout.PropertyField(distanceLimit, DISTANCE_LIMIT);
 
-            serializedObject.ApplyModifiedProperties();
-            base.OnInspectorGUI();
+            base.drawAdvanced();
         }
     }
 }
