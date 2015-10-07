@@ -390,7 +390,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Rotate to rotate \naround Z axis"
+  m_Text: 'Rotate with 2 fingers
+
+    or ALT + Mouse
+
+    to rotate around Z axis'
 --- !u!222 &567050692
 CanvasRenderer:
   m_ObjectHideFlags: 0

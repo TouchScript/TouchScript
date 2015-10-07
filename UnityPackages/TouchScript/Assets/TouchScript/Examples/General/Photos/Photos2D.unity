@@ -726,7 +726,7 @@ GameObject:
   - 224: {fileID: 744958296}
   - 114: {fileID: 744958295}
   m_Layer: 5
-  m_Name: Rotate
+  m_Name: Scale
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1140,6 +1140,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Use two fingers
 
+    or ALT + Mouse
+
     to scale a photo'
 --- !u!222 &990023253
 CanvasRenderer:
@@ -1515,6 +1517,8 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Use two fingers
+
+    or ALT + Mouse
 
     to rotate a photo'
 --- !u!222 &1399100006
