@@ -13,6 +13,9 @@ using UnityEngine;
 
 namespace TouchScript.Gestures
 {
+    /// <summary>
+    /// Recognizes a transform gesture around center of the object, i.e. one finger rotation, scaling or a combination of these.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Pinned Transform Gesture")]
     public class PinnedTransformGesture : PinnedTrasformGestureBase, ITransformGesture
     {
@@ -98,10 +101,8 @@ namespace TouchScript.Gestures
 
         #region Private variables
 
-        [SerializeField]
-        private ProjectionType projection = ProjectionType.Layer;
-        [SerializeField]
-        private Vector3 projectionPlaneNormal = Vector3.forward;
+        [SerializeField] private ProjectionType projection = ProjectionType.Layer;
+        [SerializeField] private Vector3 projectionPlaneNormal = Vector3.forward;
 
         private TouchLayer projectionLayer;
         private Plane transformPlane;
@@ -113,7 +114,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         public void ApplyTransform(Transform target)
         {
-            if (!Mathf.Approximately(DeltaRotation, 0f)) target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis) * target.rotation;
+            if (!Mathf.Approximately(DeltaRotation, 0f))
+                target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis)*target.rotation;
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
 
@@ -202,7 +204,7 @@ namespace TouchScript.Gestures
                     screenPixelRotationBuffer += TwoD.PointToLineDistance(screenCenter, oldScreenPos, newScreenPos);
                     angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos);
 
-                    if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
+                    if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
                         screenTransformPixelThresholdSquared)
                     {
                         isTransforming = true;
@@ -219,10 +221,11 @@ namespace TouchScript.Gestures
                 }
                 else
                 {
-                    screenPixelScalingBuffer += (newScreenPos - screenCenter).magnitude - (oldScreenPos - screenCenter).magnitude;
+                    screenPixelScalingBuffer += (newScreenPos - screenCenter).magnitude -
+                                                (oldScreenPos - screenCenter).magnitude;
                     scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos);
 
-                    if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
+                    if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
                         screenTransformPixelThresholdSquared)
                     {
                         isTransforming = true;
@@ -247,7 +250,7 @@ namespace TouchScript.Gestures
         }
 
 #if DEBUG
-        /// <inheritdoc />
+    /// <inheritdoc />
         protected override void touchesEnded(IList<ITouch> touches)
         {
             base.touchesEnded(touches);
@@ -295,7 +298,7 @@ namespace TouchScript.Gestures
         {
             var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
             var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
-            return newVector.magnitude / oldVector.magnitude;
+            return newVector.magnitude/oldVector.magnitude;
         }
 
         private void updateProjectionPlane()
@@ -306,11 +309,13 @@ namespace TouchScript.Gestures
             {
                 case ProjectionType.Layer:
                     if (projectionLayer == null)
-                        transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward), cachedTransform.position);
+                        transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward),
+                            cachedTransform.position);
                     else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, cachedTransform.position);
                     break;
                 case ProjectionType.Object:
-                    transformPlane = new Plane(cachedTransform.TransformDirection(projectionPlaneNormal), cachedTransform.position);
+                    transformPlane = new Plane(cachedTransform.TransformDirection(projectionPlaneNormal),
+                        cachedTransform.position);
                     break;
                 case ProjectionType.Global:
                     transformPlane = new Plane(projectionPlaneNormal, cachedTransform.position);

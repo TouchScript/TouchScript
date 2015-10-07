@@ -14,23 +14,26 @@ using TouchScript.Utils.Debug;
 
 namespace TouchScript.Gestures.Base
 {
+    /// <summary>
+    /// Abstract base class for Pinned Transform Gestures.
+    /// </summary>
     public abstract class PinnedTrasformGestureBase : Gesture
     {
         #region Constants
 
         /// <summary>
-        /// 
+        /// Types of transformation.
         /// </summary>
         [Flags]
         public enum TransformType
         {
             /// <summary>
-            /// 
+            /// Rotation.
             /// </summary>
             Rotation = 0x2,
 
             /// <summary>
-            /// 
+            /// Scaling.
             /// </summary>
             Scaling = 0x4
         }
@@ -54,27 +57,21 @@ namespace TouchScript.Gestures.Base
 
         #region Events
 
-        /// <summary>
-        /// Occurs when gesture starts.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<EventArgs> TransformStarted
         {
             add { transformStartedInvoker += value; }
             remove { transformStartedInvoker -= value; }
         }
 
-        /// <summary>
-        /// Occurs when gesture updates.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<EventArgs> Transformed
         {
             add { transformedInvoker += value; }
             remove { transformedInvoker -= value; }
         }
 
-        /// <summary>
-        /// Occurs when gesture ends.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<EventArgs> TransformCompleted
         {
             add { transformCompletedInvoker += value; }
@@ -88,6 +85,9 @@ namespace TouchScript.Gestures.Base
 
         #region Public properties
 
+        /// <summary>
+        /// Types of transformation this gesture supports.
+        /// </summary>
         public TransformType Type
         {
             get { return type; }
@@ -108,6 +108,9 @@ namespace TouchScript.Gestures.Base
             }
         }
 
+        /// <summary>
+        /// Gets delta rotation between this frame and last frame in degrees.
+        /// </summary>
         public float DeltaRotation
         {
             get { return deltaRotation; }
@@ -160,18 +163,16 @@ namespace TouchScript.Gestures.Base
         protected float scaleBuffer;
         protected bool isTransforming = false;
 
-        [SerializeField]
-        private TransformType type = TransformType.Scaling | TransformType.Rotation;
+        [SerializeField] private TransformType type = TransformType.Scaling | TransformType.Rotation;
 
-        [SerializeField]
-        private float screenTransformThreshold = 0.1f;
+        [SerializeField] private float screenTransformThreshold = 0.1f;
 
         #endregion
 
         #region Unity methods
 
 #if DEBUG
-        /// <inheritdoc />
+    /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();
@@ -259,7 +260,8 @@ namespace TouchScript.Gestures.Base
         protected override void onRecognized()
         {
             base.onRecognized();
-            if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (transformCompletedInvoker != null)
+                transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
@@ -347,8 +349,8 @@ namespace TouchScript.Gestures.Base
 
         private void updateScreenTransformThreshold()
         {
-            screenTransformPixelThreshold = screenTransformThreshold * touchManager.DotsPerCentimeter;
-            screenTransformPixelThresholdSquared = screenTransformPixelThreshold * screenTransformPixelThreshold;
+            screenTransformPixelThreshold = screenTransformThreshold*touchManager.DotsPerCentimeter;
+            screenTransformPixelThresholdSquared = screenTransformPixelThreshold*screenTransformPixelThreshold;
         }
 
         #endregion

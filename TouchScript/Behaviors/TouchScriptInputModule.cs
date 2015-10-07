@@ -16,31 +16,38 @@ namespace TouchScript.Behaviors
     [AddComponentMenu("TouchScript/TouchScript Input Module")]
     public class TouchScriptInputModule : BaseInputModule
     {
-
         #region Public properties
 
-        /// <summary> Name of Unity Horizontal axis. </summary>
+        /// <summary> 
+        /// Name of Unity Horizontal axis. 
+        /// </summary>
         public string HorizontalAxis
         {
             get { return horizontalAxis; }
             set { horizontalAxis = value; }
         }
 
-        /// <summary> Name of Unity Vertical axis. </summary>
+        /// <summary> 
+        /// Name of Unity Vertical axis. 
+        /// </summary>
         public string VerticalAxis
         {
             get { return verticalAxis; }
             set { verticalAxis = value; }
         }
 
-        /// <summary> Name of Unity Submit button. </summary>
+        /// <summary> 
+        /// Name of Unity Submit button. 
+        /// </summary>
         public string SubmitButton
         {
             get { return submitButton; }
             set { submitButton = value; }
         }
 
-        /// <summary> Name of Unity Cancel button. </summary>
+        /// <summary> 
+        /// Name of Unity Cancel button. 
+        /// </summary>
         public string CancelButton
         {
             get { return cancelButton; }
@@ -53,23 +60,17 @@ namespace TouchScript.Behaviors
 
         protected Dictionary<int, PointerEventData> pointerEvents = new Dictionary<int, PointerEventData>();
 
-        [SerializeField]
-        private string horizontalAxis = "Horizontal";
+        [SerializeField] private string horizontalAxis = "Horizontal";
 
-        [SerializeField]
-        private string verticalAxis = "Vertical";
+        [SerializeField] private string verticalAxis = "Vertical";
 
-        [SerializeField]
-        private string submitButton = "Submit";
+        [SerializeField] private string submitButton = "Submit";
 
-        [SerializeField]
-        private string cancelButton = "Cancel";
+        [SerializeField] private string cancelButton = "Cancel";
 
-        [SerializeField]
-        private float inputActionsPerSecond = 10f;
+        [SerializeField] private float inputActionsPerSecond = 10f;
 
-        [SerializeField]
-        private float repeatDelay = 0.5f;
+        [SerializeField] private float repeatDelay = 0.5f;
 
         private float nextActionTime;
 
@@ -219,7 +220,8 @@ namespace TouchScript.Behaviors
             // search for the control that will receive the press
             // if we can't find a press handler set the press
             // handler to be what would receive a click.
-            var newPressed = ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.pointerDownHandler);
+            var newPressed = ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent,
+                ExecuteEvents.pointerDownHandler);
 
             // didnt find a press handler... search for a click handler
             if (newPressed == null)
@@ -255,7 +257,9 @@ namespace TouchScript.Behaviors
 
             if (moving && pointerEvent.pointerDrag != null
                 && !pointerEvent.dragging
-                && shouldStartDrag(pointerEvent.pressPosition, pointerEvent.position, eventSystem.pixelDragThreshold, pointerEvent.useDragThreshold))
+                &&
+                shouldStartDrag(pointerEvent.pressPosition, pointerEvent.position, eventSystem.pixelDragThreshold,
+                    pointerEvent.useDragThreshold))
             {
                 ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.beginDragHandler);
                 pointerEvent.dragging = true;
@@ -388,7 +392,7 @@ namespace TouchScript.Behaviors
             if (!useDragThreshold)
                 return true;
 
-            return (pressPos - currentPos).sqrMagnitude >= threshold * threshold;
+            return (pressPos - currentPos).sqrMagnitude >= threshold*threshold;
         }
 
         private bool sendSubmitEventToSelectedObject()
@@ -440,10 +444,13 @@ namespace TouchScript.Behaviors
             MoveDirection moveDir = axisEventData.moveDir;
 
             // Repeat delay
-            if (moveDir != lastMoveDirection) {
+            if (moveDir != lastMoveDirection)
+            {
                 lastMoveDirection = moveDir;
                 lastMoveStartTime = time;
-            } else {
+            }
+            else
+            {
                 if (time < lastMoveStartTime + repeatDelay)
                     return false;
             }
@@ -452,7 +459,7 @@ namespace TouchScript.Behaviors
             {
                 ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, ExecuteEvents.moveHandler);
             }
-            nextActionTime = time + 1f / inputActionsPerSecond;
+            nextActionTime = time + 1f/inputActionsPerSecond;
             return axisEventData.used;
         }
 
@@ -507,6 +514,5 @@ namespace TouchScript.Behaviors
         }
 
         #endregion
-
     }
 }

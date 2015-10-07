@@ -8,16 +8,20 @@ using UnityEngine;
 
 namespace TouchScript.Gestures
 {
+    /// <summary>
+    /// Recognizes a transform gesture in screen space, i.e. translation, rotation, scaling or a combination of these.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Screen Transform Gesture")]
     public class ScreenTransformGesture : TransformGestureBase, ITransformGesture
     {
-
         #region Public methods
 
+        /// <inheritdoc />
         public void ApplyTransform(Transform target)
         {
             if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
-            if (!Mathf.Approximately(DeltaRotation, 0f)) target.rotation = Quaternion.Euler(0, 0, DeltaRotation) * target.rotation;
+            if (!Mathf.Approximately(DeltaRotation, 0f))
+                target.rotation = Quaternion.Euler(0, 0, DeltaRotation)*target.rotation;
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
 
@@ -25,6 +29,7 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
             Vector2 newScreenPos2)
         {
@@ -34,12 +39,14 @@ namespace TouchScript.Gestures
                     Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x))*Mathf.Rad2Deg;
         }
 
+        /// <inheritdoc />
         protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
             Vector2 newScreenPos2)
         {
             return (newScreenPos2 - newScreenPos1).magnitude/(oldScreenPos2 - oldScreenPos1).magnitude;
         }
 
+        /// <inheritdoc />
         protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
         {
             if (isTransforming)
@@ -57,7 +64,9 @@ namespace TouchScript.Gestures
             return Vector3.zero;
         }
 
-        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
+        /// <inheritdoc />
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
+            Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
         {
             if (isTransforming)
             {
@@ -70,7 +79,7 @@ namespace TouchScript.Gestures
             {
                 isTransforming = true;
                 oldScreenPos1 = newScreenPos1 - screenPixelTranslationBuffer;
-                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2) * .5f, dR, dS);
+                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2)*.5f, dR, dS);
                 return new Vector3(newScreenPos1.x - transformedPoint.x, newScreenPos1.y - transformedPoint.y, 0);
             }
 
@@ -85,7 +94,7 @@ namespace TouchScript.Gestures
         {
             var delta = point - center;
             if (dR != 0) delta = TwoD.Rotate(delta, dR);
-            if (dS != 0) delta = delta * dS;
+            if (dS != 0) delta = delta*dS;
             return center + delta;
         }
 

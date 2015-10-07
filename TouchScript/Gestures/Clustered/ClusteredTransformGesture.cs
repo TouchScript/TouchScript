@@ -8,11 +8,13 @@ using UnityEngine;
 
 namespace TouchScript.Gestures.Clustered
 {
-
+    /// <summary>
+    /// TransformGesture which uses all points, splits them into 2 clusters and works with them.
+    /// Should be used for large touch surfaces.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Transform Gesture (Clustered)")]
     public class ClusteredTransformGesture : TransformGesture
     {
-
         #region Private variables
 
         private Clusters.Clusters clusters = new Clusters.Clusters();
@@ -94,6 +96,5 @@ namespace TouchScript.Gestures.Clustered
         }
 
         #endregion
-
     }
 }

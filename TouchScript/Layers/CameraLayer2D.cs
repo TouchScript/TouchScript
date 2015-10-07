@@ -17,13 +17,10 @@ namespace TouchScript.Layers
     {
         #region Private variables
 
-        [SerializeField]
-        [HideInInspector]
-        [FormerlySerializedAs("sortedLayerIds")]
-        private int[] layerIds = new int[0];
+        [SerializeField] [HideInInspector] [FormerlySerializedAs("sortedLayerIds")] private int[] layerIds = new int[0];
         private Dictionary<int, int> layerById = new Dictionary<int, int>();
         private List<RaycastHit2D> sortedHits;
-        private List<HitTest> tmpHitTestList = new List<HitTest>(10); 
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 

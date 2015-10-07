@@ -9,7 +9,9 @@ using UnityEngine;
 
 namespace TouchScript.Behaviors
 {
-
+    /// <summary>
+    /// Component which transforms an object according to events from gestures.
+    /// </summary>
     [AddComponentMenu("TouchScript/Behaviors/Transformer")]
     public class Transformer : MonoBehaviour
     {
@@ -61,6 +63,5 @@ namespace TouchScript.Behaviors
         }
 
         #endregion
-
     }
 }

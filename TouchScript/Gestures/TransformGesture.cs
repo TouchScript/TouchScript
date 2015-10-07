@@ -13,6 +13,9 @@ using UnityEngine;
 
 namespace TouchScript.Gestures
 {
+    /// <summary>
+    /// Recognizes a transform gesture, i.e. translation, rotation, scaling or a combination of these.
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
     public class TransformGesture : TransformGestureBase, ITransformGesture
     {
@@ -164,6 +167,7 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
             Vector2 newScreenPos2)
         {
@@ -177,6 +181,7 @@ namespace TouchScript.Gestures
             return angle;
         }
 
+        /// <inheritdoc />
         protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
             Vector2 newScreenPos2)
         {
@@ -187,6 +192,7 @@ namespace TouchScript.Gestures
             return newVector.magnitude/oldVector.magnitude;
         }
 
+        /// <inheritdoc />
         protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
         {
             if (isTransforming)
@@ -206,6 +212,7 @@ namespace TouchScript.Gestures
             return Vector3.zero;
         }
 
+        /// <inheritdoc />
         protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
         {
             if (isTransforming)
@@ -224,6 +231,7 @@ namespace TouchScript.Gestures
             return Vector3.zero;
         }
 
+        /// <inheritdoc />
         private Vector3 projectScaledRotated(Vector2 point, float dR, float dS)
         {
             var delta = projectionLayer.ProjectTo(point, TransformPlane) - cachedTransform.position;

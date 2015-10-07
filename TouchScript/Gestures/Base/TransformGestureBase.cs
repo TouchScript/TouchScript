@@ -15,28 +15,31 @@ using TouchScript.Utils.Debug;
 
 namespace TouchScript.Gestures.Base
 {
+    /// <summary>
+    /// Abstract base class for Transform Gestures.
+    /// </summary>
     public abstract class TransformGestureBase : Gesture
     {
         #region Constants
 
         /// <summary>
-        /// 
+        /// Types of transformation.
         /// </summary>
         [Flags]
         public enum TransformType
         {
             /// <summary>
-            /// 
+            /// Translation.
             /// </summary>
             Translation = 0x1,
 
             /// <summary>
-            /// 
+            /// Rotation.
             /// </summary>
             Rotation = 0x2,
 
             /// <summary>
-            /// 
+            /// Scaling.
             /// </summary>
             Scaling = 0x4
         }
@@ -60,27 +63,21 @@ namespace TouchScript.Gestures.Base
 
         #region Events
 
-        /// <summary>
-        /// Occurs when gesture starts.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<EventArgs> TransformStarted
         {
             add { transformStartedInvoker += value; }
             remove { transformStartedInvoker -= value; }
         }
 
-        /// <summary>
-        /// Occurs when gesture updates.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<EventArgs> Transformed
         {
             add { transformedInvoker += value; }
             remove { transformedInvoker -= value; }
         }
 
-        /// <summary>
-        /// Occurs when gesture ends.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<EventArgs> TransformCompleted
         {
             add { transformCompletedInvoker += value; }
@@ -94,6 +91,9 @@ namespace TouchScript.Gestures.Base
 
         #region Public properties
 
+        /// <summary>
+        /// Types of transformation this gesture supports.
+        /// </summary>
         public TransformType Type
         {
             get { return type; }
@@ -128,14 +128,16 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <summary>
-        /// Gets delta position in world coordinates.
+        /// Gets delta position between this frame and the last frame in world coordinates.
         /// </summary>
-        /// <value>Delta position between this frame and the last frame in world coordinates.</value>
         public Vector3 DeltaPosition
         {
             get { return deltaPosition; }
         }
 
+        /// <summary>
+        /// Gets delta rotation between this frame and last frame in degrees.
+        /// </summary>
         public float DeltaRotation
         {
             get { return deltaRotation; }
@@ -211,7 +213,7 @@ namespace TouchScript.Gestures.Base
         #region Unity methods
 
 #if DEBUG
-        /// <inheritdoc />
+    /// <inheritdoc />
         protected override void Awake()
         {
             base.Awake();
@@ -233,7 +235,6 @@ namespace TouchScript.Gestures.Base
         #endregion
 
         #region Gesture callbacks
-
 
         /// <inheritdoc />
         protected override void touchesBegan(IList<ITouch> touches)
@@ -353,7 +354,9 @@ namespace TouchScript.Gestures.Base
                     if (translationEnabled)
                     {
                         if (dR == 0 && dS == 1) dP = doOnePointTranslation(oldScreenPos1, newScreenPos1);
-                        else dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR, dS);
+                        else
+                            dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR,
+                                dS);
                     }
                 }
                 else if (translationEnabled)
@@ -427,7 +430,8 @@ namespace TouchScript.Gestures.Base
         protected override void onRecognized()
         {
             base.onRecognized();
-            if (transformCompletedInvoker != null) transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            if (transformCompletedInvoker != null)
+                transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
@@ -483,7 +487,8 @@ namespace TouchScript.Gestures.Base
 
         /// <summary>
         /// </summary>
-        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
+        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
+            Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
         {
             return Vector3.zero;
         }

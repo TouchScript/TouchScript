@@ -5,14 +5,12 @@
  */
 
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace TouchScript.Utils
 {
     internal class ObjectPool<T> where T : new()
     {
-
         public delegate T0 UnityFunc<T0>();
 
         private readonly Stack<T> stack;
@@ -21,10 +19,19 @@ namespace TouchScript.Utils
         private readonly UnityFunc<T> onNew;
 
         public int CountAll { get; private set; }
-        public int CountActive { get { return CountAll - CountInactive; } }
-        public int CountInactive { get { return stack.Count; } }
 
-        public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet, UnityAction<T> actionOnRelease)
+        public int CountActive
+        {
+            get { return CountAll - CountInactive; }
+        }
+
+        public int CountInactive
+        {
+            get { return stack.Count; }
+        }
+
+        public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet,
+            UnityAction<T> actionOnRelease)
         {
             stack = new Stack<T>(capacity);
             onNew = actionNew;

@@ -87,11 +87,9 @@ namespace TouchScript.Layers
 
         #region Private variables
 
-        [SerializeField]
-        private LayerType type = LayerType.MainCamera;
+        [SerializeField] private LayerType type = LayerType.MainCamera;
 
-        [SerializeField]
-        private Camera _camera;
+        [SerializeField] private Camera _camera;
 
         private Transform cameraTransform;
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
@@ -120,7 +118,8 @@ namespace TouchScript.Layers
                 var test = tmpHitTestList[i];
                 if (!test.enabled) continue;
                 var hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) return LayerHitResult.Miss;
+                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard)
+                    return LayerHitResult.Miss;
             }
 
             return LayerHitResult.Hit;

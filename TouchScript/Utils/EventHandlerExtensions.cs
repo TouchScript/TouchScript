@@ -1,10 +1,15 @@
-﻿using System;
+﻿/*
+ * @author DenizPiri / denizpiri@hotmail.com
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using System;
 
 namespace TouchScript.Utils
 {
-    static internal class EventHandlerExtensions
+    internal static class EventHandlerExtensions
     {
-        static public Exception InvokeHandleExceptions<T>(this EventHandler<T> handler, object sender, T args)
+        public static Exception InvokeHandleExceptions<T>(this EventHandler<T> handler, object sender, T args)
             where T : EventArgs
         {
             try
@@ -19,7 +24,7 @@ namespace TouchScript.Utils
             return null;
         }
 
-        static public Exception InvokeHandleExceptions(this EventHandler handler, object sender, EventArgs args)
+        public static Exception InvokeHandleExceptions(this EventHandler handler, object sender, EventArgs args)
         {
             try
             {

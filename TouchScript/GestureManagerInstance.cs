@@ -65,9 +65,15 @@ namespace TouchScript
         // Dictionary<Gesture, List<ITouch>> - touch points sorted by gesture
         private Dictionary<Gesture, List<ITouch>> gestureTouches = new Dictionary<Gesture, List<ITouch>>(10);
         private List<Gesture> activeGestures = new List<Gesture>(20);
-        private static ObjectPool<List<Gesture>> gestureListPool = new ObjectPool<List<Gesture>>(10, () => new List<Gesture>(20), null, (l) => l.Clear());
-        private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(20, () => new List<ITouch>(10), null, (l) => l.Clear());
-        private static ObjectPool<List<Transform>> transformListPool = new ObjectPool<List<Transform>>(10, () => new List<Transform>(10), null, (l) => l.Clear());
+
+        private static ObjectPool<List<Gesture>> gestureListPool = new ObjectPool<List<Gesture>>(10,
+            () => new List<Gesture>(20), null, (l) => l.Clear());
+
+        private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(20,
+            () => new List<ITouch>(10), null, (l) => l.Clear());
+
+        private static ObjectPool<List<Transform>> transformListPool = new ObjectPool<List<Transform>>(10,
+            () => new List<Transform>(10), null, (l) => l.Clear());
 
         #endregion
 
@@ -139,7 +145,8 @@ namespace TouchScript
                         case Gesture.GestureState.Possible:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
+                                new object[] {gesture, state, gesture.State}));
                             break;
                     }
                     recognized = recognizeGestureIfNotPrevented(gesture);
@@ -156,7 +163,8 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
+                                new object[] {gesture, state, gesture.State}));
                             break;
                     }
                     break;
@@ -178,7 +186,8 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}", new object[] {gesture, state, gesture.State}));
+                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
+                                new object[] {gesture, state, gesture.State}));
                             break;
                     }
                     break;
@@ -214,7 +223,8 @@ namespace TouchScript
             gesture.INTERNAL_TouchesCancelled(touchPoints);
         }
 
-        private void update(IList<ITouch> updatedTouches, Action<Transform> process, Action<Gesture, IList<ITouch>> dispatch)
+        private void update(IList<ITouch> updatedTouches, Action<Transform> process,
+            Action<Gesture, IList<ITouch>> dispatch)
         {
             // WARNING! Arcane magic ahead!
             // gestures which got any touch points
@@ -333,7 +343,9 @@ namespace TouchScript
                     var activeGesture = containingList[j];
 
                     if (gesture == activeGesture) continue;
-                    if ((activeGesture.State == Gesture.GestureState.Began || activeGesture.State == Gesture.GestureState.Changed) && (activeGesture.CanPreventGesture(gesture)))
+                    if ((activeGesture.State == Gesture.GestureState.Began ||
+                         activeGesture.State == Gesture.GestureState.Changed) &&
+                        (activeGesture.CanPreventGesture(gesture)))
                     {
                         // there's a started gesture which prevents this one
                         canReceiveTouches = false;
@@ -343,7 +355,7 @@ namespace TouchScript
 
                 // check gesture's ShouldReceiveTouch callback
                 if (!canReceiveTouches) continue;
-                
+
                 var touchList = touchListPool.Get();
                 for (var j = 0; j < touchCount; j++)
                 {
@@ -466,7 +478,8 @@ namespace TouchScript
                 if (gesture == otherGesture) continue;
                 if (!gestureIsActive(otherGesture)) continue;
 
-                if (otherGesture.State == Gesture.GestureState.Began || otherGesture.State == Gesture.GestureState.Changed)
+                if (otherGesture.State == Gesture.GestureState.Began ||
+                    otherGesture.State == Gesture.GestureState.Changed)
                 {
                     if (otherGesture.CanPreventGesture(gesture))
                     {
