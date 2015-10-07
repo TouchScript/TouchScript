@@ -5,6 +5,7 @@ Editor.meta
 TouchScript/*
 !TouchScript/Examples.meta
 !TouchScript/Examples
+TouchScript/Examples/Examples.unity*
 TouchScript/Examples/General*
 TouchScript/Examples/_misc*
 
