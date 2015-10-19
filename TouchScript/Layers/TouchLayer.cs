@@ -63,6 +63,21 @@ namespace TouchScript.Layers
         // Needed to overcome iOS AOT limitations
         private EventHandler<TouchLayerEventArgs> touchBeganInvoker;
 
+        /// <summary>
+        /// Occurs when OrderIndex value is changed.
+        /// </summary>
+        public event Action<TouchLayer, int> OrderIndexChanged {
+          add { orderIndexChangedInvoker += value; }
+          remove { orderIndexChangedInvoker -= value; }
+        }
+
+        // Needed to overcome iOS AOT limitations
+        private Action<TouchLayer, int> orderIndexChangedInvoker;
+
+        #endregion
+
+        #region Private properties
+        private int orderIndex = 0;
         #endregion
 
         #region Public properties
@@ -78,6 +93,23 @@ namespace TouchScript.Layers
         public virtual Vector3 WorldProjectionNormal
         {
             get { return transform.forward; }
+        }
+
+        /// <summary>
+        /// Index used for ordering among other layers. If index is -1, and
+        /// other layers are 0 as is by default, this layer will always be
+        /// getting the hits first. If multiple layers share have the same
+        /// OrderIndex value, their list order is respected.
+        /// </summary>
+        public int OrderIndex
+        {
+            get { return orderIndex; }
+            set
+            {
+                orderIndex = value;
+                if (orderIndexChangedInvoker != null)
+                    orderIndexChangedInvoker(this, value);
+            }
         }
 
         #endregion

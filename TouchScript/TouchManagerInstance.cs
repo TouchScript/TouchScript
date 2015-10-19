@@ -182,6 +182,23 @@ namespace TouchScript
         private List<TouchPoint> touches = new List<TouchPoint>(30);
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
 
+        private List<TouchLayer> layersOrderedCache = new List<TouchLayer>(10);
+        private bool layersOrderedCacheDirty = true;
+        private List<TouchLayer> layersOrdered
+        {
+            get
+            {
+                if (false == layersOrderedCacheDirty)
+                    return layersOrderedCache;
+                layersOrderedCache.Clear();
+                // This should be stable sort.
+                layersOrderedCache.AddRange(
+                    layers.OrderBy(layer => layer.OrderIndex));
+                return layersOrderedCache;
+            }
+        }
+
+
         // Upcoming changes
         private List<TouchPoint> touchesBegan = new List<TouchPoint>(10);
         private HashSet<int> touchesUpdated = new HashSet<int>();
@@ -216,6 +233,8 @@ namespace TouchScript
             if (layer == null) return false;
             if (layers.Contains(layer)) return true;
             layers.Add(layer);
+            layer.OrderIndexChanged += layerOrderIndexChanged;
+            layersOrderedCacheDirty = true;
             return true;
         }
 
@@ -228,6 +247,7 @@ namespace TouchScript
             if (i == -1)
             {
                 layers.Insert(index, layer);
+                layer.OrderIndexChanged += layerOrderIndexChanged;
             }
             else
             {
@@ -236,6 +256,7 @@ namespace TouchScript
                 if (index < i) layers.Insert(index, layer);
                 else layers.Insert(index - 1, layer);
             }
+            layersOrderedCacheDirty = true;
             return true;
         }
 
@@ -244,6 +265,9 @@ namespace TouchScript
         {
             if (layer == null) return false;
             var result = layers.Remove(layer);
+            if (result)
+                layer.OrderIndexChanged -= layerOrderIndexChanged;
+            layersOrderedCacheDirty = true;
             return result;
         }
 
@@ -255,6 +279,7 @@ namespace TouchScript
             var data = layers[at];
             layers.RemoveAt(at);
             layers.Insert(to, data);
+            layersOrderedCacheDirty = true;
         }
 
         /// <inheritdoc />
@@ -279,10 +304,10 @@ namespace TouchScript
             hit = null;
             layer = null;
 
-            var count = layers.Count;
+            var count = layersOrdered.Count;
             for (var i = 0; i < count; i++)
             {
-                var touchLayer = layers[i];
+                var touchLayer = layersOrdered[i];
                 if (touchLayer == null) continue;
                 ITouchHit _hit;
                 if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
@@ -451,6 +476,10 @@ namespace TouchScript
 
         #region Private functions
 
+        private void layerOrderIndexChanged(TouchLayer layer, int index) {
+          layersOrderedCacheDirty = true;
+        }
+
         private void updateDPI()
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
@@ -520,7 +549,7 @@ namespace TouchScript
         {
             var count = points.Count;
             var list = touchListPool.Get();
-            var layerCount = layers.Count;
+            var layerCount = layersOrdered.Count;
             for (var i = 0; i < count; i++)
             {
                 var touch = points[i];
@@ -530,7 +559,7 @@ namespace TouchScript
 
                 for (var j = 0; j < layerCount; j++)
                 {
-                    var touchLayer = Layers[j];
+                    var touchLayer = layersOrdered[j];
                     if (touchLayer == null) continue;
                     if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                 }
@@ -668,13 +697,13 @@ namespace TouchScript
             count = redispatchList.Count;
             if (count > 0)
             {
-                var layerCount = layers.Count;
+                var layerCount = layersOrdered.Count;
                 for (var i = 0; i < count; i++)
                 {
                     var touch = redispatchList[i] as TouchPoint;
                     for (var j = 0; j < layerCount; j++)
                     {
-                        var touchLayer = Layers[j];
+                        var touchLayer = layersOrdered[j];
                         if (touchLayer == null) continue;
                         if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                     }
