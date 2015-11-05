@@ -446,13 +446,21 @@ namespace TouchScript.Gestures
             return friendlyGestures.Contains(gesture);
         }
 
+        public bool IsTouchOnTarget(ITouch touch)
+        {
+            TouchHit hit;
+            if ((touch.Layer.Hit(touch.Position, out hit) == TouchLayer.LayerHitResult.Hit) &&
+                (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform))) return true;
+            return false;
+        }
+
         /// <summary>
         /// Gets result of casting a ray from gesture touch points' centroid screen position.
         /// </summary>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public bool GetTargetHitResult()
         {
-            ITouchHit hit;
+            TouchHit hit;
             return GetTargetHitResult(ScreenPosition, out hit);
         }
 
@@ -461,7 +469,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="hit">Raycast result</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public bool GetTargetHitResult(out ITouchHit hit)
+        public virtual bool GetTargetHitResult(out TouchHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
         }
@@ -473,7 +481,7 @@ namespace TouchScript.Gestures
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
         public bool GetTargetHitResult(Vector2 position)
         {
-            ITouchHit hit;
+            TouchHit hit;
             return GetTargetHitResult(position, out hit);
         }
 
@@ -483,7 +491,7 @@ namespace TouchScript.Gestures
         /// <param name="position">The position.</param>
         /// <param name="hit">Raycast result.</param>
         /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
-        public virtual bool GetTargetHitResult(Vector2 position, out ITouchHit hit)
+        public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
         {
             TouchLayer layer = null;
             if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;
@@ -854,6 +862,7 @@ namespace TouchScript.Gestures
         protected bool setState(GestureState value)
         {
             if (gestureManagerInstance == null) return false;
+            if (!enabled && value != GestureState.Failed) return false;
             if (requireGestureToFail != null)
             {
                 switch (value)

@@ -52,7 +52,7 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out ITouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
@@ -64,10 +64,9 @@ namespace TouchScript.Layers
             return castRay(ray, out hit);
         }
 
-        /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        public override ProjectionParams GetProjectionParams(ITouch touch)
         {
-            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+            return new ProjectionParams(cameraLayerProjection);
         }
 
         /// <inheritdoc />
@@ -91,6 +90,12 @@ namespace TouchScript.Layers
         #endregion
 
         #region Protected functions
+
+        protected virtual Ray cameraLayerProjection(Vector2 screenPosition)
+        {
+            if (_camera == null) return TouchManager.INVALID_RAY;
+            return _camera.ScreenPointToRay(screenPosition);
+        }
 
         /// <inheritdoc />
         protected override void setName()
@@ -116,7 +121,7 @@ namespace TouchScript.Layers
         /// <param name="ray">The ray.</param>
         /// <param name="hit">Hit information if the ray has hit something.</param>
         /// <returns>Hit result.</returns>
-        protected abstract LayerHitResult castRay(Ray ray, out ITouchHit hit);
+        protected abstract LayerHitResult castRay(Ray ray, out TouchHit hit);
 
         #endregion
     }

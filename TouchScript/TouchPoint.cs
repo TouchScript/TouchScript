@@ -32,21 +32,21 @@ namespace TouchScript
         public Vector2 PreviousPosition { get; private set; }
 
         /// <inheritdoc />
-        public ITouchHit Hit
+        public TouchHit Hit { get; internal set; }
+
+        /// <inheritdoc />
+        public TouchLayer Layer { get; internal set; }
+
+        public ProjectionParams ProjectionParams
         {
             get
             {
-                if (isDirty)
+                if (!projection.IsValid)
                 {
-                    TouchManager.Instance.GetHitTarget(position, out hit);
-                    isDirty = false;
+                    if (Layer == null) projection = TouchLayer.INVALID_PROJECTION_PARAMS;
+                    projection = Layer.GetProjectionParams(this);
                 }
-                return hit;
-            }
-            internal set
-            {
-                hit = value;
-                isDirty = false;
+                return projection;
             }
         }
 
@@ -70,6 +70,7 @@ namespace TouchScript
         private Vector2 newPosition = Vector2.zero;
         private ITouchHit hit;
         private bool isDirty;
+        private ProjectionParams projection;
         private Dictionary<string, System.Object> properties;
 
         #endregion
@@ -131,14 +132,12 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Resets touch's position. Used internally to update <see cref="TouchPoint.PreviousPosition"/> between frames.
         /// </summary>
         internal void INTERNAL_ResetPosition()
         {
             PreviousPosition = position;
             position = newPosition;
             newPosition = position;
-            if (PreviousPosition != position) isDirty = true;
         }
 
         internal void INTERNAL_SetPosition(Vector2 value)

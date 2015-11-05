@@ -39,11 +39,8 @@ namespace TouchScript
 
         /// <summary>
         /// Original hit information.
-        /// <seealso cref="ITouchHit"/>
-        /// <seealso cref="ITouchHit2D"/>
-        /// <seealso cref="ITouchHit3D"/>
         /// </summary>
-        ITouchHit Hit { get; }
+        TouchHit Hit { get; }
 
         /// <summary>
         /// Original layer which created this touch object.
@@ -52,6 +49,8 @@ namespace TouchScript
         /// <seealso cref="CameraLayer2D"/>
         /// </summary>
         TouchLayer Layer { get; }
+
+        ProjectionParams ProjectionParams { get; }
 
         /// <summary>
         /// Tags collection for this touch object.

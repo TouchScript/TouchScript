@@ -99,7 +99,7 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out ITouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
@@ -108,7 +108,7 @@ namespace TouchScript.Layers
                 if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
             }
 
-            hit = TouchHitFactory.Instance.GetTouchHit(transform);
+            hit = new TouchHit(transform);
             transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return LayerHitResult.Hit;
@@ -126,13 +126,14 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        public override ProjectionParams GetProjectionParams(ITouch touch)
         {
-            if (_camera == null) return base.ProjectTo(screenPosition, projectionPlane);
-            return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
+			if (_camera == null) return DEFAULT_PROJECTION_PARAMS;
+            return new ProjectionParams(cameraLayerProjection);
         }
 
         /// <inheritdoc />
+        // TODO: this is probably broken after UI branch merge
         public override Vector2 ProjectFrom(Vector3 worldPosition)
         {
             if (_camera == null) return base.ProjectFrom(worldPosition);
@@ -152,9 +153,6 @@ namespace TouchScript.Layers
             base.Awake();
         }
 
-        // To be able to turn it off
-        private void OnEnable() {}
-
         #endregion
 
         #region Protected functions
@@ -169,6 +167,12 @@ namespace TouchScript.Layers
         #endregion
 
         #region Private functions
+
+        private Ray cameraLayerProjection(Vector2 screenPosition)
+        {
+            if (_camera == null) return TouchManager.INVALID_RAY;
+            return _camera.ScreenPointToRay(screenPosition);
+        }
 
         private void updateCamera()
         {

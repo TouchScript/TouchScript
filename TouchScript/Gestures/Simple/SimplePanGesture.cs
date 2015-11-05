@@ -134,6 +134,8 @@ namespace TouchScript.Gestures.Simple
         {
             base.touchesMoved(touches);
 
+            var projectionParams = ActiveTouches[0].ProjectionParams;
+
             var worldDelta = Vector3.zero;
 
             if (touchesNumState != TouchesNumState.InRange) return;
@@ -144,8 +146,8 @@ namespace TouchScript.Gestures.Simple
 
             if (isMoving)
             {
-                oldWorldCenter = projectionLayer.ProjectTo(oldScreenCenter, WorldTransformPlane);
-                newWorldCenter = projectionLayer.ProjectTo(newScreenCenter, WorldTransformPlane);
+                oldWorldCenter = projectionParams.Project(oldScreenCenter, WorldTransformPlane);
+                newWorldCenter = projectionParams.Project(newScreenCenter, WorldTransformPlane);
                 worldDelta = newWorldCenter - oldWorldCenter;
             }
             else
@@ -161,7 +163,7 @@ namespace TouchScript.Gestures.Simple
                 }
                 else
                 {
-                    newWorldCenter = projectionLayer.ProjectTo(newScreenCenter - movementBuffer, WorldTransformPlane);
+                    newWorldCenter = projectionParams.Project(newScreenCenter - movementBuffer, WorldTransformPlane);
                     oldWorldCenter = newWorldCenter;
                 }
             }

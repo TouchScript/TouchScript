@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -47,6 +48,9 @@ namespace TouchScript.Layers
             Miss = 2
         }
 
+        public static ProjectionParams DEFAULT_PROJECTION_PARAMS = new ProjectionParams(DefaultLayerProjection);
+        public static ProjectionParams INVALID_PROJECTION_PARAMS = new ProjectionParams(InvalidLayerProjection);
+
         #endregion
 
         #region Events
@@ -84,28 +88,32 @@ namespace TouchScript.Layers
 
         #region Public methods
 
+        public static Ray DefaultLayerProjection(Vector2 screenPosition)
+        {
+            return new Ray(new Vector3(screenPosition.x, screenPosition.y), Vector3.forward);
+        }
+
+        public static Ray InvalidLayerProjection(Vector2 screenPosition)
+        {
+            return TouchManager.INVALID_RAY;
+        }
+
         /// <summary>
         /// Checks if a point in screen coordinates hits something in this layer.
         /// </summary>
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out ITouchHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
-            hit = null;
+            hit = default(TouchHit);
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             return LayerHitResult.Error;
         }
 
-        /// <summary>
-        /// Projects a screen point on a plane using this layer's parameters.
-        /// </summary>
-        /// <param name="screenPosition">Screen point to project.</param>
-        /// <param name="projectionPlane">3D plane to project to.</param>
-        /// <returns>Projected point in world coordinates.</returns>
-        public virtual Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        public virtual ProjectionParams GetProjectionParams(ITouch touch)
         {
-            return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
+            return INVALID_PROJECTION_PARAMS;
         }
 
         /// <summary>
@@ -128,6 +136,14 @@ namespace TouchScript.Layers
             if (Application.isPlaying) TouchManager.Instance.AddLayer(this);
         }
 
+        protected virtual IEnumerator lateAwake()
+        {
+            yield return new WaitForEndOfFrame();
+            TouchManager.Instance.AddLayer(this);
+        }
+
+        protected virtual void OnEnable() {}
+
         /// <summary>
         /// Unity OnDestroy callback.
         /// </summary>
@@ -142,13 +158,13 @@ namespace TouchScript.Layers
 
         internal bool INTERNAL_BeginTouch(TouchPoint touch)
         {
-            ITouchHit hit;
+            TouchHit hit;
             var result = beginTouch(touch, out hit);
             if (result == LayerHitResult.Hit)
             {
                 touch.Layer = this;
                 touch.Hit = hit;
-                if (hit != null) touch.Target = hit.Transform;
+                if (hit.Transform != null) touch.Target = hit.Transform;
                 if (touchBeganInvoker != null)
                     touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
                 return true;
@@ -180,7 +196,7 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void setName()
         {
-            Name = "undefined";
+            if (String.IsNullOrEmpty(Name)) Name = "Layer";
         }
 
         /// <summary>
@@ -190,7 +206,7 @@ namespace TouchScript.Layers
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult beginTouch(ITouch touch, out ITouchHit hit)
+        protected virtual LayerHitResult beginTouch(ITouch touch, out TouchHit hit)
         {
             var result = Hit(touch.Position, out hit);
             return result;

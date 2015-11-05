@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Layers;
 using UnityEngine;
 
 namespace TouchScript.Utils
@@ -11,6 +12,7 @@ namespace TouchScript.Utils
     /// </summary>
     public static class ProjectionUtils
     {
+
         /// <summary>
         /// Projects a screen point to a plane from a camera's point of view.
         /// </summary>
@@ -23,8 +25,7 @@ namespace TouchScript.Utils
             var distance = 0f;
             var ray = camera.ScreenPointToRay(position);
             var result = projectionPlane.Raycast(ray, out distance);
-            if (!result && distance == 0f)
-                return -projectionPlane.normal*projectionPlane.distance; // perpendicular to the screen
+            if (!result && Mathf.Approximately(distance, 0f)) return -projectionPlane.normal * projectionPlane.GetDistanceToPoint(Vector3.zero); // perpendicular to the screen
 
             return ray.origin + ray.direction*distance;
         }
@@ -40,8 +41,7 @@ namespace TouchScript.Utils
             var distance = 0f;
             var ray = new Ray(position, Vector3.forward);
             var result = projectionPlane.Raycast(ray, out distance);
-            if (!result && distance == 0f)
-                return -projectionPlane.normal*projectionPlane.distance; // perpendicular to the screen
+            if (!result && Mathf.Approximately(distance, 0f)) return -projectionPlane.normal * projectionPlane.GetDistanceToPoint(Vector3.zero); // perpendicular to the screen
 
             return ray.origin + new Vector3(0, 0, distance);
         }

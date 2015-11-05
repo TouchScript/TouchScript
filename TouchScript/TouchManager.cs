@@ -127,6 +127,8 @@ namespace TouchScript
         /// </summary>
         public static readonly Vector2 INVALID_POSITION = new Vector2(float.NaN, float.NaN);
 
+        public static readonly Ray INVALID_RAY = new Ray(Vector3.zero, Vector3.forward);
+
         /// <summary>
         /// TouchScript version.
         /// </summary>

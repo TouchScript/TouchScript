@@ -26,8 +26,10 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+
             sortedHits = new List<RaycastHit2D>();
             layerById.Clear();
             for (var i = 0; i < layerIds.Length; i++)
@@ -43,9 +45,9 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult castRay(Ray ray, out ITouchHit hit)
+        protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
         {
-            hit = null;
+            hit = default(TouchHit);
             var raycastHits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
 
             if (raycastHits.Length == 0) return LayerHitResult.Miss;
@@ -84,12 +86,13 @@ namespace TouchScript.Layers
             return LayerHitResult.Miss;
         }
 
-        private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out ITouchHit hit)
+        private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out TouchHit hit)
         {
-            hit = TouchHitFactory.Instance.GetTouchHit(raycastHit);
-            raycastHit.transform.GetComponents(tmpHitTestList);
+            hit = new TouchHit(raycastHit);
+			raycastHit.transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return HitTest.ObjectHitResult.Hit;
+
 
             var hitResult = HitTest.ObjectHitResult.Hit;
             for (var i = 0; i < count; i++)

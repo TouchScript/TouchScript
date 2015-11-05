@@ -191,7 +191,7 @@ namespace TouchScript.Behaviors
             m_RaycastResultCache.Clear();
         }
 
-        protected void processBegan(ITouch touch)
+        protected PointerEventData initPointerData(ITouch touch)
         {
             PointerEventData pointerEvent;
             getPointerData(touch.Id, out pointerEvent, true);
@@ -204,7 +204,11 @@ namespace TouchScript.Behaviors
             pointerEvent.useDragThreshold = true;
             pointerEvent.pressPosition = pointerEvent.position;
 
-            raycastPointer(pointerEvent);
+            return pointerEvent;
+        }
+
+        protected void injectPointer(PointerEventData pointerEvent)
+        {
             pointerEvent.pointerPressRaycast = pointerEvent.pointerCurrentRaycast;
             var currentOverGo = pointerEvent.pointerCurrentRaycast.gameObject;
 
@@ -240,7 +244,7 @@ namespace TouchScript.Behaviors
                 ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.initializePotentialDrag);
         }
 
-        private void processMove(ITouch touch)
+        protected PointerEventData updatePointerData(ITouch touch)
         {
             PointerEventData pointerEvent;
             getPointerData(touch.Id, out pointerEvent, true);
@@ -248,8 +252,11 @@ namespace TouchScript.Behaviors
             pointerEvent.position = touch.Position;
             pointerEvent.delta = touch.Position - touch.PreviousPosition;
 
-            raycastPointer(pointerEvent);
+            return pointerEvent;
+        }
 
+        protected void movePointer(PointerEventData pointerEvent)
+        {
             var targetGO = pointerEvent.pointerCurrentRaycast.gameObject;
             HandlePointerExitAndEnter(pointerEvent, targetGO);
 
@@ -282,15 +289,8 @@ namespace TouchScript.Behaviors
             }
         }
 
-        private void processEnded(ITouch touch)
+        protected void endPointer(PointerEventData pointerEvent)
         {
-            PointerEventData pointerEvent;
-            getPointerData(touch.Id, out pointerEvent, true);
-
-            pointerEvent.position = touch.Position;
-            pointerEvent.delta = Vector2.zero;
-
-            raycastPointer(pointerEvent);
             var currentOverGo = pointerEvent.pointerCurrentRaycast.gameObject;
 
             ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, ExecuteEvents.pointerUpHandler);
@@ -378,6 +378,27 @@ namespace TouchScript.Behaviors
         #endregion
 
         #region Private functions
+
+        private void processBegan(ITouch touch)
+        {
+            PointerEventData pointerEvent = initPointerData(touch);
+            raycastPointer(pointerEvent);
+            injectPointer(pointerEvent);
+        }
+
+        private void processMove(ITouch touch)
+        {
+            PointerEventData pointerEvent = updatePointerData(touch);
+            raycastPointer(pointerEvent);
+            movePointer(pointerEvent);
+        }
+
+        private void processEnded(ITouch touch)
+        {
+            PointerEventData pointerEvent = updatePointerData(touch);
+            raycastPointer(pointerEvent);
+            endPointer(pointerEvent);
+        }
 
         private bool allowMoveEventProcessing(float time)
         {
