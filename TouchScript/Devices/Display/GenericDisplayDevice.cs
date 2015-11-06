@@ -115,7 +115,7 @@ namespace TouchScript.Devices.Display
                     case RuntimePlatform.IPhonePlayer:
                     {
                         var width = Mathf.Max(Screen.currentResolution.width, Screen.currentResolution.height);
-                        var height = Mathf.Min(Screen.currentResolution.width, Screen.currentResolution.height);
+//                        var height = Mathf.Min(Screen.currentResolution.width, Screen.currentResolution.height);
                         if (width >= 2048) dpi = 290; // iPad4 or ipad2 mini
                         else if (width >= 1136) dpi = 326; // iPhone 5+
                         else if (width >= 1024) dpi = 160; // iPad mini1

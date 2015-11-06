@@ -3,6 +3,7 @@
  */
 
 using TouchScript.Gestures.Base;
+using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 using UnityEngine;
 
@@ -30,8 +31,7 @@ namespace TouchScript.Gestures
         #region Protected methods
 
         /// <inheritdoc />
-        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
-            Vector2 newScreenPos2)
+        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
             var newScreenDelta = newScreenPos2 - newScreenPos1;
@@ -40,14 +40,13 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
-            Vector2 newScreenPos2)
+        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return (newScreenPos2 - newScreenPos1).magnitude/(oldScreenPos2 - oldScreenPos1).magnitude;
         }
 
         /// <inheritdoc />
-        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
+        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
         {
             if (isTransforming)
             {
@@ -65,8 +64,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
-            Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             if (isTransforming)
             {

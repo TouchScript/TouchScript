@@ -153,7 +153,7 @@ namespace TouchScript.Gestures
                 updateProjectionPlane();
 
 #if DEBUG
-                drawDebug(projectionLayer.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
+                drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
 #endif
             }
         }
@@ -163,12 +163,13 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
+            var projectionParams = ActiveTouches[0].ProjectionParams;
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
 
 #if DEBUG
             var worldCenter = cachedTransform.position;
-            var screenCenter = projectionLayer.ProjectFrom(worldCenter);
+            var screenCenter = projectionParams.ProjectFrom(worldCenter);
             var newScreenPos = getPointScreenPosition();
             drawDebug(screenCenter, newScreenPos);
 #endif
@@ -183,7 +184,7 @@ namespace TouchScript.Gestures
 #if !DEBUG
             var theTouch = activeTouches[0];
             var worldCenter = cachedTransform.position;
-            var screenCenter = projectionLayer.ProjectFrom(worldCenter);
+            var screenCenter = projectionParams.ProjectFrom(worldCenter);
             var newScreenPos = theTouch.Position;
 #endif
 
@@ -195,13 +196,13 @@ namespace TouchScript.Gestures
             {
                 if (isTransforming)
                 {
-                    dR = doRotation(worldCenter, oldScreenPos, newScreenPos);
+                    dR = doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
                 }
                 else
                 {
                     // Find how much we moved perpendicular to the line (center, oldScreenPos)
                     screenPixelRotationBuffer += TwoD.PointToLineDistance(screenCenter, oldScreenPos, newScreenPos);
-                    angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos);
+                    angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
 
                     if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
                         screenTransformPixelThresholdSquared)
@@ -216,13 +217,13 @@ namespace TouchScript.Gestures
             {
                 if (isTransforming)
                 {
-                    dS *= doScaling(worldCenter, oldScreenPos, newScreenPos);
+                    dS *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
                 }
                 else
                 {
                     screenPixelScalingBuffer += (newScreenPos - screenCenter).magnitude -
                                                 (oldScreenPos - screenCenter).magnitude;
-                    scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos);
+                    scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
 
                     if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
                         screenTransformPixelThresholdSquared)
@@ -255,7 +256,7 @@ namespace TouchScript.Gestures
             base.touchesEnded(touches);
 
             if (activeTouches.Count == 0) return;
-            drawDebug(projectionLayer.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
+            drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
         }
 #endif
 
@@ -283,20 +284,20 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
-        private float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos)
+        private float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
         {
-            var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
-            var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
+            var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
+            var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
             var angle = Vector3.Angle(oldVector, newVector);
             if (Vector3.Dot(Vector3.Cross(oldVector, newVector), TransformPlane.normal) < 0)
                 angle = -angle;
             return angle;
         }
 
-        private float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos)
+        private float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
         {
-            var newVector = projectionLayer.ProjectTo(newScreenPos, TransformPlane) - center;
-            var oldVector = projectionLayer.ProjectTo(oldScreenPos, TransformPlane) - center;
+            var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
+            var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
             return newVector.magnitude/oldVector.magnitude;
         }
 

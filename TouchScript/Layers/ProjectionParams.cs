@@ -2,41 +2,95 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Layers
 {
-    public struct ProjectionParams
+    /// <summary>
+    /// </summary>
+    public class ProjectionParams
     {
 
-        public bool IsValid
+        /// <summary>
+        /// </summary>
+        public virtual Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
-            get { return func != null; }
+            return ProjectionUtils.ScreenToPlaneProjection(screenPosition, projectionPlane);
         }
 
-        private readonly Func<Vector2, Ray> func;
-
-        public Vector3 Project(Vector2 position, Plane projectionPlane)
+        /// <summary>
+        /// </summary>
+        public virtual Vector2 ProjectFrom(Vector3 worldPosition)
         {
-            var ray = GetRay(position);
-            float distance;
-            var result = projectionPlane.Raycast(ray, out distance);
-            if (!result && Mathf.Approximately(distance, 0f))
-                return -projectionPlane.normal * projectionPlane.GetDistanceToPoint(Vector3.zero); // perpendicular to the screen
-            return ray.origin + ray.direction * distance;
-        }
-
-        public Ray GetRay(Vector2 screenPosition)
-        {
-            return func(screenPosition);
-        }
-
-        public ProjectionParams(Func<Vector2, Ray> func = null)
-        {
-            if (func == null) this.func = TouchLayer.InvalidLayerProjection;
-            else this.func = func;
+            return new Vector2(worldPosition.x, worldPosition.y);
         }
 
     }
+
+    /// <summary>
+    /// </summary>
+    public class CameraProjectionParams : ProjectionParams
+    {
+
+        /// <summary>
+        /// </summary>
+        protected Camera camera;
+
+        /// <summary>
+        /// </summary>
+        public CameraProjectionParams(Camera camera)
+        {
+            this.camera = camera;
+        }
+
+        /// <inheritdoc />
+        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        {
+            return ProjectionUtils.CameraToPlaneProjection(screenPosition, camera, projectionPlane);
+        }
+
+        /// <inheritdoc />
+        public override Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            return camera.WorldToScreenPoint(worldPosition);
+        }
+    }
+
+    public class CanvasProjectionParams : ProjectionParams
+    {
+
+        protected Canvas canvas;
+        protected RectTransform rect;
+        protected RenderMode mode;
+        protected Camera camera;
+
+        public CanvasProjectionParams(Canvas canvas)
+        {
+            this.canvas = canvas;
+            mode = canvas.renderMode;
+
+            if (mode == RenderMode.ScreenSpaceOverlay)
+            {
+                rect = canvas.GetComponent<RectTransform>();
+            }
+            else
+            {
+                camera = canvas.worldCamera ?? Camera.main;
+            }
+        }
+
+        public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
+        {
+            if (mode == RenderMode.ScreenSpaceOverlay) return base.ProjectTo(screenPosition, projectionPlane);
+            return ProjectionUtils.CameraToPlaneProjection(screenPosition, camera, projectionPlane);
+        }
+
+        public override Vector2 ProjectFrom(Vector3 worldPosition)
+        {
+            if (mode == RenderMode.ScreenSpaceOverlay) return base.ProjectFrom(worldPosition);
+            return camera.WorldToScreenPoint(worldPosition);
+        }
+    }
+
 }

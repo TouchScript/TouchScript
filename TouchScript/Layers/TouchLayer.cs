@@ -48,9 +48,6 @@ namespace TouchScript.Layers
             Miss = 2
         }
 
-        public static ProjectionParams DEFAULT_PROJECTION_PARAMS = new ProjectionParams(DefaultLayerProjection);
-        public static ProjectionParams INVALID_PROJECTION_PARAMS = new ProjectionParams(InvalidLayerProjection);
-
         #endregion
 
         #region Events
@@ -88,14 +85,9 @@ namespace TouchScript.Layers
 
         #region Public methods
 
-        public static Ray DefaultLayerProjection(Vector2 screenPosition)
+        public virtual ProjectionParams GetProjectionParams(ITouch touch)
         {
-            return new Ray(new Vector3(screenPosition.x, screenPosition.y), Vector3.forward);
-        }
-
-        public static Ray InvalidLayerProjection(Vector2 screenPosition)
-        {
-            return TouchManager.INVALID_RAY;
+            return layerProjectionParams;
         }
 
         /// <summary>
@@ -111,17 +103,11 @@ namespace TouchScript.Layers
             return LayerHitResult.Error;
         }
 
-        public virtual ProjectionParams GetProjectionParams(ITouch touch)
-        {
-            return INVALID_PROJECTION_PARAMS;
-        }
+        #endregion
 
-        /// <summary>
-        /// </summary>
-        public virtual Vector2 ProjectFrom(Vector3 worldPosition)
-        {
-            return worldPosition;
-        }
+        #region Private variables
+
+        protected ProjectionParams layerProjectionParams;
 
         #endregion
 
@@ -133,7 +119,11 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying) TouchManager.Instance.AddLayer(this);
+            if (Application.isPlaying)
+            {
+                layerProjectionParams = createProjectionParams();
+                TouchManager.Instance.AddLayer(this);
+            }
         }
 
         protected virtual IEnumerator lateAwake()
@@ -232,6 +222,11 @@ namespace TouchScript.Layers
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void cancelTouch(ITouch touch) {}
+
+        protected virtual ProjectionParams createProjectionParams()
+        {
+            return new ProjectionParams();
+        }
 
         #endregion
     }

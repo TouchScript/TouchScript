@@ -125,21 +125,6 @@ namespace TouchScript.Layers
             return LayerHitResult.Hit;
         }
 
-        /// <inheritdoc />
-        public override ProjectionParams GetProjectionParams(ITouch touch)
-        {
-			if (_camera == null) return DEFAULT_PROJECTION_PARAMS;
-            return new ProjectionParams(cameraLayerProjection);
-        }
-
-        /// <inheritdoc />
-        // TODO: this is probably broken after UI branch merge
-        public override Vector2 ProjectFrom(Vector3 worldPosition)
-        {
-            if (_camera == null) return base.ProjectFrom(worldPosition);
-            return _camera.WorldToScreenPoint(worldPosition);
-        }
-
         #endregion
 
         #region Unity methods
@@ -164,15 +149,16 @@ namespace TouchScript.Layers
             else Name = "Fullscreen @ " + _camera.name;
         }
 
+        /// <inheritdoc />
+        protected override ProjectionParams createProjectionParams()
+        {
+            if (_camera) return new CameraProjectionParams(_camera);
+            return base.createProjectionParams();
+        }
+
         #endregion
 
         #region Private functions
-
-        private Ray cameraLayerProjection(Vector2 screenPosition)
-        {
-            if (_camera == null) return TouchManager.INVALID_RAY;
-            return _camera.ScreenPointToRay(screenPosition);
-        }
 
         private void updateCamera()
         {

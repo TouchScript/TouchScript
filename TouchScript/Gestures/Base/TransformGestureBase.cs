@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Utils.Geom;
 using UnityEngine;
@@ -265,6 +266,7 @@ namespace TouchScript.Gestures.Base
         {
             base.touchesMoved(touches);
 
+            var projectionParams = ActiveTouches[0].ProjectionParams;
             var dP = deltaPosition = Vector3.zero;
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
@@ -286,7 +288,7 @@ namespace TouchScript.Gestures.Base
                 if (!relevantTouches1(touches)) return;
 
                 // translate using one point
-                dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0));
+                dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0), projectionParams);
             }
             else
             {
@@ -308,7 +310,7 @@ namespace TouchScript.Gestures.Base
                     {
                         if (isTransforming)
                         {
-                            dR = doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                            dR = doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
                         }
                         else
                         {
@@ -317,7 +319,7 @@ namespace TouchScript.Gestures.Base
                             TwoD.PointToLineDistance2(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
                                 out d1, out d2);
                             screenPixelRotationBuffer += (d1 - d2);
-                            angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                            angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
 
                             if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
                                 screenTransformPixelThresholdSquared)
@@ -332,7 +334,7 @@ namespace TouchScript.Gestures.Base
                     {
                         if (isTransforming)
                         {
-                            dS *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                            dS *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
                         }
                         else
                         {
@@ -340,7 +342,7 @@ namespace TouchScript.Gestures.Base
                             var newDistance = newScreenDelta.magnitude;
                             var oldDistance = oldScreenDelta.magnitude;
                             screenPixelScalingBuffer += newDistance - oldDistance;
-                            scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2);
+                            scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
 
                             if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
                                 screenTransformPixelThresholdSquared)
@@ -353,16 +355,15 @@ namespace TouchScript.Gestures.Base
 
                     if (translationEnabled)
                     {
-                        if (dR == 0 && dS == 1) dP = doOnePointTranslation(oldScreenPos1, newScreenPos1);
+                        if (dR == 0 && dS == 1) dP = doOnePointTranslation(oldScreenPos1, newScreenPos1, projectionParams);
                         else
-                            dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR,
-                                dS);
+                            dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR, dS, projectionParams);
                     }
                 }
                 else if (translationEnabled)
                 {
                     // points are too close, translate using one point
-                    dP = doOnePointTranslation(oldScreenPos1, newScreenPos1);
+                    dP = doOnePointTranslation(oldScreenPos1, newScreenPos1, projectionParams);
                 }
             }
 
@@ -464,31 +465,28 @@ namespace TouchScript.Gestures.Base
 
         /// <summary>
         /// </summary>
-        protected virtual float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
-            Vector2 newScreenPos2)
+        protected virtual float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return 0;
         }
 
         /// <summary>
         /// </summary>
-        protected virtual float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
-            Vector2 newScreenPos2)
+        protected virtual float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return 1;
         }
 
         /// <summary>
         /// </summary>
-        protected virtual Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos)
+        protected virtual Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
         {
             return Vector3.zero;
         }
 
         /// <summary>
         /// </summary>
-        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
-            Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS)
+        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             return Vector3.zero;
         }

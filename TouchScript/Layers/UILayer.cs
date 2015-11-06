@@ -79,6 +79,7 @@ namespace TouchScript.Layers
         private PointerEventData pointerDataCache;
         private EventSystem eventSystem;
         private InputModuleStub inputModule;
+        private Dictionary<Canvas, ProjectionParams> projectionParamsCache = new Dictionary<Canvas, ProjectionParams>(); 
 
         #endregion
 
@@ -114,17 +115,18 @@ namespace TouchScript.Layers
         public override ProjectionParams GetProjectionParams(ITouch touch)
         {
             var graphic = touch.Target.GetComponent<Graphic>();
-            if (graphic == null) return INVALID_PROJECTION_PARAMS;
+            if (graphic == null) return layerProjectionParams;
             var canvas = graphic.canvas;
-            if (canvas == null) return INVALID_PROJECTION_PARAMS;
-            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            if (canvas == null) return layerProjectionParams;
+
+            ProjectionParams pp;
+            if (!projectionParamsCache.TryGetValue(canvas, out pp))
             {
-                var canvasRect = canvas.GetComponent<RectTransform>();
-                return new ProjectionParams((screenPosition) =>
-                    new Ray(new Vector3(screenPosition.x, screenPosition.y, canvasRect.position.z - ScreenSpaceZOffset), Vector3.forward));
+                // TODO: memory leak
+                pp = new CanvasProjectionParams(canvas);
+                projectionParamsCache.Add(canvas, pp);
             }
-            var c = canvas.worldCamera ?? Camera.main;
-            return new ProjectionParams((screenPosition) => c.ScreenPointToRay(screenPosition));
+            return pp;
         }
 
         #endregion

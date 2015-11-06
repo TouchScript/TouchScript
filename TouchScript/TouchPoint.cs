@@ -37,21 +37,11 @@ namespace TouchScript
         /// <inheritdoc />
         public TouchLayer Layer { get; internal set; }
 
+        /// <inheritdoc />
         public ProjectionParams ProjectionParams
         {
-            get
-            {
-                if (!projection.IsValid)
-                {
-                    if (Layer == null) projection = TouchLayer.INVALID_PROJECTION_PARAMS;
-                    projection = Layer.GetProjectionParams(this);
-                }
-                return projection;
-            }
+            get { return Layer.GetProjectionParams(this); }
         }
-
-        /// <inheritdoc />
-        public TouchLayer Layer { get; internal set; }
 
         /// <inheritdoc />
         public Tags Tags { get; private set; }
@@ -68,9 +58,7 @@ namespace TouchScript
 
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
-        private ITouchHit hit;
-        private bool isDirty;
-        private ProjectionParams projection;
+//        private bool isDirty;
         private Dictionary<string, System.Object> properties;
 
         #endregion
@@ -109,8 +97,7 @@ namespace TouchScript
 
         internal void INTERNAL_Reset()
         {
-            TouchHitFactory.Instance.ReleaseTouchHit(hit);
-            hit = null;
+            Hit = default(TouchHit);
             Target = null;
             Layer = null;
             Tags = null;
@@ -127,7 +114,7 @@ namespace TouchScript
         {
             Id = id;
             this.position = PreviousPosition = newPosition = position;
-            isDirty = true;
+//            isDirty = true;
             Tags = tags ?? new Tags();
         }
 

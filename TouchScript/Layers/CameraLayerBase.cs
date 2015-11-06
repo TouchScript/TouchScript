@@ -4,7 +4,6 @@
 
 using System;
 using TouchScript.Hit;
-using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -64,17 +63,6 @@ namespace TouchScript.Layers
             return castRay(ray, out hit);
         }
 
-        public override ProjectionParams GetProjectionParams(ITouch touch)
-        {
-            return new ProjectionParams(cameraLayerProjection);
-        }
-
-        /// <inheritdoc />
-        public override Vector2 ProjectFrom(Vector3 worldPosition)
-        {
-            return _camera.WorldToScreenPoint(worldPosition);
-        }
-
         #endregion
 
         #region Unity methods
@@ -91,16 +79,16 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
-        protected virtual Ray cameraLayerProjection(Vector2 screenPosition)
-        {
-            if (_camera == null) return TouchManager.INVALID_RAY;
-            return _camera.ScreenPointToRay(screenPosition);
-        }
-
         /// <inheritdoc />
         protected override void setName()
         {
             if (String.IsNullOrEmpty(Name) && _camera != null) Name = _camera.name;
+        }
+
+        /// <inheritdoc />
+        protected override ProjectionParams createProjectionParams()
+        {
+            return new CameraProjectionParams(_camera);
         }
 
         /// <summary>
