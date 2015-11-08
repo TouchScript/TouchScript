@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TouchScript.Behaviors;
 using TouchScript.Hit;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,39 +17,7 @@ namespace TouchScript.Layers
     /// </summary>
     public class UILayer : TouchLayer
     {
-        #region Constants
-
-        /// <summary>
-        /// Determines layer behavior.
-        /// </summary>
-        public enum UILayerMode
-        {
-            /// <summary>
-            /// Works as a touch layer using UI EventSystem to check if touch points hit any UI elements.
-            /// </summary>
-            Layer,
-
-            /// <summary>
-            /// Works as a UI input module redirecting touch points to UI EventSystem.
-            /// </summary>
-            Proxy
-        }
-
-        #endregion
-
         #region Public properties
-
-        public UILayerMode Mode
-        {
-            get { return mode; }
-            set
-            {
-                if (value == mode) return;
-                deactivateMode();
-                mode = value;
-                activateMode();
-            }
-        }
 
         /// <summary>
         /// Z offset used to cast a ray from a screen space canvas.
@@ -68,9 +35,6 @@ namespace TouchScript.Layers
         private static UILayer instance;
 
         [SerializeField]
-        private UILayerMode mode = UILayerMode.Layer;
-
-        [SerializeField]
         private float screenSpaceZOffset = 1000;
 
         [NonSerialized]
@@ -78,7 +42,6 @@ namespace TouchScript.Layers
 
         private PointerEventData pointerDataCache;
         private EventSystem eventSystem;
-        private InputModuleStub inputModule;
         private Dictionary<Canvas, ProjectionParams> projectionParamsCache = new Dictionary<Canvas, ProjectionParams>(); 
 
         #endregion
@@ -93,21 +56,14 @@ namespace TouchScript.Layers
             var raycast = this.raycast(position);
             if (raycast.gameObject == null) return LayerHitResult.Miss;
 
-            if (mode == UILayerMode.Layer)
+            if (!(raycast.module is GraphicRaycaster))
             {
-                if (!(raycast.module is GraphicRaycaster))
-                {
-                    if (Application.isEditor)
-                        Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
-                    return LayerHitResult.Miss;
-                }
+                if (Application.isEditor)
+                    Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
+                return LayerHitResult.Miss;
+            }
 
-                hit = new TouchHit(raycast);
-            }
-            else
-            {
-                // don't init hit, no target --> layer consumes touch
-            }
+            hit = new TouchHit(raycast);
 
             return LayerHitResult.Hit;
         }
@@ -144,18 +100,14 @@ namespace TouchScript.Layers
             }
 
             base.Awake();
+            StartCoroutine(lateAwake());
         }
 
-        protected override IEnumerator lateAwake()
+        protected IEnumerator lateAwake()
         {
-            yield return base.lateAwake();
-            activateMode();
-        }
-
-        protected override void OnDestroy()
-        {
-            deactivateMode();
-            base.OnDestroy();
+            yield return new WaitForEndOfFrame();
+            eventSystem = EventSystem.current;
+            if (eventSystem == null) eventSystem = gameObject.AddComponent<EventSystem>();
         }
 
         #endregion
@@ -175,51 +127,16 @@ namespace TouchScript.Layers
             var raycast = this.raycast(touch.Position);
             if (raycast.gameObject == null) return LayerHitResult.Miss;
 
-            if (mode == UILayerMode.Layer)
+            if (!(raycast.module is GraphicRaycaster))
             {
-                if (!(raycast.module is GraphicRaycaster))
-                {
-                    if (Application.isEditor)
-                        Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
-                    return LayerHitResult.Miss;
-                }
+                if (Application.isEditor)
+                    Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
+                return LayerHitResult.Miss;
+            }
 
-                hit = new TouchHit(raycast);
-            }
-            else
-            {
-                // don't init hit, no target --> layer consumes touch
-                var pointerEvent = inputModule.InitPointerData(touch);
-                pointerEvent.pointerCurrentRaycast = raycast;
-                inputModule.InjectPointer(pointerEvent);
-            }
+            hit = new TouchHit(raycast);
 
             return LayerHitResult.Hit;
-        }
-
-        protected override void updateTouch(ITouch touch)
-        {
-            if (mode != UILayerMode.Proxy) return;
-
-            PointerEventData pointerEvent = inputModule.UpdatePointerData(touch);
-            inputModule.RaycastPointer(pointerEvent);
-            inputModule.MovePointer(pointerEvent);
-        }
-
-        protected override void endTouch(ITouch touch)
-        {
-            if (mode != UILayerMode.Proxy) return;
-
-            PointerEventData pointerEvent = inputModule.UpdatePointerData(touch);
-            inputModule.RaycastPointer(pointerEvent);
-            inputModule.EndPointer(pointerEvent);
-        }
-
-        protected override void cancelTouch(ITouch touch)
-        {
-            if (mode != UILayerMode.Proxy) return;
-
-            endTouch(touch);
         }
 
         #endregion
@@ -249,84 +166,7 @@ namespace TouchScript.Layers
             return new RaycastResult();
         }
 
-        private void activateMode()
-        {
-            if (!Application.isPlaying) return;
-
-            eventSystem = EventSystem.current;
-            if (eventSystem == null) eventSystem = gameObject.AddComponent<EventSystem>();
-
-            switch (mode)
-            {
-                case UILayerMode.Proxy:
-                    inputModule = eventSystem.gameObject.AddComponent<InputModuleStub>();
-                    inputModule.hideFlags = HideFlags.HideInInspector;
-                    break;
-                case UILayerMode.Layer:
-                    break;
-            }
-        }
-
-        private void deactivateMode()
-        {
-            if (!Application.isPlaying) return;
-
-            switch (mode)
-            {
-                case UILayerMode.Proxy:
-                    if (inputModule)
-                    {
-                        Destroy(inputModule);
-                        inputModule = null;
-                    }
-                    break;
-                case UILayerMode.Layer:
-                    break;
-            }
-        }
-
         #endregion
 
-        private class InputModuleStub : TouchScriptInputModule
-        {
-            public new static RaycastResult FindFirstRaycast(List<RaycastResult> candidates)
-            {
-                return BaseInputModule.FindFirstRaycast(candidates);
-            }
-
-            public void RaycastPointer(PointerEventData pointerEvent)
-            {
-                raycastPointer(pointerEvent);
-            }
-
-            public PointerEventData InitPointerData(ITouch touch)
-            {
-                return initPointerData(touch);
-            }
-
-            public void InjectPointer(PointerEventData pointerEvent)
-            {
-                injectPointer(pointerEvent);
-            }
-
-            public PointerEventData UpdatePointerData(ITouch touch)
-            {
-                return updatePointerData(touch);
-            }
-
-            public void MovePointer(PointerEventData pointerEvent)
-            {
-                movePointer(pointerEvent);
-            }
-
-            public void EndPointer(PointerEventData pointerEvent)
-            {
-                endPointer(pointerEvent);
-            }
-
-            public override void Process() {}
-            public override void ActivateModule() {}
-            public override void DeactivateModule() {}
-        }
     }
 }

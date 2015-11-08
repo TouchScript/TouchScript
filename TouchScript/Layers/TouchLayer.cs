@@ -126,12 +126,6 @@ namespace TouchScript.Layers
             }
         }
 
-        protected virtual IEnumerator lateAwake()
-        {
-            yield return new WaitForEndOfFrame();
-            TouchManager.Instance.AddLayer(this);
-        }
-
         protected virtual void OnEnable() {}
 
         /// <summary>
