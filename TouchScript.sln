@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -12,11 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.Editor", "Touch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.TUIO", "TouchScript.Inputs\TouchScript.TUIO\TouchScript.TUIO.csproj", "{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.Windows", "TouchScript.Inputs\TouchScript.Windows\TouchScript.Windows.csproj", "{6A8A2544-312D-45F2-BDE1-A16058E2AD99}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.TUIO.Editor", "TouchScript.Inputs\TouchScript.TUIO.Editor\TouchScript.TUIO.Editor.csproj", "{F95D2781-B409-42BF-BDAF-6FC4C894A8F3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchScript.Windows.Editor", "TouchScript.Inputs\TouchScript.Windows.Editor\TouchScript.Windows.Editor.csproj", "{9CE60248-37AB-4077-A1EA-CD4FD194951F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,18 +41,10 @@ Global
 		{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE1F19D3-E864-4A28-9717-EDD7FA69C2D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A8A2544-312D-45F2-BDE1-A16058E2AD99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A8A2544-312D-45F2-BDE1-A16058E2AD99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A8A2544-312D-45F2-BDE1-A16058E2AD99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A8A2544-312D-45F2-BDE1-A16058E2AD99}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F95D2781-B409-42BF-BDAF-6FC4C894A8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F95D2781-B409-42BF-BDAF-6FC4C894A8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F95D2781-B409-42BF-BDAF-6FC4C894A8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F95D2781-B409-42BF-BDAF-6FC4C894A8F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9CE60248-37AB-4077-A1EA-CD4FD194951F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CE60248-37AB-4077-A1EA-CD4FD194951F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9CE60248-37AB-4077-A1EA-CD4FD194951F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9CE60248-37AB-4077-A1EA-CD4FD194951F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

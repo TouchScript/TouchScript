@@ -73,6 +73,7 @@
     <Compile Include="InputSources\InputSourceEditor.cs" />
     <Compile Include="InputSources\MobileInputEditor.cs" />
     <Compile Include="InputSources\MouseInputEditor.cs" />
+    <Compile Include="InputSources\StandaloneInputEditor.cs" />
     <Compile Include="Layers\CameraLayer2DEditor.cs" />
     <Compile Include="Layers\FullscreenLayerEditor.cs" />
     <Compile Include="Layers\UILayerEditor.cs" />
