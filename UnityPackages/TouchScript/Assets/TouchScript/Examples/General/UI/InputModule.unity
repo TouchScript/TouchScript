@@ -727,12 +727,10 @@ GameObject:
   - 224: {fileID: 238072899}
   - 222: {fileID: 238072898}
   - 114: {fileID: 238072897}
-  - 114: {fileID: 238072901}
-  - 114: {fileID: 238072904}
-  - 114: {fileID: 238072903}
-  - 114: {fileID: 238072900}
   - 65: {fileID: 238072902}
   - 114: {fileID: 238072905}
+  - 114: {fileID: 238072901}
+  - 114: {fileID: 238072900}
   m_Layer: 0
   m_Name: Image 1
   m_TagString: Untagged
@@ -793,12 +791,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 238072896}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 10
-  PanMultiplier: 1
-  AllowChangingFromOutside: 0
 --- !u!114 &238072901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -807,9 +802,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 238072896}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -819,12 +815,12 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 238072903}
-  - {fileID: 238072904}
-  projection: 1
-  projectionNormal: {x: 0, y: 0, z: 1}
-  movementThreshold: .5
+  friendlyGestures: []
+  type: 7
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
+  projection: 0
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!65 &238072902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -837,60 +833,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 300, y: 300, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &238072903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 238072896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 238072901}
-  - {fileID: 238072904}
-  projection: 1
-  projectionNormal: {x: 0, y: 0, z: 1}
-  minPointsDistance: .5
-  scalingThreshold: .5
---- !u!114 &238072904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 238072896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 238072903}
-  - {fileID: 238072901}
-  projection: 1
-  projectionNormal: {x: 0, y: 0, z: 1}
-  minPointsDistance: .5
-  rotationThreshold: 3
 --- !u!114 &238072905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1569,12 +1511,10 @@ GameObject:
   - 224: {fileID: 886654112}
   - 222: {fileID: 886654118}
   - 114: {fileID: 886654117}
-  - 114: {fileID: 886654119}
-  - 114: {fileID: 886654116}
-  - 114: {fileID: 886654115}
-  - 114: {fileID: 886654114}
   - 65: {fileID: 886654113}
   - 114: {fileID: 886654120}
+  - 114: {fileID: 886654115}
+  - 114: {fileID: 886654114}
   m_Layer: 0
   m_Name: Image 2
   m_TagString: Untagged
@@ -1621,12 +1561,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 886654111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 645232165, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 10
-  PanMultiplier: 1
-  AllowChangingFromOutside: 0
 --- !u!114 &886654115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1635,9 +1572,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 886654111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1136761322, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1647,40 +1585,12 @@ MonoBehaviour:
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 886654116}
-  - {fileID: 886654119}
+  friendlyGestures: []
+  type: 7
+  minScreenPointsDistance: .5
+  screenTransformThreshold: .100000001
   projection: 1
-  projectionNormal: {x: 0, y: 0, z: 1}
-  minPointsDistance: .5
-  scalingThreshold: .5
---- !u!114 &886654116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 886654111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1726975797, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 886654115}
-  - {fileID: 886654119}
-  projection: 1
-  projectionNormal: {x: 0, y: 0, z: 1}
-  minPointsDistance: .5
-  rotationThreshold: 3
+  projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!114 &886654117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1707,32 +1617,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 886654111}
---- !u!114 &886654119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 886654111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1518784480, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
-  useSendMessage: 0
-  sendStateChangeMessages: 0
-  sendMessageTarget: {fileID: 0}
-  requireGestureToFail: {fileID: 0}
-  friendlyGestures:
-  - {fileID: 886654115}
-  - {fileID: 886654116}
-  projection: 1
-  projectionNormal: {x: 0, y: 0, z: 1}
-  movementThreshold: .5
 --- !u!114 &886654120
 MonoBehaviour:
   m_ObjectHideFlags: 0
