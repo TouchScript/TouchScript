@@ -24,8 +24,7 @@ ExportedObj/
  
 _ReSharper*
 
-Assets/TouchScript/Editor/*.dll
-Assets/TouchScript/Plugins/*.dll
+/Assets/UnityVS*
 
 *.pdb*
 *.mdb*
