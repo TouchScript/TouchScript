@@ -1,0 +1,10 @@
+TouchScript/*
+!TouchScript/Examples.meta
+!TouchScript/Examples
+TouchScript/Examples/Examples.unity*
+TouchScript/Examples/General*
+TouchScript/Examples/_misc*
+
+!TouchScript/Modules*
+TouchScript/Modules/TUIO/Libraries/*
+TouchScript/Modules/TUIO/Libraries/*.meta
