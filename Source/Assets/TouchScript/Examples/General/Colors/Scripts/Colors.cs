@@ -18,7 +18,7 @@ namespace TouchScript.Examples.Colors
 				var obj = Instantiate(Prefab) as Transform;
 				obj.SetParent(container);
 				obj.localPosition = new Vector3(Random.Range(-100, 100), Random.Range(-100, 100), 0);
-				obj.renderer.material.color = colors[Random.Range(0, colors.Count)];
+				obj.GetComponent<Renderer>().material.color = colors[Random.Range(0, colors.Count)];
 			}
 		}
 	}
