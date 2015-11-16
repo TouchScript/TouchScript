@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 
 namespace TouchScript.Utils.Debug
 {

@@ -3,7 +3,7 @@
  * Based on http://pastebin.com/69QP1s45
  */
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 
 using System.Collections.Generic;
 using UnityEngine;

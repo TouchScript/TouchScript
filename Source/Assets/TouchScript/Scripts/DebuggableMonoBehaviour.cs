@@ -2,7 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.Attributes;
 #endif
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace TouchScript
         {
             get
             {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 return debugMode;
 #else
                 return false;
@@ -27,13 +27,13 @@ namespace TouchScript
             }
             set
             {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 debugMode = value;
 #endif
             }
         }
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
         [SerializeField]
         [ToggleLeft]
         private bool debugMode = false;

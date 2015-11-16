@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
@@ -152,7 +152,7 @@ namespace TouchScript.Gestures
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
 #endif
             }
@@ -167,7 +167,7 @@ namespace TouchScript.Gestures
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
             var worldCenter = cachedTransform.position;
             var screenCenter = projectionParams.ProjectFrom(worldCenter);
             var newScreenPos = getPointScreenPosition();
@@ -181,7 +181,7 @@ namespace TouchScript.Gestures
             if (!rotationEnabled && !scalingEnabled) return;
             if (!relevantTouches(touches)) return;
 
-#if !DEBUG
+#if !TOUCHSCRIPT_DEBUG
             var theTouch = activeTouches[0];
             var worldCenter = cachedTransform.position;
             var screenCenter = projectionParams.ProjectFrom(worldCenter);
@@ -249,7 +249,7 @@ namespace TouchScript.Gestures
             }
         }
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
     /// <inheritdoc />
         protected override void touchesEnded(IList<ITouch> touches)
         {
@@ -264,7 +264,7 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
         protected override void clearDebug()
         {
             base.clearDebug();

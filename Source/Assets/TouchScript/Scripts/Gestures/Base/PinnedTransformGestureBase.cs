@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 using System.Collections;
 using TouchScript.Utils.Debug;
 #endif
@@ -171,7 +171,7 @@ namespace TouchScript.Gestures.Base
 
         #region Unity methods
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
     /// <inheritdoc />
         protected override void Awake()
         {
@@ -282,7 +282,7 @@ namespace TouchScript.Gestures.Base
 
             isTransforming = false;
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
             clearDebug();
 #endif
         }
@@ -323,7 +323,7 @@ namespace TouchScript.Gestures.Base
             return activeTouches[0].PreviousPosition;
         }
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
         protected int debugID;
         protected Coroutine debugCoroutine;
         protected Vector2 debugTouchSize;

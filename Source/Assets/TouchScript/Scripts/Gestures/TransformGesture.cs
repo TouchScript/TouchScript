@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils;
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
@@ -238,7 +238,7 @@ namespace TouchScript.Gestures
             return cachedTransform.position + delta;
         }
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
         protected override void clearDebug()
         {
             base.clearDebug();

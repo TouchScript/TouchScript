@@ -36,7 +36,7 @@ namespace TouchScript
     {
         #region Constants
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
         public const int DEBUG_GL_START = int.MinValue;
         public const int DEBUG_GL_TOUCH = DEBUG_GL_START;
 #endif

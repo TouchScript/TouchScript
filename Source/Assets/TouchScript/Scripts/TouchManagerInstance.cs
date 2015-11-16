@@ -12,7 +12,7 @@ using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
 using TouchScript.Utils;
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
@@ -417,7 +417,7 @@ namespace TouchScript
             intListPool.WarmUp(1);
             cancelledListPool.WarmUp(1);
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
             DebugMode = true;
 #endif
         }
@@ -455,7 +455,7 @@ namespace TouchScript
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
             dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
             debugTouchSize = Vector2.one * dotsPerCentimeter;
 #endif
         }
@@ -535,7 +535,7 @@ namespace TouchScript
                     if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                 }
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 addDebugFigureForTouch(touch);
 #endif
             }
@@ -562,7 +562,7 @@ namespace TouchScript
                 list.Add(touch);
                 if (touch.Layer != null) touch.Layer.INTERNAL_UpdateTouch(touch);
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 addDebugFigureForTouch(touch);
 #endif
             }
@@ -585,7 +585,7 @@ namespace TouchScript
                 list.Add(touch);
                 if (touch.Layer != null) touch.Layer.INTERNAL_EndTouch(touch);
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForTouch(touch);
 #endif
             }
@@ -610,7 +610,7 @@ namespace TouchScript
                 list.Add(touch);
                 if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForTouch(touch);
 #endif
             }
@@ -648,7 +648,7 @@ namespace TouchScript
                     idToTouch.Remove(id);
                     touches.Remove(touch);
                     releaseList.Add(touch);
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForTouch(touch);
 #endif
                 }
@@ -753,7 +753,7 @@ namespace TouchScript
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
 
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
         private Vector2 debugTouchSize;
 
         private void removeDebugFigureForTouch(ITouch touch)
