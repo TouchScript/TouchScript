@@ -29,13 +29,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 191238}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.5, y: .075000003, z: 3.55999994}
+  m_LocalPosition: {x: -2.47300005, y: .200000003, z: 3.54399991}
   m_LocalScale: {x: .899999976, y: .200000003, z: .899999976}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!23 &2391238
-Renderer:
+MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -43,15 +43,19 @@ Renderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
   - {fileID: 2100000, guid: b5c4be3614b4447869f4bfd2124b81c0, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
 --- !u!33 &3391238
@@ -86,7 +90,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_SmoothSphereCollisions: 0
   m_Convex: 1
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &11409928
@@ -108,9 +111,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 191238}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1097873817, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -134,7 +138,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 191238}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1905284378, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &100100000
@@ -148,4 +152,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 191238}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

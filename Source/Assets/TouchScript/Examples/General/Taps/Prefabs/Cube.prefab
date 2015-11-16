@@ -37,7 +37,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!23 &2396116
-Renderer:
+MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -45,15 +45,19 @@ Renderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
   - {fileID: 2100000, guid: 69c151168e0de486b9df0688ff9e4891, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
 --- !u!33 &3396116
@@ -111,9 +115,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 196116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -109791083, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 65c8d97aff62a473e888feae3bec54cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -125,7 +130,7 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   timeToPress: 1
-  distanceLimit: 1
+  distanceLimit: Infinity
 --- !u!114 &11437420
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -146,9 +151,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 196116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1235405773, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -161,7 +167,7 @@ MonoBehaviour:
   friendlyGestures: []
   numberOfTapsRequired: 1
   timeLimit: Infinity
-  distanceLimit: 1
+  distanceLimit: Infinity
 --- !u!114 &11456388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -170,9 +176,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 196116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1088824302, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -195,4 +202,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 196116}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

@@ -66,7 +66,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -409488130, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 0dd4c394fe06f4ea49e03aaa5e7a8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   displayDevice: {fileID: 0}
@@ -74,8 +74,7 @@ MonoBehaviour:
   useSendMessage: 0
   sendMessageEvents: 60
   sendMessageTarget: {fileID: 0}
-  layers:
-  - {fileID: 0}
+  layers: []
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -84,7 +83,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -102971247, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 17fdf02507df2433595874500f6eef4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -100,7 +99,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 770742126, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
+  m_Script: {fileID: 11500000, guid: 33cbf52dea18b40649d742b0c6f96d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
@@ -119,4 +118,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100002}
   m_IsPrefabParent: 1
-  m_IsExploded: 1
