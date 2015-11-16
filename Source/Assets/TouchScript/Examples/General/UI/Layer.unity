@@ -388,7 +388,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -880,7 +879,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1075,7 +1073,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: UI Layer
-  screenSpaceZOffset: 1000
 --- !u!4 &366022213
 Transform:
   m_ObjectHideFlags: 0
@@ -1118,7 +1115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1575,7 +1571,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1732,7 +1727,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -2024,7 +2018,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -2313,7 +2306,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -2744,7 +2736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -2887,7 +2878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0

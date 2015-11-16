@@ -19,26 +19,15 @@ namespace TouchScript.Layers
     {
         #region Public properties
 
-        /// <summary>
-        /// Z offset used to cast a ray from a screen space canvas.
-        /// </summary>
-        public float ScreenSpaceZOffset
-        {
-            get { return screenSpaceZOffset; }
-            set { screenSpaceZOffset = value; }
-        }
-
         #endregion
 
         #region Private variables
 
         private static UILayer instance;
 
-        [SerializeField]
-        private float screenSpaceZOffset = 1000;
-
         [NonSerialized]
-        private List<RaycastResult> raycastResultCache = new List<RaycastResult>();
+        private List<RaycastResult> raycastResultCache = new List<RaycastResult>(20);
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         private PointerEventData pointerDataCache;
         private EventSystem eventSystem;
@@ -50,22 +39,43 @@ namespace TouchScript.Layers
 
         public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
-            // have to duplicate some code since Gesture depends on Layer.Hit but in beginTouch we need full touch info
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
             if (eventSystem == null) return LayerHitResult.Error;
-            var raycast = this.raycast(position);
-            if (raycast.gameObject == null) return LayerHitResult.Miss;
 
-            if (!(raycast.module is GraphicRaycaster))
+            if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
+            pointerDataCache.position = position;
+            eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
+
+            var count = raycastResultCache.Count;
+            if (count == 0) return LayerHitResult.Miss;
+            if (count > 1)
             {
-                if (Application.isEditor)
-                    Debug.LogWarning("UILayer in doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer to hit 3d or CameraLayer2D to hit 2d objects.");
-                return LayerHitResult.Miss;
+                for (var i = 0; i < count; ++i)
+                {
+                    var raycastHit = raycastResultCache[i];
+                    switch (doHit(raycastHit, out hit))
+                    {
+                        case HitTest.ObjectHitResult.Hit:
+                            return LayerHitResult.Hit;
+                        case HitTest.ObjectHitResult.Discard:
+                            return LayerHitResult.Miss;
+                    }
+                }
+            }
+            else
+            {
+                switch (doHit(raycastResultCache[0], out hit))
+                {
+                    case HitTest.ObjectHitResult.Hit:
+                        return LayerHitResult.Hit;
+                    case HitTest.ObjectHitResult.Error:
+                        return LayerHitResult.Error;
+                    default:
+                        return LayerHitResult.Miss;
+                }
             }
 
-            hit = new TouchHit(raycast);
-
-            return LayerHitResult.Hit;
+            return LayerHitResult.Miss;
         }
 
         public override ProjectionParams GetProjectionParams(ITouch touch)
@@ -128,51 +138,30 @@ namespace TouchScript.Layers
             Name = "UI Layer";
         }
 
-        protected override LayerHitResult beginTouch(ITouch touch, out TouchHit hit)
-        {
-            hit = default(TouchHit);
-            if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
-            if (eventSystem == null) return LayerHitResult.Error;
-            var raycast = this.raycast(touch.Position);
-            if (raycast.gameObject == null) return LayerHitResult.Miss;
-
-            if (!(raycast.module is GraphicRaycaster))
-            {
-                if (Application.isEditor)
-                    Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
-                return LayerHitResult.Miss;
-            }
-
-            hit = new TouchHit(raycast);
-
-            return LayerHitResult.Hit;
-        }
-
         #endregion
 
         #region Private functions
 
-        private RaycastResult raycast(Vector2 position)
+        private HitTest.ObjectHitResult doHit(RaycastResult raycastHit, out TouchHit hit)
         {
-            if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
-            pointerDataCache.position = position;
-            eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
-            var raycast = findFirstRaycast(raycastResultCache);
-            raycastResultCache.Clear();
+            hit = new TouchHit(raycastHit);
 
-            return raycast;
-        }
+            if (!(raycastHit.module is GraphicRaycaster)) return HitTest.ObjectHitResult.Miss;
+            var go = raycastHit.gameObject;
+            if (go == null) return HitTest.ObjectHitResult.Miss;
+            go.GetComponents(tmpHitTestList);
+            var count = tmpHitTestList.Count;
+            if (count == 0) return HitTest.ObjectHitResult.Hit;
 
-        private static RaycastResult findFirstRaycast(List<RaycastResult> candidates)
-        {
-            for (var i = 0; i < candidates.Count; ++i)
+            var hitResult = HitTest.ObjectHitResult.Hit;
+            for (var i = 0; i < count; i++)
             {
-                if (candidates[i].gameObject == null)
-                    continue;
-
-                return candidates[i];
+                var test = tmpHitTestList[i];
+                if (!test.enabled) continue;
+                hitResult = test.IsHit(hit);
+                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
             }
-            return new RaycastResult();
+            return hitResult;
         }
 
         #endregion

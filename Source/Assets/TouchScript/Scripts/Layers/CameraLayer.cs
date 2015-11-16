@@ -84,7 +84,7 @@ namespace TouchScript.Layers
             hit = new TouchHit(raycastHit);
             raycastHit.transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
-            if (tmpHitTestList.Count == 0) return HitTest.ObjectHitResult.Hit;
+            if (count == 0) return HitTest.ObjectHitResult.Hit;
 
             var hitResult = HitTest.ObjectHitResult.Hit;
             for (var i = 0; i < count; i++)
