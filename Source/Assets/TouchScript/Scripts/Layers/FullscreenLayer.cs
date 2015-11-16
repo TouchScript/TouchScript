@@ -133,9 +133,10 @@ namespace TouchScript.Layers
         protected override void Awake()
         {
             updateCamera();
-            cacheCameraTransform();
-
             base.Awake();
+            if (!Application.isPlaying) return;
+
+            cacheCameraTransform();
         }
 
         #endregion

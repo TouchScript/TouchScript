@@ -16,7 +16,7 @@ namespace TouchScript.Layers
     {
         #region Private variables
 
-        private List<RaycastHit> sortedHits;
+        private List<RaycastHit> sortedHits = new List<RaycastHit>(20);
         private Transform cachedTransform;
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
@@ -28,13 +28,9 @@ namespace TouchScript.Layers
         protected override void Awake()
         {
             base.Awake();
-            cachedTransform = GetComponent<Transform>();
-        }
+            if (!Application.isPlaying) return;
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            sortedHits = new List<RaycastHit>(20);
+            cachedTransform = GetComponent<Transform>();
         }
 
         #endregion

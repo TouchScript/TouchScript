@@ -19,18 +19,17 @@ namespace TouchScript.Layers
 
         [SerializeField] [HideInInspector] [FormerlySerializedAs("sortedLayerIds")] private int[] layerIds = new int[0];
         private Dictionary<int, int> layerById = new Dictionary<int, int>();
-        private List<RaycastHit2D> sortedHits;
+        private List<RaycastHit2D> sortedHits = new List<RaycastHit2D>(20);
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 
         #region Unity methods
 
-        protected override void OnEnable()
+        protected virtual void OnEnable()
         {
-            base.OnEnable();
+            if (!Application.isPlaying) return;
 
-            sortedHits = new List<RaycastHit2D>();
             layerById.Clear();
             for (var i = 0; i < layerIds.Length; i++)
             {

@@ -119,14 +119,11 @@ namespace TouchScript.Layers
         protected virtual void Awake()
         {
             setName();
-            if (Application.isPlaying)
-            {
-                layerProjectionParams = createProjectionParams();
-                TouchManager.Instance.AddLayer(this);
-            }
-        }
+            if (!Application.isPlaying) return;
 
-        protected virtual void OnEnable() {}
+            layerProjectionParams = createProjectionParams();
+            TouchManager.Instance.AddLayer(this);
+        }
 
         /// <summary>
         /// Unity OnDestroy callback.

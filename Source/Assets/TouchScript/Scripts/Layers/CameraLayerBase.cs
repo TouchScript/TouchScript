@@ -71,7 +71,6 @@ namespace TouchScript.Layers
         protected override void Awake()
         {
             updateCamera();
-
             base.Awake();
         }
 

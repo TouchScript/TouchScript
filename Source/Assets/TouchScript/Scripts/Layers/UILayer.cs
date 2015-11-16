@@ -91,15 +91,20 @@ namespace TouchScript.Layers
 
         protected override void Awake()
         {
-            if (instance == null) instance = this;
-            if (instance != this)
+            if (Application.isPlaying)
             {
-                Debug.LogError("Only one instance ot UILayer should exist in a scene.");
-                Destroy(this);
-                return;
+                if (instance == null) instance = this;
+                if (instance != this)
+                {
+                    Debug.LogError("Only one instance ot UILayer should exist in a scene.");
+                    Destroy(this);
+                    return;
+                }
             }
 
             base.Awake();
+            if (!Application.isPlaying) return;
+
             StartCoroutine(lateAwake());
         }
 
@@ -107,7 +112,11 @@ namespace TouchScript.Layers
         {
             yield return new WaitForEndOfFrame();
             eventSystem = EventSystem.current;
-            if (eventSystem == null) eventSystem = gameObject.AddComponent<EventSystem>();
+            if (eventSystem == null)
+            {
+                eventSystem = gameObject.AddComponent<EventSystem>();
+                eventSystem.hideFlags = HideFlags.DontSave;
+            }
         }
 
         #endregion
