@@ -59,7 +59,7 @@ namespace TouchScript.Layers
             if (!(raycast.module is GraphicRaycaster))
             {
                 if (Application.isEditor)
-                    Debug.LogWarning("UILayer in Layer mode doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer or CameraLayer2D to hit 3d objects.");
+                    Debug.LogWarning("UILayer in doesn't support raycasters other than GraphicRaycaster. Please use CameraLayer to hit 3d or CameraLayer2D to hit 2d objects.");
                 return LayerHitResult.Miss;
             }
 
