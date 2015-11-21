@@ -1,21 +1,21 @@
 ﻿
-using TouchScript.Debugging;
+using TouchScript.Behaviors;
 using UnityEditor;
 using UnityEngine;
 
-namespace TouchScript.Editor.Debugging
+namespace TouchScript.Editor.Behaviors
 {
 
-    [CustomEditor(typeof(TouchDebugger))]
-    internal sealed class TouchDebuggerEditor : UnityEditor.Editor
+    /*[CustomEditor(typeof(TouchVisualizer))]
+	internal sealed class TouchVisualizerEditor : UnityEditor.Editor
     {
 
-        private TouchDebugger instance;
+		private TouchVisualizer instance;
         private SerializedProperty texture, useDPI, touchSize, showTouchId, showTags;
 
         private void OnEnable()
         {
-            instance = target as TouchDebugger;
+			instance = target as TouchVisualizer;
             showTouchId = serializedObject.FindProperty("showTouchId");
             showTags = serializedObject.FindProperty("showTags");
             texture = serializedObject.FindProperty("texture");
@@ -67,5 +67,5 @@ namespace TouchScript.Editor.Debugging
 
             serializedObject.ApplyModifiedProperties();
         }
-    }
+    }*/
 }
