@@ -33,17 +33,21 @@ namespace TouchScript.InputSources
 
         public void Update()
         {
+            // If mouse button was pressed and released during the same frame,
+            // we need to figure out what happened first.
             var upHandled = false;
             if (Input.GetMouseButtonUp(0))
             {
+                // Release happened first?
                 if (mousePointId != -1)
                 {
                     endTouch(mousePointId);
                     mousePointId = -1;
+                    upHandled = true;
                 }
-                upHandled = true;
             }
 
+            // Need to end fake pointer
             if (fakeMousePointId > -1 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
             {
                 endTouch(fakeMousePointId);
@@ -79,7 +83,8 @@ namespace TouchScript.InputSources
                 }
             }
 
-            if (Input.GetMouseButtonUp(0) && !upHandled)
+            // Release mouse if we haven't done it yet
+            if (Input.GetMouseButtonUp(0) && !upHandled && mousePointId != -1)
             {
                 endTouch(mousePointId);
                 mousePointId = -1;
