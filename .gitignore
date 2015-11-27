@@ -11,7 +11,7 @@
 *.sln.docstates
 *.userprefs
 *.pidb
-/.vs
+.vs
 
 # Build results
 *_i.c
