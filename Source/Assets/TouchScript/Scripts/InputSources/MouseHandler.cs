@@ -40,8 +40,8 @@ namespace TouchScript.InputSources
                 {
                     endTouch(mousePointId);
                     mousePointId = -1;
-                    upHandled = true;
                 }
+                upHandled = true;
             }
 
             if (fakeMousePointId > -1 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
