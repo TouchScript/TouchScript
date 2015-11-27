@@ -179,7 +179,7 @@ namespace TouchScript.InputSources
         private void enableWindows7()
         {
             touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
-            hMainWindow = GetForegroundWindow();
+            hMainWindow = GetActiveWindow();
             RegisterTouchWindow(hMainWindow, 0);
             registerWindowProc(wndProcWin7);
             disablePressAndHold();
@@ -196,7 +196,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows8()
         {
-            hMainWindow = GetForegroundWindow();
+            hMainWindow = GetActiveWindow();
             registerWindowProc(wndProcWin8);
             EnableMouseInPointer(true);
             disablePressAndHold();
@@ -399,7 +399,7 @@ namespace TouchScript.InputSources
 
         private void getNativeMonitorResolution(out int width, out int height)
         {
-            var monitor = MonitorFromWindow(GetForegroundWindow(), MONITOR_DEFAULTTONEAREST);
+            var monitor = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
             MONITORINFO monitorInfo = new MONITORINFO();
             monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
             if (!GetMonitorInfo(monitor, ref monitorInfo))
@@ -569,7 +569,7 @@ namespace TouchScript.InputSources
         }
 
         [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
+        static extern IntPtr GetActiveWindow();
 
         [DllImport("user32.dll")]
         static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
