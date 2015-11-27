@@ -341,7 +341,7 @@ namespace TouchScript
                 {
                     if (!touchesUpdated.Contains(id)) touchesUpdated.Add(id);
                 }
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 else Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to UPDATE but no touch with such id found.");
 #endif
             }
@@ -359,7 +359,7 @@ namespace TouchScript
                     // No touch with such id
                     if (touch == null)
                     {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                         Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to MOVE to " + position + " but no touch with such id found.");
 #endif
                         return;
@@ -384,14 +384,14 @@ namespace TouchScript
                     // No touch with such id
                     if (touch == null)
                     {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                         Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to END but no touch with such id found.");
 #endif
                         return;
                     }
                 }
                 if (!touchesEnded.Contains(id)) touchesEnded.Add(id);
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 else Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to END more than once this frame.");
 #endif
             }
@@ -410,14 +410,14 @@ namespace TouchScript
                     // No touch with such id
                     if (touch == null)
                     {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                         Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to CANCEL but no touch with such id found.");
 #endif
                         return;
                     }
                 }
                 if (!touchesCancelled.Contains(id)) touchesCancelled.Add(touch.Id);
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                 else Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to CANCEL more than once this frame.");
 #endif
             }
@@ -596,7 +596,7 @@ namespace TouchScript
                 TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                     Debug.LogWarning("TouchScript > Id [" + id + "] was in UPDATED list but no touch with such id found.");
 #endif
                     continue;
@@ -624,7 +624,7 @@ namespace TouchScript
                 TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                     Debug.LogWarning("TouchScript > Id [" + id + "] was in ENDED list but no touch with such id found.");
 #endif
                     continue;
@@ -656,7 +656,7 @@ namespace TouchScript
                 TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
-#if DEBUG
+#if TOUCHSCRIPT_DEBUG
                     Debug.LogWarning("TouchScript > Id [" + id + "] was in CANCELLED list but no touch with such id found.");
 #endif
                     continue;
