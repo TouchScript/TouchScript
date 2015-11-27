@@ -119,7 +119,7 @@ namespace TouchScript.InputSources
 
         private void init()
         {
-            hMainWindow = GetForegroundWindow();
+            hMainWindow = GetActiveWindow();
 
             newWndProc = wndProc;
             newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
@@ -280,7 +280,7 @@ namespace TouchScript.InputSources
         static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
+        static extern IntPtr GetActiveWindow();
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
         private static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
