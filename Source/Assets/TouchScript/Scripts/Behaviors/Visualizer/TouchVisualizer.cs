@@ -15,10 +15,14 @@ namespace TouchScript.Behaviors.Visualizer
     {
         #region Public properties
 
-        public TouchProxy TouchProxy
+        public TouchProxyBase TouchProxy
         {
             get { return touchProxy; }
-            set { touchProxy = value; }
+            set
+            {
+                touchProxy = value;
+                updateDefaultSize();
+            }
         }
 
         /// <summary>
@@ -44,11 +48,7 @@ namespace TouchScript.Behaviors.Visualizer
         public bool UseDPI
         {
             get { return useDPI; }
-            set
-            {
-                useDPI = value;
-                update();
-            }
+            set { useDPI = value; }
         }
 
         /// <summary>Gets or sets the size of touch cursors in cm.</summary>
@@ -56,11 +56,7 @@ namespace TouchScript.Behaviors.Visualizer
         public float TouchSize
         {
             get { return touchSize; }
-            set
-            {
-                touchSize = value;
-                update();
-            }
+            set { touchSize = value; }
         }
 
         #endregion
@@ -68,7 +64,7 @@ namespace TouchScript.Behaviors.Visualizer
         #region Private variables
 
         [SerializeField]
-        private TouchProxy touchProxy;
+        private TouchProxyBase touchProxy;
 
         [SerializeField]
         private bool showTouchId = true;
@@ -82,9 +78,10 @@ namespace TouchScript.Behaviors.Visualizer
         [SerializeField]
         private float touchSize = 1f;
 
+        private int defaultSize = 64;
         private RectTransform rect;
-        private ObjectPool<TouchProxy> pool; 
-        private Dictionary<int, TouchProxy> proxies = new Dictionary<int, TouchProxy>(10);
+        private ObjectPool<TouchProxyBase> pool;
+        private Dictionary<int, TouchProxyBase> proxies = new Dictionary<int, TouchProxyBase>(10);
         private float textureDPI, scale, dpi, shadowOffset;
 
         #endregion
@@ -93,18 +90,18 @@ namespace TouchScript.Behaviors.Visualizer
 
         private void Awake()
         {
-            pool = new ObjectPool<TouchProxy>(10, instantiateProxy, null, clearProxy);
+            pool = new ObjectPool<TouchProxyBase>(10, instantiateProxy, null, clearProxy);
             rect = transform as RectTransform;
             if (rect == null)
             {
                 Debug.LogError("TouchVisualizer must be on an UI element!");
+                enabled = false;
             }
+            updateDefaultSize();
         }
 
         private void OnEnable()
         {
-            update();
-
             if (TouchManager.Instance != null)
             {
                 TouchManager.Instance.TouchesBegan += touchesBeganHandler;
@@ -129,23 +126,32 @@ namespace TouchScript.Behaviors.Visualizer
 
         #region Private functions
 
-        private void checkDPI()
-        {
-            if (useDPI && !Mathf.Approximately(dpi, TouchManager.Instance.DPI)) update();
-        }
-
-        private void update()
-        {
-        }
-
-        private TouchProxy instantiateProxy()
+        private TouchProxyBase instantiateProxy()
         {
             return Instantiate(touchProxy);
         }
 
-        private void clearProxy(TouchProxy proxy)
+        private void clearProxy(TouchProxyBase proxy)
         {
             proxy.Hide();
+        }
+
+        private int getTouchSize()
+        {
+            if (useDPI)
+            {
+                return (int)(touchSize * TouchManager.Instance.DotsPerCentimeter);
+            }
+            return defaultSize;
+        }
+
+        private void updateDefaultSize()
+        {
+            if (touchProxy != null)
+            {
+                var rt = touchProxy.GetComponent<RectTransform>();
+                if (rt) defaultSize = (int)rt.sizeDelta.x;
+            }
         }
 
         #endregion
@@ -161,6 +167,9 @@ namespace TouchScript.Behaviors.Visualizer
             {
                 var touch = e.Touches[i];
                 var proxy = pool.Get();
+                proxy.Size = getTouchSize();
+                proxy.ShowTouchId = showTouchId;
+                proxy.ShowTags = showTags;
                 proxy.Init(rect, touch);
                 proxies.Add(touch.Id, proxy);
             }
@@ -172,7 +181,7 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var touch = e.Touches[i];
-                TouchProxy proxy;
+                TouchProxyBase proxy;
                 if (!proxies.TryGetValue(touch.Id, out proxy)) return;
                 proxy.UpdateTouch(touch);
             }
@@ -184,7 +193,7 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var touch = e.Touches[i];
-                TouchProxy proxy;
+                TouchProxyBase proxy;
                 if (!proxies.TryGetValue(touch.Id, out proxy)) return;
                 proxies.Remove(touch.Id);
                 pool.Release(proxy);

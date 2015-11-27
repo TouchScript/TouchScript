@@ -746,7 +746,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c2dca9c55c34126a66ce1252fbad55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -816,7 +815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c2dca9c55c34126a66ce1252fbad55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
