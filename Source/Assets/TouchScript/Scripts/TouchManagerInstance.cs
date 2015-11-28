@@ -160,6 +160,16 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
+        public IList<IInputSource> Inputs
+        {
+            get
+            {
+                if (readonlyInputs == null) readonlyInputs = new ReadOnlyCollection<IInputSource>(inputs);
+                return readonlyInputs;
+            }
+        }
+
+        /// <inheritdoc />
         public float DotsPerCentimeter
         {
             get { return dotsPerCentimeter; }
@@ -192,6 +202,9 @@ namespace TouchScript
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private ReadOnlyCollection<TouchLayer> readonlyLayers;
+        private List<IInputSource> inputs = new List<IInputSource>(3);
+        private ReadOnlyCollection<IInputSource> readonlyInputs;
+
         private List<TouchPoint> touches = new List<TouchPoint>(30);
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
 
@@ -268,6 +281,23 @@ namespace TouchScript
             var data = layers[at];
             layers.RemoveAt(at);
             layers.Insert(to, data);
+        }
+
+        /// <inheritdoc />
+        public bool AddInput(IInputSource input)
+        {
+            if (input == null) return false;
+            if (inputs.Contains(input)) return true;
+            inputs.Add(input);
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool RemoveInput(IInputSource input)
+        {
+            if (input == null) return false;
+            var result = inputs.Remove(input);
+            return result;
         }
 
         /// <inheritdoc />
@@ -487,6 +517,7 @@ namespace TouchScript
 
         private void Update()
         {
+            updateInputs();
             updateTouches();
         }
 
@@ -562,6 +593,12 @@ namespace TouchScript
                         break;
                 }
             }
+        }
+
+        private void updateInputs()
+        {
+            var count = inputs.Count;
+            for (var i = 0; i < count; i++) inputs[i].UpdateInput();
         }
 
         private void updateBegan(List<TouchPoint> points)

@@ -77,7 +77,19 @@ namespace TouchScript.InputSources
         private Windows7TouchHandler windows7TouchHandler;
 #endif
 
-#endregion
+        #endregion
+
+        #region Public methods
+
+        public override void UpdateInput()
+        {
+            base.UpdateInput();
+
+            if (mouseHandler != null) mouseHandler.Update();
+            if (touchHandler != null) touchHandler.Update();
+        }
+
+        #endregion
 
         #region Unity
 
@@ -161,14 +173,6 @@ namespace TouchScript.InputSources
             enableTouch();
 #endif
 #endif
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
-            if (mouseHandler != null) mouseHandler.Update();
-            if (touchHandler != null) touchHandler.Update();
         }
 
         /// <inheritdoc />
@@ -273,6 +277,6 @@ namespace TouchScript.InputSources
         }
 #endif
 
-#endregion
+    #endregion
     }
 }

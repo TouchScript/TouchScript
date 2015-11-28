@@ -18,5 +18,7 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <value>An object used to change coordinates of touch points coming from this input source.</value>
         ICoordinatesRemapper CoordinatesRemapper { get; set; }
+
+        void UpdateInput();
     }
 }

@@ -25,11 +25,18 @@ namespace TouchScript.InputSources
         #region Private variables
 
 #pragma warning disable 0169
-        [SerializeField]
-        private bool advancedProps; // is used to save whether advanced properties are opened or closed
+        [SerializeField] private bool advancedProps; // is used to save whether advanced properties are opened or closed
 #pragma warning restore 0169
 
         private TouchManagerInstance manager;
+
+        #endregion
+
+        #region Public methods
+
+        public virtual void UpdateInput()
+        {
+        }
 
         #endregion
 
@@ -42,6 +49,7 @@ namespace TouchScript.InputSources
         {
             manager = TouchManagerInstance.Instance;
             if (manager == null) throw new InvalidOperationException("TouchManager instance is required!");
+            manager.AddInput(this);
         }
 
         /// <summary>
@@ -49,13 +57,12 @@ namespace TouchScript.InputSources
         /// </summary>
         protected virtual void OnDisable()
         {
-            manager = null;
+            if (manager != null)
+            {
+                manager.RemoveInput(this);
+                manager = null;
+            }
         }
-
-        /// <summary>
-        /// Unity Update callback.
-        /// </summary>
-        protected virtual void Update() {}
 
         #endregion
 

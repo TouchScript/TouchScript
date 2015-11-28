@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
 using TouchScript.Hit;
+using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
 
@@ -96,6 +97,8 @@ namespace TouchScript
         /// <value>A sorted list of currently active touch layers.</value>
         IList<TouchLayer> Layers { get; }
 
+        IList<IInputSource> Inputs { get; } 
+
         /// <summary>
         /// Gets number of pixels in a cm with current DPI.
         /// </summary>
@@ -140,6 +143,9 @@ namespace TouchScript
         /// <param name="at">Layer index 1.</param>
         /// <param name="to">Layer index 2.</param>
         void ChangeLayerIndex(int at, int to);
+
+        bool AddInput(IInputSource input);
+        bool RemoveInput(IInputSource input);
 
         /// <summary>
         /// Checks if a touch hits anything.
