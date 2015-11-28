@@ -33,10 +33,7 @@ namespace TouchScript.Utils.Debug
                         camera.clearFlags = CameraClearFlags.Nothing;
                         camera.depth = 9000;
                         _instance = go.AddComponent<GLDebug>();
-                        go.hideFlags = HideFlags.HideAndDontSave;
-                        camera.hideFlags = HideFlags.HideAndDontSave;
                     }
-                    _instance.hideFlags = HideFlags.HideAndDontSave;
                 }
                 return _instance;
             }
@@ -275,7 +272,7 @@ namespace TouchScript.Utils.Debug
         {
             if (_instance)
             {
-                DestroyImmediate(this);
+                Destroy(this);
                 return;
             }
 
