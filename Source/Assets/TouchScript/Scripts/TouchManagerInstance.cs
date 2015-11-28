@@ -143,6 +143,13 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
+        public bool ShouldCreateStandardInput
+        {
+            get { return shouldCreateStandardInput; }
+            set { shouldCreateStandardInput = value; }
+        }
+
+        /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
             get { return new ReadOnlyCollection<TouchLayer>(layers); }
@@ -172,7 +179,8 @@ namespace TouchScript
 
         private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
-        private Boolean shouldCreateCameraLayer = true;
+        private bool shouldCreateCameraLayer = true;
+        private bool shouldCreateStandardInput = true;
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;

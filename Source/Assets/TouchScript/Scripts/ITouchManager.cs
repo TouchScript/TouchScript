@@ -86,7 +86,9 @@ namespace TouchScript
         /// </summary>
         /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
         /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.</remarks>
-        Boolean ShouldCreateCameraLayer { get; set; }
+        bool ShouldCreateCameraLayer { get; set; }
+
+        bool ShouldCreateStandardInput { get; set; }
 
         /// <summary>
         /// Gets the list of touch layers.
@@ -178,7 +180,6 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Touch id to cancel.</param>
         void CancelTouch(int id);
-
     }
 
     /// <summary>
@@ -197,7 +198,9 @@ namespace TouchScript
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
         /// </summary>
-        private TouchEventArgs() {}
+        private TouchEventArgs()
+        {
+        }
 
         /// <summary>
         /// Returns cached instance of EventArgs.

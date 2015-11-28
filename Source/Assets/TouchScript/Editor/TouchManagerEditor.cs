@@ -18,6 +18,7 @@ namespace TouchScript.Editor
     {
         private static readonly GUIContent DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
         private static readonly GUIContent CREATE_CAMERA_LAYER = new GUIContent("Create Camera Layer", "Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene. This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.");
+        private static readonly GUIContent CREATE_STANDARD_INPUT = new GUIContent("Create Standard Input", "");
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("SendMessage Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
         private static readonly GUIContent SEND_MESSAGE_EVENTS = new GUIContent("SendMessage Events", "Which events should be sent as Unity Messages.");
@@ -25,7 +26,7 @@ namespace TouchScript.Editor
 
         private TouchManager instance;
         private ReorderableList layersList;
-        private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, useSendMessage, sendMessageTarget, sendMessageEvents;
+        private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, shouldCreateStandardInput, useSendMessage, sendMessageTarget, sendMessageEvents;
 
         private void OnEnable()
         {
@@ -33,6 +34,7 @@ namespace TouchScript.Editor
             layers = serializedObject.FindProperty("layers");
             displayDevice = serializedObject.FindProperty("displayDevice");
             shouldCreateCameraLayer = serializedObject.FindProperty("shouldCreateCameraLayer");
+            shouldCreateStandardInput = serializedObject.FindProperty("shouldCreateStandardInput");
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendMessageEvents = serializedObject.FindProperty("sendMessageEvents");
@@ -74,6 +76,7 @@ namespace TouchScript.Editor
 
             if (Application.isPlaying) GUI.enabled = false;
             EditorGUILayout.PropertyField(shouldCreateCameraLayer, CREATE_CAMERA_LAYER);
+            EditorGUILayout.PropertyField(shouldCreateStandardInput, CREATE_STANDARD_INPUT);
             GUI.enabled = true;
 
             EditorGUIUtility.labelWidth = 160;

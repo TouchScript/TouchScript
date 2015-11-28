@@ -181,6 +181,12 @@ namespace TouchScript
             set { shouldCreateCameraLayer = value; }
         }
 
+        public bool ShouldCreateStandardInput
+        {
+            get { return shouldCreateStandardInput; }
+            set { shouldCreateStandardInput = value; }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether Unity messages are sent when <see cref="ITouchManager"/> dispatches events.
         /// </summary>
@@ -246,7 +252,9 @@ namespace TouchScript
 
         [SerializeField] private Object displayDevice;
 
-        [SerializeField] [ToggleLeft] private Boolean shouldCreateCameraLayer = true;
+        [SerializeField] [ToggleLeft] private bool shouldCreateCameraLayer = true;
+
+        [SerializeField] [ToggleLeft] private bool shouldCreateStandardInput = true;
 
         [SerializeField] [ToggleLeft] private bool useSendMessage = false;
 
@@ -267,6 +275,7 @@ namespace TouchScript
 
             Instance.DisplayDevice = displayDevice as IDisplayDevice;
             Instance.ShouldCreateCameraLayer = ShouldCreateCameraLayer;
+            Instance.ShouldCreateStandardInput = ShouldCreateStandardInput;
             for (var i = 0; i < layers.Count; i++)
             {
                 Instance.AddLayer(layers[i], i);
