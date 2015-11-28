@@ -4,6 +4,7 @@
 
 using TouchScript.Utils.Attributes;
 using UnityEngine;
+using TouchScript.InputSources.InputHandlers;
 
 namespace TouchScript.InputSources
 {
@@ -44,7 +45,7 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
-            Debug.LogWarning("MouseInput is deprecated. Please use StandaloneInput.");
+            Debug.LogWarning("MouseInput is deprecated. Please use StandardInput.");
 
             if (DisableOnMobilePlatforms)
             {
@@ -70,7 +71,7 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnDisable()
         {
-            mouseHandler.Destroy();
+            mouseHandler.Dispose();
             mouseHandler = null;
 
             base.OnDisable();

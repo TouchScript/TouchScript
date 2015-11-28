@@ -5,10 +5,12 @@
 using System;
 using UnityEngine;
 
-namespace TouchScript.InputSources
+namespace TouchScript.InputSources.InputHandlers
 {
-    internal class MouseHandler
+    public class MouseHandler : IDisposable
     {
+
+        #region Private variables
 
         private Func<Vector2, ITouch> beginTouch;
         private Action<int, Vector2> moveTouch;
@@ -18,6 +20,8 @@ namespace TouchScript.InputSources
         private int mousePointId = -1;
         private int fakeMousePointId = -1;
         private Vector3 mousePointPos = Vector3.zero;
+
+        #endregion
 
         public MouseHandler(Func<Vector2, ITouch> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
             Action<int> cancelTouch)
@@ -30,6 +34,8 @@ namespace TouchScript.InputSources
             mousePointId = -1;
             fakeMousePointId = -1;
         }
+
+        #region Public methods
 
         public void Update()
         {
@@ -91,11 +97,13 @@ namespace TouchScript.InputSources
             }
         }
 
-        public void Destroy()
+        public void Dispose()
         {
             if (mousePointId != -1) cancelTouch(mousePointId);
             if (fakeMousePointId != -1) cancelTouch(fakeMousePointId);
         }
+
+        #endregion
 
     }
 }
