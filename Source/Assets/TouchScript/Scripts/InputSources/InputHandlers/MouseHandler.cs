@@ -37,6 +37,20 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Public methods
 
+        public void EndTouches()
+        {
+            if (mousePointId != -1)
+            {
+                endTouch(mousePointId);
+                mousePointId = -1;
+            }
+            if (fakeMousePointId != -1)
+            {
+                endTouch(fakeMousePointId);
+                fakeMousePointId = -1;
+            }
+        }
+
         public void Update()
         {
             // If mouse button was pressed and released during the same frame,
@@ -64,13 +78,8 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
-                {
-                    if (fakeMousePointId == -1) fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
-                }
-                else
-                {
-                    if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
-                }
+                    fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
+                else if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y)).Id;
             }
             else if (Input.GetMouseButton(0))
             {
@@ -78,14 +87,12 @@ namespace TouchScript.InputSources.InputHandlers
                 if (mousePointPos != pos)
                 {
                     mousePointPos = pos;
-                    if (fakeMousePointId > -1 && mousePointId == -1)
+                    if (fakeMousePointId != -1)
                     {
-                        moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
+                        if (mousePointId == -1) moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
+                        else moveTouch(mousePointId, new Vector2(pos.x, pos.y));
                     }
-                    else
-                    {
-                        moveTouch(mousePointId, new Vector2(pos.x, pos.y));
-                    }
+                    else if (mousePointId != -1) moveTouch(mousePointId, new Vector2(pos.x, pos.y));
                 }
             }
 

@@ -15,7 +15,7 @@ namespace TouchScript.InputSources
     ///     <item>Touch and pen input doesn't work in the editor.</item>
     /// </list>
     /// </summary>
-    [AddComponentMenu("TouchScript/Input Sources/Standalone Input")]
+    [AddComponentMenu("TouchScript/Input Sources/Standard Input")]
     public sealed class StandardInput : InputSource
     {
         #region Constants
@@ -35,7 +35,7 @@ namespace TouchScript.InputSources
             None
         }
 
-#if UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private static readonly Version WIN7_VERSION = new Version(6, 1, 0, 0);
         private static readonly Version WIN8_VERSION = new Version(6, 2, 0, 0);
 #endif
@@ -73,7 +73,7 @@ namespace TouchScript.InputSources
 
         private MouseHandler mouseHandler;
         private TouchHandler touchHandler;
-#if UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private Windows8MouseHandler windows8MouseHandler;
         private Windows8TouchHandler windows8TouchHandler;
         private Windows7TouchHandler windows7TouchHandler;
@@ -87,8 +87,18 @@ namespace TouchScript.InputSources
         {
             base.UpdateInput();
 
-            if (mouseHandler != null) mouseHandler.Update();
-            if (touchHandler != null) touchHandler.Update();
+            if (touchHandler != null)
+            {
+                touchHandler.Update();
+                // Unity adds mouse events from touches resulting in duplicated pointers.
+                // Don't update mouse if touch input is present.
+                if (mouseHandler != null)
+                {
+                    if (touchHandler.HasTouches) mouseHandler.EndTouches();
+                    else mouseHandler.Update();
+                }
+            }
+            else if (mouseHandler != null) mouseHandler.Update();
         }
 
         #endregion
@@ -182,7 +192,7 @@ namespace TouchScript.InputSources
         {
             disableMouse();
             disableTouch();
-#if UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
             disableWindows8Mouse();
             disableWindows7Touch();
             disableWindows8Touch();
@@ -198,6 +208,7 @@ namespace TouchScript.InputSources
         private void enableMouse()
         {
             mouseHandler = new MouseHandler((p) => beginTouch(p, new Tags(MouseTags)), moveTouch, endTouch, cancelTouch);
+            Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
 
         private void disableMouse()
@@ -212,6 +223,7 @@ namespace TouchScript.InputSources
         private void enableTouch()
         {
             touchHandler = new TouchHandler((p) => beginTouch(p, new Tags(TouchTags)), moveTouch, endTouch, cancelTouch);
+            Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
         private void disableTouch()
@@ -223,10 +235,11 @@ namespace TouchScript.InputSources
             }
         }
 
-#if UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private void enableWindows8Mouse()
         {
             windows8MouseHandler = new Windows8MouseHandler();
+            Debug.Log("[TouchScript] Initialized Windows 8 mouse input.");
         }
 
         private void disableWindows8Mouse()
@@ -242,6 +255,7 @@ namespace TouchScript.InputSources
         {
             windows7TouchHandler = new Windows7TouchHandler((p, s) => beginTouch(p, new Tags(TouchTags)), moveTouch,
                 endTouch, cancelTouch);
+            Debug.Log("[TouchScript] Initialized Windows 7 touch input.");
         }
 
         private void disableWindows7Touch()
@@ -263,10 +277,10 @@ namespace TouchScript.InputSources
                         return beginTouch(p, new Tags(TouchTags));
                     case WindowsTouchHandler.TouchSource.Pen:
                         return beginTouch(p, new Tags(PenTags));
-                    default:
-                        return beginTouch(p, new Tags(MouseTags));
                 }
+                return beginTouch(p, new Tags(MouseTags));
             }, moveTouch, endTouch, cancelTouch);
+            Debug.Log("[TouchScript] Initialized Windows 8 touch input.");
         }
 
         private void disableWindows8Touch()

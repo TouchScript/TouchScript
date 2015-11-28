@@ -12,6 +12,12 @@ namespace TouchScript.InputSources.InputHandlers
     public class TouchHandler : IDisposable
     {
 
+        #region Public properties
+
+        public bool HasTouches { get { return touchesNum > 0; } }
+
+        #endregion
+
         #region Private variables
 
         private Func<Vector2, ITouch> beginTouch;
@@ -21,6 +27,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         private Dictionary<int, TouchState> touchStates = new Dictionary<int, TouchState>();
         private HashSet<int> touchIds = new HashSet<int>();
+        private int touchesNum;
 
         #endregion
 
@@ -47,14 +54,14 @@ namespace TouchScript.InputSources.InputHandlers
                         if (touchIds.Contains(t.fingerId))
                         {
                             // Ending previous touch (missed a frame)
-                            endTouch(t.fingerId);
-                            int id = beginTouch(t.position).Id;
+                            internalEndTouch(t.fingerId);
+                            int id = internalBeginTouch(t.position).Id;
                             touchStates[t.fingerId] = new TouchState(id, t.phase, t.position);
                         }
                         else
                         {
                             touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position).Id;
+                            int id = internalBeginTouch(t.position).Id;
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
                         }
                         break;
@@ -69,7 +76,7 @@ namespace TouchScript.InputSources.InputHandlers
                         {
                             // Missed began phase
                             touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position).Id;
+                            int id = internalBeginTouch(t.position).Id;
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
                         }
                         break;
@@ -79,13 +86,13 @@ namespace TouchScript.InputSources.InputHandlers
                             var ts = touchStates[t.fingerId];
                             touchIds.Remove(t.fingerId);
                             touchStates.Remove(t.fingerId);
-                            endTouch(ts.Id);
+                            internalEndTouch(ts.Id);
                         }
                         else
                         {
                             // Missed one finger begin-end transition
-                            int id = beginTouch(t.position).Id;
-                            endTouch(id);
+                            int id = internalBeginTouch(t.position).Id;
+                            internalEndTouch(id);
                         }
                         break;
                     case TouchPhase.Canceled:
@@ -94,13 +101,13 @@ namespace TouchScript.InputSources.InputHandlers
                             var ts = touchStates[t.fingerId];
                             touchIds.Remove(t.fingerId);
                             touchStates.Remove(t.fingerId);
-                            endTouch(ts.Id);
+                            internalEndTouch(ts.Id);
                         }
                         else
                         {
                             // Missed one finger begin-end transition
-                            int id = beginTouch(t.position).Id;
-                            cancelTouch(id);
+                            int id = internalBeginTouch(t.position).Id;
+                            internalCancelTouch(id);
                         }
                         break;
                     case TouchPhase.Stationary:
@@ -108,7 +115,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position).Id;
+                            int id = internalBeginTouch(t.position).Id;
                             touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
                         }
                         break;
@@ -118,8 +125,30 @@ namespace TouchScript.InputSources.InputHandlers
 
         public void Dispose()
         {
-            foreach (var touchState in touchStates) cancelTouch(touchState.Value.Id);
+            foreach (var touchState in touchStates) internalCancelTouch(touchState.Value.Id);
             touchStates.Clear();
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private ITouch internalBeginTouch(Vector2 position)
+        {
+            touchesNum++;
+            return beginTouch(position);
+        }
+
+        private void internalEndTouch(int id)
+        {
+            touchesNum--;
+            endTouch(id);
+        }
+
+        private void internalCancelTouch(int id)
+        {
+            touchesNum--;
+            cancelTouch(id);
         }
 
         #endregion
