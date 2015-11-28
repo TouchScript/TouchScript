@@ -68,6 +68,7 @@ namespace TouchScript.Behaviors.Visualizer
         {
             show();
             rect.SetParent(parent);
+            rect.SetAsLastSibling();
             updateOnce(touch);
             update(touch);
         }
