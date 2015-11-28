@@ -24,9 +24,7 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-#pragma warning disable 0169
         [SerializeField] private bool advancedProps; // is used to save whether advanced properties are opened or closed
-#pragma warning restore 0169
 
         private TouchManagerInstance manager;
 

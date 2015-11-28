@@ -376,9 +376,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Transform cachedTransform;
 
-#pragma warning disable 0169
         [SerializeField] private bool advancedProps; // is used to save if advanced properties are opened or closed
-#pragma warning restore 0169
 
         [SerializeField] private int minTouches = 0;
 
