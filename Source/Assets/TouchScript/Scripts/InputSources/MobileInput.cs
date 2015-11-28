@@ -53,7 +53,7 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnEnable()
         {
-            Debug.LogWarning("MobileInput is deprecated! Please use StandardInput instead.");
+            Debug.LogWarning("[TouchScript] MobileInput is deprecated! Please use StandardInput instead.");
 
             if (DisableOnNonTouchPlatforms)
             {

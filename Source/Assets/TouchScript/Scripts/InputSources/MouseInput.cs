@@ -57,7 +57,7 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
-            Debug.LogWarning("MouseInput is deprecated! Please use StandardInput instead.");
+            Debug.LogWarning("[TouchScript] MouseInput is deprecated! Please use StandardInput instead.");
 
             if (DisableOnMobilePlatforms)
             {
