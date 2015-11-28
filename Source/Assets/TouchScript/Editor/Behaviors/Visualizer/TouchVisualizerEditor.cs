@@ -10,12 +10,10 @@ namespace TouchScript.Editor.Behaviors.Visualizer
 	internal sealed class TouchVisualizerEditor : UnityEditor.Editor
     {
 
-		private TouchVisualizer instance;
         private SerializedProperty touchProxy, useDPI, touchSize, showTouchId, showTags;
 
         private void OnEnable()
         {
-			instance = target as TouchVisualizer;
             showTouchId = serializedObject.FindProperty("showTouchId");
             showTags = serializedObject.FindProperty("showTags");
             touchProxy = serializedObject.FindProperty("touchProxy");

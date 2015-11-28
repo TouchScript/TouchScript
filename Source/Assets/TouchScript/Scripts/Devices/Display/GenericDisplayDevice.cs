@@ -123,9 +123,9 @@ namespace TouchScript.Devices.Display
                         else dpi = 160;
                         break;
                     }
-                    case RuntimePlatform.MetroPlayerARM:
-                    case RuntimePlatform.MetroPlayerX64:
-                    case RuntimePlatform.MetroPlayerX86:
+                    case RuntimePlatform.WSAPlayerARM:
+                    case RuntimePlatform.WSAPlayerX64:
+                    case RuntimePlatform.WSAPlayerX86:
                         dpi = 160;
                         break;
                     case RuntimePlatform.WP8Player:

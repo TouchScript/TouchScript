@@ -3,7 +3,9 @@ using UnityEditor;
 
 namespace TouchScript.Editor.InputSources
 {
+#pragma warning disable 0618
     [CustomEditor(typeof(MouseInput), true)]
+#pragma warning restore 0618
     internal sealed class MouseInputEditor : InputSourceEditor
     {
         private SerializedProperty tags;

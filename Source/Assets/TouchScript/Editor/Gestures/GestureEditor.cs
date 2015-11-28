@@ -27,11 +27,8 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
         private static readonly GUIContent LIMIT_TOUCHES = new GUIContent("Limit Touches", "");
 
-        private static readonly Type GESTURE_TYPE = typeof(Gesture);
-
         protected bool shouldDrawCombineTouches = false;
 
-        private Gesture instance;
         private SerializedProperty advanced;
         private SerializedProperty debugMode;
         private SerializedProperty friendlyGestures;
@@ -47,8 +44,6 @@ namespace TouchScript.Editor.Gestures
         protected virtual void OnEnable()
         {
             hideFlags = HideFlags.HideAndDontSave;
-
-            instance = target as Gesture;
 
             advanced = serializedObject.FindProperty("advancedProps");
             debugMode = serializedObject.FindProperty("debugMode");

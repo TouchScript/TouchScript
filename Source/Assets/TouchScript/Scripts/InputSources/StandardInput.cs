@@ -35,8 +35,10 @@ namespace TouchScript.InputSources
             None
         }
 
+#if UNITY_STANDALONE_WIN
         private static readonly Version WIN7_VERSION = new Version(6, 1, 0, 0);
         private static readonly Version WIN8_VERSION = new Version(6, 2, 0, 0);
+#endif
 
         #endregion
 
@@ -189,9 +191,9 @@ namespace TouchScript.InputSources
             base.OnDisable();
         }
 
-#endregion
+        #endregion
 
-#region Private functions
+        #region Private functions
 
         private void enableMouse()
         {
@@ -277,6 +279,6 @@ namespace TouchScript.InputSources
         }
 #endif
 
-    #endregion
+        #endregion
     }
 }

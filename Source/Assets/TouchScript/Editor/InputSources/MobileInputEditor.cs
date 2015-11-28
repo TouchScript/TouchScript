@@ -3,7 +3,9 @@ using UnityEditor;
 
 namespace TouchScript.Editor.InputSources
 {
-    [CustomEditor(typeof(MobileInput), true)]
+#pragma warning disable 0618
+    [CustomEditor(typeof (MobileInput), true)]
+#pragma warning restore 0618
     internal sealed class MobileInputEditor : InputSourceEditor
     {
         private SerializedProperty tags;
