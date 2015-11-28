@@ -565,7 +565,7 @@ namespace TouchScript
 
                 for (var j = 0; j < layerCount; j++)
                 {
-                    var touchLayer = Layers[j];
+                    var touchLayer = layers[j];
                     if (touchLayer == null) continue;
                     if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                 }
@@ -730,7 +730,7 @@ namespace TouchScript
                     var touch = redispatchList[i] as TouchPoint;
                     for (var j = 0; j < layerCount; j++)
                     {
-                        var touchLayer = Layers[j];
+                        var touchLayer = layers[j];
                         if (touchLayer == null) continue;
                         if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                     }
