@@ -11,7 +11,7 @@ namespace TouchScript.InputSources
     /// <summary>
     /// Input source which transfers mouse clicks to touches.
     /// </summary>
-    [AddComponentMenu("TouchScript/Input Sources/Mouse Input")]
+    [System.Obsolete("MouseInput is deprecated! Please use StandardInput instead.")]
     public sealed class MouseInput : InputSource
     {
         
@@ -38,6 +38,18 @@ namespace TouchScript.InputSources
 
         #endregion
 
+        #region Public methods
+
+        /// <inheritdoc />
+        public override void UpdateInput()
+        {
+            base.UpdateInput();
+
+            mouseHandler.Update();
+        }
+
+        #endregion
+
         #region Unity methods
 
         /// <inheritdoc />
@@ -45,7 +57,7 @@ namespace TouchScript.InputSources
         {
             base.OnEnable();
 
-            Debug.LogWarning("MouseInput is deprecated. Please use StandardInput.");
+            Debug.LogWarning("MouseInput is deprecated! Please use StandardInput instead.");
 
             if (DisableOnMobilePlatforms)
             {
@@ -75,14 +87,6 @@ namespace TouchScript.InputSources
             mouseHandler = null;
 
             base.OnDisable();
-        }
-
-        /// <inheritdoc />
-        protected override void Update()
-        {
-            base.Update();
-
-            mouseHandler.Update();
         }
 
         #endregion

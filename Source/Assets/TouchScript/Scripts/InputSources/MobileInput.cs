@@ -5,14 +5,14 @@
 
 using TouchScript.Utils.Attributes;
 using UnityEngine;
-using System.Collections.Generic;
+using TouchScript.InputSources.InputHandlers;
 
 namespace TouchScript.InputSources
 {
     /// <summary>
     /// Mobile Input Source. Gathers touch input from built-in Unity's Input.Touches API. Though, should be used on mobile devices.
     /// </summary>
-    [AddComponentMenu("TouchScript/Input Sources/Mobile Input")]
+    [System.Obsolete("MobileInput is deprecated! Please use StandardInput instead.")]
     public sealed class MobileInput : InputSource
     {
         #region Public properties
@@ -32,8 +32,19 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-        private Dictionary<int, TouchState> touchStates = new Dictionary<int, TouchState>();
-        private HashSet<int> touchIds = new HashSet<int>();
+        private TouchHandler touchHandler;
+
+        #endregion
+
+        #region Public methods
+
+        /// <inheritdoc />
+        public override void UpdateInput()
+        {
+            base.UpdateInput();
+
+            if (touchHandler != null) touchHandler.Update();
+        }
 
         #endregion
 
@@ -42,6 +53,8 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnEnable()
         {
+            Debug.LogWarning("MobileInput is deprecated! Please use StandardInput instead.");
+
             if (DisableOnNonTouchPlatforms)
             {
                 switch (Application.platform)
@@ -61,127 +74,23 @@ namespace TouchScript.InputSources
                 }
             }
 
-            base.OnEnable();
+            touchHandler = new TouchHandler((p) => beginTouch(p, new Tags(Tags)), moveTouch, endTouch, cancelTouch);
 
-            touchStates.Clear();
-            touchIds.Clear();
+            base.OnEnable();
         }
 
         /// <inheritdoc />
         protected override void OnDisable()
         {
-            foreach (var touchState in touchStates)
+            if (touchHandler != null)
             {
-                cancelTouch(touchState.Value.Id);
+                touchHandler.Dispose();
+                touchHandler = null;
             }
 
             base.OnDisable();
         }
 
-        /// <inheritdoc />
-        protected override void Update()
-        {
-            base.Update();
-
-            for (var i = 0; i < Input.touchCount; ++i)
-            {
-                var t = Input.GetTouch(i);
-
-                switch (t.phase)
-                {
-                    case TouchPhase.Began:
-                        if (touchIds.Contains(t.fingerId))
-                        {
-                            // ending previous touch (maybe we missed a frame)
-                            endTouch(t.fingerId);
-                            int id = beginTouch(t.position).Id;
-                            touchStates[t.fingerId] = new TouchState(id, t.phase, t.position);
-                        }
-                        else
-                        {
-                            touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position).Id;
-                            touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
-                        }
-                        break;
-                    case TouchPhase.Moved:
-                        if (touchIds.Contains(t.fingerId))
-                        {
-                            var ts = touchStates[t.fingerId];
-                            touchStates[t.fingerId] = new TouchState(ts.Id, t.phase, t.position);
-                            moveTouch(ts.Id, t.position);
-                        }
-                        else
-                        {
-                            // maybe we missed began phase
-                            touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position).Id;
-                            touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
-                        }
-                        break;
-                    case TouchPhase.Ended:
-                        if (touchIds.Contains(t.fingerId))
-                        {
-                            var ts = touchStates[t.fingerId];
-                            touchIds.Remove(t.fingerId);
-                            touchStates.Remove(t.fingerId);
-                            endTouch(ts.Id);
-                        }
-                        else
-                        {
-                            // maybe we totally missed one finger begin-end transition
-                            int id = beginTouch(t.position).Id;
-                            endTouch(id);
-                        }
-                        break;
-                    case TouchPhase.Canceled:
-                        if (touchIds.Contains(t.fingerId))
-                        {
-                            var ts = touchStates[t.fingerId];
-                            touchIds.Remove(t.fingerId);
-                            touchStates.Remove(t.fingerId);
-                            endTouch(ts.Id);
-                        }
-                        else
-                        {
-                            // maybe we totally missed one finger begin-end transition
-                            int id = beginTouch(t.position).Id;
-                            cancelTouch(id);
-                        }
-                        break;
-                    case TouchPhase.Stationary:
-                        if (touchIds.Contains(t.fingerId)) {}
-                        else
-                        {
-                            touchIds.Add(t.fingerId);
-                            int id = beginTouch(t.position).Id;
-                            touchStates.Add(t.fingerId, new TouchState(id, t.phase, t.position));
-                        }
-                        break;
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override ITouch beginTouch(Vector2 position)
-        {
-            return beginTouch(position, new Tags(Tags));
-        }
-
         #endregion
-    }
-
-    internal struct TouchState
-    {
-        public int Id;
-        public TouchPhase Phase;
-        public Vector2 Position;
-
-        public TouchState(int anId, TouchPhase aPhase, Vector2 aPosition)
-        {
-            Id = anId;
-            Phase = aPhase;
-            Position = aPosition;
-        }
     }
 }
