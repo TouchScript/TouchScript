@@ -439,6 +439,56 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!1001 &572399281
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.data[0]
+      value: 
+      objectReference: {fileID: 930800605}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &624081474
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,56 +542,6 @@ MonoBehaviour:
   m_PreferredHeight: 60
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!1001 &671893194
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: layers.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-      propertyPath: layers.Array.data[0]
-      value: 
-      objectReference: {fileID: 930800605}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &740851131
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,10 +709,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 930800601}
   - 54: {fileID: 930800603}
-  - 114: {fileID: 930800605}
   - 114: {fileID: 930800604}
   - 114: {fileID: 930800602}
   - 114: {fileID: 930800606}
+  - 114: {fileID: 930800605}
   m_Layer: 0
   m_Name: Scene
   m_TagString: Untagged
@@ -743,12 +743,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 930800600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35c2dca9c55c34126a66ce1252fbad55, type: 3}
+  m_Script: {fileID: 11500000, guid: 74ae431eff8434b0897d3f7f1cff4311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
+  minTouches: 1
+  maxTouches: 1
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -756,9 +756,9 @@ MonoBehaviour:
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
-  type: 7
+  type: 1
   minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: .0500000007
 --- !u!54 &930800603
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -785,8 +785,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5f2ff2a908224e94b8dde12c7b83c3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TwoFingerMoveGesture: {fileID: 930800606}
-  ManipulationGesture: {fileID: 930800602}
+  TwoFingerMoveGesture: {fileID: 930800602}
+  ManipulationGesture: {fileID: 930800606}
   PanSpeed: .0199999996
   RotationSpeed: 200
   ZoomSpeed: 10
@@ -812,12 +812,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 930800600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35c2dca9c55c34126a66ce1252fbad55, type: 3}
+  m_Script: {fileID: 11500000, guid: 74ae431eff8434b0897d3f7f1cff4311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
+  minTouches: 2
+  maxTouches: 10
   combineTouches: 0
   combineTouchesInterval: .300000012
   useSendMessage: 0
@@ -827,7 +827,7 @@ MonoBehaviour:
   friendlyGestures: []
   type: 7
   minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: .200000003
 --- !u!1 &1138005899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1048,9 +1048,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Drag using 1 or 3+ fingers
+  m_Text: 'Drag with 1 finger
 
-    to rotate the camera'
+    to move the camera'
 --- !u!222 &1408280583
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1393,7 +1393,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Drag using 2 fingers \nto move the camera"
+  m_Text: "Drag with 2+ fingers \nto rotate the camera"
 --- !u!222 &1713463343
 CanvasRenderer:
   m_ObjectHideFlags: 0
