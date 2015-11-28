@@ -258,7 +258,7 @@ Transform:
   m_GameObject: {fileID: 481822342}
   m_LocalRotation: {x: -8.94069672e-08, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.30000019, y: -6.05999994, z: .400000006}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 3
@@ -341,7 +341,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -368,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -391,7 +389,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -688,8 +685,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 851559560}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.21999979, y: -2.5999999, z: .100000001}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalPosition: {x: 7.01000023, y: -3.6400001, z: .100000001}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 0
@@ -760,7 +757,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -799,7 +795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -822,7 +817,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -881,7 +875,7 @@ Transform:
   m_GameObject: {fileID: 893756805}
   m_LocalRotation: {x: -8.94069672e-08, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.23999977, y: 6.07999992, z: .300000012}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 2
@@ -964,7 +958,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -991,7 +984,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1014,7 +1006,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1199,8 +1190,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1166789651}
   m_LocalRotation: {x: -8.94069672e-08, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.36000013, y: 3.29999995, z: .200000003}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalPosition: {x: -8.31999969, y: 4.82000017, z: .200000003}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 1
@@ -1283,7 +1274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1310,7 +1300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1333,7 +1322,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
