@@ -152,21 +152,13 @@ namespace TouchScript
         /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
-            get
-            {
-                if (readonlyLayers == null) readonlyLayers = new ReadOnlyCollection<TouchLayer>(layers);
-                return readonlyLayers;
-            }
+            get { return new List<TouchLayer>(layers); }
         }
 
         /// <inheritdoc />
         public IList<IInputSource> Inputs
         {
-            get
-            {
-                if (readonlyInputs == null) readonlyInputs = new ReadOnlyCollection<IInputSource>(inputs);
-                return readonlyInputs;
-            }
+            get { return new List<IInputSource>(inputs); }
         }
 
         /// <inheritdoc />
@@ -201,9 +193,7 @@ namespace TouchScript
         private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
-        private ReadOnlyCollection<TouchLayer> readonlyLayers;
         private List<IInputSource> inputs = new List<IInputSource>(3);
-        private ReadOnlyCollection<IInputSource> readonlyInputs;
 
         private List<TouchPoint> touches = new List<TouchPoint>(30);
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
@@ -385,7 +375,9 @@ namespace TouchScript
                     if (!touchesUpdated.Contains(id)) touchesUpdated.Add(id);
                 }
 #if TOUCHSCRIPT_DEBUG
-                else Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to UPDATE but no touch with such id found.");
+                else
+                    Debug.LogWarning("TouchScript > Touch with id [" + id +
+                                     "] is requested to UPDATE but no touch with such id found.");
 #endif
             }
         }
@@ -403,7 +395,8 @@ namespace TouchScript
                     if (touch == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to MOVE to " + position + " but no touch with such id found.");
+                        Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to MOVE to " + position +
+                                         " but no touch with such id found.");
 #endif
                         return;
                     }
@@ -428,14 +421,17 @@ namespace TouchScript
                     if (touch == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to END but no touch with such id found.");
+                        Debug.LogWarning("TouchScript > Touch with id [" + id +
+                                         "] is requested to END but no touch with such id found.");
 #endif
                         return;
                     }
                 }
                 if (!touchesEnded.Contains(id)) touchesEnded.Add(id);
 #if TOUCHSCRIPT_DEBUG
-                else Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to END more than once this frame.");
+                else
+                    Debug.LogWarning("TouchScript > Touch with id [" + id +
+                                     "] is requested to END more than once this frame.");
 #endif
             }
         }
@@ -454,14 +450,17 @@ namespace TouchScript
                     if (touch == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to CANCEL but no touch with such id found.");
+                        Debug.LogWarning("TouchScript > Touch with id [" + id +
+                                         "] is requested to CANCEL but no touch with such id found.");
 #endif
                         return;
                     }
                 }
                 if (!touchesCancelled.Contains(id)) touchesCancelled.Add(touch.Id);
 #if TOUCHSCRIPT_DEBUG
-                else Debug.LogWarning("TouchScript > Touch with id [" + id + "] is requested to CANCEL more than once this frame.");
+                else
+                    Debug.LogWarning("TouchScript > Touch with id [" + id +
+                                     "] is requested to CANCEL more than once this frame.");
 #endif
             }
         }
@@ -535,7 +534,7 @@ namespace TouchScript
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
             dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
 #if TOUCHSCRIPT_DEBUG
-            debugTouchSize = Vector2.one * dotsPerCentimeter;
+            debugTouchSize = Vector2.one*dotsPerCentimeter;
 #endif
         }
 
@@ -552,7 +551,8 @@ namespace TouchScript
                 if (Camera.main != null)
                 {
                     if (Application.isEditor)
-                        Debug.Log("[TouchScript] No camera layer found, adding CameraLayer for the main camera. (this message is harmless)");
+                        Debug.Log(
+                            "[TouchScript] No camera layer found, adding CameraLayer for the main camera. (this message is harmless)");
                     var layer = Camera.main.gameObject.AddComponent<CameraLayer>();
                     AddLayer(layer);
                 }
@@ -600,7 +600,7 @@ namespace TouchScript
 
                 for (var j = 0; j < layerCount; j++)
                 {
-                    var touchLayer = Layers[j];
+                    var touchLayer = layers[j];
                     if (touchLayer == null) continue;
                     if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                 }
@@ -632,7 +632,8 @@ namespace TouchScript
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id + "] was in UPDATED list but no touch with such id found.");
+                    Debug.LogWarning("TouchScript > Id [" + id +
+                                     "] was in UPDATED list but no touch with such id found.");
 #endif
                     continue;
                 }
@@ -692,7 +693,8 @@ namespace TouchScript
                 if (!idToTouch.TryGetValue(id, out touch))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id + "] was in CANCELLED list but no touch with such id found.");
+                    Debug.LogWarning("TouchScript > Id [" + id +
+                                     "] was in CANCELLED list but no touch with such id found.");
 #endif
                     continue;
                 }
@@ -740,7 +742,7 @@ namespace TouchScript
                     touches.Remove(touch);
                     releaseList.Add(touch);
 #if TOUCHSCRIPT_DEBUG
-                removeDebugFigureForTouch(touch);
+                    removeDebugFigureForTouch(touch);
 #endif
                 }
 
@@ -765,7 +767,7 @@ namespace TouchScript
                     var touch = redispatchList[i] as TouchPoint;
                     for (var j = 0; j < layerCount; j++)
                     {
-                        var touchLayer = Layers[j];
+                        var touchLayer = layers[j];
                         if (touchLayer == null) continue;
                         if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                     }
@@ -854,7 +856,8 @@ namespace TouchScript
 
         private void addDebugFigureForTouch(ITouch touch)
         {
-            GLDebug.DrawSquareScreenSpace(TouchManager.DEBUG_GL_TOUCH + touch.Id, touch.Position, 0, debugTouchSize, GLDebug.MULTIPLY, float.PositiveInfinity);
+            GLDebug.DrawSquareScreenSpace(TouchManager.DEBUG_GL_TOUCH + touch.Id, touch.Position, 0, debugTouchSize,
+                GLDebug.MULTIPLY, float.PositiveInfinity);
         }
 #endif
 
