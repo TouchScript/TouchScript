@@ -140,6 +140,18 @@ namespace TouchScript.InputSources
 
         #endregion
 
+        #region Public methods
+
+        /// <inheritdoc />
+        public override void UpdateInput()
+        {
+            base.UpdateInput();
+            screenWidth = Screen.width;
+            screenHeight = Screen.height;
+        }
+        
+        #endregion
+
         #region Unity
 
         /// <inheritdoc />
@@ -166,14 +178,6 @@ namespace TouchScript.InputSources
             objectProcessor.ObjectRemoved += OnObjectRemoved;
 
             connect();
-        }
-
-        /// <inheritdoc />
-        protected override void Update()
-        {
-            base.Update();
-            screenWidth = Screen.width;
-            screenHeight = Screen.height;
         }
 
         /// <inheritdoc />
