@@ -552,8 +552,7 @@ namespace TouchScript
                 if (Camera.main != null)
                 {
                     if (Application.isEditor)
-                        Debug.LogWarning(
-                            "No camera layers, adding CameraLayer for the main camera. (this message is harmless)");
+                        Debug.Log("[TouchScript] No camera layer found, adding CameraLayer for the main camera. (this message is harmless)");
                     var layer = Camera.main.gameObject.AddComponent<CameraLayer>();
                     AddLayer(layer);
                 }
@@ -562,9 +561,10 @@ namespace TouchScript
 
         private void createTouchInput()
         {
-            var inputs = FindObjectsOfType(typeof (InputSource));
-            if (inputs.Length == 0)
+            if (inputs.Count == 0 && shouldCreateStandardInput)
             {
+                if (Application.isEditor)
+                    Debug.Log("[TouchScript] No input source found, adding StandardInput. (this message is harmless)");
                 GameObject obj = null;
                 var objects = FindObjectsOfType<TouchManager>();
                 if (objects.Length == 0)
@@ -576,22 +576,7 @@ namespace TouchScript
                 {
                     obj = objects[0].gameObject;
                 }
-
-                switch (Application.platform)
-                {
-                    case RuntimePlatform.IPhonePlayer:
-                    case RuntimePlatform.Android:
-                    case RuntimePlatform.BlackBerryPlayer:
-                    case RuntimePlatform.MetroPlayerARM:
-                    case RuntimePlatform.MetroPlayerX64:
-                    case RuntimePlatform.MetroPlayerX86:
-                    case RuntimePlatform.WP8Player:
-                        obj.AddComponent<MobileInput>();
-                        break;
-                    default:
-                        obj.AddComponent<MouseInput>();
-                        break;
-                }
+                obj.AddComponent<StandardInput>();
             }
         }
 
