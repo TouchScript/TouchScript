@@ -458,7 +458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minTouches: 0
   maxTouches: 0
@@ -1427,13 +1426,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '<b>Taps</b>
-
-
-    This example shows how to use TapGesture and LongPressGesture.
-
-
-    Check the Cube prefab.'
+  m_Text: "<b>Taps</b>\n\nThis example shows how to use TapGesture \nand LongPressGesture.\n\nCheck
+    the Cube prefab."
 --- !u!222 &1552723603
 CanvasRenderer:
   m_ObjectHideFlags: 0
