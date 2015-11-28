@@ -152,7 +152,11 @@ namespace TouchScript
         /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
-            get { return new ReadOnlyCollection<TouchLayer>(layers); }
+            get
+            {
+                if (readonlyLayers == null) readonlyLayers = new ReadOnlyCollection<TouchLayer>(layers);
+                return readonlyLayers;
+            }
         }
 
         /// <inheritdoc />
@@ -187,6 +191,7 @@ namespace TouchScript
         private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
+        private ReadOnlyCollection<TouchLayer> readonlyLayers;
         private List<TouchPoint> touches = new List<TouchPoint>(30);
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
 
