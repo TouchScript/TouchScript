@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Collections;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
@@ -71,7 +70,7 @@ namespace TouchScript.Layers
         /// <summary>
         /// Touch layer's name.
         /// </summary>
-        public String Name;
+        public string Name;
 
         /// <summary>
         /// Layers screen to world projection normal.

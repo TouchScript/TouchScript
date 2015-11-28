@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -53,7 +52,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>A unique string for a list of touches.</returns>
-        public static String GetPointsHash(IList<ITouch> touches)
+        public static string GetPointsHash(IList<ITouch> touches)
         {
             hashString.Remove(0, hashString.Length);
             for (var i = 0; i < touches.Count; i++)
