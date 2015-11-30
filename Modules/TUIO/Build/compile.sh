@@ -2,6 +2,7 @@ printf "\n\e[32mCompiling TUIOSharp.\e[39m\n"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SLN="$DIR/../TUIOsharp/TUIOsharp.sln"
+WIN="$(expr substr $(uname -s) 1 10)"
 
 # Mac
 if [ "$(uname)" == "Darwin" ]; then
@@ -9,7 +10,7 @@ if [ "$(uname)" == "Darwin" ]; then
 	/Applications/Unity/MonoDevelop.app/Contents/MacOS/mdtool build --t:Build --c:Release $SLN
 
 # Windows
-elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+elif [ "$WIN" == "MINGW32_NT" ] || [ "$WIN" == "MINGW64_NT" ]; then
     /c/Windows/Microsoft.NET/Framework/v4.0.30319/msbuild.exe $SLN -p:Configuration=Release -clp:ErrorsOnly
 fi
 
