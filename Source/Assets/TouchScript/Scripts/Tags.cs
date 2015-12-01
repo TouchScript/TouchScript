@@ -63,6 +63,9 @@ namespace TouchScript
                 if (string.IsNullOrEmpty(tag)) continue;
                 this.tags.Add(tag);
             }
+#if UNITY_EDITOR
+            syncTagList();
+#endif
         }
 
         public Tags(Tags tags, string add) : this(tags)
@@ -79,6 +82,9 @@ namespace TouchScript
         {
             if (tags == null) return;
             foreach (var tag in tags.tags) this.tags.Add(tag);
+#if UNITY_EDITOR
+            syncTagList();
+#endif
         }
 
         /// <summary>
@@ -93,6 +99,9 @@ namespace TouchScript
                 if (string.IsNullOrEmpty(tag)) continue;
                 this.tags.Add(tag);
             }
+#if UNITY_EDITOR
+            syncTagList();
+#endif
         }
 
         public Tags(params string[] tags) : this()
@@ -105,6 +114,9 @@ namespace TouchScript
                 if (string.IsNullOrEmpty(tag)) continue;
                 this.tags.Add(tag);
             }
+#if UNITY_EDITOR
+            syncTagList();
+#endif
         }
 
         /// <summary>
@@ -115,6 +127,9 @@ namespace TouchScript
         {
             if (string.IsNullOrEmpty(tag)) return;
             tags.Add(tag);
+#if UNITY_EDITOR
+            syncTagList();
+#endif
         }
 
         public Tags()
@@ -139,12 +154,14 @@ namespace TouchScript
         public void OnBeforeSerialize()
         {
 #if !UNITY_EDITOR
-            tagList = new List<string>(tags);
+            tagList.Clear();
+            tagList.AddRange(tags);
 #endif
         }
 
         public void OnAfterDeserialize()
         {
+            Debug.Log("DESERIALIZE");
             tags.Clear();
             foreach (var tag in tagList) tags.Add(tag);
         }
@@ -176,6 +193,20 @@ namespace TouchScript
             return stringValue;
         }
 
-#endregion
+        #endregion
+
+        #region Private functions
+
+#if UNITY_EDITOR
+        // When Tags is created in editor as a component's property need to copy all tags to tagList so Unity could serialize them.
+        private void syncTagList()
+        {
+            tagList.Clear();
+            tagList.AddRange(tags);
+            Debug.Log(tagList.Count);
+        }
+#endif
+
+        #endregion
     }
 }
