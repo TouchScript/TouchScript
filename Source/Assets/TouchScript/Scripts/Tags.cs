@@ -161,7 +161,6 @@ namespace TouchScript
 
         public void OnAfterDeserialize()
         {
-            Debug.Log("DESERIALIZE");
             tags.Clear();
             foreach (var tag in tagList) tags.Add(tag);
         }
@@ -203,7 +202,6 @@ namespace TouchScript
         {
             tagList.Clear();
             tagList.AddRange(tags);
-            Debug.Log(tagList.Count);
         }
 #endif
 
