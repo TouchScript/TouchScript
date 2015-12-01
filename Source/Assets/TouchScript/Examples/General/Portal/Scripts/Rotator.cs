@@ -1,15 +1,18 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
 
-namespace TouchScript.Examples.Portal 
+using UnityEngine;
+
+namespace TouchScript.Examples.Portal
 {
-	public class Rotator : MonoBehaviour 
-	{
-		public float RotationSpeed = 1f;
+    public class Rotator : MonoBehaviour
+    {
+        public float RotationSpeed = 1f;
 
-		void Update () 
-		{
-			transform.localRotation *= Quaternion.Euler(0, 0, Time.deltaTime * RotationSpeed);
-		}
-	}
+        void Update()
+        {
+            transform.localRotation *= Quaternion.Euler(0, 0, Time.deltaTime*RotationSpeed);
+        }
+    }
 }
