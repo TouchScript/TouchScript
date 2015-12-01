@@ -128,7 +128,7 @@ namespace TouchScript
         /// <param name="layer">The layer to add.</param>
         /// <param name="index">Layer index to add the layer to.</param>
         /// <returns>True if the layer was added.</returns>
-        bool AddLayer(TouchLayer layer, int index);
+        bool AddLayer(TouchLayer layer, int index, bool addIfExists = true);
 
         /// <summary>
         /// Removes a touch layer.

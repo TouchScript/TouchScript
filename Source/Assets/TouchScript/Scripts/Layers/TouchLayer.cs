@@ -121,7 +121,7 @@ namespace TouchScript.Layers
             if (!Application.isPlaying) return;
 
             layerProjectionParams = createProjectionParams();
-            TouchManager.Instance.AddLayer(this);
+            TouchManager.Instance.AddLayer(this, 0, false);
         }
 
         /// <summary>

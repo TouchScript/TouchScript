@@ -228,29 +228,37 @@ namespace TouchScript
         /// <inheritdoc />
         public bool AddLayer(TouchLayer layer)
         {
-            if (layer == null) return false;
-            if (layers.Contains(layer)) return true;
-            layers.Add(layer);
-            return true;
+            return AddLayer(layer, 0);
         }
 
         /// <inheritdoc />
-        public bool AddLayer(TouchLayer layer, int index)
+        public bool AddLayer(TouchLayer layer, int index, bool addIfExists = true)
         {
             if (layer == null) return false;
-            if (index >= layers.Count) return AddLayer(layer);
+
             var i = layers.IndexOf(layer);
-            if (i == -1)
+            if (i != -1)
             {
-                layers.Insert(index, layer);
-            }
-            else
-            {
-                if (index == i || i == index - 1) return true;
+                if (!addIfExists) return false;
                 layers.RemoveAt(i);
+            }
+            if (index <= 0)
+            {
+                layers.Insert(0, layer);
+                return i == -1;
+            }
+            if (index >= layers.Count)
+            {
+                layers.Add(layer);
+                return i == -1;
+            }
+            if (i != -1)
+            {
                 if (index < i) layers.Insert(index, layer);
                 else layers.Insert(index - 1, layer);
+                return false;
             }
+            layers.Insert(index, layer);
             return true;
         }
 
@@ -490,7 +498,7 @@ namespace TouchScript
 
             touchListPool.WarmUp(2);
             touchPointListPool.WarmUp(1);
-            intListPool.WarmUp(1);
+            intListPool.WarmUp(3);
             cancelledListPool.WarmUp(1);
 
 #if TOUCHSCRIPT_DEBUG
