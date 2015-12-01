@@ -1,11 +1,9 @@
 /*
  * @author Valentin Simonov / http://va.lent.in/
  */
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Hit;
@@ -214,13 +212,14 @@ namespace TouchScript
         private static ObjectPool<List<TouchPoint>> touchPointListPool = new ObjectPool<List<TouchPoint>>(1,
             () => new List<TouchPoint>(10), null, (l) => l.Clear());
 
-        private static ObjectPool<List<int>> intListPool = new ObjectPool<List<int>>(1, () => new List<int>(10), null,
+        private static ObjectPool<List<int>> intListPool = new ObjectPool<List<int>>(3, () => new List<int>(10), null,
             (l) => l.Clear());
 
         private static ObjectPool<List<CancelledTouch>> cancelledListPool = new ObjectPool<List<CancelledTouch>>(1,
             () => new List<CancelledTouch>(10), null, (l) => l.Clear());
 
         private int nextTouchId = 0;
+        private object touchLock = new object();
 
         #endregion
 
@@ -353,7 +352,7 @@ namespace TouchScript
         internal ITouch INTERNAL_BeginTouch(Vector2 position, Tags tags)
         {
             TouchPoint touch;
-            lock (touchesBegan)
+            lock (touchLock)
             {
                 touch = touchPointPool.Get();
                 touch.INTERNAL_Init(nextTouchId++, position, tags);
@@ -368,7 +367,7 @@ namespace TouchScript
         /// <param name="id">Touch id</param>
         internal void INTERNAL_UpdateTouch(int id)
         {
-            lock (touchesUpdated)
+            lock (touchLock)
             {
                 if (idToTouch.ContainsKey(id))
                 {
@@ -384,7 +383,7 @@ namespace TouchScript
 
         internal void INTERNAL_MoveTouch(int id, Vector2 position)
         {
-            lock (touchesUpdated)
+            lock (touchLock)
             {
                 TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
@@ -410,7 +409,7 @@ namespace TouchScript
         /// <inheritdoc />
         internal void INTERNAL_EndTouch(int id)
         {
-            lock (touchesEnded)
+            lock (touchLock)
             {
                 TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
@@ -439,7 +438,7 @@ namespace TouchScript
         /// <inheritdoc />
         internal void INTERNAL_CancelTouch(int id)
         {
-            lock (touchesCancelled)
+            lock (touchLock)
             {
                 TouchPoint touch;
                 if (!idToTouch.TryGetValue(id, out touch))
@@ -782,66 +781,72 @@ namespace TouchScript
         {
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
-            // need to copy buffers here since they might get updated during execution
-            if (touchesBegan.Count > 0)
+            // need to copy buffers since they might get updated during execution
+            List<TouchPoint> beganList = null;
+            List<int> updatedList = null;
+            List<int> endedList = null;
+            List<int> cancelledList = null;
+            List<CancelledTouch> manuallyCancelledList = null;
+            lock (touchLock)
             {
-                var updateList = touchPointListPool.Get();
-                lock (touchesBegan)
+                if (touchesBegan.Count > 0)
                 {
-                    updateList.AddRange(touchesBegan);
+                    beganList = touchPointListPool.Get();
+                    beganList.AddRange(touchesBegan);
                     touchesBegan.Clear();
                 }
-                updateBegan(updateList);
-                touchPointListPool.Release(updateList);
-            }
-
-            if (touchesUpdated.Count > 0)
-            {
-                var updateList = intListPool.Get();
-                lock (touchesUpdated)
+                if (touchesUpdated.Count > 0)
                 {
-                    updateList.AddRange(touchesUpdated);
+                    updatedList = intListPool.Get();
+                    updatedList.AddRange(touchesUpdated);
                     touchesUpdated.Clear();
                 }
-                updateUpdated(updateList);
-                intListPool.Release(updateList);
-            }
-
-            if (touchesEnded.Count > 0)
-            {
-                var updateList = intListPool.Get();
-                lock (touchesEnded)
+                if (touchesEnded.Count > 0)
                 {
-                    updateList.AddRange(touchesEnded);
+                    endedList = intListPool.Get();
+                    endedList.AddRange(touchesEnded);
                     touchesEnded.Clear();
                 }
-                updateEnded(updateList);
-                intListPool.Release(updateList);
-            }
-
-            if (touchesCancelled.Count > 0)
-            {
-                var updateList = intListPool.Get();
-                lock (touchesCancelled)
+                if (touchesCancelled.Count > 0)
                 {
-                    updateList.AddRange(touchesCancelled);
+                    cancelledList = intListPool.Get();
+                    cancelledList.AddRange(touchesCancelled);
                     touchesCancelled.Clear();
                 }
-                updateCancelled(updateList);
-                intListPool.Release(updateList);
-            }
-
-            if (touchesManuallyCancelled.Count > 0)
-            {
-                var updateList = cancelledListPool.Get();
-                lock (touchesManuallyCancelled)
+                if (touchesManuallyCancelled.Count > 0)
                 {
-                    updateList.AddRange(touchesManuallyCancelled);
+                    manuallyCancelledList = cancelledListPool.Get();
+                    manuallyCancelledList.AddRange(touchesManuallyCancelled);
                     touchesManuallyCancelled.Clear();
                 }
-                updateManuallyCancelled(updateList);
-                cancelledListPool.Release(updateList);
             }
+
+            if (beganList != null)
+            {
+                updateBegan(beganList);
+                touchPointListPool.Release(beganList);
+            }
+            if (updatedList != null)
+            {
+                updateUpdated(updatedList);
+                intListPool.Release(updatedList);
+            }
+            if (endedList != null)
+            {
+                updateEnded(endedList);
+                intListPool.Release(endedList);
+            }
+            if (cancelledList != null)
+            {
+                updateCancelled(cancelledList);
+                intListPool.Release(cancelledList);
+            }
+            if (manuallyCancelledList != null)
+            {
+                updateManuallyCancelled(manuallyCancelledList);
+                cancelledListPool.Release(manuallyCancelledList);
+            }
+            
 
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
