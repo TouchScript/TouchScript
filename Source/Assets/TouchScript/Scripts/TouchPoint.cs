@@ -47,7 +47,7 @@ namespace TouchScript
         public Tags Tags { get; private set; }
 
         /// <inheritdoc />
-        public IDictionary<string, System.Object> Properties
+        public IDictionary<string, object> Properties
         {
             get { return properties; }
         }
@@ -58,8 +58,7 @@ namespace TouchScript
 
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
-//        private bool isDirty;
-        private Dictionary<string, System.Object> properties;
+        private Dictionary<string, object> properties;
 
         #endregion
 
@@ -114,7 +113,6 @@ namespace TouchScript
         {
             Id = id;
             this.position = PreviousPosition = newPosition = position;
-//            isDirty = true;
             Tags = tags ?? Tags.EMPTY;
         }
 
