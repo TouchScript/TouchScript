@@ -207,7 +207,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler((p) => beginTouch(p, new Tags(MouseTags)), moveTouch, endTouch, cancelTouch);
+            mouseHandler = new MouseHandler((p) => beginTouch(p, MouseTags), moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
 
@@ -222,7 +222,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler((p) => beginTouch(p, new Tags(TouchTags)), moveTouch, endTouch, cancelTouch);
+            touchHandler = new TouchHandler((p) => beginTouch(p, TouchTags), moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
@@ -253,7 +253,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows7Touch()
         {
-            windows7TouchHandler = new Windows7TouchHandler((p, s) => beginTouch(p, new Tags(TouchTags)), moveTouch,
+            windows7TouchHandler = new Windows7TouchHandler((p, s) => beginTouch(p, TouchTags), moveTouch,
                 endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Windows 7 touch input.");
         }
@@ -274,11 +274,11 @@ namespace TouchScript.InputSources
                 switch (s)
                 {
                     case WindowsTouchHandler.TouchSource.Touch:
-                        return beginTouch(p, new Tags(TouchTags));
+                        return beginTouch(p, TouchTags);
                     case WindowsTouchHandler.TouchSource.Pen:
-                        return beginTouch(p, new Tags(PenTags));
+                        return beginTouch(p, PenTags);
                 }
-                return beginTouch(p, new Tags(MouseTags));
+                return beginTouch(p, MouseTags);
             }, moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Windows 8 touch input.");
         }

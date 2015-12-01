@@ -77,7 +77,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            mouseHandler = new MouseHandler((p) => beginTouch(p, new Tags(Tags)), moveTouch, endTouch, cancelTouch);
+            mouseHandler = new MouseHandler((p) => beginTouch(p,Tags), moveTouch, endTouch, cancelTouch);
         }
 
         /// <inheritdoc />

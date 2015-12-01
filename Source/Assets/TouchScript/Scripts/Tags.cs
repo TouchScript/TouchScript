@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Text;
 using UnityEngine;
 
 namespace TouchScript
@@ -13,8 +13,10 @@ namespace TouchScript
     /// Tags collection for touches.
     /// </summary>
     [Serializable]
-    public sealed class Tags
+    public sealed class Tags : ISerializationCallbackReceiver
     {
+        #region Constants
+
         /// <summary>
         /// Touch.
         /// </summary>
@@ -35,33 +37,39 @@ namespace TouchScript
         /// </summary>
         public const string INPUT_OBJECT = "Object";
 
-        /// <summary>
-        /// Windows native touch source.
-        /// </summary>
-        public const string SOURCE_WINDOWS = "Windows";
+        public static readonly Tags EMPTY = new Tags();
 
-        /// <summary>
-        /// TUIO touch source.
-        /// </summary>
-        public const string SOURCE_TUIO = "TUIO";
+        #endregion
 
-        /// <summary>
-        /// List of tags.
-        /// </summary>
-        public ICollection<string> TagList
-        {
-            get { return new ReadOnlyCollection<string>(tagList); }
-        }
+        #region Public properties
 
-        /// <summary>
-        /// Number of tags in this collection.
-        /// </summary>
-        public int Count
-        {
-            get { return tagList.Count; }
-        }
+        #endregion
+
+        #region Private variables
 
         [SerializeField] private List<string> tagList = new List<string>();
+        private HashSet<string> tags = new HashSet<string>();
+        private string stringValue;
+
+        #endregion
+
+        #region Constructors
+
+        public Tags(Tags tags, IEnumerable<string> add) : this(tags)
+        {
+            if (add == null) return;
+            foreach (var tag in add)
+            {
+                if (string.IsNullOrEmpty(tag)) continue;
+                this.tags.Add(tag);
+            }
+        }
+
+        public Tags(Tags tags, string add) : this(tags)
+        {
+            if (string.IsNullOrEmpty(add)) return;
+            this.tags.Add(add);
+        }
 
         /// <summary>
         /// Creates an instance of Tags.
@@ -70,11 +78,7 @@ namespace TouchScript
         public Tags(Tags tags) : this()
         {
             if (tags == null) return;
-            var count = tags.tagList.Count;
-            for (var i = 0; i < count; i++)
-            {
-                AddTag(tags.tagList[i]);
-            }
+            foreach (var tag in tags.tags) this.tags.Add(tag);
         }
 
         /// <summary>
@@ -83,9 +87,23 @@ namespace TouchScript
         /// <param name="tags">Tags collection to copy.</param>
         public Tags(IEnumerable<string> tags) : this()
         {
+            if (tags == null) return;
             foreach (var tag in tags)
             {
-                AddTag(tag);
+                if (string.IsNullOrEmpty(tag)) continue;
+                this.tags.Add(tag);
+            }
+        }
+
+        public Tags(params string[] tags) : this()
+        {
+            if (tags == null) return;
+            var count = tags.Length;
+            for (var i = 0; i < count; i++)
+            {
+                var tag = tags[i];
+                if (string.IsNullOrEmpty(tag)) continue;
+                this.tags.Add(tag);
             }
         }
 
@@ -95,33 +113,17 @@ namespace TouchScript
         /// <param name="tag">Tag to add to the new collection.</param>
         public Tags(string tag) : this()
         {
-            tagList.Add(tag);
-        }
-
-        /// <summary>
-        /// Creates an instance of Tags.
-        /// </summary>
-        public Tags() {}
-
-        /// <summary>
-        /// Adds a tag to this collection.
-        /// </summary>
-        /// <param name="tag">Tag to add.</param>
-        public void AddTag(string tag)
-        {
             if (string.IsNullOrEmpty(tag)) return;
-            if (tagList.Contains(tag)) return;
-            tagList.Add(tag);
+            tags.Add(tag);
         }
 
-        /// <summary>
-        /// Removes a tag from this collection.
-        /// </summary>
-        /// <param name="tag">Tag to remove.</param>
-        public void RemoveTag(string tag)
+        public Tags()
         {
-            tagList.Remove(tag);
         }
+
+        #endregion
+
+        #region Public methods
 
         /// <summary>
         /// Checks if this collection contains a tag.
@@ -130,13 +132,50 @@ namespace TouchScript
         /// <returns>True if tag is in this collection; false otherwise.</returns>
         public bool HasTag(string tag)
         {
-            return tagList.Contains(tag);
+            return tags.Contains(tag);
+        }
+
+
+        public void OnBeforeSerialize()
+        {
+#if !UNITY_EDITOR
+            tagList = new List<string>(tags);
+#endif
+        }
+
+        public void OnAfterDeserialize()
+        {
+            tags.Clear();
+            foreach (var tag in tagList) tags.Add(tag);
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return String.Join(", ", tagList.ToArray());
+            if (stringValue == null)
+            {
+                if (tags.Count == 0)
+                {
+                    stringValue = "";
+                }
+                else if (tags.Count == 1)
+                {
+                    foreach (var tag in tags) stringValue = tag; // doh!?
+                }
+                else
+                {
+                    var sb = new StringBuilder(100);
+                    foreach (var tag in tags)
+                    {
+                        sb.Append(tag);
+                        sb.Append(", ");
+                    }
+                    stringValue = sb.ToString(0, sb.Length - 2);
+                }
+            }
+            return stringValue;
         }
+
+#endregion
     }
 }

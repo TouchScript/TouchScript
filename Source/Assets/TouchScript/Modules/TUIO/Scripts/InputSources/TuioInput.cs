@@ -19,6 +19,8 @@ namespace TouchScript.InputSources
     {
         #region Constants
 
+        public const string SOURCE_TUIO = "TUIO";
+
         /// <summary>
         /// Type of TUIO input object.
         /// </summary>
@@ -119,13 +121,13 @@ namespace TouchScript.InputSources
         private List<TuioObjectMapping> tuioObjectMappings = new List<TuioObjectMapping>();
 
         [SerializeField]
-        private Tags cursorTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+        private Tags cursorTags = new Tags(SOURCE_TUIO, Tags.INPUT_TOUCH);
 
         [SerializeField]
-        private Tags blobTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_TOUCH});
+        private Tags blobTags = new Tags(SOURCE_TUIO, Tags.INPUT_TOUCH);
 
         [SerializeField]
-        private Tags objectTags = new Tags(new List<string>() {Tags.SOURCE_TUIO, Tags.INPUT_OBJECT});
+        private Tags objectTags = new Tags(SOURCE_TUIO, Tags.INPUT_OBJECT);
 
         private TuioServer server;
         private CursorProcessor cursorProcessor;
@@ -272,7 +274,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                cursorToInternalId.Add(entity, beginTouch(new Vector2(x, y), new Tags(CursorTags)));
+                cursorToInternalId.Add(entity, beginTouch(new Vector2(x, y), CursorTags));
             }
         }
 
@@ -311,7 +313,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                var touch = beginTouch(new Vector2(x, y), new Tags(BlobTags));
+                var touch = beginTouch(new Vector2(x, y), BlobTags);
                 updateBlobProperties(touch, entity);
                 blobToInternalId.Add(entity, touch);
             }
@@ -353,10 +355,9 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                var touch = beginTouch(new Vector2(x, y), new Tags(ObjectTags));
+                var touch = beginTouch(new Vector2(x, y), new Tags(ObjectTags, getTagById(entity.ClassId)));
                 updateObjectProperties(touch, entity);
                 objectToInternalId.Add(entity, touch);
-                touch.Tags.AddTag(getTagById(entity.ClassId));
             }
         }
 

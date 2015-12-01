@@ -115,7 +115,7 @@ namespace TouchScript
             Id = id;
             this.position = PreviousPosition = newPosition = position;
 //            isDirty = true;
-            Tags = tags ?? new Tags();
+            Tags = tags ?? Tags.EMPTY;
         }
 
         /// <summary>

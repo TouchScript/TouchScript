@@ -74,7 +74,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            touchHandler = new TouchHandler((p) => beginTouch(p, new Tags(Tags)), moveTouch, endTouch, cancelTouch);
+            touchHandler = new TouchHandler((p) => beginTouch(p, Tags), moveTouch, endTouch, cancelTouch);
 
             base.OnEnable();
         }
