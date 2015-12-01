@@ -40,6 +40,8 @@ namespace TouchScript
             }
         }
 
+        public IGestureDelegate GlobalGestureDelegate { get; set; }
+
         #endregion
 
         #region Private variables
@@ -354,7 +356,7 @@ namespace TouchScript
                     if (gesture == activeGesture) continue;
                     if ((activeGesture.State == Gesture.GestureState.Began ||
                          activeGesture.State == Gesture.GestureState.Changed) &&
-                        (activeGesture.CanPreventGesture(gesture)))
+                        (canPreventGesture(activeGesture, gesture)))
                     {
                         // there's a started gesture which prevents this one
                         canReceiveTouches = false;
@@ -369,7 +371,7 @@ namespace TouchScript
                 for (var j = 0; j < touchCount; j++)
                 {
                     var touch = targetList[j];
-                    if (gesture.ShouldReceiveTouch(touch)) touchList.Add(touch);
+                    if (shouldReceiveTouch(gesture, touch)) touchList.Add(touch);
                 }
                 if (touchList.Count > 0)
                 {
@@ -473,7 +475,7 @@ namespace TouchScript
 
         private bool recognizeGestureIfNotPrevented(Gesture gesture)
         {
-            if (!gesture.ShouldBegin()) return false;
+            if (!shouldBegin(gesture)) return false;
 
             var gesturesToFail = gestureListPool.Get();
             var gesturesInHierarchy = gestureListPool.Get();
@@ -490,7 +492,7 @@ namespace TouchScript
                 if (otherGesture.State == Gesture.GestureState.Began ||
                     otherGesture.State == Gesture.GestureState.Changed)
                 {
-                    if (otherGesture.CanPreventGesture(gesture))
+                    if (canPreventGesture(otherGesture, gesture))
                     {
                         canRecognize = false;
                         break;
@@ -498,7 +500,7 @@ namespace TouchScript
                 }
                 else
                 {
-                    if (gesture.CanPreventGesture(otherGesture))
+                    if (canPreventGesture(gesture, otherGesture))
                     {
                         gesturesToFail.Add(otherGesture);
                     }
@@ -523,6 +525,27 @@ namespace TouchScript
         private void failGesture(Gesture gesture)
         {
             gesture.INTERNAL_SetState(Gesture.GestureState.Failed);
+        }
+
+        private bool shouldReceiveTouch(Gesture gesture, ITouch touch)
+        {
+            bool result = true;
+            if (GlobalGestureDelegate != null) result = GlobalGestureDelegate.ShouldReceiveTouch(gesture, touch);
+            return result && gesture.ShouldReceiveTouch(touch);
+        }
+
+        private bool shouldBegin(Gesture gesture)
+        {
+            bool result = true;
+            if (GlobalGestureDelegate != null) result = GlobalGestureDelegate.ShouldBegin(gesture);
+            return result && gesture.ShouldBegin();
+        }
+
+        private bool canPreventGesture(Gesture first, Gesture second)
+        {
+            bool result = true;
+            if (GlobalGestureDelegate != null) result = !GlobalGestureDelegate.ShouldRecognizeSimultaneously(first, second);
+            return result && first.CanPreventGesture(second);
         }
 
         #endregion

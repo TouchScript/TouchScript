@@ -7,5 +7,10 @@ namespace TouchScript
     /// <summary>
     /// Core manager which controls gesture recognition in hierarchy.
     /// </summary>
-    public interface IGestureManager {}
+    public interface IGestureManager 
+    {
+        
+        IGestureDelegate GlobalGestureDelegate { get; set; }
+        
+    }
 }
