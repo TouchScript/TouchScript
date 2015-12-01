@@ -176,7 +176,7 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void setName()
         {
-            if (String.IsNullOrEmpty(Name)) Name = "Layer";
+            if (string.IsNullOrEmpty(Name)) Name = "Layer";
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using TouchScript.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -60,7 +61,7 @@ namespace TouchScript.Gestures.UI
             {
                 var touch = touches[i];
                 var data = getPointerData(touch);
-                if (IsTouchOnTarget(touch))
+                if (TouchUtils.IsTouchOnTarget(touch, cachedTransform))
                 {
                     if (!data.OnTarget)
                     {

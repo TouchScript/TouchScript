@@ -106,7 +106,7 @@ namespace TouchScript.Layers
                 if (instance == null) instance = this;
                 if (instance != this)
                 {
-                    Debug.LogError("Only one instance ot UILayer should exist in a scene.");
+                    Debug.LogWarning("[TouchScript] Only one instance of UILayer should exist in a scene. Destroying.");
                     Destroy(this);
                     return;
                 }

@@ -444,14 +444,6 @@ namespace TouchScript.Gestures
             return friendlyGestures.Contains(gesture);
         }
 
-        public bool IsTouchOnTarget(ITouch touch)
-        {
-            TouchHit hit;
-            if ((touch.Layer.Hit(touch.Position, out hit) == TouchLayer.LayerHitResult.Hit) &&
-                (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform))) return true;
-            return false;
-        }
-
         /// <summary>
         /// Gets result of casting a ray from gesture touch points' centroid screen position.
         /// </summary>
@@ -590,7 +582,7 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected virtual void Awake()
         {
-            cachedTransform = GetComponent<Transform>();
+            cachedTransform = transform;
 
             var count = friendlyGestures.Count;
             for (var i = 0; i < count; i++)
