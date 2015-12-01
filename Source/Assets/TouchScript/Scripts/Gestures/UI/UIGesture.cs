@@ -26,7 +26,7 @@ namespace TouchScript.Gestures.UI
         public override bool CanPreventGesture(Gesture gesture)
         {
             if (Delegate == null) return false;
-            return Delegate.ShouldRecognizeSimultaneously(this, gesture);
+            return !Delegate.ShouldRecognizeSimultaneously(this, gesture);
         }
 
         /// <inheritdoc />
