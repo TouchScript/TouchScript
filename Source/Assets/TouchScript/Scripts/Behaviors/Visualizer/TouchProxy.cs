@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,25 +12,34 @@ namespace TouchScript.Behaviors.Visualizer
     {
         public Text Text;
 
+        private StringBuilder stringBuilder = new StringBuilder(64);
+
         #region Protected methods
 
         protected override void updateOnce(ITouch touch)
         {
             base.updateOnce(touch);
 
-            gameObject.name = "Touch id: " + touch.Id;
+            stringBuilder.Length = 0;
+            stringBuilder.Append("Touch id: ");
+            stringBuilder.Append(touch.Id);
+            gameObject.name = stringBuilder.ToString();
 
             if (Text == null) return;
             if (!ShowTouchId && !ShowTags) return;
 
-            string text = "";
-            if (ShowTouchId) text += "Id: " + touch.Id;
+            stringBuilder.Length = 0;
+            if (ShowTouchId) {
+                stringBuilder.Append("Id: ");
+                stringBuilder.Append(touch.Id);
+            };
             if (ShowTags)
             {
-                if (text != "") text += "\n";
-                text += "Tags: " + touch.Tags.ToString();
+                if (stringBuilder.Length > 0) stringBuilder.Append("\n");
+                stringBuilder.Append("Tags: ");
+                stringBuilder.Append(touch.Tags.ToString());
             }
-            Text.text = text;
+            Text.text = stringBuilder.ToString();
         }
 
         #endregion
