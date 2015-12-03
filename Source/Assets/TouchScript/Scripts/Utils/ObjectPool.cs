@@ -31,7 +31,7 @@ namespace TouchScript.Utils
         }
 
         public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet,
-            UnityAction<T> actionOnRelease)
+                          UnityAction<T> actionOnRelease)
         {
             stack = new Stack<T>(capacity);
             onNew = actionNew;

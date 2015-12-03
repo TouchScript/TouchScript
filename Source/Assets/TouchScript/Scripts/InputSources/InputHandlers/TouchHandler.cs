@@ -9,12 +9,21 @@ using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
 {
+    /// <summary>
+    /// Unity touch handling implementation which can be embedded and controlled from other (input) classes.
+    /// </summary>
     public class TouchHandler : IDisposable
     {
-
         #region Public properties
 
-        public bool HasTouches { get { return touchesNum > 0; } }
+        /// <summary>
+        /// Gets a value indicating whether there any active touches.
+        /// </summary>
+        /// <value> <c>true</c> if this instance has active touches; otherwise, <c>false</c>. </value>
+        public bool HasTouches
+        {
+            get { return touchesNum > 0; }
+        }
 
         #endregion
 
@@ -31,8 +40,15 @@ namespace TouchScript.InputSources.InputHandlers
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchHandler"/> class.
+        /// </summary>
+        /// <param name="beginTouch"> A function called when a new touch is detected. As <see cref="InputSource.beginTouch(Vector2)"/> this function must accept a Vector2 position of the new touch and return an instance of <see cref="ITouch"/>. </param>
+        /// <param name="moveTouch"> A function called when a touch is moved. As <see cref="InputSource.moveTouch"/> this function must accept an int id and a Vector2 position. </param>
+        /// <param name="endTouch"> A function called when a touch is lifted off. As <see cref="InputSource.endTouch"/> this function must accept an int id. </param>
+        /// <param name="cancelTouch"> A function called when a touch is cancelled. As <see cref="InputSource.cancelTouch"/> this function must accept an int id. </param>
         public TouchHandler(Func<Vector2, ITouch> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
-            Action<int> cancelTouch)
+                            Action<int> cancelTouch)
         {
             this.beginTouch = beginTouch;
             this.moveTouch = moveTouch;
@@ -42,6 +58,9 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Public methods
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         public void Update()
         {
             for (var i = 0; i < Input.touchCount; ++i)
@@ -111,7 +130,7 @@ namespace TouchScript.InputSources.InputHandlers
                         }
                         break;
                     case TouchPhase.Stationary:
-                        if (touchIds.Contains(t.fingerId)) { }
+                        if (touchIds.Contains(t.fingerId)) {}
                         else
                         {
                             touchIds.Add(t.fingerId);
@@ -123,6 +142,7 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             foreach (var touchState in touchStates) internalCancelTouch(touchState.Value.Id);
@@ -153,7 +173,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         #endregion
 
-        internal struct TouchState
+        private struct TouchState
         {
             public int Id;
             public TouchPhase Phase;

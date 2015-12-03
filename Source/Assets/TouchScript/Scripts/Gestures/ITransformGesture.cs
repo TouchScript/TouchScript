@@ -30,7 +30,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Applies gesture's transform for this frame to target Transform.
         /// </summary>
-        /// <param name="target">Object to transform.</param>
+        /// <param name="target"> Object to transform. </param>
         void ApplyTransform(Transform target);
     }
 }

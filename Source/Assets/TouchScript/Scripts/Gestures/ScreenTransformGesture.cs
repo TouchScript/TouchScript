@@ -22,7 +22,7 @@ namespace TouchScript.Gestures
         {
             if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
             if (!Mathf.Approximately(DeltaRotation, 0f))
-                target.rotation = Quaternion.Euler(0, 0, DeltaRotation)*target.rotation;
+                target.rotation = Quaternion.Euler(0, 0, DeltaRotation) * target.rotation;
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
 
@@ -31,22 +31,25 @@ namespace TouchScript.Gestures
         #region Protected methods
 
         /// <inheritdoc />
-        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
+        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+                                            Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
             var newScreenDelta = newScreenPos2 - newScreenPos1;
             return (Mathf.Atan2(newScreenDelta.y, newScreenDelta.x) -
-                    Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x))*Mathf.Rad2Deg;
+                    Mathf.Atan2(oldScreenDelta.y, oldScreenDelta.x)) * Mathf.Rad2Deg;
         }
 
         /// <inheritdoc />
-        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
+        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+                                           Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
-            return (newScreenPos2 - newScreenPos1).magnitude/(oldScreenPos2 - oldScreenPos1).magnitude;
+            return (newScreenPos2 - newScreenPos1).magnitude / (oldScreenPos2 - oldScreenPos1).magnitude;
         }
 
         /// <inheritdoc />
-        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
+        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos,
+                                                         ProjectionParams projectionParams)
         {
             if (isTransforming)
             {
@@ -64,11 +67,12 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
+                                                         Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             if (isTransforming)
             {
-                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2)*.5f, dR, dS);
+                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2) * .5f, dR, dS);
                 return new Vector3(newScreenPos1.x - transformedPoint.x, newScreenPos1.y - transformedPoint.y, 0);
             }
 
@@ -77,7 +81,7 @@ namespace TouchScript.Gestures
             {
                 isTransforming = true;
                 oldScreenPos1 = newScreenPos1 - screenPixelTranslationBuffer;
-                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2)*.5f, dR, dS);
+                var transformedPoint = scaleAndRotate(oldScreenPos1, (oldScreenPos1 + oldScreenPos2) * .5f, dR, dS);
                 return new Vector3(newScreenPos1.x - transformedPoint.x, newScreenPos1.y - transformedPoint.y, 0);
             }
 
@@ -92,7 +96,7 @@ namespace TouchScript.Gestures
         {
             var delta = point - center;
             if (dR != 0) delta = TwoD.Rotate(delta, dR);
-            if (dS != 0) delta = delta*dS;
+            if (dS != 0) delta = delta * dS;
             return center + delta;
         }
 

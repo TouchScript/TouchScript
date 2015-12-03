@@ -9,29 +9,55 @@ using UnityEngine;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Processes Windows input events: mouse, touch and pen. Works with both Windows 7 and Windows 8.
-    /// Known issues:
-    /// <list type="bullet">
-    ///     <item>Touch and pen input doesn't work in the editor.</item>
-    /// </list>
+    /// Processes standard input events (mouse, touch, pen) on all platforms.
+    /// Initializes proper inputs automatically. Replaces old Mobile and Mouse inputs.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Standard Input")]
     public sealed class StandardInput : InputSource
     {
         #region Constants
 
+        /// <summary>
+        /// Touch API to use on Windows 8 and later OS versions.
+        /// </summary>
         public enum Windows8TouchAPIType
         {
+            /// <summary>
+            /// Windows 8 WM_POINTER API.
+            /// </summary>
             Windows8,
+
+            /// <summary>
+            /// Windows 7 WM_TOUCH API.
+            /// </summary>
             Windows7,
+
+            /// <summary>
+            /// Built-in Unity 5 WM_TOUCH implementation.
+            /// </summary>
             Unity,
+
+            /// <summary>
+            /// Don't initialize touch input at all.
+            /// </summary>
             None
         }
 
+        /// <summary>
+        /// Touch API to use on Windows 7.
+        /// </summary>
         public enum Windows7TouchAPIType
         {
             Windows7,
+
+            /// <summary>
+            /// Built-in Unity 5 WM_TOUCH implementation.
+            /// </summary>
             Unity,
+
+            /// <summary>
+            /// Don't initialize touch input at all.
+            /// </summary>
             None
         }
 
@@ -59,12 +85,39 @@ namespace TouchScript.InputSources
         /// </summary>
         public Tags PenTags = new Tags(Tags.INPUT_PEN);
 
+        /// <summary>
+        /// Touch API to use on Windows 8.
+        /// </summary>
         public Windows8TouchAPIType Windows8Touch = Windows8TouchAPIType.Windows8;
+
+        /// <summary>
+        /// Touch API to use on Windows 7.
+        /// </summary>
         public Windows7TouchAPIType Windows7Touch = Windows7TouchAPIType.Windows7;
+
+        /// <summary>
+        /// Initialize touch input in WebPlayer or not.
+        /// </summary>
         public bool WebPlayerTouch = true;
+
+        /// <summary>
+        /// Initialize touch input in WebGL or not.
+        /// </summary>
         public bool WebGLTouch = true;
+
+        /// <summary>
+        /// Initialize mouse input on Windows 8+ or not.
+        /// </summary>
         public bool Windows8Mouse = true;
+
+        /// <summary>
+        /// Initialize mouse input on Windows 7 or not.
+        /// </summary>
         public bool Windows7Mouse = true;
+
+        /// <summary>
+        /// Initialize mouse input on UWP or not.
+        /// </summary>
         public bool UniversalWindowsMouse = true;
 
         #endregion
@@ -83,6 +136,7 @@ namespace TouchScript.InputSources
 
         #region Public methods
 
+        /// <inheritdoc />
         public override void UpdateInput()
         {
             base.UpdateInput();

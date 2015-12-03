@@ -87,9 +87,11 @@ namespace TouchScript.Layers
 
         #region Private variables
 
-        [SerializeField] private LayerType type = LayerType.MainCamera;
+        [SerializeField]
+        private LayerType type = LayerType.MainCamera;
 
-        [SerializeField] private Camera _camera;
+        [SerializeField]
+        private Camera _camera;
 
         private Transform cameraTransform;
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);

@@ -18,36 +18,40 @@ namespace TouchScript.Behaviors
     {
         #region Public properties
 
-        /// <summary> 
-        /// Name of Unity Horizontal axis. 
+        /// <summary>
+        /// Gets or sets the name of Unity horizontal axis. Required to be compatible with other input.
         /// </summary>
+        /// <value> The name of Unity horizontal axis. </value>
         public string HorizontalAxis
         {
             get { return horizontalAxis; }
             set { horizontalAxis = value; }
         }
 
-        /// <summary> 
-        /// Name of Unity Vertical axis. 
+        /// <summary>
+        /// Gets or sets the name of Unity vertical axis.  Required to be compatible with other input.
         /// </summary>
+        /// <value> The name of Unity vertical axis. </value>
         public string VerticalAxis
         {
             get { return verticalAxis; }
             set { verticalAxis = value; }
         }
 
-        /// <summary> 
-        /// Name of Unity Submit button. 
+        /// <summary>
+        /// Gets or sets the name of Unity submit button. Required to be compatible with other input.
         /// </summary>
+        /// <value> The name of Unity submit button. </value>
         public string SubmitButton
         {
             get { return submitButton; }
             set { submitButton = value; }
         }
 
-        /// <summary> 
-        /// Name of Unity Cancel button. 
+        /// <summary>
+        /// Gets or sets the name of Unity cancel button. Required to be compatible with other input.
         /// </summary>
+        /// <value> The name of Unity cancel button. </value>
         public string CancelButton
         {
             get { return cancelButton; }
@@ -60,20 +64,25 @@ namespace TouchScript.Behaviors
 
         protected Dictionary<int, PointerEventData> pointerEvents = new Dictionary<int, PointerEventData>();
 
-        [SerializeField] private string horizontalAxis = "Horizontal";
+        [SerializeField]
+        private string horizontalAxis = "Horizontal";
 
-        [SerializeField] private string verticalAxis = "Vertical";
+        [SerializeField]
+        private string verticalAxis = "Vertical";
 
-        [SerializeField] private string submitButton = "Submit";
+        [SerializeField]
+        private string submitButton = "Submit";
 
-        [SerializeField] private string cancelButton = "Cancel";
+        [SerializeField]
+        private string cancelButton = "Cancel";
 
-        [SerializeField] private float inputActionsPerSecond = 10f;
+        [SerializeField]
+        private float inputActionsPerSecond = 10f;
 
-        [SerializeField] private float repeatDelay = 0.5f;
+        [SerializeField]
+        private float repeatDelay = 0.5f;
 
         private float nextActionTime;
-
         private MoveDirection lastMoveDirection;
         private float lastMoveStartTime;
 
@@ -183,6 +192,10 @@ namespace TouchScript.Behaviors
 
         #region Protected functions
 
+        /// <summary>
+        /// Does a raycast with pointer data.
+        /// </summary>
+        /// <param name="pointerEvent"> Pointer data. </param>
         protected void raycastPointer(PointerEventData pointerEvent)
         {
             eventSystem.RaycastAll(pointerEvent, m_RaycastResultCache);
@@ -191,6 +204,11 @@ namespace TouchScript.Behaviors
             m_RaycastResultCache.Clear();
         }
 
+        /// <summary>
+        /// Initializes pointer data for a touch.
+        /// </summary>
+        /// <param name="touch"> The touch to initialize pointer data from. </param>
+        /// <returns> Pointer data for the touch. </returns>
         protected PointerEventData initPointerData(ITouch touch)
         {
             PointerEventData pointerEvent;
@@ -207,6 +225,10 @@ namespace TouchScript.Behaviors
             return pointerEvent;
         }
 
+        /// <summary>
+        /// Injects the pointer into UI.
+        /// </summary>
+        /// <param name="pointerEvent"> The pointer data to inject. </param>
         protected void injectPointer(PointerEventData pointerEvent)
         {
             pointerEvent.pointerPressRaycast = pointerEvent.pointerCurrentRaycast;
@@ -244,6 +266,11 @@ namespace TouchScript.Behaviors
                 ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.initializePotentialDrag);
         }
 
+        /// <summary>
+        /// Updates pointer data for touch.
+        /// </summary>
+        /// <param name="touch"> The touch. </param>
+        /// <returns> Updated pointer data. </returns>
         protected PointerEventData updatePointerData(ITouch touch)
         {
             PointerEventData pointerEvent;
@@ -255,6 +282,10 @@ namespace TouchScript.Behaviors
             return pointerEvent;
         }
 
+        /// <summary>
+        /// Moves injected pointer in UI.
+        /// </summary>
+        /// <param name="pointerEvent"> The pointer data. </param>
         protected void movePointer(PointerEventData pointerEvent)
         {
             var targetGO = pointerEvent.pointerCurrentRaycast.gameObject;
@@ -289,6 +320,10 @@ namespace TouchScript.Behaviors
             }
         }
 
+        /// <summary>
+        /// Sends ended event for injected pointer.
+        /// </summary>
+        /// <param name="pointerEvent"> The pointer data. </param>
         protected void endPointer(PointerEventData pointerEvent)
         {
             var currentOverGo = pointerEvent.pointerCurrentRaycast.gameObject;
@@ -325,6 +360,13 @@ namespace TouchScript.Behaviors
             removePointerData(pointerEvent);
         }
 
+        /// <summary>
+        /// Gets pointer data for a touch.
+        /// </summary>
+        /// <param name="id"> Touch id. </param>
+        /// <param name="data"> Pointer data. </param>
+        /// <param name="create"> If set to <c>true</c> not found pointer data is created. </param>
+        /// <returns><c>true</c> if pointer data is found or created; <c>false</c> otherwise.</returns>
         protected bool getPointerData(int id, out PointerEventData data, bool create)
         {
             if (!pointerEvents.TryGetValue(id, out data) && create)
@@ -339,11 +381,20 @@ namespace TouchScript.Behaviors
             return false;
         }
 
+        /// <summary>
+        /// Removes pointer data.
+        /// </summary>
+        /// <param name="data"> The data. </param>
         protected void removePointerData(PointerEventData data)
         {
             pointerEvents.Remove(data.pointerId);
         }
 
+        /// <summary>
+        /// Gets the last pointer event data.
+        /// </summary>
+        /// <param name="id"> Touch id. </param>
+        /// <returns> Pointer data. </returns>
         protected PointerEventData getLastPointerEventData(int id)
         {
             PointerEventData data;
@@ -351,6 +402,9 @@ namespace TouchScript.Behaviors
             return data;
         }
 
+        /// <summary>
+        /// Clears UI selection.
+        /// </summary>
         protected void clearSelection()
         {
             var baseEventData = GetBaseEventData();
@@ -365,6 +419,11 @@ namespace TouchScript.Behaviors
             eventSystem.SetSelectedGameObject(null, baseEventData);
         }
 
+        /// <summary>
+        /// Deselects if selection changed.
+        /// </summary>
+        /// <param name="currentOverGo"> GameObject which has the touch over it. </param>
+        /// <param name="pointerEvent"> Pointer data for the touch. </param>
         protected void deselectIfSelectionChanged(GameObject currentOverGo, BaseEventData pointerEvent)
         {
             // Selection tracking
@@ -413,7 +472,7 @@ namespace TouchScript.Behaviors
             if (!useDragThreshold)
                 return true;
 
-            return (pressPos - currentPos).sqrMagnitude >= threshold*threshold;
+            return (pressPos - currentPos).sqrMagnitude >= threshold * threshold;
         }
 
         private bool sendSubmitEventToSelectedObject()
@@ -480,7 +539,7 @@ namespace TouchScript.Behaviors
             {
                 ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, ExecuteEvents.moveHandler);
             }
-            nextActionTime = time + 1f/inputActionsPerSecond;
+            nextActionTime = time + 1f / inputActionsPerSecond;
             return axisEventData.used;
         }
 
@@ -501,37 +560,25 @@ namespace TouchScript.Behaviors
         private void touchesBeganHandler(object sender, TouchEventArgs touchEventArgs)
         {
             var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++)
-            {
-                processBegan(touches[i]);
-            }
+            for (var i = 0; i < touches.Count; i++) processBegan(touches[i]);
         }
 
         private void touchesMovedHandler(object sender, TouchEventArgs touchEventArgs)
         {
             var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++)
-            {
-                processMove(touches[i]);
-            }
+            for (var i = 0; i < touches.Count; i++) processMove(touches[i]);
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs touchEventArgs)
         {
             var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++)
-            {
-                processEnded(touches[i]);
-            }
+            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs touchEventArgs)
         {
             var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++)
-            {
-                processEnded(touches[i]);
-            }
+            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
         }
 
         #endregion

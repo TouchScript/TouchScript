@@ -10,7 +10,7 @@ using UnityEngine;
 namespace TouchScript.Behaviors
 {
     /// <summary>
-    /// Component which transforms an object according to events from gestures.
+    /// Component which transforms an object according to events from transform gestures: <see cref="TransformGesture"/>, <see cref="ScreenTransformGesture"/>, <see cref="PinnedTransformGesture"/> and others.
     /// </summary>
     [AddComponentMenu("TouchScript/Behaviors/Transformer")]
     public class Transformer : MonoBehaviour

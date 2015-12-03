@@ -9,12 +9,17 @@ using UnityEngine;
 namespace TouchScript.Behaviors.Visualizer
 {
     /// <summary>
-    /// Visual debugger to show touches as GUI elements.
+    /// <para>Touch visualizer which shows touch circles with debug text using Unity UI.</para>
+    /// <para>The script should be placed on an element with RectTransform or a Canvas. A reference prefab is provided in TouchScript package.</para>
     /// </summary>
-	public class TouchVisualizer : MonoBehaviour
+    public class TouchVisualizer : MonoBehaviour
     {
         #region Public properties
 
+        /// <summary>
+        /// Gets or sets touch UI element prefab which represents a touch on screen.
+        /// </summary>
+        /// <value> A prefab with a script derived from TouchProxyBase. </value>
         public TouchProxyBase TouchProxy
         {
             get { return touchProxy; }
@@ -26,8 +31,9 @@ namespace TouchScript.Behaviors.Visualizer
         }
 
         /// <summary>
-        /// Show touch id near touch circles.
+        /// Gets or sets a value indicating whether touch id text should be displayed on screen.
         /// </summary>
+        /// <value> <c>true</c> if touch id text should be displayed on screen; otherwise, <c>false</c>. </value>
         public bool ShowTouchId
         {
             get { return showTouchId; }
@@ -35,24 +41,29 @@ namespace TouchScript.Behaviors.Visualizer
         }
 
         /// <summary>
-        /// Show tag list near touch circles.
+        /// Gets or sets a value indicating whether touch tags text should be displayed on screen.
         /// </summary>
+        /// <value> <c>true</c> if touch tags text should be displayed on screen; otherwise, <c>false</c>. </value>
         public bool ShowTags
         {
             get { return showTags; }
             set { showTags = value; }
         }
 
-        /// <summary>Gets or sets whether <see cref="TouchDebugger"/> is using DPI to scale touch cursors.</summary>
-        /// <value><c>true</c> if dpi value is used; otherwise, <c>false</c>.</value>
+        /// <summary>
+        /// Gets or sets whether <see cref="TouchVisualizer"/> is using DPI to scale touch cursors.
+        /// </summary>
+        /// <value> <c>true</c> if DPI value is used; otherwise, <c>false</c>. </value>
         public bool UseDPI
         {
             get { return useDPI; }
             set { useDPI = value; }
         }
 
-        /// <summary>Gets or sets the size of touch cursors in cm.</summary>
-        /// <value>The size of touch cursors in cm.</value>
+        /// <summary>
+        /// Gets or sets the size of touch cursors in cm. This value is only used when <see cref="UseDPI"/> is set to <c>true</c>.
+        /// </summary>
+        /// <value> The size of touch cursors in cm. </value>
         public float TouchSize
         {
             get { return touchSize; }
@@ -82,7 +93,6 @@ namespace TouchScript.Behaviors.Visualizer
         private RectTransform rect;
         private ObjectPool<TouchProxyBase> pool;
         private Dictionary<int, TouchProxyBase> proxies = new Dictionary<int, TouchProxyBase>(10);
-        private float textureDPI, scale, dpi, shadowOffset;
 
         #endregion
 
@@ -138,10 +148,7 @@ namespace TouchScript.Behaviors.Visualizer
 
         private int getTouchSize()
         {
-            if (useDPI)
-            {
-                return (int)(touchSize * TouchManager.Instance.DotsPerCentimeter);
-            }
+            if (useDPI) return (int) (touchSize * TouchManager.Instance.DotsPerCentimeter);
             return defaultSize;
         }
 
@@ -150,7 +157,7 @@ namespace TouchScript.Behaviors.Visualizer
             if (touchProxy != null)
             {
                 var rt = touchProxy.GetComponent<RectTransform>();
-                if (rt) defaultSize = (int)rt.sizeDelta.x;
+                if (rt) defaultSize = (int) rt.sizeDelta.x;
             }
         }
 

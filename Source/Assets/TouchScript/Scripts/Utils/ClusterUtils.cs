@@ -28,7 +28,7 @@ namespace TouchScript.Utils
 
             var position = new Vector2();
             for (var i = 0; i < count; i++) position += touches[i].Position;
-            return position/count;
+            return position / count;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace TouchScript.Utils
 
             var position = new Vector2();
             for (var i = 0; i < count; i++) position += touches[i].PreviousPosition;
-            return position/count;
+            return position / count;
         }
 
         /// <summary>

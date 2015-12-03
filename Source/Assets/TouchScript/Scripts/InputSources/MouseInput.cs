@@ -14,7 +14,6 @@ namespace TouchScript.InputSources
     [System.Obsolete("MouseInput is deprecated! Please use StandardInput instead.")]
     public sealed class MouseInput : InputSource
     {
-        
         #region Public properties
 
         /// <summary>
@@ -23,7 +22,8 @@ namespace TouchScript.InputSources
         /// <remarks>
         /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated touch points in exactly the same coordinates. This affects clusters and multitouch gestures.
         /// </remarks>
-        [ToggleLeft] public bool DisableOnMobilePlatforms = true;
+        [ToggleLeft]
+        public bool DisableOnMobilePlatforms = true;
 
         /// <summary>
         /// Tags added to touches coming from this input.
@@ -77,7 +77,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            mouseHandler = new MouseHandler((p) => beginTouch(p,Tags), moveTouch, endTouch, cancelTouch);
+            mouseHandler = new MouseHandler((p) => beginTouch(p, Tags), moveTouch, endTouch, cancelTouch);
         }
 
         /// <inheritdoc />
@@ -90,6 +90,5 @@ namespace TouchScript.InputSources
         }
 
         #endregion
-
     }
 }

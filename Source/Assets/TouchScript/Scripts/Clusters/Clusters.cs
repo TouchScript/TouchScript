@@ -15,25 +15,33 @@ namespace TouchScript.Clusters
     {
         #region Constants
 
-        /// <summary>The first cluster.</summary>
+        /// <summary>
+        /// The first cluster.
+        /// </summary>
         public const int CLUSTER1 = 0;
 
-        /// <summary>The second cluster.</summary>
+        /// <summary>
+        /// The second cluster.
+        /// </summary>
         public const int CLUSTER2 = 1;
 
         #endregion
 
         #region Public properties
 
-        /// <summary>Gets the total number of points in clusters represented by this object.</summary>
+        /// <summary>
+        /// Gets the total number of points in clusters represented by this object.
+        /// </summary>
         public int PointsCount
         {
             get { return points.Count; }
         }
 
-        /// <summary>Gets or sets minimum distance in pixels between clusters to treat them as two separate clusters.</summary>
-        /// <value>Minimum distance in pixels which must be between cluster centers to consider them as separate clusters.</value>
-        /// <remarks>This value is used to set the limit of how close cluster can be. Sometimes very close points shouldn't be treated as being in separate clusters.</remarks>
+        /// <summary>
+        /// Gets or sets minimum distance in pixels between clusters to treat them as two separate clusters.
+        /// </summary>
+        /// <value> Minimum distance in pixels which must be between cluster centers to consider them as separate clusters. </value>
+        /// <remarks> This value is used to set the limit of how close cluster can be. Sometimes very close points shouldn't be treated as being in separate clusters. </remarks>
         public float MinPointsDistance
         {
             get { return minPointDistance; }
@@ -44,8 +52,10 @@ namespace TouchScript.Clusters
             }
         }
 
-        /// <summary>Indicates that this cluster instance has two valid clusters.</summary>
-        /// <value><c>true</c> if this instance has clusters; otherwise, <c>false</c>.</value>
+        /// <summary>
+        /// Indicates that this cluster instance has two valid clusters.
+        /// </summary>
+        /// <value> <c>true</c> if this instance has clusters; otherwise, <c>false</c>. </value>
         public bool HasClusters
         {
             get
@@ -68,7 +78,9 @@ namespace TouchScript.Clusters
 
         #endregion
 
-        /// <summary>Initializes a new instance of the <see cref="Clusters"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Clusters"/> class.
+        /// </summary>
         public Clusters()
         {
             MinPointsDistance = 0;
@@ -77,9 +89,11 @@ namespace TouchScript.Clusters
 
         #region Public methods
 
-        /// <summary>Calculates the center position of one of the clusters.</summary>
-        /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
+        /// <summary>
+        /// Calculates the center position of one of the clusters.
+        /// </summary>
+        /// <param name="id"> Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>. </param>
+        /// <returns> Cluster's centroid position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points. </returns>
         public Vector2 GetCenterPosition(int id)
         {
             if (!HasClusters) return TouchManager.INVALID_POSITION;
@@ -99,9 +113,11 @@ namespace TouchScript.Clusters
             return result;
         }
 
-        /// <summary>Calculates previous center position of one of the clusters.</summary>
-        /// <param name="id">Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>.</param>
-        /// <returns>Cluster's centroid previous position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
+        /// <summary>
+        /// Calculates previous center position of one of the clusters.
+        /// </summary>
+        /// <param name="id"> Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>. </param>
+        /// <returns> Cluster's centroid previous position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points. </returns>
         public Vector2 GetPreviousCenterPosition(int id)
         {
             if (!HasClusters) return TouchManager.INVALID_POSITION;
@@ -121,8 +137,9 @@ namespace TouchScript.Clusters
             return result;
         }
 
-        /// <summary>Adds a point to cluster.</summary>
-        /// <param name="point">A point.</param>
+        /// <summary>
+        /// Adds a point to cluster. </summary>
+        /// <param name="point"> A point. </param>
         public void AddPoint(ITouch point)
         {
             if (points.Contains(point)) return;
@@ -131,16 +148,20 @@ namespace TouchScript.Clusters
             markDirty();
         }
 
-        /// <summary>Adds a list of points to cluster.</summary>
-        /// <param name="points">List of points.</param>
+        /// <summary>
+        /// Adds a list of points to cluster.
+        /// </summary>
+        /// <param name="points"> List of points. </param>
         public void AddPoints(IList<ITouch> points)
         {
             var count = points.Count;
             for (var i = 0; i < count; i++) AddPoint(points[i]);
         }
 
-        /// <summary>Removes a point from cluster.</summary>
-        /// <param name="point">A point.</param>
+        /// <summary>
+        /// Removes a point from cluster.
+        /// </summary>
+        /// <param name="point"> A point. </param>
         public void RemovePoint(ITouch point)
         {
             if (!points.Contains(point)) return;
@@ -149,22 +170,28 @@ namespace TouchScript.Clusters
             markDirty();
         }
 
-        /// <summary>Removes a list of points from cluster.</summary>
-        /// <param name="points">List of points.</param>
+        /// <summary>
+        /// Removes a list of points from cluster.
+        /// </summary>
+        /// <param name="points"> List of points. </param>
         public void RemovePoints(IList<ITouch> points)
         {
             var count = points.Count;
             for (var i = 0; i < count; i++) RemovePoint(points[i]);
         }
 
-        /// <summary>Removes all points from cluster.</summary>
+        /// <summary>
+        /// Removes all points from cluster.
+        /// </summary>
         public void RemoveAllPoints()
         {
             points.Clear();
             markDirty();
         }
 
-        /// <summary>Invalidates cluster state. Call this method to recalculate cluster properties.</summary>
+        /// <summary>
+        /// Invalidates cluster state. Call this method to recalculate cluster properties.
+        /// </summary>
         public void Invalidate()
         {
             markDirty();

@@ -47,8 +47,9 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Transform's projection type.
+        /// Gets or sets transform's projection type.
         /// </summary>
+        /// <value> Projection type. </value>
         public ProjectionType Projection
         {
             get { return projection; }
@@ -61,8 +62,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Transform's projection plane normal.
+        /// Gets or sets transform's projection plane normal.
         /// </summary>
+        /// <value> Projection plane normal. </value>
         public Vector3 ProjectionPlaneNormal
         {
             get
@@ -110,8 +112,11 @@ namespace TouchScript.Gestures
 
         #region Private variables
 
-        [SerializeField] private ProjectionType projection = ProjectionType.Layer;
-        [SerializeField] private Vector3 projectionPlaneNormal = Vector3.forward;
+        [SerializeField]
+        private ProjectionType projection = ProjectionType.Layer;
+
+        [SerializeField]
+        private Vector3 projectionPlaneNormal = Vector3.forward;
 
         private TouchLayer projectionLayer;
         private Plane transformPlane;
@@ -168,7 +173,8 @@ namespace TouchScript.Gestures
         #region Protected methods
 
         /// <inheritdoc />
-        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
+        protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+                                            Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             var newVector = projectionParams.ProjectTo(newScreenPos2, TransformPlane) -
                             projectionParams.ProjectTo(newScreenPos1, TransformPlane);
@@ -181,17 +187,19 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
+        protected override float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+                                           Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             var newVector = projectionParams.ProjectTo(newScreenPos2, TransformPlane) -
                             projectionParams.ProjectTo(newScreenPos1, TransformPlane);
             var oldVector = projectionParams.ProjectTo(oldScreenPos2, TransformPlane) -
                             projectionParams.ProjectTo(oldScreenPos1, TransformPlane);
-            return newVector.magnitude/oldVector.magnitude;
+            return newVector.magnitude / oldVector.magnitude;
         }
 
         /// <inheritdoc />
-        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
+        protected override Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos,
+                                                         ProjectionParams projectionParams)
         {
             if (isTransforming)
             {
@@ -211,7 +219,8 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
+        protected override Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
+                                                         Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             if (isTransforming)
             {

@@ -46,8 +46,8 @@ namespace TouchScript.Hit
         /// <summary>
         /// Determines whether a touch point hit the object.
         /// </summary>
-        /// <param name="hit">Data from a raycast.</param>
-        /// <returns><see cref="ObjectHitResult.Hit"/> if touch point hits the object, <see cref="ObjectHitResult.Miss"/> if it doesn't, <see cref="ObjectHitResult.Discard"/> if it doesn't and this touch must be ignored, Error otherwise.</returns>
+        /// <param name="hit"> Data from a raycast. </param>
+        /// <returns> <see cref="ObjectHitResult.Hit"/> if touch point hits the object, <see cref="ObjectHitResult.Miss"/> if it doesn't, <see cref="ObjectHitResult.Discard"/> if it doesn't and this touch must be ignored, Error otherwise. </returns>
         public virtual ObjectHitResult IsHit(TouchHit hit)
         {
             return ObjectHitResult.Hit;

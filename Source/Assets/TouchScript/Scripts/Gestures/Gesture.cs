@@ -14,7 +14,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Base class for all gestures
+    /// Base class for all gestures.
     /// </summary>
     public abstract class Gesture : DebuggableMonoBehaviour
     {
@@ -111,6 +111,11 @@ namespace TouchScript.Gestures
 
         #region Public properties
 
+        /// <summary>
+        /// Gets or sets minimum number of touches this gesture reacts to.
+        /// The gesture will not be recognized if it has less than <see cref="MinTouches"/> touches.
+        /// </summary>
+        /// <value> Minimum number of touches. </value>
         public int MinTouches
         {
             get { return minTouches; }
@@ -121,6 +126,11 @@ namespace TouchScript.Gestures
             }
         }
 
+        /// <summary>
+        /// Gets or sets maximum number of touches this gesture reacts to.
+        /// The gesture will not be recognized if it has more than <see cref="MaxTouches"/> touches.
+        /// </summary>
+        /// <value> Maximum number of touches. </value>
         public int MaxTouches
         {
             get { return maxTouches; }
@@ -134,9 +144,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets another gesture which must fail before this gesture can be recognized.
         /// </summary>
-        /// <value>
-        /// The gesture which must fail before this gesture can be recognized;
-        /// </value>
+        /// <value> The gesture which must fail before this gesture can be recognized. </value>
         public Gesture RequireGestureToFail
         {
             get { return requireGestureToFail; }
@@ -153,7 +161,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets the flag if touches should be treated as a cluster.
         /// </summary>
-        /// <value><c>true</c> if touches should be treated as a cluster; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if touches should be treated as a cluster; otherwise, <c>false</c>. </value>
         /// <remarks>
         /// At the end of a gesture when touches are lifted off due to the fact that computers are faster than humans the very last touch's position will be gesture's <see cref="ScreenPosition"/> after that. This flag is used to combine several touches which from the point of a user were lifted off simultaneously and set their centroid as gesture's <see cref="ScreenPosition"/>.
         /// </remarks>
@@ -166,7 +174,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets time interval before gesture is recognized to combine all lifted touch points into a cluster to use its center as <see cref="ScreenPosition"/>.
         /// </summary>
-        /// <value>Time in seconds to treat touches lifted off during this interval as a single gesture.</value>
+        /// <value> Time in seconds to treat touches lifted off during this interval as a single gesture. </value>
         public float CombineTouchesInterval
         {
             get { return combineTouchesInterval; }
@@ -176,7 +184,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets whether gesture should use Unity's SendMessage in addition to C# events.
         /// </summary>
-        /// <value><c>true</c> if gesture uses SendMessage; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if gesture uses SendMessage; otherwise, <c>false</c>. </value>
         public bool UseSendMessage
         {
             get { return useSendMessage; }
@@ -186,7 +194,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseSendMessage"/> is true..
         /// </summary>
-        /// <value><c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>. </value>
         public bool SendStateChangeMessages
         {
             get { return sendStateChangeMessages; }
@@ -196,7 +204,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets the target of Unity messages sent from this gesture.
         /// </summary>
-        /// <value>The target of Unity messages.</value>
+        /// <value> The target of Unity messages. </value>
         public GameObject SendMessageTarget
         {
             get { return sendMessageTarget; }
@@ -210,7 +218,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets current gesture state.
         /// </summary>
-        /// <value>Current state of the gesture.</value>
+        /// <value> Current state of the gesture. </value>
         public GestureState State
         {
             get { return state; }
@@ -252,13 +260,13 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets previous gesture state.
         /// </summary>
-        /// <value>Previous state of the gesture.</value>
+        /// <value> Previous state of the gesture. </value>
         public GestureState PreviousState { get; private set; }
 
         /// <summary>
         /// Gets current screen position.
         /// </summary>
-        /// <value>Gesture's position in screen coordinates.</value>
+        /// <value> Gesture's position in screen coordinates. </value>
         public virtual Vector2 ScreenPosition
         {
             get
@@ -275,7 +283,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets previous screen position.
         /// </summary>
-        /// <value>Gesture's previous position in screen coordinates.</value>
+        /// <value> Gesture's previous position in screen coordinates. </value>
         public virtual Vector2 PreviousScreenPosition
         {
             get
@@ -293,35 +301,35 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets normalized screen position.
         /// </summary>
-        /// <value>Gesture's position in normalized screen coordinates.</value>
+        /// <value> Gesture's position in normalized screen coordinates. </value>
         public Vector2 NormalizedScreenPosition
         {
             get
             {
                 var position = ScreenPosition;
                 if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
-                return new Vector2(position.x/Screen.width, position.y/Screen.height);
+                return new Vector2(position.x / Screen.width, position.y / Screen.height);
             }
         }
 
         /// <summary>
         /// Gets previous screen position.
         /// </summary>
-        /// <value>Gesture's previous position in normalized screen coordinates.</value>
+        /// <value> Gesture's previous position in normalized screen coordinates. </value>
         public Vector2 PreviousNormalizedScreenPosition
         {
             get
             {
                 var position = PreviousScreenPosition;
                 if (TouchManager.IsInvalidPosition(position)) return TouchManager.INVALID_POSITION;
-                return new Vector2(position.x/Screen.width, position.y/Screen.height);
+                return new Vector2(position.x / Screen.width, position.y / Screen.height);
             }
         }
 
         /// <summary>
         /// Gets list of gesture's active touch points.
         /// </summary>
-        /// <value>The list of touches owned by this gesture.</value>
+        /// <value> The list of touches owned by this gesture. </value>
         public IList<ITouch> ActiveTouches
         {
             get
@@ -335,15 +343,16 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets the number of active touch points.
         /// </summary>
-        /// <value>The number of touches owned by this gesture.</value>
+        /// <value> The number of touches owned by this gesture. </value>
         public int NumTouches
         {
             get { return numTouches; }
         }
 
         /// <summary>
-        /// An object implementing <see cref="IGestureDelegate"/> to be asked for gesture specific actions.
+        /// Gets or sets an object implementing <see cref="IGestureDelegate"/> to be asked for gesture specific actions.
         /// </summary>
+        /// <value> The delegate. </value>
         public IGestureDelegate Delegate { get; set; }
 
         #endregion
@@ -364,6 +373,9 @@ namespace TouchScript.Gestures
         /// </summary>
         protected ITouchManager touchManager { get; private set; }
 
+        /// <summary>
+        /// The state of min/max number of touches.
+        /// </summary>
         protected TouchesNumState touchesNumState { get; private set; }
 
         /// <summary>
@@ -376,23 +388,36 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Transform cachedTransform;
 
-        [SerializeField] private bool advancedProps; // is used to save if advanced properties are opened or closed
+        [SerializeField]
+        private bool advancedProps; // is used to save if advanced properties are opened or closed
 
-        [SerializeField] private int minTouches = 0;
+        [SerializeField]
+        private int minTouches = 0;
 
-        [SerializeField] private int maxTouches = 0;
+        [SerializeField]
+        private int maxTouches = 0;
 
-        [SerializeField] [ToggleLeft] private bool combineTouches = false;
+        [SerializeField]
+        [ToggleLeft]
+        private bool combineTouches = false;
 
-        [SerializeField] private float combineTouchesInterval = .3f;
+        [SerializeField]
+        private float combineTouchesInterval = .3f;
 
-        [SerializeField] [ToggleLeft] private bool useSendMessage = false;
+        [SerializeField]
+        [ToggleLeft]
+        private bool useSendMessage = false;
 
-        [SerializeField] [ToggleLeft] private bool sendStateChangeMessages = false;
+        [SerializeField]
+        [ToggleLeft]
+        private bool sendStateChangeMessages = false;
 
-        [SerializeField] private GameObject sendMessageTarget;
+        [SerializeField]
+        private GameObject sendMessageTarget;
 
-        [SerializeField] [NullToggle] private Gesture requireGestureToFail;
+        [SerializeField]
+        [NullToggle]
+        private Gesture requireGestureToFail;
 
         [SerializeField]
         // Serialized list of gestures for Unity IDE.
@@ -425,7 +450,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Adds a friendly gesture.
         /// </summary>
-        /// <param name="gesture">The gesture.</param>
+        /// <param name="gesture"> The gesture. </param>
         public void AddFriendlyGesture(Gesture gesture)
         {
             if (gesture == null || gesture == this) return;
@@ -437,8 +462,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Checks if a gesture is friendly with this gesture.
         /// </summary>
-        /// <param name="gesture">A gesture to check.</param>
-        /// <returns>True if gestures are friendly; false otherwise.</returns>
+        /// <param name="gesture"> A gesture to check. </param>
+        /// <returns> <c>true</c> if gestures are friendly; <c>false</c> otherwise. </returns>
         public bool IsFriendly(Gesture gesture)
         {
             return friendlyGestures.Contains(gesture);
@@ -447,7 +472,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets result of casting a ray from gesture touch points' centroid screen position.
         /// </summary>
-        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
+        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
         public bool GetTargetHitResult()
         {
             TouchHit hit;
@@ -457,8 +482,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets result of casting a ray from gesture touch points centroid screen position.
         /// </summary>
-        /// <param name="hit">Raycast result</param>
-        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
+        /// <param name="hit"> Raycast result </param>
+        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
         public virtual bool GetTargetHitResult(out TouchHit hit)
         {
             return GetTargetHitResult(ScreenPosition, out hit);
@@ -467,8 +492,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets result of casting a ray from specific screen position.
         /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
+        /// <param name="position"> The position. </param>
+        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
         public bool GetTargetHitResult(Vector2 position)
         {
             TouchHit hit;
@@ -478,9 +503,9 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets result of casting a ray from specific screen position.
         /// </summary>
-        /// <param name="position">The position.</param>
-        /// <param name="hit">Raycast result.</param>
-        /// <returns>true if ray hits gesture's target; otherwise, false.</returns>
+        /// <param name="position"> The position. </param>
+        /// <param name="hit"> Raycast result. </param>
+        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
         public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
         {
             TouchLayer layer = null;
@@ -493,10 +518,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Determines whether gesture controls a touch point.
         /// </summary>
-        /// <param name="touch">The touch.</param>
-        /// <returns>
-        ///   <c>true</c> if gesture controls the touch point; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="touch"> The touch. </param>
+        /// <returns> <c>true</c> if gesture controls the touch point; <c>false</c> otherwise. </returns>
         public bool HasTouch(ITouch touch)
         {
             return activeTouches.Contains(touch);
@@ -505,10 +528,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Determines whether this instance can prevent the specified gesture.
         /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        /// <returns>
-        ///   <c>true</c> if this instance can prevent the specified gesture; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="gesture"> The gesture. </param>
+        /// <returns> <c>true</c> if this instance can prevent the specified gesture; <c>false</c> otherwise. </returns>
         public virtual bool CanPreventGesture(Gesture gesture)
         {
             if (Delegate == null)
@@ -522,10 +543,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Determines whether this instance can be prevented by specified gesture.
         /// </summary>
-        /// <param name="gesture">The gesture.</param>
-        /// <returns>
-        ///   <c>true</c> if this instance can be prevented by specified gesture; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="gesture"> The gesture. </param>
+        /// <returns> <c>true</c> if this instance can be prevented by specified gesture; <c>false</c> otherwise. </returns>
         public virtual bool CanBePreventedByGesture(Gesture gesture)
         {
             if (Delegate == null) return !IsFriendly(gesture);
@@ -535,8 +554,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Specifies if gesture can receive this specific touch point.
         /// </summary>
-        /// <param name="touch">The touch.</param>
-        /// <returns><c>true</c> if this touch should be received by the gesture; otherwise, <c>false</c>.</returns>
+        /// <param name="touch"> The touch. </param>
+        /// <returns> <c>true</c> if this touch should be received by the gesture; <c>false</c> otherwise. </returns>
         public virtual bool ShouldReceiveTouch(ITouch touch)
         {
             if (Delegate == null) return true;
@@ -546,7 +565,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Specifies if gesture can begin or recognize.
         /// </summary>
-        /// <returns><c>true</c> if gesture should begin; otherwise, <c>false</c>.</returns>
+        /// <returns> <c>true</c> if gesture should begin; <c>false</c> otherwise. </returns>
         public virtual bool ShouldBegin()
         {
             if (Delegate == null) return true;
@@ -554,7 +573,10 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
+        /// Cancels this gesture.
         /// </summary>
+        /// <param name="cancelTouches"> if set to <c>true</c> also implicitly cancels all touches owned by the gesture. </param>
+        /// <param name="redispatchTouches"> if set to <c>true</c> redispatched all canceled touches. </param>
         public void Cancel(bool cancelTouches, bool redispatchTouches)
         {
             switch (state)
@@ -568,12 +590,16 @@ namespace TouchScript.Gestures
             setState(GestureState.Cancelled);
 
             if (!cancelTouches) return;
-            for (var i = 0; i < numTouches; i++)
-            {
-                touchManager.CancelTouch(activeTouches[i].Id, redispatchTouches);
-            }
+            for (var i = 0; i < numTouches; i++) touchManager.CancelTouch(activeTouches[i].Id, redispatchTouches);
         }
-        public void Cancel() { Cancel(false, false); }
+
+        /// <summary>
+        /// Cancels this gesture.
+        /// </summary>
+        public void Cancel()
+        {
+            Cancel(false, false);
+        }
 
         #endregion
 
@@ -837,8 +863,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Should the gesture cache this touch to use it later in calculation of <see cref="ScreenPosition"/>.
         /// </summary>
-        /// <param name="value">Touch to cache.</param>
-        /// <returns><c>true</c> if touch should be cached; <c>false</c> otherwise.</returns>
+        /// <param name="value"> Touch to cache. </param>
+        /// <returns> <c>true</c> if touch should be cached; <c>false</c> otherwise. </returns>
         protected virtual bool shouldCacheTouchPosition(ITouch value)
         {
             return true;
@@ -847,8 +873,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Tries to change gesture state.
         /// </summary>
-        /// <param name="value">New state.</param>
-        /// <returns><c>true</c> if state was changed; otherwise, <c>false</c>.</returns>
+        /// <param name="value"> New state. </param>
+        /// <returns> <c>true</c> if state was changed; otherwise, <c>false</c>. </returns>
         protected bool setState(GestureState value)
         {
             if (gestureManagerInstance == null) return false;
@@ -886,31 +912,25 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Called when new touches appear.
         /// </summary>
-        /// <param name="touches">The touches.</param>
-        protected virtual void touchesBegan(IList<ITouch> touches)
-        {
-        }
+        /// <param name="touches"> The touches. </param>
+        protected virtual void touchesBegan(IList<ITouch> touches) {}
 
         /// <summary>
         /// Called for moved touches.
         /// </summary>
-        /// <param name="touches">The touches.</param>
-        protected virtual void touchesMoved(IList<ITouch> touches)
-        {
-        }
+        /// <param name="touches"> The touches. </param>
+        protected virtual void touchesMoved(IList<ITouch> touches) {}
 
         /// <summary>
         /// Called if touches are removed.
         /// </summary>
-        /// <param name="touches">The touches.</param>
-        protected virtual void touchesEnded(IList<ITouch> touches)
-        {
-        }
+        /// <param name="touches"> The touches. </param>
+        protected virtual void touchesEnded(IList<ITouch> touches) {}
 
         /// <summary>
         /// Called when touches are cancelled.
         /// </summary>
-        /// <param name="touches">The touches.</param>
+        /// <param name="touches"> The touches. </param>
         protected virtual void touchesCancelled(IList<ITouch> touches)
         {
             if (touchesNumState == TouchesNumState.PassedMinThreshold)
@@ -939,37 +959,27 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Called when state is changed to Possible.
         /// </summary>
-        protected virtual void onPossible()
-        {
-        }
+        protected virtual void onPossible() {}
 
         /// <summary>
         /// Called when state is changed to Began.
         /// </summary>
-        protected virtual void onBegan()
-        {
-        }
+        protected virtual void onBegan() {}
 
         /// <summary>
         /// Called when state is changed to Changed.
         /// </summary>
-        protected virtual void onChanged()
-        {
-        }
+        protected virtual void onChanged() {}
 
         /// <summary>
         /// Called when state is changed to Recognized.
         /// </summary>
-        protected virtual void onRecognized()
-        {
-        }
+        protected virtual void onRecognized() {}
 
         /// <summary>
         /// Called when state is changed to Failed.
         /// </summary>
-        protected virtual void onFailed()
-        {
-        }
+        protected virtual void onFailed() {}
 
         /// <summary>
         /// Called when state is changed to Cancelled.
@@ -1044,8 +1054,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Initializes a new instance of the <see cref="GestureStateChangeEventArgs"/> class.
         /// </summary>
-        /// <param name="state">Current gesture state.</param>
-        /// <param name="previousState">Previous gesture state.</param>
+        /// <param name="state"> Current gesture state. </param>
+        /// <param name="previousState"> Previous gesture state. </param>
         public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
         {
             State = state;

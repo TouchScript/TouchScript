@@ -78,8 +78,10 @@ namespace TouchScript.Gestures
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<MetaGestureEventArgs> touchBeganInvoker, touchMovedInvoker,
-            touchEndedInvoker, touchCancelledInvoker;
+        private EventHandler<MetaGestureEventArgs> touchBeganInvoker,
+                                                   touchMovedInvoker,
+                                                   touchEndedInvoker,
+                                                   touchCancelledInvoker;
 
         #endregion
 
@@ -175,7 +177,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.
         /// </summary>
-        /// <param name="touch">Touch point the event is for.</param>
+        /// <param name="touch"> Touch point the event is for. </param>
         public MetaGestureEventArgs(ITouch touch)
         {
             Touch = touch;

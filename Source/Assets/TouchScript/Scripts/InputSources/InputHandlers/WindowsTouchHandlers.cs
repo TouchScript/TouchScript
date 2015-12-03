@@ -4,6 +4,7 @@
  * @author Andrew David Griffiths
  */
 
+
 #if UNITY_STANDALONE_WIN
 
 using System;
@@ -13,18 +14,16 @@ using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
 {
+    /// <summary>
+    /// Windows 8 touch handling implementation which can be embedded to other (input) classes.
+    /// </summary>
     public class Windows8TouchHandler : WindowsTouchHandler
     {
-
+        /// <inheritdoc />
         public Windows8TouchHandler(Func<Vector2, TouchSource, ITouch> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
             Action<int> cancelTouch) : base(beginTouch, moveTouch, endTouch, cancelTouch)
         {
             registerWindowProc(wndProcWin8);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
         }
 
         private IntPtr wndProcWin8(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -98,7 +97,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             moveTouch(existingId,
-                                new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY));
+                                new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
                         }
                     }
                     break;
@@ -108,18 +107,19 @@ namespace TouchScript.InputSources.InputHandlers
 
     public class Windows7TouchHandler : WindowsTouchHandler
     {
-
         private int touchInputSize;
 
+        /// <inheritdoc />
         public Windows7TouchHandler(Func<Vector2, TouchSource, ITouch> beginTouch, Action<int, Vector2> moveTouch,
             Action<int> endTouch,
             Action<int> cancelTouch) : base(beginTouch, moveTouch, endTouch, cancelTouch)
         {
-            touchInputSize = Marshal.SizeOf(typeof(TOUCHINPUT));
+            touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
             RegisterTouchWindow(hMainWindow, 0);
             registerWindowProc(wndProcWin7);
         }
 
+        /// <inheritdoc />
         public override void Dispose()
         {
             UnregisterTouchWindow(hMainWindow);
@@ -158,18 +158,18 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 TOUCHINPUT touch = inputs[i];
 
-                if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_DOWN) != 0)
+                if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_DOWN) != 0)
                 {
                     POINT p = new POINT();
-                    p.X = touch.x / 100;
-                    p.Y = touch.y / 100;
+                    p.X = touch.x/100;
+                    p.Y = touch.y/100;
                     ScreenToClient(hMainWindow, ref p);
 
                     winToInternalId.Add(touch.dwID, beginTouch(
-                        new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), TouchSource.Touch)
+                        new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY), TouchSource.Touch)
                         .Id);
                 }
-                else if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
+                else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
@@ -178,18 +178,18 @@ namespace TouchScript.InputSources.InputHandlers
                         endTouch(existingId);
                     }
                 }
-                else if ((touch.dwFlags & (int)TOUCH_EVENT.TOUCHEVENTF_MOVE) != 0)
+                else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_MOVE) != 0)
                 {
                     int existingId;
                     if (winToInternalId.TryGetValue(touch.dwID, out existingId))
                     {
                         POINT p = new POINT();
-                        p.X = touch.x / 100;
-                        p.Y = touch.y / 100;
+                        p.X = touch.x/100;
+                        p.Y = touch.y/100;
                         ScreenToClient(hMainWindow, ref p);
 
                         moveTouch(existingId,
-                            new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY));
+                            new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
                     }
                 }
             }
@@ -200,7 +200,9 @@ namespace TouchScript.InputSources.InputHandlers
 
     public abstract class WindowsTouchHandler : IDisposable
     {
-
+        /// <summary>
+        /// Source of touch input.
+        /// </summary>
         public enum TouchSource
         {
             Touch,
@@ -208,7 +210,11 @@ namespace TouchScript.InputSources.InputHandlers
             Mouse
         }
 
+        /// <summary>
+        /// Windows constant to turn off press and hold visual effect.
+        /// </summary>
         public const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
+
         public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         protected Func<Vector2, TouchSource, ITouch> beginTouch;
@@ -225,6 +231,13 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected float offsetX, offsetY, scaleX, scaleY;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowsTouchHandler"/> class.
+        /// </summary>
+        /// <param name="beginTouch"> A function called when a new touch is detected. As <see cref="InputSource.beginTouch(Vector2)"/> this function must accept a Vector2 position of the new touch and return an instance of <see cref="ITouch"/>. </param>
+        /// <param name="moveTouch"> A function called when a touch is moved. As <see cref="InputSource.moveTouch"/> this function must accept an int id and a Vector2 position. </param>
+        /// <param name="endTouch"> A function called when a touch is lifted off. As <see cref="InputSource.endTouch"/> this function must accept an int id. </param>
+        /// <param name="cancelTouch"> A function called when a touch is cancelled. As <see cref="InputSource.cancelTouch"/> this function must accept an int id. </param>
         public WindowsTouchHandler(Func<Vector2, TouchSource, ITouch> beginTouch, Action<int, Vector2> moveTouch,
             Action<int> endTouch,
             Action<int> cancelTouch)
@@ -239,12 +252,10 @@ namespace TouchScript.InputSources.InputHandlers
             initScaling();
         }
 
+        /// <inheritdoc />
         public virtual void Dispose()
         {
-            foreach (var i in winToInternalId)
-            {
-                cancelTouch(i.Value);
-            }
+            foreach (var i in winToInternalId) cancelTouch(i.Value);
 
             enablePressAndHold();
             unregisterWindowProc();
@@ -299,9 +310,9 @@ namespace TouchScript.InputSources.InputHandlers
 
             int width, height;
             getNativeMonitorResolution(out width, out height);
-            float scale = Mathf.Max(Screen.width / ((float)width), Screen.height / ((float)height));
-            offsetX = (width - Screen.width / scale) * .5f;
-            offsetY = (height - Screen.height / scale) * .5f;
+            float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
+            offsetX = (width - Screen.width/scale)*.5f;
+            offsetY = (height - Screen.height/scale)*.5f;
             scaleX = scale;
             scaleY = scale;
         }
@@ -541,14 +552,20 @@ namespace TouchScript.InputSources.InputHandlers
         #endregion
     }
 
+    /// <summary>
+    /// A class which turns on mouse to WM_POINTER events redirection on Windows 8.
+    /// </summary>
     public class Windows8MouseHandler : IDisposable
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Windows8MouseHandler"/> class.
+        /// </summary>
         public Windows8MouseHandler()
         {
             EnableMouseInPointer(true);
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             EnableMouseInPointer(false);
@@ -556,7 +573,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         [DllImport("user32.dll")]
         private static extern IntPtr EnableMouseInPointer(bool value);
-
     }
 }
+
 #endif

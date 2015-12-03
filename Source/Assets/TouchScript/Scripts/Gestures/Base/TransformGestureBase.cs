@@ -93,8 +93,9 @@ namespace TouchScript.Gestures.Base
         #region Public properties
 
         /// <summary>
-        /// Types of transformation this gesture supports.
+        /// Gets or sets types of transformation this gesture supports.
         /// </summary>
+        /// <value> Type flags. </value>
         public TransformType Type
         {
             get { return type; }
@@ -102,8 +103,9 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <summary>
-        /// Minimum distance between 2 points in cm for gesture to begin.
+        /// Gets or sets minimum distance between 2 points in cm for gesture to begin.
         /// </summary>
+        /// <value> Minimum distance. </value>
         public virtual float MinScreenPointsDistance
         {
             get { return minScreenPointsDistance; }
@@ -117,7 +119,7 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Gets or sets minimum distance in cm for touch points to move for gesture to begin. 
         /// </summary>
-        /// <value>Minimum value in cm user must move their fingers to start this gesture.</value>
+        /// <value> Minimum value in cm user must move their fingers to start this gesture. </value>
         public float ScreenTransformThreshold
         {
             get { return screenTransformThreshold; }
@@ -160,7 +162,7 @@ namespace TouchScript.Gestures.Base
             {
                 if (NumTouches == 0) return TouchManager.INVALID_POSITION;
                 if (NumTouches == 1) return activeTouches[0].Position;
-                return (getPointScreenPosition(0) + getPointScreenPosition(1))*.5f;
+                return (getPointScreenPosition(0) + getPointScreenPosition(1)) * .5f;
             }
         }
 
@@ -171,7 +173,7 @@ namespace TouchScript.Gestures.Base
             {
                 if (NumTouches == 0) return TouchManager.INVALID_POSITION;
                 if (NumTouches == 1) return activeTouches[0].PreviousPosition;
-                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1))*.5f;
+                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) * .5f;
             }
         }
 
@@ -203,11 +205,15 @@ namespace TouchScript.Gestures.Base
         protected float scaleBuffer;
         protected bool isTransforming = false;
 
-        [SerializeField] private TransformType type = TransformType.Translation | TransformType.Scaling |
-                                                      TransformType.Rotation;
+        [SerializeField]
+        private TransformType type = TransformType.Translation | TransformType.Scaling |
+                                     TransformType.Rotation;
 
-        [SerializeField] private float minScreenPointsDistance = 0.5f;
-        [SerializeField] private float screenTransformThreshold = 0.1f;
+        [SerializeField]
+        private float minScreenPointsDistance = 0.5f;
+
+        [SerializeField]
+        private float screenTransformThreshold = 0.1f;
 
         #endregion
 
@@ -321,7 +327,7 @@ namespace TouchScript.Gestures.Base
                             screenPixelRotationBuffer += (d1 - d2);
                             angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
 
-                            if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
+                            if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
                                 screenTransformPixelThresholdSquared)
                             {
                                 isTransforming = true;
@@ -344,7 +350,7 @@ namespace TouchScript.Gestures.Base
                             screenPixelScalingBuffer += newDistance - oldDistance;
                             scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
 
-                            if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
+                            if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
                                 screenTransformPixelThresholdSquared)
                             {
                                 isTransforming = true;
@@ -464,40 +470,79 @@ namespace TouchScript.Gestures.Base
         #region Protected methods
 
         /// <summary>
+        /// Calculates rotation.
         /// </summary>
-        protected virtual float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
+        /// <param name="oldScreenPos1"> Finger one old screen position. </param>
+        /// <param name="oldScreenPos2"> Finger two old screen position. </param>
+        /// <param name="newScreenPos1"> Finger one new screen position. </param>
+        /// <param name="newScreenPos2"> Finger two new screen position. </param>
+        /// <param name="projectionParams"> Layer projection parameters. </param>
+        /// <returns> Angle in degrees. </returns>
+        protected virtual float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+                                           Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return 0;
         }
 
         /// <summary>
+        /// Calculates scaling.
         /// </summary>
-        protected virtual float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, ProjectionParams projectionParams)
+        /// <param name="oldScreenPos1"> Finger one old screen position. </param>
+        /// <param name="oldScreenPos2"> Finger two old screen position. </param>
+        /// <param name="newScreenPos1"> Finger one new screen position. </param>
+        /// <param name="newScreenPos2"> Finger two new screen position. </param>
+        /// <param name="projectionParams"> Layer projection parameters. </param>
+        /// <returns> Multiplicative delta scaling. </returns>
+        protected virtual float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
+                                          Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return 1;
         }
 
         /// <summary>
+        /// Calculates single finger translation.
         /// </summary>
-        protected virtual Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
+        /// <param name="oldScreenPos"> Finger old screen position. </param>
+        /// <param name="newScreenPos"> Finger new screen position. </param>
+        /// <param name="projectionParams"> Layer projection parameters. </param>
+        /// <returns> Delta translation vector. </returns>
+        protected virtual Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos,
+                                                        ProjectionParams projectionParams)
         {
             return Vector3.zero;
         }
 
         /// <summary>
+        /// Calculated two finger translation with respect to rotation and scaling.
         /// </summary>
-        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
+        /// <param name="oldScreenPos1"> Finger one old screen position. </param>
+        /// <param name="oldScreenPos2"> Finger two old screen position. </param>
+        /// <param name="newScreenPos1"> Finger one new screen position. </param>
+        /// <param name="newScreenPos2"> Finger two new screen position. </param>
+        /// <param name="dR"> Calculated delta rotation. </param>
+        /// <param name="dS"> Calculated delta scaling. </param>
+        /// <param name="projectionParams"> Layer projection parameters. </param>
+        /// <returns> Delta translation vector. </returns>
+        protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
+                                                        Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             return Vector3.zero;
         }
 
         /// <summary>
+        /// Gets the number of points.
         /// </summary>
+        /// <returns> Number of points. </returns>
         protected virtual int getNumPoints()
         {
             return NumTouches;
         }
 
+        /// <summary>
+        /// Checks if there are touch points in the list which matter for the gesture.
+        /// </summary>
+        /// <param name="touches"> List of touch points. </param>
+        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
         protected virtual bool relevantTouches1(IList<ITouch> touches)
         {
             // We care only about the first touch point
@@ -512,8 +557,8 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Checks if there are touch points in the list which matter for the gesture.
         /// </summary>
-        /// <param name="touches">List of touch points</param>
-        /// <returns>True if there are relevant touch points, False otherwise.</returns>
+        /// <param name="touches"> List of touch points. </param>
+        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
         protected virtual bool relevantTouches2(IList<ITouch> touches)
         {
             // We care only about the first and the second touch points
@@ -529,7 +574,7 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Returns screen position of a point with index 0 or 1
         /// </summary>
-        /// <param name="index">The index.</param>
+        /// <param name="index"> The index. </param>
         protected virtual Vector2 getPointScreenPosition(int index)
         {
             return activeTouches[index].Position;
@@ -538,7 +583,7 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Returns previous screen position of a point with index 0 or 1
         /// </summary>
-        /// <param name="index">The index.</param>
+        /// <param name="index"> The index. </param>
         protected virtual Vector2 getPointPreviousScreenPosition(int index)
         {
             return activeTouches[index].PreviousPosition;
@@ -605,14 +650,14 @@ namespace TouchScript.Gestures.Base
 
         private void updateMinScreenPointsDistance()
         {
-            minScreenPointsPixelDistance = minScreenPointsDistance*touchManager.DotsPerCentimeter;
-            minScreenPointsPixelDistanceSquared = minScreenPointsPixelDistance*minScreenPointsPixelDistance;
+            minScreenPointsPixelDistance = minScreenPointsDistance * touchManager.DotsPerCentimeter;
+            minScreenPointsPixelDistanceSquared = minScreenPointsPixelDistance * minScreenPointsPixelDistance;
         }
 
         private void updateScreenTransformThreshold()
         {
-            screenTransformPixelThreshold = screenTransformThreshold*touchManager.DotsPerCentimeter;
-            screenTransformPixelThresholdSquared = screenTransformPixelThreshold*screenTransformPixelThreshold;
+            screenTransformPixelThreshold = screenTransformThreshold * touchManager.DotsPerCentimeter;
+            screenTransformPixelThresholdSquared = screenTransformPixelThreshold * screenTransformPixelThreshold;
         }
 
         #endregion

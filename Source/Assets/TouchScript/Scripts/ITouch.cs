@@ -50,6 +50,9 @@ namespace TouchScript
         /// </summary>
         TouchLayer Layer { get; }
 
+        /// <summary>
+        /// Projection parameters for the layer which created this touch.
+        /// </summary>
         ProjectionParams ProjectionParams { get; }
 
         /// <summary>

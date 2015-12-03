@@ -116,8 +116,6 @@ namespace TouchScript
             Tags = tags ?? Tags.EMPTY;
         }
 
-        /// <summary>
-        /// </summary>
         internal void INTERNAL_ResetPosition()
         {
             PreviousPosition = position;

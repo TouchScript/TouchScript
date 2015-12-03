@@ -235,7 +235,7 @@ namespace TouchScript
         }
 
         private void update(IList<ITouch> updatedTouches, Action<Transform> process,
-            Action<Gesture, IList<ITouch>> dispatch)
+                            Action<Gesture, IList<ITouch>> dispatch)
         {
             // WARNING! Arcane magic ahead!
             // gestures which got any touch points

@@ -4,14 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[assembly: InternalsVisibleTo("TouchScript.Windows")]
 namespace TouchScript
 {
     /// <summary>
@@ -122,7 +120,7 @@ namespace TouchScript
         /// <summary>
         /// Inch to centimeter ratio to be used in DPI calculations.
         /// </summary>
-        public const float INCH_TO_CM = 1/CM_TO_INCH;
+        public const float INCH_TO_CM = 1 / CM_TO_INCH;
 
         /// <summary>
         /// The value used to represent an unknown state of a screen position. Use <see cref="TouchManager.IsInvalidPosition"/> to check if a point has unknown value.
@@ -181,6 +179,11 @@ namespace TouchScript
             set { shouldCreateCameraLayer = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a <see cref="StandardInput"/> should be created in scene if no inputs present.
+        /// </summary>
+        /// <value> <c>true</c> if StandardInput should be created; otherwise, <c>false</c>. </value>
+        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off.</remarks>
         public bool ShouldCreateStandardInput
         {
             get { return shouldCreateStandardInput; }
@@ -250,20 +253,30 @@ namespace TouchScript
 
         #region Private variables
 
-        [SerializeField] private Object displayDevice;
+        [SerializeField]
+        private Object displayDevice;
 
-        [SerializeField] [ToggleLeft] private bool shouldCreateCameraLayer = true;
+        [SerializeField]
+        [ToggleLeft]
+        private bool shouldCreateCameraLayer = true;
 
-        [SerializeField] [ToggleLeft] private bool shouldCreateStandardInput = true;
+        [SerializeField]
+        [ToggleLeft]
+        private bool shouldCreateStandardInput = true;
 
-        [SerializeField] [ToggleLeft] private bool useSendMessage = false;
+        [SerializeField]
+        [ToggleLeft]
+        private bool useSendMessage = false;
 
-        [SerializeField] private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled |
-                                                                 MessageType.TouchesEnded | MessageType.TouchesMoved;
+        [SerializeField]
+        private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled |
+                                                MessageType.TouchesEnded | MessageType.TouchesMoved;
 
-        [SerializeField] private GameObject sendMessageTarget;
+        [SerializeField]
+        private GameObject sendMessageTarget;
 
-        [SerializeField] private List<TouchLayer> layers = new List<TouchLayer>();
+        [SerializeField]
+        private List<TouchLayer> layers = new List<TouchLayer>();
 
         #endregion
 

@@ -84,6 +84,11 @@ namespace TouchScript.Layers
 
         #region Public methods
 
+        /// <summary>
+        /// Gets the projection parameters of this layer which might depend on a specific touch data.
+        /// </summary>
+        /// <param name="touch"> Touch to retrieve projection parameters for. </param>
+        /// <returns></returns>
         public virtual ProjectionParams GetProjectionParams(ITouch touch)
         {
             return layerProjectionParams;
@@ -106,6 +111,9 @@ namespace TouchScript.Layers
 
         #region Private variables
 
+        /// <summary>
+        /// The layer projection parameters.
+        /// </summary>
         protected ProjectionParams layerProjectionParams;
 
         #endregion
@@ -213,6 +221,10 @@ namespace TouchScript.Layers
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void cancelTouch(ITouch touch) {}
 
+        /// <summary>
+        /// Creates projection parameters.
+        /// </summary>
+        /// <returns> Created <see cref="ProjectionParams"/> instance.</returns>
         protected virtual ProjectionParams createProjectionParams()
         {
             return new ProjectionParams();

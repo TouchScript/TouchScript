@@ -10,7 +10,7 @@ using UnityEngine;
 namespace TouchScript
 {
     /// <summary>
-    /// A debuggable component. When built in Debug mode has a checkbox to turn debug information on and off.
+    /// A debuggable component. When built with TOUCHSCRIPT_DEBUG define has a checkbox to turn debug information on and off.
     /// </summary>
     public class DebuggableMonoBehaviour : MonoBehaviour, IDebuggable
     {

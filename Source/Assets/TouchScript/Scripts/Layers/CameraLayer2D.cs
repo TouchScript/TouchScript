@@ -17,7 +17,10 @@ namespace TouchScript.Layers
     {
         #region Private variables
 
-        [SerializeField] [HideInInspector] [FormerlySerializedAs("sortedLayerIds")] private int[] layerIds = new int[0];
+        [SerializeField]
+        [HideInInspector]
+        private int[] layerIds = new int[0];
+
         private Dictionary<int, int> layerById = new Dictionary<int, int>();
         private List<RaycastHit2D> sortedHits = new List<RaycastHit2D>(20);
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
@@ -88,7 +91,7 @@ namespace TouchScript.Layers
         private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out TouchHit hit)
         {
             hit = new TouchHit(raycastHit);
-			raycastHit.transform.GetComponents(tmpHitTestList);
+            raycastHit.transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return HitTest.ObjectHitResult.Hit;
 

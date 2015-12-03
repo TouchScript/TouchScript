@@ -86,8 +86,9 @@ namespace TouchScript.Gestures.Base
         #region Public properties
 
         /// <summary>
-        /// Types of transformation this gesture supports.
+        /// Gets or sets types of transformation this gesture supports.
         /// </summary>
+        /// <value> Type flags. </value>
         public TransformType Type
         {
             get { return type; }
@@ -97,7 +98,7 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Gets or sets minimum distance in cm for touch points to move for gesture to begin. 
         /// </summary>
-        /// <value>Minimum value in cm user must move their fingers to start this gesture.</value>
+        /// <value> Minimum value in cm user must move their fingers to start this gesture. </value>
         public float ScreenTransformThreshold
         {
             get { return screenTransformThreshold; }
@@ -163,9 +164,11 @@ namespace TouchScript.Gestures.Base
         protected float scaleBuffer;
         protected bool isTransforming = false;
 
-        [SerializeField] private TransformType type = TransformType.Scaling | TransformType.Rotation;
+        [SerializeField]
+        private TransformType type = TransformType.Scaling | TransformType.Rotation;
 
-        [SerializeField] private float screenTransformThreshold = 0.1f;
+        [SerializeField]
+        private float screenTransformThreshold = 0.1f;
 
         #endregion
 
@@ -294,8 +297,8 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Checks if there are touch points in the list which matter for the gesture.
         /// </summary>
-        /// <param name="touches">List of touch points</param>
-        /// <returns>True if there are relevant touch points, False otherwise.</returns>
+        /// <param name="touches"> List of touch points </param>
+        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
         protected virtual bool relevantTouches(IList<ITouch> touches)
         {
             // We care only about the first touch point
@@ -365,8 +368,8 @@ namespace TouchScript.Gestures.Base
 
         private void updateScreenTransformThreshold()
         {
-            screenTransformPixelThreshold = screenTransformThreshold*touchManager.DotsPerCentimeter;
-            screenTransformPixelThresholdSquared = screenTransformPixelThreshold*screenTransformPixelThreshold;
+            screenTransformPixelThreshold = screenTransformThreshold * touchManager.DotsPerCentimeter;
+            screenTransformPixelThresholdSquared = screenTransformPixelThreshold * screenTransformPixelThreshold;
         }
 
         #endregion

@@ -13,7 +13,7 @@ using UnityEngine.UI;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// 
+    /// Touch layer which handles Unity UI and interface objects in a Canvas.
     /// </summary>
     public class UILayer : TouchLayer
     {
@@ -27,16 +27,18 @@ namespace TouchScript.Layers
 
         [NonSerialized]
         private List<RaycastResult> raycastResultCache = new List<RaycastResult>(20);
+
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         private PointerEventData pointerDataCache;
         private EventSystem eventSystem;
-        private Dictionary<Canvas, ProjectionParams> projectionParamsCache = new Dictionary<Canvas, ProjectionParams>(); 
+        private Dictionary<Canvas, ProjectionParams> projectionParamsCache = new Dictionary<Canvas, ProjectionParams>();
 
         #endregion
 
         #region Public methods
 
+        /// <inheritdoc />
         public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
@@ -78,6 +80,7 @@ namespace TouchScript.Layers
             return LayerHitResult.Miss;
         }
 
+        /// <inheritdoc />
         public override ProjectionParams GetProjectionParams(ITouch touch)
         {
             var graphic = touch.Target.GetComponent<Graphic>();
@@ -99,6 +102,7 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
+        /// <inheritdoc />
         protected override void Awake()
         {
             if (Application.isPlaying)
@@ -118,6 +122,7 @@ namespace TouchScript.Layers
             StartCoroutine(lateAwake());
         }
 
+        /// <inheritdoc />
         protected IEnumerator lateAwake()
         {
             yield return new WaitForEndOfFrame();
@@ -133,6 +138,7 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
+        /// <inheritdoc />
         protected override void setName()
         {
             Name = "UI Layer";
@@ -165,6 +171,5 @@ namespace TouchScript.Layers
         }
 
         #endregion
-
     }
 }

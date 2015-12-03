@@ -47,8 +47,9 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Transform's projection type.
+        /// Gets or sets transform's projection type.
         /// </summary>
+        /// <value> Projection type. </value>
         public ProjectionType Projection
         {
             get { return projection; }
@@ -61,8 +62,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Transform's projection plane normal.
+        /// Gets or sets transform's projection plane normal.
         /// </summary>
+        /// <value> Projection plane normal. </value>
         public Vector3 ProjectionPlaneNormal
         {
             get
@@ -91,7 +93,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets rotation axis of the gesture in world coordinates.
         /// </summary>
-        /// <value>Rotation axis of the gesture in world coordinates.</value>
+        /// <value> Rotation axis of the gesture in world coordinates. </value>
         public Vector3 RotationAxis
         {
             get { return transformPlane.normal; }
@@ -101,8 +103,11 @@ namespace TouchScript.Gestures
 
         #region Private variables
 
-        [SerializeField] private ProjectionType projection = ProjectionType.Layer;
-        [SerializeField] private Vector3 projectionPlaneNormal = Vector3.forward;
+        [SerializeField]
+        private ProjectionType projection = ProjectionType.Layer;
+
+        [SerializeField]
+        private Vector3 projectionPlaneNormal = Vector3.forward;
 
         private TouchLayer projectionLayer;
         private Plane transformPlane;
@@ -115,7 +120,7 @@ namespace TouchScript.Gestures
         public void ApplyTransform(Transform target)
         {
             if (!Mathf.Approximately(DeltaRotation, 0f))
-                target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis)*target.rotation;
+                target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis) * target.rotation;
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
 
@@ -204,7 +209,7 @@ namespace TouchScript.Gestures
                     screenPixelRotationBuffer += TwoD.PointToLineDistance(screenCenter, oldScreenPos, newScreenPos);
                     angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
 
-                    if (screenPixelRotationBuffer*screenPixelRotationBuffer >=
+                    if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
                         screenTransformPixelThresholdSquared)
                     {
                         isTransforming = true;
@@ -225,7 +230,7 @@ namespace TouchScript.Gestures
                                                 (oldScreenPos - screenCenter).magnitude;
                     scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
 
-                    if (screenPixelScalingBuffer*screenPixelScalingBuffer >=
+                    if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
                         screenTransformPixelThresholdSquared)
                     {
                         isTransforming = true;
@@ -284,7 +289,8 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
-        private float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
+        private float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos,
+                                 ProjectionParams projectionParams)
         {
             var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
             var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
@@ -294,11 +300,12 @@ namespace TouchScript.Gestures
             return angle;
         }
 
-        private float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
+        private float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos,
+                                ProjectionParams projectionParams)
         {
             var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
             var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
-            return newVector.magnitude/oldVector.magnitude;
+            return newVector.magnitude / oldVector.magnitude;
         }
 
         private void updateProjectionPlane()

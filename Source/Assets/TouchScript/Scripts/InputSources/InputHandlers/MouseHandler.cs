@@ -7,9 +7,11 @@ using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
 {
+    /// <summary>
+    /// Unity mouse handling implementation which can be embedded and controlled from other (input) classes.
+    /// </summary>
     public class MouseHandler : IDisposable
     {
-
         #region Private variables
 
         private Func<Vector2, ITouch> beginTouch;
@@ -23,8 +25,15 @@ namespace TouchScript.InputSources.InputHandlers
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MouseHandler"/> class.
+        /// </summary>
+        /// <param name="beginTouch"> A function called when a new touch is detected. As <see cref="InputSource.beginTouch(Vector2)"/> this function must accept a Vector2 position of the new touch and return an instance of <see cref="ITouch"/>. </param>
+        /// <param name="moveTouch"> A function called when a touch is moved. As <see cref="InputSource.moveTouch"/> this function must accept an int id and a Vector2 position. </param>
+        /// <param name="endTouch"> A function called when a touch is lifted off. As <see cref="InputSource.endTouch"/> this function must accept an int id. </param>
+        /// <param name="cancelTouch"> A function called when a touch is cancelled. As <see cref="InputSource.cancelTouch"/> this function must accept an int id. </param>
         public MouseHandler(Func<Vector2, ITouch> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
-            Action<int> cancelTouch)
+                            Action<int> cancelTouch)
         {
             this.beginTouch = beginTouch;
             this.moveTouch = moveTouch;
@@ -37,6 +46,9 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Public methods
 
+        /// <summary>
+        /// Immediately ends all touches.
+        /// </summary>
         public void EndTouches()
         {
             if (mousePointId != -1)
@@ -51,6 +63,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         public void Update()
         {
             // If mouse button was pressed and released during the same frame,
@@ -104,6 +119,7 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             if (mousePointId != -1) cancelTouch(mousePointId);
@@ -111,6 +127,5 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         #endregion
-
     }
 }

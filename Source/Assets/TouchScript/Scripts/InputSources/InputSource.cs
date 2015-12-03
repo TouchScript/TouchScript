@@ -24,7 +24,8 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-        [SerializeField] private bool advancedProps; // is used to save whether advanced properties are opened or closed
+        [SerializeField]
+        private bool advancedProps; // is used to save whether advanced properties are opened or closed
 
         private TouchManagerInstance manager;
 
@@ -32,9 +33,8 @@ namespace TouchScript.InputSources
 
         #region Public methods
 
-        public virtual void UpdateInput()
-        {
-        }
+        /// <inheritdoc />
+        public virtual void UpdateInput() {}
 
         #endregion
 

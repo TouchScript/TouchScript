@@ -7,12 +7,15 @@ using UnityEngine;
 namespace TouchScript
 {
     /// <summary>
-    /// Internal facade for current instance of <see cref="ITouchManager"/>.
+    /// Facade for current instance of <see cref="IGestureManager"/>.
     /// </summary>
-    internal sealed class GestureManager : MonoBehaviour
+    public sealed class GestureManager : MonoBehaviour
     {
         #region Public properties
 
+        /// <summary>
+        /// Gets the GestureManager instance.
+        /// </summary>
         public static IGestureManager Instance
         {
             get { return GestureManagerInstance.Instance; }

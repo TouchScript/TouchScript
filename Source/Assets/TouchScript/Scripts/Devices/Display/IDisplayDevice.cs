@@ -13,12 +13,16 @@ namespace TouchScript.Devices.Display
     /// </remarks>
     public interface IDisplayDevice
     {
-        /// <summary>Gets or sets the name of display device.</summary>
-        /// <value>The name of display device.</value>
+        /// <summary>
+        /// Gets or sets the name of display device.
+        /// </summary>
+        /// <value> The name of display device. </value>
         string Name { get; set; }
 
-        /// <summary>Gets or sets DPI of display device.</summary>
-        /// <value>DPI used by display device.</value>
+        /// <summary>
+        /// Gets or sets DPI of display device.
+        /// </summary>
+        /// <value> DPI used by display device. </value>
         float DPI { get; set; }
     }
 }

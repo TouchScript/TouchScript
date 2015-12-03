@@ -47,7 +47,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets a value indicating whether actions coming from children should be ingored.
         /// </summary>
-        /// <value><c>true</c> if actions from children should be ignored; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if actions from children should be ignored; otherwise, <c>false</c>. </value>
         public bool IgnoreChildren
         {
             get { return ignoreChildren; }
@@ -103,7 +103,8 @@ namespace TouchScript.Gestures
         {
             base.onRecognized();
             if (pressedInvoker != null) pressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
-            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseSendMessage && SendMessageTarget != null)
+                SendMessageTarget.SendMessage(PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
         }
 
         #endregion

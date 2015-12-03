@@ -29,15 +29,21 @@ namespace TouchScript.Devices.Display
             set { dpi = value; }
         }
 
-        /// <summary>Serialized device name.</summary>
+        /// <summary>
+        /// Serialized device name.
+        /// </summary>
         [SerializeField]
         protected new string name = "Unknown Device";
 
-        /// <summary>Serialized device DPI.</summary>
+        /// <summary>
+        /// Serialized device DPI.
+        /// </summary>
         [SerializeField]
         protected float dpi = 96;
 
-        /// <summary>OnEnable Unity method.</summary>
+        /// <summary>
+        /// OnEnable Unity method.
+        /// </summary>
         protected virtual void OnEnable()
         {
             base.name = name;

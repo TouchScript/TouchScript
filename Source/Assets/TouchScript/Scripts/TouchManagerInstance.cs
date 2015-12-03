@@ -1,6 +1,7 @@
 /*
  * @author Valentin Simonov / http://va.lent.in/
  */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,9 +69,9 @@ namespace TouchScript
 
         // Needed to overcome iOS AOT limitations
         private EventHandler<TouchEventArgs> touchesBeganInvoker,
-            touchesMovedInvoker,
-            touchesEndedInvoker,
-            touchesCancelledInvoker;
+                                             touchesMovedInvoker,
+                                             touchesEndedInvoker,
+                                             touchesCancelledInvoker;
 
         private EventHandler frameStartedInvoker, frameFinishedInvoker;
 
@@ -188,7 +189,7 @@ namespace TouchScript
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
-        private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
+        private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private List<IInputSource> inputs = new List<IInputSource>(3);
@@ -539,7 +540,7 @@ namespace TouchScript
         private void updateDPI()
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
-            dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
+            dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
 #if TOUCHSCRIPT_DEBUG
             debugTouchSize = Vector2.one*dotsPerCentimeter;
 #endif
@@ -854,7 +855,7 @@ namespace TouchScript
                 updateManuallyCancelled(manuallyCancelledList);
                 cancelledListPool.Release(manuallyCancelledList);
             }
-            
+
 
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }

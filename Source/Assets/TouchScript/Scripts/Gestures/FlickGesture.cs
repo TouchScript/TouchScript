@@ -66,7 +66,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets time interval in seconds in which touch points must move by <see cref="MinDistance"/> for gesture to succeed.
         /// </summary>
-        /// <value>Interval in seconds in which touch points must move by <see cref="MinDistance"/> for gesture to succeed.</value>
+        /// <value> Interval in seconds in which touch points must move by <see cref="MinDistance"/> for gesture to succeed. </value>
         public float FlickTime
         {
             get { return flickTime; }
@@ -76,7 +76,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.
         /// </summary>
-        /// <value>Minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized.</value>
+        /// <value> Minimum distance in cm to move in <see cref="FlickTime"/> before ending gesture for it to be recognized. </value>
         public float MinDistance
         {
             get { return minDistance; }
@@ -86,8 +86,8 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets minimum distance in cm touches must move to start recognizing this gesture.
         /// </summary>
-        /// <value>Minimum distance in cm touches must move to start recognizing this gesture.</value>
-        /// <remarks>Prevents misinterpreting taps.</remarks>
+        /// <value> Minimum distance in cm touches must move to start recognizing this gesture. </value>
+        /// <remarks> Prevents misinterpreting taps. </remarks>
         public float MovementThreshold
         {
             get { return movementThreshold; }
@@ -97,7 +97,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Gets or sets direction to look for.
         /// </summary>
-        /// <value>Direction of movement.</value>
+        /// <value> Direction of movement. </value>
         public GestureDirection Direction
         {
             get { return direction; }

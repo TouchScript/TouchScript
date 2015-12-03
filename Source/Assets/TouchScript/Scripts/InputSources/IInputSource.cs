@@ -19,6 +19,9 @@ namespace TouchScript.InputSources
         /// <value>An object used to change coordinates of touch points coming from this input source.</value>
         ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
+        /// <summary>
+        /// This method is called by <see cref="TouchManagerInstance"/> to synchronously update the input.
+        /// </summary>
         void UpdateInput();
     }
 }

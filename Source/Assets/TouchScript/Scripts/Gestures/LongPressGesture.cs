@@ -45,8 +45,9 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Total time in seconds required to hold touches still.
+        /// Gets or sets total time in seconds required to hold touches still.
         /// </summary>
+        /// <value> Time in seconds. </value>
         public float TimeToPress
         {
             get { return timeToPress; }
@@ -54,8 +55,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Maximum distance in cm touch points can move before gesture fails.
+        /// Gets or sets maximum distance in cm touch points can move before gesture fails.
         /// </summary>
+        /// <value> Distance in cm. </value>
         public float DistanceLimit
         {
             get { return distanceLimit; }
@@ -106,7 +108,8 @@ namespace TouchScript.Gestures
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
-            } else if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            }
+            else if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
                 StartCoroutine("wait");
             }

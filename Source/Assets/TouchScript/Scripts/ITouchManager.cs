@@ -83,21 +83,30 @@ namespace TouchScript
         float DPI { get; }
 
         /// <summary>
-        /// Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene.
+        /// Indicates if TouchScript should create a <see cref="CameraLayer"/> for you if no layers present in a scene.
         /// </summary>
         /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
         /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.</remarks>
         bool ShouldCreateCameraLayer { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a <see cref="StandardInput"/> should be created in scene if no inputs present.
+        /// </summary>
+        /// <value> <c>true</c> if StandardInput should be created; otherwise, <c>false</c>. </value>
+        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off.</remarks>
         bool ShouldCreateStandardInput { get; set; }
 
         /// <summary>
-        /// Gets the list of touch layers.
+        /// Gets the list of <see cref="TouchLayer"/>.
         /// </summary>
         /// <value>A sorted list of currently active touch layers.</value>
         IList<TouchLayer> Layers { get; }
 
-        IList<IInputSource> Inputs { get; } 
+        /// <summary>
+        /// Gets the list of <see cref="IInputSource"/>
+        /// </summary>
+        /// <value> A sorted list of input sources. </value>
+        IList<IInputSource> Inputs { get; }
 
         /// <summary>
         /// Gets number of pixels in a cm with current DPI.
@@ -144,7 +153,18 @@ namespace TouchScript
         /// <param name="to">Layer index 2.</param>
         void ChangeLayerIndex(int at, int to);
 
+        /// <summary>
+        /// Adds an input source.
+        /// </summary>
+        /// <param name="input"> Input source to add. </param>
+        /// <returns> <c>true</c> if the input source wasn't in the list and was added; <c>false</c> otherwise. </returns>
         bool AddInput(IInputSource input);
+
+        /// <summary>
+        /// Removes the input.
+        /// </summary>
+        /// <param name="input"> Input source to remove. </param>
+        /// <returns> <c>true</c> if the input source was removed; <c>false</c> otherwise. </returns>
         bool RemoveInput(IInputSource input);
 
         /// <summary>
@@ -204,9 +224,7 @@ namespace TouchScript
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
         /// </summary>
-        private TouchEventArgs()
-        {
-        }
+        private TouchEventArgs() {}
 
         /// <summary>
         /// Returns cached instance of EventArgs.

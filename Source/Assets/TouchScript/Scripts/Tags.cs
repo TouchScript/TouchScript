@@ -10,7 +10,7 @@ using UnityEngine;
 namespace TouchScript
 {
     /// <summary>
-    /// Tags collection for touches.
+    /// Immutable tag collection for touches.
     /// </summary>
     [Serializable]
     public sealed class Tags : ISerializationCallbackReceiver
@@ -37,6 +37,9 @@ namespace TouchScript
         /// </summary>
         public const string INPUT_OBJECT = "Object";
 
+        /// <summary>
+        /// Empty tag list.
+        /// </summary>
         public static readonly Tags EMPTY = new Tags();
 
         #endregion
@@ -47,7 +50,9 @@ namespace TouchScript
 
         #region Private variables
 
-        [SerializeField] private List<string> tagList = new List<string>();
+        [SerializeField]
+        private List<string> tagList = new List<string>();
+
         private HashSet<string> tags = new HashSet<string>();
         private string stringValue;
 
@@ -55,6 +60,11 @@ namespace TouchScript
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tags"/> class.
+        /// </summary>
+        /// <param name="tags"> Tags to copy. </param>
+        /// <param name="add"> Tags to add. </param>
         public Tags(Tags tags, IEnumerable<string> add) : this(tags)
         {
             if (add == null) return;
@@ -68,6 +78,11 @@ namespace TouchScript
 #endif
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tags"/> class.
+        /// </summary>
+        /// <param name="tags"> Tags to copy. </param>
+        /// <param name="add"> Tag to add. </param>
         public Tags(Tags tags, string add) : this(tags)
         {
             if (string.IsNullOrEmpty(add)) return;
@@ -75,9 +90,9 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Creates an instance of Tags.
+        /// Initializes a new instance of the <see cref="Tags"/> class.
         /// </summary>
-        /// <param name="tags">Tags collection to copy.</param>
+        /// <param name="tags"> Tags to copy. </param>
         public Tags(Tags tags) : this()
         {
             if (tags == null) return;
@@ -88,9 +103,9 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Creates an instance of Tags.
+        /// Initializes a new instance of the <see cref="Tags"/> class.
         /// </summary>
-        /// <param name="tags">Tags collection to copy.</param>
+        /// <param name="tags"> Tags to copy. </param>
         public Tags(IEnumerable<string> tags) : this()
         {
             if (tags == null) return;
@@ -104,6 +119,10 @@ namespace TouchScript
 #endif
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tags"/> class.
+        /// </summary>
+        /// <param name="tags"> Tags to add. </param>
         public Tags(params string[] tags) : this()
         {
             if (tags == null) return;
@@ -120,9 +139,9 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Creates an instance of Tags.
+        /// Initializes a new instance of the <see cref="Tags"/> class.
         /// </summary>
-        /// <param name="tag">Tag to add to the new collection.</param>
+        /// <param name="tag"> Tag to add. </param>
         public Tags(string tag) : this()
         {
             if (string.IsNullOrEmpty(tag)) return;
@@ -132,9 +151,10 @@ namespace TouchScript
 #endif
         }
 
-        public Tags()
-        {
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tags"/> class.
+        /// </summary>
+        public Tags() {}
 
         #endregion
 
@@ -151,6 +171,7 @@ namespace TouchScript
         }
 
 
+        /// <exclude />
         public void OnBeforeSerialize()
         {
 #if !UNITY_EDITOR
@@ -159,6 +180,7 @@ namespace TouchScript
 #endif
         }
 
+        /// <exclude />
         public void OnAfterDeserialize()
         {
             tags.Clear();

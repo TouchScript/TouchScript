@@ -9,13 +9,18 @@ using UnityEngine.EventSystems;
 
 namespace TouchScript.Gestures.UI
 {
-
+    /// <summary>
+    /// <para>Gesture which receives touch input from TouchScript and routes it to Unity UI components on the same GameObject.</para>
+    /// <para>Mostly needed for UI buttons to work with <see cref="TouchScript.Layers.UILayer"/>.</para>
+    /// </summary>
     [AddComponentMenu("TouchScript/Gestures/UI Gesture")]
     public class UIGesture : Gesture
     {
-
         #region Protected variables
 
+        /// <summary>
+        /// Touch id -> pointer data.
+        /// </summary>
         protected Dictionary<int, TouchData> pointerData = new Dictionary<int, TouchData>();
 
         #endregion
@@ -75,7 +80,7 @@ namespace TouchScript.Gestures.UI
                     {
                         data.OnTarget = false;
                         ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerExitHandler);
-                    } 
+                    }
                 }
                 setPointerData(touch, data);
             }
@@ -116,12 +121,17 @@ namespace TouchScript.Gestures.UI
             }
 
             if (activeTouches.Count == 0) setState(GestureState.Ended);
-        } 
+        }
 
         #endregion
 
         #region Protected methods
 
+        /// <summary>
+        /// Gets or creates pointer data for touch.
+        /// </summary>
+        /// <param name="touch"> The touch. </param>
+        /// <returns> Pointer data. </returns>
         protected virtual TouchData getPointerData(ITouch touch)
         {
             TouchData data;
@@ -150,11 +160,20 @@ namespace TouchScript.Gestures.UI
             return data;
         }
 
+        /// <summary>
+        /// Sets pointer data for touch.
+        /// </summary>
+        /// <param name="touch"> The touch. </param>
+        /// <param name="data"> The data. </param>
         protected virtual void setPointerData(ITouch touch, TouchData data)
         {
             if (pointerData.ContainsKey(touch.Id)) pointerData[touch.Id] = data;
         }
 
+        /// <summary>
+        /// Removes pointer data for touch.
+        /// </summary>
+        /// <param name="touch"> The touch. </param>
         protected virtual void removePointerData(ITouch touch)
         {
             pointerData.Remove(touch.Id);
@@ -162,9 +181,19 @@ namespace TouchScript.Gestures.UI
 
         #endregion
 
+        /// <summary>
+        /// Touch pointer data value object.
+        /// </summary>
         protected struct TouchData
         {
+            /// <summary>
+            /// Is the object over the target it first hit?
+            /// </summary>
             public bool OnTarget;
+
+            /// <summary>
+            /// Pointer data for UI.
+            /// </summary>
             public PointerEventData Data;
 
             public TouchData(bool onTarget = false, PointerEventData data = null)
@@ -172,8 +201,6 @@ namespace TouchScript.Gestures.UI
                 OnTarget = onTarget;
                 Data = data;
             }
-
         }
-
     }
 }
