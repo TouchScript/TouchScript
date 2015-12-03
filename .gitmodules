@@ -4,3 +4,6 @@
 [submodule "Modules/Playmaker"]
 	path = Modules/Playmaker
 	url = https://github.com/TouchScript/Playmaker.git
+[submodule "Modules/Scaleform"]
+	path = Modules/Scaleform
+	url = https://github.com/TouchScript/Scaleform.git
