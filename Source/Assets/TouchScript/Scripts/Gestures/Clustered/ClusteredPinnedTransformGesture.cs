@@ -17,7 +17,7 @@ namespace TouchScript.Gestures.Clustered
         #region Protected methods
 
         /// <inheritdoc />
-        protected override bool relevantTouch(ITouch touch)
+        protected override bool relevantTouches()
         {
             return true;
         }

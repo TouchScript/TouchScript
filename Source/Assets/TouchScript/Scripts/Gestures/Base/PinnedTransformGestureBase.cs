@@ -3,6 +3,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using TouchScript.Layers;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -163,6 +165,9 @@ namespace TouchScript.Gestures.Base
         protected float scaleBuffer;
         protected bool isTransforming = false;
 
+        protected List<ITouch> movedTouches = new List<ITouch>(5);
+        protected ProjectionParams projectionParams;
+
         [SerializeField]
         private TransformType type = TransformType.Scaling | TransformType.Rotation;
 
@@ -201,6 +206,8 @@ namespace TouchScript.Gestures.Base
         protected override void touchBegan(ITouch touch)
         {
             base.touchBegan(touch);
+
+            if (activeTouches.Count == 1) projectionParams = activeTouches[0].ProjectionParams;
 
             if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
@@ -262,10 +269,30 @@ namespace TouchScript.Gestures.Base
         protected override void onRecognized()
         {
             base.onRecognized();
+
+            // need to clear moved touches updateMoved() wouldn't fire in a wrong state
+            // yes, if moved and released the same frame movement data will be lost
+            movedTouches.Clear();
             if (transformCompletedInvoker != null)
                 transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <inheritdoc />
+        protected override void onFailed()
+        {
+            base.onFailed();
+
+            movedTouches.Clear();
+        }
+
+        /// <inheritdoc />
+        protected override void onCancelled()
+        {
+            base.onCancelled();
+
+            movedTouches.Clear();
         }
 
         /// <inheritdoc />
@@ -282,6 +309,7 @@ namespace TouchScript.Gestures.Base
             screenPixelScalingBuffer = 0f;
             scaleBuffer = 1f;
 
+            movedTouches.Clear();
             isTransforming = false;
 
 #if TOUCHSCRIPT_DEBUG
@@ -294,14 +322,17 @@ namespace TouchScript.Gestures.Base
         #region Protected methods
 
         /// <summary>
-        /// Checks if this touch matters for the gesture.
+        /// Checks if there are touch points in moved list which matter for the gesture.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
-        /// <returns> <c>true</c> if this is a relevant touch; <c>false</c> otherwise.</returns>
-        protected virtual bool relevantTouch(ITouch touch)
+        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
+        protected virtual bool relevantTouches()
         {
             // We care only about the first touch point
-            if (touch == activeTouches[0]) return true;
+            var count = movedTouches.Count;
+            for (var i = 0; i < count; i++)
+            {
+                if (movedTouches[i] == activeTouches[0]) return true;
+            }
             return false;
         }
 
