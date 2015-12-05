@@ -149,7 +149,7 @@ namespace TouchScript.Gestures
         {
             base.OnDisable();
 
-            TouchManager.Instance.FrameFinished -= frameFinishedHandler;
+            if (TouchManager.Instance != null) TouchManager.Instance.FrameFinished -= frameFinishedHandler;
         }
 
         #endregion
