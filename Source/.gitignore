@@ -23,10 +23,9 @@ ExportedObj/
 *.mdb
  
 _ReSharper*
-
 /Assets/UnityVS*
 /.vscode
-/Assets/Plugins*
+/Assets/VSCode*
 
 *.pdb*
 *.mdb*
