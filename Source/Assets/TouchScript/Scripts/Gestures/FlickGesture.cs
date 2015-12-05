@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -152,9 +151,9 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouch> touches)
+        protected override void touchBegan(ITouch touch)
         {
-            base.touchesBegan(touches);
+            base.touchBegan(touch);
 
             if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
@@ -170,9 +169,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouch> touches)
+        protected override void touchMoved(ITouch touch)
         {
-            base.touchesMoved(touches);
+            base.touchMoved(touch);
 
             if (isActive || !moving)
             {
@@ -186,9 +185,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouch> touches)
+        protected override void touchEnded(ITouch touch)
         {
-            base.touchesEnded(touches);
+            base.touchEnded(touch);
 
             if (NumTouches == 0)
             {

@@ -19,10 +19,10 @@ namespace TouchScript
     /// <para>Every frame touch events are dispatched in this order:</para>
     /// <list type="number">
     /// <item><description>FrameStarted</description></item>
-    /// <item><description>TouchesBegan</description></item>
-    /// <item><description>TouchesMoved</description></item>
-    /// <item><description>TouchesEnded</description></item>
-    /// <item><description>TouchesCancelled</description></item>
+    /// <item><description>TouchBegan</description></item>
+    /// <item><description>TouchMoved</description></item>
+    /// <item><description>TouchEnded</description></item>
+    /// <item><description>TouchCancelled</description></item>
     /// <item><description>FrameFinished</description></item>
     /// </list>
     /// <para>FrameStarted and FrameFinished events mark the start and the end of current touch frame and allow to implement specific logic at these moments.</para>
@@ -32,10 +32,8 @@ namespace TouchScript
     /// <example>
     /// This sample shows how to get Touch Manager instance and subscribe to events.
     /// <code>
-    /// TouchManager.Instance.TouchesBegan += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Began: " + touch.Id); }; 
-    /// TouchManager.Instance.TouchesEnded += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Ended: " + touch.Id); }; 
+    /// TouchManager.Instance.TouchBegan += (sender, args) => { Debug.Log("Began: " + args.Touch.Id); }; 
+    /// TouchManager.Instance.TouchEnded += (sender, args) => { Debug.Log("Ended: " + args.Touch.Id); }; 
     /// </code>
     /// </example>
     public interface ITouchManager
@@ -53,22 +51,22 @@ namespace TouchScript
         /// <summary>
         /// Occurs when new touch points are added.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesBegan;
+        event EventHandler<TouchEventArgs> TouchBegan;
 
         /// <summary>
         /// Occurs when touch points are updated.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesMoved;
+        event EventHandler<TouchEventArgs> TouchMoved;
 
         /// <summary>
         /// Occurs when touch points are removed.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesEnded;
+        event EventHandler<TouchEventArgs> TouchEnded;
 
         /// <summary>
         /// Occurs when touch points are cancelled.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesCancelled;
+        event EventHandler<TouchEventArgs> TouchCancelled;
 
         /// <summary>
         /// Gets or sets current display device.
@@ -214,10 +212,10 @@ namespace TouchScript
     public class TouchEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets list of touches participating in the event.
+        /// Gets the touch participating in the event.
         /// </summary>
-        /// <value>List of touches added, changed or removed this frame.</value>
-        public IList<ITouch> Touches { get; private set; }
+        /// <value> The touch added, changed or removed this frame. </value>
+        public ITouch Touch { get; private set; }
 
         private static TouchEventArgs instance;
 
@@ -230,12 +228,12 @@ namespace TouchScript
         /// Returns cached instance of EventArgs.
         /// This cached EventArgs is reused throughout the library not to alocate new ones on every call.
         /// </summary>
-        /// <param name="touches">A list of touches for event.</param>
+        /// <param name="touch"> Touch for the event. </param>
         /// <returns>Cached EventArgs object.</returns>
-        public static TouchEventArgs GetCachedEventArgs(IList<ITouch> touches)
+        public static TouchEventArgs GetCachedEventArgs(ITouch touch)
         {
             if (instance == null) instance = new TouchEventArgs();
-            instance.Touches = touches;
+            instance.Touch = touch;
             return instance;
         }
     }

@@ -1,10 +1,9 @@
-/*
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
@@ -123,9 +122,9 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouch> touches)
+        protected override void touchBegan(ITouch touch)
         {
-            base.touchesBegan(touches);
+            base.touchBegan(touch);
 
             if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
@@ -134,26 +133,26 @@ namespace TouchScript.Gestures
                 return;
             }
 
-            if (NumTouches == touches.Count)
+            if (NumTouches == 1)
             {
                 // the first ever touch
                 if (tapsDone == 0)
                 {
-                    startPosition = touches[0].Position;
+                    startPosition = touch.Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
                 }
                 else if (tapsDone >= numberOfTapsRequired) // Might be delayed and retapped while waiting
                 {
                     setState(GestureState.Possible);
                     reset();
-                    startPosition = touches[0].Position;
+                    startPosition = touch.Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
                 }
                 else
                 {
                     if (distanceLimit < float.PositiveInfinity)
                     {
-                        if ((touches[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared)
+                        if ((touch.Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared)
                         {
                             setState(GestureState.Failed);
                             return;
@@ -170,21 +169,21 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouch> touches)
+        protected override void touchMoved(ITouch touch)
         {
-            base.touchesMoved(touches);
+            base.touchMoved(touch);
 
             if (distanceLimit < float.PositiveInfinity)
             {
-                totalMovement += touches[0].Position - touches[0].PreviousPosition;
+                totalMovement += touch.Position - touch.PreviousPosition;
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouch> touches)
+        protected override void touchEnded(ITouch touch)
         {
-            base.touchesEnded(touches);
+            base.touchEnded(touch);
 
             if (NumTouches == 0)
             {

@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -24,27 +23,27 @@ namespace TouchScript.Gestures.Clustered
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouch> touches)
+        protected override void touchBegan(ITouch touch)
         {
-            clusters.AddPoints(touches);
+            clusters.AddPoint(touch);
 
-            base.touchesBegan(touches);
+            base.touchBegan(touch);
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouch> touches)
+        protected override void touchMoved(ITouch touch)
         {
             clusters.Invalidate();
 
-            base.touchesMoved(touches);
+            base.touchMoved(touch);
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouch> touches)
+        protected override void touchEnded(ITouch touch)
         {
-            clusters.RemovePoints(touches);
+            clusters.RemovePoint(touch);
 
-            base.touchesEnded(touches);
+            base.touchEnded(touch);
         }
 
         /// <inheritdoc />
@@ -68,13 +67,13 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches1(IList<ITouch> touches)
+        protected override bool relevantTouch1(ITouch touch)
         {
             return true;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches2(IList<ITouch> touches)
+        protected override bool relevantTouch2(ITouch touch)
         {
             return true;
         }

@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
@@ -147,12 +146,12 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouch> touches)
+        protected override void touchBegan(ITouch touch)
         {
-            base.touchesBegan(touches);
+            base.touchBegan(touch);
 
             if (State != GestureState.Possible) return;
-            if (touches.Count == NumTouches)
+            if (NumTouches == 1)
             {
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
@@ -164,9 +163,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<ITouch> touches)
+        protected override void touchMoved(ITouch touch)
         {
-            base.touchesMoved(touches);
+            base.touchMoved(touch);
 
             var projectionParams = ActiveTouches[0].ProjectionParams;
             var dR = deltaRotation = 0;
@@ -184,7 +183,7 @@ namespace TouchScript.Gestures
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
             if (!rotationEnabled && !scalingEnabled) return;
-            if (!relevantTouches(touches)) return;
+            if (!relevantTouch(touch)) return;
 
 #if !TOUCHSCRIPT_DEBUG
             var theTouch = activeTouches[0];
@@ -256,9 +255,9 @@ namespace TouchScript.Gestures
 
 #if TOUCHSCRIPT_DEBUG
     /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouch> touches)
+        protected override void touchEnded(IList<ITouch> touches)
         {
-            base.touchesEnded(touches);
+            base.touchEnded(touches);
 
             if (activeTouches.Count == 0) return;
             drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);

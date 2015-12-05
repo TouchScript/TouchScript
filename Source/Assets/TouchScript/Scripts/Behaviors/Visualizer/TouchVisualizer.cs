@@ -114,10 +114,10 @@ namespace TouchScript.Behaviors.Visualizer
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.TouchesBegan += touchesBeganHandler;
-                TouchManager.Instance.TouchesEnded += touchesEndedHandler;
-                TouchManager.Instance.TouchesMoved += touchesMovedHandler;
-                TouchManager.Instance.TouchesCancelled += touchesCancelledHandler;
+                TouchManager.Instance.TouchBegan += touchBeganHandler;
+                TouchManager.Instance.TouchEnded += touchEndedHandler;
+                TouchManager.Instance.TouchMoved += touchMovedHandler;
+                TouchManager.Instance.TouchCancelled += touchCancelledHandler;
             }
         }
 
@@ -125,10 +125,10 @@ namespace TouchScript.Behaviors.Visualizer
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
-                TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
-                TouchManager.Instance.TouchesMoved -= touchesMovedHandler;
-                TouchManager.Instance.TouchesCancelled -= touchesCancelledHandler;
+                TouchManager.Instance.TouchBegan -= touchBeganHandler;
+                TouchManager.Instance.TouchEnded -= touchEndedHandler;
+                TouchManager.Instance.TouchMoved -= touchMovedHandler;
+                TouchManager.Instance.TouchCancelled -= touchCancelledHandler;
             }
         }
 
@@ -165,51 +165,39 @@ namespace TouchScript.Behaviors.Visualizer
 
         #region Event handlers
 
-        private void touchesBeganHandler(object sender, TouchEventArgs e)
+        private void touchBeganHandler(object sender, TouchEventArgs e)
         {
             if (touchProxy == null) return;
 
-            var count = e.Touches.Count;
-            for (var i = 0; i < count; i++)
-            {
-                var touch = e.Touches[i];
-                var proxy = pool.Get();
-                proxy.Size = getTouchSize();
-                proxy.ShowTouchId = showTouchId;
-                proxy.ShowTags = showTags;
-                proxy.Init(rect, touch);
-                proxies.Add(touch.Id, proxy);
-            }
+            var touch = e.Touch;
+            var proxy = pool.Get();
+            proxy.Size = getTouchSize();
+            proxy.ShowTouchId = showTouchId;
+            proxy.ShowTags = showTags;
+            proxy.Init(rect, touch);
+            proxies.Add(touch.Id, proxy);
         }
 
-        private void touchesMovedHandler(object sender, TouchEventArgs e)
+        private void touchMovedHandler(object sender, TouchEventArgs e)
         {
-            var count = e.Touches.Count;
-            for (var i = 0; i < count; i++)
-            {
-                var touch = e.Touches[i];
-                TouchProxyBase proxy;
-                if (!proxies.TryGetValue(touch.Id, out proxy)) return;
-                proxy.UpdateTouch(touch);
-            }
+            var touch = e.Touch;
+            TouchProxyBase proxy;
+            if (!proxies.TryGetValue(touch.Id, out proxy)) return;
+            proxy.UpdateTouch(touch);
         }
 
-        private void touchesEndedHandler(object sender, TouchEventArgs e)
+        private void touchEndedHandler(object sender, TouchEventArgs e)
         {
-            var count = e.Touches.Count;
-            for (var i = 0; i < count; i++)
-            {
-                var touch = e.Touches[i];
-                TouchProxyBase proxy;
-                if (!proxies.TryGetValue(touch.Id, out proxy)) return;
-                proxies.Remove(touch.Id);
-                pool.Release(proxy);
-            }
+            var touch = e.Touch;
+            TouchProxyBase proxy;
+            if (!proxies.TryGetValue(touch.Id, out proxy)) return;
+            proxies.Remove(touch.Id);
+            pool.Release(proxy);
         }
 
-        private void touchesCancelledHandler(object sender, TouchEventArgs e)
+        private void touchCancelledHandler(object sender, TouchEventArgs e)
         {
-            touchesEndedHandler(sender, e);
+            touchEndedHandler(sender, e);
         }
 
         #endregion

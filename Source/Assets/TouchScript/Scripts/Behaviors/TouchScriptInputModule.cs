@@ -128,10 +128,10 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.TouchesBegan += touchesBeganHandler;
-                touchManager.TouchesMoved += touchesMovedHandler;
-                touchManager.TouchesEnded += touchesEndedHandler;
-                touchManager.TouchesCancelled += touchesCancelledHandler;
+                touchManager.TouchBegan += touchBeganHandler;
+                touchManager.TouchMoved += touchMovedHandler;
+                touchManager.TouchEnded += touchEndedHandler;
+                touchManager.TouchCancelled += touchCancelledHandler;
             }
 
             var toSelect = eventSystem.currentSelectedGameObject;
@@ -149,10 +149,10 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.TouchesBegan -= touchesBeganHandler;
-                touchManager.TouchesMoved -= touchesMovedHandler;
-                touchManager.TouchesEnded -= touchesEndedHandler;
-                touchManager.TouchesCancelled -= touchesCancelledHandler;
+                touchManager.TouchBegan -= touchBeganHandler;
+                touchManager.TouchMoved -= touchMovedHandler;
+                touchManager.TouchEnded -= touchEndedHandler;
+                touchManager.TouchCancelled -= touchCancelledHandler;
             }
 
             clearSelection();
@@ -557,28 +557,24 @@ namespace TouchScript.Behaviors
 
         #region Touch event callbacks
 
-        private void touchesBeganHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchBeganHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processBegan(touches[i]);
+            processBegan(touchEventArgs.Touch);
         }
 
-        private void touchesMovedHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchMovedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processMove(touches[i]);
+            processMove(touchEventArgs.Touch);
         }
 
-        private void touchesEndedHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchEndedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
+            processEnded(touchEventArgs.Touch);
         }
 
-        private void touchesCancelledHandler(object sender, TouchEventArgs touchEventArgs)
+        private void touchCancelledHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
+            processEnded(touchEventArgs.Touch);
         }
 
         #endregion

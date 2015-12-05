@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -199,9 +198,9 @@ namespace TouchScript.Gestures.Base
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<ITouch> touches)
+        protected override void touchBegan(ITouch touch)
         {
-            base.touchesBegan(touches);
+            base.touchBegan(touch);
 
             if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
@@ -220,9 +219,9 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<ITouch> touches)
+        protected override void touchEnded(ITouch touch)
         {
-            base.touchesEnded(touches);
+            base.touchEnded(touch);
 
             if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {
@@ -295,18 +294,14 @@ namespace TouchScript.Gestures.Base
         #region Protected methods
 
         /// <summary>
-        /// Checks if there are touch points in the list which matter for the gesture.
+        /// Checks if this touch matters for the gesture.
         /// </summary>
-        /// <param name="touches"> List of touch points </param>
-        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
-        protected virtual bool relevantTouches(IList<ITouch> touches)
+        /// <param name="touch"> The touch. </param>
+        /// <returns> <c>true</c> if this is a relevant touch; <c>false</c> otherwise.</returns>
+        protected virtual bool relevantTouch(ITouch touch)
         {
             // We care only about the first touch point
-            var count = touches.Count;
-            for (var i = 0; i < count; i++)
-            {
-                if (touches[i] == activeTouches[0]) return true;
-            }
+            if (touch == activeTouches[0]) return true;
             return false;
         }
 

@@ -23,10 +23,8 @@ namespace TouchScript
     /// <example>
     /// This sample shows how to get Touch Manager instance and subscribe to events.
     /// <code>
-    /// TouchManager.Instance.TouchesBegan += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Began: " + touch.Id); }; 
-    /// TouchManager.Instance.TouchesEnded += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Ended: " + touch.Id); }; 
+    /// TouchManager.Instance.TouchBegan += (sender, args) => { Debug.Log("Began: " + args.Touch.Id); }; 
+    /// TouchManager.Instance.TouchEnded += (sender, args) => { Debug.Log("Ended: " + args.Touch.Id); }; 
     /// </code>
     /// </example>
     [AddComponentMenu("TouchScript/Touch Manager")]
@@ -58,22 +56,22 @@ namespace TouchScript
             /// <summary>
             /// Some touches have begun during the frame.
             /// </summary>
-            TouchesBegan = 1 << 2,
+            TouchBegan = 1 << 2,
 
             /// <summary>
             /// Some touches have moved during the frame.
             /// </summary>
-            TouchesMoved = 1 << 3,
+            TouchMoved = 1 << 3,
 
             /// <summary>
             /// Some touches have ended during the frame.
             /// </summary>
-            TouchesEnded = 1 << 4,
+            TouchEnded = 1 << 4,
 
             /// <summary>
             /// Some touches were cancelled during the frame.
             /// </summary>
-            TouchesCancelled = 1 << 5
+            TouchCancelled = 1 << 5
         }
 
         /// <summary>
@@ -94,22 +92,22 @@ namespace TouchScript
             /// <summary>
             /// Some touches have begun during the frame.
             /// </summary>
-            OnTouchesBegan = MessageType.TouchesBegan,
+            OnTouchBegan = MessageType.TouchBegan,
 
             /// <summary>
             /// Some touches have moved during the frame.
             /// </summary>
-            OnTouchesMoved = MessageType.TouchesMoved,
+            OnTouchMoved = MessageType.TouchMoved,
 
             /// <summary>
             /// Some touches have ended during the frame.
             /// </summary>
-            OnTouchesEnded = MessageType.TouchesEnded,
+            OnTouchEnded = MessageType.TouchEnded,
 
             /// <summary>
             /// Some touches were cancelled during the frame.
             /// </summary>
-            OnTouchesCancelled = MessageType.TouchesCancelled
+            OnTouchCancelled = MessageType.TouchCancelled
         }
 
         /// <summary>
@@ -269,8 +267,8 @@ namespace TouchScript
         private bool useSendMessage = false;
 
         [SerializeField]
-        private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled |
-                                                MessageType.TouchesEnded | MessageType.TouchesMoved;
+        private MessageType sendMessageEvents = MessageType.TouchBegan | MessageType.TouchCancelled |
+                                                MessageType.TouchEnded | MessageType.TouchMoved;
 
         [SerializeField]
         private GameObject sendMessageTarget;
@@ -320,13 +318,12 @@ namespace TouchScript
 
             if (!useSendMessage) return;
 
-            if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedhandler;
+            if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedHandler;
             if ((SendMessageEvents & MessageType.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
-            if ((SendMessageEvents & MessageType.TouchesBegan) != 0) Instance.TouchesBegan += touchesBeganHandler;
-            if ((SendMessageEvents & MessageType.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
-            if ((SendMessageEvents & MessageType.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
-            if ((SendMessageEvents & MessageType.TouchesCancelled) != 0)
-                Instance.TouchesCancelled += touchesCancelledHandler;
+            if ((SendMessageEvents & MessageType.TouchBegan) != 0) Instance.TouchBegan += touchBeganHandler;
+            if ((SendMessageEvents & MessageType.TouchMoved) != 0) Instance.TouchMoved += touchMovedHandler;
+            if ((SendMessageEvents & MessageType.TouchEnded) != 0) Instance.TouchEnded += touchEndedHandler;
+            if ((SendMessageEvents & MessageType.TouchCancelled) != 0) Instance.TouchCancelled += touchCancelledHandler;
         }
 
         private void removeSubscriptions()
@@ -334,39 +331,39 @@ namespace TouchScript
             if (!Application.isPlaying) return;
             if (Instance == null) return;
 
-            Instance.FrameStarted -= frameStartedhandler;
+            Instance.FrameStarted -= frameStartedHandler;
             Instance.FrameFinished -= frameFinishedHandler;
-            Instance.TouchesBegan -= touchesBeganHandler;
-            Instance.TouchesMoved -= touchesMovedHandler;
-            Instance.TouchesEnded -= touchesEndedHandler;
-            Instance.TouchesCancelled -= touchesCancelledHandler;
+            Instance.TouchBegan -= touchBeganHandler;
+            Instance.TouchMoved -= touchMovedHandler;
+            Instance.TouchEnded -= touchEndedHandler;
+            Instance.TouchCancelled -= touchCancelledHandler;
         }
 
-        private void touchesBeganHandler(object sender, TouchEventArgs e)
+        private void touchBeganHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnTouchBegan.ToString(), e.Touch,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void touchesMovedHandler(object sender, TouchEventArgs e)
+        private void touchMovedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnTouchMoved.ToString(), e.Touch,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void touchesEndedHandler(object sender, TouchEventArgs e)
+        private void touchEndedHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnTouchEnded.ToString(), e.Touch,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void touchesCancelledHandler(object sender, TouchEventArgs e)
+        private void touchCancelledHandler(object sender, TouchEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnTouchCancelled.ToString(), e.Touch,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void frameStartedhandler(object sender, EventArgs e)
+        private void frameStartedHandler(object sender, EventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnTouchFrameStarted.ToString(),
                 SendMessageOptions.DontRequireReceiver);
