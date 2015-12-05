@@ -834,7 +834,6 @@ namespace TouchScript
                 cancelledListPool.Release(manuallyCancelledList);
             }
 
-
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
 
