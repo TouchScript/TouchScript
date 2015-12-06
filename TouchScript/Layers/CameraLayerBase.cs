@@ -36,6 +36,8 @@ namespace TouchScript.Layers
             }
         }
 
+        public Func<Vector2, Vector2> ScreenCoordinateRemapper { get; set; }
+
         #endregion
 
         #region Private variables
@@ -58,6 +60,8 @@ namespace TouchScript.Layers
 
             if (_camera == null) return LayerHitResult.Error;
             if (_camera.enabled == false || _camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
+
+            if (ScreenCoordinateRemapper != null) position = ScreenCoordinateRemapper(position);
             if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
 
             var ray = _camera.ScreenPointToRay(position);
@@ -67,6 +71,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
+            if (ScreenCoordinateRemapper != null) screenPosition = ScreenCoordinateRemapper(screenPosition);
             return ProjectionUtils.CameraToPlaneProjection(screenPosition, _camera, projectionPlane);
         }
 
