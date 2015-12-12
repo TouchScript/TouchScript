@@ -165,7 +165,7 @@ namespace TouchScript.Gestures.Base
         protected float scaleBuffer;
         protected bool isTransforming = false;
 
-        protected List<ITouch> movedTouches = new List<ITouch>(5);
+        protected List<TouchPoint> movedTouches = new List<TouchPoint>(5);
         protected ProjectionParams projectionParams;
 
         [SerializeField]
@@ -203,7 +203,7 @@ namespace TouchScript.Gestures.Base
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(ITouch touch)
+        protected override void touchBegan(TouchPoint touch)
         {
             base.touchBegan(touch);
 
@@ -226,7 +226,7 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(ITouch touch)
+        protected override void touchEnded(TouchPoint touch)
         {
             base.touchEnded(touch);
 

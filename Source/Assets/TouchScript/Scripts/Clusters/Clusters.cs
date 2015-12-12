@@ -69,10 +69,10 @@ namespace TouchScript.Clusters
 
         #region Private variables
 
-        private List<ITouch> points = new List<ITouch>();
+        private List<TouchPoint> points = new List<TouchPoint>();
         private bool dirty;
-        private List<ITouch> cluster1 = new List<ITouch>();
-        private List<ITouch> cluster2 = new List<ITouch>();
+        private List<TouchPoint> cluster1 = new List<TouchPoint>();
+        private List<TouchPoint> cluster2 = new List<TouchPoint>();
         private float minPointDistance, minPointDistanceSqr;
         private bool hasClusters = false;
 
@@ -140,7 +140,7 @@ namespace TouchScript.Clusters
         /// <summary>
         /// Adds a point to cluster. </summary>
         /// <param name="point"> A point. </param>
-        public void AddPoint(ITouch point)
+        public void AddPoint(TouchPoint point)
         {
             if (points.Contains(point)) return;
 
@@ -152,7 +152,7 @@ namespace TouchScript.Clusters
         /// Adds a list of points to cluster.
         /// </summary>
         /// <param name="points"> List of points. </param>
-        public void AddPoints(IList<ITouch> points)
+        public void AddPoints(IList<TouchPoint> points)
         {
             var count = points.Count;
             for (var i = 0; i < count; i++) AddPoint(points[i]);
@@ -162,7 +162,7 @@ namespace TouchScript.Clusters
         /// Removes a point from cluster.
         /// </summary>
         /// <param name="point"> A point. </param>
-        public void RemovePoint(ITouch point)
+        public void RemovePoint(TouchPoint point)
         {
             if (!points.Contains(point)) return;
 
@@ -174,7 +174,7 @@ namespace TouchScript.Clusters
         /// Removes a list of points from cluster.
         /// </summary>
         /// <param name="points"> List of points. </param>
-        public void RemovePoints(IList<ITouch> points)
+        public void RemovePoints(IList<TouchPoint> points)
         {
             var count = points.Count;
             for (var i = 0; i < count; i++) RemovePoint(points[i]);
@@ -224,8 +224,8 @@ namespace TouchScript.Clusters
             {
                 var center1 = ClusterUtils.Get2DCenterPosition(cluster1);
                 var center2 = ClusterUtils.Get2DCenterPosition(cluster2);
-                ITouch obj1 = null;
-                ITouch obj2 = null;
+                TouchPoint obj1 = null;
+                TouchPoint obj2 = null;
 
                 // Take most distant points from cluster1 and cluster2
                 var maxDist1 = -float.MaxValue;

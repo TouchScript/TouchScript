@@ -122,7 +122,7 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(ITouch touch)
+        protected override void touchBegan(TouchPoint touch)
         {
             base.touchBegan(touch);
 
@@ -169,7 +169,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(ITouch touch)
+        protected override void touchMoved(TouchPoint touch)
         {
             base.touchMoved(touch);
 
@@ -181,7 +181,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(ITouch touch)
+        protected override void touchEnded(TouchPoint touch)
         {
             base.touchEnded(touch);
 
@@ -230,7 +230,7 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override bool shouldCacheTouchPosition(ITouch value)
+        protected override bool shouldCacheTouchPosition(TouchPoint value)
         {
             // Points must be over target when released
             return GetTargetHitResult(value.Position);

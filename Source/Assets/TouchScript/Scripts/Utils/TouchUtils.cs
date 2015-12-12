@@ -19,7 +19,7 @@ namespace TouchScript.Utils
         /// <param name="touch"> The touch. </param>
         /// <param name="target"> The target. </param>
         /// <returns> <c>true</c> if the touch is over the GameObject; <c>false</c> otherwise.</returns>
-        public static bool IsTouchOnTarget(ITouch touch, Transform target)
+        public static bool IsTouchOnTarget(TouchPoint touch, Transform target)
         {
             if (touch == null || touch.Layer == null || target == null) return false;
             TouchHit hit;
@@ -34,7 +34,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touch"> The touch. </param>
         /// <returns> <c>true</c> if the touch is over the GameObject; <c>false</c> otherwise.</returns>
-        public static bool IsTouchOnTarget(ITouch touch)
+        public static bool IsTouchOnTarget(TouchPoint touch)
         {
             if (touch == null) return false;
             return IsTouchOnTarget(touch, touch.Target);

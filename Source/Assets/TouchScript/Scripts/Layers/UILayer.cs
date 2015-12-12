@@ -81,7 +81,7 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override ProjectionParams GetProjectionParams(ITouch touch)
+        public override ProjectionParams GetProjectionParams(TouchPoint touch)
         {
             var graphic = touch.Target.GetComponent<Graphic>();
             if (graphic == null) return layerProjectionParams;

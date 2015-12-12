@@ -45,7 +45,7 @@ namespace TouchScript.Examples.Checkers
             return true;
         }
 
-        public bool ShouldReceiveTouch(Gesture gesture, ITouch touch)
+        public bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch)
         {
             if (exclusive) return gesture == Target;
             return true;

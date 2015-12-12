@@ -42,7 +42,7 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchBegan(ITouch touch)
+        protected override void touchBegan(TouchPoint touch)
         {
             base.touchBegan(touch);
 
@@ -54,7 +54,7 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(ITouch touch)
+        protected override void touchMoved(TouchPoint touch)
         {
             base.touchMoved(touch);
 
@@ -79,7 +79,7 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(ITouch touch)
+        protected override void touchEnded(TouchPoint touch)
         {
             base.touchEnded(touch);
 
@@ -96,7 +96,7 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchCancelled(ITouch touch)
+        protected override void touchCancelled(TouchPoint touch)
         {
             base.touchCancelled(touch);
 
@@ -116,7 +116,7 @@ namespace TouchScript.Gestures.UI
         /// </summary>
         /// <param name="touch"> The touch. </param>
         /// <returns> Pointer data. </returns>
-        protected virtual TouchData getPointerData(ITouch touch)
+        protected virtual TouchData getPointerData(TouchPoint touch)
         {
             TouchData data;
             if (!pointerData.TryGetValue(touch.Id, out data))
@@ -149,7 +149,7 @@ namespace TouchScript.Gestures.UI
         /// </summary>
         /// <param name="touch"> The touch. </param>
         /// <param name="data"> The data. </param>
-        protected virtual void setPointerData(ITouch touch, TouchData data)
+        protected virtual void setPointerData(TouchPoint touch, TouchData data)
         {
             if (pointerData.ContainsKey(touch.Id)) pointerData[touch.Id] = data;
         }
@@ -158,7 +158,7 @@ namespace TouchScript.Gestures.UI
         /// Removes pointer data for touch.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        protected virtual void removePointerData(ITouch touch)
+        protected virtual void removePointerData(TouchPoint touch)
         {
             pointerData.Remove(touch.Id);
         }

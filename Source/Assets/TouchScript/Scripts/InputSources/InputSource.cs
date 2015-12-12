@@ -36,6 +36,9 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public virtual void UpdateInput() {}
 
+        /// <inheritdoc />
+        public virtual void ReturnTouch(TouchPoint touch) {}
+
         #endregion
 
         #region Unity methods
@@ -70,25 +73,12 @@ namespace TouchScript.InputSources
         /// Begin touch in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
-        /// <returns>Internal touch id.</returns>
-        protected virtual ITouch beginTouch(Vector2 position)
-        {
-            return beginTouch(position, null);
-        }
-
-        /// <summary>
-        /// Begin touch in given screen position.
-        /// </summary>
-        /// <param name="position">Screen position.</param>
         /// <param name="tags">Initial tags.</param>
         /// <returns>Internal touch id.</returns>
-        protected virtual ITouch beginTouch(Vector2 position, Tags tags)
+        protected virtual TouchPoint beginTouch(Vector2 position, Tags tags, bool canRemap = true)
         {
-            if (CoordinatesRemapper != null)
-            {
-                position = CoordinatesRemapper.Remap(position);
-            }
-            return manager.INTERNAL_BeginTouch(position, tags);
+            if (CoordinatesRemapper != null && canRemap) position = CoordinatesRemapper.Remap(position);
+            return manager.INTERNAL_BeginTouch(position, this, tags);
         }
 
         /// <summary>

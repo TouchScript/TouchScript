@@ -12,8 +12,8 @@ namespace TouchScript.Layers
     /// <summary>
     /// Base class for all touch layers. Used to check if some object is hit by a touch point.
     /// <seealso cref="ITouchManager"/>
-    /// <seealso cref="ITouchHit"/>
-    /// <seealso cref="ITouch"/>
+    /// <seealso cref="TouchHit"/>
+    /// <seealso cref="TouchPoint"/>
     /// </summary>
     /// <remarks>
     /// <para>In <b>TouchScript</b> it's a layer's job to determine if a touch on the screen hits anything in Unity's 3d/2d world.</para>
@@ -89,7 +89,7 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch"> Touch to retrieve projection parameters for. </param>
         /// <returns></returns>
-        public virtual ProjectionParams GetProjectionParams(ITouch touch)
+        public virtual ProjectionParams GetProjectionParams(TouchPoint touch)
         {
             return layerProjectionParams;
         }
@@ -160,17 +160,17 @@ namespace TouchScript.Layers
             return false;
         }
 
-        internal void INTERNAL_UpdateTouch(ITouch touch)
+        internal void INTERNAL_UpdateTouch(TouchPoint touch)
         {
             updateTouch(touch);
         }
 
-        internal void INTERNAL_EndTouch(ITouch touch)
+        internal void INTERNAL_EndTouch(TouchPoint touch)
         {
             endTouch(touch);
         }
 
-        internal void INTERNAL_CancelTouch(ITouch touch)
+        internal void INTERNAL_CancelTouch(TouchPoint touch)
         {
             cancelTouch(touch);
         }
@@ -194,7 +194,7 @@ namespace TouchScript.Layers
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult beginTouch(ITouch touch, out TouchHit hit)
+        protected virtual LayerHitResult beginTouch(TouchPoint touch, out TouchHit hit)
         {
             var result = Hit(touch.Position, out hit);
             return result;
@@ -205,21 +205,21 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void updateTouch(ITouch touch) {}
+        protected virtual void updateTouch(TouchPoint touch) {}
 
         /// <summary>
         /// Called when a touch ends.
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void endTouch(ITouch touch) {}
+        protected virtual void endTouch(TouchPoint touch) {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch">Touch.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void cancelTouch(ITouch touch) {}
+        protected virtual void cancelTouch(TouchPoint touch) {}
 
         /// <summary>
         /// Creates projection parameters.
@@ -241,13 +241,13 @@ namespace TouchScript.Layers
         /// <summary>
         /// Gets the touch associated with the event.
         /// </summary>
-        public ITouch Touch { get; private set; }
+        public TouchPoint Touch { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchLayerEventArgs"/> class.
         /// </summary>
         /// <param name="touch">The touch associated with the event.</param>
-        public TouchLayerEventArgs(ITouch touch)
+        public TouchLayerEventArgs(TouchPoint touch)
             : base()
         {
             Touch = touch;

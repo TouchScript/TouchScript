@@ -8,7 +8,7 @@ namespace TouchScript.InputSources
     /// An object which represents an input source.
     /// </summary>
     /// <remarks>
-    /// <para>In TouchScript all touch points (<see cref="ITouch"/>) come from input sources.</para>
+    /// <para>In TouchScript all touch points (<see cref="TouchPoint"/>) come from input sources.</para>
     /// <para>If you want to feed the library with touches the best way to do it is to create a custom input source.</para>
     /// </remarks>
     public interface IInputSource
@@ -23,5 +23,7 @@ namespace TouchScript.InputSources
         /// This method is called by <see cref="TouchManagerInstance"/> to synchronously update the input.
         /// </summary>
         void UpdateInput();
+
+        void ReturnTouch(TouchPoint touch);
     }
 }

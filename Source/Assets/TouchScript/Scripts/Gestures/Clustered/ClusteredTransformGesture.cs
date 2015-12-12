@@ -23,7 +23,7 @@ namespace TouchScript.Gestures.Clustered
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(ITouch touch)
+        protected override void touchBegan(TouchPoint touch)
         {
             clusters.AddPoint(touch);
 
@@ -31,7 +31,7 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(ITouch touch)
+        protected override void touchMoved(TouchPoint touch)
         {
             clusters.Invalidate();
 
@@ -39,7 +39,7 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(ITouch touch)
+        protected override void touchEnded(TouchPoint touch)
         {
             clusters.RemovePoint(touch);
 

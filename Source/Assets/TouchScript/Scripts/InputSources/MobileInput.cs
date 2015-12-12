@@ -46,6 +46,13 @@ namespace TouchScript.InputSources
             if (touchHandler != null) touchHandler.Update();
         }
 
+        public override void ReturnTouch(TouchPoint touch)
+        {
+            base.ReturnTouch(touch);
+
+            if (touchHandler != null) touchHandler.ReturnTouch(touch);
+        }
+
         #endregion
 
         #region Unity methods
@@ -74,7 +81,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            touchHandler = new TouchHandler((p) => beginTouch(p, Tags), moveTouch, endTouch, cancelTouch);
+            touchHandler = new TouchHandler(Tags, beginTouch, moveTouch, endTouch, cancelTouch);
 
             base.OnEnable();
         }

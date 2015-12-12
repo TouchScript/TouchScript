@@ -20,7 +20,7 @@ namespace TouchScript
         /// <param name="touch"> The touch. </param>
         /// <returns> <c>true</c> if it should; <c>false</c> otherwise. </returns>
         /// <remarks> Can be used to restrict what touches a gesture can receive and ignore the ones it shouldn't. </remarks>
-        bool ShouldReceiveTouch(Gesture gesture, ITouch touch);
+        bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch);
 
         /// <summary>
         /// Returns whether a gesture can now begin.

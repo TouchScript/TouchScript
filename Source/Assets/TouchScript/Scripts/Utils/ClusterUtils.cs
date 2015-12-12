@@ -20,7 +20,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Centroid of touch points' positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
-        public static Vector2 Get2DCenterPosition(IList<ITouch> touches)
+        public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)
         {
             var count = touches.Count;
             if (count == 0) return TouchManager.INVALID_POSITION;
@@ -36,7 +36,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>Centroid of previous touch point's positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
-        public static Vector2 GetPrevious2DCenterPosition(IList<ITouch> touches)
+        public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches)
         {
             var count = touches.Count;
             if (count == 0) return TouchManager.INVALID_POSITION;
@@ -52,7 +52,7 @@ namespace TouchScript.Utils
         /// </summary>
         /// <param name="touches">List of touch points.</param>
         /// <returns>A unique string for a list of touches.</returns>
-        public static string GetPointsHash(IList<ITouch> touches)
+        public static string GetPointsHash(IList<TouchPoint> touches)
         {
             hashString.Remove(0, hashString.Length);
             for (var i = 0; i < touches.Count; i++)

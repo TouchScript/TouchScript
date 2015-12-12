@@ -120,7 +120,7 @@ namespace TouchScript
         /// Gets the list of active touches.
         /// </summary>
         /// <value>An unsorted list of all touches which began but have not ended yet.</value>
-        IList<ITouch> ActiveTouches { get; }
+        IList<TouchPoint> ActiveTouches { get; }
 
         /// <summary>
         /// Adds a touch layer.
@@ -183,7 +183,7 @@ namespace TouchScript
 
         /// <summary>
         /// Checks if a touch hits anything.
-        /// <seealso cref="ITouchHit"/>
+        /// <seealso cref="TouchHit"/>
         /// <seealso cref="TouchLayer"/>
         /// </summary>
         /// <param name="position">Screen position of the touch.</param>
@@ -196,8 +196,8 @@ namespace TouchScript
         /// Cancels a touch and returns it to the system of need.
         /// </summary>
         /// <param name="id">Touch id to cancel.</param>
-        /// <param name="redispatch">Should the touch be returned to the system.</param>
-        void CancelTouch(int id, bool redispatch);
+        /// <param name="returnTouch">Should the touch be returned to the system.</param>
+        void CancelTouch(int id, bool returnTouch);
 
         /// <summary>
         /// Cancels a touch.
@@ -215,7 +215,7 @@ namespace TouchScript
         /// Gets the touch participating in the event.
         /// </summary>
         /// <value> The touch added, changed or removed this frame. </value>
-        public ITouch Touch { get; private set; }
+        public TouchPoint Touch { get; private set; }
 
         private static TouchEventArgs instance;
 
@@ -230,7 +230,7 @@ namespace TouchScript
         /// </summary>
         /// <param name="touch"> Touch for the event. </param>
         /// <returns>Cached EventArgs object.</returns>
-        public static TouchEventArgs GetCachedEventArgs(ITouch touch)
+        public static TouchEventArgs GetCachedEventArgs(TouchPoint touch)
         {
             if (instance == null) instance = new TouchEventArgs();
             instance.Touch = touch;

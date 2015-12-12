@@ -2,7 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 using System;
+#endif
 using TouchScript.InputSources.InputHandlers;
 using UnityEngine;
 
@@ -155,6 +157,19 @@ namespace TouchScript.InputSources
             else if (mouseHandler != null) mouseHandler.Update();
         }
 
+        public override void ReturnTouch(TouchPoint touch)
+        {
+            base.ReturnTouch(touch);
+
+            var handled = false;
+            if (touchHandler != null) handled = touchHandler.ReturnTouch(touch);
+            if (mouseHandler != null && !handled) handled = mouseHandler.ReturnTouch(touch);
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            if (windows7TouchHandler != null && !handled) handled = windows7TouchHandler.ReturnTouch(touch);
+            if (windows8TouchHandler != null && !handled) windows8TouchHandler.ReturnTouch(touch);
+#endif
+        }
+
         #endregion
 
         #region Unity
@@ -261,7 +276,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler((p) => beginTouch(p, MouseTags), moveTouch, endTouch, cancelTouch);
+            mouseHandler = new MouseHandler(MouseTags, beginTouch, moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
 
@@ -276,7 +291,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler((p) => beginTouch(p, TouchTags), moveTouch, endTouch, cancelTouch);
+            touchHandler = new TouchHandler(TouchTags, beginTouch, moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
@@ -307,8 +322,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows7Touch()
         {
-            windows7TouchHandler = new Windows7TouchHandler((p, s) => beginTouch(p, TouchTags), moveTouch,
-                endTouch, cancelTouch);
+            windows7TouchHandler = new Windows7TouchHandler(TouchTags, beginTouch, moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Windows 7 touch input.");
         }
 
@@ -323,17 +337,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows8Touch()
         {
-            windows8TouchHandler = new Windows8TouchHandler((p, s) =>
-            {
-                switch (s)
-                {
-                    case WindowsTouchHandler.TouchSource.Touch:
-                        return beginTouch(p, TouchTags);
-                    case WindowsTouchHandler.TouchSource.Pen:
-                        return beginTouch(p, PenTags);
-                }
-                return beginTouch(p, MouseTags);
-            }, moveTouch, endTouch, cancelTouch);
+            windows8TouchHandler = new Windows8TouchHandler(TouchTags, MouseTags, PenTags, beginTouch, moveTouch, endTouch, cancelTouch);
             Debug.Log("[TouchScript] Initialized Windows 8 touch input.");
         }
 

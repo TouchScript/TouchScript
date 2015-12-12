@@ -330,12 +330,12 @@ namespace TouchScript.Gestures
         /// Gets list of gesture's active touch points.
         /// </summary>
         /// <value> The list of touches owned by this gesture. </value>
-        public IList<ITouch> ActiveTouches
+        public IList<TouchPoint> ActiveTouches
         {
             get
             {
                 if (readonlyActiveTouches == null)
-                    readonlyActiveTouches = new ReadOnlyCollection<ITouch>(activeTouches);
+                    readonlyActiveTouches = new ReadOnlyCollection<TouchPoint>(activeTouches);
                 return readonlyActiveTouches;
             }
         }
@@ -381,7 +381,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Touch points the gesture currently owns and works with.
         /// </summary>
-        protected List<ITouch> activeTouches = new List<ITouch>(10);
+        protected List<TouchPoint> activeTouches = new List<TouchPoint>(10);
 
         /// <summary>
         /// Cached transform of the parent object.
@@ -424,8 +424,8 @@ namespace TouchScript.Gestures
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private int numTouches;
-        private ReadOnlyCollection<ITouch> readonlyActiveTouches;
-        private TimedSequence<ITouch> touchSequence = new TimedSequence<ITouch>();
+        private ReadOnlyCollection<TouchPoint> readonlyActiveTouches;
+        private TimedSequence<TouchPoint> touchSequence = new TimedSequence<TouchPoint>();
         private GestureManagerInstance gestureManagerInstance;
         private GestureState delayedStateChange = GestureState.Possible;
         private bool requiredGestureFailed = false;
@@ -520,7 +520,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="touch"> The touch. </param>
         /// <returns> <c>true</c> if gesture controls the touch point; <c>false</c> otherwise. </returns>
-        public bool HasTouch(ITouch touch)
+        public bool HasTouch(TouchPoint touch)
         {
             return activeTouches.Contains(touch);
         }
@@ -556,7 +556,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="touch"> The touch. </param>
         /// <returns> <c>true</c> if this touch should be received by the gesture; <c>false</c> otherwise. </returns>
-        public virtual bool ShouldReceiveTouch(ITouch touch)
+        public virtual bool ShouldReceiveTouch(TouchPoint touch)
         {
             if (Delegate == null) return true;
             return Delegate.ShouldReceiveTouch(this, touch);
@@ -576,8 +576,8 @@ namespace TouchScript.Gestures
         /// Cancels this gesture.
         /// </summary>
         /// <param name="cancelTouches"> if set to <c>true</c> also implicitly cancels all touches owned by the gesture. </param>
-        /// <param name="redispatchTouches"> if set to <c>true</c> redispatched all canceled touches. </param>
-        public void Cancel(bool cancelTouches, bool redispatchTouches)
+        /// <param name="returnTouches"> if set to <c>true</c> redispatched all canceled touches. </param>
+        public void Cancel(bool cancelTouches, bool returnTouches)
         {
             switch (state)
             {
@@ -590,7 +590,7 @@ namespace TouchScript.Gestures
             setState(GestureState.Cancelled);
 
             if (!cancelTouches) return;
-            for (var i = 0; i < numTouches; i++) touchManager.CancelTouch(activeTouches[i].Id, redispatchTouches);
+            for (var i = 0; i < numTouches; i++) touchManager.CancelTouch(activeTouches[i].Id, returnTouches);
         }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace TouchScript.Gestures
             reset();
         }
 
-        internal void INTERNAL_TouchBegan(ITouch touch)
+        internal void INTERNAL_TouchBegan(TouchPoint touch)
         {
             var total = numTouches + 1;
             touchesNumState = TouchesNumState.InRange;
@@ -718,7 +718,7 @@ namespace TouchScript.Gestures
             touchBegan(touch);
         }
 
-        internal void INTERNAL_TouchMoved(ITouch touch)
+        internal void INTERNAL_TouchMoved(TouchPoint touch)
         {
             touchesNumState = TouchesNumState.InRange;
             if (minTouches > 0 && numTouches < minTouches) touchesNumState = TouchesNumState.TooFew;
@@ -726,7 +726,7 @@ namespace TouchScript.Gestures
             touchMoved(touch);
         }
 
-        internal void INTERNAL_TouchEnded(ITouch touch)
+        internal void INTERNAL_TouchEnded(TouchPoint touch)
         {
             var total = numTouches - 1;
             touchesNumState = TouchesNumState.InRange;
@@ -799,7 +799,7 @@ namespace TouchScript.Gestures
             touchEnded(touch);
         }
 
-        internal void INTERNAL_TouchCancelled(ITouch touch)
+        internal void INTERNAL_TouchCancelled(TouchPoint touch)
         {
             var total = numTouches - 1;
             touchesNumState = TouchesNumState.InRange;
@@ -858,7 +858,7 @@ namespace TouchScript.Gestures
         /// </summary>
         /// <param name="value"> Touch to cache. </param>
         /// <returns> <c>true</c> if touch should be cached; <c>false</c> otherwise. </returns>
-        protected virtual bool shouldCacheTouchPosition(ITouch value)
+        protected virtual bool shouldCacheTouchPosition(TouchPoint value)
         {
             return true;
         }
@@ -906,25 +906,25 @@ namespace TouchScript.Gestures
         /// Called when a touch is added.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        protected virtual void touchBegan(ITouch touch) {}
+        protected virtual void touchBegan(TouchPoint touch) {}
 
         /// <summary>
         /// Called when a touch is moved.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        protected virtual void touchMoved(ITouch touch) {}
+        protected virtual void touchMoved(TouchPoint touch) {}
 
         /// <summary>
         /// Called when a touch is removed.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        protected virtual void touchEnded(ITouch touch) {}
+        protected virtual void touchEnded(TouchPoint touch) {}
 
         /// <summary>
         /// Called when a touch is cancelled.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        protected virtual void touchCancelled(ITouch touch)
+        protected virtual void touchCancelled(TouchPoint touch)
         {
             if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {

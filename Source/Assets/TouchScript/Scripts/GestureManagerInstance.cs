@@ -52,8 +52,8 @@ namespace TouchScript
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
 
-        private Action<Gesture, ITouch> _updateBegan, _updateMoved, _updateEnded, _updateCancelled;
-        private Action<Transform, ITouch> _processTarget, _processTargetBegan;
+        private Action<Gesture, TouchPoint> _updateBegan, _updateMoved, _updateEnded, _updateCancelled;
+        private Action<Transform, TouchPoint> _processTarget, _processTargetBegan;
 
         #endregion
 
@@ -185,7 +185,7 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
+                            print(string.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
                                 new object[] {gesture, state, gesture.State}));
                             break;
                     }
@@ -202,28 +202,28 @@ namespace TouchScript
 
         #region Private functions
 
-        private void doUpdateBegan(Gesture gesture, ITouch touch)
+        private void doUpdateBegan(Gesture gesture, TouchPoint touch)
         {
             gesture.INTERNAL_TouchBegan(touch);
         }
 
-        private void doUpdateMoved(Gesture gesture, ITouch touch)
+        private void doUpdateMoved(Gesture gesture, TouchPoint touch)
         {
             gesture.INTERNAL_TouchMoved(touch);
         }
 
-        private void doUpdateEnded(Gesture gesture, ITouch touch)
+        private void doUpdateEnded(Gesture gesture, TouchPoint touch)
         {
             gesture.INTERNAL_TouchEnded(touch);
         }
 
-        private void doUpdateCancelled(Gesture gesture, ITouch touch)
+        private void doUpdateCancelled(Gesture gesture, TouchPoint touch)
         {
             gesture.INTERNAL_TouchCancelled(touch);
         }
 
-        private void update(ITouch touch, Action<Transform, ITouch> process,
-                            Action<Gesture, ITouch> dispatch)
+        private void update(TouchPoint touch, Action<Transform, TouchPoint> process,
+                            Action<Gesture, TouchPoint> dispatch)
         {
             // WARNING! Arcane magic ahead!
             // gestures which got any touch points
@@ -239,7 +239,7 @@ namespace TouchScript
             }
         }
 
-        private void processTarget(Transform target, ITouch touch)
+        private void processTarget(Transform target, TouchPoint touch)
         {
             // gestures on objects in the hierarchy from "root" to target
             var endingList = gestureListPool.Get();
@@ -256,7 +256,7 @@ namespace TouchScript
             gestureListPool.Release(endingList);
         }
 
-        private void processTargetBegan(Transform target, ITouch touch)
+        private void processTargetBegan(Transform target, TouchPoint touch)
         {
             var containingList = gestureListPool.Get();
             var endingList = gestureListPool.Get();
@@ -428,7 +428,7 @@ namespace TouchScript
             gesture.INTERNAL_SetState(Gesture.GestureState.Failed);
         }
 
-        private bool shouldReceiveTouch(Gesture gesture, ITouch touch)
+        private bool shouldReceiveTouch(Gesture gesture, TouchPoint touch)
         {
             bool result = true;
             if (GlobalGestureDelegate != null) result = GlobalGestureDelegate.ShouldReceiveTouch(gesture, touch);

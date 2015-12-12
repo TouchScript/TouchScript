@@ -209,7 +209,7 @@ namespace TouchScript.Behaviors
         /// </summary>
         /// <param name="touch"> The touch to initialize pointer data from. </param>
         /// <returns> Pointer data for the touch. </returns>
-        protected PointerEventData initPointerData(ITouch touch)
+        protected PointerEventData initPointerData(TouchPoint touch)
         {
             PointerEventData pointerEvent;
             getPointerData(touch.Id, out pointerEvent, true);
@@ -271,7 +271,7 @@ namespace TouchScript.Behaviors
         /// </summary>
         /// <param name="touch"> The touch. </param>
         /// <returns> Updated pointer data. </returns>
-        protected PointerEventData updatePointerData(ITouch touch)
+        protected PointerEventData updatePointerData(TouchPoint touch)
         {
             PointerEventData pointerEvent;
             getPointerData(touch.Id, out pointerEvent, true);
@@ -438,21 +438,21 @@ namespace TouchScript.Behaviors
 
         #region Private functions
 
-        private void processBegan(ITouch touch)
+        private void processBegan(TouchPoint touch)
         {
             PointerEventData pointerEvent = initPointerData(touch);
             raycastPointer(pointerEvent);
             injectPointer(pointerEvent);
         }
 
-        private void processMove(ITouch touch)
+        private void processMove(TouchPoint touch)
         {
             PointerEventData pointerEvent = updatePointerData(touch);
             raycastPointer(pointerEvent);
             movePointer(pointerEvent);
         }
 
-        private void processEnded(ITouch touch)
+        private void processEnded(TouchPoint touch)
         {
             PointerEventData pointerEvent = updatePointerData(touch);
             raycastPointer(pointerEvent);

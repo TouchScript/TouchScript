@@ -23,7 +23,7 @@ namespace TouchScript.Behaviors.Visualizer
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void updateOnce(ITouch touch)
+        protected override void updateOnce(TouchPoint touch)
         {
             base.updateOnce(touch);
 
@@ -103,7 +103,7 @@ namespace TouchScript.Behaviors.Visualizer
         /// </summary>
         /// <param name="parent"> Parent container. </param>
         /// <param name="touch"> Touch this cursor represents. </param>
-        public void Init(RectTransform parent, ITouch touch)
+        public void Init(RectTransform parent, TouchPoint touch)
         {
             show();
             rect.SetParent(parent);
@@ -116,7 +116,7 @@ namespace TouchScript.Behaviors.Visualizer
         /// Updates the touch. This method is called when the touch is moved.
         /// </summary>
         /// <param name="touch"> Touch this cursor represents. </param>
-        public void UpdateTouch(ITouch touch)
+        public void UpdateTouch(TouchPoint touch)
         {
             update(touch);
         }
@@ -170,13 +170,13 @@ namespace TouchScript.Behaviors.Visualizer
         /// This method is called once when the cursor is initialized.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        protected virtual void updateOnce(ITouch touch) {}
+        protected virtual void updateOnce(TouchPoint touch) {}
 
         /// <summary>
         /// This method is called every time when the touch changes.
         /// </summary>
         /// <param name="touch"> The touch. </param>
-        public virtual void update(ITouch touch)
+        public virtual void update(TouchPoint touch)
         {
             rect.anchoredPosition = touch.Position;
         }

@@ -173,9 +173,9 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public IList<ITouch> ActiveTouches
+        public IList<TouchPoint> ActiveTouches
         {
-            get { return touches.Cast<ITouch>().ToList(); }
+            get { return new List<TouchPoint>(touches); }
         }
 
         #endregion
@@ -202,22 +202,15 @@ namespace TouchScript
         private HashSet<int> touchesUpdated = new HashSet<int>();
         private HashSet<int> touchesEnded = new HashSet<int>();
         private HashSet<int> touchesCancelled = new HashSet<int>();
-        private List<CancelledTouch> touchesManuallyCancelled = new List<CancelledTouch>(10);
 
         private static ObjectPool<TouchPoint> touchPointPool = new ObjectPool<TouchPoint>(10, null, null,
             (t) => t.INTERNAL_Reset());
 
-        private static ObjectPool<List<ITouch>> touchListPool = new ObjectPool<List<ITouch>>(2,
-            () => new List<ITouch>(10), null, (l) => l.Clear());
-
-        private static ObjectPool<List<TouchPoint>> touchPointListPool = new ObjectPool<List<TouchPoint>>(1,
+        private static ObjectPool<List<TouchPoint>> touchPointListPool = new ObjectPool<List<TouchPoint>>(2,
             () => new List<TouchPoint>(10), null, (l) => l.Clear());
 
         private static ObjectPool<List<int>> intListPool = new ObjectPool<List<int>>(3, () => new List<int>(10), null,
             (l) => l.Clear());
-
-        private static ObjectPool<List<CancelledTouch>> cancelledListPool = new ObjectPool<List<CancelledTouch>>(1,
-            () => new List<CancelledTouch>(10), null, (l) => l.Clear());
 
         private int nextTouchId = 0;
         private object touchLock = new object();
@@ -338,9 +331,14 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void CancelTouch(int id, bool redispatch)
+        public void CancelTouch(int id, bool returnTouch)
         {
-            touchesManuallyCancelled.Add(new CancelledTouch(id, redispatch));
+            TouchPoint touch;
+            if (idToTouch.TryGetValue(id, out touch))
+            {
+                INTERNAL_CancelTouch(id);
+                if (returnTouch) touch.InputSource.ReturnTouch(touch);
+            }
         }
 
         /// <inheritdoc />
@@ -353,18 +351,18 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal ITouch INTERNAL_BeginTouch(Vector2 position)
+        internal TouchPoint INTERNAL_BeginTouch(Vector2 position, IInputSource input)
         {
-            return INTERNAL_BeginTouch(position, null);
+            return INTERNAL_BeginTouch(position, input, null);
         }
 
-        internal ITouch INTERNAL_BeginTouch(Vector2 position, Tags tags)
+        internal TouchPoint INTERNAL_BeginTouch(Vector2 position, IInputSource input, Tags tags)
         {
             TouchPoint touch;
             lock (touchLock)
             {
                 touch = touchPointPool.Get();
-                touch.INTERNAL_Init(nextTouchId++, position, tags);
+                touch.INTERNAL_Init(nextTouchId++, position, input, tags);
                 touchesBegan.Add(touch);
             }
             return touch;
@@ -497,10 +495,8 @@ namespace TouchScript
             StopAllCoroutines();
             StartCoroutine(lateAwake());
 
-            touchListPool.WarmUp(2);
-            touchPointListPool.WarmUp(1);
+            touchPointListPool.WarmUp(2);
             intListPool.WarmUp(3);
-            cancelledListPool.WarmUp(1);
 
 #if TOUCHSCRIPT_DEBUG
             DebugMode = true;
@@ -709,61 +705,6 @@ namespace TouchScript
             }
         }
 
-        private void updateManuallyCancelled(List<CancelledTouch> points)
-        {
-            var cancelledCount = points.Count;
-            var redispatchList = touchListPool.Get();
-            for (var i = 0; i < cancelledCount; i++)
-            {
-                var data = points[i];
-                var id = data.Id;
-                TouchPoint touch;
-                if (!idToTouch.TryGetValue(id, out touch))
-                {
-                    // might be dead already
-                    continue;
-                }
-
-                if (data.Redispatch)
-                {
-                    redispatchList.Add(touch);
-                }
-                else
-                {
-                    idToTouch.Remove(id);
-                    touches.Remove(touch);
-                    touchPointPool.Release(touch);
-#if TOUCHSCRIPT_DEBUG
-                    removeDebugFigureForTouch(touch);
-#endif
-                }
-
-                if (touch.Layer != null) touch.Layer.INTERNAL_CancelTouch(touch);
-                if (touchCancelledInvoker != null)
-                    touchCancelledInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(touch));
-            }
-
-            var count = redispatchList.Count;
-            if (count > 0)
-            {
-                var layerCount = layers.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    var touch = redispatchList[i] as TouchPoint;
-                    for (var j = 0; j < layerCount; j++)
-                    {
-                        var touchLayer = layers[j];
-                        if (touchLayer == null) continue;
-                        if (touchLayer.INTERNAL_BeginTouch(touch)) break;
-                    }
-
-                    if (touchBeganInvoker != null)
-                        touchBeganInvoker.InvokeHandleExceptions(this, TouchEventArgs.GetCachedEventArgs(touch));
-                }
-            }
-            touchListPool.Release(redispatchList);
-        }
-
         private void updateTouches()
         {
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
@@ -773,7 +714,6 @@ namespace TouchScript
             List<int> updatedList = null;
             List<int> endedList = null;
             List<int> cancelledList = null;
-            List<CancelledTouch> manuallyCancelledList = null;
             lock (touchLock)
             {
                 if (touchesBegan.Count > 0)
@@ -800,12 +740,6 @@ namespace TouchScript
                     cancelledList.AddRange(touchesCancelled);
                     touchesCancelled.Clear();
                 }
-                if (touchesManuallyCancelled.Count > 0)
-                {
-                    manuallyCancelledList = cancelledListPool.Get();
-                    manuallyCancelledList.AddRange(touchesManuallyCancelled);
-                    touchesManuallyCancelled.Clear();
-                }
             }
 
             if (beganList != null)
@@ -828,11 +762,6 @@ namespace TouchScript
                 updateCancelled(cancelledList);
                 intListPool.Release(cancelledList);
             }
-            if (manuallyCancelledList != null)
-            {
-                updateManuallyCancelled(manuallyCancelledList);
-                cancelledListPool.Release(manuallyCancelledList);
-            }
 
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
         }
@@ -840,12 +769,12 @@ namespace TouchScript
 #if TOUCHSCRIPT_DEBUG
         private Vector2 debugTouchSize;
 
-        private void removeDebugFigureForTouch(ITouch touch)
+        private void removeDebugFigureForTouch(TouchPoint touch)
         {
             GLDebug.RemoveFigure(TouchManager.DEBUG_GL_TOUCH + touch.Id);
         }
 
-        private void addDebugFigureForTouch(ITouch touch)
+        private void addDebugFigureForTouch(TouchPoint touch)
         {
             GLDebug.DrawSquareScreenSpace(TouchManager.DEBUG_GL_TOUCH + touch.Id, touch.Position, 0, debugTouchSize,
                 GLDebug.MULTIPLY, float.PositiveInfinity);
@@ -854,26 +783,5 @@ namespace TouchScript
 
         #endregion
 
-        #region Structs
-
-        private struct CancelledTouch
-        {
-            public int Id;
-            public bool Redispatch;
-
-            public CancelledTouch(int id, bool redispatch)
-            {
-                Id = id;
-                Redispatch = redispatch;
-            }
-
-            public CancelledTouch(int id)
-            {
-                Id = id;
-                Redispatch = false;
-            }
-        }
-
-        #endregion
     }
 }

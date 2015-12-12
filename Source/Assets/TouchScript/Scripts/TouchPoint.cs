@@ -4,49 +4,76 @@
 
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
 
 namespace TouchScript
 {
     /// <summary>
-    /// Class which internally represents a touch.
+    /// <para>Representation of a finger within TouchScript.</para>
+    /// <para>An object implementing this interface is created when user touches the screen. A unique id is assigned to it which doesn't change throughout its life.</para>
+    /// <para><b>Attention!</b> Do not store references to these objects beyond touch's lifetime (i.e. when target finger is lifted off). These objects may be reused internally. Store unique ids instead.</para>
     /// </summary>
-    internal sealed class TouchPoint : ITouch
+    public class TouchPoint
     {
         #region Public properties
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Internal unique touch point id.
+        /// </summary>
         public int Id { get; private set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Original hit target.
+        /// </summary>
         public Transform Target { get; internal set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Current position in screen coordinates.
+        /// </summary>
         public Vector2 Position
         {
             get { return position; }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Previous position (during last frame) in screen coordinates.
+        /// </summary>
         public Vector2 PreviousPosition { get; private set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Original hit information.
+        /// </summary>
         public TouchHit Hit { get; internal set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Original layer which created this touch object.
+        /// <seealso cref="TouchLayer"/>
+        /// <seealso cref="CameraLayer"/>
+        /// <seealso cref="CameraLayer2D"/>
+        /// </summary>
         public TouchLayer Layer { get; internal set; }
 
         /// <inheritdoc />
+        public IInputSource InputSource { get; internal set; }
+
+        /// <summary>
+        /// Projection parameters for the layer which created this touch.
+        /// </summary>
         public ProjectionParams ProjectionParams
         {
             get { return Layer.GetProjectionParams(this); }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Tags collection for this touch object.
+        /// </summary>
         public Tags Tags { get; private set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// List of custom properties (key-value pairs) for this touch object.
+        /// </summary>
         public IDictionary<string, object> Properties
         {
             get { return properties; }
@@ -67,22 +94,22 @@ namespace TouchScript
         /// <inheritdoc />
         public override bool Equals(object other)
         {
-            return Equals(other as ITouch);
+            return Equals(other as TouchPoint);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(TouchPoint other)
+        {
+            if (other == null)
+                return false;
+
+            return Id == other.Id;
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
             return Id;
-        }
-
-        /// <inheritdoc />
-        public bool Equals(ITouch other)
-        {
-            if (other == null)
-                return false;
-
-            return Id == other.Id;
         }
 
         #endregion
@@ -109,9 +136,10 @@ namespace TouchScript
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
         /// <param name="tags">Initial tags.</param>
-        internal void INTERNAL_Init(int id, Vector2 position, Tags tags)
+        internal void INTERNAL_Init(int id, Vector2 position, IInputSource input, Tags tags)
         {
             Id = id;
+            InputSource = input;
             this.position = PreviousPosition = newPosition = position;
             Tags = tags ?? Tags.EMPTY;
         }
