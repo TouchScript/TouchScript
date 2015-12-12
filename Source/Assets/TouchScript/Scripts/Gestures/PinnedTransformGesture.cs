@@ -182,12 +182,12 @@ namespace TouchScript.Gestures
         }
 
 #if TOUCHSCRIPT_DEBUG
-    /// <inheritdoc />
-        protected override void touchEnded(IList<TouchPoint> touches)
+        /// <inheritdoc />
+        protected override void touchEnded(TouchPoint touch)
         {
-            base.touchEnded(touches);
+            base.touchEnded(touch);
 
-            if (activeTouches.Count == 0) return;
+            if (NumTouches == 0) return;
             drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
         }
 #endif
