@@ -151,7 +151,87 @@ namespace TouchScript.InputSources
             screenWidth = Screen.width;
             screenHeight = Screen.height;
         }
-        
+
+        /// <inheritdoc />
+        public override void CancelTouch(TouchPoint touch, bool @return)
+        {
+            base.CancelTouch(touch, @return);
+            lock (this)
+            {
+                TuioCursor cursor = null;
+                foreach (var touchPoint in cursorToInternalId)
+                {
+                    if (touchPoint.Value.Id == touch.Id)
+                    {
+                        cursor = touchPoint.Key;
+                        break;
+                    }
+                }
+                if (cursor != null)
+                {
+                    cancelTouch(touch.Id);
+                    if (@return)
+                    {
+                        cursorToInternalId[cursor] = beginTouch(touch.Position, touch.Tags, false);
+                    }
+                    else
+                    {
+                        cursorToInternalId.Remove(cursor);
+                    }
+                    return;
+                }
+
+                TuioBlob blob = null;
+                foreach (var touchPoint in blobToInternalId)
+                {
+                    if (touchPoint.Value.Id == touch.Id)
+                    {
+                        blob = touchPoint.Key;
+                        break;
+                    }
+                }
+                if (blob != null)
+                {
+                    cancelTouch(touch.Id);
+                    if (@return)
+                    {
+                        var t = beginTouch(touch.Position, touch.Tags, false);
+                        t.Properties = touch.Properties;
+                        blobToInternalId[blob] = t;
+                    }
+                    else
+                    {
+                        blobToInternalId.Remove(blob);
+                    }
+                    return;
+                }
+
+                TuioObject obj = null;
+                foreach (var touchPoint in objectToInternalId)
+                {
+                    if (touchPoint.Value.Id == touch.Id)
+                    {
+                        obj = touchPoint.Key;
+                        break;
+                    }
+                }
+                if (obj != null)
+                {
+                    cancelTouch(touch.Id);
+                    if (@return)
+                    {
+                        var t = beginTouch(touch.Position, touch.Tags, false);
+                        t.Properties = touch.Properties;
+                        objectToInternalId[obj] = t;
+                    }
+                    else
+                    {
+                        objectToInternalId.Remove(obj);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Unity
@@ -212,10 +292,9 @@ namespace TouchScript.InputSources
                 server = null;
             }
 
-            foreach (var i in cursorToInternalId)
-            {
-                cancelTouch(i.Value.Id);
-            }
+            foreach (var i in cursorToInternalId) cancelTouch(i.Value.Id);
+            foreach (var i in blobToInternalId) cancelTouch(i.Value.Id);
+            foreach (var i in objectToInternalId) cancelTouch(i.Value.Id);
         }
 
         private void updateInputs()

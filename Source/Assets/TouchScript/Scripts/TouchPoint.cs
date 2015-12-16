@@ -74,9 +74,10 @@ namespace TouchScript
         /// <summary>
         /// List of custom properties (key-value pairs) for this touch object.
         /// </summary>
-        public IDictionary<string, object> Properties
+        public Dictionary<string, object> Properties
         {
             get { return properties; }
+            set { properties = value; }
         }
 
         #endregion
