@@ -242,13 +242,15 @@ namespace TouchScript.Gestures
                     case GestureState.Recognized:
                         // Only retain/release touches for continuos gestures
                         if (PreviousState == GestureState.Changed || PreviousState == GestureState.Began)
-                            releaseTouches();
+                            releaseTouches(true);
                         onRecognized();
                         break;
                     case GestureState.Failed:
                         onFailed();
                         break;
                     case GestureState.Cancelled:
+                        if (PreviousState == GestureState.Changed || PreviousState == GestureState.Began)
+                            releaseTouches(false);
                         onCancelled();
                         break;
                 }
@@ -717,6 +719,8 @@ namespace TouchScript.Gestures
                 else touchesNumState = TouchesNumState.TooMany;
             }
 
+            if (state == GestureState.Began || state == GestureState.Changed) touch.INTERNAL_Retain();
+
             activeTouches.Add(touch);
             numTouches = total;
             touchBegan(touch);
@@ -998,13 +1002,13 @@ namespace TouchScript.Gestures
             for (var i = 0; i < total; i++) activeTouches[i].INTERNAL_Retain();
         }
 
-        private void releaseTouches()
+        private void releaseTouches(bool cancel)
         {
             var total = NumTouches;
             for (var i = 0; i < total; i++)
             {
                 var touch = activeTouches[i];
-                if (touch.INTERNAL_Release() == 0) touchManager.CancelTouch(touch.Id, true);
+                if (touch.INTERNAL_Release() == 0 && cancel) touchManager.CancelTouch(touch.Id, true);
             }
         }
 
