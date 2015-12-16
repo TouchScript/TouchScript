@@ -157,16 +157,16 @@ namespace TouchScript.InputSources
             else if (mouseHandler != null) mouseHandler.Update();
         }
 
-        public override void ReturnTouch(TouchPoint touch)
+        public override void CancelTouch(TouchPoint touch, bool @return)
         {
-            base.ReturnTouch(touch);
+            base.CancelTouch(touch, @return);
 
             var handled = false;
-            if (touchHandler != null) handled = touchHandler.ReturnTouch(touch);
-            if (mouseHandler != null && !handled) handled = mouseHandler.ReturnTouch(touch);
+            if (touchHandler != null) handled = touchHandler.CancelTouch(touch, @return);
+            if (mouseHandler != null && !handled) handled = mouseHandler.CancelTouch(touch, @return);
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows7TouchHandler != null && !handled) handled = windows7TouchHandler.ReturnTouch(touch);
-            if (windows8TouchHandler != null && !handled) windows8TouchHandler.ReturnTouch(touch);
+            if (windows7TouchHandler != null && !handled) handled = windows7TouchHandler.CancelTouch(touch, @return);
+            if (windows8TouchHandler != null && !handled) windows8TouchHandler.CancelTouch(touch, @return);
 #endif
         }
 

@@ -121,16 +121,20 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
-        public bool ReturnTouch(TouchPoint touch)
+        public bool CancelTouch(TouchPoint touch, bool @return)
         {
             if (touch.Id == mousePointId)
             {
-                mousePointId = beginTouch(touch.Position, tags, false).Id;
+                cancelTouch(mousePointId);
+                if (@return) mousePointId = beginTouch(touch.Position, tags, false).Id;
+                else mousePointId = -1;
                 return true;
             }
             if (touch.Id == fakeMousePointId)
             {
-                fakeMousePointId = beginTouch(touch.Position, tags, false).Id;
+                cancelTouch(fakeMousePointId);
+                if (@return) fakeMousePointId = beginTouch(touch.Position, tags, false).Id;
+                else fakeMousePointId = -1;
                 return true;
             }
             return false;

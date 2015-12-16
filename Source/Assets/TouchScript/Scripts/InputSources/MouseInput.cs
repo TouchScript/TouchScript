@@ -48,11 +48,11 @@ namespace TouchScript.InputSources
             mouseHandler.Update();
         }
 
-        public override void ReturnTouch(TouchPoint touch)
+        public override void CancelTouch(TouchPoint touch, bool @return)
         {
-            base.ReturnTouch(touch);
+            base.CancelTouch(touch, @return);
 
-            if (mouseHandler != null) mouseHandler.ReturnTouch(touch);
+            if (mouseHandler != null) mouseHandler.CancelTouch(touch, @return);
         }
 
         #endregion

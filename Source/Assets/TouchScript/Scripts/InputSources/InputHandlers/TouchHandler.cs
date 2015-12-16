@@ -35,7 +35,7 @@ namespace TouchScript.InputSources.InputHandlers
         private Action<int> cancelTouch;
 
         private Tags tags;
-        private Dictionary<int, int> systemToInternalId = new Dictionary<int, int>();
+        private Dictionary<int, TouchState> systemToInternalId = new Dictionary<int, TouchState>();
         private int touchesNum;
 
         #endregion
@@ -67,68 +67,62 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 var t = Input.GetTouch(i);
 
-                int id;
+                TouchState touchState;
                 switch (t.phase)
                 {
                     case TouchPhase.Began:
-                        if (systemToInternalId.TryGetValue(t.fingerId, out id))
+                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState) && touchState.Phase != TouchPhase.Canceled)
                         {
                             // Ending previous touch (missed a frame)
-                            internalEndTouch(id);
-                            id = internalBeginTouch(t.position).Id;
-                            systemToInternalId[t.fingerId] = id;
+                            internalEndTouch(touchState.Id);
+                            systemToInternalId[t.fingerId] = new TouchState(internalBeginTouch(t.position).Id);
                         }
                         else
                         {
-                            id = internalBeginTouch(t.position).Id;
-                            systemToInternalId.Add(t.fingerId, id);
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalBeginTouch(t.position).Id));
                         }
                         break;
                     case TouchPhase.Moved:
-                        if (systemToInternalId.TryGetValue(t.fingerId, out id))
+                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState) && touchState.Phase != TouchPhase.Canceled)
                         {
-                            moveTouch(id, t.position);
+                            moveTouch(touchState.Id, t.position);
                         }
                         else
                         {
                             // Missed began phase
-                            id = internalBeginTouch(t.position).Id;
-                            systemToInternalId.Add(t.fingerId, id);
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalBeginTouch(t.position).Id));
                         }
                         break;
                     case TouchPhase.Ended:
-                        if (systemToInternalId.TryGetValue(t.fingerId, out id))
+                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
                         {
                             systemToInternalId.Remove(t.fingerId);
-                            internalEndTouch(id);
+                            if (touchState.Phase != TouchPhase.Canceled) internalEndTouch(touchState.Id);
                         }
                         else
                         {
                             // Missed one finger begin-end transition
-                            id = internalBeginTouch(t.position).Id;
-                            internalEndTouch(id);
+                            internalEndTouch(internalBeginTouch(t.position).Id);
                         }
                         break;
                     case TouchPhase.Canceled:
-                        if (systemToInternalId.TryGetValue(t.fingerId, out id))
+                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
                         {
                             systemToInternalId.Remove(t.fingerId);
-                            internalCancelTouch(id);
+                            if (touchState.Phase != TouchPhase.Canceled) internalCancelTouch(touchState.Id);
                         }
                         else
                         {
                             // Missed one finger begin-end transition
-                            id = internalBeginTouch(t.position).Id;
-                            internalCancelTouch(id);
+                            internalCancelTouch(internalBeginTouch(t.position).Id);
                         }
                         break;
                     case TouchPhase.Stationary:
-                        if (systemToInternalId.TryGetValue(t.fingerId, out id)) {}
+                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState)) {}
                         else
                         {
                             // Missed begin phase
-                            id = internalBeginTouch(t.position).Id;
-                            systemToInternalId.Add(t.fingerId, id);
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalBeginTouch(t.position).Id));
                         }
                         break;
                 }
@@ -136,12 +130,12 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
-        public bool ReturnTouch(TouchPoint touch)
+        public bool CancelTouch(TouchPoint touch, bool @return)
         {
             int fingerId = -1;
             foreach (var touchState in systemToInternalId)
             {
-                if (touchState.Value == touch.Id)
+                if (touchState.Value.Id == touch.Id && touchState.Value.Phase != TouchPhase.Canceled)
                 {
                     fingerId = touchState.Key;
                     break;
@@ -149,7 +143,16 @@ namespace TouchScript.InputSources.InputHandlers
             }
             if (fingerId > -1)
             {
-                systemToInternalId[fingerId] = beginTouch(touch.Position, touch.Tags, false).Id;
+                if (@return)
+                {
+                    cancelTouch(touch.Id);
+                    systemToInternalId[fingerId] = new TouchState(beginTouch(touch.Position, touch.Tags, false).Id);
+                }
+                else
+                {
+                    systemToInternalId[fingerId] = new TouchState(touch.Id, TouchPhase.Canceled);
+                    internalCancelTouch(touch.Id);
+                }
                 return true;
             }
             return false;
@@ -158,7 +161,10 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public void Dispose()
         {
-            foreach (var touchState in systemToInternalId) internalCancelTouch(touchState.Value);
+            foreach (var touchState in systemToInternalId)
+            {
+                if (touchState.Value.Phase != TouchPhase.Canceled) internalCancelTouch(touchState.Value.Id);
+            }
             systemToInternalId.Clear();
         }
 
@@ -185,5 +191,19 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         #endregion
+
+        private struct TouchState
+        {
+            public int Id;
+            public TouchPhase Phase;
+
+            public TouchState(int id, TouchPhase phase = TouchPhase.Began)
+            {
+                Id = id;
+                Phase = phase;
+            }
+
+        }
+
     }
 }

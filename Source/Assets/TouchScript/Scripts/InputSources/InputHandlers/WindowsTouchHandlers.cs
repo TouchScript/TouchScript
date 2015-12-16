@@ -4,13 +4,11 @@
  * @author Andrew David Griffiths
  */
 
-
 #if UNITY_STANDALONE_WIN
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using TouchScript;
 using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
@@ -257,7 +255,7 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
-        public bool ReturnTouch(TouchPoint touch)
+        public bool CancelTouch(TouchPoint touch, bool @return)
         {
             int internalId = -1;
             foreach (var t in winToInternalId)
@@ -270,7 +268,8 @@ namespace TouchScript.InputSources.InputHandlers
             }
             if (internalId > -1)
             {
-                winToInternalId[internalId] = beginTouch(touch.Position, touch.Tags, false).Id;
+                cancelTouch(touch.Id);
+                if (@return) winToInternalId[internalId] = beginTouch(touch.Position, touch.Tags, false).Id;
                 return true;
             }
             return false;

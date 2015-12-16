@@ -37,7 +37,7 @@ namespace TouchScript.InputSources
         public virtual void UpdateInput() {}
 
         /// <inheritdoc />
-        public virtual void ReturnTouch(TouchPoint touch) {}
+        public virtual void CancelTouch(TouchPoint touch, bool @return) {}
 
         #endregion
 

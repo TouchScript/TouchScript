@@ -24,6 +24,6 @@ namespace TouchScript.InputSources
         /// </summary>
         void UpdateInput();
 
-        void ReturnTouch(TouchPoint touch);
+        void CancelTouch(TouchPoint touch, bool @return);
     }
 }

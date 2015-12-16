@@ -196,8 +196,8 @@ namespace TouchScript
         /// Cancels a touch and returns it to the system of need.
         /// </summary>
         /// <param name="id">Touch id to cancel.</param>
-        /// <param name="returnTouch">Should the touch be returned to the system.</param>
-        void CancelTouch(int id, bool returnTouch);
+        /// <param name="return">Should the touch be returned to the system.</param>
+        void CancelTouch(int id, bool @return);
 
         /// <summary>
         /// Cancels a touch.

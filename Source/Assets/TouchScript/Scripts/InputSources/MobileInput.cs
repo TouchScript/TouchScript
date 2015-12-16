@@ -46,11 +46,11 @@ namespace TouchScript.InputSources
             if (touchHandler != null) touchHandler.Update();
         }
 
-        public override void ReturnTouch(TouchPoint touch)
+        public override void CancelTouch(TouchPoint touch, bool @return)
         {
-            base.ReturnTouch(touch);
+            base.CancelTouch(touch, @return);
 
-            if (touchHandler != null) touchHandler.ReturnTouch(touch);
+            if (touchHandler != null) touchHandler.CancelTouch(touch, @return);
         }
 
         #endregion

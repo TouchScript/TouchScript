@@ -331,13 +331,12 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void CancelTouch(int id, bool returnTouch)
+        public void CancelTouch(int id, bool @return)
         {
             TouchPoint touch;
             if (idToTouch.TryGetValue(id, out touch))
             {
-                INTERNAL_CancelTouch(id);
-                if (returnTouch) touch.InputSource.ReturnTouch(touch);
+                touch.InputSource.CancelTouch(touch, @return);
             }
         }
 
