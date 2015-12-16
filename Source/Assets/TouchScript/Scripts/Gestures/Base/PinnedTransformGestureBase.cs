@@ -218,9 +218,6 @@ namespace TouchScript.Gestures.Base
                     case GestureState.Changed:
                         setState(GestureState.Ended);
                         break;
-                    case GestureState.Possible:
-                        setState(GestureState.Failed);
-                        break;
                 }
             }
         }
@@ -237,9 +234,6 @@ namespace TouchScript.Gestures.Base
                     case GestureState.Began:
                     case GestureState.Changed:
                         setState(GestureState.Ended);
-                        break;
-                    case GestureState.Possible:
-                        setState(GestureState.Failed);
                         break;
                 }
             }

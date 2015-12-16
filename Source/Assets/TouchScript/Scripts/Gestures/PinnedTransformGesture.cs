@@ -266,7 +266,7 @@ namespace TouchScript.Gestures
             drawDebug(screenCenter, newScreenPos);
 #endif
 
-            if (touchesNumState != TouchesNumState.InRange) return;
+            if (NumTouches == 0) return;
 
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
@@ -331,7 +331,16 @@ namespace TouchScript.Gestures
 
             if (dR != 0 || dS != 1)
             {
-                if (State == GestureState.Possible) setState(GestureState.Began);
+                if (State == GestureState.Possible)
+                {
+                    if (touchesNumState == TouchesNumState.InRange) setState(GestureState.Began);
+                    else
+                    {
+                        // Wrong number of touches!
+                        setState(GestureState.Failed);
+                        return;
+                    }
+                }
                 switch (State)
                 {
                     case GestureState.Began:

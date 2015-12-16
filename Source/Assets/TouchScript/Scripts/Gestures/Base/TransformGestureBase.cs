@@ -272,9 +272,6 @@ namespace TouchScript.Gestures.Base
                     case GestureState.Changed:
                         setState(GestureState.Ended);
                         break;
-                    case GestureState.Possible:
-                        setState(GestureState.Failed);
-                        break;
                 }
             }
 #if TOUCHSCRIPT_DEBUG
@@ -302,9 +299,6 @@ namespace TouchScript.Gestures.Base
                     case GestureState.Began:
                     case GestureState.Changed:
                         setState(GestureState.Ended);
-                        break;
-                    case GestureState.Possible:
-                        setState(GestureState.Failed);
                         break;
                 }
             }
@@ -340,7 +334,7 @@ namespace TouchScript.Gestures.Base
             base.onRecognized();
 
             // need to clear moved touches updateMoved() wouldn't fire in a wrong state
-            // yes, if moved and released the same frame movement data will be lost
+            // if moved and released the same frame movement data will be lost
             movedTouches.Clear();
             if (transformCompletedInvoker != null)
                 transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
@@ -575,7 +569,8 @@ namespace TouchScript.Gestures.Base
             drawDebugDelayed(getNumPoints());
 #endif
 
-            if (touchesNumState != TouchesNumState.InRange) return;
+            var numPoints = getNumPoints();
+            if (numPoints == 0) return;
 
             var translationEnabled = (Type & TransformType.Translation) == TransformType.Translation;
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
@@ -586,7 +581,8 @@ namespace TouchScript.Gestures.Base
             var dS = deltaScale = 1f;
 
             // one touch or one cluster (points might be too close to each other for 2 clusters)
-            if (getNumPoints() == 1 || (!rotationEnabled && !scalingEnabled))
+            
+            if (numPoints == 1 || (!rotationEnabled && !scalingEnabled))
             {
                 if (!translationEnabled) return; // don't look for translates
                 if (!relevantTouches1()) return;
@@ -594,7 +590,7 @@ namespace TouchScript.Gestures.Base
                 // translate using one point
                 dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0), projectionParams);
             }
-            else
+            else if (numPoints >= 2)
             {
                 // Make sure that we actually care about the touch moved.
                 if (!relevantTouches2()) return;
@@ -673,7 +669,16 @@ namespace TouchScript.Gestures.Base
 
             if (dP != Vector3.zero || dR != 0 || dS != 1)
             {
-                if (State == GestureState.Possible) setState(GestureState.Began);
+                if (State == GestureState.Possible)
+                {
+                    if (touchesNumState == TouchesNumState.InRange) setState(GestureState.Began);
+                    else
+                    {
+                        // Wrong number of touches!
+                        setState(GestureState.Failed);
+                        return;
+                    }
+                }
                 switch (State)
                 {
                     case GestureState.Began:
