@@ -233,12 +233,16 @@ namespace TouchScript.Gestures
                         onPossible();
                         break;
                     case GestureState.Began:
+                        retainTouches();
                         onBegan();
                         break;
                     case GestureState.Changed:
                         onChanged();
                         break;
                     case GestureState.Recognized:
+                        // Only retain/release touches for continuos gestures
+                        if (PreviousState == GestureState.Changed || PreviousState == GestureState.Began)
+                            releaseTouches();
                         onRecognized();
                         break;
                     case GestureState.Failed:
@@ -987,6 +991,22 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Private functions
+
+        private void retainTouches()
+        {
+            var total = NumTouches;
+            for (var i = 0; i < total; i++) activeTouches[i].INTERNAL_Retain();
+        }
+
+        private void releaseTouches()
+        {
+            var total = NumTouches;
+            for (var i = 0; i < total; i++)
+            {
+                var touch = activeTouches[i];
+                if (touch.INTERNAL_Release() == 0) touchManager.CancelTouch(touch.Id, true);
+            }
+        }
 
         private void registerFriendlyGesture(Gesture gesture)
         {
