@@ -83,6 +83,7 @@ namespace TouchScript
 
         #region Private variables
 
+        private int refCount = 0;
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
         private Dictionary<string, object> properties;
@@ -121,15 +122,6 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal void INTERNAL_Reset()
-        {
-            Hit = default(TouchHit);
-            Target = null;
-            Layer = null;
-            Tags = null;
-            properties.Clear();
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchPoint"/> class.
         /// </summary>
@@ -144,6 +136,16 @@ namespace TouchScript
             Tags = tags ?? Tags.EMPTY;
         }
 
+        internal void INTERNAL_Reset()
+        {
+            refCount = 0;
+            Hit = default(TouchHit);
+            Target = null;
+            Layer = null;
+            Tags = null;
+            properties.Clear();
+        }
+
         internal void INTERNAL_ResetPosition()
         {
             PreviousPosition = position;
@@ -154,6 +156,16 @@ namespace TouchScript
         internal void INTERNAL_SetPosition(Vector2 value)
         {
             newPosition = value;
+        }
+
+        internal void INTERNAL_Retain()
+        {
+            refCount++;
+        }
+
+        internal int INTERNAL_Release()
+        {
+            return --refCount;
         }
 
         #endregion
