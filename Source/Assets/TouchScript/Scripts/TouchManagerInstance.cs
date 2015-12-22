@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TouchScript.Devices.Display;
 using TouchScript.Hit;
 using TouchScript.InputSources;
@@ -192,7 +191,9 @@ namespace TouchScript
         private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
+        private int layerCount = 0;
         private List<IInputSource> inputs = new List<IInputSource>(3);
+        private int inputCount = 0;
 
         private List<TouchPoint> touches = new List<TouchPoint>(30);
         private Dictionary<int, TouchPoint> idToTouch = new Dictionary<int, TouchPoint>(30);
@@ -235,24 +236,29 @@ namespace TouchScript
             {
                 if (!addIfExists) return false;
                 layers.RemoveAt(i);
+                layerCount--;
             }
             if (index <= 0)
             {
                 layers.Insert(0, layer);
+                layerCount++;
                 return i == -1;
             }
-            if (index >= layers.Count)
+            if (index >= layerCount)
             {
                 layers.Add(layer);
+                layerCount++;
                 return i == -1;
             }
             if (i != -1)
             {
                 if (index < i) layers.Insert(index, layer);
                 else layers.Insert(index - 1, layer);
+                layerCount++;
                 return false;
             }
             layers.Insert(index, layer);
+            layerCount++;
             return true;
         }
 
@@ -261,14 +267,15 @@ namespace TouchScript
         {
             if (layer == null) return false;
             var result = layers.Remove(layer);
+            if (result) layerCount--;
             return result;
         }
 
         /// <inheritdoc />
         public void ChangeLayerIndex(int at, int to)
         {
-            if (at < 0 || at >= layers.Count) return;
-            if (to < 0 || to >= layers.Count) return;
+            if (at < 0 || at >= layerCount) return;
+            if (to < 0 || to >= layerCount) return;
             var data = layers[at];
             layers.RemoveAt(at);
             layers.Insert(to, data);
@@ -280,6 +287,7 @@ namespace TouchScript
             if (input == null) return false;
             if (inputs.Contains(input)) return true;
             inputs.Add(input);
+            inputCount++;
             return true;
         }
 
@@ -288,6 +296,7 @@ namespace TouchScript
         {
             if (input == null) return false;
             var result = inputs.Remove(input);
+            if (result) inputCount--;
             return result;
         }
 
@@ -313,8 +322,7 @@ namespace TouchScript
             hit = default(TouchHit);
             layer = null;
 
-            var count = layers.Count;
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < layerCount; i++)
             {
                 var touchLayer = layers[i];
                 if (touchLayer == null) continue;
@@ -545,11 +553,12 @@ namespace TouchScript
         {
             // filter empty layers
             layers = layers.FindAll(l => l != null);
+            layerCount = layers.Count;
         }
 
         private void createCameraLayer()
         {
-            if (layers.Count == 0 && shouldCreateCameraLayer)
+            if (layerCount == 0 && shouldCreateCameraLayer)
             {
                 if (Camera.main != null)
                 {
@@ -564,7 +573,7 @@ namespace TouchScript
 
         private void createTouchInput()
         {
-            if (inputs.Count == 0 && shouldCreateStandardInput)
+            if (inputCount == 0 && shouldCreateStandardInput)
             {
                 if (Application.isEditor)
                     Debug.Log("[TouchScript] No input source found, adding StandardInput. (this message is harmless)");
@@ -585,14 +594,12 @@ namespace TouchScript
 
         private void updateInputs()
         {
-            var count = inputs.Count;
-            for (var i = 0; i < count; i++) inputs[i].UpdateInput();
+            for (var i = 0; i < inputCount; i++) inputs[i].UpdateInput();
         }
 
         private void updateBegan(List<TouchPoint> points)
         {
             var count = points.Count;
-            var layerCount = layers.Count;
             for (var i = 0; i < count; i++)
             {
                 var touch = points[i];
