@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 927472823, guid: 20c2a163775f09b4cafa29b19d0c9204, type: 3}
-  m_Name: 55" FullHD TV
+  m_Name: FullHD TV 55
   m_EditorClassIdentifier: 
   name: FullHD TV 55
   dpi: 40
