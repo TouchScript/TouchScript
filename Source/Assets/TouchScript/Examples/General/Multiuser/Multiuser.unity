@@ -2121,7 +2121,7 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 2
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: .0500000007
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &1164346784
@@ -2586,7 +2586,7 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 2
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: .0500000007
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &1388179444
