@@ -1,5 +1,12 @@
+#!/bin/bash
+
 # Builds a solution on OSX and Windows.
 # build_solution.sh <path to solution>
+
+if [[ $# -eq 0 ]] ; then
+    printf "\e[31mUsage: build_solution.sh <path to solution>\e[39m\n"
+    exit 0
+fi
 
 printf "\e[1;33mBuilding ${1}.\e[0;39m\n"
 
