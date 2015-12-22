@@ -47,14 +47,19 @@ namespace TouchScript.Editor.Gestures.Base
 
             doInspectorGUI();
 
-            EditorGUIUtility.labelWidth = 160;
-            EditorGUILayout.PropertyField(screenTransformThreshold, SCREEN_TRANSFORM_THRESHOLD);
-
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
 
         protected virtual void doInspectorGUI() { }
+
+        protected override void drawAdvanced()
+        {
+            EditorGUIUtility.labelWidth = 160;
+            EditorGUILayout.PropertyField(screenTransformThreshold, SCREEN_TRANSFORM_THRESHOLD);
+
+            base.drawAdvanced();
+        }
 
     }
 }
