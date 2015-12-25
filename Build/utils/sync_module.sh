@@ -25,7 +25,7 @@ mkdir $TMP
 ROOTFOLDER="Assets/TouchScript"
 IFS=$'\n'
 for f in $(git ls-tree -r --name-only HEAD | grep "^$ROOTFOLDER/") ; do
-#	echo "$f"
+	echo "$f"
 	FOLDER=$(dirname "$f")/
 	FILENAME=$(basename "$f")
 	TMPFOLDER="$TMP/${FOLDER##$ROOTFOLDER/}"

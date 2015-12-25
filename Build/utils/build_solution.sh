@@ -12,8 +12,12 @@ printf "\e[1;33mBuilding ${1}.\e[0;39m\n"
 
 # Mac
 if [ "$(uname)" == "Darwin" ]; then
-	/Applications/Unity/MonoDevelop.app/Contents/MacOS/mdtool build --t:Clean --c:Release ${1} 
-	/Applications/Unity/MonoDevelop.app/Contents/MacOS/mdtool build --t:Build --c:Release ${1}
+	UNITYPATH="/Applications/Unity/Unity.app"
+    if [ ! -d "$UNITYPATH" ]; then
+        printf "\e[31mCouldn't find Unity at $UNITYPATH!\e[39m\n"
+        exit 0;
+    fi
+	"$UNITYPATH/Contents/Frameworks/MonoBleedingEdge/bin/xbuild" /p:Configuration=Release /clp:ErrorsOnly "${1}"
 
 # Windows
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ] || [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
