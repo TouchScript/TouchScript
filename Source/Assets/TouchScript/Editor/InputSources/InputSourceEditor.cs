@@ -1,11 +1,9 @@
 using TouchScript.Editor.Utils;
-using TouchScript.InputSources;
 using UnityEditor;
 using UnityEngine;
 
 namespace TouchScript.Editor.InputSources
 {
-    [CustomEditor(typeof(InputSource), true)]
     public class InputSourceEditor : UnityEditor.Editor
     {
         private const string TEXT_ADVANCED_HEADER = "Advanced properties.";
