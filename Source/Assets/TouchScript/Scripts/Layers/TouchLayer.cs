@@ -80,6 +80,12 @@ namespace TouchScript.Layers
             get { return transform.forward; }
         }
 
+        /// <summary>
+        /// Gets or sets an object implementing <see cref="ILayerDelegate"/> to be asked for layer specific actions.
+        /// </summary>
+        /// <value> The delegate. </value>
+        public ILayerDelegate Delegate { get; set; }
+
         #endregion
 
         #region Public methods
@@ -147,6 +153,7 @@ namespace TouchScript.Layers
         internal bool INTERNAL_BeginTouch(TouchPoint touch)
         {
             TouchHit hit;
+            if (Delegate != null && Delegate.ShouldReceiveTouch(this, touch) == false) return false;
             var result = beginTouch(touch, out hit);
             if (result == LayerHitResult.Hit)
             {
