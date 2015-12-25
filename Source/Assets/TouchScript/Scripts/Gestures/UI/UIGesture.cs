@@ -180,6 +180,11 @@ namespace TouchScript.Gestures.UI
             /// </summary>
             public PointerEventData Data;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TouchData"/> struct.
+            /// </summary>
+            /// <param name="onTarget">if set to <c>true</c> touch is on target.</param>
+            /// <param name="data">The data.</param>
             public TouchData(bool onTarget = false, PointerEventData data = null)
             {
                 OnTarget = onTarget;

@@ -19,6 +19,9 @@ namespace TouchScript.InputSources
     {
         #region Constants
 
+        /// <summary>
+        /// TUIO tag used for touches.
+        /// </summary>
         public const string SOURCE_TUIO = "TUIO";
 
         /// <summary>

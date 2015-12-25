@@ -24,6 +24,11 @@ namespace TouchScript.InputSources
         /// </summary>
         void UpdateInput();
 
+        /// <summary>
+        /// Cancels the touch.
+        /// </summary>
+        /// <param name="touch">The touch.</param>
+        /// <param name="return">if set to <c>true</c> returns the touch back to the system with different id.</param>
         void CancelTouch(TouchPoint touch, bool @return);
     }
 }

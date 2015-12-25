@@ -38,7 +38,6 @@ namespace TouchScript.Utils
         /// <summary>
         /// Invokes an event handling exceptions.
         /// </summary>
-        /// <typeparam name="T"> EventArgs type. </typeparam>
         /// <param name="handler"> Event. </param>
         /// <param name="sender"> Event sender. </param>
         /// <param name="args"> EventArgs. </param>

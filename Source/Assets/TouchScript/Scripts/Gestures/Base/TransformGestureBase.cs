@@ -191,21 +191,69 @@ namespace TouchScript.Gestures.Base
         /// </summary>
         protected float minScreenPointsPixelDistanceSquared;
 
+        /// <summary>
+        /// <see cref="ScreenTransformThreshold"/> in pixels.
+        /// </summary>
         protected float screenTransformPixelThreshold;
+
+        /// <summary>
+        /// <see cref="ScreenTransformThreshold"/> in pixels squared.
+        /// </summary>
         protected float screenTransformPixelThresholdSquared;
 
+        /// <summary>
+        /// Calculated delta position.
+        /// </summary>
         protected Vector3 deltaPosition;
+
+        /// <summary>
+        /// Calculated delta rotation.
+        /// </summary>
         protected float deltaRotation;
+
+        /// <summary>
+        /// Calculated delta scale.
+        /// </summary>
         protected float deltaScale;
 
+        /// <summary>
+        /// Translation buffer.
+        /// </summary>
         protected Vector2 screenPixelTranslationBuffer;
+
+        /// <summary>
+        /// Rotation buffer.
+        /// </summary>
         protected float screenPixelRotationBuffer;
+
+        /// <summary>
+        /// Angle buffer.
+        /// </summary>
         protected float angleBuffer;
+
+        /// <summary>
+        /// Screen space scaling buffer.
+        /// </summary>
         protected float screenPixelScalingBuffer;
+
+        /// <summary>
+        /// Scaling buffer.
+        /// </summary>
         protected float scaleBuffer;
+
+        /// <summary>
+        /// Indicates whether transformation started;
+        /// </summary>
         protected bool isTransforming = false;
 
+        /// <summary>
+        /// Touches moved this frame.
+        /// </summary>
         protected List<TouchPoint> movedTouches = new List<TouchPoint>(5);
+
+        /// <summary>
+        /// Layer projection parameters.
+        /// </summary>
         protected ProjectionParams projectionParams;
 
         [SerializeField]
@@ -472,7 +520,6 @@ namespace TouchScript.Gestures.Base
         /// <summary>
         /// Checks if there are touch points in moved list which matter for the gesture.
         /// </summary>
-        /// <param name="touches"> List of touch points. </param>
         /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
         protected virtual bool relevantTouches2()
         {
@@ -581,7 +628,7 @@ namespace TouchScript.Gestures.Base
             var dS = deltaScale = 1f;
 
             // one touch or one cluster (points might be too close to each other for 2 clusters)
-            
+
             if (numPoints == 1 || (!rotationEnabled && !scalingEnabled))
             {
                 if (!translationEnabled) return; // don't look for translates

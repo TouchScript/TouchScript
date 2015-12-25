@@ -134,7 +134,10 @@ namespace TouchScript
         /// </summary>
         /// <param name="layer">The layer to add.</param>
         /// <param name="index">Layer index to add the layer to.</param>
-        /// <returns>True if the layer was added.</returns>
+        /// <param name="addIfExists">if set to <c>true</c> move the layer to another index if it is already added; don't move otherwise.</param>
+        /// <returns>
+        /// True if the layer was added.
+        /// </returns>
         bool AddLayer(TouchLayer layer, int index, bool addIfExists = true);
 
         /// <summary>
@@ -174,7 +177,7 @@ namespace TouchScript
 
         /// <summary>
         /// Checks if a touch hits anything.
-        /// <seealso cref="ITouchHit"/>
+        /// <seealso cref="TouchHit"/>
         /// </summary>
         /// <param name="position">Screen position of the touch.</param>
         /// <param name="hit">An object which represents hit information.</param>

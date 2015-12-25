@@ -48,6 +48,7 @@ namespace TouchScript.InputSources
             mouseHandler.Update();
         }
 
+        /// <inheritdoc />
         public override void CancelTouch(TouchPoint touch, bool @return)
         {
             base.CancelTouch(touch, @return);

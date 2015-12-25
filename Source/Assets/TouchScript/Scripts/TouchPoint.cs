@@ -116,6 +116,9 @@ namespace TouchScript
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchPoint"/> class.
+        /// </summary>
         public TouchPoint()
         {
             properties = new Dictionary<string, object>();
@@ -124,10 +127,11 @@ namespace TouchScript
         #region Internal methods
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TouchPoint"/> class.
+        /// Initializes a new instance of the <see cref="TouchPoint" /> class.
         /// </summary>
         /// <param name="id">Unique id of the touch.</param>
         /// <param name="position">Screen position of the touch.</param>
+        /// <param name="input">Input source which created this touch.</param>
         /// <param name="tags">Initial tags.</param>
         internal void INTERNAL_Init(int id, Vector2 position, IInputSource input, Tags tags)
         {

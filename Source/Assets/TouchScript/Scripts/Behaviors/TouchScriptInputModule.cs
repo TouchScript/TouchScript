@@ -62,6 +62,9 @@ namespace TouchScript.Behaviors
 
         #region Private variables
 
+        /// <summary>
+        /// id to event data.
+        /// </summary>
         protected Dictionary<int, PointerEventData> pointerEvents = new Dictionary<int, PointerEventData>();
 
         [SerializeField]

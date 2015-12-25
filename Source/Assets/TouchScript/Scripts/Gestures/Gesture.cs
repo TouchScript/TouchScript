@@ -71,13 +71,39 @@ namespace TouchScript.Gestures
             Recognized = Ended
         }
 
+        /// <summary>
+        /// Current state of the number of touch points.
+        /// </summary>
         protected enum TouchesNumState
         {
+            /// <summary>
+            /// The number of touch points is between min and max thresholds.
+            /// </summary>
             InRange,
+
+            /// <summary>
+            /// The number of touch points is less than min threshold.
+            /// </summary>
             TooFew,
+
+            /// <summary>
+            /// The number of touch points is greater than max threshold.
+            /// </summary>
             TooMany,
+
+            /// <summary>
+            /// The number of touch points passed min threshold this frame and is now in range.
+            /// </summary>
             PassedMinThreshold,
+
+            /// <summary>
+            /// The number of touch points passed max threshold this frame and is now in range.
+            /// </summary>
             PassedMaxThreshold,
+
+            /// <summary>
+            /// The number of touch points passed both min and max thresholds.
+            /// </summary>
             PassedMinMaxThreshold
         }
 

@@ -29,6 +29,9 @@ namespace TouchScript.Layers
 
         #region Unity methods
 
+        /// <summary>
+        /// Unity OnEnable callback.
+        /// </summary>
         protected virtual void OnEnable()
         {
             if (!Application.isPlaying) return;

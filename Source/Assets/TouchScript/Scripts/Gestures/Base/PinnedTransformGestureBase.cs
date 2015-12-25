@@ -151,21 +151,69 @@ namespace TouchScript.Gestures.Base
 
         #region Private variables
 
+        /// <summary>
+        /// <see cref="ScreenTransformThreshold"/> in pixels.
+        /// </summary>
         protected float screenTransformPixelThreshold;
+
+        /// <summary>
+        /// <see cref="ScreenTransformThreshold"/> in pixels squared.
+        /// </summary>
         protected float screenTransformPixelThresholdSquared;
+
+        /// <summary>
+        /// The cached collider.
+        /// </summary>
         protected Collider cachedCollider;
 
+        /// <summary>
+        /// Calculated delta rotation.
+        /// </summary>
         protected float deltaRotation;
+
+        /// <summary>
+        /// Calculated delta scale.
+        /// </summary>
         protected float deltaScale;
 
+        /// <summary>
+        /// Translation buffer.
+        /// </summary>
         protected Vector2 screenPixelTranslationBuffer;
+
+        /// <summary>
+        /// Rotation buffer.
+        /// </summary>
         protected float screenPixelRotationBuffer;
+
+        /// <summary>
+        /// Angle buffer.
+        /// </summary>
         protected float angleBuffer;
+
+        /// <summary>
+        /// Screen space scaling buffer.
+        /// </summary>
         protected float screenPixelScalingBuffer;
+
+        /// <summary>
+        /// Scaling buffer.
+        /// </summary>
         protected float scaleBuffer;
+
+        /// <summary>
+        /// Indicates whether transformation started;
+        /// </summary>
         protected bool isTransforming = false;
 
+        /// <summary>
+        /// Touches moved this frame.
+        /// </summary>
         protected List<TouchPoint> movedTouches = new List<TouchPoint>(5);
+
+        /// <summary>
+        /// Layer projection parameters.
+        /// </summary>
         protected ProjectionParams projectionParams;
 
         [SerializeField]

@@ -19,8 +19,19 @@ namespace TouchScript.Hit
         /// </summary>
         public enum TouchHitType
         {
+            /// <summary>
+            /// 3D hit.
+            /// </summary>
             Hit3D,
+
+            /// <summary>
+            /// 2D hit.
+            /// </summary>
             Hit2D,
+
+            /// <summary>
+            /// UI hit.
+            /// </summary>
             HitUI
         }
 

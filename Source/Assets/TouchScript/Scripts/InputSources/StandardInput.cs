@@ -50,6 +50,9 @@ namespace TouchScript.InputSources
         /// </summary>
         public enum Windows7TouchAPIType
         {
+            /// <summary>
+            /// Windows 7 WM_TOUCH API.
+            /// </summary>
             Windows7,
 
             /// <summary>
@@ -157,6 +160,7 @@ namespace TouchScript.InputSources
             else if (mouseHandler != null) mouseHandler.Update();
         }
 
+        /// <inheritdoc />
         public override void CancelTouch(TouchPoint touch, bool @return)
         {
             base.CancelTouch(touch, @return);

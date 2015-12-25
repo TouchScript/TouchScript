@@ -90,8 +90,14 @@ namespace TouchScript.Behaviors.Visualizer
 
         #region Private variables
 
+        /// <summary>
+        /// Cached RectTransform.
+        /// </summary>
         protected RectTransform rect;
 
+        /// <summary>
+        /// Cursor size.
+        /// </summary>
         protected int size = 1;
 
         #endregion

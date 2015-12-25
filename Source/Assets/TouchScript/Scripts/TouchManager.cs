@@ -178,7 +178,7 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a <see cref="StandardInput"/> should be created in scene if no inputs present.
+        /// Gets or sets a value indicating whether a <see cref="TouchScript.InputSources.StandardInput"/> should be created in scene if no inputs present.
         /// </summary>
         /// <value> <c>true</c> if StandardInput should be created; otherwise, <c>false</c>. </value>
         /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off.</remarks>

@@ -74,7 +74,8 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <param name="tags">Initial tags.</param>
-        /// <returns>Internal touch id.</returns>
+        /// <param name="canRemap">if set to <c>true</c> a <see cref="CoordinatesRemapper"/> can be used on provided coordinates.</param>
+        /// <returns> Internal touch id. </returns>
         protected virtual TouchPoint beginTouch(Vector2 position, Tags tags, bool canRemap = true)
         {
             if (CoordinatesRemapper != null && canRemap) position = CoordinatesRemapper.Remap(position);
