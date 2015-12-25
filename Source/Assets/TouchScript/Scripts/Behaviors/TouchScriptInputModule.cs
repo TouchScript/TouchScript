@@ -14,6 +14,7 @@ namespace TouchScript.Behaviors
     /// It works without any layers or gestures but can be used with for examle a CameraLayer and BoxColliders on UI elements to attach gestures to them.
     /// </summary>
     [AddComponentMenu("TouchScript/TouchScript Input Module")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Behaviors_TouchScriptInputModule.htm")]
     public class TouchScriptInputModule : BaseInputModule
     {
         #region Public properties

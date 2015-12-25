@@ -14,6 +14,7 @@ namespace TouchScript.Gestures
     /// Gesture which recognizes a point cluster which didn't move for specified time since it appeared.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Long Press Gesture")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_LongPressGesture.htm")]
     public class LongPressGesture : Gesture
     {
         #region Constants

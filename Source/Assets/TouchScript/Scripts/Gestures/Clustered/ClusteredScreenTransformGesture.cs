@@ -12,6 +12,7 @@ namespace TouchScript.Gestures.Clustered
     /// Should be used for large touch surfaces.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Screen Transform Gesture (Clustered)")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_Clustered_ClusteredScreenTransformGesture.htm")]
     public class ClusteredScreenTransformGesture : ScreenTransformGesture
     {
         #region Private variables

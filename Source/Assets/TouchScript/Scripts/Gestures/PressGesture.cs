@@ -14,6 +14,7 @@ namespace TouchScript.Gestures
     /// Works with any gesture unless a Delegate is set.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Press Gesture")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_PressGesture.htm")]
     public class PressGesture : Gesture
     {
         #region Constants

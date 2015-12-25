@@ -15,6 +15,8 @@ namespace TouchScript.Layers
     /// <summary>
     /// Touch layer which handles Unity UI and interface objects in a Canvas.
     /// </summary>
+    [AddComponentMenu("TouchScript/Layers/UI Layer")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Layers_UILayer.htm")]
     public class UILayer : TouchLayer
     {
         #region Public properties

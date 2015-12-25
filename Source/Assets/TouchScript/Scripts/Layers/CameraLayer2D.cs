@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace TouchScript.Layers
 {
@@ -13,6 +12,7 @@ namespace TouchScript.Layers
     /// Touch layer which works with Unity 4.3+ 2d physics. Can pick 2d objects hit by touches in right order.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer 2D")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Layers_CameraLayer2D.htm")]
     public class CameraLayer2D : CameraLayerBase
     {
         #region Private variables

@@ -14,6 +14,7 @@ namespace TouchScript.Gestures.UI
     /// <para>Mostly needed for UI buttons to work with <see cref="TouchScript.Layers.UILayer"/>.</para>
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/UI Gesture")]
+    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_UI_UIGesture.htm")]
     public class UIGesture : Gesture
     {
         #region Protected variables
