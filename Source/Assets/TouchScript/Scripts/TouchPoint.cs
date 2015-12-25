@@ -48,14 +48,17 @@ namespace TouchScript
         public TouchHit Hit { get; internal set; }
 
         /// <summary>
-        /// Original layer which created this touch object.
+        /// Original layer which registered this touch.
         /// <seealso cref="TouchLayer"/>
         /// <seealso cref="CameraLayer"/>
         /// <seealso cref="CameraLayer2D"/>
         /// </summary>
         public TouchLayer Layer { get; internal set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Original input source which created this touch.
+        /// <seealso cref="IInputSource"/>
+        /// </summary>
         public IInputSource InputSource { get; internal set; }
 
         /// <summary>

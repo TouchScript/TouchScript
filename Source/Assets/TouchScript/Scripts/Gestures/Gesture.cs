@@ -456,6 +456,7 @@ namespace TouchScript.Gestures
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private int numTouches;
+        private TouchLayer layer;
         private ReadOnlyCollection<TouchPoint> readonlyActiveTouches;
         private TimedSequence<TouchPoint> touchSequence = new TimedSequence<TouchPoint>();
         private GestureManagerInstance gestureManagerInstance;
@@ -540,8 +541,15 @@ namespace TouchScript.Gestures
         /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
         public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
         {
-            TouchLayer layer = null;
-            if (!touchManager.GetHitTarget(position, out hit, out layer)) return false;
+            if (layer != null)
+            {
+                if (layer.Hit(position, out hit) != TouchLayer.LayerHitResult.Hit) return false;
+            }
+            else
+            {
+                TouchLayer l = null;
+                if (!touchManager.GetHitTarget(position, out hit, out l)) return false;
+            }
 
             if (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform)) return true;
             return false;
@@ -711,6 +719,8 @@ namespace TouchScript.Gestures
 
         internal void INTERNAL_TouchBegan(TouchPoint touch)
         {
+            if (numTouches == 0) layer = touch.Layer;
+
             var total = numTouches + 1;
             touchesNumState = TouchesNumState.InRange;
 
@@ -979,6 +989,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void reset()
         {
+            layer = null;
             cachedScreenPosition = TouchManager.INVALID_POSITION;
             cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
         }
