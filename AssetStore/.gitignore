@@ -26,7 +26,3 @@ _ReSharper*
 /Assets/UnityVS*
 /.vscode
 /Assets/VSCode*
-
-*.pdb*
-*.mdb*
-pdb2mdb.bat*
