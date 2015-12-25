@@ -18,6 +18,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouchScript/Examples/General/Multiuser/Multiuser.unity
   - enabled: 1
+    path: Assets/TouchScript/Examples/General/Cube/Cube.unity
+  - enabled: 1
     path: Assets/TouchScript/Examples/General/Portal/Portal.unity
   - enabled: 1
     path: Assets/TouchScript/Examples/General/Colors/Colors.unity

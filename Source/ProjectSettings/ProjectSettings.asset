@@ -323,6 +323,7 @@ PlayerSettings:
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
   scriptingDefineSymbols:
+    1: 
     4: 
   metroPackageName: General Examples
   metroPackageLogo: 
