@@ -1,17 +1,31 @@
-if [[ $# -lt 2 ]] ; then
-    printf "\e[31mUsage: package.sh <project folder> <package path> <examples package path>\e[39m\n"
-    exit 0
-fi
+#!/bin/bash
+
+# 1. Builds external dlls
+# 2. Synchronizes modules
+# 3. Builds module packages
+# 4. Builds TouchScript package
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-exportFolders="Assets/TouchScript/Devices Assets/TouchScript/Editor Assets/TouchScript/Plugins Assets/TouchScript/Prefabs Assets/TouchScript/Textures"
-include="${1}/include.txt"
-if [ -f "$include" ]; then
-    value=`cat "$include"`
-    exportFolders="$exportFolders $value"
-fi
+ASSETSTORE=$(cd "$DIR/../AssetStore/" && pwd)
+SOURCE=$(cd "$DIR/../Source/" && pwd)
+MODULES=$(cd "$DIR/../Modules/" && pwd)
+UNITYPACKAGE=$(cd "$DIR/../" && pwd)/TouchScript.unitypackage
 
-"${DIR}"/package_project.sh "$1" "$2" "\"$exportFolders\""
-if [[ $# -eq 3 ]] ; then
-    "${DIR}"/package_project.sh "$1" "$3" "\"$exportFolders Assets/TouchScript/Examples\""
-fi
+$DIR/build_external.sh
+$DIR/sync_modules.sh
+
+rm -rf "$ASSETSTORE/Assets/TouchScript"
+rm -f "$ASSETSTORE/Assets/TouchScript.meta"
+cp -r "$SOURCE/Assets/TouchScript" "$ASSETSTORE/Assets/"
+cp "$SOURCE/Assets/TouchScript.meta" "$ASSETSTORE/Assets/"
+
+for i in $(ls -d "$MODULES/"*/); do 
+	FILE="${i%%/}/Build/package.sh"
+	if [ -f $FILE ]; then
+	   	"$FILE" "$ASSETSTORE/Assets/TouchScript/Modules"
+	fi
+done
+
+printf "\n\e[1;36mPackaging TouchScript.unitypackage.\e[0;39m\n"
+
+$DIR/utils/build_package.sh "$ASSETSTORE" "$UNITYPACKAGE" "Assets/TouchScript"
