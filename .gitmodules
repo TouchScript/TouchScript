@@ -1,3 +1,6 @@
-[submodule "TouchScript.Inputs/TUIOsharp"]
-	path = TouchScript.Inputs/TUIOsharp
+[submodule "External/TUIO/TUIOsharp"]
+	path = External/TUIO/TUIOsharp
 	url = https://github.com/valyard/TUIOsharp.git
+[submodule "Modules/Playmaker"]
+	path = Modules/Playmaker
+	url = https://github.com/TouchScript/Playmaker.git

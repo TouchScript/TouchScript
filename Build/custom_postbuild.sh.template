@@ -1,4 +1,0 @@
-# custom_postbuild.sh <solution> <Plugins/Editor> <file name>
-
-cp "$3" "$1/../Playmaker/Assets/TouchScript/$2/"
-cp "$3" "$1/../Scaleform/Assets/TouchScript/$2/"
