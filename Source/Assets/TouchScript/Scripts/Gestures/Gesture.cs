@@ -681,7 +681,7 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void OnDisable()
         {
-            setState(GestureState.Failed);
+            setState(GestureState.Cancelled);
         }
 
         /// <summary>
@@ -915,7 +915,6 @@ namespace TouchScript.Gestures
         protected bool setState(GestureState value)
         {
             if (gestureManagerInstance == null) return false;
-            if (!enabled && value != GestureState.Failed) return false;
             if (requireGestureToFail != null)
             {
                 switch (value)
