@@ -34,17 +34,22 @@ namespace TouchScript.InputSources.InputHandlers
         {
             switch (msg)
             {
+                case WM_TOUCH:
+                    CloseTouchInputHandle(lParam); // don't let Unity handle this
+                    return IntPtr.Zero;
                 case WM_POINTERDOWN:
                 case WM_POINTERUP:
                 case WM_POINTERUPDATE:
                     decodeWin8Touches(msg, wParam, lParam);
-                    break;
-                case WM_CLOSE:
-                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    Application.Quit();
                     return IntPtr.Zero;
+                case WM_CLOSE:
+                    // Not having this crashes app on quit
+                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
+                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    return IntPtr.Zero;
+                default:
+                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
             }
-            return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
 
         private void decodeWin8Touches(uint msg, IntPtr wParam, IntPtr lParam)
@@ -133,19 +138,20 @@ namespace TouchScript.InputSources.InputHandlers
 
         private IntPtr wndProcWin7(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            // TODO: Add mouse support to Windows 7
             switch (msg)
             {
                 case WM_TOUCH:
                     decodeWin7Touches(wParam, lParam);
-                    break;
+                    return IntPtr.Zero;
                 case WM_CLOSE:
+                    // Not having this crashes app on quit
                     UnregisterTouchWindow(hWnd);
                     SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    Application.Quit();
+                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
                     return IntPtr.Zero;
+                default:
+                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
             }
-            return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
         }
 
         private void decodeWin7Touches(IntPtr wParam, IntPtr lParam)
@@ -571,6 +577,9 @@ namespace TouchScript.InputSources.InputHandlers
 
         [DllImport("user32.dll")]
         public static extern int RemoveProp(IntPtr hWnd, string lpString);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         #endregion
     }
