@@ -15,7 +15,7 @@ namespace TouchScript.InputSources
     /// Initializes proper inputs automatically. Replaces old Mobile and Mouse inputs.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Standard Input")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_InputSources_StandardInput.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_InputSources_StandardInput.htm")]
     public sealed class StandardInput : InputSource
     {
         #region Constants

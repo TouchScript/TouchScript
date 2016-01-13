@@ -11,7 +11,7 @@ namespace TouchScript.Behaviors.Visualizer
     /// <summary>
     /// Visual cursor implementation used by TouchScript.
     /// </summary>
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Behaviors_TouchProxy.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_TouchProxy.htm")]
     public class TouchProxy : TouchProxyBase
     {
         /// <summary>

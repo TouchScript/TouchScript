@@ -45,7 +45,7 @@
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
     <SdkLinkTarget>Blank</SdkLinkTarget>
-    <PresentationStyle>VS2010</PresentationStyle>
+    <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
     <HelpTitle>TouchScript — multitouch library for Unity</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
@@ -81,6 +81,7 @@
       <NamespaceSummaryItem name="TouchScript.Utils.Attributes" isDocumented="False" />
       <NamespaceSummaryItem name="TouchScript.Utils.Geom" isDocumented="False" />
     </NamespaceSummaries>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional

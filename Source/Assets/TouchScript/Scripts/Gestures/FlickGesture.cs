@@ -12,7 +12,7 @@ namespace TouchScript.Gestures
     /// Recognizes fast movement before releasing touches. Doesn't care how much time touch points were on surface and how much they moved.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Flick Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_FlickGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_FlickGesture.htm")]
     public class FlickGesture : Gesture
     {
         #region Constants

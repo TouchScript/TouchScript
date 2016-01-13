@@ -14,7 +14,7 @@ namespace TouchScript.Gestures
     /// Recognizes a tap.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Tap Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_TapGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TapGesture.htm")]
     public class TapGesture : Gesture
     {
         #region Constants

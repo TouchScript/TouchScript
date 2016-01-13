@@ -12,7 +12,7 @@ namespace TouchScript.Layers
     /// Layer which gets all input from a camera. Should be used instead of a background object getting all the touches which come through.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Layers_FullscreenLayer.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_FullscreenLayer.htm")]
     public class FullscreenLayer : TouchLayer
     {
         #region Constants

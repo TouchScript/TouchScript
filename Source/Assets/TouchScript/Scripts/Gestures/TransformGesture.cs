@@ -16,7 +16,7 @@ namespace TouchScript.Gestures
     /// Recognizes a transform gesture, i.e. translation, rotation, scaling or a combination of these.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_Gestures_TransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGesture.htm")]
     public class TransformGesture : TransformGestureBase, ITransformGesture
     {
         #region Constants

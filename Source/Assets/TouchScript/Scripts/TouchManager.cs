@@ -28,7 +28,7 @@ namespace TouchScript
     /// </code>
     /// </example>
     [AddComponentMenu("TouchScript/Touch Manager")]
-    [HelpURL("http://touchscript.github.io/docs/Index.html?topic=html/T_TouchScript_TouchManager.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_TouchManager.htm")]
     public sealed class TouchManager : MonoBehaviour
     {
         #region Constants
