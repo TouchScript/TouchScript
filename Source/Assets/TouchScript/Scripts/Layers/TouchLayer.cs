@@ -6,6 +6,7 @@ using System;
 using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
+using System.Collections;
 
 namespace TouchScript.Layers
 {
@@ -135,18 +136,26 @@ namespace TouchScript.Layers
             if (!Application.isPlaying) return;
 
             layerProjectionParams = createProjectionParams();
-            TouchManager.Instance.AddLayer(this, 0, false);
+            StartCoroutine(lateAwake());
         }
 
-        // To be able to turn layers off
-        private void Start() {}
+        private IEnumerator lateAwake()
+        {
+            yield return null;
+
+            // Add ourselves after TouchManager finished adding layers in order
+            TouchManager.Instance.AddLayer(this, 0, false);
+        }
 
         /// <summary>
         /// Unity OnDestroy callback.
         /// </summary>
         protected virtual void OnDestroy()
         {
-            if (Application.isPlaying && TouchManager.Instance != null) TouchManager.Instance.RemoveLayer(this);
+            if (!Application.isPlaying || TouchManager.Instance == null) return;
+
+            StopAllCoroutines();
+            TouchManager.Instance.RemoveLayer(this);
         }
 
         #endregion
