@@ -609,7 +609,7 @@ namespace TouchScript
                 for (var j = 0; j < layerCount; j++)
                 {
                     var touchLayer = layers[j];
-                    if (touchLayer == null) continue;
+                    if (touchLayer == null || !touchLayer.enabled) continue;
                     if (touchLayer.INTERNAL_BeginTouch(touch)) break;
                 }
 
