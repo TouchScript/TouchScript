@@ -147,6 +147,9 @@ namespace TouchScript.Layers
             TouchManager.Instance.AddLayer(this, 0, false);
         }
 
+        // To be able to turn layers off
+        private void Start() {}
+
         /// <summary>
         /// Unity OnDestroy callback.
         /// </summary>
