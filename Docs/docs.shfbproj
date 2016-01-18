@@ -24,8 +24,8 @@
     <SandcastlePath>..\..\..\..\Program Files (x86)\Sandcastle\</SandcastlePath>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\Source\Assembly-CSharp.XML" />
-      <DocumentationSource sourceFile="..\Source\obj\Debug\Assembly-CSharp.dll" />
-    </DocumentationSources>
+<DocumentationSource sourceFile="..\Source\obj\Debug\Assembly-CSharp.dll" />
+<DocumentationSource sourceFile="C:\Program Files\Unity\Editor\Data\Managed\UnityEngine.xml" /></DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>C#</SyntaxFilters>
     <HeaderText>
@@ -49,7 +49,7 @@
     <Preliminary>False</Preliminary>
     <HelpTitle>TouchScript — multitouch library for Unity</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <VisibleItems>Attributes, ExplicitInterfaceImplementations, Protected</VisibleItems>
+    <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers</VisibleItems>
     <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
     <ProjectSummary>TouchScript is a multitouch library for Unity. Inspired by iOS, TouchScript makes handling complex gesture interactions on any touch surface much easier. Please refer to: https://github.com/TouchScript/TouchScript</ProjectSummary>
     <NamespaceSummaries>
@@ -82,6 +82,33 @@
       <NamespaceSummaryItem name="TouchScript.Utils.Geom" isDocumented="False" />
     </NamespaceSummaries>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ApiFilter>
+      <Filter entryType="Namespace" fullName="TouchScript" isExposed="True" xmlns="">
+  <Filter entryType="Class" fullName="TouchScript.Tags" filterName="Tags" isExposed="True">
+    <Filter entryType="Method" fullName="TouchScript.Tags.OnAfterDeserialize" filterName="OnAfterDeserialize" isExposed="False" />
+    <Filter entryType="Method" fullName="TouchScript.Tags.OnBeforeSerialize" filterName="OnBeforeSerialize" isExposed="False" />
+  </Filter>
+</Filter>
+<Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.CameraControl" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Checkers" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Colors" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Cube" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Multiuser" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Photos" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Portal" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.RawInput" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.Tap" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Examples.UI" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Gestures.Base" isExposed="False" xmlns="">
+  <Filter entryType="Class" fullName="TouchScript.Gestures.Base.PinnedTrasformGestureBase" filterName="PinnedTrasformGestureBase" isExposed="True" />
+  <Filter entryType="Enumeration" fullName="TouchScript.Gestures.Base.PinnedTrasformGestureBase.TransformType" filterName="PinnedTrasformGestureBase.TransformType" isExposed="True" />
+  <Filter entryType="Class" fullName="TouchScript.Gestures.Base.TransformGestureBase" filterName="TransformGestureBase" isExposed="True" />
+  <Filter entryType="Enumeration" fullName="TouchScript.Gestures.Base.TransformGestureBase.TransformType" filterName="TransformGestureBase.TransformType" isExposed="True" />
+</Filter>
+<Filter entryType="Namespace" fullName="TouchScript.Utils" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Utils.Attributes" isExposed="False" xmlns="" />
+<Filter entryType="Namespace" fullName="TouchScript.Utils.Geom" isExposed="False" xmlns="" /></ApiFilter>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
