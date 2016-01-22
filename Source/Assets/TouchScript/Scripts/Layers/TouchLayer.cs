@@ -144,7 +144,7 @@ namespace TouchScript.Layers
             yield return null;
 
             // Add ourselves after TouchManager finished adding layers in order
-            TouchManager.Instance.AddLayer(this, 0, false);
+            TouchManager.Instance.AddLayer(this, -1, false);
         }
 
         // To be able to turn layers off

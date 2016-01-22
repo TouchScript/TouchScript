@@ -125,22 +125,15 @@ namespace TouchScript
         IList<TouchPoint> ActiveTouches { get; }
 
         /// <summary>
-        /// Adds a touch layer.
-        /// </summary>
-        /// <param name="layer">The layer to add.</param>
-        /// <returns>True if the layer was added.</returns>
-        bool AddLayer(TouchLayer layer);
-
-        /// <summary>
         /// Adds a touch layer in a specific position.
         /// </summary>
         /// <param name="layer">The layer to add.</param>
-        /// <param name="index">Layer index to add the layer to.</param>
+        /// <param name="index">Layer index to add the layer to or <c>-1</c> to add to the end of the list.</param>
         /// <param name="addIfExists">if set to <c>true</c> move the layer to another index if it is already added; don't move otherwise.</param>
         /// <returns>
         /// True if the layer was added.
         /// </returns>
-        bool AddLayer(TouchLayer layer, int index, bool addIfExists = true);
+        bool AddLayer(TouchLayer layer, int index = -1, bool addIfExists = true);
 
         /// <summary>
         /// Removes a touch layer.

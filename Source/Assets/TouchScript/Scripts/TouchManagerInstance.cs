@@ -221,13 +221,7 @@ namespace TouchScript
         #region Public methods
 
         /// <inheritdoc />
-        public bool AddLayer(TouchLayer layer)
-        {
-            return AddLayer(layer, 0);
-        }
-
-        /// <inheritdoc />
-        public bool AddLayer(TouchLayer layer, int index, bool addIfExists = true)
+        public bool AddLayer(TouchLayer layer, int index = -1, bool addIfExists = true)
         {
             if (layer == null) return false;
 
@@ -238,13 +232,13 @@ namespace TouchScript
                 layers.RemoveAt(i);
                 layerCount--;
             }
-            if (index <= 0)
+            if (index == 0)
             {
                 layers.Insert(0, layer);
                 layerCount++;
                 return i == -1;
             }
-            if (index >= layerCount)
+            if (index == -1 || index >= layerCount)
             {
                 layers.Add(layer);
                 layerCount++;

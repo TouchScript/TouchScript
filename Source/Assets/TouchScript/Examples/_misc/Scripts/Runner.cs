@@ -35,7 +35,7 @@ namespace TouchScript.Examples
 
         private void OnLevelWasLoaded(int num)
         {
-            TouchManager.Instance.AddLayer(layer);
+            TouchManager.Instance.AddLayer(layer, 0);
         }
     }
 }
