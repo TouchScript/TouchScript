@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace TouchScript.Gestures.Clustered
         #region Protected methods
 
         /// <inheritdoc />
-        protected override bool relevantTouches()
+        protected override bool relevantTouches(IList<TouchPoint> touches)
         {
             return true;
         }

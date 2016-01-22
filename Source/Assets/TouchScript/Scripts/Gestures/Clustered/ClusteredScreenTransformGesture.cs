@@ -69,13 +69,13 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches1()
+        protected override bool relevantTouches1(IList<TouchPoint> touches)
         {
             return true;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches2()
+        protected override bool relevantTouches2(IList<TouchPoint> touches)
         {
             return true;
         }
