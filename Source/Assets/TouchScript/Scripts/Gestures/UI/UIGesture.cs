@@ -43,52 +43,64 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
-            if (NumTouches == 1) setState(GestureState.Began); 
+            if (NumTouches == touches.Count) setState(GestureState.Began);
 
-            var data = getPointerData(touch);
-            ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerEnterHandler);
-            ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerDownHandler);
+            for (var i = 0; i < touches.Count; i++)
+            {
+                var touch = touches[i];
+                var data = getPointerData(touch);
+                ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerEnterHandler);
+                ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerDownHandler);
+            }
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
-            var data = getPointerData(touch);
-            if (TouchUtils.IsTouchOnTarget(touch, cachedTransform))
+            for (var i = 0; i < touches.Count; i++)
             {
-                if (!data.OnTarget)
+                var touch = touches[i];
+                var data = getPointerData(touch);
+                if (TouchUtils.IsTouchOnTarget(touch, cachedTransform))
                 {
-                    data.OnTarget = true;
-                    ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerEnterHandler);
+                    if (!data.OnTarget)
+                    {
+                        data.OnTarget = true;
+                        ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerEnterHandler);
+                    }
                 }
-            }
-            else
-            {
-                if (data.OnTarget)
+                else
                 {
-                    data.OnTarget = false;
-                    ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerExitHandler);
+                    if (data.OnTarget)
+                    {
+                        data.OnTarget = false;
+                        ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerExitHandler);
+                    }
                 }
+                setPointerData(touch, data);
             }
-            setPointerData(touch, data);
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             TouchData onTarget = new TouchData();
-            var data = getPointerData(touch);
-            ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerUpHandler);
-            if (data.OnTarget) onTarget = data;
-            removePointerData(touch);
+            for (var i = 0; i < touches.Count; i++)
+            {
+                var touch = touches[i];
+                var data = getPointerData(touch);
+                ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerUpHandler);
+                if (data.OnTarget) onTarget = data;
+                removePointerData(touch);
+            }
 
             // One of the touches was released ontop of the target
             if (onTarget.OnTarget) ExecuteEvents.Execute(gameObject, onTarget.Data, ExecuteEvents.pointerClickHandler);
@@ -97,13 +109,17 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchCancelled(TouchPoint touch)
+        protected override void touchesCancelled(IList<TouchPoint> touches)
         {
-            base.touchCancelled(touch);
+            base.touchesCancelled(touches);
 
-            var data = getPointerData(touch);
-            ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerUpHandler);
-            removePointerData(touch);
+            for (var i = 0; i < touches.Count; i++)
+            {
+                var touch = touches[i];
+                var data = getPointerData(touch);
+                ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerUpHandler);
+                removePointerData(touch);
+            }
 
             if (activeTouches.Count == 0) setState(GestureState.Ended);
         }

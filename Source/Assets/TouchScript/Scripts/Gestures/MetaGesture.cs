@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Utils;
 using UnityEngine;
 
@@ -88,45 +89,77 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (State == GestureState.Possible) setState(GestureState.Began);
 
-            if (touchBeganInvoker != null) touchBeganInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touch));
-            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TOUCH_BEGAN_MESSAGE, touch, SendMessageOptions.DontRequireReceiver);
+            var length = touches.Count;
+            if (touchBeganInvoker != null)
+            {
+                for (var i = 0; i < length; i++)
+                    touchBeganInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+            }
+            if (UseSendMessage && SendMessageTarget != null)
+            {
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_BEGAN_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
             if (State == GestureState.Began || State == GestureState.Changed) setState(GestureState.Changed);
 
-            if (touchMovedInvoker != null) touchMovedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touch));
-            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TOUCH_MOVED_MESSAGE, touch, SendMessageOptions.DontRequireReceiver);
+            var length = touches.Count;
+            if (touchMovedInvoker != null)
+            {
+                for (var i = 0; i < length; i++)
+                    touchMovedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+            }
+            if (UseSendMessage && SendMessageTarget != null)
+            {
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_MOVED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Ended);
 
-            if (touchEndedInvoker != null) touchEndedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touch));
-            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TOUCH_ENDED_MESSAGE, touch, SendMessageOptions.DontRequireReceiver);
+            var length = touches.Count;
+            if (touchEndedInvoker != null)
+            {
+                for (var i = 0; i < length; i++)
+                    touchEndedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+            }
+            if (UseSendMessage && SendMessageTarget != null)
+            {
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_ENDED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         /// <inheritdoc />
-        protected override void touchCancelled(TouchPoint touch)
+        protected override void touchesCancelled(IList<TouchPoint> touches)
         {
-            base.touchCancelled(touch);
+            base.touchesCancelled(touches);
 
-            if (touchCancelledInvoker != null) touchCancelledInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touch));
-            if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TOUCH_CANCELLED_MESSAGE, touch, SendMessageOptions.DontRequireReceiver);
+            var length = touches.Count;
+            if (touchCancelledInvoker != null)
+            {
+                for (var i = 0; i < length; i++)
+                    touchCancelledInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+            }
+            if (UseSendMessage && SendMessageTarget != null)
+            {
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_CANCELLED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         #endregion

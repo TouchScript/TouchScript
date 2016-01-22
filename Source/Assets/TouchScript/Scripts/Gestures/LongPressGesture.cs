@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
@@ -100,9 +101,9 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
                 touchesNumState == TouchesNumState.PassedMinMaxThreshold)
@@ -116,9 +117,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
             if (distanceLimit < float.PositiveInfinity)
             {
@@ -128,9 +129,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {

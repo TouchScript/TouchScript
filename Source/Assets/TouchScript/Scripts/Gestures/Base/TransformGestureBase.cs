@@ -305,9 +305,9 @@ namespace TouchScript.Gestures.Base
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (NumTouches == 1) projectionParams = activeTouches[0].ProjectionParams;
 
@@ -328,17 +328,18 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
-            movedTouches.Add(touch);
+            //movedTouches.Add(touch);
+            movedTouches.AddRange(touches);
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (touchesNumState == TouchesNumState.PassedMinThreshold)
             {

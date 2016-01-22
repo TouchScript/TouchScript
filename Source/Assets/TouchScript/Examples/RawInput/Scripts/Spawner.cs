@@ -14,7 +14,7 @@ namespace TouchScript.Examples.RawInput
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.TouchBegan += touchBeganHandler;
+                TouchManager.Instance.TouchesBegan += touchesBeganHandler;
             }
         }
 
@@ -22,7 +22,7 @@ namespace TouchScript.Examples.RawInput
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.TouchBegan -= touchBeganHandler;
+                TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
             }
         }
 
@@ -33,9 +33,12 @@ namespace TouchScript.Examples.RawInput
             obj.transform.rotation = transform.rotation;
         }
 
-        private void touchBeganHandler(object sender, TouchEventArgs e)
+        private void touchesBeganHandler(object sender, TouchEventArgs e)
         {
-            spawnPrefabAt(e.Touch.Position);
+            foreach (var point in e.Touches)
+            {
+                spawnPrefabAt(point.Position);
+            }
         }
     }
 }

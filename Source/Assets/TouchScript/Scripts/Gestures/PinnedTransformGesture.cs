@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
@@ -158,12 +159,12 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchBegan(TouchPoint touch)
+        protected override void touchesBegan(IList<TouchPoint> touches)
         {
-            base.touchBegan(touch);
+            base.touchesBegan(touches);
 
             if (State != GestureState.Possible) return;
-            if (NumTouches == 1)
+            if (NumTouches == touches.Count)
             {
                 projectionLayer = activeTouches[0].Layer;
                 updateProjectionPlane();
@@ -175,18 +176,18 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchMoved(TouchPoint touch)
+        protected override void touchesMoved(IList<TouchPoint> touches)
         {
-            base.touchMoved(touch);
+            base.touchesMoved(touches);
 
-            movedTouches.Add(touch);
+            movedTouches.AddRange(touches);
         }
 
 #if TOUCHSCRIPT_DEBUG
-        /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+    /// <inheritdoc />
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (NumTouches == 0) return;
             drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);

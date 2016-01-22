@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
@@ -91,9 +92,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchEnded(TouchPoint touch)
+        protected override void touchesEnded(IList<TouchPoint> touches)
         {
-            base.touchEnded(touch);
+            base.touchesEnded(touches);
 
             if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }
