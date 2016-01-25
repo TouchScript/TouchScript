@@ -941,7 +941,7 @@ GameObject:
   - 20: {fileID: 1459600547}
   - 114: {fileID: 1459600544}
   m_Layer: 0
-  m_Name: RenderTexture Camera
+  m_Name: Scene Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
