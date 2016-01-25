@@ -19,12 +19,14 @@ rm -f "$ASSETSTORE/Assets/TouchScript.meta"
 cp -r "$SOURCE/Assets/TouchScript" "$ASSETSTORE/Assets/"
 cp "$SOURCE/Assets/TouchScript.meta" "$ASSETSTORE/Assets/"
 
-for i in $(ls -d "$MODULES/"*/); do 
-	FILE="${i%%/}/Build/package.sh"
-	if [ -f $FILE ]; then
-	   	"$FILE" "$ASSETSTORE/Assets/TouchScript/Modules"
-	fi
-done
+if [ -d "$MODULES" ]; then
+	for i in $(ls -d "$MODULES/"*/); do 
+		FILE="${i%%/}/Build/package.sh"
+		if [ -f $FILE ]; then
+		   	"$FILE" "$ASSETSTORE/Assets/TouchScript/Modules"
+		fi
+	done
+fi
 
 printf "\n\e[1;36mPackaging TouchScript.unitypackage.\e[0;39m\n"
 
