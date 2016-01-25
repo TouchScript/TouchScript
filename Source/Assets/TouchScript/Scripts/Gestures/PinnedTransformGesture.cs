@@ -171,7 +171,7 @@ namespace TouchScript.Gestures
         {
             base.touchesMoved(touches);
 
-            var projectionParams = ActiveTouches[0].ProjectionParams;
+            var projectionParams = activeTouches[0].ProjectionParams;
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
 

@@ -173,6 +173,14 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
+        protected Vector3 projectScaledRotated(Vector2 point, float dR, float dS, ProjectionParams projectionParams)
+        {
+            var delta = projectionParams.ProjectTo(point, transformPlane) - cachedTransform.position;
+            if (dR != 0) delta = Quaternion.AngleAxis(dR, RotationAxis) * delta;
+            if (dS != 0) delta = delta * dS;
+            return cachedTransform.position + delta;
+        }
+
         /// <inheritdoc />
         protected override float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
                                             Vector2 newScreenPos2, ProjectionParams projectionParams)
@@ -237,15 +245,6 @@ namespace TouchScript.Gestures
             }
 
             return Vector3.zero;
-        }
-
-        /// <inheritdoc />
-        private Vector3 projectScaledRotated(Vector2 point, float dR, float dS, ProjectionParams projectionParams)
-        {
-            var delta = projectionParams.ProjectTo(point, TransformPlane) - cachedTransform.position;
-            if (dR != 0) delta = Quaternion.AngleAxis(dR, RotationAxis) * delta;
-            if (dS != 0) delta = delta * dS;
-            return cachedTransform.position + delta;
         }
 
 #if TOUCHSCRIPT_DEBUG
