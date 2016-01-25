@@ -14,10 +14,12 @@ namespace TouchScript.Examples.Tap
 
         private TapGesture gesture;
         private Rigidbody rb;
+		private Camera activeCamera;
 
         private void OnEnable()
         {
             rb = GetComponent<Rigidbody>();
+			activeCamera = GameObject.Find("Scene Camera").GetComponent<Camera>();
             gesture = GetComponent<TapGesture>();
             gesture.Tapped += tappedHandler;
         }
@@ -29,7 +31,7 @@ namespace TouchScript.Examples.Tap
 
         private void tappedHandler(object sender, System.EventArgs e)
         {
-            var ray = Camera.main.ScreenPointToRay(gesture.ScreenPosition);
+			var ray = activeCamera.ScreenPointToRay(gesture.ScreenPosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit) && hit.transform == transform)
             {

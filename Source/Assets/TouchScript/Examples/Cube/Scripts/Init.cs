@@ -8,7 +8,7 @@ namespace TouchScript.Examples.Cube
     {
         void Start () {
             var d = GetComponent<LayerDelegate>();
-            var go = GameObject.Find("RenderTexture Camera");
+			var go = GameObject.Find("Scene Camera");
             go.GetComponent<CameraLayer>().Delegate = d;
             go = GameObject.Find("Camera");
             go.GetComponent<CameraLayer>().Delegate = d;
