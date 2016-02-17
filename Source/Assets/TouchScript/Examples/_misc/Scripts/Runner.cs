@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using TouchScript.Layers;
+using UnityEngine.SceneManagement;
 
 namespace TouchScript.Examples
 {
@@ -14,7 +15,7 @@ namespace TouchScript.Examples
 
         public void LoadNextLevel()
         {
-            Application.LoadLevel((Application.loadedLevel + 1)%Application.levelCount);
+            SceneManager.LoadScene((SceneManager.GetActiveScene ().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
         }
 
         private void Awake()
@@ -27,7 +28,7 @@ namespace TouchScript.Examples
 
             layer = GetComponent<UILayer>();
 
-            if (Application.loadedLevelName == "Examples" && Application.levelCount > 1)
+            if (SceneManager.GetActiveScene ().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)
             {
                 LoadNextLevel();
             }
