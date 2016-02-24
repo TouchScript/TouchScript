@@ -21,7 +21,7 @@ struct Input {
 void surf (Input IN, inout SurfaceOutput o) {
 	fixed4 c;
 	if (IN.uv_MainTex.x < _Border || IN.uv_MainTex.x > 1 - _Border || IN.uv_MainTex.y < _Border || IN.uv_MainTex.y > 1 - _Border)
-		c = float4(1);
+		c = float4(1, 1, 1, 1);
 	else
 		c = tex2D(_MainTex, IN.uv_MainTex);
 	o.Albedo = c.rgb;
