@@ -84,10 +84,10 @@ namespace TouchScript.InputSources.InputHandlers
                         }
                         break;
                     case TouchPhase.Moved:
-                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState) && touchState.Phase != TouchPhase.Canceled)
-                        {
-                            moveTouch(touchState.Id, t.position);
-                        }
+						if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
+						{
+							if (touchState.Phase != TouchPhase.Canceled) moveTouch(touchState.Id, t.position);
+						}
                         else
                         {
                             // Missed began phase
