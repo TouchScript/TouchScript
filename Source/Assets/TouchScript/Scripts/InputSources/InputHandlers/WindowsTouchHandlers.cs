@@ -13,6 +13,9 @@ using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
 {
+
+    #region Windows 8
+
     /// <summary>
     /// Windows 8 touch handling implementation which can be embedded to other (input) classes.
     /// </summary>
@@ -30,7 +33,7 @@ namespace TouchScript.InputSources.InputHandlers
             this.touchTags = touchTags;
             this.penTags = penTags;
 
-            Init(TOUCH_API.WIN8, pointerDownDelegate, pointerUpdateDelegate, pointerUpDelegate);
+            init(TOUCH_API.WIN8);
         }
 
         protected override Tags getTagsForType(POINTER_INPUT_TYPE type)
@@ -50,6 +53,10 @@ namespace TouchScript.InputSources.InputHandlers
 
     }
 
+    #endregion
+
+    #region Windows 7
+
     public class Windows7TouchHandler : WindowsTouchHandler
     {
         private int touchInputSize;
@@ -57,88 +64,20 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public Windows7TouchHandler(Tags tags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch) : base(tags, beginTouch, moveTouch, endTouch, cancelTouch)
         {
-            touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
-            RegisterTouchWindow(hMainWindow, 0);
+            init(TOUCH_API.WIN7);
         }
 
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            UnregisterTouchWindow(hMainWindow);
-
-            base.Dispose();
-        }
-
-        private IntPtr wndProcWin7(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
-        {
-            switch (msg)
-            {
-                case WM_TOUCH:
-                    decodeWin7Touches(wParam, lParam);
-                    return IntPtr.Zero;
-                case WM_CLOSE:
-                    Dispose();
-                    SendMessage(hWnd, WM_CLOSE, wParam, lParam);
-                    return IntPtr.Zero;
-                default:
-                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
-            }
-        }
-
-        private void decodeWin7Touches(IntPtr wParam, IntPtr lParam)
-        {
-            int inputCount = LOWORD(wParam.ToInt32());
-            TOUCHINPUT[] inputs = new TOUCHINPUT[inputCount];
-
-            if (!GetTouchInputInfo(lParam, inputCount, inputs, touchInputSize))
-            {
-                return;
-            }
-
-            for (int i = 0; i < inputCount; i++)
-            {
-                TOUCHINPUT touch = inputs[i];
-
-                if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_DOWN) != 0)
-                {
-                    POINT p = new POINT();
-                    p.X = touch.x/100;
-                    p.Y = touch.y/100;
-                    ScreenToClient(hMainWindow, ref p);
-
-                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY), tags, true).Id);
-                }
-                else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
-                {
-                    int existingId;
-                    if (winToInternalId.TryGetValue(touch.dwID, out existingId))
-                    {
-                        winToInternalId.Remove(touch.dwID);
-                        endTouch(existingId);
-                    }
-                }
-                else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_MOVE) != 0)
-                {
-                    int existingId;
-                    if (winToInternalId.TryGetValue(touch.dwID, out existingId))
-                    {
-                        POINT p = new POINT();
-                        p.X = touch.x/100;
-                        p.Y = touch.y/100;
-                        ScreenToClient(hMainWindow, ref p);
-
-                        moveTouch(existingId,
-                            new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
-                    }
-                }
-            }
-
-            CloseTouchInputHandle(lParam);
-        }
     }
+
+    #endregion
+
+    #region Base Windows touch handler
 
     public abstract class WindowsTouchHandler : IDisposable
     {
+
+        #region Consts
+
         /// <summary>
         /// Source of touch input.
         /// </summary>
@@ -154,30 +93,33 @@ namespace TouchScript.InputSources.InputHandlers
         /// </summary>
         public const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
 
-        public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-        public delegate void PointerDown(int id, POINTER_INPUT_TYPE type, Vector2 position, uint flags);
-        public delegate void PointerUpdate(int id, Vector2 position, uint flags);
-        public delegate void PointerUp(int id, uint flags);
-        public delegate void Ping(int id);
+        protected delegate void PointerBegan(int id, POINTER_INPUT_TYPE type, Vector2 position);
+        protected delegate void PointerMoved(int id, Vector2 position);
+        protected delegate void PointerEnded(int id);
+        protected delegate void PointerCancelled(int id);
 
-        protected PointerDown pointerDownDelegate;
-        protected PointerUpdate pointerUpdateDelegate;
-        protected PointerUp pointerUpDelegate;
+        #endregion
 
-        protected Func<Vector2, Tags, bool, TouchPoint> beginTouch;
-        protected Action<int, Vector2> moveTouch;
-        protected Action<int> endTouch;
-        protected Action<int> cancelTouch;
+        #region Private variables
 
-        protected Tags tags; 
-        protected IntPtr hMainWindow;
-        protected IntPtr oldWndProcPtr;
-        protected IntPtr newWndProcPtr;
-        protected WndProcDelegate newWndProc;
-        protected ushort pressAndHoldAtomID;
-        protected Dictionary<int, int> winToInternalId = new Dictionary<int, int>();
+        private PointerBegan pointerBeganDelegate;
+        private PointerMoved pointerMovedDelegate;
+        private PointerEnded pointerEndedDelegate;
+        private PointerCancelled pointerCancelledDelegate;
 
-        protected float offsetX, offsetY, scaleX, scaleY;
+        private Func<Vector2, Tags, bool, TouchPoint> beginTouch;
+        private Action<int, Vector2> moveTouch;
+        private Action<int> endTouch;
+        private Action<int> cancelTouch;
+
+        private Tags tags;
+        private IntPtr hMainWindow;
+        private ushort pressAndHoldAtomID;
+        private Dictionary<int, int> winToInternalId = new Dictionary<int, int>();
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsTouchHandler"/> class.
@@ -194,14 +136,19 @@ namespace TouchScript.InputSources.InputHandlers
             this.endTouch = endTouch;
             this.cancelTouch = cancelTouch;
 
-            pointerDownDelegate = pointerDown;
-            pointerUpdateDelegate = pointerUpdate;
-            pointerUpDelegate = pointerUp;
+            pointerBeganDelegate = pointerBegan;
+            pointerMovedDelegate = pointerMoved;
+            pointerEndedDelegate = pointerEnded;
+            pointerCancelledDelegate = pointerCancelled;
 
             hMainWindow = GetActiveWindow();
             disablePressAndHold();
             initScaling();
         }
+
+        #endregion
+
+        #region Public methods
 
         /// <inheritdoc />
         public bool CancelTouch(TouchPoint touch, bool @return)
@@ -233,7 +180,25 @@ namespace TouchScript.InputSources.InputHandlers
             DisposePlugin();
         }
 
-        protected void disablePressAndHold()
+        #endregion
+
+        #region Protected methods
+
+        protected void init(TOUCH_API api)
+        {
+            Init(api, pointerBeganDelegate, pointerMovedDelegate, pointerEndedDelegate, pointerCancelledDelegate);
+        }
+
+        protected virtual Tags getTagsForType(POINTER_INPUT_TYPE type)
+        {
+            return tags;
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private void disablePressAndHold()
         {
             // https://msdn.microsoft.com/en-us/library/bb969148(v=vs.85).aspx
             pressAndHoldAtomID = GlobalAddAtom(PRESS_AND_HOLD_ATOM);
@@ -245,7 +210,7 @@ namespace TouchScript.InputSources.InputHandlers
                 );
         }
 
-        protected void enablePressAndHold()
+        private void enablePressAndHold()
         {
             if (pressAndHoldAtomID != 0)
             {
@@ -254,25 +219,18 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        protected void initScaling()
+        private void initScaling()
         {
             if (!Screen.fullScreen)
             {
-                offsetX = offsetY = 0;
-                scaleX = scaleY = 1;
-            }
-            else
-            {
-                int width, height;
-                getNativeMonitorResolution(out width, out height);
-                float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
-                offsetX = (width - Screen.width/scale)*.5f;
-                offsetY = (height - Screen.height/scale)*.5f;
-                scaleX = scale;
-                scaleY = scale;
+                SetScreenParams(Screen.width, Screen.height, 0, 0, 1, 1);
+                return;
             }
 
-            SetScreenParams(Screen.width, Screen.height, offsetX, offsetY, scaleX, scaleY);
+            int width, height;
+            getNativeMonitorResolution(out width, out height);
+            float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
+            SetScreenParams(Screen.width, Screen.height, (width - Screen.width / scale) * .5f, (height - Screen.height / scale) * .5f, scale, scale);
         }
 
         private void getNativeMonitorResolution(out int width, out int height)
@@ -292,83 +250,63 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        protected virtual Tags getTagsForType(POINTER_INPUT_TYPE type)
-        {
-            return Tags.EMPTY;
-        }
+        #endregion
 
-        private void pointerDown(int id, POINTER_INPUT_TYPE type, Vector2 position, uint flags)
+        #region Pointer callbacks
+
+        private void pointerBegan(int id, POINTER_INPUT_TYPE type, Vector2 position)
         {
-            if ((flags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) return;
             winToInternalId.Add(id, beginTouch(position, getTagsForType(type), true).Id);
-
         }
 
-        private void pointerUpdate(int id, Vector2 position, uint flags)
+        private void pointerMoved(int id, Vector2 position)
         {
             int existingId;
             if (winToInternalId.TryGetValue(id, out existingId))
             {
-                if ((flags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
-                {
-                    winToInternalId.Remove(id);
-                    cancelTouch(existingId);
-                }
-                else
-                {
-                    moveTouch(existingId, position);
-                }
+                moveTouch(existingId, position);
             }
         }
 
-        private void pointerUp(int id, uint flags)
+        private void pointerEnded(int id)
         {
             int existingId;
             if (winToInternalId.TryGetValue(id, out existingId))
             {
                 winToInternalId.Remove(id);
-                if ((flags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
-                    cancelTouch(existingId);
-                else endTouch(existingId);
+                endTouch(existingId);
             }
         }
 
+        private void pointerCancelled(int id)
+        {
+            int existingId;
+            if (winToInternalId.TryGetValue(id, out existingId))
+            {
+                winToInternalId.Remove(id);
+                cancelTouch(existingId);
+            }
+        }
+
+        #endregion
+
         #region p/invoke
 
-        public enum TOUCH_API
+        protected enum TOUCH_API
         {
             WIN7,
             WIN8
         }
 
-        [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
-        public static extern void Init(TOUCH_API api, PointerDown pointerDown, PointerUpdate pointerUpdate, PointerUp pointerUp);
+        private const int TABLET_DISABLE_PRESSANDHOLD = 0x00000001;
+        private const int TABLET_DISABLE_PENTAPFEEDBACK = 0x00000008;
+        private const int TABLET_DISABLE_PENBARRELFEEDBACK = 0x00000010;
+        private const int TABLET_DISABLE_FLICKS = 0x00010000;
 
-        [DllImport("WindowsTouch", EntryPoint = "Dispose", CallingConvention = CallingConvention.StdCall)]
-        public static extern void DisposePlugin();
-
-        [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetScreenParams(int width, int height, float offsetX, float offsetY, float scaleX, float scaleY);
-
-        public const int GWL_WNDPROC = -4;
-
-        public const int WM_CLOSE = 0x0010;
-        public const int WM_TOUCH = 0x0240;
-        public const int WM_POINTERDOWN = 0x0246;
-        public const int WM_POINTERUP = 0x0247;
-        public const int WM_POINTERUPDATE = 0x0245;
-
-        public const int POINTER_FLAG_CANCELLED = 0x00008000;
-
-        public const int TABLET_DISABLE_PRESSANDHOLD = 0x00000001;
-        public const int TABLET_DISABLE_PENTAPFEEDBACK = 0x00000008;
-        public const int TABLET_DISABLE_PENBARRELFEEDBACK = 0x00000010;
-        public const int TABLET_DISABLE_FLICKS = 0x00010000;
-
-        public const int MONITOR_DEFAULTTONEAREST = 2;
+        private const int MONITOR_DEFAULTTONEAREST = 2;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MONITORINFO
+        private struct MONITORINFO
         {
             public int cbSize;
             public RECT rcMonitor;
@@ -377,7 +315,7 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        private struct RECT
         {
             public int Left, Top, Right, Bottom;
 
@@ -422,33 +360,7 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        public enum TOUCH_EVENT : int
-        {
-            TOUCHEVENTF_MOVE = 0x0001,
-            TOUCHEVENTF_DOWN = 0x0002,
-            TOUCHEVENTF_UP = 0x0004,
-            TOUCHEVENTF_INRANGE = 0x0008,
-            TOUCHEVENTF_PRIMARY = 0x0010,
-            TOUCHEVENTF_NOCOALESCE = 0x0020,
-            TOUCHEVENTF_PEN = 0x0040
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct TOUCHINPUT
-        {
-            public int x;
-            public int y;
-            public IntPtr hSource;
-            public int dwID;
-            public int dwFlags;
-            public int dwMask;
-            public int dwTime;
-            public IntPtr dwExtraInfo;
-            public int cxContact;
-            public int cyContact;
-        }
-
-        public enum POINTER_INPUT_TYPE
+        protected enum POINTER_INPUT_TYPE
         {
             PT_POINTER = 0x00000001,
             PT_TOUCH = 0x00000002,
@@ -456,120 +368,42 @@ namespace TouchScript.InputSources.InputHandlers
             PT_MOUSE = 0x00000004,
         }
 
-        public enum POINTER_BUTTON_CHANGE_TYPE
-        {
-            POINTER_CHANGE_NONE,
-            POINTER_CHANGE_FIRSTBUTTON_DOWN,
-            POINTER_CHANGE_FIRSTBUTTON_UP,
-            POINTER_CHANGE_SECONDBUTTON_DOWN,
-            POINTER_CHANGE_SECONDBUTTON_UP,
-            POINTER_CHANGE_THIRDBUTTON_DOWN,
-            POINTER_CHANGE_THIRDBUTTON_UP,
-            POINTER_CHANGE_FOURTHBUTTON_DOWN,
-            POINTER_CHANGE_FOURTHBUTTON_UP,
-            POINTER_CHANGE_FIFTHBUTTON_DOWN,
-            POINTER_CHANGE_FIFTHBUTTON_UP,
-        }
+        [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
+        private static extern void Init(TOUCH_API api, PointerBegan pointerBegan, PointerMoved pointerMoved, PointerEnded pointerEnded, PointerCancelled pointerCancelled);
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct POINTER_INFO
-        {
-            public POINTER_INPUT_TYPE pointerType;
-            public UInt32 pointerId;
-            public UInt32 frameId;
-            public UInt32 pointerFlags;
-            public IntPtr sourceDevice;
-            public IntPtr hwndTarget;
-            public POINT ptPixelLocation;
-            public POINT ptHimetricLocation;
-            public POINT ptPixelLocationRaw;
-            public POINT ptHimetricLocationRaw;
-            public UInt32 dwTime;
-            public UInt32 historyCount;
-            public Int32 inputData;
-            public UInt32 dwKeyStates;
-            public UInt64 PerformanceCount;
-            public POINTER_BUTTON_CHANGE_TYPE ButtonChangeType;
-        }
+        [DllImport("WindowsTouch", EntryPoint = "Dispose", CallingConvention = CallingConvention.StdCall)]
+        private static extern void DisposePlugin();
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            public int X;
-            public int Y;
-        }
-
-        public static int LOWORD(int value)
-        {
-            return value & 0xffff;
-        }
-
-        public static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
-        {
-            if (IntPtr.Size == 8) return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
-            return new IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32()));
-        }
+        [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
+        private static extern void SetScreenParams(int width, int height, float offsetX, float offsetY, float scaleX, float scaleY);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr GetActiveWindow();
+        private static extern IntPtr GetActiveWindow();
 
         [DllImport("user32.dll")]
-        public static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+        private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
 
         [DllImport("user32.dll")]
-        public static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
-        public static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
-        public static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam,
-            IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool RegisterTouchWindow(IntPtr hWnd, uint ulFlags);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool UnregisterTouchWindow(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetTouchInputInfo(IntPtr hTouchInput, int cInputs, [Out] TOUCHINPUT[] pInputs,
-            int cbSize);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern void CloseTouchInputHandle(IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        public static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetPointerInfo(int pointerID, ref POINTER_INFO pPointerInfo);
+        private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
 
         [DllImport("Kernel32.dll")]
-        public static extern ushort GlobalAddAtom(string lpString);
+        private static extern ushort GlobalAddAtom(string lpString);
 
         [DllImport("Kernel32.dll")]
-        public static extern ushort GlobalDeleteAtom(ushort nAtom);
+        private static extern ushort GlobalDeleteAtom(ushort nAtom);
 
         [DllImport("user32.dll")]
-        public static extern int SetProp(IntPtr hWnd, string lpString, int hData);
+        private static extern int SetProp(IntPtr hWnd, string lpString, int hData);
 
         [DllImport("user32.dll")]
-        public static extern int RemoveProp(IntPtr hWnd, string lpString);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+        private static extern int RemoveProp(IntPtr hWnd, string lpString);
 
         #endregion
     }
+
+    #endregion
+
+    #region Windows 8 mouse handler
 
     /// <summary>
     /// A class which turns on mouse to WM_POINTER events redirection on Windows 8.
@@ -593,6 +427,8 @@ namespace TouchScript.InputSources.InputHandlers
         [DllImport("user32.dll")]
         private static extern IntPtr EnableMouseInPointer(bool value);
     }
+
+    #endregion
 }
 
 #endif
