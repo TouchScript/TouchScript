@@ -22,98 +22,32 @@ namespace TouchScript.InputSources.InputHandlers
         private Tags mouseTags, touchTags, penTags;
 
         /// <inheritdoc />
-        public Windows8TouchHandler(Tags touchTags, Tags mouseTags, Tags penTags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch) : base(touchTags, beginTouch, moveTouch, endTouch, cancelTouch)
+        public Windows8TouchHandler(Tags touchTags, Tags mouseTags, Tags penTags,
+            Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch,
+            Action<int> cancelTouch) : base(touchTags, beginTouch, moveTouch, endTouch, cancelTouch)
         {
             this.mouseTags = mouseTags;
             this.touchTags = touchTags;
             this.penTags = penTags;
-            registerWindowProc(wndProcWin8);
+
+            Init(TOUCH_API.WIN8, pointerDownDelegate, pointerUpdateDelegate, pointerUpDelegate);
         }
 
-        private IntPtr wndProcWin8(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        protected override Tags getTagsForType(POINTER_INPUT_TYPE type)
         {
-            switch (msg)
+            switch (type)
             {
-                case WM_TOUCH:
-                    CloseTouchInputHandle(lParam); // don't let Unity handle this
-                    return IntPtr.Zero;
-                case WM_POINTERDOWN:
-                case WM_POINTERUP:
-                case WM_POINTERUPDATE:
-                    decodeWin8Touches(msg, wParam, lParam);
-                    return IntPtr.Zero;
-                case WM_CLOSE:
-                    // Not having this crashes app on quit
-                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
-                    return IntPtr.Zero;
+                case POINTER_INPUT_TYPE.PT_MOUSE:
+                    return mouseTags;
+                case POINTER_INPUT_TYPE.PT_TOUCH:
+                    return touchTags;
+                case POINTER_INPUT_TYPE.PT_PEN:
+                    return penTags;
                 default:
-                    return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
+                    return Tags.EMPTY;
             }
         }
 
-        private void decodeWin8Touches(uint msg, IntPtr wParam, IntPtr lParam)
-        {
-            int pointerId = LOWORD(wParam.ToInt32());
-
-            POINTER_INFO pointerInfo = new POINTER_INFO();
-            if (!GetPointerInfo(pointerId, ref pointerInfo))
-            {
-                return;
-            }
-
-            POINT p = new POINT();
-            p.X = pointerInfo.ptPixelLocation.X;
-            p.Y = pointerInfo.ptPixelLocation.Y;
-            ScreenToClient(hMainWindow, ref p);
-
-            int existingId;
-
-            switch (msg)
-            {
-                case WM_POINTERDOWN:
-                    if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
-                    Tags tags = null;
-                    switch (pointerInfo.pointerType)
-                    {
-                        case POINTER_INPUT_TYPE.PT_MOUSE:
-                            tags = mouseTags;
-                            break;
-                        case POINTER_INPUT_TYPE.PT_TOUCH:
-                            tags = touchTags;
-                            break;
-                        case POINTER_INPUT_TYPE.PT_PEN:
-                            tags = penTags;
-                            break;
-                    }
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), tags, true).Id);
-                    break;
-                case WM_POINTERUP:
-                    if (winToInternalId.TryGetValue(pointerId, out existingId))
-                    {
-                        winToInternalId.Remove(pointerId);
-                        if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
-                            cancelTouch(existingId);
-                        else endTouch(existingId);
-                    }
-                    break;
-                case WM_POINTERUPDATE:
-                    if (winToInternalId.TryGetValue(pointerId, out existingId))
-                    {
-                        if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
-                        {
-                            winToInternalId.Remove(pointerId);
-                            cancelTouch(existingId);
-                        }
-                        else
-                        {
-                            moveTouch(existingId,
-                                new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
-                        }
-                    }
-                    break;
-            }
-        }
     }
 
     public class Windows7TouchHandler : WindowsTouchHandler
@@ -125,7 +59,6 @@ namespace TouchScript.InputSources.InputHandlers
         {
             touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
             RegisterTouchWindow(hMainWindow, 0);
-            registerWindowProc(wndProcWin7);
         }
 
         /// <inheritdoc />
@@ -144,10 +77,8 @@ namespace TouchScript.InputSources.InputHandlers
                     decodeWin7Touches(wParam, lParam);
                     return IntPtr.Zero;
                 case WM_CLOSE:
-                    // Not having this crashes app on quit
-                    UnregisterTouchWindow(hWnd);
-                    SetWindowLongPtr(hWnd, -4, oldWndProcPtr);
-                    SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    Dispose();
+                    SendMessage(hWnd, WM_CLOSE, wParam, lParam);
                     return IntPtr.Zero;
                 default:
                     return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
@@ -224,6 +155,14 @@ namespace TouchScript.InputSources.InputHandlers
         public const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
 
         public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        public delegate void PointerDown(int id, POINTER_INPUT_TYPE type, Vector2 position, uint flags);
+        public delegate void PointerUpdate(int id, Vector2 position, uint flags);
+        public delegate void PointerUp(int id, uint flags);
+        public delegate void Ping(int id);
+
+        protected PointerDown pointerDownDelegate;
+        protected PointerUpdate pointerUpdateDelegate;
+        protected PointerUp pointerUpDelegate;
 
         protected Func<Vector2, Tags, bool, TouchPoint> beginTouch;
         protected Action<int, Vector2> moveTouch;
@@ -254,6 +193,10 @@ namespace TouchScript.InputSources.InputHandlers
             this.moveTouch = moveTouch;
             this.endTouch = endTouch;
             this.cancelTouch = cancelTouch;
+
+            pointerDownDelegate = pointerDown;
+            pointerUpdateDelegate = pointerUpdate;
+            pointerUpDelegate = pointerUp;
 
             hMainWindow = GetActiveWindow();
             disablePressAndHold();
@@ -287,24 +230,7 @@ namespace TouchScript.InputSources.InputHandlers
             foreach (var i in winToInternalId) cancelTouch(i.Value);
 
             enablePressAndHold();
-            unregisterWindowProc();
-        }
-
-        protected void registerWindowProc(WndProcDelegate windowProc)
-        {
-            newWndProc = windowProc;
-            newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
-            oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
-        }
-
-        protected void unregisterWindowProc()
-        {
-            SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
-            hMainWindow = IntPtr.Zero;
-            oldWndProcPtr = IntPtr.Zero;
-            newWndProcPtr = IntPtr.Zero;
-
-            newWndProc = null;
+            DisposePlugin();
         }
 
         protected void disablePressAndHold()
@@ -334,16 +260,19 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 offsetX = offsetY = 0;
                 scaleX = scaleY = 1;
-                return;
+            }
+            else
+            {
+                int width, height;
+                getNativeMonitorResolution(out width, out height);
+                float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
+                offsetX = (width - Screen.width/scale)*.5f;
+                offsetY = (height - Screen.height/scale)*.5f;
+                scaleX = scale;
+                scaleY = scale;
             }
 
-            int width, height;
-            getNativeMonitorResolution(out width, out height);
-            float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
-            offsetX = (width - Screen.width/scale)*.5f;
-            offsetY = (height - Screen.height/scale)*.5f;
-            scaleX = scale;
-            scaleY = scale;
+            SetScreenParams(Screen.width, Screen.height, offsetX, offsetY, scaleX, scaleY);
         }
 
         private void getNativeMonitorResolution(out int width, out int height)
@@ -363,7 +292,65 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
+        protected virtual Tags getTagsForType(POINTER_INPUT_TYPE type)
+        {
+            return Tags.EMPTY;
+        }
+
+        private void pointerDown(int id, POINTER_INPUT_TYPE type, Vector2 position, uint flags)
+        {
+            if ((flags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) return;
+            winToInternalId.Add(id, beginTouch(position, getTagsForType(type), true).Id);
+
+        }
+
+        private void pointerUpdate(int id, Vector2 position, uint flags)
+        {
+            int existingId;
+            if (winToInternalId.TryGetValue(id, out existingId))
+            {
+                if ((flags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
+                {
+                    winToInternalId.Remove(id);
+                    cancelTouch(existingId);
+                }
+                else
+                {
+                    moveTouch(existingId, position);
+                }
+            }
+        }
+
+        private void pointerUp(int id, uint flags)
+        {
+            int existingId;
+            if (winToInternalId.TryGetValue(id, out existingId))
+            {
+                winToInternalId.Remove(id);
+                if ((flags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
+                    cancelTouch(existingId);
+                else endTouch(existingId);
+            }
+        }
+
         #region p/invoke
+
+        public enum TOUCH_API
+        {
+            WIN7,
+            WIN8
+        }
+
+        [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
+        public static extern void Init(TOUCH_API api, PointerDown pointerDown, PointerUpdate pointerUpdate, PointerUp pointerUp);
+
+        [DllImport("WindowsTouch", EntryPoint = "Dispose", CallingConvention = CallingConvention.StdCall)]
+        public static extern void DisposePlugin();
+
+        [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetScreenParams(int width, int height, float offsetX, float offsetY, float scaleX, float scaleY);
+
+        public const int GWL_WNDPROC = -4;
 
         public const int WM_CLOSE = 0x0010;
         public const int WM_TOUCH = 0x0240;
@@ -532,7 +519,7 @@ namespace TouchScript.InputSources.InputHandlers
         [DllImport("user32.dll")]
         public static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
 
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
         public static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]

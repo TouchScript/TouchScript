@@ -18,7 +18,11 @@ extern "C"
 
 	void __stdcall Dispose()
 	{
-		if (_oldWindowProc) SetWindowLongPtr(_currentWindow, GWLP_WNDPROC, (LONG_PTR)_oldWindowProc);
+		if (_oldWindowProc)
+		{
+			SetWindowLongPtr(_currentWindow, GWLP_WNDPROC, (LONG_PTR)_oldWindowProc);
+			_oldWindowProc = 0;
+		}
 	}
 
 	void __stdcall SetScreenParams(int width, int height, float offsetX, float offsetY, float scaleX, float scaleY)
