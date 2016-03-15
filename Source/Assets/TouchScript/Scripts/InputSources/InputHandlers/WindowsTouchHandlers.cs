@@ -22,7 +22,7 @@ namespace TouchScript.InputSources.InputHandlers
         private Tags mouseTags, touchTags, penTags;
 
         /// <inheritdoc />
-        public Windows8TouchHandler(Tags touchTags, Tags mouseTags, Tags penTags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch) : base(touchTags, beginTouch, moveTouch, endTouch, cancelTouch)
+        public Windows8TouchHandler(Tags touchTags, Tags mouseTags, Tags penTags, Func<Vector2, Tags, int, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch) : base(touchTags, beginTouch, moveTouch, endTouch, cancelTouch)
         {
             this.mouseTags = mouseTags;
             this.touchTags = touchTags;
@@ -86,7 +86,7 @@ namespace TouchScript.InputSources.InputHandlers
                             tags = penTags;
                             break;
                     }
-                    winToInternalId.Add(pointerId, beginTouch(new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), tags, true).Id);
+                    winToInternalId.Add(pointerId, beginTouch(new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), tags, -1, true).Id);
                     break;
                 case WM_POINTERUP:
                     if (winToInternalId.TryGetValue(pointerId, out existingId))
@@ -121,7 +121,7 @@ namespace TouchScript.InputSources.InputHandlers
         private int touchInputSize;
 
         /// <inheritdoc />
-        public Windows7TouchHandler(Tags tags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch) : base(tags, beginTouch, moveTouch, endTouch, cancelTouch)
+        public Windows7TouchHandler(Tags tags, Func<Vector2, Tags, int, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch) : base(tags, beginTouch, moveTouch, endTouch, cancelTouch)
         {
             touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
             RegisterTouchWindow(hMainWindow, 0);
@@ -175,7 +175,7 @@ namespace TouchScript.InputSources.InputHandlers
                     p.Y = touch.y/100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY), tags, true).Id);
+                    winToInternalId.Add(touch.dwID, beginTouch(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY), tags, -1, true).Id);
                 }
                 else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
                 {
@@ -225,7 +225,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        protected Func<Vector2, Tags, bool, TouchPoint> beginTouch;
+        protected Func<Vector2, Tags, int, bool, TouchPoint> beginTouch;
         protected Action<int, Vector2> moveTouch;
         protected Action<int> endTouch;
         protected Action<int> cancelTouch;
@@ -247,7 +247,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <param name="moveTouch"> A function called when a touch is moved. As <see cref="InputSource.moveTouch"/> this function must accept an int id and a Vector2 position. </param>
         /// <param name="endTouch"> A function called when a touch is lifted off. As <see cref="InputSource.endTouch"/> this function must accept an int id. </param>
         /// <param name="cancelTouch"> A function called when a touch is cancelled. As <see cref="InputSource.cancelTouch"/> this function must accept an int id. </param>
-        public WindowsTouchHandler(Tags tags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch)
+        public WindowsTouchHandler(Tags tags, Func<Vector2, Tags, int, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch)
         {
             this.tags = tags;
             this.beginTouch = beginTouch;
@@ -274,8 +274,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
             if (internalId > -1)
             {
+                var id = touch.Id;
                 cancelTouch(touch.Id);
-                if (@return) winToInternalId[internalId] = beginTouch(touch.Position, touch.Tags, false).Id;
+                if (@return) winToInternalId[internalId] = beginTouch(touch.Position, touch.Tags, id, false).Id;
                 return true;
             }
             return false;

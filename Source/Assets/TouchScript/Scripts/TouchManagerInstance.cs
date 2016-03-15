@@ -354,17 +354,18 @@ namespace TouchScript
 
         internal TouchPoint INTERNAL_BeginTouch(Vector2 position, IInputSource input)
         {
-            return INTERNAL_BeginTouch(position, input, null);
+            return INTERNAL_BeginTouch(position, input, null, -1);
         }
 
-        internal TouchPoint INTERNAL_BeginTouch(Vector2 position, IInputSource input, Tags tags)
+        internal TouchPoint INTERNAL_BeginTouch(Vector2 position, IInputSource input, Tags tags, int originalId)
         {
             TouchPoint touch;
             lock (touchLock)
             {
                 touch = touchPointPool.Get();
-                touch.INTERNAL_Init(nextTouchId++, position, input, tags);
+                touch.INTERNAL_Init(nextTouchId, position, input, tags, originalId == -1 ? nextTouchId : originalId);
                 touchesBegan.Add(touch);
+                nextTouchId++;
             }
             return touch;
         }

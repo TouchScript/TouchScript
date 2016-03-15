@@ -75,12 +75,13 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <param name="tags">Initial tags.</param>
+        /// <param name="originalId">Original id if this touch is a copy.</param>
         /// <param name="canRemap">if set to <c>true</c> a <see cref="CoordinatesRemapper"/> can be used on provided coordinates.</param>
         /// <returns> New touch. </returns>
-        protected virtual TouchPoint beginTouch(Vector2 position, Tags tags, bool canRemap = true)
+        protected virtual TouchPoint beginTouch(Vector2 position, Tags tags, int originalId = -1, bool canRemap = true)
         {
             if (CoordinatesRemapper != null && canRemap) position = CoordinatesRemapper.Remap(position);
-            return manager.INTERNAL_BeginTouch(position, this, tags);
+            return manager.INTERNAL_BeginTouch(position, this, tags, originalId);
         }
 
         /// <summary>

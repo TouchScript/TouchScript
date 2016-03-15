@@ -14,7 +14,7 @@ namespace TouchScript.InputSources.InputHandlers
     {
         #region Private variables
 
-        private Func<Vector2, Tags, bool, TouchPoint> beginTouch;
+        private Func<Vector2, Tags, int, bool, TouchPoint> beginTouch;
         private Action<int, Vector2> moveTouch;
         private Action<int> endTouch;
         private Action<int> cancelTouch;
@@ -34,7 +34,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <param name="moveTouch">A function called when a touch is moved. As <see cref="InputSource.moveTouch" /> this function must accept an int id and a Vector2 position.</param>
         /// <param name="endTouch">A function called when a touch is lifted off. As <see cref="InputSource.endTouch" /> this function must accept an int id.</param>
         /// <param name="cancelTouch">A function called when a touch is cancelled. As <see cref="InputSource.cancelTouch" /> this function must accept an int id.</param>
-        public MouseHandler(Tags tags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch)
+        public MouseHandler(Tags tags, Func<Vector2, Tags, int, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch)
         {
             this.tags = tags;
             this.beginTouch = beginTouch;
@@ -95,8 +95,8 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
-                    fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y), tags, true).Id;
-                else if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y), tags, true).Id;
+                    fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y), tags, -1, true).Id;
+                else if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y), tags, -1, true).Id;
             }
             else if (Input.GetMouseButton(0))
             {
@@ -127,14 +127,14 @@ namespace TouchScript.InputSources.InputHandlers
             if (touch.Id == mousePointId)
             {
                 cancelTouch(mousePointId);
-                if (@return) mousePointId = beginTouch(touch.Position, tags, false).Id;
+                if (@return) mousePointId = beginTouch(touch.Position, tags, mousePointId, false).Id;
                 else mousePointId = -1;
                 return true;
             }
             if (touch.Id == fakeMousePointId)
             {
                 cancelTouch(fakeMousePointId);
-                if (@return) fakeMousePointId = beginTouch(touch.Position, tags, false).Id;
+                if (@return) fakeMousePointId = beginTouch(touch.Position, tags, fakeMousePointId, false).Id;
                 else fakeMousePointId = -1;
                 return true;
             }

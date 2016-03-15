@@ -25,6 +25,11 @@ namespace TouchScript
         public int Id { get; private set; }
 
         /// <summary>
+        /// Original unique touch point id (in case this touch point was copied).
+        /// </summary>
+        public int OriginalId { get; private set; }
+
+        /// <summary>
         /// Original hit target.
         /// </summary>
         public Transform Target { get; internal set; }
@@ -136,9 +141,11 @@ namespace TouchScript
         /// <param name="position">Screen position of the touch.</param>
         /// <param name="input">Input source which created this touch.</param>
         /// <param name="tags">Initial tags.</param>
-        internal void INTERNAL_Init(int id, Vector2 position, IInputSource input, Tags tags)
+        /// <param name="originalId">Original touch id (in case this touch is a copy).</param>
+        internal void INTERNAL_Init(int id, Vector2 position, IInputSource input, Tags tags, int originalId)
         {
             Id = id;
+            OriginalId = originalId;
             InputSource = input;
             this.position = PreviousPosition = newPosition = position;
             Tags = tags ?? Tags.EMPTY;

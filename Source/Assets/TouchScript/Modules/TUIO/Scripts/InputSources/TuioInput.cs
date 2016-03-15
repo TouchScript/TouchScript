@@ -174,10 +174,11 @@ namespace TouchScript.InputSources
                 }
                 if (cursor != null)
                 {
+                    var id = touch.Id;
                     cancelTouch(touch.Id);
                     if (@return)
                     {
-                        cursorToInternalId[cursor] = beginTouch(touch.Position, touch.Tags, false);
+                        cursorToInternalId[cursor] = beginTouch(touch.Position, touch.Tags, id, false);
                     }
                     else
                     {
@@ -197,10 +198,11 @@ namespace TouchScript.InputSources
                 }
                 if (blob != null)
                 {
+                    var id = touch.Id;
                     cancelTouch(touch.Id);
                     if (@return)
                     {
-                        var t = beginTouch(touch.Position, touch.Tags, false);
+                        var t = beginTouch(touch.Position, touch.Tags, id, false);
                         t.Properties = touch.Properties;
                         blobToInternalId[blob] = t;
                     }
@@ -222,10 +224,11 @@ namespace TouchScript.InputSources
                 }
                 if (obj != null)
                 {
+                    var id = touch.Id;
                     cancelTouch(touch.Id);
                     if (@return)
                     {
-                        var t = beginTouch(touch.Position, touch.Tags, false);
+                        var t = beginTouch(touch.Position, touch.Tags, id, false);
                         t.Properties = touch.Properties;
                         objectToInternalId[obj] = t;
                     }
