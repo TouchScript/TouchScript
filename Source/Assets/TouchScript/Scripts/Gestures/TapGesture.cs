@@ -85,6 +85,17 @@ namespace TouchScript.Gestures
 
         #endregion
 
+        #region Public methods
+
+        /// <inheritdoc />
+        public override bool ShouldReceiveTouch(TouchPoint touch)
+        {
+            if (Delegate == null) return touch.OriginalId == touch.Id;
+            return Delegate.ShouldReceiveTouch(this, touch);
+        }
+
+        #endregion
+
         #region Private variables
 
         [SerializeField]
