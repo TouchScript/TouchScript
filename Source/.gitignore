@@ -30,3 +30,5 @@ _ReSharper*
 *.pdb*
 *.mdb*
 pdb2mdb.bat*
+
+/Assets/Tests*
