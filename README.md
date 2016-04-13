@@ -31,7 +31,7 @@ Developed by Valentin Simonov at [Interactive Lab](http://interactivelab.ru).
 Please refer to [Wiki](https://github.com/TouchScript/TouchScript/wiki) for up-to-date documentation and tutorials.  
 If you have questions please read the [FAQ](https://github.com/TouchScript/TouchScript/wiki/FAQ) first. After that search [the Forum](http://touchprefab.com/index.php).  
 If you are sure that you found a bug post an [issue](https://github.com/TouchScript/TouchScript/issues).  
-API documentation is available [here](http://TouchScript.github.io/docs/Index.html).
+API documentation is available [here](http://touchscript.github.io/docs/index.html).
 
 ## Consulting and contract work
 If you require custom functionality for your project or consulting services please contact me at **v@lent.in**.
