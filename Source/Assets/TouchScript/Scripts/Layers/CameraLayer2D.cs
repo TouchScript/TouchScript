@@ -132,10 +132,7 @@ namespace TouchScript.Layers
                     if (sprite1.sortingOrder > sprite2.sortingOrder) return -1;
                 }
 
-                var cameraPos = GetComponent<Camera>().transform.position;
-                var distA = (a.transform.position - cameraPos).sqrMagnitude;
-                var distB = (b.transform.position - cameraPos).sqrMagnitude;
-                return distA < distB ? -1 : 1;
+                return a.distance < b.distance ? -1 : 1;
             });
         }
 
