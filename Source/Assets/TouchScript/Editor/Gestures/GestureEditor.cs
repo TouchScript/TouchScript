@@ -151,8 +151,12 @@ namespace TouchScript.Editor.Gestures
                     minTouchesFloat = 0;
                     maxTouchesFloat = 10;
                 }
-                      else { minTouchesFloat = (float)minTouches.intValue; maxTouchesFloat = (float)maxTouches.intValue; } 
-                      //or this values doesn't change from script properly
+                else
+                {
+                    minTouchesFloat = (float) minTouches.intValue;
+                    maxTouchesFloat = (float) maxTouches.intValue;
+                }
+                //or this values doesn't change from script properly
                 EditorGUI.indentLevel++;
                 EditorGUILayout.LabelField("Min: " + (int)minTouchesFloat + ", Max: " + (int)maxTouchesFloat);
                 EditorGUILayout.MinMaxSlider(ref minTouchesFloat, ref maxTouchesFloat, 0, 10);
