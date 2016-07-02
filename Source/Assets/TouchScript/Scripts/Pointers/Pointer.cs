@@ -136,6 +136,8 @@ namespace TouchScript.Pointers
 
         #endregion
 
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Pointer"/> class.
         /// </summary>
@@ -146,6 +148,8 @@ namespace TouchScript.Pointers
             properties = new Dictionary<string, object>();
 			INTERNAL_Reset();
         }
+
+        #endregion
 
         #region Internal methods
 
@@ -194,5 +198,6 @@ namespace TouchScript.Pointers
         }
 
         #endregion
+
     }
 }

@@ -9,10 +9,14 @@ namespace TouchScript.Pointers
     public class MousePointer : Pointer
     {
 
+        #region Constructor
+
         public MousePointer(IInputSource input) : base(input)
         {
             Type = PointerType.Mouse;
         }
+
+        #endregion
 
     }
 }

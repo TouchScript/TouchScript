@@ -19,15 +19,18 @@ namespace TouchScript.Examples.Cube
         public override bool CancelPointer(Pointer pointer, bool @return)
         {
             base.CancelPointer(pointer, @return);
-//
-//            map.Remove(pointer.Id);
-//            if (@return)
-//            {
-//                TouchHit hit;
-//                if (!gesture.GetTargetHitResult(pointer.Position, out hit)) return true;
-//				beginPointer(pointer, processCoords(hit.RaycastHit.textureCoord), false)
-//                map.Add(pointer.Id, .Id);
-//            }
+
+            map.Remove(pointer.Id);
+            if (@return)
+            {
+                TouchHit hit;
+                if (gesture.GetTargetHitResult(pointer.Position, out hit))
+                {
+                    var newPointer = PointerFactory.Create(pointer.Type, this);
+                    beginPointer(newPointer, processCoords(hit.RaycastHit.textureCoord));
+                    map.Add(pointer.Id, newPointer.Id);
+                }
+            }
 			return true;
         }
 
@@ -64,38 +67,44 @@ namespace TouchScript.Examples.Cube
 
         private void pointerBeganHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-//            var pointer = metaGestureEventArgs.Pointer;
-//            if (pointer.InputSource == this) return;
-//            map.Add(pointer.Id, beginPointer(processCoords(pointer.Hit.RaycastHit.textureCoord), pointer.Tags).Id);
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+
+            var newPointer = PointerFactory.Create(pointer.Type, this);
+            beginPointer(newPointer, processCoords(pointer.Hit.RaycastHit.textureCoord));
+            map.Add(pointer.Id, newPointer.Id);
         }
 
         private void pointerMovedhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-//            int id;
-//            TouchHit hit;
-//            var pointer = metaGestureEventArgs.Pointer;
-//            if (pointer.InputSource == this) return;
-//            if (!map.TryGetValue(pointer.Id, out id)) return;
-//            if (!gesture.GetTargetHitResult(pointer.Position, out hit)) return;
-//            movePointer(id, processCoords(hit.RaycastHit.textureCoord));
+            int id;
+            TouchHit hit;
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+
+            if (!map.TryGetValue(pointer.Id, out id)) return;
+            if (!gesture.GetTargetHitResult(pointer.Position, out hit)) return;
+            movePointer(id, processCoords(hit.RaycastHit.textureCoord));
         }
 
         private void pointerEndedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-//            int id;
-//            var pointer = metaGestureEventArgs.Pointer;
-//            if (pointer.InputSource == this) return;
-//            if (!map.TryGetValue(pointer.Id, out id)) return;
-//            endPointer(id);
+            int id;
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+
+            if (!map.TryGetValue(pointer.Id, out id)) return;
+            endPointer(id);
         }
 
         private void pointerCancelledhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-//            int id;
-//            var pointer = metaGestureEventArgs.Pointer;
-//            if (pointer.InputSource == this) return;
-//            if (!map.TryGetValue(pointer.Id, out id)) return;
-//            cancelPointer(id);
+            int id;
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+
+            if (!map.TryGetValue(pointer.Id, out id)) return;
+            cancelPointer(id);
         }
 
     }
