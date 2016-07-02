@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 namespace TouchScript.Hit
 {
     /// <summary>
-    /// An object representing a point hit by a touch in 3D, 2D or UI space.
+    /// An object representing a point hit by a pointer in 3D, 2D or UI space.
     /// </summary>
     public struct TouchHit
     {
@@ -17,7 +17,7 @@ namespace TouchScript.Hit
         /// <summary>
         /// Type of hit
         /// </summary>
-        public enum TouchHitType
+        public enum PointerHitType
         {
             /// <summary>
             /// 3D hit.
@@ -43,15 +43,15 @@ namespace TouchScript.Hit
         /// Gets the type of the hit.
         /// </summary>
         /// <value> The type. </value>
-        public TouchHitType Type
+        public PointerHitType Type
         {
             get { return type; }
         }
 
         /// <summary>
-        /// Gets target transform the touch hit.
+        /// Gets target transform the hit.
         /// </summary>
-        /// <value> Transform the touch hit. </value>
+        /// <value> Hit transform. </value>
         public Transform Transform
         {
             get { return transform; }
@@ -94,11 +94,11 @@ namespace TouchScript.Hit
             {
                 switch (type)
                 {
-                    case TouchHitType.Hit3D:
+                    case PointerHitType.Hit3D:
                         return RaycastHit.point;
-                    case TouchHitType.Hit2D:
+                    case PointerHitType.Hit2D:
                         return RaycastHit2D.point;
-                    case TouchHitType.HitUI:
+                    case PointerHitType.HitUI:
                         return RaycastResult.worldPosition;
                 }
                 return Vector3.zero;
@@ -115,11 +115,11 @@ namespace TouchScript.Hit
             {
                 switch (type)
                 {
-                    case TouchHitType.Hit3D:
+                    case PointerHitType.Hit3D:
                         return RaycastHit.normal;
-                    case TouchHitType.Hit2D:
+                    case PointerHitType.Hit2D:
                         return RaycastHit2D.normal;
-                    case TouchHitType.HitUI:
+                    case PointerHitType.HitUI:
                         return RaycastResult.worldNormal;
                 }
                 return Vector3.forward;
@@ -130,7 +130,7 @@ namespace TouchScript.Hit
 
         #region Private variables
 
-        private TouchHitType type;
+        private PointerHitType type;
         private Transform transform;
         private RaycastHit raycastHit;
         private RaycastHit2D raycastHit2D;
@@ -150,7 +150,7 @@ namespace TouchScript.Hit
             raycastHit = default(RaycastHit);
             raycastHit2D = default(RaycastHit2D);
             raycastResult = default(RaycastResult);
-            type = TouchHitType.Hit3D;
+            type = PointerHitType.Hit3D;
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace TouchScript.Hit
         public TouchHit(RaycastHit value) : this(value.collider.transform)
         {
             raycastHit = value;
-            type = TouchHitType.Hit3D;
+            type = PointerHitType.Hit3D;
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace TouchScript.Hit
             this(value.collider.transform)
         {
             raycastHit2D = value;
-            type = TouchHitType.Hit2D;
+            type = PointerHitType.Hit2D;
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace TouchScript.Hit
             this(value.gameObject.transform)
         {
             raycastResult = value;
-            type = TouchHitType.HitUI;
+            type = PointerHitType.HitUI;
         }
 
         #endregion

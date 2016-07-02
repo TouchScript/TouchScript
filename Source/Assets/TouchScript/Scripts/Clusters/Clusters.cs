@@ -69,10 +69,10 @@ namespace TouchScript.Clusters
 
         #region Private variables
 
-        private List<TouchPoint> points = new List<TouchPoint>();
+        private List<Pointer> points = new List<Pointer>();
         private bool dirty;
-        private List<TouchPoint> cluster1 = new List<TouchPoint>();
-        private List<TouchPoint> cluster2 = new List<TouchPoint>();
+        private List<Pointer> cluster1 = new List<Pointer>();
+        private List<Pointer> cluster2 = new List<Pointer>();
         private float minPointDistance, minPointDistanceSqr;
         private bool hasClusters = false;
 
@@ -93,7 +93,7 @@ namespace TouchScript.Clusters
         /// Calculates the center position of one of the clusters.
         /// </summary>
         /// <param name="id"> Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>. </param>
-        /// <returns> Cluster's centroid position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points. </returns>
+        /// <returns> Cluster's centroid position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no pointers. </returns>
         public Vector2 GetCenterPosition(int id)
         {
             if (!HasClusters) return TouchManager.INVALID_POSITION;
@@ -117,7 +117,7 @@ namespace TouchScript.Clusters
         /// Calculates previous center position of one of the clusters.
         /// </summary>
         /// <param name="id"> Cluster id. Either <see cref="CLUSTER1"/> or <see cref="CLUSTER2"/>. </param>
-        /// <returns> Cluster's centroid previous position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points. </returns>
+        /// <returns> Cluster's centroid previous position or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no pointers. </returns>
         public Vector2 GetPreviousCenterPosition(int id)
         {
             if (!HasClusters) return TouchManager.INVALID_POSITION;
@@ -138,50 +138,50 @@ namespace TouchScript.Clusters
         }
 
         /// <summary>
-        /// Adds a point to cluster. </summary>
-        /// <param name="point"> A point. </param>
-        public void AddPoint(TouchPoint point)
+        /// Adds a pointer to cluster. </summary>
+        /// <param name="pointer"> A pointer. </param>
+        public void AddPoint(Pointer pointer)
         {
-            if (points.Contains(point)) return;
+            if (points.Contains(pointer)) return;
 
-            points.Add(point);
+            points.Add(pointer);
             markDirty();
         }
 
         /// <summary>
-        /// Adds a list of points to cluster.
+        /// Adds a list of pointers to cluster.
         /// </summary>
-        /// <param name="points"> List of points. </param>
-        public void AddPoints(IList<TouchPoint> points)
+        /// <param name="pointers"> List of pointers. </param>
+        public void AddPoints(IList<Pointer> pointers)
         {
-            var count = points.Count;
-            for (var i = 0; i < count; i++) AddPoint(points[i]);
+            var count = pointers.Count;
+            for (var i = 0; i < count; i++) AddPoint(pointers[i]);
         }
 
         /// <summary>
-        /// Removes a point from cluster.
+        /// Removes a pointer from cluster.
         /// </summary>
-        /// <param name="point"> A point. </param>
-        public void RemovePoint(TouchPoint point)
+        /// <param name="pointer"> A pointer. </param>
+        public void RemovePoint(Pointer pointer)
         {
-            if (!points.Contains(point)) return;
+            if (!points.Contains(pointer)) return;
 
-            points.Remove(point);
+            points.Remove(pointer);
             markDirty();
         }
 
         /// <summary>
-        /// Removes a list of points from cluster.
+        /// Removes a list of pointers from cluster.
         /// </summary>
-        /// <param name="points"> List of points. </param>
-        public void RemovePoints(IList<TouchPoint> points)
+        /// <param name="points"> List of pointers. </param>
+        public void RemovePoints(IList<Pointer> points)
         {
             var count = points.Count;
             for (var i = 0; i < count; i++) RemovePoint(points[i]);
         }
 
         /// <summary>
-        /// Removes all points from cluster.
+        /// Removes all pointers from cluster.
         /// </summary>
         public void RemoveAllPoints()
         {
@@ -224,8 +224,8 @@ namespace TouchScript.Clusters
             {
                 var center1 = ClusterUtils.Get2DCenterPosition(cluster1);
                 var center2 = ClusterUtils.Get2DCenterPosition(cluster2);
-                TouchPoint obj1 = null;
-                TouchPoint obj2 = null;
+                Pointer obj1 = null;
+                Pointer obj2 = null;
 
                 // Take most distant points from cluster1 and cluster2
                 var maxDist1 = -float.MaxValue;

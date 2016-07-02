@@ -12,8 +12,8 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(TransformGesture), true)]
     internal class TransformGestureEditor : TransformGestureBaseEditor
     {
-        private static readonly GUIContent PROJECTION = new GUIContent("Projection Type", "Method used to project 2d screen positions of touch points into 3d space.");
-        private static readonly GUIContent PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where touch points' positions are projected.");
+        private static readonly GUIContent PROJECTION = new GUIContent("Projection Type", "Method used to project 2d screen positions of pointers into 3d space.");
+        private static readonly GUIContent PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where pointers' positions are projected.");
 
         private SerializedProperty projection;
         private SerializedProperty projectionPlaneNormal;

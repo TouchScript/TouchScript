@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Base class for all touch input sources.
+    /// Base class for all pointer input sources.
     /// </summary>
     public abstract class InputSource : MonoBehaviour, IInputSource
     {
@@ -38,7 +38,7 @@ namespace TouchScript.InputSources
         public virtual void UpdateInput() {}
 
         /// <inheritdoc />
-        public virtual void CancelTouch(TouchPoint touch, bool @return) {}
+        public virtual void CancelPointer(Pointer pointer, bool @return) {}
 
         #endregion
 
@@ -71,57 +71,57 @@ namespace TouchScript.InputSources
         #region Protected methods
 
         /// <summary>
-        /// Begin touch in given screen position.
+        /// Begin pointer in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <param name="tags">Initial tags.</param>
         /// <param name="canRemap">if set to <c>true</c> a <see cref="CoordinatesRemapper"/> can be used on provided coordinates.</param>
-        /// <returns> New touch. </returns>
-        protected virtual TouchPoint beginTouch(Vector2 position, Tags tags, bool canRemap = true)
+        /// <returns> New pointer. </returns>
+        protected virtual Pointer beginPointer(Vector2 position, Tags tags, bool canRemap = true)
         {
             if (CoordinatesRemapper != null && canRemap) position = CoordinatesRemapper.Remap(position);
-            return manager.INTERNAL_BeginTouch(position, this, tags);
+            return manager.INTERNAL_BeginPointer(position, this, tags);
         }
 
         /// <summary>
-        /// Mark touch as updated.
+        /// Mark pointer as updated.
         /// </summary>
-        /// <param name="id">Touch id.</param>
-        protected virtual void updateTouch(int id)
+        /// <param name="id">Pointer id.</param>
+        protected virtual void updatePointer(int id)
         {
-            manager.INTERNAL_UpdateTouch(id);
+            manager.INTERNAL_UpdatePointer(id);
         }
 
         /// <summary>
-        /// Mark touch as moved.
+        /// Mark pointer as moved.
         /// </summary>
-        /// <param name="id">Touch id.</param>
+        /// <param name="id">Pointer id.</param>
         /// <param name="position">Screen position.</param>
-        protected virtual void moveTouch(int id, Vector2 position)
+        protected virtual void movePointer(int id, Vector2 position)
         {
             if (CoordinatesRemapper != null)
             {
                 position = CoordinatesRemapper.Remap(position);
             }
-            manager.INTERNAL_MoveTouch(id, position);
+            manager.INTERNAL_MovePointer(id, position);
         }
 
         /// <summary>
-        /// End touch with id.
+        /// End pointer with id.
         /// </summary>
-        /// <param name="id">Touch point id.</param>
-        protected virtual void endTouch(int id)
+        /// <param name="id">Pointer id.</param>
+        protected virtual void endPointer(int id)
         {
-            manager.INTERNAL_EndTouch(id);
+            manager.INTERNAL_EndPointer(id);
         }
 
         /// <summary>
-        /// Cancel touch with id.
+        /// Cancel pointer with id.
         /// </summary>
-        /// <param name="id">Touch id.</param>
-        protected virtual void cancelTouch(int id)
+        /// <param name="id">Pointer id.</param>
+        protected virtual void cancelPointer(int id)
         {
-            manager.INTERNAL_CancelTouch(id);
+            manager.INTERNAL_CancelPointer(id);
         }
 
         #endregion

@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 namespace TouchScript.Gestures.UI
 {
     /// <summary>
-    /// <para>Gesture which receives touch input from TouchScript and routes it to Unity UI components on the same GameObject.</para>
+    /// <para>Gesture which receives pointer input from TouchScript and routes it to Unity UI components on the same GameObject.</para>
     /// <para>Mostly needed for UI buttons to work with <see cref="TouchScript.Layers.UILayer"/>.</para>
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/UI Gesture")]
@@ -20,9 +20,9 @@ namespace TouchScript.Gestures.UI
         #region Protected variables
 
         /// <summary>
-        /// Touch id -> pointer data.
+        /// Pointer id -> pointer data.
         /// </summary>
-        protected Dictionary<int, TouchData> pointerData = new Dictionary<int, TouchData>();
+        protected Dictionary<int, PointerData> pointerData = new Dictionary<int, PointerData>();
 
         #endregion
 
@@ -43,31 +43,31 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
 
-            if (NumTouches == touches.Count) setState(GestureState.Began);
+            if (NumPointers == pointers.Count) setState(GestureState.Began);
 
-            for (var i = 0; i < touches.Count; i++)
+            for (var i = 0; i < pointers.Count; i++)
             {
-                var touch = touches[i];
-                var data = getPointerData(touch);
+                var pointer = pointers[i];
+                var data = getPointerData(pointer);
                 ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerEnterHandler);
                 ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerDownHandler);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersMoved(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+            base.pointersMoved(pointers);
 
-            for (var i = 0; i < touches.Count; i++)
+            for (var i = 0; i < pointers.Count; i++)
             {
-                var touch = touches[i];
-                var data = getPointerData(touch);
-                if (TouchUtils.IsTouchOnTarget(touch, cachedTransform))
+                var pointer = pointers[i];
+                var data = getPointerData(pointer);
+                if (PointerUtils.IsPointerOnTarget(pointer, cachedTransform))
                 {
                     if (!data.OnTarget)
                     {
@@ -83,45 +83,45 @@ namespace TouchScript.Gestures.UI
                         ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerExitHandler);
                     }
                 }
-                setPointerData(touch, data);
+                setPointerData(pointer, data);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
 
-            TouchData onTarget = new TouchData();
-            for (var i = 0; i < touches.Count; i++)
+            PointerData onTarget = new PointerData();
+            for (var i = 0; i < pointers.Count; i++)
             {
-                var touch = touches[i];
-                var data = getPointerData(touch);
+                var pointer = pointers[i];
+                var data = getPointerData(pointer);
                 ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerUpHandler);
                 if (data.OnTarget) onTarget = data;
-                removePointerData(touch);
+                removePointerData(pointer);
             }
 
-            // One of the touches was released ontop of the target
+            // One of the pointers was released ontop of the target
             if (onTarget.OnTarget) ExecuteEvents.Execute(gameObject, onTarget.Data, ExecuteEvents.pointerClickHandler);
 
-            if (activeTouches.Count == 0) setState(GestureState.Ended);
+            if (activePointers.Count == 0) setState(GestureState.Ended);
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
+        protected override void pointersCancelled(IList<Pointer> pointers)
         {
-            base.touchesCancelled(touches);
+            base.pointersCancelled(pointers);
 
-            for (var i = 0; i < touches.Count; i++)
+            for (var i = 0; i < pointers.Count; i++)
             {
-                var touch = touches[i];
-                var data = getPointerData(touch);
+                var pointer = pointers[i];
+                var data = getPointerData(pointer);
                 ExecuteEvents.Execute(gameObject, data.Data, ExecuteEvents.pointerUpHandler);
-                removePointerData(touch);
+                removePointerData(pointer);
             }
 
-            if (activeTouches.Count == 0) setState(GestureState.Ended);
+            if (activePointers.Count == 0) setState(GestureState.Ended);
         }
 
         #endregion
@@ -129,63 +129,63 @@ namespace TouchScript.Gestures.UI
         #region Protected methods
 
         /// <summary>
-        /// Gets or creates pointer data for touch.
+        /// Gets or creates pointer data for pointer.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
+        /// <param name="pointer"> The pointer. </param>
         /// <returns> Pointer data. </returns>
-        protected virtual TouchData getPointerData(TouchPoint touch)
+        protected virtual PointerData getPointerData(Pointer pointer)
         {
-            TouchData data;
-            if (!pointerData.TryGetValue(touch.Id, out data))
+            PointerData data;
+            if (!pointerData.TryGetValue(pointer.Id, out data))
             {
-                data = new TouchData
+                data = new PointerData
                 {
                     OnTarget = true,
                     Data = new PointerEventData(EventSystem.current)
                     {
-                        pointerId = touch.Id,
+                        pointerId = pointer.Id,
                         pointerEnter = gameObject,
                         pointerPress = gameObject,
                         eligibleForClick = true,
                         delta = Vector2.zero,
                         dragging = false,
                         useDragThreshold = true,
-                        position = touch.Position,
-                        pressPosition = touch.Position,
-                        pointerPressRaycast = touch.Hit.RaycastResult,
-                        pointerCurrentRaycast = touch.Hit.RaycastResult
+                        position = pointer.Position,
+                        pressPosition = pointer.Position,
+                        pointerPressRaycast = pointer.Hit.RaycastResult,
+                        pointerCurrentRaycast = pointer.Hit.RaycastResult
                     }
                 };
-                pointerData.Add(touch.Id, data);
+                pointerData.Add(pointer.Id, data);
             }
             return data;
         }
 
         /// <summary>
-        /// Sets pointer data for touch.
+        /// Sets pointer data for pointer.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
+        /// <param name="pointer"> The pointer. </param>
         /// <param name="data"> The data. </param>
-        protected virtual void setPointerData(TouchPoint touch, TouchData data)
+        protected virtual void setPointerData(Pointer pointer, PointerData data)
         {
-            if (pointerData.ContainsKey(touch.Id)) pointerData[touch.Id] = data;
+            if (pointerData.ContainsKey(pointer.Id)) pointerData[pointer.Id] = data;
         }
 
         /// <summary>
-        /// Removes pointer data for touch.
+        /// Removes pointer data for pointer.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
-        protected virtual void removePointerData(TouchPoint touch)
+        /// <param name="pointer"> The pointer. </param>
+        protected virtual void removePointerData(Pointer pointer)
         {
-            pointerData.Remove(touch.Id);
+            pointerData.Remove(pointer.Id);
         }
 
         #endregion
 
         /// <summary>
-        /// Touch pointer data value object.
+        /// Pointer data value object.
         /// </summary>
-        protected struct TouchData
+        protected struct PointerData
         {
             /// <summary>
             /// Is the object over the target it first hit?
@@ -198,11 +198,11 @@ namespace TouchScript.Gestures.UI
             public PointerEventData Data;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="TouchData"/> struct.
+            /// Initializes a new instance of the <see cref="PointerData"/> struct.
             /// </summary>
-            /// <param name="onTarget">if set to <c>true</c> touch is on target.</param>
+            /// <param name="onTarget">if set to <c>true</c> pointer is on target.</param>
             /// <param name="data">The data.</param>
-            public TouchData(bool onTarget = false, PointerEventData data = null)
+            public PointerData(bool onTarget = false, PointerEventData data = null)
             {
                 OnTarget = onTarget;
                 Data = data;

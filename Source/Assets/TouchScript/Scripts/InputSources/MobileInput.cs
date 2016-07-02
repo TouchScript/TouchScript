@@ -18,13 +18,13 @@ namespace TouchScript.InputSources
         #region Public properties
 
         /// <summary>
-        /// Indicates if this input source should be disabled on platforms which don't support touch input with Input.Touches.
+        /// Indicates if this input source should be disabled on platforms which don't support pointer input with Input.Pointers.
         /// </summary>
         [ToggleLeft]
         public bool DisableOnNonTouchPlatforms = true;
 
         /// <summary>
-        /// Tags added to touches coming from this input.
+        /// Tags added to pointers coming from this input.
         /// </summary>
         public Tags Tags = new Tags(Tags.INPUT_TOUCH);
 
@@ -47,11 +47,11 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        public override void CancelTouch(TouchPoint touch, bool @return)
+        public override void CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelTouch(touch, @return);
+            base.CancelPointer(pointer, @return);
 
-            if (touchHandler != null) touchHandler.CancelTouch(touch, @return);
+            if (touchHandler != null) touchHandler.CancelPointer(pointer, @return);
         }
 
         #endregion
@@ -76,13 +76,13 @@ namespace TouchScript.InputSources
                     case RuntimePlatform.BlackBerryPlayer:
                         break;
                     default:
-                        // don't need mobile touch here
+                        // don't need mobile pointer here
                         enabled = false;
                         return;
                 }
             }
 
-            touchHandler = new TouchHandler(Tags, beginTouch, moveTouch, endTouch, cancelTouch);
+            touchHandler = new TouchHandler(Tags, beginPointer, movePointer, endPointer, cancelPointer);
 
             base.OnEnable();
         }

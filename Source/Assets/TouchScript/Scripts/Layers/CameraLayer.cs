@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// Touch layer which represents a 3d camera looking into the world. Determines which objects may be hit in the view of a camera attached to parent GameObject.
+    /// Pointer layer which represents a 3d camera looking into the world. Determines which objects may be hit in the view of a camera attached to parent GameObject.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Camera Layer")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_CameraLayer.htm")]

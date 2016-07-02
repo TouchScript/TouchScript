@@ -11,7 +11,7 @@ using UnityEngine;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Processes standard input events (mouse, touch, pen) on all platforms.
+    /// Processes standard input events (mouse, pointer, pen) on all platforms.
     /// Initializes proper inputs automatically. Replaces old Mobile and Mouse inputs.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/Standard Input")]
@@ -21,9 +21,9 @@ namespace TouchScript.InputSources
         #region Constants
 
         /// <summary>
-        /// Touch API to use on Windows 8 and later OS versions.
+        /// Pointer API to use on Windows 8 and later OS versions.
         /// </summary>
-        public enum Windows8TouchAPIType
+        public enum Windows8APIType
         {
             /// <summary>
             /// Windows 8 WM_POINTER API.
@@ -41,15 +41,15 @@ namespace TouchScript.InputSources
             Unity,
 
             /// <summary>
-            /// Don't initialize touch input at all.
+            /// Don't initialize pointer input at all.
             /// </summary>
             None
         }
 
         /// <summary>
-        /// Touch API to use on Windows 7.
+        /// Pointer API to use on Windows 7.
         /// </summary>
-        public enum Windows7TouchAPIType
+        public enum Windows7APIType
         {
             /// <summary>
             /// Windows 7 WM_TOUCH API.
@@ -62,7 +62,7 @@ namespace TouchScript.InputSources
             Unity,
 
             /// <summary>
-            /// Don't initialize touch input at all.
+            /// Don't initialize pointer input at all.
             /// </summary>
             None
         }
@@ -82,24 +82,24 @@ namespace TouchScript.InputSources
         public Tags TouchTags = new Tags(Tags.INPUT_TOUCH);
 
         /// <summary>
-        /// Tags added to mouse touches coming from this input.
+        /// Tags added to mouse pointers coming from this input.
         /// </summary>
         public Tags MouseTags = new Tags(Tags.INPUT_MOUSE);
 
         /// <summary>
-        /// Tags added to pen touches coming from this input.
+        /// Tags added to pen pointers coming from this input.
         /// </summary>
         public Tags PenTags = new Tags(Tags.INPUT_PEN);
 
         /// <summary>
-        /// Touch API to use on Windows 8.
+        /// Pointer API to use on Windows 8.
         /// </summary>
-        public Windows8TouchAPIType Windows8Touch = Windows8TouchAPIType.Windows8;
+        public Windows8APIType Windows8API = Windows8APIType.Windows8;
 
         /// <summary>
-        /// Touch API to use on Windows 7.
+        /// Pointer API to use on Windows 7.
         /// </summary>
-        public Windows7TouchAPIType Windows7Touch = Windows7TouchAPIType.Windows7;
+        public Windows7APIType Windows7API = Windows7APIType.Windows7;
 
         /// <summary>
         /// Initialize touch input in WebPlayer or not.
@@ -134,8 +134,8 @@ namespace TouchScript.InputSources
         private TouchHandler touchHandler;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private Windows8MouseHandler windows8MouseHandler;
-        private Windows8TouchHandler windows8TouchHandler;
-        private Windows7TouchHandler windows7TouchHandler;
+        private Windows8PointerHandler windows8PointerHandler;
+        private Windows7PointerHandler windows7PointerHandler;
 #endif
 
         #endregion
@@ -151,10 +151,10 @@ namespace TouchScript.InputSources
             {
                 touchHandler.Update();
                 // Unity adds mouse events from touches resulting in duplicated pointers.
-                // Don't update mouse if touch input is present.
+                // Don't update mouse if pointer input is present.
                 if (mouseHandler != null)
                 {
-                    if (touchHandler.HasTouches) mouseHandler.EndTouches();
+                    if (touchHandler.HasPointers) mouseHandler.EndPointers();
                     else mouseHandler.Update();
                 }
             }
@@ -162,16 +162,16 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        public override void CancelTouch(TouchPoint touch, bool @return)
+        public override void CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelTouch(touch, @return);
+            base.CancelPointer(pointer, @return);
 
             var handled = false;
-            if (touchHandler != null) handled = touchHandler.CancelTouch(touch, @return);
-            if (mouseHandler != null && !handled) handled = mouseHandler.CancelTouch(touch, @return);
+            if (touchHandler != null) handled = touchHandler.CancelPointer(pointer, @return);
+            if (mouseHandler != null && !handled) handled = mouseHandler.CancelPointer(pointer, @return);
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows7TouchHandler != null && !handled) handled = windows7TouchHandler.CancelTouch(touch, @return);
-            if (windows8TouchHandler != null && !handled) windows8TouchHandler.CancelTouch(touch, @return);
+            if (windows7PointerHandler != null && !handled) handled = windows7PointerHandler.CancelPointer(pointer, @return);
+            if (windows8PointerHandler != null && !handled) windows8PointerHandler.CancelPointer(pointer, @return);
 #endif
         }
 
@@ -196,21 +196,21 @@ namespace TouchScript.InputSources
                 if (Environment.OSVersion.Version >= WIN8_VERSION)
                 {
                     // Windows 8+
-                    switch (Windows8Touch)
+                    switch (Windows8API)
                     {
-                        case Windows8TouchAPIType.Windows8:
+                        case Windows8APIType.Windows8:
                             enableWindows8Touch();
                             if (Windows8Mouse) enableWindows8Mouse();
                             break;
-                        case Windows8TouchAPIType.Windows7:
+                        case Windows8APIType.Windows7:
                             enableWindows7Touch();
                             if (Windows8Mouse) enableMouse();
                             break;
-                        case Windows8TouchAPIType.Unity:
+                        case Windows8APIType.Unity:
                             enableTouch();
                             if (Windows8Mouse) enableMouse();
                             break;
-                        case Windows8TouchAPIType.None:
+                        case Windows8APIType.None:
                             enableMouse();
                             break;
                     }
@@ -218,17 +218,17 @@ namespace TouchScript.InputSources
                 else if (Environment.OSVersion.Version >= WIN7_VERSION)
                 {
                     // Windows 7
-                    switch (Windows7Touch)
+                    switch (Windows7API)
                     {
-                        case Windows7TouchAPIType.Windows7:
+                        case Windows7APIType.Windows7:
                             enableWindows7Touch();
                             if (Windows7Mouse) enableMouse();
                             break;
-                        case Windows7TouchAPIType.Unity:
+                        case Windows7APIType.Unity:
                             enableTouch();
                             if (Windows7Mouse) enableMouse();
                             break;
-                        case Windows7TouchAPIType.None:
+                        case Windows7APIType.None:
                             enableMouse();
                             break;
                     }
@@ -281,7 +281,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler(MouseTags, beginTouch, moveTouch, endTouch, cancelTouch);
+            mouseHandler = new MouseHandler(MouseTags, beginPointer, movePointer, endPointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
 
@@ -296,7 +296,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler(TouchTags, beginTouch, moveTouch, endTouch, cancelTouch);
+            touchHandler = new TouchHandler(TouchTags, beginPointer, movePointer, endPointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
@@ -327,31 +327,31 @@ namespace TouchScript.InputSources
 
         private void enableWindows7Touch()
         {
-            windows7TouchHandler = new Windows7TouchHandler(TouchTags, beginTouch, moveTouch, endTouch, cancelTouch);
-            Debug.Log("[TouchScript] Initialized Windows 7 touch input.");
+            windows7PointerHandler = new Windows7PointerHandler(TouchTags, beginPointer, movePointer, endPointer, cancelPointer);
+            Debug.Log("[TouchScript] Initialized Windows 7 pointer input.");
         }
 
         private void disableWindows7Touch()
         {
-            if (windows7TouchHandler != null)
+            if (windows7PointerHandler != null)
             {
-                windows7TouchHandler.Dispose();
-                windows7TouchHandler = null;
+                windows7PointerHandler.Dispose();
+                windows7PointerHandler = null;
             }
         }
 
         private void enableWindows8Touch()
         {
-            windows8TouchHandler = new Windows8TouchHandler(TouchTags, MouseTags, PenTags, beginTouch, moveTouch, endTouch, cancelTouch);
-            Debug.Log("[TouchScript] Initialized Windows 8 touch input.");
+            windows8PointerHandler = new Windows8PointerHandler(TouchTags, MouseTags, PenTags, beginPointer, movePointer, endPointer, cancelPointer);
+            Debug.Log("[TouchScript] Initialized Windows 8 pointer input.");
         }
 
         private void disableWindows8Touch()
         {
-            if (windows8TouchHandler != null)
+            if (windows8PointerHandler != null)
             {
-                windows8TouchHandler.Dispose();
-                windows8TouchHandler = null;
+                windows8PointerHandler.Dispose();
+                windows8PointerHandler = null;
             }
         }
 #endif

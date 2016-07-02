@@ -9,7 +9,7 @@ using TouchScript.InputSources.InputHandlers;
 namespace TouchScript.InputSources
 {
     /// <summary>
-    /// Input source which transfers mouse clicks to touches.
+    /// Input source which transforms mouse to pointer.
     /// </summary>
     [System.Obsolete("MouseInput is deprecated! Please use StandardInput instead.")]
     public sealed class MouseInput : InputSource
@@ -20,13 +20,13 @@ namespace TouchScript.InputSources
         /// Indicates if this input source should be disabled on mobile platforms.
         /// </summary>
         /// <remarks>
-        /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated touch points in exactly the same coordinates. This affects clusters and multitouch gestures.
+        /// Operation Systems which support touch input send first touches as mouse clicks which may result in duplicated pointer points in exactly the same coordinates. This affects clusters and multitouch gestures.
         /// </remarks>
         [ToggleLeft]
         public bool DisableOnMobilePlatforms = true;
 
         /// <summary>
-        /// Tags added to touches coming from this input.
+        /// Tags added to pointers coming from this input.
         /// </summary>
         public Tags Tags = new Tags(Tags.INPUT_MOUSE);
 
@@ -49,11 +49,11 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        public override void CancelTouch(TouchPoint touch, bool @return)
+        public override void CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelTouch(touch, @return);
+            base.CancelPointer(pointer, @return);
 
-            if (mouseHandler != null) mouseHandler.CancelTouch(touch, @return);
+            if (mouseHandler != null) mouseHandler.CancelPointer(pointer, @return);
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            mouseHandler = new MouseHandler(Tags, beginTouch, moveTouch, endTouch, cancelTouch);
+            mouseHandler = new MouseHandler(Tags, beginPointer, movePointer, endPointer, cancelPointer);
         }
 
         /// <inheritdoc />

@@ -370,8 +370,8 @@ MonoBehaviour:
   PenTags:
     tagList:
     - Pen
-  Windows8Touch: 0
-  Windows7Touch: 0
+  Windows8API: 0
+  Windows7API: 0
   WebPlayerTouch: 1
   WebGLTouch: 1
   Windows8Mouse: 1
@@ -762,10 +762,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1220,6 +1220,15 @@ Prefab:
       value: 
       objectReference: {fileID: 11468960, guid: 55576da10f8e2478e9aec42a40f85554,
         type: 2}
+    - target: {fileID: 22401058, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
+      propertyPath: pointerProxy
+      value: 
+      objectReference: {fileID: 11468960, guid: 55576da10f8e2478e9aec42a40f85554,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0dc5781cae4a6348b42ea6b818a3f9c, type: 2}
   m_IsPrefabParent: 0
@@ -1269,10 +1278,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}

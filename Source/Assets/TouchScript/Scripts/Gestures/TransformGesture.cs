@@ -157,14 +157,14 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
 
             if (State != GestureState.Possible) return;
-            if (NumTouches == touches.Count)
+            if (NumPointers == pointers.Count)
             {
-                projectionLayer = activeTouches[0].Layer;
+                projectionLayer = activePointers[0].Layer;
                 updateProjectionPlane();
             }
         }
@@ -255,12 +255,12 @@ namespace TouchScript.Gestures
             GLDebug.RemoveFigure(debugID + 3);
         }
 
-        protected override void drawDebug(int touchPoints)
+        protected override void drawDebug(int pointers)
         {
-            base.drawDebug(touchPoints);
+            base.drawDebug(pointers);
 
             if (!DebugMode) return;
-            switch (touchPoints)
+            switch (pointers)
             {
                 case 1:
                     if (projection == ProjectionType.Global || projection == ProjectionType.Object)

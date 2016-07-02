@@ -14,8 +14,8 @@ namespace TouchScript.Editor.Gestures.Base
         public static readonly GUIContent TYPE_TRANSLATION = new GUIContent("Translation", "Dragging with one ore more fingers.");
         public static readonly GUIContent TYPE_ROTATION = new GUIContent("Rotation", "Rotating with two or more fingers.");
         public static readonly GUIContent TYPE_SCALING = new GUIContent("Scaling", "Scaling with two or more fingers.");
-        public static readonly GUIContent MIN_SCREEN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two points (clusters) in cm to consider this gesture started. Used to prevent fake touch points spawned near real ones on cheap multitouch hardware to mess everything up.");
-        public static readonly GUIContent SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm touch points must move for the gesture to begin.");
+        public static readonly GUIContent MIN_SCREEN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two pointers (clusters) in cm to consider this gesture started. Used to prevent fake pointers spawned near real ones on cheap multitouch hardware to mess everything up.");
+        public static readonly GUIContent SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm pointers must move for the gesture to begin.");
 
         protected SerializedProperty type;
         protected SerializedProperty minScreenPointsDistance;

@@ -8,15 +8,15 @@ namespace TouchScript.InputSources
     /// An object which represents an input source.
     /// </summary>
     /// <remarks>
-    /// <para>In TouchScript all touch points (<see cref="TouchPoint"/>) come from input sources.</para>
-    /// <para>If you want to feed the library with touches the best way to do it is to create a custom input source.</para>
+    /// <para>In TouchScript all pointer points (<see cref="Pointer"/>) come from input sources.</para>
+    /// <para>If you want to feed pointers to the library the best way to do it is to create a custom input source.</para>
     /// </remarks>
     public interface IInputSource
     {
         /// <summary>
         /// Gets or sets current coordinates remapper.
         /// </summary>
-        /// <value>An object used to change coordinates of touch points coming from this input source.</value>
+        /// <value>An object used to change coordinates of pointer points coming from this input source.</value>
         ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
         /// <summary>
@@ -25,10 +25,10 @@ namespace TouchScript.InputSources
         void UpdateInput();
 
         /// <summary>
-        /// Cancels the touch.
+        /// Cancels the pointer.
         /// </summary>
-        /// <param name="touch">The touch.</param>
-        /// <param name="return">if set to <c>true</c> returns the touch back to the system with different id.</param>
-        void CancelTouch(TouchPoint touch, bool @return);
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="return">if set to <c>true</c> returns the pointer back to the system with different id.</param>
+        void CancelPointer(Pointer pointer, bool @return);
     }
 }

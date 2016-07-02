@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures.Clustered
 {
     /// <summary>
-    /// ScreenTransformGesture which works with centroid of all touches instead of with just the first touch.
+    /// ScreenTransformGesture which works with centroid of all pointers instead of with just the first one.
     /// Should be used for large touch surfaces.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Pinned Transform Gesture (Clustered)")]
@@ -19,7 +19,7 @@ namespace TouchScript.Gestures.Clustered
         #region Protected methods
 
         /// <inheritdoc />
-        protected override bool relevantTouches(IList<TouchPoint> touches)
+        protected override bool relevantPointers(IList<Pointer> pointers)
         {
             return true;
         }
@@ -27,13 +27,13 @@ namespace TouchScript.Gestures.Clustered
         /// <inheritdoc />
         protected override Vector2 getPointScreenPosition()
         {
-            return ClusterUtils.Get2DCenterPosition(activeTouches);
+            return ClusterUtils.Get2DCenterPosition(activePointers);
         }
 
         /// <inheritdoc />
         protected override Vector2 getPointPreviousScreenPosition()
         {
-            return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
+            return ClusterUtils.GetPrevious2DCenterPosition(activePointers);
         }
 
         #endregion

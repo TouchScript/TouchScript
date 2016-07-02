@@ -18,7 +18,7 @@ namespace TouchScript
         #region Constants
 
         /// <summary>
-        /// Touch.
+        /// Pointer.
         /// </summary>
         public const string INPUT_TOUCH = "Touch";
 

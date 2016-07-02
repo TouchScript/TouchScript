@@ -13,7 +13,7 @@ using UnityEngine.UI;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// Touch layer which handles Unity UI and interface objects in a Canvas.
+    /// Pointer layer which handles Unity UI and interface objects in a Canvas.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/UI Layer")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_UILayer.htm")]
@@ -83,9 +83,9 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
-        public override ProjectionParams GetProjectionParams(TouchPoint touch)
+        public override ProjectionParams GetProjectionParams(Pointer pointer)
         {
-            var graphic = touch.Target.GetComponent<Graphic>();
+            var graphic = pointer.Target.GetComponent<Graphic>();
             if (graphic == null) return layerProjectionParams;
             var canvas = graphic.canvas;
             if (canvas == null) return layerProjectionParams;

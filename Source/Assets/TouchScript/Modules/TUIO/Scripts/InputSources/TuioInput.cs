@@ -22,7 +22,7 @@ namespace TouchScript.InputSources
         #region Constants
 
         /// <summary>
-        /// TUIO tag used for touches.
+        /// TUIO tag used for pointers.
         /// </summary>
         public const string SOURCE_TUIO = "TUIO";
 
@@ -33,7 +33,7 @@ namespace TouchScript.InputSources
         public enum InputType
         {
             /// <summary>
-            /// Touch/pointer.
+            /// Pointer.
             /// </summary>
             Cursors = 1 << 0,
 
@@ -139,9 +139,9 @@ namespace TouchScript.InputSources
         private ObjectProcessor objectProcessor;
         private BlobProcessor blobProcessor;
 
-        private Dictionary<TuioCursor, TouchPoint> cursorToInternalId = new Dictionary<TuioCursor, TouchPoint>();
-        private Dictionary<TuioBlob, TouchPoint> blobToInternalId = new Dictionary<TuioBlob, TouchPoint>();
-        private Dictionary<TuioObject, TouchPoint> objectToInternalId = new Dictionary<TuioObject, TouchPoint>();
+        private Dictionary<TuioCursor, Pointer> cursorToInternalId = new Dictionary<TuioCursor, Pointer>();
+        private Dictionary<TuioBlob, Pointer> blobToInternalId = new Dictionary<TuioBlob, Pointer>();
+        private Dictionary<TuioObject, Pointer> objectToInternalId = new Dictionary<TuioObject, Pointer>();
         private int screenWidth;
         private int screenHeight;
 
@@ -158,15 +158,15 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        public override void CancelTouch(TouchPoint touch, bool @return)
+        public override void CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelTouch(touch, @return);
+            base.CancelPointer(pointer, @return);
             lock (this)
             {
                 TuioCursor cursor = null;
                 foreach (var touchPoint in cursorToInternalId)
                 {
-                    if (touchPoint.Value.Id == touch.Id)
+                    if (touchPoint.Value.Id == pointer.Id)
                     {
                         cursor = touchPoint.Key;
                         break;
@@ -174,10 +174,10 @@ namespace TouchScript.InputSources
                 }
                 if (cursor != null)
                 {
-                    cancelTouch(touch.Id);
+                    cancelPointer(pointer.Id);
                     if (@return)
                     {
-                        cursorToInternalId[cursor] = beginTouch(touch.Position, touch.Tags, false);
+                        cursorToInternalId[cursor] = beginPointer(pointer.Position, pointer.Tags, false);
                     }
                     else
                     {
@@ -189,7 +189,7 @@ namespace TouchScript.InputSources
                 TuioBlob blob = null;
                 foreach (var touchPoint in blobToInternalId)
                 {
-                    if (touchPoint.Value.Id == touch.Id)
+                    if (touchPoint.Value.Id == pointer.Id)
                     {
                         blob = touchPoint.Key;
                         break;
@@ -197,11 +197,11 @@ namespace TouchScript.InputSources
                 }
                 if (blob != null)
                 {
-                    cancelTouch(touch.Id);
+                    cancelPointer(pointer.Id);
                     if (@return)
                     {
-                        var t = beginTouch(touch.Position, touch.Tags, false);
-                        t.Properties = touch.Properties;
+                        var t = beginPointer(pointer.Position, pointer.Tags, false);
+                        t.Properties = pointer.Properties;
                         blobToInternalId[blob] = t;
                     }
                     else
@@ -214,7 +214,7 @@ namespace TouchScript.InputSources
                 TuioObject obj = null;
                 foreach (var touchPoint in objectToInternalId)
                 {
-                    if (touchPoint.Value.Id == touch.Id)
+                    if (touchPoint.Value.Id == pointer.Id)
                     {
                         obj = touchPoint.Key;
                         break;
@@ -222,11 +222,11 @@ namespace TouchScript.InputSources
                 }
                 if (obj != null)
                 {
-                    cancelTouch(touch.Id);
+                    cancelPointer(pointer.Id);
                     if (@return)
                     {
-                        var t = beginTouch(touch.Position, touch.Tags, false);
-                        t.Properties = touch.Properties;
+                        var t = beginPointer(pointer.Position, pointer.Tags, false);
+                        t.Properties = pointer.Properties;
                         objectToInternalId[obj] = t;
                     }
                     else
@@ -297,9 +297,9 @@ namespace TouchScript.InputSources
                 server = null;
             }
 
-            foreach (var i in cursorToInternalId) cancelTouch(i.Value.Id);
-            foreach (var i in blobToInternalId) cancelTouch(i.Value.Id);
-            foreach (var i in objectToInternalId) cancelTouch(i.Value.Id);
+            foreach (var i in cursorToInternalId) cancelPointer(i.Value.Id);
+            foreach (var i in blobToInternalId) cancelPointer(i.Value.Id);
+            foreach (var i in objectToInternalId) cancelPointer(i.Value.Id);
         }
 
         private void updateInputs()
@@ -314,7 +314,7 @@ namespace TouchScript.InputSources
             else server.RemoveDataProcessor(objectProcessor);
         }
 
-        private void updateBlobProperties(TouchPoint touch, TuioBlob blob)
+        private void updateBlobProperties(Pointer touch, TuioBlob blob)
         {
             var props = touch.Properties;
 
@@ -326,7 +326,7 @@ namespace TouchScript.InputSources
             props["RotationAcceleration"] = blob.RotationAcceleration;
         }
 
-        private void updateObjectProperties(TouchPoint touch, TuioObject obj)
+        private void updateObjectProperties(Pointer touch, TuioObject obj)
         {
             var props = touch.Properties;
 
@@ -358,7 +358,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                cursorToInternalId.Add(entity, beginTouch(new Vector2(x, y), CursorTags));
+                cursorToInternalId.Add(entity, beginPointer(new Vector2(x, y), CursorTags));
             }
         }
 
@@ -367,13 +367,13 @@ namespace TouchScript.InputSources
             var entity = e.Cursor;
             lock (this)
             {
-                TouchPoint touch;
+                Pointer touch;
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(touch.Id, new Vector2(x, y));
+                movePointer(touch.Id, new Vector2(x, y));
             }
         }
 
@@ -382,11 +382,11 @@ namespace TouchScript.InputSources
             var entity = e.Cursor;
             lock (this)
             {
-                TouchPoint touch;
+                Pointer touch;
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
                 cursorToInternalId.Remove(entity);
-                endTouch(touch.Id);
+                endPointer(touch.Id);
             }
         }
 
@@ -397,7 +397,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                var touch = beginTouch(new Vector2(x, y), BlobTags);
+                var touch = beginPointer(new Vector2(x, y), BlobTags);
                 updateBlobProperties(touch, entity);
                 blobToInternalId.Add(entity, touch);
             }
@@ -408,13 +408,13 @@ namespace TouchScript.InputSources
             var entity = e.Blob;
             lock (this)
             {
-                TouchPoint touch;
+                Pointer touch;
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(touch.Id, new Vector2(x, y));
+                movePointer(touch.Id, new Vector2(x, y));
                 updateBlobProperties(touch, entity);
             }
         }
@@ -424,11 +424,11 @@ namespace TouchScript.InputSources
             var entity = e.Blob;
             lock (this)
             {
-                TouchPoint touch;
+                Pointer touch;
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
                 blobToInternalId.Remove(entity);
-                endTouch(touch.Id);
+                endPointer(touch.Id);
             }
         }
 
@@ -439,7 +439,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                var touch = beginTouch(new Vector2(x, y), new Tags(ObjectTags, getTagById(entity.ClassId)));
+                var touch = beginPointer(new Vector2(x, y), new Tags(ObjectTags, getTagById(entity.ClassId)));
                 updateObjectProperties(touch, entity);
                 objectToInternalId.Add(entity, touch);
             }
@@ -450,13 +450,13 @@ namespace TouchScript.InputSources
             var entity = e.Object;
             lock (this)
             {
-                TouchPoint touch;
+                Pointer touch;
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                moveTouch(touch.Id, new Vector2(x, y));
+                movePointer(touch.Id, new Vector2(x, y));
                 updateObjectProperties(touch, entity);
             }
         }
@@ -466,11 +466,11 @@ namespace TouchScript.InputSources
             var entity = e.Object;
             lock (this)
             {
-                TouchPoint touch;
+                Pointer touch;
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
                 objectToInternalId.Remove(entity);
-                endTouch(touch.Id);
+                endPointer(touch.Id);
             }
         }
 

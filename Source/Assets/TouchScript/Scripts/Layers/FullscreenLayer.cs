@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// Layer which gets all input from a camera. Should be used instead of a background object getting all the touches which come through.
+    /// Layer which gets all input from a camera. Should be used instead of a background object getting all the pointers which come through.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_FullscreenLayer.htm")]
@@ -23,17 +23,17 @@ namespace TouchScript.Layers
         public enum LayerType
         {
             /// <summary>
-            /// Get touches from main camera.
+            /// Get pointers from main camera.
             /// </summary>
             MainCamera,
 
             /// <summary>
-            /// Get touches from specific camera.
+            /// Get pointers from specific camera.
             /// </summary>
             Camera,
 
             /// <summary>
-            /// Get all touches on Z=0 plane without a camera.
+            /// Get all pointers on Z=0 plane without a camera.
             /// </summary>
             Global
         }

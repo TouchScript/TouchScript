@@ -12,7 +12,7 @@ namespace TouchScript.Behaviors.Visualizer
     /// Visual cursor implementation used by TouchScript.
     /// </summary>
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_TouchProxy.htm")]
-    public class TouchProxy : TouchProxyBase
+    public class PointerProxy : PointerProxyBase
     {
         /// <summary>
         /// The link to UI.Text component.
@@ -24,29 +24,29 @@ namespace TouchScript.Behaviors.Visualizer
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void updateOnce(TouchPoint touch)
+        protected override void updateOnce(Pointer pointer)
         {
-            base.updateOnce(touch);
+            base.updateOnce(pointer);
 
             stringBuilder.Length = 0;
-            stringBuilder.Append("Touch id: ");
-            stringBuilder.Append(touch.Id);
+            stringBuilder.Append("Pointer id: ");
+            stringBuilder.Append(pointer.Id);
             gameObject.name = stringBuilder.ToString();
 
             if (Text == null) return;
-            if (!ShowTouchId && !ShowTags) return;
+            if (!ShowPointerId && !ShowTags) return;
 
             stringBuilder.Length = 0;
-            if (ShowTouchId)
+            if (ShowPointerId)
             {
                 stringBuilder.Append("Id: ");
-                stringBuilder.Append(touch.Id);
+                stringBuilder.Append(pointer.Id);
             }
             if (ShowTags)
             {
                 if (stringBuilder.Length > 0) stringBuilder.Append("\n");
                 stringBuilder.Append("Tags: ");
-                stringBuilder.Append(touch.Tags.ToString());
+                stringBuilder.Append(pointer.Tags.ToString());
             }
             Text.text = stringBuilder.ToString();
         }
@@ -55,9 +55,9 @@ namespace TouchScript.Behaviors.Visualizer
     }
 
     /// <summary>
-    /// Base class for <see cref="TouchVisualizer"/> cursors.
+    /// Base class for <see cref="PointerVisualizer"/> cursors.
     /// </summary>
-    public class TouchProxyBase : MonoBehaviour
+    public class PointerProxyBase : MonoBehaviour
     {
         #region Public properties
 
@@ -76,15 +76,15 @@ namespace TouchScript.Behaviors.Visualizer
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether touch id text should be displayed on screen.
+        /// Gets or sets a value indicating whether pointer id text should be displayed on screen.
         /// </summary>
-        /// <value> <c>true</c> if touch id text should be displayed on screen; otherwise, <c>false</c>. </value>
-        public bool ShowTouchId { get; set; }
+        /// <value> <c>true</c> if pointer id text should be displayed on screen; otherwise, <c>false</c>. </value>
+        public bool ShowPointerId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether touch tags text should be displayed on screen.
+        /// Gets or sets a value indicating whether pointer tags text should be displayed on screen.
         /// </summary>
-        /// <value> <c>true</c> if touch tags text should be displayed on screen; otherwise, <c>false</c>. </value>
+        /// <value> <c>true</c> if pointer tags text should be displayed on screen; otherwise, <c>false</c>. </value>
         public bool ShowTags { get; set; }
 
         #endregion
@@ -109,23 +109,23 @@ namespace TouchScript.Behaviors.Visualizer
         /// Initializes (resets) the cursor.
         /// </summary>
         /// <param name="parent"> Parent container. </param>
-        /// <param name="touch"> Touch this cursor represents. </param>
-        public void Init(RectTransform parent, TouchPoint touch)
+        /// <param name="pointer"> Pointer this cursor represents. </param>
+        public void Init(RectTransform parent, Pointer pointer)
         {
             show();
             rect.SetParent(parent);
             rect.SetAsLastSibling();
-            updateOnce(touch);
-            update(touch);
+            updateOnce(pointer);
+            update(pointer);
         }
 
         /// <summary>
-        /// Updates the touch. This method is called when the touch is moved.
+        /// Updates the pointer. This method is called when the pointer is moved.
         /// </summary>
-        /// <param name="touch"> Touch this cursor represents. </param>
-        public void UpdateTouch(TouchPoint touch)
+        /// <param name="pointer"> Pointer this cursor represents. </param>
+        public void UpdatePointer(Pointer pointer)
         {
-            update(touch);
+            update(pointer);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace TouchScript.Behaviors.Visualizer
             rect = transform as RectTransform;
             if (rect == null)
             {
-                Debug.LogError("TouchProxy must be on an UI element!");
+                Debug.LogError("PointerProxy must be on an UI element!");
                 enabled = false;
                 return;
             }
@@ -162,7 +162,7 @@ namespace TouchScript.Behaviors.Visualizer
         protected virtual void hide()
         {
             gameObject.SetActive(false);
-            gameObject.name = "inactive touch";
+            gameObject.name = "inactive pointer";
         }
 
         /// <summary>
@@ -176,16 +176,16 @@ namespace TouchScript.Behaviors.Visualizer
         /// <summary>
         /// This method is called once when the cursor is initialized.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
-        protected virtual void updateOnce(TouchPoint touch) {}
+        /// <param name="pointer"> The pointer. </param>
+        protected virtual void updateOnce(Pointer pointer) {}
 
         /// <summary>
-        /// This method is called every time when the touch changes.
+        /// This method is called every time when the pointer changes.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
-        public virtual void update(TouchPoint touch)
+        /// <param name="pointer"> The pointer. </param>
+        public virtual void update(Pointer pointer)
         {
-            rect.anchoredPosition = touch.Position;
+            rect.anchoredPosition = pointer.Position;
         }
 
         #endregion

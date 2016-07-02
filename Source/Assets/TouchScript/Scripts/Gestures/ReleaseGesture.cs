@@ -11,7 +11,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Recognizes when last touch is released from target.
+    /// Recognizes when last pointer is released from target.
     /// Works with any gesture unless a Delegate is set.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Release Gesture")]
@@ -68,12 +68,12 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        public override bool ShouldReceiveTouch(TouchPoint touch)
+        public override bool ShouldReceivePointer(Pointer pointer)
         {
-            if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
-            if (!base.ShouldReceiveTouch(touch)) return false;
+            if (!IgnoreChildren) return base.ShouldReceivePointer(pointer);
+            if (!base.ShouldReceivePointer(pointer)) return false;
 
-            if (touch.Target != cachedTransform) return false;
+            if (pointer.Target != cachedTransform) return false;
             return true;
         }
 
@@ -92,11 +92,11 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
+            if (pointersNumState == PointersNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }
 
         /// <inheritdoc />

@@ -45,7 +45,7 @@ namespace TouchScript.Examples.Checkers
             return true;
         }
 
-        public bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch)
+        public bool ShouldReceivePointer(Gesture gesture, Pointer pointer)
         {
             if (exclusive) return gesture == Target;
             return true;

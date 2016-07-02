@@ -46,7 +46,7 @@ namespace TouchScript.Gestures
         #region Public properties
 
         /// <summary>
-        /// Gets or sets total time in seconds required to hold touches still.
+        /// Gets or sets total time in seconds required to hold pointers still.
         /// </summary>
         /// <value> Time in seconds. </value>
         public float TimeToPress
@@ -56,7 +56,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets or sets maximum distance in cm touch points can move before gesture fails.
+        /// Gets or sets maximum distance in cm pointers can move before gesture fails.
         /// </summary>
         /// <value> Distance in cm. </value>
         public float DistanceLimit
@@ -101,25 +101,25 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
-                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            if (pointersNumState == PointersNumState.PassedMaxThreshold ||
+                pointersNumState == PointersNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
             }
-            else if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            else if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 StartCoroutine("wait");
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersMoved(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+            base.pointersMoved(pointers);
 
             if (distanceLimit < float.PositiveInfinity)
             {
@@ -129,11 +129,11 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 setState(GestureState.Failed);
             }

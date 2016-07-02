@@ -22,10 +22,10 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
         private static readonly GUIContent SEND_STATE_CHANGE_MESSAGES = new GUIContent("Send State Change Messages", "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
-        private static readonly GUIContent COMBINE_TOUCH_POINTS = new GUIContent("Combine Touch Points", "When several fingers are used to perform a tap, touch points released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
-        private static readonly GUIContent COMBINE_TOUCH_POINTS_INTERVAL = new GUIContent("Combine Interval (sec)", COMBINE_TOUCH_POINTS.tooltip);
+        private static readonly GUIContent COMBINE_POINTERS = new GUIContent("Combine Pointers", "When several fingers are used to perform a tap, pointers released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
+        private static readonly GUIContent COMBINE_TOUCH_POINTERS = new GUIContent("Combine Interval (sec)", COMBINE_POINTERS.tooltip);
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
-        private static readonly GUIContent LIMIT_TOUCHES = new GUIContent("Limit Touches", "");
+        private static readonly GUIContent LIMIT_POINTERS = new GUIContent("Limit Pointers", "");
 
         protected bool shouldDrawCombineTouches = false;
 
@@ -33,13 +33,13 @@ namespace TouchScript.Editor.Gestures
         private SerializedProperty debugMode;
         private SerializedProperty friendlyGestures;
         private SerializedProperty requireGestureToFail;
-        private SerializedProperty minTouches, maxTouches;
-        private SerializedProperty combineTouches, combineTouchesInterval;
+        private SerializedProperty minPointers, maxPointers;
+        private SerializedProperty combinePointers, combinePointersInterval;
         private SerializedProperty useSendMessage, sendMessageTarget, sendStateChangeMessages;
 
         private ReorderableList friendlyGesturesList;
         private int indexToRemove = -1;
-        private float minTouchesFloat, maxTouchesFloat;
+        private float minPointersFloat, maxPointersFloat;
 
         protected virtual void OnEnable()
         {
@@ -49,16 +49,16 @@ namespace TouchScript.Editor.Gestures
             debugMode = serializedObject.FindProperty("debugMode");
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
-            combineTouches = serializedObject.FindProperty("combineTouches");
-            combineTouchesInterval = serializedObject.FindProperty("combineTouchesInterval");
+            combinePointers = serializedObject.FindProperty("combinePointers");
+            combinePointersInterval = serializedObject.FindProperty("combinePointersInterval");
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
-            minTouches = serializedObject.FindProperty("minTouches");
-            maxTouches = serializedObject.FindProperty("maxTouches");
+            minPointers = serializedObject.FindProperty("minPointers");
+            maxPointers = serializedObject.FindProperty("maxPointers");
 
-            minTouchesFloat = minTouches.intValue;
-            maxTouchesFloat = maxTouches.intValue;
+            minPointersFloat = minPointers.intValue;
+            maxPointersFloat = maxPointers.intValue;
 
             friendlyGesturesList = new ReorderableList(serializedObject, friendlyGestures, false, false, false, true);
             friendlyGesturesList.headerHeight = 0;
@@ -126,14 +126,14 @@ namespace TouchScript.Editor.Gestures
         {
             if (shouldDrawCombineTouches)
             {
-                EditorGUILayout.PropertyField(combineTouches, COMBINE_TOUCH_POINTS);
-                if (combineTouches.boolValue)
+                EditorGUILayout.PropertyField(combinePointers, COMBINE_POINTERS);
+                if (combinePointers.boolValue)
                 {
                     EditorGUIUtility.labelWidth = 160;
                     EditorGUILayout.BeginHorizontal();
                     GUILayout.Label(GUIContent.none, GUILayout.Width(10));
                     EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-                    EditorGUILayout.PropertyField(combineTouchesInterval, COMBINE_TOUCH_POINTS_INTERVAL);
+                    EditorGUILayout.PropertyField(combinePointersInterval, COMBINE_TOUCH_POINTERS);
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.EndHorizontal();
                 }
@@ -142,37 +142,37 @@ namespace TouchScript.Editor.Gestures
 
         protected virtual void drawLimitTouches()
         {
-            var limitTouches = (minTouches.intValue > 0) || (maxTouches.intValue > 0);
-            var newLimitTouches = EditorGUILayout.ToggleLeft(LIMIT_TOUCHES, limitTouches);
-            if (newLimitTouches)
+            var limitPointers = (minPointers.intValue > 0) || (maxPointers.intValue > 0);
+            var newLimitPointers = EditorGUILayout.ToggleLeft(LIMIT_POINTERS, limitPointers);
+            if (newLimitPointers)
             {
-                if (!limitTouches)
+                if (!limitPointers)
                 {
-                    minTouchesFloat = 0;
-                    maxTouchesFloat = 10;
+                    minPointersFloat = 0;
+                    maxPointersFloat = 10;
                 }
                 else
                 {
-                    minTouchesFloat = (float) minTouches.intValue;
-                    maxTouchesFloat = (float) maxTouches.intValue;
+                    minPointersFloat = (float) minPointers.intValue;
+                    maxPointersFloat = (float) maxPointers.intValue;
                 }
                 //or this values doesn't change from script properly
                 EditorGUI.indentLevel++;
-                EditorGUILayout.LabelField("Min: " + (int)minTouchesFloat + ", Max: " + (int)maxTouchesFloat);
-                EditorGUILayout.MinMaxSlider(ref minTouchesFloat, ref maxTouchesFloat, 0, 10);
+                EditorGUILayout.LabelField("Min: " + (int)minPointersFloat + ", Max: " + (int)maxPointersFloat);
+                EditorGUILayout.MinMaxSlider(ref minPointersFloat, ref maxPointersFloat, 0, 10);
                 EditorGUI.indentLevel--;
             }
             else
             {
-                if (limitTouches)
+                if (limitPointers)
                 {
-                    minTouchesFloat = 0;
-                    maxTouchesFloat = 0;
+                    minPointersFloat = 0;
+                    maxPointersFloat = 0;
                 }
             }
 
-            minTouches.intValue = (int)minTouchesFloat;
-            maxTouches.intValue = (int)maxTouchesFloat;
+            minPointers.intValue = (int)minPointersFloat;
+            maxPointers.intValue = (int)maxPointersFloat;
         }
 
         protected virtual void drawRequireToFail()

@@ -11,16 +11,16 @@ using UnityEngine;
 namespace TouchScript
 {
     /// <summary>
-    /// <para>Representation of a finger within TouchScript.</para>
-    /// <para>An object implementing this interface is created when user touches the screen. A unique id is assigned to it which doesn't change throughout its life.</para>
-    /// <para><b>Attention!</b> Do not store references to these objects beyond touch's lifetime (i.e. when target finger is lifted off). These objects may be reused internally. Store unique ids instead.</para>
+    /// <para>Representation of a pointer (touch, mouse) within TouchScript.</para>
+    /// <para>An instance of this class is created when user touches the screen. A unique id is assigned to it which doesn't change throughout its life.</para>
+    /// <para><b>Attention!</b> Do not store references to these objects beyond pointer's lifetime (i.e. when target finger is lifted off). These objects may be reused internally. Store unique ids instead.</para>
     /// </summary>
-    public class TouchPoint
+    public class Pointer
     {
         #region Public properties
 
         /// <summary>
-        /// Internal unique touch point id.
+        /// Internal unique pointer id.
         /// </summary>
         public int Id { get; private set; }
 
@@ -48,7 +48,7 @@ namespace TouchScript
         public TouchHit Hit { get; internal set; }
 
         /// <summary>
-        /// Original layer which registered this touch.
+        /// Original layer which registered this pointer.
         /// <seealso cref="TouchLayer"/>
         /// <seealso cref="CameraLayer"/>
         /// <seealso cref="CameraLayer2D"/>
@@ -56,13 +56,13 @@ namespace TouchScript
         public TouchLayer Layer { get; internal set; }
 
         /// <summary>
-        /// Original input source which created this touch.
+        /// Original input source which created this pointer.
         /// <seealso cref="IInputSource"/>
         /// </summary>
         public IInputSource InputSource { get; internal set; }
 
         /// <summary>
-        /// Projection parameters for the layer which created this touch.
+        /// Projection parameters for the layer which created this pointer.
         /// </summary>
         public ProjectionParams ProjectionParams
         {
@@ -70,12 +70,12 @@ namespace TouchScript
         }
 
         /// <summary>
-        /// Tags collection for this touch object.
+        /// Tags collection for this pointer.
         /// </summary>
         public Tags Tags { get; private set; }
 
         /// <summary>
-        /// List of custom properties (key-value pairs) for this touch object.
+        /// List of custom properties (key-value pairs) for this pointer.
         /// </summary>
         public Dictionary<string, object> Properties
         {
@@ -99,11 +99,11 @@ namespace TouchScript
         /// <inheritdoc />
         public override bool Equals(object other)
         {
-            return Equals(other as TouchPoint);
+            return Equals(other as Pointer);
         }
 
         /// <inheritdoc />
-        public bool Equals(TouchPoint other)
+        public bool Equals(Pointer other)
         {
             if (other == null)
                 return false;
@@ -120,9 +120,9 @@ namespace TouchScript
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TouchPoint"/> class.
+        /// Initializes a new instance of the <see cref="Pointer"/> class.
         /// </summary>
-        public TouchPoint()
+        public Pointer()
         {
             properties = new Dictionary<string, object>();
         }
@@ -130,11 +130,11 @@ namespace TouchScript
         #region Internal methods
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TouchPoint" /> class.
+        /// Initializes a new instance of the <see cref="Pointer" /> class.
         /// </summary>
-        /// <param name="id">Unique id of the touch.</param>
-        /// <param name="position">Screen position of the touch.</param>
-        /// <param name="input">Input source which created this touch.</param>
+        /// <param name="id">Unique id of the pointer.</param>
+        /// <param name="position">Screen position of the pointer.</param>
+        /// <param name="input">Input source which created this pointer.</param>
         /// <param name="tags">Initial tags.</param>
         internal void INTERNAL_Init(int id, Vector2 position, IInputSource input, Tags tags)
         {

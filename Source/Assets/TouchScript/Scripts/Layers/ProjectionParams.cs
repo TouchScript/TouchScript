@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// <see cref="TouchLayer"/> specific projection parameters. Used by layers to project touches in the world and world coordinates onto layers.
+    /// <see cref="TouchLayer"/> specific projection parameters. Used by layers to project pointers in the world and world coordinates onto layers.
     /// </summary>
     public class ProjectionParams
     {

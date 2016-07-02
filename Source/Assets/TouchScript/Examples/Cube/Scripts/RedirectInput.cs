@@ -15,16 +15,16 @@ namespace TouchScript.Examples.Cube
         private MetaGesture gesture;
         private Dictionary<int, int> map = new Dictionary<int, int>();
 
-        public override void CancelTouch(TouchPoint touch, bool @return)
+        public override void CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelTouch(touch, @return);
+            base.CancelPointer(pointer, @return);
 
-            map.Remove(touch.Id);
+            map.Remove(pointer.Id);
             if (@return)
             {
                 TouchHit hit;
-                if (!gesture.GetTargetHitResult(touch.Position, out hit)) return;
-                map.Add(touch.Id, beginTouch(processCoords(hit.RaycastHit.textureCoord), touch.Tags).Id);
+                if (!gesture.GetTargetHitResult(pointer.Position, out hit)) return;
+                map.Add(pointer.Id, beginPointer(processCoords(hit.RaycastHit.textureCoord), pointer.Tags).Id);
             }
         }
 
@@ -34,10 +34,10 @@ namespace TouchScript.Examples.Cube
             gesture = GetComponent<MetaGesture>();
             if (gesture)
             {
-                gesture.TouchBegan += touchBeganHandler;
-                gesture.TouchMoved += touchMovedhandler;
-                gesture.TouchCancelled += touchCancelledhandler;
-                gesture.TouchEnded += touchEndedHandler;
+                gesture.PointerBegan += pointerBeganHandler;
+                gesture.PointerMoved += pointerMovedhandler;
+                gesture.PointerCancelled += pointerCancelledhandler;
+                gesture.PointerEnded += pointerEndedHandler;
             }
         }
 
@@ -47,10 +47,10 @@ namespace TouchScript.Examples.Cube
 
             if (gesture)
             {
-                gesture.TouchBegan -= touchBeganHandler;
-                gesture.TouchMoved -= touchMovedhandler;
-                gesture.TouchCancelled -= touchCancelledhandler;
-                gesture.TouchEnded -= touchEndedHandler;
+                gesture.PointerBegan -= pointerBeganHandler;
+                gesture.PointerMoved -= pointerMovedhandler;
+                gesture.PointerCancelled -= pointerCancelledhandler;
+                gesture.PointerEnded -= pointerEndedHandler;
             }
         }
 
@@ -59,40 +59,40 @@ namespace TouchScript.Examples.Cube
             return new Vector2(value.x * Width, value.y * Height);
         }
 
-        private void touchBeganHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
+        private void pointerBeganHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-            var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
-            map.Add(touch.Id, beginTouch(processCoords(touch.Hit.RaycastHit.textureCoord), touch.Tags).Id);
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+            map.Add(pointer.Id, beginPointer(processCoords(pointer.Hit.RaycastHit.textureCoord), pointer.Tags).Id);
         }
 
-        private void touchMovedhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
+        private void pointerMovedhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             int id;
             TouchHit hit;
-            var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
-            if (!map.TryGetValue(touch.Id, out id)) return;
-            if (!gesture.GetTargetHitResult(touch.Position, out hit)) return;
-            moveTouch(id, processCoords(hit.RaycastHit.textureCoord));
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+            if (!map.TryGetValue(pointer.Id, out id)) return;
+            if (!gesture.GetTargetHitResult(pointer.Position, out hit)) return;
+            movePointer(id, processCoords(hit.RaycastHit.textureCoord));
         }
 
-        private void touchEndedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
+        private void pointerEndedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             int id;
-            var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
-            if (!map.TryGetValue(touch.Id, out id)) return;
-            endTouch(id);
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+            if (!map.TryGetValue(pointer.Id, out id)) return;
+            endPointer(id);
         }
 
-        private void touchCancelledhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
+        private void pointerCancelledhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             int id;
-            var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
-            if (!map.TryGetValue(touch.Id, out id)) return;
-            cancelTouch(id);
+            var pointer = metaGestureEventArgs.Pointer;
+            if (pointer.InputSource == this) return;
+            if (!map.TryGetValue(pointer.Id, out id)) return;
+            cancelPointer(id);
         }
 
     }

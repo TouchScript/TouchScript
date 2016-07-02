@@ -14,10 +14,10 @@ namespace TouchScript.InputSources.InputHandlers
     {
         #region Private variables
 
-        private Func<Vector2, Tags, bool, TouchPoint> beginTouch;
-        private Action<int, Vector2> moveTouch;
-        private Action<int> endTouch;
-        private Action<int> cancelTouch;
+        private Func<Vector2, Tags, bool, Pointer> beginPointer;
+        private Action<int, Vector2> movePointer;
+        private Action<int> endPointer;
+        private Action<int> cancelPointer;
 
         private Tags tags;
         private int mousePointId = -1;
@@ -29,18 +29,18 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseHandler" /> class.
         /// </summary>
-        /// <param name="tags">Tags to add to touches.</param>
-        /// <param name="beginTouch">A function called when a new touch is detected. As <see cref="InputSource.beginTouch" /> this function must accept a Vector2 position of the new touch and return an instance of <see cref="TouchPoint" />.</param>
-        /// <param name="moveTouch">A function called when a touch is moved. As <see cref="InputSource.moveTouch" /> this function must accept an int id and a Vector2 position.</param>
-        /// <param name="endTouch">A function called when a touch is lifted off. As <see cref="InputSource.endTouch" /> this function must accept an int id.</param>
-        /// <param name="cancelTouch">A function called when a touch is cancelled. As <see cref="InputSource.cancelTouch" /> this function must accept an int id.</param>
-        public MouseHandler(Tags tags, Func<Vector2, Tags, bool, TouchPoint> beginTouch, Action<int, Vector2> moveTouch, Action<int> endTouch, Action<int> cancelTouch)
+        /// <param name="tags">Tags to add to pointers.</param>
+        /// <param name="beginPointer">A function called when a new pointer is detected. As <see cref="InputSource.beginPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
+        /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
+        /// <param name="endPointer">A function called when a pointer is lifted off. As <see cref="InputSource.endPointer" /> this function must accept an int id.</param>
+        /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
+        public MouseHandler(Tags tags, Func<Vector2, Tags, bool, Pointer> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
         {
             this.tags = tags;
-            this.beginTouch = beginTouch;
-            this.moveTouch = moveTouch;
-            this.endTouch = endTouch;
-            this.cancelTouch = cancelTouch;
+            this.beginPointer = beginPointer;
+            this.movePointer = movePointer;
+            this.endPointer = endPointer;
+            this.cancelPointer = cancelPointer;
 
             mousePointId = -1;
             fakeMousePointId = -1;
@@ -49,18 +49,18 @@ namespace TouchScript.InputSources.InputHandlers
         #region Public methods
 
         /// <summary>
-        /// Immediately ends all touches.
+        /// Immediately ends all pointers.
         /// </summary>
-        public void EndTouches()
+        public void EndPointers()
         {
             if (mousePointId != -1)
             {
-                endTouch(mousePointId);
+                endPointer(mousePointId);
                 mousePointId = -1;
             }
             if (fakeMousePointId != -1)
             {
-                endTouch(fakeMousePointId);
+                endPointer(fakeMousePointId);
                 fakeMousePointId = -1;
             }
         }
@@ -78,7 +78,7 @@ namespace TouchScript.InputSources.InputHandlers
                 // Release happened first?
                 if (mousePointId != -1)
                 {
-                    endTouch(mousePointId);
+                    endPointer(mousePointId);
                     mousePointId = -1;
                     upHandled = true;
                 }
@@ -87,7 +87,7 @@ namespace TouchScript.InputSources.InputHandlers
             // Need to end fake pointer
             if (fakeMousePointId > -1 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
             {
-                endTouch(fakeMousePointId);
+                endPointer(fakeMousePointId);
                 fakeMousePointId = -1;
             }
 
@@ -95,8 +95,8 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
-                    fakeMousePointId = beginTouch(new Vector2(pos.x, pos.y), tags, true).Id;
-                else if (mousePointId == -1) mousePointId = beginTouch(new Vector2(pos.x, pos.y), tags, true).Id;
+                    fakeMousePointId = beginPointer(new Vector2(pos.x, pos.y), tags, true).Id;
+                else if (mousePointId == -1) mousePointId = beginPointer(new Vector2(pos.x, pos.y), tags, true).Id;
             }
             else if (Input.GetMouseButton(0))
             {
@@ -106,35 +106,35 @@ namespace TouchScript.InputSources.InputHandlers
                     mousePointPos = pos;
                     if (fakeMousePointId != -1)
                     {
-                        if (mousePointId == -1) moveTouch(fakeMousePointId, new Vector2(pos.x, pos.y));
-                        else moveTouch(mousePointId, new Vector2(pos.x, pos.y));
+                        if (mousePointId == -1) movePointer(fakeMousePointId, new Vector2(pos.x, pos.y));
+                        else movePointer(mousePointId, new Vector2(pos.x, pos.y));
                     }
-                    else if (mousePointId != -1) moveTouch(mousePointId, new Vector2(pos.x, pos.y));
+                    else if (mousePointId != -1) movePointer(mousePointId, new Vector2(pos.x, pos.y));
                 }
             }
 
             // Release mouse if we haven't done it yet
             if (Input.GetMouseButtonUp(0) && !upHandled && mousePointId != -1)
             {
-                endTouch(mousePointId);
+                endPointer(mousePointId);
                 mousePointId = -1;
             }
         }
 
         /// <inheritdoc />
-        public bool CancelTouch(TouchPoint touch, bool @return)
+        public bool CancelPointer(Pointer pointer, bool @return)
         {
-            if (touch.Id == mousePointId)
+            if (pointer.Id == mousePointId)
             {
-                cancelTouch(mousePointId);
-                if (@return) mousePointId = beginTouch(touch.Position, tags, false).Id;
+                cancelPointer(mousePointId);
+                if (@return) mousePointId = beginPointer(pointer.Position, tags, false).Id;
                 else mousePointId = -1;
                 return true;
             }
-            if (touch.Id == fakeMousePointId)
+            if (pointer.Id == fakeMousePointId)
             {
-                cancelTouch(fakeMousePointId);
-                if (@return) fakeMousePointId = beginTouch(touch.Position, tags, false).Id;
+                cancelPointer(fakeMousePointId);
+                if (@return) fakeMousePointId = beginPointer(pointer.Position, tags, false).Id;
                 else fakeMousePointId = -1;
                 return true;
             }
@@ -144,8 +144,8 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public void Dispose()
         {
-            if (mousePointId != -1) cancelTouch(mousePointId);
-            if (fakeMousePointId != -1) cancelTouch(fakeMousePointId);
+            if (mousePointId != -1) cancelPointer(mousePointId);
+            if (fakeMousePointId != -1) cancelPointer(fakeMousePointId);
         }
 
         #endregion

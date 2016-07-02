@@ -10,7 +10,7 @@ using UnityEngine;
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Converts touch events for target object into separate events to be used somewhere else.
+    /// Converts Pointer events for target object into separate events to be used somewhere else.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Meta Gesture")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_MetaGesture.htm")]
@@ -19,146 +19,146 @@ namespace TouchScript.Gestures
         #region Constants
 
         /// <summary>
-        /// Message dispatched when a touch begins.
+        /// Message dispatched when a pointer begins.
         /// </summary>
-        public const string TOUCH_BEGAN_MESSAGE = "OnTouchBegan";
+        public const string POINTER_BEGAN_MESSAGE = "OnPointerBegan";
 
         /// <summary>
-        /// Message dispatched when a touch moves.
+        /// Message dispatched when a pointer moves.
         /// </summary>
-        public const string TOUCH_MOVED_MESSAGE = "OnTouchMoved";
+        public const string POINTER_MOVED_MESSAGE = "OnPointerMoved";
 
         /// <summary>
-        /// Message dispatched when a touch ends.
+        /// Message dispatched when a pointer ends.
         /// </summary>
-        public const string TOUCH_ENDED_MESSAGE = "OnTouchEnded";
+        public const string POINTER_ENDED_MESSAGE = "OnPointerEnded";
 
         /// <summary>
-        /// Message dispatched when a touch is cancelled.
+        /// Message dispatched when a pointer is cancelled.
         /// </summary>
-        public const string TOUCH_CANCELLED_MESSAGE = "OnTouchCancelled";
+        public const string POINTER_CANCELLED_MESSAGE = "OnPointerCancelled";
 
         #endregion
 
         #region Events
 
         /// <summary>
-        /// Occurs when a touch point is added.
+        /// Occurs when a pointer is added.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchBegan
+        public event EventHandler<MetaGestureEventArgs> PointerBegan
         {
-            add { touchBeganInvoker += value; }
-            remove { touchBeganInvoker -= value; }
+            add { pointerBeganInvoker += value; }
+            remove { pointerBeganInvoker -= value; }
         }
 
         /// <summary>
-        /// Occurs when a touch point is updated.
+        /// Occurs when a pointer is updated.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchMoved
+        public event EventHandler<MetaGestureEventArgs> PointerMoved
         {
-            add { touchMovedInvoker += value; }
-            remove { touchMovedInvoker -= value; }
+            add { pointerMovedInvoker += value; }
+            remove { pointerMovedInvoker -= value; }
         }
 
         /// <summary>
-        /// Occurs when a touch point is removed.
+        /// Occurs when a pointer is removed.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchEnded
+        public event EventHandler<MetaGestureEventArgs> PointerEnded
         {
-            add { touchEndedInvoker += value; }
-            remove { touchEndedInvoker -= value; }
+            add { pointerEndedInvoker += value; }
+            remove { pointerEndedInvoker -= value; }
         }
 
         /// <summary>
-        /// Occurs when a touch point is cancelled.
+        /// Occurs when a pointer is cancelled.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> TouchCancelled
+        public event EventHandler<MetaGestureEventArgs> PointerCancelled
         {
-            add { touchCancelledInvoker += value; }
-            remove { touchCancelledInvoker -= value; }
+            add { pointerCancelledInvoker += value; }
+            remove { pointerCancelledInvoker -= value; }
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<MetaGestureEventArgs> touchBeganInvoker,
-                                                   touchMovedInvoker,
-                                                   touchEndedInvoker,
-                                                   touchCancelledInvoker;
+        private EventHandler<MetaGestureEventArgs> pointerBeganInvoker,
+                                                   pointerMovedInvoker,
+                                                   pointerEndedInvoker,
+                                                   pointerCancelledInvoker;
 
         #endregion
 
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
 
             if (State == GestureState.Possible) setState(GestureState.Began);
 
-            var length = touches.Count;
-            if (touchBeganInvoker != null)
+            var length = pointers.Count;
+            if (pointerBeganInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    touchBeganInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+                    pointerBeganInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_BEGAN_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_BEGAN_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersMoved(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+            base.pointersMoved(pointers);
 
             if (State == GestureState.Began || State == GestureState.Changed) setState(GestureState.Changed);
 
-            var length = touches.Count;
-            if (touchMovedInvoker != null)
+            var length = pointers.Count;
+            if (pointerMovedInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    touchMovedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+                    pointerMovedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_MOVED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_MOVED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
 
-            if ((State == GestureState.Began || State == GestureState.Changed) && NumTouches == 0) setState(GestureState.Ended);
+            if ((State == GestureState.Began || State == GestureState.Changed) && NumPointers == 0) setState(GestureState.Ended);
 
-            var length = touches.Count;
-            if (touchEndedInvoker != null)
+            var length = pointers.Count;
+            if (pointerEndedInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    touchEndedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+                    pointerEndedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_ENDED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_ENDED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesCancelled(IList<TouchPoint> touches)
+        protected override void pointersCancelled(IList<Pointer> pointers)
         {
-            base.touchesCancelled(touches);
+            base.pointersCancelled(pointers);
 
-            var length = touches.Count;
-            if (touchCancelledInvoker != null)
+            var length = pointers.Count;
+            if (pointerCancelledInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    touchCancelledInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(touches[i]));
+                    pointerCancelledInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(TOUCH_CANCELLED_MESSAGE, touches[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_CANCELLED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -171,17 +171,17 @@ namespace TouchScript.Gestures
     public class MetaGestureEventArgs : EventArgs
     {
         /// <summary>
-        /// Current touch point.
+        /// Current pointer.
         /// </summary>
-        public TouchPoint Touch { get; private set; }
+        public Pointer Pointer { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MetaGestureEventArgs"/> class.
         /// </summary>
-        /// <param name="touch"> Touch point the event is for. </param>
-        public MetaGestureEventArgs(TouchPoint touch)
+        /// <param name="pointer"> Pointer the event is for. </param>
+        public MetaGestureEventArgs(Pointer pointer)
         {
-            Touch = touch;
+            Pointer = pointer;
         }
     }
 }

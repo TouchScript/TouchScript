@@ -132,10 +132,10 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.TouchesBegan += touchesBeganHandler;
-                touchManager.TouchesMoved += touchesMovedHandler;
-                touchManager.TouchesEnded += touchesEndedHandler;
-                touchManager.TouchesCancelled += touchesCancelledHandler;
+                touchManager.PointersBegan += pointersBeganHandler;
+                touchManager.PointersMoved += pointersMovedHandler;
+                touchManager.PointersEnded += pointersEndedHandler;
+                touchManager.PointersCancelled += pointersCancelledHandler;
             }
 
             var toSelect = eventSystem.currentSelectedGameObject;
@@ -153,10 +153,10 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.TouchesBegan -= touchesBeganHandler;
-                touchManager.TouchesMoved -= touchesMovedHandler;
-                touchManager.TouchesEnded -= touchesEndedHandler;
-                touchManager.TouchesCancelled -= touchesCancelledHandler;
+                touchManager.PointersBegan -= pointersBeganHandler;
+                touchManager.PointersMoved -= pointersMovedHandler;
+                touchManager.PointersEnded -= pointersEndedHandler;
+                touchManager.PointersCancelled -= pointersCancelledHandler;
             }
 
             clearSelection();
@@ -209,16 +209,16 @@ namespace TouchScript.Behaviors
         }
 
         /// <summary>
-        /// Initializes pointer data for a touch.
+        /// Initializes pointer data for a pointer.
         /// </summary>
-        /// <param name="touch"> The touch to initialize pointer data from. </param>
-        /// <returns> Pointer data for the touch. </returns>
-        protected PointerEventData initPointerData(TouchPoint touch)
+        /// <param name="pointer"> The pointer to initialize pointer data from. </param>
+        /// <returns> Pointer data for the pointer. </returns>
+        protected PointerEventData initPointerData(Pointer pointer)
         {
             PointerEventData pointerEvent;
-            getPointerData(touch.Id, out pointerEvent, true);
+            getPointerData(pointer.Id, out pointerEvent, true);
 
-            pointerEvent.position = touch.Position;
+            pointerEvent.position = pointer.Position;
             pointerEvent.button = PointerEventData.InputButton.Left;
             pointerEvent.eligibleForClick = true;
             pointerEvent.delta = Vector2.zero;
@@ -271,17 +271,17 @@ namespace TouchScript.Behaviors
         }
 
         /// <summary>
-        /// Updates pointer data for touch.
+        /// Updates pointer data for pointer.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
+        /// <param name="pointer"> The pointer. </param>
         /// <returns> Updated pointer data. </returns>
-        protected PointerEventData updatePointerData(TouchPoint touch)
+        protected PointerEventData updatePointerData(Pointer pointer)
         {
             PointerEventData pointerEvent;
-            getPointerData(touch.Id, out pointerEvent, true);
+            getPointerData(pointer.Id, out pointerEvent, true);
 
-            pointerEvent.position = touch.Position;
-            pointerEvent.delta = touch.Position - touch.PreviousPosition;
+            pointerEvent.position = pointer.Position;
+            pointerEvent.delta = pointer.Position - pointer.PreviousPosition;
 
             return pointerEvent;
         }
@@ -357,7 +357,7 @@ namespace TouchScript.Behaviors
             pointerEvent.dragging = false;
             pointerEvent.pointerDrag = null;
 
-            // send exit events as we need to simulate this on touch up on touch device
+            // send exit events as we need to simulate this on pointer up on pointer device
             ExecuteEvents.ExecuteHierarchy(pointerEvent.pointerEnter, pointerEvent, ExecuteEvents.pointerExitHandler);
             pointerEvent.pointerEnter = null;
 
@@ -365,9 +365,9 @@ namespace TouchScript.Behaviors
         }
 
         /// <summary>
-        /// Gets pointer data for a touch.
+        /// Gets pointer data for a pointer.
         /// </summary>
-        /// <param name="id"> Touch id. </param>
+        /// <param name="id"> Pointer id. </param>
         /// <param name="data"> Pointer data. </param>
         /// <param name="create"> If set to <c>true</c> not found pointer data is created. </param>
         /// <returns><c>true</c> if pointer data is found or created; <c>false</c> otherwise.</returns>
@@ -397,7 +397,7 @@ namespace TouchScript.Behaviors
         /// <summary>
         /// Gets the last pointer event data.
         /// </summary>
-        /// <param name="id"> Touch id. </param>
+        /// <param name="id"> Pointer id. </param>
         /// <returns> Pointer data. </returns>
         protected PointerEventData getLastPointerEventData(int id)
         {
@@ -426,8 +426,8 @@ namespace TouchScript.Behaviors
         /// <summary>
         /// Deselects if selection changed.
         /// </summary>
-        /// <param name="currentOverGo"> GameObject which has the touch over it. </param>
-        /// <param name="pointerEvent"> Pointer data for the touch. </param>
+        /// <param name="currentOverGo"> GameObject which has the pointer over it. </param>
+        /// <param name="pointerEvent"> Pointer data for the pointer. </param>
         protected void deselectIfSelectionChanged(GameObject currentOverGo, BaseEventData pointerEvent)
         {
             // Selection tracking
@@ -442,23 +442,23 @@ namespace TouchScript.Behaviors
 
         #region Private functions
 
-        private void processBegan(TouchPoint touch)
+        private void processBegan(Pointer pointer)
         {
-            PointerEventData pointerEvent = initPointerData(touch);
+            PointerEventData pointerEvent = initPointerData(pointer);
             raycastPointer(pointerEvent);
             injectPointer(pointerEvent);
         }
 
-        private void processMove(TouchPoint touch)
+        private void processMove(Pointer pointer)
         {
-            PointerEventData pointerEvent = updatePointerData(touch);
+            PointerEventData pointerEvent = updatePointerData(pointer);
             raycastPointer(pointerEvent);
             movePointer(pointerEvent);
         }
 
-        private void processEnded(TouchPoint touch)
+        private void processEnded(Pointer pointer)
         {
-            PointerEventData pointerEvent = updatePointerData(touch);
+            PointerEventData pointerEvent = updatePointerData(pointer);
             raycastPointer(pointerEvent);
             endPointer(pointerEvent);
         }
@@ -559,30 +559,30 @@ namespace TouchScript.Behaviors
 
         #endregion
 
-        #region Touch event callbacks
+        #region Pointer event callbacks
 
-        private void touchesBeganHandler(object sender, TouchEventArgs touchEventArgs)
+        private void pointersBeganHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processBegan(touches[i]);
+            var pointers = pointerEventArgs.Pointers;
+            for (var i = 0; i < pointers.Count; i++) processBegan(pointers[i]);
         }
 
-        private void touchesMovedHandler(object sender, TouchEventArgs touchEventArgs)
+        private void pointersMovedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processMove(touches[i]);
+            var pointers = pointerEventArgs.Pointers;
+            for (var i = 0; i < pointers.Count; i++) processMove(pointers[i]);
         }
 
-        private void touchesEndedHandler(object sender, TouchEventArgs touchEventArgs)
+        private void pointersEndedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
+            var pointers = pointerEventArgs.Pointers;
+            for (var i = 0; i < pointers.Count; i++) processEnded(pointers[i]);
         }
 
-        private void touchesCancelledHandler(object sender, TouchEventArgs touchEventArgs)
+        private void pointersCancelledHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            var touches = touchEventArgs.Touches;
-            for (var i = 0; i < touches.Count; i++) processEnded(touches[i]);
+            var pointers = pointerEventArgs.Pointers;
+            for (var i = 0; i < pointers.Count; i++) processEnded(pointers[i]);
         }
 
         #endregion

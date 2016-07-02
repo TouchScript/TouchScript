@@ -11,7 +11,7 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(LongPressGesture), true)]
     internal sealed class LongPressGestureEditor : GestureEditor
     {
-        private static readonly GUIContent TIME_TO_PRESS = new GUIContent("Time to Press (sec)", "Limit maximum number of simultaneous touch points.");
+        private static readonly GUIContent TIME_TO_PRESS = new GUIContent("Time to Press (sec)", "Limit maximum number of simultaneous pointers.");
         private static readonly GUIContent DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if fingers move more than <Value> cm.");
 
         private SerializedProperty distanceLimit;

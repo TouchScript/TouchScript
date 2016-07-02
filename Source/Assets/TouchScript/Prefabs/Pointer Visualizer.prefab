@@ -11,7 +11,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 223: {fileID: 22341586}
   m_Layer: 0
-  m_Name: Touch Visualizer
+  m_Name: Pointer Visualizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,11 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75324aa372886435faa21a4145210f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchProxy: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
-  showTouchId: 1
+  pointerProxy: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
+  showPointerId: 1
   showTags: 1
   useDPI: 1
-  touchSize: 1
+  pointerSize: 1
 --- !u!1002 &11400001
 EditorExtensionImpl:
   serializedVersion: 6
@@ -94,7 +94,12 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: pointerProxy
+      value: 
+      objectReference: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}

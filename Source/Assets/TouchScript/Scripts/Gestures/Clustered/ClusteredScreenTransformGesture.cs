@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TouchScript.Gestures.Clustered
 {
     /// <summary>
-    /// ScreenTransformGesture which splits all touch points into 2 clusters and works with them.
+    /// ScreenTransformGesture which splits all pointers into 2 clusters and works with them.
     /// Should be used for large touch surfaces.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Screen Transform Gesture (Clustered)")]
@@ -25,27 +25,27 @@ namespace TouchScript.Gestures.Clustered
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            clusters.AddPoints(touches);
+            clusters.AddPoints(pointers);
 
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersMoved(IList<Pointer> pointers)
         {
             clusters.Invalidate();
 
-            base.touchesMoved(touches);
+            base.pointersMoved(pointers);
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            clusters.RemovePoints(touches);
+            clusters.RemovePoints(pointers);
 
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
         }
 
         /// <inheritdoc />
@@ -64,18 +64,18 @@ namespace TouchScript.Gestures.Clustered
         protected override int getNumPoints()
         {
             if (clusters.HasClusters) return 2;
-            if (NumTouches > 0) return 1;
+            if (NumPointers > 0) return 1;
             return 0;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches1(IList<TouchPoint> touches)
+        protected override bool relevantPointers1(IList<Pointer> pointers)
         {
             return true;
         }
 
         /// <inheritdoc />
-        protected override bool relevantTouches2(IList<TouchPoint> touches)
+        protected override bool relevantPointers2(IList<Pointer> pointers)
         {
             return true;
         }
@@ -83,7 +83,7 @@ namespace TouchScript.Gestures.Clustered
         /// <inheritdoc />
         protected override Vector2 getPointScreenPosition(int index)
         {
-            if (!clusters.HasClusters) return ClusterUtils.Get2DCenterPosition(activeTouches);
+            if (!clusters.HasClusters) return ClusterUtils.Get2DCenterPosition(activePointers);
 
             return clusters.GetCenterPosition(index);
         }
@@ -91,7 +91,7 @@ namespace TouchScript.Gestures.Clustered
         /// <inheritdoc />
         protected override Vector2 getPointPreviousScreenPosition(int index)
         {
-            if (!clusters.HasClusters) return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
+            if (!clusters.HasClusters) return ClusterUtils.GetPrevious2DCenterPosition(activePointers);
 
             return clusters.GetPreviousCenterPosition(index);
         }

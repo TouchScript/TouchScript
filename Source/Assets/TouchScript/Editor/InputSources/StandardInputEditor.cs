@@ -23,8 +23,8 @@ namespace TouchScript.Editor.InputSources
             touchTags = serializedObject.FindProperty("TouchTags");
             mouseTags = serializedObject.FindProperty("MouseTags");
             penTags = serializedObject.FindProperty("PenTags");
-            windows8Touch = serializedObject.FindProperty("Windows8Touch");
-            windows7Touch = serializedObject.FindProperty("Windows7Touch");
+            windows8Touch = serializedObject.FindProperty("Windows8API");
+            windows7Touch = serializedObject.FindProperty("Windows7API");
             webPlayerTouch = serializedObject.FindProperty("WebPlayerTouch");
             webGLTouch = serializedObject.FindProperty("WebGLTouch");
             windows8Mouse = serializedObject.FindProperty("Windows8Mouse");

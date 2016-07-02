@@ -117,7 +117,7 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <summary>
-        /// Gets or sets minimum distance in cm for touch points to move for gesture to begin. 
+        /// Gets or sets minimum distance in cm for pointers to move for gesture to begin. 
         /// </summary>
         /// <value> Minimum value in cm user must move their fingers to start this gesture. </value>
         public float ScreenTransformThreshold
@@ -160,8 +160,8 @@ namespace TouchScript.Gestures.Base
         {
             get
             {
-                if (NumTouches == 0) return TouchManager.INVALID_POSITION;
-                if (NumTouches == 1) return activeTouches[0].Position;
+                if (NumPointers == 0) return TouchManager.INVALID_POSITION;
+                if (NumPointers == 1) return activePointers[0].Position;
                 return (getPointScreenPosition(0) + getPointScreenPosition(1)) * .5f;
             }
         }
@@ -171,8 +171,8 @@ namespace TouchScript.Gestures.Base
         {
             get
             {
-                if (NumTouches == 0) return TouchManager.INVALID_POSITION;
-                if (NumTouches == 1) return activeTouches[0].PreviousPosition;
+                if (NumPointers == 0) return TouchManager.INVALID_POSITION;
+                if (NumPointers == 1) return activePointers[0].PreviousPosition;
                 return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) * .5f;
             }
         }
@@ -267,7 +267,7 @@ namespace TouchScript.Gestures.Base
             base.Awake();
 
             debugID = DebugHelper.GetDebugId(this);
-            debugTouchSize = Vector2.one*TouchManager.Instance.DotsPerCentimeter*1.1f;
+            debugPointerSize = Vector2.one*TouchManager.Instance.DotsPerCentimeter*1.1f;
         }
 #endif
 
@@ -285,12 +285,12 @@ namespace TouchScript.Gestures.Base
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
-                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            if (pointersNumState == PointersNumState.PassedMaxThreshold ||
+                pointersNumState == PointersNumState.PassedMinMaxThreshold)
             {
                 switch (State)
                 {
@@ -306,11 +306,11 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersMoved(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+            base.pointersMoved(pointers);
 
-            var projectionParams = activeTouches[0].ProjectionParams;
+            var projectionParams = activePointers[0].ProjectionParams;
             var dP = deltaPosition = Vector3.zero;
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
@@ -319,25 +319,25 @@ namespace TouchScript.Gestures.Base
             drawDebugDelayed(getNumPoints());
 #endif
 
-            if (touchesNumState != TouchesNumState.InRange) return;
+            if (pointersNumState != PointersNumState.InRange) return;
 
             var translationEnabled = (Type & TransformType.Translation) == TransformType.Translation;
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
 
-            // one touch or one cluster (points might be too close to each other for 2 clusters)
+            // one pointer or one cluster (points might be too close to each other for 2 clusters)
             if (getNumPoints() == 1 || (!rotationEnabled && !scalingEnabled))
             {
                 if (!translationEnabled) return; // don't look for translates
-                if (!relevantTouches1(touches)) return;
+                if (!relevantPointers1(pointers)) return;
 
                 // translate using one point
                 dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0), projectionParams);
             }
             else
             {
-                // Make sure that we actually care about the touches moved.
-                if (!relevantTouches2(touches)) return;
+                // Make sure that we actually care about the pointers moved.
+                if (!relevantPointers2(pointers)) return;
 
                 var newScreenPos1 = getPointScreenPosition(0);
                 var newScreenPos2 = getPointScreenPosition(1);
@@ -428,11 +428,11 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 switch (State)
                 {
@@ -571,38 +571,38 @@ namespace TouchScript.Gestures.Base
         /// <returns> Number of points. </returns>
         protected virtual int getNumPoints()
         {
-            return NumTouches;
+            return NumPointers;
         }
 
         /// <summary>
-        /// Checks if there are touch points in the list which matter for the gesture.
+        /// Checks if there are pointers in the list which matter for the gesture.
         /// </summary>
-        /// <param name="touches"> List of touch points. </param>
-        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
-        protected virtual bool relevantTouches1(IList<TouchPoint> touches)
+        /// <param name="pointers"> List of pointers. </param>
+        /// <returns> <c>true</c> if there are relevant pointers; <c>false</c> otherwise.</returns>
+        protected virtual bool relevantPointers1(IList<Pointer> pointers)
         {
-            // We care only about the first touch point
-            var count = touches.Count;
+            // We care only about the first pointer
+            var count = pointers.Count;
             for (var i = 0; i < count; i++)
             {
-                if (touches[i] == activeTouches[0]) return true;
+                if (pointers[i] == activePointers[0]) return true;
             }
             return false;
         }
 
         /// <summary>
-        /// Checks if there are touch points in the list which matter for the gesture.
+        /// Checks if there are pointers in the list which matter for the gesture.
         /// </summary>
-        /// <param name="touches"> List of touch points. </param>
-        /// <returns> <c>true</c> if there are relevant touch points; <c>false</c> otherwise.</returns>
-        protected virtual bool relevantTouches2(IList<TouchPoint> touches)
+        /// <param name="pointers"> List of pointers. </param>
+        /// <returns> <c>true</c> if there are relevant pointers; <c>false</c> otherwise.</returns>
+        protected virtual bool relevantPointers2(IList<Pointer> pointers)
         {
-            // We care only about the first and the second touch points
-            var count = touches.Count;
+            // We care only about the first and the second pointers
+            var count = pointers.Count;
             for (var i = 0; i < count; i++)
             {
-                var touch = touches[i];
-                if (touch == activeTouches[0] || touch == activeTouches[1]) return true;
+                var pointer = pointers[i];
+                if (pointer == activePointers[0] || pointer == activePointers[1]) return true;
             }
             return false;
         }
@@ -613,7 +613,7 @@ namespace TouchScript.Gestures.Base
         /// <param name="index"> The index. </param>
         protected virtual Vector2 getPointScreenPosition(int index)
         {
-            return activeTouches[index].Position;
+            return activePointers[index].Position;
         }
 
         /// <summary>
@@ -622,13 +622,13 @@ namespace TouchScript.Gestures.Base
         /// <param name="index"> The index. </param>
         protected virtual Vector2 getPointPreviousScreenPosition(int index)
         {
-            return activeTouches[index].PreviousPosition;
+            return activePointers[index].PreviousPosition;
         }
 
 #if TOUCHSCRIPT_DEBUG
         protected int debugID;
         protected Coroutine debugCoroutine;
-        protected Vector2 debugTouchSize;
+        protected Vector2 debugPointerSize;
 
         protected virtual void clearDebug()
         {
@@ -654,7 +654,7 @@ namespace TouchScript.Gestures.Base
             switch (touchPoints)
             {
                 case 1:
-                    GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugTouchSize, color,
+                    GLDebug.DrawSquareScreenSpace(debugID, getPointScreenPosition(0), 0f, debugPointerSize, color,
                         float.PositiveInfinity);
                     GLDebug.RemoveFigure(debugID + 1);
                     GLDebug.RemoveFigure(debugID + 2);
@@ -662,12 +662,12 @@ namespace TouchScript.Gestures.Base
                 default:
                     var newScreenPos1 = getPointScreenPosition(0);
                     var newScreenPos2 = getPointScreenPosition(1);
-                    GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugTouchSize, color,
+                    GLDebug.DrawSquareScreenSpace(debugID, newScreenPos1, 0f, debugPointerSize, color,
                         float.PositiveInfinity);
-                    GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugTouchSize, color,
+                    GLDebug.DrawSquareScreenSpace(debugID + 1, newScreenPos2, 0f, debugPointerSize, color,
                         float.PositiveInfinity);
                     GLDebug.DrawLineWithCrossScreenSpace(debugID + 2, newScreenPos1, newScreenPos2, .5f,
-                        debugTouchSize * .3f, color, float.PositiveInfinity);
+                        debugPointerSize * .3f, color, float.PositiveInfinity);
                     break;
             }
         }

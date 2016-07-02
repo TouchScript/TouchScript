@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
@@ -150,28 +149,28 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersBegan(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersBegan(pointers);
 
             if (State != GestureState.Possible) return;
-            if (NumTouches == touches.Count)
+            if (NumPointers == pointers.Count)
             {
-                projectionLayer = activeTouches[0].Layer;
+                projectionLayer = activePointers[0].Layer;
                 updateProjectionPlane();
 
 #if TOUCHSCRIPT_DEBUG
-                drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
+                drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
 #endif
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersMoved(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+            base.pointersMoved(pointers);
 
-            var projectionParams = activeTouches[0].ProjectionParams;
+            var projectionParams = activePointers[0].ProjectionParams;
             var dR = deltaRotation = 0;
             var dS = deltaScale = 1f;
 
@@ -182,18 +181,18 @@ namespace TouchScript.Gestures
             drawDebug(screenCenter, newScreenPos);
 #endif
 
-            if (touchesNumState != TouchesNumState.InRange) return;
+            if (pointersNumState != PointersNumState.InRange) return;
 
             var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
             var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
             if (!rotationEnabled && !scalingEnabled) return;
-            if (!relevantTouches(touches)) return;
+            if (!relevantPointers(pointers)) return;
 
 #if !TOUCHSCRIPT_DEBUG
-            var theTouch = activeTouches[0];
+            var thePointer = activePointers[0];
             var worldCenter = cachedTransform.position;
             var screenCenter = projectionParams.ProjectFrom(worldCenter);
-            var newScreenPos = theTouch.Position;
+            var newScreenPos = thePointer.Position;
 #endif
 
             // Here we can't reuse last frame screen positions because points 0 and 1 can change.
@@ -259,12 +258,12 @@ namespace TouchScript.Gestures
 
 #if TOUCHSCRIPT_DEBUG
     /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersEnded(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersEnded(pointers);
 
-            if (NumTouches == 0) return;
-            drawDebug(activeTouches[0].ProjectionParams.ProjectFrom(cachedTransform.position), activeTouches[0].Position);
+            if (NumPointers == 0) return;
+            drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
         }
 #endif
 
