@@ -4,12 +4,13 @@
  * https://bitbucket.org/Unity-Technologies/ui/src/ccb946ecc23815d1a7099aee0ed77b0cde7ff278/UnityEngine.UI/UI/Core/Utility/ObjectPool.cs?at=5.1
  */
 
+using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
 namespace TouchScript.Utils
 {
-    internal class ObjectPool<T> where T : new()
+    internal class ObjectPool<T> where T : class
     {
         public delegate T0 UnityFunc<T0>();
 
@@ -33,6 +34,7 @@ namespace TouchScript.Utils
         public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet,
                           UnityAction<T> actionOnRelease)
         {
+            if (actionNew == null) throw new ArgumentException("New action can't be null!");
             stack = new Stack<T>(capacity);
             onNew = actionNew;
             onGet = actionOnGet;
@@ -43,9 +45,7 @@ namespace TouchScript.Utils
         {
             for (var i = 0; i < count; i++)
             {
-                T element;
-                if (onNew != null) element = onNew();
-                else element = new T();
+                var element = onNew();
                 CountAll++;
                 stack.Push(element);
             }
@@ -56,8 +56,7 @@ namespace TouchScript.Utils
             T element;
             if (stack.Count == 0)
             {
-                if (onNew != null) element = onNew();
-                else element = new T();
+                element = onNew();
                 CountAll++;
             }
             else
