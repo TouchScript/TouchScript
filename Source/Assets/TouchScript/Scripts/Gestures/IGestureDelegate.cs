@@ -3,6 +3,7 @@
  */
 
 using TouchScript.Gestures;
+using TouchScript.Pointers;
 
 namespace TouchScript
 {

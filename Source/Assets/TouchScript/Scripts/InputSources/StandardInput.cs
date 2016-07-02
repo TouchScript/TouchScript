@@ -6,6 +6,7 @@
 using System;
 #endif
 using TouchScript.InputSources.InputHandlers;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.InputSources

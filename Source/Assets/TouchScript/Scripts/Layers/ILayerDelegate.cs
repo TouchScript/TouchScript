@@ -2,6 +2,8 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Pointers;
+
 namespace TouchScript.Layers
 {
     /// <summary>

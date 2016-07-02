@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils;
+using TouchScript.Pointers;
 #if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.Debug;
 #endif

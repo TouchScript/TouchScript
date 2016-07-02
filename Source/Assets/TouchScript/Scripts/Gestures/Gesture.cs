@@ -9,6 +9,7 @@ using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Gestures

@@ -4,8 +4,9 @@
  */
 
 using TouchScript.Utils.Attributes;
-using UnityEngine;
+using TouchScript.Pointers;
 using TouchScript.InputSources.InputHandlers;
+using UnityEngine;
 
 namespace TouchScript.InputSources
 {

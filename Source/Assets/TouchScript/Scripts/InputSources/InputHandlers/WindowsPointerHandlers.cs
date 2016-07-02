@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
@@ -363,7 +364,7 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        #region p/invoke
+#region p/invoke
 
         public const int WM_CLOSE = 0x0010;
         public const int WM_TOUCH = 0x0240;
@@ -581,7 +582,7 @@ namespace TouchScript.InputSources.InputHandlers
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
-        #endregion
+#endregion
     }
 
     /// <summary>

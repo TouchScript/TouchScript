@@ -8,7 +8,7 @@ using TouchScript.InputSources;
 using TouchScript.Layers;
 using UnityEngine;
 
-namespace TouchScript
+namespace TouchScript.Pointers
 {
     /// <summary>
     /// <para>Representation of a pointer (touch, mouse) within TouchScript.</para>

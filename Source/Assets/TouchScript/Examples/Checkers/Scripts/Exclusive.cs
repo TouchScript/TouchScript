@@ -3,6 +3,7 @@
  */
 
 using TouchScript.Gestures;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Examples.Checkers

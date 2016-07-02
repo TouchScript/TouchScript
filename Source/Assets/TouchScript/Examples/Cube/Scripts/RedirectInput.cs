@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TouchScript.Gestures;
 using TouchScript.Hit;
 using TouchScript.InputSources;
+using TouchScript.Pointers;
 
 namespace TouchScript.Examples.Cube
 {

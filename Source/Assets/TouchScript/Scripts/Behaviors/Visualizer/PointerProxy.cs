@@ -3,6 +3,7 @@
  */
 
 using System.Text;
+using TouchScript.Pointers;
 using UnityEngine;
 using UnityEngine.UI;
 

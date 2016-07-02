@@ -10,6 +10,7 @@ using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
 using TouchScript.Utils;
+using TouchScript.Pointers;
 #if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.Debug;
 #endif

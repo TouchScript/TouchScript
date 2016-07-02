@@ -7,6 +7,7 @@ using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
 using System.Collections;
+using TouchScript.Pointers;
 
 namespace TouchScript.Layers
 {

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using TouchScript.Behaviors.Visualizer;
+﻿using TouchScript.Pointers;
 
 namespace TouchScript.Examples.Cube 
 {

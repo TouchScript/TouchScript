@@ -4,6 +4,7 @@
 
 using TouchScript.Hit;
 using TouchScript.Layers;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Utils

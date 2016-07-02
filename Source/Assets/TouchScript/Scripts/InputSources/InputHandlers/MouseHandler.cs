@@ -3,6 +3,7 @@
  */
 
 using System;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers

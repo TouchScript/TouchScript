@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Utils.Geom;
+using TouchScript.Pointers;
 using UnityEngine;
 
 #if TOUCHSCRIPT_DEBUG

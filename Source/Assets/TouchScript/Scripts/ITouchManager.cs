@@ -8,6 +8,7 @@ using TouchScript.Devices.Display;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript

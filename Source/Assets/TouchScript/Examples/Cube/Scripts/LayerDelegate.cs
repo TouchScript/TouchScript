@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TouchScript.Layers;
+using TouchScript.Pointers;
 
 namespace TouchScript.Examples.Cube
 {

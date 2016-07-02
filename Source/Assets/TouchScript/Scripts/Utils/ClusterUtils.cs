@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Text;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Utils
