@@ -150,20 +150,20 @@ namespace TouchScript.InputSources
 
             if (touchHandler != null)
             {
-                touchHandler.Update();
+                touchHandler.UpdateInput();
                 // Unity adds mouse events from touches resulting in duplicated pointers.
                 // Don't update mouse if pointer input is present.
                 if (mouseHandler != null)
                 {
                     if (touchHandler.HasPointers) mouseHandler.EndPointers();
-                    else mouseHandler.Update();
+                    else mouseHandler.UpdateInput();
                 }
             }
-            else if (mouseHandler != null) mouseHandler.Update();
+            else if (mouseHandler != null) mouseHandler.UpdateInput();
         }
 
         /// <inheritdoc />
-        public override void CancelPointer(Pointer pointer, bool @return)
+        public override bool CancelPointer(Pointer pointer, bool @return)
         {
             base.CancelPointer(pointer, @return);
 
@@ -172,8 +172,10 @@ namespace TouchScript.InputSources
             if (mouseHandler != null && !handled) handled = mouseHandler.CancelPointer(pointer, @return);
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
             if (windows7PointerHandler != null && !handled) handled = windows7PointerHandler.CancelPointer(pointer, @return);
-            if (windows8PointerHandler != null && !handled) windows8PointerHandler.CancelPointer(pointer, @return);
+            if (windows8PointerHandler != null && !handled) handled = windows8PointerHandler.CancelPointer(pointer, @return);
 #endif
+
+            return handled;
         }
 
         #endregion
@@ -357,6 +359,6 @@ namespace TouchScript.InputSources
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

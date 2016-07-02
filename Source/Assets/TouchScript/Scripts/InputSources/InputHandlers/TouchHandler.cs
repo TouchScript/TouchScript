@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Pointers;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
@@ -13,7 +14,7 @@ namespace TouchScript.InputSources.InputHandlers
     /// <summary>
     /// Unity touch handling implementation which can be embedded and controlled from other (input) classes.
     /// </summary>
-    public class TouchHandler : IDisposable
+    public class TouchHandler : IInputSource, IDisposable
     {
         #region Public properties
 
@@ -30,11 +31,12 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private variables
 
-        private Func<Vector2, Tags, bool, Pointer> beginPointer;
+        private Action<Pointer, Vector2, bool> beginPointer;
         private Action<int, Vector2> movePointer;
         private Action<int> endPointer;
         private Action<int> cancelPointer;
 
+        private ObjectPool<TouchPointer> pointerPool;
         private Tags tags;
         private Dictionary<int, TouchState> systemToInternalId = new Dictionary<int, TouchState>();
         private int pointersNum;
@@ -49,13 +51,15 @@ namespace TouchScript.InputSources.InputHandlers
         /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
         /// <param name="endPointer">A function called when a pointer is lifted off. As <see cref="InputSource.endPointer" /> this function must accept an int id.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
-        public TouchHandler(Tags tags, Func<Vector2, Tags, bool, Pointer> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
+        public TouchHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
         {
             this.tags = tags;
             this.beginPointer = beginPointer;
             this.movePointer = movePointer;
             this.endPointer = endPointer;
             this.cancelPointer = cancelPointer;
+
+            pointerPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
         }
 
         #region Public methods
@@ -63,7 +67,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Updates this instance.
         /// </summary>
-        public void Update()
+        public void UpdateInput()
         {
             for (var i = 0; i < Input.touchCount; ++i)
             {
@@ -147,8 +151,8 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 if (@return)
                 {
-                    cancelPointer(pointer.Id);
-                    systemToInternalId[fingerId] = new TouchState(beginPointer(pointer.Position, pointer.Tags, false).Id);
+                    internalCancelPointer(pointer.Id);
+                    systemToInternalId[fingerId] = new TouchState(internalBeginPointer(pointer.Position, false).Id);
                 }
                 else
                 {
@@ -172,12 +176,26 @@ namespace TouchScript.InputSources.InputHandlers
 
         #endregion
 
+        #region Internal methods
+
+        public void INTERNAL_ReleasePointer(Pointer pointer)
+        {
+            var touchPointer = pointer as TouchPointer;
+            if (touchPointer == null) return;
+
+            pointerPool.Release(touchPointer);
+        }
+
+        #endregion
+
         #region Private functions
 
-        private Pointer internalBeginPointer(Vector2 position)
+        private Pointer internalBeginPointer(Vector2 position, bool remap = true)
         {
             pointersNum++;
-            return beginPointer(position, tags, true);
+            var pointer = pointerPool.Get();
+            beginPointer(pointer, position, remap);
+            return pointer;
         }
 
         private void internalEndPointer(int id)

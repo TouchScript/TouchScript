@@ -205,9 +205,6 @@ namespace TouchScript
         private HashSet<int> pointersEnded = new HashSet<int>();
         private HashSet<int> pointersCancelled = new HashSet<int>();
 
-        private static ObjectPool<Pointer> pointerPool = new ObjectPool<Pointer>(10, null, null,
-            (t) => t.INTERNAL_Reset());
-
         private static ObjectPool<List<Pointer>> pointerListPool = new ObjectPool<List<Pointer>>(2,
             () => new List<Pointer>(10), null, (l) => l.Clear());
 
@@ -353,21 +350,13 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal Pointer INTERNAL_BeginPointer(Vector2 position, IInputSource input)
+        internal void INTERNAL_BeginPointer(Pointer pointer, Vector2 position)
         {
-            return INTERNAL_BeginPointer(position, input, null);
-        }
-
-        internal Pointer INTERNAL_BeginPointer(Vector2 position, IInputSource input, Tags tags)
-        {
-            Pointer pointer;
             lock (pointerLock)
             {
-                pointer = pointerPool.Get();
-                pointer.INTERNAL_Init(nextPointerId++, position, input, tags);
+                pointer.INTERNAL_Init(nextPointerId++, position);
                 pointersBegan.Add(pointer);
             }
-            return pointer;
         }
 
         /// <summary>
@@ -683,7 +672,11 @@ namespace TouchScript
             if (pointersEndedInvoker != null)
                 pointersEndedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
 
-            for (var i = 0; i < endedCount; i++) pointerPool.Release(list[i]);
+            for (var i = 0; i < endedCount; i++)
+            {
+                var pointer = list[i];
+                pointer.InputSource.INTERNAL_ReleasePointer(pointer);
+            }
             pointerListPool.Release(list);
         }
 
@@ -716,7 +709,11 @@ namespace TouchScript
             if (pointersCancelledInvoker != null)
                 pointersCancelledInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
 
-            for (var i = 0; i < cancelledCount; i++) pointerPool.Release(list[i]);
+            for (var i = 0; i < cancelledCount; i++)
+            {
+                var pointer = list[i];
+                pointer.InputSource.INTERNAL_ReleasePointer(pointer);
+            }
             pointerListPool.Release(list);
         }
 

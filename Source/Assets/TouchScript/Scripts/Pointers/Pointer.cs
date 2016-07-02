@@ -17,12 +17,29 @@ namespace TouchScript.Pointers
     /// </summary>
     public class Pointer
     {
+
+        #region Constants
+
+        public const int INVALID_POINTER = -1;
+
+        public enum PointerType
+        {
+            Touch,
+            Mouse,
+            Pen,
+            Object
+        }
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
         /// Internal unique pointer id.
         /// </summary>
         public int Id { get; private set; }
+
+        public PointerType Type { get; protected set; }
 
         /// <summary>
         /// Original hit target.
@@ -59,7 +76,7 @@ namespace TouchScript.Pointers
         /// Original input source which created this pointer.
         /// <seealso cref="IInputSource"/>
         /// </summary>
-        public IInputSource InputSource { get; internal set; }
+        public IInputSource InputSource { get; private set; }
 
         /// <summary>
         /// Projection parameters for the layer which created this pointer.
@@ -122,9 +139,12 @@ namespace TouchScript.Pointers
         /// <summary>
         /// Initializes a new instance of the <see cref="Pointer"/> class.
         /// </summary>
-        public Pointer()
+        public Pointer(IInputSource input)
         {
+            Type = PointerType.Touch;
+            InputSource = input;
             properties = new Dictionary<string, object>();
+			INTERNAL_Reset();
         }
 
         #region Internal methods
@@ -134,23 +154,20 @@ namespace TouchScript.Pointers
         /// </summary>
         /// <param name="id">Unique id of the pointer.</param>
         /// <param name="position">Screen position of the pointer.</param>
-        /// <param name="input">Input source which created this pointer.</param>
-        /// <param name="tags">Initial tags.</param>
-        internal void INTERNAL_Init(int id, Vector2 position, IInputSource input, Tags tags)
+        internal void INTERNAL_Init(int id, Vector2 position)
         {
             Id = id;
-            InputSource = input;
             this.position = PreviousPosition = newPosition = position;
-            Tags = tags ?? Tags.EMPTY;
         }
 
         internal void INTERNAL_Reset()
         {
+            Id = INVALID_POINTER;
             refCount = 0;
             Hit = default(TouchHit);
             Target = null;
             Layer = null;
-            Tags = null;
+            Tags = Tags.EMPTY;
             properties.Clear();
         }
 

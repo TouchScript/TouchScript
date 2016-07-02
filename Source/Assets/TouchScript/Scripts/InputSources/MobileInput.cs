@@ -44,15 +44,14 @@ namespace TouchScript.InputSources
         {
             base.UpdateInput();
 
-            if (touchHandler != null) touchHandler.Update();
+            if (touchHandler != null) touchHandler.UpdateInput();
         }
 
         /// <inheritdoc />
-        public override void CancelPointer(Pointer pointer, bool @return)
+        public override bool CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelPointer(pointer, @return);
-
-            if (touchHandler != null) touchHandler.CancelPointer(pointer, @return);
+            if (touchHandler != null) return touchHandler.CancelPointer(pointer, @return);
+            return base.CancelPointer(pointer, @return);
         }
 
         #endregion

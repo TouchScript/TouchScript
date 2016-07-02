@@ -46,15 +46,14 @@ namespace TouchScript.InputSources
         {
             base.UpdateInput();
 
-            mouseHandler.Update();
+            mouseHandler.UpdateInput();
         }
 
         /// <inheritdoc />
-        public override void CancelPointer(Pointer pointer, bool @return)
+        public override bool CancelPointer(Pointer pointer, bool @return)
         {
-            base.CancelPointer(pointer, @return);
-
-            if (mouseHandler != null) mouseHandler.CancelPointer(pointer, @return);
+            if (mouseHandler != null) return mouseHandler.CancelPointer(pointer, @return);
+            return base.CancelPointer(pointer, @return);
         }
 
         #endregion

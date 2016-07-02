@@ -11,18 +11,21 @@ namespace TouchScript.InputSources.InputHandlers
     /// <summary>
     /// Unity mouse handling implementation which can be embedded and controlled from other (input) classes.
     /// </summary>
-    public class MouseHandler : IDisposable
+    public class MouseHandler : IInputSource, IDisposable
     {
+        #region Public properties
+
+        #endregion
+
         #region Private variables
 
-        private Func<Vector2, Tags, bool, Pointer> beginPointer;
+        private Action<Pointer, Vector2, bool> beginPointer;
         private Action<int, Vector2> movePointer;
         private Action<int> endPointer;
         private Action<int> cancelPointer;
 
+        private MousePointer mousePointer, fakeMousePointer;
         private Tags tags;
-        private int mousePointId = -1;
-        private int fakeMousePointId = -1;
         private Vector3 mousePointPos = Vector3.zero;
 
         #endregion
@@ -35,7 +38,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
         /// <param name="endPointer">A function called when a pointer is lifted off. As <see cref="InputSource.endPointer" /> this function must accept an int id.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
-        public MouseHandler(Tags tags, Func<Vector2, Tags, bool, Pointer> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
+        public MouseHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
         {
             this.tags = tags;
             this.beginPointer = beginPointer;
@@ -43,8 +46,8 @@ namespace TouchScript.InputSources.InputHandlers
             this.endPointer = endPointer;
             this.cancelPointer = cancelPointer;
 
-            mousePointId = -1;
-            fakeMousePointId = -1;
+            mousePointer = new MousePointer(this);
+            fakeMousePointer = new MousePointer(this);
         }
 
         #region Public methods
@@ -54,22 +57,20 @@ namespace TouchScript.InputSources.InputHandlers
         /// </summary>
         public void EndPointers()
         {
-            if (mousePointId != -1)
+            if (mousePointer.Id != Pointer.INVALID_POINTER)
             {
-                endPointer(mousePointId);
-                mousePointId = -1;
+                endPointer(mousePointer.Id);
             }
-            if (fakeMousePointId != -1)
+            if (fakeMousePointer.Id != Pointer.INVALID_POINTER)
             {
-                endPointer(fakeMousePointId);
-                fakeMousePointId = -1;
+                endPointer(fakeMousePointer.Id);
             }
         }
 
         /// <summary>
         /// Updates this instance.
         /// </summary>
-        public void Update()
+        public void UpdateInput()
         {
             // If mouse button was pressed and released during the same frame,
             // we need to figure out what happened first.
@@ -77,27 +78,25 @@ namespace TouchScript.InputSources.InputHandlers
             if (Input.GetMouseButtonUp(0))
             {
                 // Release happened first?
-                if (mousePointId != -1)
+                if (mousePointer.Id != Pointer.INVALID_POINTER)
                 {
-                    endPointer(mousePointId);
-                    mousePointId = -1;
+                    endPointer(mousePointer.Id);
                     upHandled = true;
                 }
             }
 
             // Need to end fake pointer
-            if (fakeMousePointId > -1 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+            if (fakeMousePointer.Id != Pointer.INVALID_POINTER && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
             {
-                endPointer(fakeMousePointId);
-                fakeMousePointId = -1;
+                endPointer(fakeMousePointer.Id);
             }
 
             if (Input.GetMouseButtonDown(0))
             {
                 var pos = Input.mousePosition;
-                if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointId == -1)
-                    fakeMousePointId = beginPointer(new Vector2(pos.x, pos.y), tags, true).Id;
-                else if (mousePointId == -1) mousePointId = beginPointer(new Vector2(pos.x, pos.y), tags, true).Id;
+                if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointer.Id == Pointer.INVALID_POINTER)
+                    beginPointer(fakeMousePointer, new Vector2(pos.x, pos.y), true);
+                else if (mousePointer.Id == Pointer.INVALID_POINTER) beginPointer(mousePointer, new Vector2(pos.x, pos.y), true);
             }
             else if (Input.GetMouseButton(0))
             {
@@ -105,38 +104,35 @@ namespace TouchScript.InputSources.InputHandlers
                 if (mousePointPos != pos)
                 {
                     mousePointPos = pos;
-                    if (fakeMousePointId != -1)
+                    if (fakeMousePointer.Id != Pointer.INVALID_POINTER)
                     {
-                        if (mousePointId == -1) movePointer(fakeMousePointId, new Vector2(pos.x, pos.y));
-                        else movePointer(mousePointId, new Vector2(pos.x, pos.y));
+                        if (mousePointer.Id == Pointer.INVALID_POINTER) movePointer(fakeMousePointer.Id, new Vector2(pos.x, pos.y));
+                        else movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
                     }
-                    else if (mousePointId != -1) movePointer(mousePointId, new Vector2(pos.x, pos.y));
+                    else if (mousePointer.Id != Pointer.INVALID_POINTER) movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
                 }
             }
 
             // Release mouse if we haven't done it yet
-            if (Input.GetMouseButtonUp(0) && !upHandled && mousePointId != -1)
+            if (Input.GetMouseButtonUp(0) && !upHandled && mousePointer.Id != Pointer.INVALID_POINTER)
             {
-                endPointer(mousePointId);
-                mousePointId = -1;
+                endPointer(mousePointer.Id);
             }
         }
 
         /// <inheritdoc />
         public bool CancelPointer(Pointer pointer, bool @return)
         {
-            if (pointer.Id == mousePointId)
+            if (pointer.Equals(mousePointer))
             {
-                cancelPointer(mousePointId);
-                if (@return) mousePointId = beginPointer(pointer.Position, tags, false).Id;
-                else mousePointId = -1;
+                cancelPointer(mousePointer.Id);
+                if (@return) beginPointer(mousePointer, pointer.Position, false);
                 return true;
             }
-            if (pointer.Id == fakeMousePointId)
+            else if (pointer.Equals(fakeMousePointer))
             {
-                cancelPointer(fakeMousePointId);
-                if (@return) fakeMousePointId = beginPointer(pointer.Position, tags, false).Id;
-                else fakeMousePointId = -1;
+                cancelPointer(fakeMousePointer.Id);
+                if (@return) beginPointer(fakeMousePointer, pointer.Position, false);
                 return true;
             }
             return false;
@@ -145,9 +141,28 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public void Dispose()
         {
-            if (mousePointId != -1) cancelPointer(mousePointId);
-            if (fakeMousePointId != -1) cancelPointer(fakeMousePointId);
+            if (mousePointer.Id != Pointer.INVALID_POINTER) cancelPointer(mousePointer.Id);
+            if (fakeMousePointer.Id != Pointer.INVALID_POINTER) cancelPointer(fakeMousePointer.Id);
         }
+
+        #endregion
+
+        #region Internal methods
+
+        public void INTERNAL_ReleasePointer(Pointer pointer)
+        {
+            if (pointer.Equals(mousePointer))
+            {
+                mousePointer.INTERNAL_Reset();
+            } else if (pointer.Equals(fakeMousePointer))
+            {
+                fakeMousePointer.INTERNAL_Reset();
+            }
+        }
+
+        #endregion
+
+        #region Private functions
 
         #endregion
     }

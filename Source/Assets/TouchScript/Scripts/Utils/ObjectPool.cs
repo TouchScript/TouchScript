@@ -10,7 +10,7 @@ using UnityEngine.Events;
 
 namespace TouchScript.Utils
 {
-    internal class ObjectPool<T> where T : class
+    public class ObjectPool<T> where T : class
     {
         public delegate T0 UnityFunc<T0>();
 

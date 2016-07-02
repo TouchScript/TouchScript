@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using TouchScript.Pointers;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
@@ -19,17 +20,56 @@ namespace TouchScript.InputSources.InputHandlers
     /// </summary>
     public class Windows8PointerHandler : WindowsPointerHandler
     {
-
         private Tags mouseTags, touchTags, penTags;
+        private MousePointer mousePointer;
+        private PenPointer penPointer;
 
         /// <inheritdoc />
-        public Windows8PointerHandler(Tags touchTags, Tags mouseTags, Tags penTags, Func<Vector2, Tags, bool, Pointer> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(touchTags, beginPointer, movePointer, endPointer, cancelPointer)
+        public Windows8PointerHandler(Tags touchTags, Tags mouseTags, Tags penTags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(touchTags, beginPointer, movePointer, endPointer, cancelPointer)
         {
             this.mouseTags = mouseTags;
             this.touchTags = touchTags;
             this.penTags = penTags;
+
+            mousePointer = new MousePointer(this);
+            penPointer = new PenPointer(this);
+
             registerWindowProc(wndProcWin8);
         }
+
+        /// <inheritdoc />
+        public override bool CancelPointer(Pointer pointer, bool @return)
+        {
+            if (pointer.Equals(mousePointer))
+            {
+                cancelPointer(mousePointer.Id);
+                if (@return) beginPointer(mousePointer, pointer.Position, false);
+                return true;
+            }
+            if (pointer.Equals(penPointer))
+            {
+                cancelPointer(penPointer.Id);
+                if (@return) beginPointer(penPointer, pointer.Position, false);
+                return true;
+            }
+            return base.CancelPointer(pointer, @return);
+        }
+
+        #region Internal methods
+
+        public override void INTERNAL_ReleasePointer(Pointer pointer)
+        {
+            if (pointer.Equals(mousePointer))
+            {
+                mousePointer.INTERNAL_Reset();
+            } else if (pointer.Equals(penPointer))
+            {
+                penPointer.INTERNAL_Reset();
+            }
+            base.INTERNAL_ReleasePointer(pointer);
+        }
+
+        #endregion
 
         private IntPtr wndProcWin8(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
@@ -73,45 +113,82 @@ namespace TouchScript.InputSources.InputHandlers
             switch (msg)
             {
                 case WM_POINTERDOWN:
+                {
                     if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
                     Tags tags = null;
+                    var position = new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY);
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_MOUSE:
                             tags = mouseTags;
+                            beginPointer(mousePointer, position, true);
                             break;
                         case POINTER_INPUT_TYPE.PT_TOUCH:
                             tags = touchTags;
+                            winTouchToInternalId.Add(pointerId, internalBeginTouchPointer(position).Id);
                             break;
                         case POINTER_INPUT_TYPE.PT_PEN:
                             tags = penTags;
+                            beginPointer(penPointer, position, true);
                             break;
                     }
-                    winToInternalId.Add(pointerId, beginPointer(new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY), tags, true).Id);
+                }
                     break;
+
                 case WM_POINTERUP:
-                    if (winToInternalId.TryGetValue(pointerId, out existingId))
+                {
+                    var id = Pointer.INVALID_POINTER;
+                    switch (pointerInfo.pointerType)
                     {
-                        winToInternalId.Remove(pointerId);
-                        if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
-                            cancelPointer(existingId);
-                        else endPointer(existingId);
+                        case POINTER_INPUT_TYPE.PT_MOUSE:
+                            id = mousePointer.Id;
+                            break;
+                        case POINTER_INPUT_TYPE.PT_TOUCH:
+                            if (winTouchToInternalId.TryGetValue(pointerId, out existingId))
+                            {
+                                winTouchToInternalId.Remove(pointerId);
+                                id = existingId;
+                            }
+                            break;
+                        case POINTER_INPUT_TYPE.PT_PEN:
+                            id = penPointer.Id;
+                            break;
                     }
+                    if (id != Pointer.INVALID_POINTER)
+                    {
+                        if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) cancelPointer(id);
+                        else endPointer(id);
+                    }
+                }
                     break;
                 case WM_POINTERUPDATE:
-                    if (winToInternalId.TryGetValue(pointerId, out existingId))
+                {
+                    var id = Pointer.INVALID_POINTER;
+                    switch (pointerInfo.pointerType)
+                    {
+                        case POINTER_INPUT_TYPE.PT_MOUSE:
+                            id = mousePointer.Id;
+                            break;
+                        case POINTER_INPUT_TYPE.PT_TOUCH:
+                            if (winTouchToInternalId.TryGetValue(pointerId, out existingId)) id = existingId;
+                            break;
+                        case POINTER_INPUT_TYPE.PT_PEN:
+                            id = penPointer.Id;
+                            break;
+                    }
+                    if (id != Pointer.INVALID_POINTER)
                     {
                         if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
                         {
-                            winToInternalId.Remove(pointerId);
-                            cancelPointer(existingId);
+                            if (pointerInfo.pointerType == POINTER_INPUT_TYPE.PT_TOUCH) winTouchToInternalId.Remove(pointerId);
+                            cancelPointer(id);
                         }
                         else
                         {
-                            movePointer(existingId,
-                                new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
+                            movePointer(id, new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY));
                         }
                     }
+                }
                     break;
             }
         }
@@ -122,7 +199,7 @@ namespace TouchScript.InputSources.InputHandlers
         private int touchInputSize;
 
         /// <inheritdoc />
-        public Windows7PointerHandler(Tags tags, Func<Vector2, Tags, bool, Pointer> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(tags, beginPointer, movePointer, endPointer, cancelPointer)
+        public Windows7PointerHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(tags, beginPointer, movePointer, endPointer, cancelPointer)
         {
             touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
             RegisterTouchWindow(hMainWindow, 0);
@@ -172,33 +249,33 @@ namespace TouchScript.InputSources.InputHandlers
                 if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_DOWN) != 0)
                 {
                     POINT p = new POINT();
-                    p.X = touch.x/100;
-                    p.Y = touch.y/100;
+                    p.X = touch.x / 100;
+                    p.Y = touch.y / 100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winToInternalId.Add(touch.dwID, beginPointer(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY), tags, true).Id);
+                    winTouchToInternalId.Add(touch.dwID, internalBeginTouchPointer(new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY)).Id);
                 }
                 else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
                 {
                     int existingId;
-                    if (winToInternalId.TryGetValue(touch.dwID, out existingId))
+                    if (winTouchToInternalId.TryGetValue(touch.dwID, out existingId))
                     {
-                        winToInternalId.Remove(touch.dwID);
+                        winTouchToInternalId.Remove(touch.dwID);
                         endPointer(existingId);
                     }
                 }
                 else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_MOVE) != 0)
                 {
                     int existingId;
-                    if (winToInternalId.TryGetValue(touch.dwID, out existingId))
+                    if (winTouchToInternalId.TryGetValue(touch.dwID, out existingId))
                     {
                         POINT p = new POINT();
-                        p.X = touch.x/100;
-                        p.Y = touch.y/100;
+                        p.X = touch.x / 100;
+                        p.Y = touch.y / 100;
                         ScreenToClient(hMainWindow, ref p);
 
                         movePointer(existingId,
-                            new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
+                            new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY));
                     }
                 }
             }
@@ -207,8 +284,10 @@ namespace TouchScript.InputSources.InputHandlers
         }
     }
 
-    public abstract class WindowsPointerHandler : IDisposable
+    public abstract class WindowsPointerHandler : IInputSource, IDisposable
     {
+        #region Consts
+
         /// <summary>
         /// Source of pointer input.
         /// </summary>
@@ -226,20 +305,30 @@ namespace TouchScript.InputSources.InputHandlers
 
         public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        protected Func<Vector2, Tags, bool, Pointer> beginPointer;
+        #endregion
+
+        #region Protected variables
+
+        protected Action<Pointer, Vector2, bool> beginPointer;
         protected Action<int, Vector2> movePointer;
         protected Action<int> endPointer;
         protected Action<int> cancelPointer;
 
-        protected Tags tags; 
+        protected Tags tags;
         protected IntPtr hMainWindow;
         protected IntPtr oldWndProcPtr;
         protected IntPtr newWndProcPtr;
         protected WndProcDelegate newWndProc;
         protected ushort pressAndHoldAtomID;
-        protected Dictionary<int, int> winToInternalId = new Dictionary<int, int>();
+        protected Dictionary<int, int> winTouchToInternalId = new Dictionary<int, int>();
 
         protected float offsetX, offsetY, scaleX, scaleY;
+
+        protected ObjectPool<TouchPointer> touchPool;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsPointerHandler"/> class.
@@ -248,7 +337,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <param name="movePointer"> A function called when a pointer is moved. As <see cref="InputSource.movePointer"/> this function must accept an int id and a Vector2 position. </param>
         /// <param name="endPointer"> A function called when a pointer is lifted off. As <see cref="InputSource.endPointer"/> this function must accept an int id. </param>
         /// <param name="cancelPointer"> A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer"/> this function must accept an int id. </param>
-        public WindowsPointerHandler(Tags tags, Func<Vector2, Tags, bool, Pointer> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
+        public WindowsPointerHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
         {
             this.tags = tags;
             this.beginPointer = beginPointer;
@@ -256,27 +345,36 @@ namespace TouchScript.InputSources.InputHandlers
             this.endPointer = endPointer;
             this.cancelPointer = cancelPointer;
 
+            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
+
             hMainWindow = GetActiveWindow();
             disablePressAndHold();
             initScaling();
         }
 
+        #endregion
+
+        #region Public methods
+
         /// <inheritdoc />
-        public bool CancelPointer(Pointer pointer, bool @return)
+        public void UpdateInput() {}
+
+        /// <inheritdoc />
+        public virtual bool CancelPointer(Pointer pointer, bool @return)
         {
-            int internalId = -1;
-            foreach (var t in winToInternalId)
+            int internalTouchId = -1;
+            foreach (var t in winTouchToInternalId)
             {
                 if (t.Value == pointer.Id)
                 {
-                    internalId = t.Key;
+                    internalTouchId = t.Key;
                     break;
                 }
             }
-            if (internalId > -1)
+            if (internalTouchId > -1)
             {
                 cancelPointer(pointer.Id);
-                if (@return) winToInternalId[internalId] = beginPointer(pointer.Position, pointer.Tags, false).Id;
+                if (@return) winTouchToInternalId[internalTouchId] = internalBeginTouchPointer(pointer.Position, false).Id;
                 return true;
             }
             return false;
@@ -285,10 +383,33 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public virtual void Dispose()
         {
-            foreach (var i in winToInternalId) cancelPointer(i.Value);
+            foreach (var i in winTouchToInternalId) cancelPointer(i.Value);
 
             enablePressAndHold();
             unregisterWindowProc();
+        }
+
+        #endregion
+
+        #region Internal methods
+
+        public virtual void INTERNAL_ReleasePointer(Pointer pointer)
+        {
+            var touchPointer = pointer as TouchPointer;
+            if (touchPointer == null) return;
+
+            touchPool.Release(touchPointer);
+        }
+
+        #endregion
+
+        #region Protected methods
+
+        protected Pointer internalBeginTouchPointer(Vector2 position, bool remap = true)
+        {
+            var pointer = touchPool.Get();
+            beginPointer(pointer, position, remap);
+            return pointer;
         }
 
         protected void registerWindowProc(WndProcDelegate windowProc)
@@ -340,12 +461,16 @@ namespace TouchScript.InputSources.InputHandlers
 
             int width, height;
             getNativeMonitorResolution(out width, out height);
-            float scale = Mathf.Max(Screen.width/((float) width), Screen.height/((float) height));
-            offsetX = (width - Screen.width/scale)*.5f;
-            offsetY = (height - Screen.height/scale)*.5f;
+            float scale = Mathf.Max(Screen.width / ((float) width), Screen.height / ((float) height));
+            offsetX = (width - Screen.width / scale) * .5f;
+            offsetY = (height - Screen.height / scale) * .5f;
             scaleX = scale;
             scaleY = scale;
         }
+
+        #endregion
+
+        #region Private functions
 
         private void getNativeMonitorResolution(out int width, out int height)
         {
@@ -364,7 +489,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-#region p/invoke
+        #endregion
+
+        #region p/invoke
 
         public const int WM_CLOSE = 0x0010;
         public const int WM_TOUCH = 0x0240;
@@ -541,7 +668,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         [DllImport("user32.dll")]
         public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam,
-            IntPtr lParam);
+                                                   IntPtr lParam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -554,7 +681,7 @@ namespace TouchScript.InputSources.InputHandlers
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetTouchInputInfo(IntPtr hTouchInput, int cInputs, [Out] TOUCHINPUT[] pInputs,
-            int cbSize);
+                                                    int cbSize);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -582,7 +709,7 @@ namespace TouchScript.InputSources.InputHandlers
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
-#endregion
+        #endregion
     }
 
     /// <summary>

@@ -11,7 +11,7 @@ namespace TouchScript.InputSources
     /// <summary>
     /// Base class for all pointer input sources.
     /// </summary>
-    public abstract class InputSource : MonoBehaviour, IInputSource
+    public abstract class InputSource : MonoBehaviour, IInputSource, IRemapableInputSource
     {
         #region Public properties
 
@@ -19,7 +19,11 @@ namespace TouchScript.InputSources
         /// Gets or sets current remapper.
         /// </summary>
         /// <value>Optional remapper to use to change screen coordinates which go into the TouchManager.</value>
-        public ICoordinatesRemapper CoordinatesRemapper { get; set; }
+        public ICoordinatesRemapper CoordinatesRemapper
+        {
+            get { return coordinatesRemapper; }
+            set { coordinatesRemapper = value; }
+        }
 
         #endregion
 
@@ -29,6 +33,7 @@ namespace TouchScript.InputSources
         [HideInInspector]
         private bool advancedProps; // is used to save whether advanced properties are opened or closed
 
+        private ICoordinatesRemapper coordinatesRemapper;
         private TouchManagerInstance manager;
 
         #endregion
@@ -39,7 +44,16 @@ namespace TouchScript.InputSources
         public virtual void UpdateInput() {}
 
         /// <inheritdoc />
-        public virtual void CancelPointer(Pointer pointer, bool @return) {}
+        public virtual bool CancelPointer(Pointer pointer, bool @return)
+        {
+            return false;
+        }
+
+        #endregion
+
+        #region Internal methods
+
+        public virtual void INTERNAL_ReleasePointer(Pointer pointer) {}
 
         #endregion
 
@@ -75,13 +89,11 @@ namespace TouchScript.InputSources
         /// Begin pointer in given screen position.
         /// </summary>
         /// <param name="position">Screen position.</param>
-        /// <param name="tags">Initial tags.</param>
-        /// <param name="canRemap">if set to <c>true</c> a <see cref="CoordinatesRemapper"/> can be used on provided coordinates.</param>
         /// <returns> New pointer. </returns>
-        protected virtual Pointer beginPointer(Vector2 position, Tags tags, bool canRemap = true)
+        protected virtual void beginPointer(Pointer pointer, Vector2 position, bool remap = true)
         {
-            if (CoordinatesRemapper != null && canRemap) position = CoordinatesRemapper.Remap(position);
-            return manager.INTERNAL_BeginPointer(position, this, tags);
+            if (coordinatesRemapper != null && remap) position = coordinatesRemapper.Remap(position);
+            manager.INTERNAL_BeginPointer(pointer, position);
         }
 
         /// <summary>
@@ -100,10 +112,7 @@ namespace TouchScript.InputSources
         /// <param name="position">Screen position.</param>
         protected virtual void movePointer(int id, Vector2 position)
         {
-            if (CoordinatesRemapper != null)
-            {
-                position = CoordinatesRemapper.Remap(position);
-            }
+            if (coordinatesRemapper != null) position = coordinatesRemapper.Remap(position);
             manager.INTERNAL_MovePointer(id, position);
         }
 
