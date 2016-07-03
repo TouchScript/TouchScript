@@ -145,7 +145,7 @@ namespace TouchScript.InputSources
                         cancelPointer(pointer.Id);
                         if (@return)
                         {
-                            cursorToInternalId[cursor] = internalBeginTouch(pointer.Position, false);
+                            cursorToInternalId[cursor] = internalReturnTouch(pointer as TouchPointer, pointer.Position);
                         }
                         else
                         {
@@ -170,7 +170,7 @@ namespace TouchScript.InputSources
                     cancelPointer(pointer.Id);
                     if (@return)
                     {
-                        objectToInternalId[obj] = internalBeginObject(pointer.Position, false);
+                        objectToInternalId[obj] = internalReturnObject(pointer as ObjectPointer, pointer.Position);
                     }
                     else
                     {
@@ -193,7 +193,7 @@ namespace TouchScript.InputSources
                     cancelPointer(pointer.Id);
                     if (@return)
                     {
-                        blobToInternalId[blob] = internalBeginObject(pointer.Position, false);
+                        blobToInternalId[blob] = internalReturnObject(pointer as ObjectPointer, pointer.Position);
                     }
                     else
                     {
@@ -262,18 +262,36 @@ namespace TouchScript.InputSources
 
         #region Private functions
 
-        private TouchPointer internalBeginTouch(Vector2 position, bool remap = true)
+        private TouchPointer internalBeginTouch(Vector2 position)
         {
             var pointer = touchPool.Get();
-            beginPointer(pointer, position, remap);
+            beginPointer(pointer, position, true);
+            pointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
             return pointer;
+        }
+
+        private TouchPointer internalReturnTouch(TouchPointer pointer, Vector2 position)
+        {
+            var newPointer = touchPool.Get();
+            newPointer.CopyFrom(pointer);
+            beginPointer(newPointer, position, false);
+            return newPointer;
         }
 
         private ObjectPointer internalBeginObject(Vector2 position, bool remap = true)
         {
             var pointer = objectPool.Get();
             beginPointer(pointer, position, remap);
+            pointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
             return pointer;
+        }
+
+        private ObjectPointer internalReturnObject(ObjectPointer pointer, Vector2 position)
+        {
+            var newPointer = objectPool.Get();
+            newPointer.CopyFrom(pointer);
+            beginPointer(newPointer, position, false);
+            return newPointer;
         }
 
         private void connect()
