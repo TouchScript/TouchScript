@@ -42,6 +42,16 @@ namespace TouchScript.Behaviors.Visualizer
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether pointer flags text should be displayed on screen.
+        /// </summary>
+        /// <value> <c>true</c> if pointer flags text should be displayed on screen; otherwise, <c>false</c>. </value>
+        public bool ShowFlags
+        {
+            get { return showFlags; }
+            set { showFlags = value; }
+        }
+
+        /// <summary>
         /// Gets or sets whether <see cref="PointerVisualizer"/> is using DPI to scale pointer cursors.
         /// </summary>
         /// <value> <c>true</c> if DPI value is used; otherwise, <c>false</c>. </value>
@@ -70,6 +80,9 @@ namespace TouchScript.Behaviors.Visualizer
 
         [SerializeField]
         private bool showPointerId = true;
+
+        [SerializeField]
+        private bool showFlags = true;
 
         [SerializeField]
         private bool useDPI = true;
@@ -164,6 +177,7 @@ namespace TouchScript.Behaviors.Visualizer
                 var proxy = pool.Get();
                 proxy.Size = getPointerSize();
                 proxy.ShowPointerId = showPointerId;
+                proxy.ShowFlags = showFlags;
                 proxy.Init(rect, pointer);
                 proxies.Add(pointer.Id, proxy);
             }

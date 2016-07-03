@@ -10,11 +10,12 @@ namespace TouchScript.Editor.Behaviors.Visualizer
 	internal sealed class TouchVisualizerEditor : UnityEditor.Editor
     {
 
-        private SerializedProperty touchProxy, useDPI, touchSize, showTouchId;
+        private SerializedProperty touchProxy, useDPI, touchSize, showTouchId, showFlags;
 
         private void OnEnable()
         {
             showTouchId = serializedObject.FindProperty("showPointerId");
+            showFlags = serializedObject.FindProperty("showFlags");
             touchProxy = serializedObject.FindProperty("pointerProxy");
             useDPI = serializedObject.FindProperty("useDPI");
             touchSize = serializedObject.FindProperty("pointerSize");
@@ -27,6 +28,7 @@ namespace TouchScript.Editor.Behaviors.Visualizer
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(touchProxy, new GUIContent("Pointer Proxy"));
             EditorGUILayout.PropertyField(showTouchId, new GUIContent("Show Pointer Id"));
+            EditorGUILayout.PropertyField(showFlags, new GUIContent("Show Flags"));
 
             EditorGUILayout.PropertyField(useDPI, new GUIContent("Use DPI"));
             if (useDPI.boolValue)
