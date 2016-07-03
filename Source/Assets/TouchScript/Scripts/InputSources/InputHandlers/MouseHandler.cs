@@ -25,7 +25,6 @@ namespace TouchScript.InputSources.InputHandlers
         private Action<int> cancelPointer;
 
         private MousePointer mousePointer, fakeMousePointer;
-        private Tags tags;
         private Vector3 mousePointPos = Vector3.zero;
 
         #endregion
@@ -33,14 +32,12 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseHandler" /> class.
         /// </summary>
-        /// <param name="tags">Tags to add to pointers.</param>
         /// <param name="beginPointer">A function called when a new pointer is detected. As <see cref="InputSource.beginPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
         /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
         /// <param name="endPointer">A function called when a pointer is lifted off. As <see cref="InputSource.endPointer" /> this function must accept an int id.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
-        public MouseHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
+        public MouseHandler(Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
         {
-            this.tags = tags;
             this.beginPointer = beginPointer;
             this.movePointer = movePointer;
             this.endPointer = endPointer;

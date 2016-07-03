@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
@@ -86,20 +85,6 @@ namespace TouchScript.Pointers
             get { return Layer.GetProjectionParams(this); }
         }
 
-        /// <summary>
-        /// Tags collection for this pointer.
-        /// </summary>
-        public Tags Tags { get; private set; }
-
-        /// <summary>
-        /// List of custom properties (key-value pairs) for this pointer.
-        /// </summary>
-        public Dictionary<string, object> Properties
-        {
-            get { return properties; }
-            set { properties = value; }
-        }
-
         #endregion
 
         #region Private variables
@@ -107,7 +92,6 @@ namespace TouchScript.Pointers
         private int refCount = 0;
         private Vector2 position = Vector2.zero;
         private Vector2 newPosition = Vector2.zero;
-        private Dictionary<string, object> properties;
 
         #endregion
 
@@ -145,7 +129,6 @@ namespace TouchScript.Pointers
         {
             Type = PointerType.Touch;
             InputSource = input;
-            properties = new Dictionary<string, object>();
 			INTERNAL_Reset();
         }
 
@@ -153,11 +136,6 @@ namespace TouchScript.Pointers
 
         #region Internal methods
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Pointer" /> class.
-        /// </summary>
-        /// <param name="id">Unique id of the pointer.</param>
-        /// <param name="position">Screen position of the pointer.</param>
         internal void INTERNAL_Init(int id, Vector2 position)
         {
             Id = id;
@@ -171,8 +149,6 @@ namespace TouchScript.Pointers
             Hit = default(TouchHit);
             Target = null;
             Layer = null;
-            Tags = Tags.EMPTY;
-            properties.Clear();
         }
 
         internal void INTERNAL_ResetPosition()

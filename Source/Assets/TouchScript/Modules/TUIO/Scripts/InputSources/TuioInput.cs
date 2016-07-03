@@ -24,11 +24,6 @@ namespace TouchScript.InputSources
         #region Constants
 
         /// <summary>
-        /// TUIO tag used for pointers.
-        /// </summary>
-        public const string SOURCE_TUIO = "TUIO";
-
-        /// <summary>
         /// Type of TUIO input object.
         /// </summary>
         [Flags]
@@ -82,38 +77,6 @@ namespace TouchScript.InputSources
             }
         }
 
-        /// <summary>
-        /// List of TUIO object ids to tag mappings.
-        /// </summary>
-        public IList<TuioObjectMapping> TuioObjectMappings
-        {
-            get { return tuioObjectMappings; }
-        }
-
-        /// <summary>
-        /// Tags for new cursors.
-        /// </summary>
-        public Tags CursorTags
-        {
-            get { return cursorTags; }
-        }
-
-        /// <summary>
-        /// Tags for new blobs.
-        /// </summary>
-        public Tags BlobTags
-        {
-            get { return blobTags; }
-        }
-
-        /// <summary>
-        /// Tags for new objects.
-        /// </summary>
-        public Tags ObjectTags
-        {
-            get { return objectTags; }
-        }
-
         #endregion
 
         #region Private variables
@@ -124,26 +87,14 @@ namespace TouchScript.InputSources
         [SerializeField]
         private InputType supportedInputs = InputType.Cursors | InputType.Blobs | InputType.Objects;
 
-        [SerializeField]
-        private List<TuioObjectMapping> tuioObjectMappings = new List<TuioObjectMapping>();
-
-        [SerializeField]
-        private Tags cursorTags = new Tags(SOURCE_TUIO, Tags.INPUT_TOUCH);
-
-        [SerializeField]
-        private Tags blobTags = new Tags(SOURCE_TUIO, Tags.INPUT_TOUCH);
-
-        [SerializeField]
-        private Tags objectTags = new Tags(SOURCE_TUIO, Tags.INPUT_OBJECT);
-
         private TuioServer server;
         private CursorProcessor cursorProcessor;
         private ObjectProcessor objectProcessor;
         private BlobProcessor blobProcessor;
 
-        private Dictionary<TuioCursor, Pointer> cursorToInternalId = new Dictionary<TuioCursor, Pointer>();
-        private Dictionary<TuioBlob, Pointer> blobToInternalId = new Dictionary<TuioBlob, Pointer>();
-        private Dictionary<TuioObject, Pointer> objectToInternalId = new Dictionary<TuioObject, Pointer>();
+        private Dictionary<TuioCursor, TouchPointer> cursorToInternalId = new Dictionary<TuioCursor, TouchPointer>();
+        private Dictionary<TuioBlob, ObjectPointer> blobToInternalId = new Dictionary<TuioBlob, ObjectPointer>();
+        private Dictionary<TuioObject, ObjectPointer> objectToInternalId = new Dictionary<TuioObject, ObjectPointer>();
         private int screenWidth;
         private int screenHeight;
 
@@ -311,14 +262,14 @@ namespace TouchScript.InputSources
 
         #region Private functions
 
-        private Pointer internalBeginTouch(Vector2 position, bool remap = true)
+        private TouchPointer internalBeginTouch(Vector2 position, bool remap = true)
         {
             var pointer = touchPool.Get();
             beginPointer(pointer, position, remap);
             return pointer;
         }
 
-        private Pointer internalBeginObject(Vector2 position, bool remap = true)
+        private ObjectPointer internalBeginObject(Vector2 position, bool remap = true)
         {
             var pointer = objectPool.Get();
             beginPointer(pointer, position, remap);
@@ -361,37 +312,17 @@ namespace TouchScript.InputSources
             else server.RemoveDataProcessor(objectProcessor);
         }
 
-        private void updateBlobProperties(Pointer touch, TuioBlob blob)
+        private void updateBlobProperties(ObjectPointer obj, TuioBlob target)
         {
-            var props = touch.Properties;
-
-            props["Angle"] = blob.Angle;
-            props["Width"] = blob.Width;
-            props["Height"] = blob.Height;
-            props["Area"] = blob.Area;
-            props["RotationVelocity"] = blob.RotationVelocity;
-            props["RotationAcceleration"] = blob.RotationAcceleration;
+            obj.Width = target.Width;
+            obj.Height = target.Height;
+            obj.Angle = target.Angle;
         }
 
-        private void updateObjectProperties(Pointer touch, TuioObject obj)
+        private void updateObjectProperties(ObjectPointer obj, TuioObject target)
         {
-            var props = touch.Properties;
-
-            props["Angle"] = obj.Angle;
-            props["ObjectId"] = obj.ClassId;
-            props["RotationVelocity"] = obj.RotationVelocity;
-            props["RotationAcceleration"] = obj.RotationAcceleration;
-        }
-
-        private string getTagById(int id)
-        {
-            var count = TuioObjectMappings.Count;
-            for (var i = 0; i < count; i++)
-            {
-                var tuioObjectMapping = tuioObjectMappings[i];
-                if (tuioObjectMapping.Id == id) return tuioObjectMapping.Tag;
-            }
-            return null;
+            obj.ObjectId = target.ClassId;
+            obj.Angle = target.Angle;
         }
 
         #endregion
@@ -414,7 +345,7 @@ namespace TouchScript.InputSources
             var entity = e.Cursor;
             lock (this)
             {
-                Pointer touch;
+                TouchPointer touch;
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
                 var x = entity.X * screenWidth;
@@ -429,7 +360,7 @@ namespace TouchScript.InputSources
             var entity = e.Cursor;
             lock (this)
             {
-                Pointer touch;
+                TouchPointer touch;
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
                 cursorToInternalId.Remove(entity);
@@ -455,7 +386,7 @@ namespace TouchScript.InputSources
             var entity = e.Blob;
             lock (this)
             {
-                Pointer touch;
+                ObjectPointer touch;
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
                 var x = entity.X * screenWidth;
@@ -471,7 +402,7 @@ namespace TouchScript.InputSources
             var entity = e.Blob;
             lock (this)
             {
-                Pointer touch;
+                ObjectPointer touch;
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
                 blobToInternalId.Remove(entity);
@@ -487,7 +418,6 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
                 var touch = internalBeginObject(new Vector2(x, y));
-                // , new Tags(ObjectTags, getTagById(entity.ClassId))
                 updateObjectProperties(touch, entity);
                 objectToInternalId.Add(entity, touch);
             }
@@ -498,7 +428,7 @@ namespace TouchScript.InputSources
             var entity = e.Object;
             lock (this)
             {
-                Pointer touch;
+                ObjectPointer touch;
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
                 var x = entity.X * screenWidth;
@@ -514,7 +444,7 @@ namespace TouchScript.InputSources
             var entity = e.Object;
             lock (this)
             {
-                Pointer touch;
+                ObjectPointer touch;
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
                 objectToInternalId.Remove(entity);
@@ -525,22 +455,6 @@ namespace TouchScript.InputSources
         #endregion
     }
 
-    /// <summary>
-    /// TUIO object id to tag mapping value object.
-    /// </summary>
-    [Serializable]
-    public class TuioObjectMapping
-    {
-        /// <summary>
-        /// TUIO object id.
-        /// </summary>
-        public int Id;
-
-        /// <summary>
-        /// Tag to attach to this object.
-        /// </summary>
-        public string Tag;
-    }
 }
 
 #endif

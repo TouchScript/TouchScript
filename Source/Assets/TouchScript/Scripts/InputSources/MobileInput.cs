@@ -24,11 +24,6 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnNonTouchPlatforms = true;
 
-        /// <summary>
-        /// Tags added to pointers coming from this input.
-        /// </summary>
-        public Tags Tags = new Tags(Tags.INPUT_TOUCH);
-
         #endregion
 
         #region Private variables
@@ -82,7 +77,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            touchHandler = new TouchHandler(Tags, beginPointer, movePointer, endPointer, cancelPointer);
+            touchHandler = new TouchHandler(beginPointer, movePointer, endPointer, cancelPointer);
 
             base.OnEnable();
         }

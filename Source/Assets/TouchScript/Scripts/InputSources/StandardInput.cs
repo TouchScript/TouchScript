@@ -78,21 +78,6 @@ namespace TouchScript.InputSources
         #region Public properties
 
         /// <summary>
-        /// Tags added to touches coming from this input.
-        /// </summary>
-        public Tags TouchTags = new Tags(Tags.INPUT_TOUCH);
-
-        /// <summary>
-        /// Tags added to mouse pointers coming from this input.
-        /// </summary>
-        public Tags MouseTags = new Tags(Tags.INPUT_MOUSE);
-
-        /// <summary>
-        /// Tags added to pen pointers coming from this input.
-        /// </summary>
-        public Tags PenTags = new Tags(Tags.INPUT_PEN);
-
-        /// <summary>
         /// Pointer API to use on Windows 8.
         /// </summary>
         public Windows8APIType Windows8API = Windows8APIType.Windows8;
@@ -284,7 +269,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler(MouseTags, beginPointer, movePointer, endPointer, cancelPointer);
+            mouseHandler = new MouseHandler(beginPointer, movePointer, endPointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
 
@@ -299,7 +284,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler(TouchTags, beginPointer, movePointer, endPointer, cancelPointer);
+            touchHandler = new TouchHandler(beginPointer, movePointer, endPointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
@@ -330,7 +315,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows7Touch()
         {
-            windows7PointerHandler = new Windows7PointerHandler(TouchTags, beginPointer, movePointer, endPointer, cancelPointer);
+            windows7PointerHandler = new Windows7PointerHandler(beginPointer, movePointer, endPointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 7 pointer input.");
         }
 
@@ -345,7 +330,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows8Touch()
         {
-            windows8PointerHandler = new Windows8PointerHandler(TouchTags, MouseTags, PenTags, beginPointer, movePointer, endPointer, cancelPointer);
+            windows8PointerHandler = new Windows8PointerHandler(beginPointer, movePointer, endPointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 8 pointer input.");
         }
 

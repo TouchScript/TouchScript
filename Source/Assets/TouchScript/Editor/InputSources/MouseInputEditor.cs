@@ -8,14 +8,12 @@ namespace TouchScript.Editor.InputSources
 #pragma warning restore 0618
     internal sealed class MouseInputEditor : InputSourceEditor
     {
-        private SerializedProperty tags;
         private SerializedProperty disableOnMobilePlatforms;
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            tags = serializedObject.FindProperty("Tags");
             disableOnMobilePlatforms = serializedObject.FindProperty("DisableOnMobilePlatforms");
         }
 
@@ -29,11 +27,5 @@ namespace TouchScript.Editor.InputSources
             base.OnInspectorGUI();
         }
 
-        protected override void drawAdvanced()
-        {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(tags);
-            EditorGUI.indentLevel--;
-        }
     }
 }

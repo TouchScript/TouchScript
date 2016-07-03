@@ -35,19 +35,13 @@ namespace TouchScript.Behaviors.Visualizer
             gameObject.name = stringBuilder.ToString();
 
             if (Text == null) return;
-            if (!ShowPointerId && !ShowTags) return;
+            if (!ShowPointerId) return;
 
             stringBuilder.Length = 0;
             if (ShowPointerId)
             {
                 stringBuilder.Append("Id: ");
                 stringBuilder.Append(pointer.Id);
-            }
-            if (ShowTags)
-            {
-                if (stringBuilder.Length > 0) stringBuilder.Append("\n");
-                stringBuilder.Append("Tags: ");
-                stringBuilder.Append(pointer.Tags.ToString());
             }
             Text.text = stringBuilder.ToString();
         }
@@ -81,12 +75,6 @@ namespace TouchScript.Behaviors.Visualizer
         /// </summary>
         /// <value> <c>true</c> if pointer id text should be displayed on screen; otherwise, <c>false</c>. </value>
         public bool ShowPointerId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pointer tags text should be displayed on screen.
-        /// </summary>
-        /// <value> <c>true</c> if pointer tags text should be displayed on screen; otherwise, <c>false</c>. </value>
-        public bool ShowTags { get; set; }
 
         #endregion
 

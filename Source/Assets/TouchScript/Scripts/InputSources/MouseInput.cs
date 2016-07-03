@@ -26,11 +26,6 @@ namespace TouchScript.InputSources
         [ToggleLeft]
         public bool DisableOnMobilePlatforms = true;
 
-        /// <summary>
-        /// Tags added to pointers coming from this input.
-        /// </summary>
-        public Tags Tags = new Tags(Tags.INPUT_MOUSE);
-
         #endregion
 
         #region Private variables
@@ -85,7 +80,7 @@ namespace TouchScript.InputSources
                 }
             }
 
-            mouseHandler = new MouseHandler(Tags, beginPointer, movePointer, endPointer, cancelPointer);
+            mouseHandler = new MouseHandler(beginPointer, movePointer, endPointer, cancelPointer);
         }
 
         /// <inheritdoc />

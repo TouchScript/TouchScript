@@ -20,17 +20,12 @@ namespace TouchScript.InputSources.InputHandlers
     /// </summary>
     public class Windows8PointerHandler : WindowsPointerHandler
     {
-        private Tags mouseTags, touchTags, penTags;
         private MousePointer mousePointer;
         private PenPointer penPointer;
 
         /// <inheritdoc />
-        public Windows8PointerHandler(Tags touchTags, Tags mouseTags, Tags penTags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(touchTags, beginPointer, movePointer, endPointer, cancelPointer)
+        public Windows8PointerHandler(Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(beginPointer, movePointer, endPointer, cancelPointer)
         {
-            this.mouseTags = mouseTags;
-            this.touchTags = touchTags;
-            this.penTags = penTags;
-
             mousePointer = new MousePointer(this);
             penPointer = new PenPointer(this);
 
@@ -115,20 +110,16 @@ namespace TouchScript.InputSources.InputHandlers
                 case WM_POINTERDOWN:
                 {
                     if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
-                    Tags tags = null;
                     var position = new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY);
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_MOUSE:
-                            tags = mouseTags;
                             beginPointer(mousePointer, position, true);
                             break;
                         case POINTER_INPUT_TYPE.PT_TOUCH:
-                            tags = touchTags;
                             winTouchToInternalId.Add(pointerId, internalBeginTouchPointer(position).Id);
                             break;
                         case POINTER_INPUT_TYPE.PT_PEN:
-                            tags = penTags;
                             beginPointer(penPointer, position, true);
                             break;
                     }
@@ -199,7 +190,7 @@ namespace TouchScript.InputSources.InputHandlers
         private int touchInputSize;
 
         /// <inheritdoc />
-        public Windows7PointerHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(tags, beginPointer, movePointer, endPointer, cancelPointer)
+        public Windows7PointerHandler(Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(beginPointer, movePointer, endPointer, cancelPointer)
         {
             touchInputSize = Marshal.SizeOf(typeof (TOUCHINPUT));
             RegisterTouchWindow(hMainWindow, 0);
@@ -314,7 +305,6 @@ namespace TouchScript.InputSources.InputHandlers
         protected Action<int> endPointer;
         protected Action<int> cancelPointer;
 
-        protected Tags tags;
         protected IntPtr hMainWindow;
         protected IntPtr oldWndProcPtr;
         protected IntPtr newWndProcPtr;
@@ -337,9 +327,8 @@ namespace TouchScript.InputSources.InputHandlers
         /// <param name="movePointer"> A function called when a pointer is moved. As <see cref="InputSource.movePointer"/> this function must accept an int id and a Vector2 position. </param>
         /// <param name="endPointer"> A function called when a pointer is lifted off. As <see cref="InputSource.endPointer"/> this function must accept an int id. </param>
         /// <param name="cancelPointer"> A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer"/> this function must accept an int id. </param>
-        public WindowsPointerHandler(Tags tags, Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
+        public WindowsPointerHandler(Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
         {
-            this.tags = tags;
             this.beginPointer = beginPointer;
             this.movePointer = movePointer;
             this.endPointer = endPointer;

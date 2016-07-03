@@ -8,14 +8,12 @@ namespace TouchScript.Editor.InputSources
 #pragma warning restore 0618
     internal sealed class MobileInputEditor : InputSourceEditor
     {
-        private SerializedProperty tags;
         private SerializedProperty disableOnNonTouchPlatforms;
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            tags = serializedObject.FindProperty("Tags");
             disableOnNonTouchPlatforms = serializedObject.FindProperty("DisableOnNonTouchPlatforms");
         }
 
@@ -27,13 +25,6 @@ namespace TouchScript.Editor.InputSources
 
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
-        }
-
-        protected override void drawAdvanced()
-        {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(tags);
-            EditorGUI.indentLevel--;
         }
     }
 }

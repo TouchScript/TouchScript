@@ -6,8 +6,6 @@ namespace TouchScript.Editor.InputSources
     [CustomEditor(typeof (StandardInput), true)]
     internal sealed class StandardInputEditor : InputSourceEditor
     {
-        private SerializedProperty touchTags, mouseTags, penTags;
-
         private SerializedProperty windows8Touch,
             windows7Touch,
             webPlayerTouch,
@@ -20,9 +18,6 @@ namespace TouchScript.Editor.InputSources
         {
             base.OnEnable();
 
-            touchTags = serializedObject.FindProperty("TouchTags");
-            mouseTags = serializedObject.FindProperty("MouseTags");
-            penTags = serializedObject.FindProperty("PenTags");
             windows8Touch = serializedObject.FindProperty("Windows8API");
             windows7Touch = serializedObject.FindProperty("Windows7API");
             webPlayerTouch = serializedObject.FindProperty("WebPlayerTouch");
@@ -44,15 +39,6 @@ namespace TouchScript.Editor.InputSources
             EditorGUILayout.PropertyField(universalWindowsMouse);
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
-        }
-
-        protected override void drawAdvanced()
-        {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(touchTags);
-            EditorGUILayout.PropertyField(mouseTags);
-            EditorGUILayout.PropertyField(penTags);
-            EditorGUI.indentLevel--;
         }
     }
 }
