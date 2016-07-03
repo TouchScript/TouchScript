@@ -25,7 +25,6 @@ namespace TouchScript.Editor.Behaviors.Visualizer
         {
             serializedObject.Update();
 
-            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(touchProxy, new GUIContent("Pointer Proxy"));
             EditorGUILayout.PropertyField(showTouchId, new GUIContent("Show Pointer Id"));
             EditorGUILayout.PropertyField(showFlags, new GUIContent("Show Flags"));
@@ -33,7 +32,6 @@ namespace TouchScript.Editor.Behaviors.Visualizer
             EditorGUILayout.PropertyField(useDPI, new GUIContent("Use DPI"));
             if (useDPI.boolValue)
             {
-                EditorGUI.BeginChangeCheck();
                 EditorGUILayout.PropertyField(touchSize, new GUIContent("Pointer Size (cm)"));
             }
 

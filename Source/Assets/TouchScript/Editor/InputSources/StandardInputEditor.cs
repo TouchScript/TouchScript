@@ -12,24 +12,30 @@ namespace TouchScript.Editor.InputSources
             webGLTouch,
             windows8Mouse,
             windows7Mouse,
-            universalWindowsMouse;
+            universalWindowsMouse,
+            emulateSecondMousePointer;
+
+        private StandardInput instance;
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            windows8Touch = serializedObject.FindProperty("Windows8API");
-            windows7Touch = serializedObject.FindProperty("Windows7API");
-            webPlayerTouch = serializedObject.FindProperty("WebPlayerTouch");
-            webGLTouch = serializedObject.FindProperty("WebGLTouch");
-            windows8Mouse = serializedObject.FindProperty("Windows8Mouse");
-            windows7Mouse = serializedObject.FindProperty("Windows7Mouse");
-            universalWindowsMouse = serializedObject.FindProperty("UniversalWindowsMouse");
+            instance = target as StandardInput;
+            windows8Touch = serializedObject.FindProperty("windows8API");
+            windows7Touch = serializedObject.FindProperty("windows7API");
+            webPlayerTouch = serializedObject.FindProperty("webPlayerTouch");
+            webGLTouch = serializedObject.FindProperty("webGLTouch");
+            windows8Mouse = serializedObject.FindProperty("windows8Mouse");
+            windows7Mouse = serializedObject.FindProperty("windows7Mouse");
+            universalWindowsMouse = serializedObject.FindProperty("universalWindowsMouse");
+            emulateSecondMousePointer = serializedObject.FindProperty("emulateSecondMousePointer");
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfDirtyOrScript();
+
             EditorGUILayout.PropertyField(windows8Touch);
             EditorGUILayout.PropertyField(windows7Touch);
             EditorGUILayout.PropertyField(webPlayerTouch);
@@ -37,6 +43,13 @@ namespace TouchScript.Editor.InputSources
             EditorGUILayout.PropertyField(windows8Mouse);
             EditorGUILayout.PropertyField(windows7Mouse);
             EditorGUILayout.PropertyField(universalWindowsMouse);
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(emulateSecondMousePointer);
+            if (EditorGUI.EndChangeCheck())
+            {
+                instance.EmulateSecondMousePointer = emulateSecondMousePointer.boolValue;
+            }
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }

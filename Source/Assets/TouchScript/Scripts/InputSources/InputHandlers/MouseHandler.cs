@@ -16,9 +16,21 @@ namespace TouchScript.InputSources.InputHandlers
     {
         #region Public properties
 
+        public bool EmulateSecondMousePointer
+        {
+            get { return emulateSecondMousePointer; }
+            set
+            {
+                emulateSecondMousePointer = value;
+                if (fakeMousePointer != null) CancelPointer(fakeMousePointer, false);
+            }
+        }
+
         #endregion
 
         #region Private variables
+
+        private bool emulateSecondMousePointer = true;
 
         private Action<Pointer, Vector2, bool> beginPointer;
         private Action<int, Vector2> movePointer;
@@ -87,7 +99,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
 
             // Need to end fake pointer
-            if (fakeMousePointer != null && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+            if (emulateSecondMousePointer
+                && fakeMousePointer != null
+                && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
             {
                 endPointer(fakeMousePointer.Id);
                 fakeMousePointer = null;
@@ -96,10 +110,16 @@ namespace TouchScript.InputSources.InputHandlers
             if (Input.GetMouseButtonDown(0))
             {
                 var pos = Input.mousePosition;
-                if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointer == null)
+                if (emulateSecondMousePointer
+                    && fakeMousePointer == null
+                    && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+                {
                     fakeMousePointer = internalBeginPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON | Pointer.FLAG_ARTIFICIAL);
+                }
                 else if (mousePointer == null)
+                {
                     mousePointer = internalBeginPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON);
+                }
             }
             else if (Input.GetMouseButton(0))
             {
@@ -107,7 +127,8 @@ namespace TouchScript.InputSources.InputHandlers
                 if (mousePointPos != pos)
                 {
                     mousePointPos = pos;
-                    if (fakeMousePointer != null)
+                    if (emulateSecondMousePointer
+                        && fakeMousePointer != null)
                     {
                         if (mousePointer == null) movePointer(fakeMousePointer.Id, new Vector2(pos.x, pos.y));
                         else movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));

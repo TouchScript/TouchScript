@@ -7,6 +7,7 @@ using System;
 #endif
 using TouchScript.InputSources.InputHandlers;
 using TouchScript.Pointers;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 
 namespace TouchScript.InputSources
@@ -80,41 +81,105 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Pointer API to use on Windows 8.
         /// </summary>
-        public Windows8APIType Windows8API = Windows8APIType.Windows8;
+        public Windows8APIType Windows8API
+        {
+            get { return windows8API; }
+        }
 
         /// <summary>
         /// Pointer API to use on Windows 7.
         /// </summary>
-        public Windows7APIType Windows7API = Windows7APIType.Windows7;
+        public Windows7APIType Windows7API
+        {
+            get { return windows7API; }
+        }
 
         /// <summary>
         /// Initialize touch input in WebPlayer or not.
         /// </summary>
-        public bool WebPlayerTouch = true;
+        public bool WebPlayerTouch
+        {
+            get { return webPlayerTouch; }
+        }
 
         /// <summary>
         /// Initialize touch input in WebGL or not.
         /// </summary>
-        public bool WebGLTouch = true;
+        public bool WebGLTouch
+        {
+            get { return webGLTouch; }
+        }
 
         /// <summary>
         /// Initialize mouse input on Windows 8+ or not.
         /// </summary>
-        public bool Windows8Mouse = true;
+        public bool Windows8Mouse
+        {
+            get { return windows8Mouse; }
+        }
 
         /// <summary>
         /// Initialize mouse input on Windows 7 or not.
         /// </summary>
-        public bool Windows7Mouse = true;
+        public bool Windows7Mouse
+        {
+            get { return windows7Mouse; }
+        }
 
         /// <summary>
         /// Initialize mouse input on UWP or not.
         /// </summary>
-        public bool UniversalWindowsMouse = true;
+        public bool UniversalWindowsMouse
+        {
+            get { return universalWindowsMouse; }
+        }
+
+        /// <summary>
+        /// Use emulated second mouse pointer with ALT or not.
+        /// </summary>
+        public bool EmulateSecondMousePointer
+        {
+            get { return emulateSecondMousePointer; }
+            set
+            {
+                emulateSecondMousePointer = value;
+                if (mouseHandler != null) mouseHandler.EmulateSecondMousePointer = value;
+            }
+        }
 
         #endregion
 
         #region Private variables
+
+        [SerializeField]
+        private Windows8APIType windows8API = Windows8APIType.Windows8;
+
+        [SerializeField]
+        private Windows7APIType windows7API = Windows7APIType.Windows7;
+
+        [ToggleLeft]
+        [SerializeField]
+        private bool webPlayerTouch = true;
+
+        [ToggleLeft]
+        [SerializeField]
+        private bool webGLTouch = true;
+
+        [ToggleLeft]
+        [SerializeField]
+        private bool windows8Mouse = true;
+
+        [ToggleLeft]
+        [SerializeField]
+        private bool windows7Mouse = true;
+
+        [ToggleLeft]
+        [SerializeField]
+        private bool universalWindowsMouse = true;
+
+        [ToggleLeft]
+        [SerializeField]
+        private bool emulateSecondMousePointer = true;
 
         private MouseHandler mouseHandler;
         private TouchHandler touchHandler;
@@ -270,6 +335,7 @@ namespace TouchScript.InputSources
         private void enableMouse()
         {
             mouseHandler = new MouseHandler(beginPointer, movePointer, endPointer, cancelPointer);
+            mouseHandler.EmulateSecondMousePointer = emulateSecondMousePointer;
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
 
