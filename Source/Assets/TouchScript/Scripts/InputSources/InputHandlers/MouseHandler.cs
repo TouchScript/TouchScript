@@ -97,9 +97,9 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 var pos = Input.mousePosition;
                 if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && fakeMousePointer == null)
-                    fakeMousePointer = internalBeginPointer(new Vector2(pos.x, pos.y));
+                    fakeMousePointer = internalBeginPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON | Pointer.FLAG_ARTIFICIAL);
                 else if (mousePointer == null)
-                    mousePointer = internalBeginPointer(new Vector2(pos.x, pos.y));
+                    mousePointer = internalBeginPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON);
             }
             else if (Input.GetMouseButton(0))
             {
@@ -175,11 +175,11 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private functions
 
-        private MousePointer internalBeginPointer(Vector2 position)
+        private MousePointer internalBeginPointer(Vector2 position, uint flags)
         {
             var pointer = mousePool.Get();
             beginPointer(pointer, position, true);
-            pointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
+            pointer.Flags |= flags;
             return pointer;
         }
 
