@@ -4,7 +4,6 @@
 
 using TouchScript.Layers;
 using UnityEditor;
-using UnityEngine;
 
 namespace TouchScript.Editor.Layers
 {

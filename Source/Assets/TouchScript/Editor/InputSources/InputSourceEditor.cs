@@ -1,3 +1,7 @@
+/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
 using TouchScript.Editor.Utils;
 using UnityEditor;
 using UnityEngine;
