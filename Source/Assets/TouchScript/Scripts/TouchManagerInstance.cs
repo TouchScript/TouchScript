@@ -12,7 +12,7 @@ using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Pointers;
 #if TOUCHSCRIPT_DEBUG
-using TouchScript.Utils.Debug;
+using TouchScript.Utils.DebugUtils;
 #endif
 using UnityEngine;
 

@@ -10,7 +10,7 @@ using UnityEngine;
 
 #if TOUCHSCRIPT_DEBUG
 using System.Collections;
-using TouchScript.Utils.Debug;
+using TouchScript.Utils.DebugUtils;
 #endif
 
 namespace TouchScript.Gestures.Base
