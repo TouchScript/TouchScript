@@ -137,6 +137,7 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
         private void Begin(Rect position, SerializedProperty property, GUIContent label)
         {
             label = EditorGUI.BeginProperty(position, label, property);
+            label.text = " " + label.text;
             position.height = 16;
             expanded = EditorGUI.ToggleLeft(position, label, expanded == true);
         }

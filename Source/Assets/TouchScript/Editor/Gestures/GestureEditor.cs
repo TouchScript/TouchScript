@@ -25,7 +25,7 @@ namespace TouchScript.Editor.Gestures
         private static readonly GUIContent COMBINE_POINTERS = new GUIContent("Combine Pointers", "When several fingers are used to perform a tap, pointers released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
         private static readonly GUIContent COMBINE_TOUCH_POINTERS = new GUIContent("Combine Interval (sec)", COMBINE_POINTERS.tooltip);
         private static readonly GUIContent REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Gesture which must fail for this gesture to start.");
-        private static readonly GUIContent LIMIT_POINTERS = new GUIContent("Limit Pointers", "");
+        private static readonly GUIContent LIMIT_POINTERS = new GUIContent(" Limit Pointers", "");
 
         protected bool shouldDrawCombineTouches = false;
 

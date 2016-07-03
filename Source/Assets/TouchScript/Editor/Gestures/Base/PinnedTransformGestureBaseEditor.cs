@@ -11,8 +11,8 @@ namespace TouchScript.Editor.Gestures.Base
     internal class PinnedTransformGestureBaseEditor : GestureEditor
     {
         public static readonly GUIContent TYPE = new GUIContent("Transform Type", "Specifies what gestures should be detected: Rotation, Scaling.");
-        public static readonly GUIContent TYPE_ROTATION = new GUIContent("Rotation", "Rotating with two or more fingers.");
-        public static readonly GUIContent TYPE_SCALING = new GUIContent("Scaling", "Scaling with two or more fingers.");
+        public static readonly GUIContent TYPE_ROTATION = new GUIContent(" Rotation", "Rotating with two or more fingers.");
+        public static readonly GUIContent TYPE_SCALING = new GUIContent(" Scaling", "Scaling with two or more fingers.");
         public static readonly GUIContent SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm pointers must move for the gesture to begin.");
 
         protected SerializedProperty type;
