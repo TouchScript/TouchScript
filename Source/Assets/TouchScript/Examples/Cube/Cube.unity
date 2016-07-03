@@ -361,22 +361,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedProps: 0
-  TouchTags:
-    tagList:
-    - Touch
-  MouseTags:
-    tagList:
-    - Mouse
-  PenTags:
-    tagList:
-    - Pen
-  Windows8API: 0
-  Windows7API: 0
-  WebPlayerTouch: 1
-  WebGLTouch: 1
-  Windows8Mouse: 1
-  Windows7Mouse: 1
-  UniversalWindowsMouse: 1
+  windows8API: 0
+  windows7API: 0
+  webPlayerTouch: 1
+  webGLTouch: 1
+  windows8Mouse: 1
+  windows7Mouse: 1
+  universalWindowsMouse: 1
+  emulateSecondMousePointer: 1
 --- !u!1 &732284827
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,6 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1277,6 +1270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd90a8856e1a49eba25728d5aaac9f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

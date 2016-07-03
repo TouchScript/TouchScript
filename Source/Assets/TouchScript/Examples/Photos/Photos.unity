@@ -388,6 +388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -936,6 +937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -962,6 +964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1328,6 +1331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1579,6 +1583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1612,6 +1617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1789,6 +1795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1822,6 +1829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2573,6 +2581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2719,6 +2728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2752,6 +2762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -3130,6 +3141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -3485,6 +3497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -3966,6 +3979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4110,6 +4124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4340,6 +4355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4641,6 +4657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4674,6 +4691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4996,6 +5014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -5410,6 +5429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -5443,6 +5463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -5616,6 +5637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -5830,6 +5852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dc6093a49a481db532b87b45132a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

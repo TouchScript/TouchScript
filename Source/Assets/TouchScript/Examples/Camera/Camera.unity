@@ -729,11 +729,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ae431eff8434b0897d3f7f1cff4311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 1
-  maxTouches: 1
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 1
+  maxPointers: 1
+  combinePointers: 0
+  combinePointersInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -798,11 +799,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ae431eff8434b0897d3f7f1cff4311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 2
-  maxTouches: 10
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 2
+  maxPointers: 10
+  combinePointers: 0
+  combinePointersInterval: .300000012
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
