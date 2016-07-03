@@ -12,7 +12,7 @@ namespace TouchScript.Clusters
     /// <summary>
     /// Represents a pool of points separated into two clusters.
     /// </summary>
-    public sealed class Clusters
+    public sealed class Clusters2D
     {
         #region Constants
 
@@ -80,9 +80,9 @@ namespace TouchScript.Clusters
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Clusters"/> class.
+        /// Initializes a new instance of the <see cref="Clusters2D"/> class.
         /// </summary>
-        public Clusters()
+        public Clusters2D()
         {
             MinPointsDistance = 0;
             markDirty();

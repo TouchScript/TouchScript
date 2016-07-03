@@ -19,7 +19,7 @@ namespace TouchScript.Gestures.Clustered
     {
         #region Private variables
 
-        private Clusters.Clusters clusters = new Clusters.Clusters();
+        private Clusters.Clusters2D clusters = new Clusters.Clusters2D();
 
         #endregion
 
