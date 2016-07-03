@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Utils;
+using TouchScript.Utils.Attributes;
 using UnityEngine;
 
 namespace TouchScript.Behaviors.Visualizer
@@ -79,12 +80,15 @@ namespace TouchScript.Behaviors.Visualizer
         private PointerProxyBase pointerProxy;
 
         [SerializeField]
+        [ToggleLeft]
         private bool showPointerId = true;
 
         [SerializeField]
+        [ToggleLeft]
         private bool showFlags = true;
 
         [SerializeField]
+        [ToggleLeft]
         private bool useDPI = true;
 
         [SerializeField]
