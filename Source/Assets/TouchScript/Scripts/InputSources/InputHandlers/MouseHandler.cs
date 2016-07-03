@@ -32,10 +32,12 @@ namespace TouchScript.InputSources.InputHandlers
 
         private bool emulateSecondMousePointer = true;
 
-        private Action<Pointer, Vector2, bool> beginPointer;
-        private Action<int, Vector2> movePointer;
-        private Action<int> endPointer;
-        private Action<int> cancelPointer;
+        private AddPointerDelegate addPointer;
+        private MovePointerDelegate movePointer;
+        private PressPointerDelegate pressPointer;
+        private ReleasePointerDelegate releasePointer;
+        private RemovePointerDelegate removePointer;
+        private CancelPointerDelegate cancelPointer;
 
         private ObjectPool<MousePointer> mousePool;
         private MousePointer mousePointer, fakeMousePointer;
@@ -46,18 +48,23 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseHandler" /> class.
         /// </summary>
-        /// <param name="beginPointer">A function called when a new pointer is detected. As <see cref="InputSource.beginPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
+        /// <param name="pressPointer">A function called when a new pointer is detected. As <see cref="InputSource.pressPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
         /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
-        /// <param name="endPointer">A function called when a pointer is lifted off. As <see cref="InputSource.endPointer" /> this function must accept an int id.</param>
+        /// <param name="releasePointer">A function called when a pointer is lifted off. As <see cref="InputSource.releasePointer" /> this function must accept an int id.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
-        public MouseHandler(Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer)
+        public MouseHandler(AddPointerDelegate addPointer, MovePointerDelegate movePointer, PressPointerDelegate pressPointer, ReleasePointerDelegate releasePointer, RemovePointerDelegate removePointer, CancelPointerDelegate cancelPointer)
         {
-            this.beginPointer = beginPointer;
+            this.addPointer = addPointer;
             this.movePointer = movePointer;
-            this.endPointer = endPointer;
+            this.pressPointer = pressPointer;
+            this.releasePointer = releasePointer;
+            this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
             mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, (t) => t.INTERNAL_Reset());
+
+            mousePointPos = Input.mousePosition;
+            mousePointer = internalAddPointer(mousePointPos);
         }
 
         #region Public methods
@@ -69,12 +76,12 @@ namespace TouchScript.InputSources.InputHandlers
         {
             if (mousePointer != null)
             {
-                endPointer(mousePointer.Id);
+                releasePointer(mousePointer.Id);
                 mousePointer = null;
             }
             if (fakeMousePointer != null)
             {
-                endPointer(fakeMousePointer.Id);
+                releasePointer(fakeMousePointer.Id);
                 fakeMousePointer = null;
             }
         }
@@ -84,65 +91,72 @@ namespace TouchScript.InputSources.InputHandlers
         /// </summary>
         public void UpdateInput()
         {
-            // If mouse button was pressed and released during the same frame,
-            // we need to figure out what happened first.
-            var upHandled = false;
-            if (Input.GetMouseButtonUp(0))
+            var pos = Input.mousePosition;
+            if (mousePointPos != pos)
             {
-                // Release happened first?
-                if (mousePointer != null)
-                {
-                    endPointer(mousePointer.Id);
-                    mousePointer = null;
-                    upHandled = true;
-                }
+                mousePointPos = pos;
+                movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
             }
 
-            // Need to end fake pointer
-            if (emulateSecondMousePointer
-                && fakeMousePointer != null
-                && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
-            {
-                endPointer(fakeMousePointer.Id);
-                fakeMousePointer = null;
-            }
+            //// If mouse button was pressed and released during the same frame,
+            //// we need to figure out what happened first.
+            //var upHandled = false;
+            //if (Input.GetMouseButtonUp(0))
+            //{
+            //    // Release happened first?
+            //    if (mousePointer != null)
+            //    {
+            //        releasePointer(mousePointer.Id);
+            //        mousePointer = null;
+            //        upHandled = true;
+            //    }
+            //}
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                var pos = Input.mousePosition;
-                if (emulateSecondMousePointer
-                    && fakeMousePointer == null
-                    && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
-                {
-                    fakeMousePointer = internalBeginPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON | Pointer.FLAG_ARTIFICIAL);
-                }
-                else if (mousePointer == null)
-                {
-                    mousePointer = internalBeginPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON);
-                }
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                var pos = Input.mousePosition;
-                if (mousePointPos != pos)
-                {
-                    mousePointPos = pos;
-                    if (emulateSecondMousePointer
-                        && fakeMousePointer != null)
-                    {
-                        if (mousePointer == null) movePointer(fakeMousePointer.Id, new Vector2(pos.x, pos.y));
-                        else movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
-                    }
-                    else if (mousePointer != null) movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
-                }
-            }
+            //// Need to end fake pointer
+            //if (emulateSecondMousePointer
+            //    && fakeMousePointer != null
+            //    && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+            //{
+            //    releasePointer(fakeMousePointer.Id);
+            //    fakeMousePointer = null;
+            //}
 
-            // Release mouse if we haven't done it yet
-            if (Input.GetMouseButtonUp(0) && !upHandled && mousePointer != null)
-            {
-                endPointer(mousePointer.Id);
-                mousePointer = null;
-            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    var pos = Input.mousePosition;
+            //    if (emulateSecondMousePointer
+            //        && fakeMousePointer == null
+            //        && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+            //    {
+            //        fakeMousePointer = internalAddPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON | Pointer.FLAG_ARTIFICIAL);
+            //    }
+            //    else if (mousePointer == null)
+            //    {
+            //        mousePointer = internalAddPointer(new Vector2(pos.x, pos.y), Pointer.FLAG_FIRST_BUTTON);
+            //    }
+            //}
+            //else if (Input.GetMouseButton(0))
+            //{
+            //    var pos = Input.mousePosition;
+            //    if (mousePointPos != pos)
+            //    {
+            //        mousePointPos = pos;
+            //        if (emulateSecondMousePointer
+            //            && fakeMousePointer != null)
+            //        {
+            //            if (mousePointer == null) movePointer(fakeMousePointer.Id, new Vector2(pos.x, pos.y));
+            //            else movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
+            //        }
+            //        else if (mousePointer != null) movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
+            //    }
+            //}
+
+            //// Release mouse if we haven't done it yet
+            //if (Input.GetMouseButtonUp(0) && !upHandled && mousePointer != null)
+            //{
+            //    releasePointer(mousePointer.Id);
+            //    mousePointer = null;
+            //}
         }
 
         /// <inheritdoc />
@@ -184,7 +198,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Internal methods
 
-        public void INTERNAL_ReleasePointer(Pointer pointer)
+        public void INTERNAL_DiscardPointer(Pointer pointer)
         {
             var p = pointer as MousePointer;
             if (p == null) return;
@@ -196,10 +210,10 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private functions
 
-        private MousePointer internalBeginPointer(Vector2 position, uint flags)
+        private MousePointer internalAddPointer(Vector2 position, uint flags = 0)
         {
             var pointer = mousePool.Get();
-            beginPointer(pointer, position, true);
+            addPointer(pointer, position);
             pointer.Flags |= flags;
             return pointer;
         }
@@ -208,7 +222,7 @@ namespace TouchScript.InputSources.InputHandlers
         {
             var newPointer = mousePool.Get();
             newPointer.CopyFrom(pointer);
-            beginPointer(newPointer, position, false);
+            //pressPointer(newPointer, position, false);
             return newPointer;
         }
 

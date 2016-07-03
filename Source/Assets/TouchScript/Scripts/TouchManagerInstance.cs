@@ -211,9 +211,11 @@ namespace TouchScript
         private Dictionary<int, Pointer> idToPointer = new Dictionary<int, Pointer>(30);
 
         // Upcoming changes
-        private List<Pointer> pointersPressed = new List<Pointer>(10);
+        private List<Pointer> pointersAdded = new List<Pointer>(10);
         private HashSet<int> pointersUpdated = new HashSet<int>();
+        private HashSet<int> pointersPressed = new HashSet<int>();
         private HashSet<int> pointersReleased = new HashSet<int>();
+        private HashSet<int> pointersRemoved = new HashSet<int>();
         private HashSet<int> pointersCancelled = new HashSet<int>();
 
         private static ObjectPool<List<Pointer>> pointerListPool = new ObjectPool<List<Pointer>>(2,
@@ -361,32 +363,12 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal void INTERNAL_BeginPointer(Pointer pointer, Vector2 position)
+        internal void INTERNAL_AddPointer(Pointer pointer, Vector2 position)
         {
             lock (pointerLock)
             {
                 pointer.INTERNAL_Init(nextPointerId++, position);
-                pointersPressed.Add(pointer);
-            }
-        }
-
-        /// <summary>
-        /// Update pointer without moving it
-        /// </summary>
-        /// <param name="id">Pointer id</param>
-        internal void INTERNAL_UpdatePointer(int id)
-        {
-            lock (pointerLock)
-            {
-                if (idToPointer.ContainsKey(id))
-                {
-                    if (!pointersUpdated.Contains(id)) pointersUpdated.Add(id);
-                }
-#if TOUCHSCRIPT_DEBUG
-                else
-                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
-                                     "] is requested to UPDATE but no pointer with such id found.");
-#endif
+                pointersAdded.Add(pointer);
             }
         }
 
@@ -398,7 +380,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
                     // This pointer was added this frame
-                    pointer = pointersPressed.Find((t) => t.Id == id);
+                    pointer = pointersAdded.Find((t) => t.Id == id);
                     // No pointer with such id
                     if (pointer == null)
                     {
@@ -415,8 +397,7 @@ namespace TouchScript
             }
         }
 
-        /// <inheritdoc />
-        internal void INTERNAL_EndPointer(int id)
+        internal void INTERNAL_PressPointer(int id)
         {
             lock (pointerLock)
             {
@@ -424,7 +405,36 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
                     // This pointer was added this frame
-                    pointer = pointersPressed.Find((t) => t.Id == id);
+                    pointer = pointersAdded.Find((t) => t.Id == id);
+                    // No pointer with such id
+                    if (pointer == null)
+                    {
+#if TOUCHSCRIPT_DEBUG
+                        Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                                         "] is requested to PRESS but no pointer with such id found.");
+#endif
+                        return;
+                    }
+                }
+                if (!pointersPressed.Contains(id)) pointersPressed.Add(id);
+#if TOUCHSCRIPT_DEBUG
+                else
+                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                                     "] is requested to PRESS more than once this frame.");
+#endif
+            }
+        }
+
+        /// <inheritdoc />
+        internal void INTERNAL_ReleasePointer(int id)
+        {
+            lock (pointerLock)
+            {
+                Pointer pointer;
+                if (!idToPointer.TryGetValue(id, out pointer))
+                {
+                    // This pointer was added this frame
+                    pointer = pointersAdded.Find((t) => t.Id == id);
                     // No pointer with such id
                     if (pointer == null)
                     {
@@ -445,6 +455,35 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
+        internal void INTERNAL_RemovePointer(int id)
+        {
+            lock (pointerLock)
+            {
+                Pointer pointer;
+                if (!idToPointer.TryGetValue(id, out pointer))
+                {
+                    // This pointer was added this frame
+                    pointer = pointersAdded.Find((t) => t.Id == id);
+                    // No pointer with such id
+                    if (pointer == null)
+                    {
+#if TOUCHSCRIPT_DEBUG
+                        Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                                         "] is requested to REMOVE but no pointer with such id found.");
+#endif
+                        return;
+                    }
+                }
+                if (!pointersRemoved.Contains(id)) pointersRemoved.Add(pointer.Id);
+#if TOUCHSCRIPT_DEBUG
+                else
+                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                                     "] is requested to REMOVE more than once this frame.");
+#endif
+            }
+        }
+
+        /// <inheritdoc />
         internal void INTERNAL_CancelPointer(int id)
         {
             lock (pointerLock)
@@ -453,7 +492,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
                     // This pointer was added this frame
-                    pointer = pointersPressed.Find((t) => t.Id == id);
+                    pointer = pointersAdded.Find((t) => t.Id == id);
                     // No pointer with such id
                     if (pointer == null)
                     {
@@ -592,31 +631,24 @@ namespace TouchScript
             for (var i = 0; i < inputCount; i++) inputs[i].UpdateInput();
         }
 
-        private void updatePressed(List<Pointer> pointers)
+        private void updateAdded(List<Pointer> pointers)
         {
-            var count = pointers.Count;
+            var addedCount = pointers.Count;
             var list = pointerListPool.Get();
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < addedCount; i++)
             {
                 var pointer = pointers[i];
                 list.Add(pointer);
                 this.pointers.Add(pointer);
                 idToPointer.Add(pointer.Id, pointer);
 
-                for (var j = 0; j < layerCount; j++)
-                {
-                    var touchLayer = layers[j];
-                    if (touchLayer == null || !touchLayer.enabled) continue;
-                    if (touchLayer.INTERNAL_BeginPointer(pointer)) break;
-                }
-
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
 #endif
             }
 
-            if (pointersPressedInvoker != null)
-                pointersPressedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
+            if (pointersAddedInvoker != null)
+                pointersAddedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
         }
 
@@ -655,11 +687,45 @@ namespace TouchScript
             pointerListPool.Release(list);
         }
 
+        private void updatePressed(List<int> pointers)
+        {
+            var pressedCount = pointers.Count;
+            var list = pointerListPool.Get();
+            for (var i = 0; i < pressedCount; i++)
+            {
+                var id = pointers[i];
+                Pointer pointer;
+                if (!idToPointer.TryGetValue(id, out pointer))
+                {
+#if TOUCHSCRIPT_DEBUG
+                    Debug.LogWarning("TouchScript > Id [" + id +
+                                     "] was in PRESSED list but no pointer with such id found.");
+#endif
+                    continue;
+                }
+                list.Add(pointer);
+                for (var j = 0; j < layerCount; j++)
+                {
+                    var touchLayer = layers[j];
+                    if (touchLayer == null || !touchLayer.enabled) continue;
+                    if (touchLayer.INTERNAL_PressPointer(pointer)) break;
+                }
+
+#if TOUCHSCRIPT_DEBUG
+                addDebugFigureForPointer(pointer);
+#endif
+            }
+
+            if (pointersPressedInvoker != null)
+                pointersPressedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
+            pointerListPool.Release(list);
+        }
+
         private void updateReleased(List<int> pointers)
         {
-            var endedCount = pointers.Count;
+            var releasedCount = pointers.Count;
             var list = pointerListPool.Get();
-            for (var i = 0; i < endedCount; i++)
+            for (var i = 0; i < releasedCount; i++)
             {
                 var id = pointers[i];
                 Pointer pointer;
@@ -670,10 +736,38 @@ namespace TouchScript
 #endif
                     continue;
                 }
+                list.Add(pointer);
+                if (pointer.Layer != null) pointer.Layer.INTERNAL_ReleasePointer(pointer);
+                pointer.Layer = null;
+
+#if TOUCHSCRIPT_DEBUG
+                addDebugFigureForPointer(pointer);
+#endif
+            }
+
+            if (pointersReleasedInvoker != null)
+                pointersReleasedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
+            pointerListPool.Release(list);
+        }
+
+        private void updateRemoved(List<int> pointers)
+        {
+            var removedCount = pointers.Count;
+            var list = pointerListPool.Get();
+            for (var i = 0; i < removedCount; i++)
+            {
+                var id = pointers[i];
+                Pointer pointer;
+                if (!idToPointer.TryGetValue(id, out pointer))
+                {
+#if TOUCHSCRIPT_DEBUG
+                    Debug.LogWarning("TouchScript > Id [" + id + "] was in REMOVED list but no pointer with such id found.");
+#endif
+                    continue;
+                }
                 idToPointer.Remove(id);
                 this.pointers.Remove(pointer);
                 list.Add(pointer);
-                if (pointer.Layer != null) pointer.Layer.INTERNAL_EndPointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForPointer(pointer);
@@ -683,10 +777,10 @@ namespace TouchScript
             if (pointersReleasedInvoker != null)
                 pointersReleasedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
 
-            for (var i = 0; i < endedCount; i++)
+            for (var i = 0; i < removedCount; i++)
             {
                 var pointer = list[i];
-                pointer.InputSource.INTERNAL_ReleasePointer(pointer);
+                pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
         }
@@ -723,7 +817,7 @@ namespace TouchScript
             for (var i = 0; i < cancelledCount; i++)
             {
                 var pointer = list[i];
-                pointer.InputSource.INTERNAL_ReleasePointer(pointer);
+                pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
         }
@@ -733,17 +827,19 @@ namespace TouchScript
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
             // need to copy buffers since they might get updated during execution
-            List<Pointer> pressedList = null;
+            List<Pointer> addedList = null;
             List<int> updatedList = null;
+            List<int> pressedList = null;
             List<int> releasedList = null;
+            List<int> removedList = null;
             List<int> cancelledList = null;
             lock (pointerLock)
             {
-                if (pointersPressed.Count > 0)
+                if (pointersAdded.Count > 0)
                 {
-                    pressedList = pointerListPool.Get();
-                    pressedList.AddRange(pointersPressed);
-                    pointersPressed.Clear();
+                    addedList = pointerListPool.Get();
+                    addedList.AddRange(pointersAdded);
+                    pointersAdded.Clear();
                 }
                 if (pointersUpdated.Count > 0)
                 {
@@ -751,11 +847,23 @@ namespace TouchScript
                     updatedList.AddRange(pointersUpdated);
                     pointersUpdated.Clear();
                 }
+                if (pointersPressed.Count > 0)
+                {
+                    pressedList = intListPool.Get();
+                    pressedList.AddRange(pointersPressed);
+                    pointersPressed.Clear();
+                }
                 if (pointersReleased.Count > 0)
                 {
                     releasedList = intListPool.Get();
                     releasedList.AddRange(pointersReleased);
                     pointersReleased.Clear();
+                }
+                if (pointersRemoved.Count > 0)
+                {
+                    removedList = intListPool.Get();
+                    removedList.AddRange(pointersRemoved);
+                    pointersRemoved.Clear();
                 }
                 if (pointersCancelled.Count > 0)
                 {
@@ -765,20 +873,30 @@ namespace TouchScript
                 }
             }
 
-            if (pressedList != null)
+            if (addedList != null)
             {
-                updatePressed(pressedList);
-                pointerListPool.Release(pressedList);
+                updateAdded(addedList);
+                pointerListPool.Release(addedList);
             }
             if (updatedList != null)
             {
                 updateUpdated(updatedList);
                 intListPool.Release(updatedList);
             }
+            if (pressedList != null)
+            {
+                updatePressed(pressedList);
+                intListPool.Release(pressedList);
+            }
             if (releasedList != null)
             {
                 updateReleased(releasedList);
                 intListPool.Release(releasedList);
+            }
+            if (removedList != null)
+            {
+                updateRemoved(removedList);
+                intListPool.Release(removedList);
             }
             if (cancelledList != null)
             {

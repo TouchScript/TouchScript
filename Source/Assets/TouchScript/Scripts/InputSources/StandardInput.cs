@@ -334,7 +334,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler(beginPointer, movePointer, endPointer, cancelPointer);
+            mouseHandler = new MouseHandler(addPointer, movePointer, pressPointer, releasePointer, endPointer, cancelPointer);
             mouseHandler.EmulateSecondMousePointer = emulateSecondMousePointer;
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
@@ -350,7 +350,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler(beginPointer, movePointer, endPointer, cancelPointer);
+            //touchHandler = new TouchHandler(pressPointer, movePointer, releasePointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
@@ -381,7 +381,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows7Touch()
         {
-            windows7PointerHandler = new Windows7PointerHandler(beginPointer, movePointer, endPointer, cancelPointer);
+            windows7PointerHandler = new Windows7PointerHandler(pressPointer, movePointer, releasePointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 7 pointer input.");
         }
 
@@ -396,7 +396,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows8Touch()
         {
-            windows8PointerHandler = new Windows8PointerHandler(beginPointer, movePointer, endPointer, cancelPointer);
+            windows8PointerHandler = new Windows8PointerHandler(pressPointer, movePointer, releasePointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 8 pointer input.");
         }
 

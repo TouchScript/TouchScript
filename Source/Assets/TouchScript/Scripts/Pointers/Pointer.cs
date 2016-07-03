@@ -209,7 +209,6 @@ namespace TouchScript.Pointers
         {
             PreviousPosition = position;
             position = newPosition;
-            newPosition = position;
         }
 
         internal void INTERNAL_SetPosition(Vector2 value)

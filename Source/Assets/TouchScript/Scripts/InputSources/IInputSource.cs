@@ -40,6 +40,6 @@ namespace TouchScript.InputSources
 
     public interface INTERNAL_IInputSource
     {
-        void INTERNAL_ReleasePointer(Pointer pointer);
+        void INTERNAL_DiscardPointer(Pointer pointer);
     }
 }

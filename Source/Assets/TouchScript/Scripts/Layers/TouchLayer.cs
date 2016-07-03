@@ -166,7 +166,12 @@ namespace TouchScript.Layers
 
         #region Internal methods
 
-        internal bool INTERNAL_BeginPointer(Pointer pointer)
+        internal void INTERNAL_UpdatePointer(Pointer pointer)
+        {
+            updatePointer(pointer);
+        }
+
+        internal bool INTERNAL_PressPointer(Pointer pointer)
         {
             TouchHit hit;
             if (Delegate != null && Delegate.ShouldReceivePointer(this, pointer) == false) return false;
@@ -183,12 +188,7 @@ namespace TouchScript.Layers
             return false;
         }
 
-        internal void INTERNAL_UpdatePointer(Pointer pointer)
-        {
-            updatePointer(pointer);
-        }
-
-        internal void INTERNAL_EndPointer(Pointer pointer)
+        internal void INTERNAL_ReleasePointer(Pointer pointer)
         {
             endPointer(pointer);
         }

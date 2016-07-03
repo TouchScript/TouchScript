@@ -8,6 +8,23 @@ using UnityEngine;
 
 namespace TouchScript.InputSources
 {
+
+    #region Consts
+
+    public delegate void AddPointerDelegate(Pointer pointer, Vector2 position, bool remap = true);
+
+    public delegate void MovePointerDelegate(int id, Vector2 position);
+
+    public delegate void PressPointerDelegate(int id);
+
+    public delegate void ReleasePointerDelegate(int id);
+
+    public delegate void RemovePointerDelegate(int id);
+
+    public delegate void CancelPointerDelegate(int id);
+
+    #endregion
+
     /// <summary>
     /// Base class for all pointer input sources.
     /// </summary>
@@ -53,7 +70,7 @@ namespace TouchScript.InputSources
 
         #region Internal methods
 
-        public virtual void INTERNAL_ReleasePointer(Pointer pointer) {}
+        public virtual void INTERNAL_DiscardPointer(Pointer pointer) {}
 
         #endregion
 
@@ -85,24 +102,10 @@ namespace TouchScript.InputSources
 
         #region Protected methods
 
-        /// <summary>
-        /// Begin pointer in given screen position.
-        /// </summary>
-        /// <param name="position">Screen position.</param>
-        /// <returns> New pointer. </returns>
-        protected virtual void beginPointer(Pointer pointer, Vector2 position, bool remap = true)
+        protected virtual void addPointer(Pointer pointer, Vector2 position, bool remap = true)
         {
             if (coordinatesRemapper != null && remap) position = coordinatesRemapper.Remap(position);
-            manager.INTERNAL_BeginPointer(pointer, position);
-        }
-
-        /// <summary>
-        /// Mark pointer as updated.
-        /// </summary>
-        /// <param name="id">Pointer id.</param>
-        protected virtual void updatePointer(int id)
-        {
-            manager.INTERNAL_UpdatePointer(id);
+            manager.INTERNAL_AddPointer(pointer, position);
         }
 
         /// <summary>
@@ -117,12 +120,25 @@ namespace TouchScript.InputSources
         }
 
         /// <summary>
+        /// Begin pointer in given screen position.
+        /// </summary>
+        /// <param name="position">Screen position.</param>
+        /// <returns> New pointer. </returns>
+        protected virtual void pressPointer(int id)
+        {
+        }
+
+        /// <summary>
         /// End pointer with id.
         /// </summary>
         /// <param name="id">Pointer id.</param>
+        protected virtual void releasePointer(int id)
+        {
+            manager.INTERNAL_ReleasePointer(id);
+        }
+
         protected virtual void endPointer(int id)
         {
-            manager.INTERNAL_EndPointer(id);
         }
 
         /// <summary>
