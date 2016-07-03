@@ -20,17 +20,22 @@ namespace TouchScript.InputSources.InputHandlers
     /// </summary>
     public class Windows8PointerHandler : WindowsPointerHandler
     {
+
+        private ObjectPool<MousePointer> mousePool;
+        private ObjectPool<PenPointer> penPool;
         private MousePointer mousePointer;
         private PenPointer penPointer;
 
         /// <inheritdoc />
         public Windows8PointerHandler(Action<Pointer, Vector2, bool> beginPointer, Action<int, Vector2> movePointer, Action<int> endPointer, Action<int> cancelPointer) : base(beginPointer, movePointer, endPointer, cancelPointer)
         {
-            mousePointer = new MousePointer(this);
-            penPointer = new PenPointer(this);
+            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, (t) => t.INTERNAL_Reset());
+            penPool = new ObjectPool<PenPointer>(2, () => new PenPointer(this), null, (t) => t.INTERNAL_Reset());
 
             registerWindowProc(wndProcWin8);
         }
+
+        #region Public methods
 
         /// <inheritdoc />
         public override bool CancelPointer(Pointer pointer, bool @return)
@@ -38,30 +43,46 @@ namespace TouchScript.InputSources.InputHandlers
             if (pointer.Equals(mousePointer))
             {
                 cancelPointer(mousePointer.Id);
-                if (@return) beginPointer(mousePointer, pointer.Position, false);
+                if (@return) mousePointer = internalReturnMousePointer(mousePointer, pointer.Position);
+                else mousePointer = null;
                 return true;
             }
             if (pointer.Equals(penPointer))
             {
                 cancelPointer(penPointer.Id);
-                if (@return) beginPointer(penPointer, pointer.Position, false);
+                if (@return) penPointer = internalReturnPenPointer(penPointer, pointer.Position);
+                else penPointer = null;
                 return true;
             }
             return base.CancelPointer(pointer, @return);
         }
 
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (mousePointer != null)
+            {
+                cancelPointer(mousePointer.Id);
+                mousePointer = null;
+            }
+            if (penPointer != null)
+            {
+                cancelPointer(penPointer.Id);
+                penPointer = null;
+            }
+
+            base.Dispose();
+        }
+
+        #endregion
+
         #region Internal methods
 
         public override void INTERNAL_ReleasePointer(Pointer pointer)
         {
-            if (pointer.Equals(mousePointer))
-            {
-                mousePointer.INTERNAL_Reset();
-            } else if (pointer.Equals(penPointer))
-            {
-                penPointer.INTERNAL_Reset();
-            }
-            base.INTERNAL_ReleasePointer(pointer);
+            if (pointer is MousePointer) mousePool.Release(pointer as MousePointer);
+            else if (pointer is PenPointer) penPool.Release(pointer as PenPointer);
+            else base.INTERNAL_ReleasePointer(pointer);
         }
 
         #endregion
@@ -114,13 +135,13 @@ namespace TouchScript.InputSources.InputHandlers
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_MOUSE:
-                            beginPointer(mousePointer, position, true);
+                            internalBeginMousePointer(position);
                             break;
                         case POINTER_INPUT_TYPE.PT_TOUCH:
                             winTouchToInternalId.Add(pointerId, internalBeginTouchPointer(position).Id);
                             break;
                         case POINTER_INPUT_TYPE.PT_PEN:
-                            beginPointer(penPointer, position, true);
+                            internalBeginPenPointer(position);
                             break;
                     }
                 }
@@ -183,6 +204,35 @@ namespace TouchScript.InputSources.InputHandlers
                     break;
             }
         }
+
+        private void internalBeginMousePointer(Vector2 position)
+        {
+            beginPointer(mousePointer, position, true);
+            mousePointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
+        }
+
+        private MousePointer internalReturnMousePointer(MousePointer pointer, Vector2 position)
+        {
+            var newPointer = mousePool.Get();
+            newPointer.CopyFrom(pointer);
+            beginPointer(newPointer, position, false);
+            return newPointer;
+        }
+
+        private void internalBeginPenPointer(Vector2 position)
+        {
+            beginPointer(penPointer, position, true);
+            penPointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
+        }
+
+        private PenPointer internalReturnPenPointer(PenPointer pointer, Vector2 position)
+        {
+            var newPointer = penPool.Get();
+            newPointer.CopyFrom(pointer);
+            beginPointer(newPointer, position, false);
+            return newPointer;
+        }
+
     }
 
     public class Windows7PointerHandler : WindowsPointerHandler
@@ -351,10 +401,13 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public virtual bool CancelPointer(Pointer pointer, bool @return)
         {
+            var touch = pointer as TouchPointer;
+            if (touch == null) return false;
+
             int internalTouchId = -1;
             foreach (var t in winTouchToInternalId)
             {
-                if (t.Value == pointer.Id)
+                if (t.Value == touch.Id)
                 {
                     internalTouchId = t.Key;
                     break;
@@ -362,8 +415,8 @@ namespace TouchScript.InputSources.InputHandlers
             }
             if (internalTouchId > -1)
             {
-                cancelPointer(pointer.Id);
-                if (@return) winTouchToInternalId[internalTouchId] = internalBeginTouchPointer(pointer.Position, false).Id;
+                cancelPointer(touch.Id);
+                if (@return) winTouchToInternalId[internalTouchId] = internalReturnTouchPointer(touch, touch.Position).Id;
                 return true;
             }
             return false;
@@ -384,21 +437,30 @@ namespace TouchScript.InputSources.InputHandlers
 
         public virtual void INTERNAL_ReleasePointer(Pointer pointer)
         {
-            var touchPointer = pointer as TouchPointer;
-            if (touchPointer == null) return;
+            var p = pointer as TouchPointer;
+            if (p == null) return;
 
-            touchPool.Release(touchPointer);
+            touchPool.Release(p);
         }
 
         #endregion
 
         #region Protected methods
 
-        protected Pointer internalBeginTouchPointer(Vector2 position, bool remap = true)
+        protected Pointer internalBeginTouchPointer(Vector2 position)
         {
             var pointer = touchPool.Get();
-            beginPointer(pointer, position, remap);
+            beginPointer(pointer, position, true);
+            pointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
             return pointer;
+        }
+
+        private TouchPointer internalReturnTouchPointer(TouchPointer pointer, Vector2 position)
+        {
+            var newPointer = touchPool.Get();
+            newPointer.CopyFrom(pointer);
+            beginPointer(newPointer, position, false);
+            return newPointer;
         }
 
         protected void registerWindowProc(WndProcDelegate windowProc)

@@ -36,7 +36,7 @@ namespace TouchScript.InputSources.InputHandlers
         private Action<int> endPointer;
         private Action<int> cancelPointer;
 
-        private ObjectPool<TouchPointer> pointerPool;
+        private ObjectPool<TouchPointer> touchPool;
         private Dictionary<int, TouchState> systemToInternalId = new Dictionary<int, TouchState>();
         private int pointersNum;
 
@@ -56,7 +56,7 @@ namespace TouchScript.InputSources.InputHandlers
             this.endPointer = endPointer;
             this.cancelPointer = cancelPointer;
 
-            pointerPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
+            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
         }
 
         #region Public methods
@@ -135,10 +135,13 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public bool CancelPointer(Pointer pointer, bool @return)
         {
+            var touch = pointer as TouchPointer;
+            if (touch == null) return false;
+
             int fingerId = -1;
             foreach (var touchState in systemToInternalId)
             {
-                if (touchState.Value.Id == pointer.Id && touchState.Value.Phase != TouchPhase.Canceled)
+                if (touchState.Value.Id == touch.Id && touchState.Value.Phase != TouchPhase.Canceled)
                 {
                     fingerId = touchState.Key;
                     break;
@@ -146,16 +149,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
             if (fingerId > -1)
             {
-                if (@return)
-                {
-                    internalCancelPointer(pointer.Id);
-                    systemToInternalId[fingerId] = new TouchState(internalBeginPointer(pointer.Position, false).Id);
-                }
-                else
-                {
-                    systemToInternalId[fingerId] = new TouchState(pointer.Id, TouchPhase.Canceled);
-                    internalCancelPointer(pointer.Id);
-                }
+                internalCancelPointer(touch.Id);
+                if (@return) systemToInternalId[fingerId] = new TouchState(internalReturnPointer(touch, touch.Position).Id);
+                else systemToInternalId[fingerId] = new TouchState(touch.Id, TouchPhase.Canceled);
                 return true;
             }
             return false;
@@ -177,22 +173,32 @@ namespace TouchScript.InputSources.InputHandlers
 
         public void INTERNAL_ReleasePointer(Pointer pointer)
         {
-            var touchPointer = pointer as TouchPointer;
-            if (touchPointer == null) return;
+            var p = pointer as TouchPointer;
+            if (p == null) return;
 
-            pointerPool.Release(touchPointer);
+            touchPool.Release(p);
         }
 
         #endregion
 
         #region Private functions
 
-        private Pointer internalBeginPointer(Vector2 position, bool remap = true)
+        private Pointer internalBeginPointer(Vector2 position)
         {
             pointersNum++;
-            var pointer = pointerPool.Get();
-            beginPointer(pointer, position, remap);
+            var pointer = touchPool.Get();
+            beginPointer(pointer, position, true);
+            pointer.Flags |= Pointer.FLAG_FIRST_BUTTON;
             return pointer;
+        }
+
+        private TouchPointer internalReturnPointer(TouchPointer pointer, Vector2 position)
+        {
+            pointersNum++;
+            var newPointer = touchPool.Get();
+            newPointer.CopyFrom(pointer);
+            beginPointer(newPointer, position, false);
+            return newPointer;
         }
 
         private void internalEndPointer(int id)

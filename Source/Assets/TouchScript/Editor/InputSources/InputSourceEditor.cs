@@ -6,13 +6,13 @@ namespace TouchScript.Editor.InputSources
 {
     public class InputSourceEditor : UnityEditor.Editor
     {
-        private const string TEXT_ADVANCED_HEADER = "Advanced properties.";
-
-        private SerializedProperty advanced;
+//        private const string TEXT_ADVANCED_HEADER = "Advanced properties.";
+//
+//        private SerializedProperty advanced;
 
         protected virtual void OnEnable()
         {
-            advanced = serializedObject.FindProperty("advancedProps");
+//            advanced = serializedObject.FindProperty("advancedProps");
         }
 
         public override void OnInspectorGUI()

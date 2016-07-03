@@ -28,5 +28,21 @@ namespace TouchScript.Pointers
         }
 
         #endregion
+
+        #region Public methods
+
+        public override void CopyFrom(Pointer target)
+        {
+            base.CopyFrom(target);
+            var obj = target as ObjectPointer;
+            if (obj == null) return;
+
+            ObjectId = obj.ObjectId;
+            Width = obj.Width;
+            Height = obj.Height;
+            Angle = obj.Angle;
+        }
+
+        #endregion
     }
 }
