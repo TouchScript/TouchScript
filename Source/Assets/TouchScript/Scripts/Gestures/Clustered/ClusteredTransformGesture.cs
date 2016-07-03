@@ -26,11 +26,11 @@ namespace TouchScript.Gestures.Clustered
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void pointersBegan(IList<Pointer> pointers)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
             clusters.AddPoints(pointers);
 
-            base.pointersBegan(pointers);
+            base.pointersPressed(pointers);
         }
 
         /// <inheritdoc />
@@ -42,11 +42,11 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override void pointersEnded(IList<Pointer> pointers)
+        protected override void pointersReleased(IList<Pointer> pointers)
         {
             clusters.RemovePoints(pointers);
 
-            base.pointersEnded(pointers);
+            base.pointersReleased(pointers);
         }
 
         /// <inheritdoc />

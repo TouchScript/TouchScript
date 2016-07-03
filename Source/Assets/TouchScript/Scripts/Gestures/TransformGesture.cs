@@ -158,9 +158,9 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void pointersBegan(IList<Pointer> pointers)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.pointersBegan(pointers);
+            base.pointersPressed(pointers);
 
             if (State != GestureState.Possible) return;
             if (NumPointers == pointers.Count)

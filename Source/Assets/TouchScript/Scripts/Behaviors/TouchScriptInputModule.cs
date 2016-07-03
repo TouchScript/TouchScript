@@ -133,9 +133,9 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.PointersBegan += pointersBeganHandler;
+                touchManager.PointersPressed += pointersPressedHandler;
                 touchManager.PointersMoved += pointersMovedHandler;
-                touchManager.PointersEnded += pointersEndedHandler;
+                touchManager.PointersReleased += pointersReleasedHandler;
                 touchManager.PointersCancelled += pointersCancelledHandler;
             }
 
@@ -154,9 +154,9 @@ namespace TouchScript.Behaviors
             var touchManager = TouchManager.Instance;
             if (touchManager != null)
             {
-                touchManager.PointersBegan -= pointersBeganHandler;
+                touchManager.PointersPressed -= pointersPressedHandler;
                 touchManager.PointersMoved -= pointersMovedHandler;
-                touchManager.PointersEnded -= pointersEndedHandler;
+                touchManager.PointersReleased -= pointersReleasedHandler;
                 touchManager.PointersCancelled -= pointersCancelledHandler;
             }
 
@@ -443,21 +443,21 @@ namespace TouchScript.Behaviors
 
         #region Private functions
 
-        private void processBegan(Pointer pointer)
+        private void processPressed(Pointer pointer)
         {
             PointerEventData pointerEvent = initPointerData(pointer);
             raycastPointer(pointerEvent);
             injectPointer(pointerEvent);
         }
 
-        private void processMove(Pointer pointer)
+        private void processMoved(Pointer pointer)
         {
             PointerEventData pointerEvent = updatePointerData(pointer);
             raycastPointer(pointerEvent);
             movePointer(pointerEvent);
         }
 
-        private void processEnded(Pointer pointer)
+        private void processReleased(Pointer pointer)
         {
             PointerEventData pointerEvent = updatePointerData(pointer);
             raycastPointer(pointerEvent);
@@ -562,28 +562,28 @@ namespace TouchScript.Behaviors
 
         #region Pointer event callbacks
 
-        private void pointersBeganHandler(object sender, PointerEventArgs pointerEventArgs)
+        private void pointersPressedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
             var pointers = pointerEventArgs.Pointers;
-            for (var i = 0; i < pointers.Count; i++) processBegan(pointers[i]);
+            for (var i = 0; i < pointers.Count; i++) processPressed(pointers[i]);
         }
 
         private void pointersMovedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
             var pointers = pointerEventArgs.Pointers;
-            for (var i = 0; i < pointers.Count; i++) processMove(pointers[i]);
+            for (var i = 0; i < pointers.Count; i++) processMoved(pointers[i]);
         }
 
-        private void pointersEndedHandler(object sender, PointerEventArgs pointerEventArgs)
+        private void pointersReleasedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
             var pointers = pointerEventArgs.Pointers;
-            for (var i = 0; i < pointers.Count; i++) processEnded(pointers[i]);
+            for (var i = 0; i < pointers.Count; i++) processReleased(pointers[i]);
         }
 
         private void pointersCancelledHandler(object sender, PointerEventArgs pointerEventArgs)
         {
             var pointers = pointerEventArgs.Pointers;
-            for (var i = 0; i < pointers.Count; i++) processEnded(pointers[i]);
+            for (var i = 0; i < pointers.Count; i++) processReleased(pointers[i]);
         }
 
         #endregion

@@ -20,9 +20,9 @@ namespace TouchScript
     /// <para>Every frame pointer events are dispatched in this order:</para>
     /// <list type="number">
     /// <item><description>FrameStarted</description></item>
-    /// <item><description>PointersBegan</description></item>
+    /// <item><description>PointersPressed</description></item>
     /// <item><description>PointersMoved</description></item>
-    /// <item><description>PointersEnded</description></item>
+    /// <item><description>PointersReleased</description></item>
     /// <item><description>PointersCancelled</description></item>
     /// <item><description>FrameFinished</description></item>
     /// </list>
@@ -33,10 +33,10 @@ namespace TouchScript
     /// <example>
     /// This sample shows how to get TouchManager instance and subscribe to events.
     /// <code>
-    /// TouchManager.Instance.PointersBegan += 
-    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Began: " + pointer.Id); }; 
-    /// TouchManager.Instance.PointersEnded += 
-    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Ended: " + pointer.Id); }; 
+    /// TouchManager.Instance.PointersPressed += 
+    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Pressed: " + pointer.Id); }; 
+    /// TouchManager.Instance.PointersReleased += 
+    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Released: " + pointer.Id); }; 
     /// </code>
     /// </example>
     public interface ITouchManager
@@ -52,9 +52,9 @@ namespace TouchScript
         event EventHandler FrameFinished;
 
         /// <summary>
-        /// Occurs when new pointers are added.
+        /// Occurs when new hovering pointers are added.
         /// </summary>
-        event EventHandler<PointerEventArgs> PointersBegan;
+        event EventHandler<PointerEventArgs> PointersAdded;
 
         /// <summary>
         /// Occurs when pointers are updated.
@@ -62,9 +62,19 @@ namespace TouchScript
         event EventHandler<PointerEventArgs> PointersMoved;
 
         /// <summary>
-        /// Occurs when pointers are removed.
+        /// Occurs when pointers touch the surface.
         /// </summary>
-        event EventHandler<PointerEventArgs> PointersEnded;
+        event EventHandler<PointerEventArgs> PointersPressed;
+
+        /// <summary>
+        /// Occurs when pointers are released.
+        /// </summary>
+        event EventHandler<PointerEventArgs> PointersReleased;
+
+        /// <summary>
+        /// Occurs when pointers are removed from the system.
+        /// </summary>
+        event EventHandler<PointerEventArgs> PointersRemoved;
 
         /// <summary>
         /// Occurs when pointers are cancelled.

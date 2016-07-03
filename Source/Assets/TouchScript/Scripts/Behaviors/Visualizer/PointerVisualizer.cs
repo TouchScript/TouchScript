@@ -119,8 +119,8 @@ namespace TouchScript.Behaviors.Visualizer
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.PointersBegan += pointersBeganHandler;
-                TouchManager.Instance.PointersEnded += pointersEndedHandler;
+                TouchManager.Instance.PointersPressed += pointersPressedHandler;
+                TouchManager.Instance.PointersReleased += pointersReleasedHandler;
                 TouchManager.Instance.PointersMoved += pointersMovedHandler;
                 TouchManager.Instance.PointersCancelled += pointersCancelledHandler;
             }
@@ -130,8 +130,8 @@ namespace TouchScript.Behaviors.Visualizer
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.PointersBegan -= pointersBeganHandler;
-                TouchManager.Instance.PointersEnded -= pointersEndedHandler;
+                TouchManager.Instance.PointersPressed -= pointersPressedHandler;
+                TouchManager.Instance.PointersReleased -= pointersReleasedHandler;
                 TouchManager.Instance.PointersMoved -= pointersMovedHandler;
                 TouchManager.Instance.PointersCancelled -= pointersCancelledHandler;
             }
@@ -170,7 +170,7 @@ namespace TouchScript.Behaviors.Visualizer
 
         #region Event handlers
 
-        private void pointersBeganHandler(object sender, PointerEventArgs e)
+        private void pointersPressedHandler(object sender, PointerEventArgs e)
         {
             if (pointerProxy == null) return;
 
@@ -199,7 +199,7 @@ namespace TouchScript.Behaviors.Visualizer
             }
         }
 
-        private void pointersEndedHandler(object sender, PointerEventArgs e)
+        private void pointersReleasedHandler(object sender, PointerEventArgs e)
         {
             var count = e.Pointers.Count;
             for (var i = 0; i < count; i++)
@@ -214,7 +214,7 @@ namespace TouchScript.Behaviors.Visualizer
 
         private void pointersCancelledHandler(object sender, PointerEventArgs e)
         {
-            pointersEndedHandler(sender, e);
+            pointersReleasedHandler(sender, e);
         }
 
         #endregion

@@ -718,7 +718,7 @@ namespace TouchScript.Gestures
             reset();
         }
 
-        internal void INTERNAL_PointerBegan(IList<Pointer> pointers)
+        internal void INTERNAL_PointersPressed(IList<Pointer> pointers)
         {
             if (numPointers == 0) layer = pointers[0].Layer;
 
@@ -764,7 +764,7 @@ namespace TouchScript.Gestures
 
             activePointers.AddRange(pointers);
             numPointers = total;
-            pointersBegan(pointers);
+            pointersPressed(pointers);
         }
 
         internal void INTERNAL_PointersMoved(IList<Pointer> pointers)
@@ -775,7 +775,7 @@ namespace TouchScript.Gestures
             pointersMoved(pointers);
         }
 
-        internal void INTERNAL_PointersEnded(IList<Pointer> pointers)
+        internal void INTERNAL_PointersReleased(IList<Pointer> pointers)
         {
             var count = pointers.Count;
             var total = numPointers - count;
@@ -847,7 +847,7 @@ namespace TouchScript.Gestures
                 }
             }
 
-            pointersEnded(pointers);
+            pointersReleased(pointers);
         }
 
         internal void INTERNAL_PointersCancelled(IList<Pointer> pointers)
@@ -957,7 +957,7 @@ namespace TouchScript.Gestures
         /// Called when new pointers appear.
         /// </summary>
         /// <param name="pointers"> The pointers. </param>
-        protected virtual void pointersBegan(IList<Pointer> pointers) {}
+        protected virtual void pointersPressed(IList<Pointer> pointers) {}
 
         /// <summary>
         /// Called for moved pointers.
@@ -969,7 +969,7 @@ namespace TouchScript.Gestures
         /// Called if pointers are removed.
         /// </summary>
         /// <param name="pointers"> The pointers. </param>
-        protected virtual void pointersEnded(IList<Pointer> pointers) {}
+        protected virtual void pointersReleased(IList<Pointer> pointers) {}
 
         /// <summary>
         /// Called when pointers are cancelled.

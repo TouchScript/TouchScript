@@ -93,9 +93,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void pointersBegan(IList<Pointer> pointers)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.pointersBegan(pointers);
+            base.pointersPressed(pointers);
 
             if (pointersNumState == PointersNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }

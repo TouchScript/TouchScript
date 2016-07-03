@@ -44,9 +44,9 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void pointersBegan(IList<Pointer> pointers)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.pointersBegan(pointers);
+            base.pointersPressed(pointers);
 
             if (NumPointers == pointers.Count) setState(GestureState.Began);
 
@@ -89,9 +89,9 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void pointersEnded(IList<Pointer> pointers)
+        protected override void pointersReleased(IList<Pointer> pointers)
         {
-            base.pointersEnded(pointers);
+            base.pointersReleased(pointers);
 
             PointerData onTarget = new PointerData();
             for (var i = 0; i < pointers.Count; i++)

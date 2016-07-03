@@ -102,9 +102,9 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void pointersBegan(IList<Pointer> pointers)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.pointersBegan(pointers);
+            base.pointersPressed(pointers);
 
             if (pointersNumState == PointersNumState.PassedMaxThreshold ||
                 pointersNumState == PointersNumState.PassedMinMaxThreshold)
@@ -130,9 +130,9 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void pointersEnded(IList<Pointer> pointers)
+        protected override void pointersReleased(IList<Pointer> pointers)
         {
-            base.pointersEnded(pointers);
+            base.pointersReleased(pointers);
 
             if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
