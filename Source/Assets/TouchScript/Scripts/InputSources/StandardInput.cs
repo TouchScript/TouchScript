@@ -213,16 +213,16 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
-        public override bool CancelPointer(Pointer pointer, bool @return)
+        public override bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
-            base.CancelPointer(pointer, @return);
+            base.CancelPointer(pointer, shouldReturn);
 
             var handled = false;
-            if (touchHandler != null) handled = touchHandler.CancelPointer(pointer, @return);
-            if (mouseHandler != null && !handled) handled = mouseHandler.CancelPointer(pointer, @return);
+            if (touchHandler != null) handled = touchHandler.CancelPointer(pointer, shouldReturn);
+            if (mouseHandler != null && !handled) handled = mouseHandler.CancelPointer(pointer, shouldReturn);
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows7PointerHandler != null && !handled) handled = windows7PointerHandler.CancelPointer(pointer, @return);
-            if (windows8PointerHandler != null && !handled) handled = windows8PointerHandler.CancelPointer(pointer, @return);
+            if (windows7PointerHandler != null && !handled) handled = windows7PointerHandler.CancelPointer(pointer, shouldReturn);
+            if (windows8PointerHandler != null && !handled) handled = windows8PointerHandler.CancelPointer(pointer, shouldReturn);
 #endif
 
             return handled;
@@ -334,7 +334,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler(addPointer, movePointer, pressPointer, releasePointer, endPointer, cancelPointer);
+            mouseHandler = new MouseHandler(addPointer, movePointer, pressPointer, releasePointer, removePointer, cancelPointer);
             mouseHandler.EmulateSecondMousePointer = emulateSecondMousePointer;
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }

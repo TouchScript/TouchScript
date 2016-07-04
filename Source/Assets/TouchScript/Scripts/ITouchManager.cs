@@ -206,7 +206,7 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Pointer id to cancel.</param>
         /// <param name="return">Should the pointer be returned to the system.</param>
-        void CancelPointer(int id, bool @return);
+        void CancelPointer(int id, bool shouldReturn);
 
         /// <summary>
         /// Cancels a pointer.

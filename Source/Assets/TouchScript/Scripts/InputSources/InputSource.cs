@@ -61,7 +61,7 @@ namespace TouchScript.InputSources
         public virtual void UpdateInput() {}
 
         /// <inheritdoc />
-        public virtual bool CancelPointer(Pointer pointer, bool @return)
+        public virtual bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
             return false;
         }
@@ -138,8 +138,9 @@ namespace TouchScript.InputSources
             manager.INTERNAL_ReleasePointer(id);
         }
 
-        protected virtual void endPointer(int id)
+        protected virtual void removePointer(int id)
         {
+            manager.INTERNAL_RemovePointer(id);
         }
 
         /// <summary>

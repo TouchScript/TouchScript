@@ -26,7 +26,7 @@ namespace TouchScript.InputSources
         /// <param name="pointer">The pointer.</param>
         /// <param name="return">if set to <c>true</c> returns the pointer back to the system with different id.</param>
         /// <returns><c>True</c> if the pointer belongs to this Input and was successfully cancelled; <c>false</c> otherwise.</returns>
-        bool CancelPointer(Pointer pointer, bool @return);
+        bool CancelPointer(Pointer pointer, bool shouldReturn);
     }
 
     public interface IRemapableInputSource

@@ -226,6 +226,11 @@ namespace TouchScript.Pointers
             return --refCount;
         }
 
+        internal void INTERNAL_ClearRefCount()
+        {
+            refCount = 0;
+        }
+
         #endregion
     }
 }

@@ -344,12 +344,12 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public void CancelPointer(int id, bool @return)
+        public void CancelPointer(int id, bool shouldReturn)
         {
             Pointer pointer;
             if (idToPointer.TryGetValue(id, out pointer))
             {
-                pointer.InputSource.CancelPointer(pointer, @return);
+                pointer.InputSource.CancelPointer(pointer, shouldReturn);
             }
         }
 
@@ -451,6 +451,7 @@ namespace TouchScript
                     Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to END more than once this frame.");
 #endif
+                pointer.INTERNAL_ClearRefCount();
             }
         }
 
@@ -774,8 +775,8 @@ namespace TouchScript
 #endif
             }
 
-            if (pointersReleasedInvoker != null)
-                pointersReleasedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
+            if (pointersRemovedInvoker != null)
+                pointersRemovedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
 
             for (var i = 0; i < removedCount; i++)
             {
