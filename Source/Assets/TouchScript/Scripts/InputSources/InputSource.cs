@@ -126,6 +126,7 @@ namespace TouchScript.InputSources
         /// <returns> New pointer. </returns>
         protected virtual void pressPointer(int id)
         {
+            manager.INTERNAL_PressPointer(id);
         }
 
         /// <summary>

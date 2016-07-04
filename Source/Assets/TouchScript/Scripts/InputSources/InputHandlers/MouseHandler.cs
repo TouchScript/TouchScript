@@ -91,6 +91,34 @@ namespace TouchScript.InputSources.InputHandlers
         /// </summary>
         public void UpdateInput()
         {
+            var flags = mousePointer.Flags & Pointer.FLAG_INCONTACT;
+            if (flags == 0)
+            {
+                // Hovering point
+                if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+                {
+                    // But there was a click this frame
+                    var newFlags = getMouseButtonFlags();
+                    mousePointer.Flags = (flags & ~Pointer.FLAG_INCONTACT) | newFlags;
+                    pressPointer(mousePointer.Id);
+                    if (newFlags == 0)
+                    {
+                        // And release the same frame
+                        releasePointer(mousePointer.Id);
+                    }
+                }
+            }
+            else
+            {
+                var newFlags = getMouseButtonFlags();
+                mousePointer.Flags = (flags & ~Pointer.FLAG_INCONTACT) | newFlags;
+                if (newFlags == 0)
+                {
+                    // Released this frame
+                    releasePointer(mousePointer.Id);
+                }
+            }
+
             var pos = Input.mousePosition;
             if (mousePointPos != pos)
             {
@@ -209,6 +237,15 @@ namespace TouchScript.InputSources.InputHandlers
         #endregion
 
         #region Private functions
+
+        private uint getMouseButtonFlags()
+        {
+            uint pressedButtons = 0;
+            if (Input.GetMouseButton(0)) pressedButtons |= Pointer.FLAG_FIRST_BUTTON;
+            if (Input.GetMouseButton(1)) pressedButtons |= Pointer.FLAG_SECOND_BUTTON;
+            if (Input.GetMouseButton(2)) pressedButtons |= Pointer.FLAG_THIRD_BUTTON;
+            return pressedButtons;
+        }
 
         private MousePointer internalAddPointer(Vector2 position, uint flags = 0)
         {
