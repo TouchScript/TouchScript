@@ -94,7 +94,7 @@ namespace TouchScript.Behaviors.Visualizer
         [SerializeField]
         private float pointerSize = 1f;
 
-        private int defaultSize = 64;
+        private uint defaultSize = 64;
         private RectTransform rect;
         private ObjectPool<PointerProxyBase> pool;
         private Dictionary<int, PointerProxyBase> proxies = new Dictionary<int, PointerProxyBase>(10);
@@ -151,9 +151,9 @@ namespace TouchScript.Behaviors.Visualizer
             proxy.Hide();
         }
 
-        private int getPointerSize()
+        private uint getPointerSize()
         {
-            if (useDPI) return (int) (pointerSize * TouchManager.Instance.DotsPerCentimeter);
+            if (useDPI) return (uint) (pointerSize * TouchManager.Instance.DotsPerCentimeter);
             return defaultSize;
         }
 
@@ -162,7 +162,7 @@ namespace TouchScript.Behaviors.Visualizer
             if (pointerProxy != null)
             {
                 var rt = pointerProxy.GetComponent<RectTransform>();
-                if (rt) defaultSize = (int) rt.sizeDelta.x;
+                if (rt) defaultSize = (uint) rt.sizeDelta.x;
             }
         }
 

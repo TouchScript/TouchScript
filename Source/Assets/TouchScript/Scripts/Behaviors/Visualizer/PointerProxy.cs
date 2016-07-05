@@ -67,7 +67,7 @@ namespace TouchScript.Behaviors.Visualizer
         /// Gets or sets cursor size.
         /// </summary>
         /// <value> Cursor size in pixels. </value>
-        public int Size
+        public uint Size
         {
             get { return size; }
             set
@@ -101,7 +101,9 @@ namespace TouchScript.Behaviors.Visualizer
         /// <summary>
         /// Cursor size.
         /// </summary>
-        protected int size = 1;
+        protected uint size = 1;
+
+        protected uint hash = uint.MaxValue;
 
         #endregion
 
@@ -114,10 +116,11 @@ namespace TouchScript.Behaviors.Visualizer
         /// <param name="pointer"> Pointer this cursor represents. </param>
         public void Init(RectTransform parent, Pointer pointer)
         {
+            hash = uint.MaxValue;
+
             show();
             rect.SetParent(parent);
             rect.SetAsLastSibling();
-            updateOnce(pointer);
             update(pointer);
         }
 
@@ -188,6 +191,18 @@ namespace TouchScript.Behaviors.Visualizer
         public virtual void update(Pointer pointer)
         {
             rect.anchoredPosition = pointer.Position;
+            var newHash = getPointerHash(pointer);
+            if (newHash != hash) updateOnce(pointer);
+            hash = newHash;
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private uint getPointerHash(Pointer pointer)
+        {
+            return pointer.Flags;
         }
 
         #endregion
