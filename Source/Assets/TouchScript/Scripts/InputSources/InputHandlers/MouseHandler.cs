@@ -109,8 +109,8 @@ namespace TouchScript.InputSources.InputHandlers
                         && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                         && fakeMousePointer == null)
                         {
-                            fakeMousePointer = internalAddPointer(mousePointPos);
-                            fakeMousePointer.Flags = flags | Pointer.FLAG_ARTIFICIAL;
+                            fakeMousePointer = internalAddPointer(mousePointPos, flags | Pointer.FLAG_ARTIFICIAL);
+                            pressPointer(fakeMousePointer.Id);
                         }
                     }
                 }
