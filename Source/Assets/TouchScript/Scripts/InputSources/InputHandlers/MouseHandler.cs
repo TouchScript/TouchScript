@@ -70,23 +70,6 @@ namespace TouchScript.InputSources.InputHandlers
         #region Public methods
 
         /// <summary>
-        /// Immediately ends all pointers.
-        /// </summary>
-        public void EndPointers()
-        {
-            if (mousePointer != null)
-            {
-                releasePointer(mousePointer.Id);
-                mousePointer = null;
-            }
-            if (fakeMousePointer != null)
-            {
-                releasePointer(fakeMousePointer.Id);
-                fakeMousePointer = null;
-            }
-        }
-
-        /// <summary>
         /// Updates this instance.
         /// </summary>
         public void UpdateInput()

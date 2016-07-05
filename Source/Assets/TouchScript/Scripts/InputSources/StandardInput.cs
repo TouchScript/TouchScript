@@ -198,18 +198,8 @@ namespace TouchScript.InputSources
         {
             base.UpdateInput();
 
-            if (touchHandler != null)
-            {
-                touchHandler.UpdateInput();
-                // Unity adds mouse events from touches resulting in duplicated pointers.
-                // Don't update mouse if pointer input is present.
-                if (mouseHandler != null)
-                {
-                    if (touchHandler.HasPointers) mouseHandler.EndPointers();
-                    else mouseHandler.UpdateInput();
-                }
-            }
-            else if (mouseHandler != null) mouseHandler.UpdateInput();
+            if (touchHandler != null) touchHandler.UpdateInput();
+            if (mouseHandler != null) mouseHandler.UpdateInput();
         }
 
         /// <inheritdoc />
@@ -236,6 +226,8 @@ namespace TouchScript.InputSources
         protected override void OnEnable()
         {
             base.OnEnable();
+
+            Input.simulateMouseWithTouches = false;
 
 #if UNITY_EDITOR
             enableTouch();
