@@ -127,13 +127,17 @@ namespace TouchScript
         /// <summary>
         /// Gets number of active pointers.
         /// </summary>
-        int NumberOfPointers { get; }
+        int PointersCount { get; }
+
+        int PressedPointersCount { get; }
 
         /// <summary>
         /// Gets the list of active pointers.
         /// </summary>
         /// <value>An unsorted list of all pointers which began but have not ended yet.</value>
-        IList<Pointer> ActivePointers { get; }
+        IList<Pointer> Pointers { get; }
+
+        IList<Pointer> PressedPointers { get; }
 
         /// <summary>
         /// Adds a layer in a specific position.

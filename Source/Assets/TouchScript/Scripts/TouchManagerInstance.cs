@@ -178,15 +178,27 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public int NumberOfPointers
+        public int PointersCount
         {
             get { return pointers.Count; }
         }
 
         /// <inheritdoc />
-        public IList<Pointer> ActivePointers
+        public IList<Pointer> Pointers
         {
             get { return new List<Pointer>(pointers); }
+        }
+
+        /// <inheritdoc />
+        public int PressedPointersCount
+        {
+            get { return pressedPointers.Count; }
+        }
+
+        /// <inheritdoc />
+        public IList<Pointer> PressedPointers
+        {
+            get { return new List<Pointer>(pressedPointers); }
         }
 
         #endregion
@@ -200,7 +212,7 @@ namespace TouchScript
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
-        private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
+        private float dotsPerCentimeter = TouchManager.CM_TO_INCH*96;
 
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private int layerCount = 0;
@@ -208,6 +220,7 @@ namespace TouchScript
         private int inputCount = 0;
 
         private List<Pointer> pointers = new List<Pointer>(30);
+        private HashSet<Pointer> pressedPointers = new HashSet<Pointer>();
         private Dictionary<int, Pointer> idToPointer = new Dictionary<int, Pointer>(30);
 
         // Upcoming changes
@@ -578,7 +591,7 @@ namespace TouchScript
         private void updateDPI()
         {
             dpi = DisplayDevice == null ? 96 : DisplayDevice.DPI;
-            dotsPerCentimeter = TouchManager.CM_TO_INCH * dpi;
+            dotsPerCentimeter = TouchManager.CM_TO_INCH*dpi;
 #if TOUCHSCRIPT_DEBUG
             debugPointerSize = Vector2.one*dotsPerCentimeter;
 #endif
@@ -705,6 +718,7 @@ namespace TouchScript
                     continue;
                 }
                 list.Add(pointer);
+                pressedPointers.Add(pointer);
                 for (var j = 0; j < layerCount; j++)
                 {
                     var touchLayer = layers[j];
@@ -738,6 +752,7 @@ namespace TouchScript
                     continue;
                 }
                 list.Add(pointer);
+                pressedPointers.Remove(pointer);
                 if (pointer.Layer != null) pointer.Layer.INTERNAL_ReleasePointer(pointer);
                 pointer.Layer = null;
 
@@ -768,6 +783,7 @@ namespace TouchScript
                 }
                 idToPointer.Remove(id);
                 this.pointers.Remove(pointer);
+                pressedPointers.Remove(pointer);
                 list.Add(pointer);
 
 #if TOUCHSCRIPT_DEBUG
@@ -804,6 +820,7 @@ namespace TouchScript
                 }
                 idToPointer.Remove(id);
                 this.pointers.Remove(pointer);
+                pressedPointers.Remove(pointer);
                 list.Add(pointer);
                 if (pointer.Layer != null) pointer.Layer.INTERNAL_CancelPointer(pointer);
 
