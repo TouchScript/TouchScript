@@ -22,7 +22,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Message dispatched when a pointer begins.
         /// </summary>
-        public const string POINTER_BEGAN_MESSAGE = "OnPointerBegan";
+        public const string POINTER_PRESSED_MESSAGE = "OnPointerPressed";
 
         /// <summary>
         /// Message dispatched when a pointer moves.
@@ -32,7 +32,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Message dispatched when a pointer ends.
         /// </summary>
-        public const string POINTER_ENDED_MESSAGE = "OnPointerEnded";
+        public const string POINTER_RELEASED_MESSAGE = "OnPointerReleased";
 
         /// <summary>
         /// Message dispatched when a pointer is cancelled.
@@ -46,10 +46,10 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Occurs when a pointer is added.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> PointerBegan
+        public event EventHandler<MetaGestureEventArgs> PointerPressed
         {
-            add { pointerBeganInvoker += value; }
-            remove { pointerBeganInvoker -= value; }
+            add { pointerPressedInvoker += value; }
+            remove { pointerPressedInvoker -= value; }
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Occurs when a pointer is removed.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> PointerEnded
+        public event EventHandler<MetaGestureEventArgs> PointerReleased
         {
-            add { pointerEndedInvoker += value; }
-            remove { pointerEndedInvoker -= value; }
+            add { pointerReleasedInvoker += value; }
+            remove { pointerReleasedInvoker -= value; }
         }
 
         /// <summary>
@@ -80,9 +80,9 @@ namespace TouchScript.Gestures
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<MetaGestureEventArgs> pointerBeganInvoker,
+        private EventHandler<MetaGestureEventArgs> pointerPressedInvoker,
                                                    pointerMovedInvoker,
-                                                   pointerEndedInvoker,
+                                                   pointerReleasedInvoker,
                                                    pointerCancelledInvoker;
 
         #endregion
@@ -97,14 +97,14 @@ namespace TouchScript.Gestures
             if (State == GestureState.Possible) setState(GestureState.Began);
 
             var length = pointers.Count;
-            if (pointerBeganInvoker != null)
+            if (pointerPressedInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    pointerBeganInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
+                    pointerPressedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_BEGAN_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_PRESSED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -135,14 +135,14 @@ namespace TouchScript.Gestures
             if ((State == GestureState.Began || State == GestureState.Changed) && NumPointers == 0) setState(GestureState.Ended);
 
             var length = pointers.Count;
-            if (pointerEndedInvoker != null)
+            if (pointerReleasedInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    pointerEndedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
+                    pointerReleasedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {
-                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_ENDED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
+                for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_RELEASED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
         }
 
