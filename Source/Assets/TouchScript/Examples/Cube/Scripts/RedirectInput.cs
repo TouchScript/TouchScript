@@ -16,18 +16,20 @@ namespace TouchScript.Examples.Cube
         private MetaGesture gesture;
         private Dictionary<int, int> map = new Dictionary<int, int>();
 
-        public override bool CancelPointer(Pointer pointer, bool @return)
+        public override bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
-            base.CancelPointer(pointer, @return);
+            base.CancelPointer(pointer, shouldReturn);
 
             map.Remove(pointer.Id);
-            if (@return)
+            if (shouldReturn)
             {
                 TouchHit hit;
                 if (gesture.GetTargetHitResult(pointer.Position, out hit))
                 {
                     var newPointer = PointerFactory.Create(pointer.Type, this);
-                    beginPointer(newPointer, processCoords(hit.RaycastHit.textureCoord));
+                    newPointer.CopyFrom(pointer);
+                    addPointer(newPointer, processCoords(pointer.Hit.RaycastHit.textureCoord));
+                    pressPointer(newPointer.Id);
                     map.Add(pointer.Id, newPointer.Id);
                 }
             }
@@ -40,10 +42,10 @@ namespace TouchScript.Examples.Cube
             gesture = GetComponent<MetaGesture>();
             if (gesture)
             {
-                gesture.PointerBegan += pointerBeganHandler;
+                gesture.PointerPressed += pointerPressedHandler;
                 gesture.PointerMoved += pointerMovedhandler;
                 gesture.PointerCancelled += pointerCancelledhandler;
-                gesture.PointerEnded += pointerEndedHandler;
+                gesture.PointerReleased += pointerReleasedHandler;
             }
         }
 
@@ -53,10 +55,10 @@ namespace TouchScript.Examples.Cube
 
             if (gesture)
             {
-                gesture.PointerBegan -= pointerBeganHandler;
+                gesture.PointerPressed -= pointerPressedHandler;
                 gesture.PointerMoved -= pointerMovedhandler;
                 gesture.PointerCancelled -= pointerCancelledhandler;
-                gesture.PointerEnded -= pointerEndedHandler;
+                gesture.PointerReleased -= pointerReleasedHandler;
             }
         }
 
@@ -65,13 +67,15 @@ namespace TouchScript.Examples.Cube
             return new Vector2(value.x * Width, value.y * Height);
         }
 
-        private void pointerBeganHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
+        private void pointerPressedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
             if (pointer.InputSource == this) return;
 
             var newPointer = PointerFactory.Create(pointer.Type, this);
-            beginPointer(newPointer, processCoords(pointer.Hit.RaycastHit.textureCoord));
+            newPointer.CopyFrom(pointer);
+            addPointer(newPointer, processCoords(pointer.Hit.RaycastHit.textureCoord));
+            pressPointer(newPointer.Id);
             map.Add(pointer.Id, newPointer.Id);
         }
 
@@ -87,14 +91,16 @@ namespace TouchScript.Examples.Cube
             movePointer(id, processCoords(hit.RaycastHit.textureCoord));
         }
 
-        private void pointerEndedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
+        private void pointerReleasedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             int id;
             var pointer = metaGestureEventArgs.Pointer;
             if (pointer.InputSource == this) return;
 
             if (!map.TryGetValue(pointer.Id, out id)) return;
-            endPointer(id);
+            map.Remove(pointer.Id);
+            releasePointer(id);
+            removePointer(id);
         }
 
         private void pointerCancelledhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
@@ -104,6 +110,7 @@ namespace TouchScript.Examples.Cube
             if (pointer.InputSource == this) return;
 
             if (!map.TryGetValue(pointer.Id, out id)) return;
+            map.Remove(pointer.Id);
             cancelPointer(id);
         }
 
