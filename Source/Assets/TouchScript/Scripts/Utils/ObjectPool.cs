@@ -98,13 +98,13 @@ namespace TouchScript.Utils
         private void log(string message)
         {
             if (string.IsNullOrEmpty(Name)) return;
-            UnityEngine.Debug.LogFormat("[{0}] ObjectPool ({1}): {2}", Time.unscaledTime, Name, message);
+            UnityEngine.Debug.LogFormat("[{0}] ObjectPool ({1}): {2}", DateTime.Now.ToString("hh:mm:ss.fff"), Name, message);
         }
 
         private void logError(string message)
         {
             if (string.IsNullOrEmpty(Name)) return;
-            UnityEngine.Debug.LogErrorFormat("[{0}] ObjectPool ({1}): {2}", Time.unscaledTime, Name, message);
+            UnityEngine.Debug.LogErrorFormat("[{0}] ObjectPool ({1}): {2}", DateTime.Now.ToString("hh:mm:ss.fff"), Name, message);
         }
 #endif
     }
