@@ -138,13 +138,8 @@ namespace TouchScript.Pointers
 
         public virtual void CopyFrom(Pointer target)
         {
-            Id = target.Id;
             Type = target.Type;
             Flags = target.Flags;
-            Target = target.Target;
-            Hit = target.Hit;
-            Layer = target.Layer;
-            InputSource = target.InputSource;
             position = target.position;
             PreviousPosition = target.PreviousPosition;
             newPosition = target.newPosition;

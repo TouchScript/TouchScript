@@ -205,8 +205,7 @@ namespace TouchScript.InputSources.InputHandlers
         private MousePointer internalReturnPointer(MousePointer pointer, Vector2 position)
         {
             var newPointer = mousePool.Get();
-//            newPointer.CopyFrom(pointer);
-			newPointer.Flags = pointer.Flags;
+            newPointer.CopyFrom(pointer);
             addPointer(newPointer, position, false);
             if ((newPointer.Flags & Pointer.FLAG_INCONTACT) != 0) pressPointer(newPointer.Id);
             return newPointer;
