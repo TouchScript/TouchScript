@@ -170,7 +170,7 @@ namespace TouchScript.InputSources.InputHandlers
                 {
                     if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
                     var position = new Vector2((p.X - offsetX) * scaleX, Screen.height - (p.Y - offsetY) * scaleY);
-                    var buttonFlags = (pointerInfo.pointerFlags << 3) & Pointer.FLAG_INCONTACT;
+                    var buttonFlags = (pointerInfo.pointerFlags >> 3) & Pointer.FLAG_INCONTACT;
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_MOUSE:

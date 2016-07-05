@@ -184,7 +184,6 @@ namespace TouchScript.InputSources
         private MouseHandler mouseHandler;
         private TouchHandler touchHandler;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-        private Windows8MouseHandler windows8MouseHandler;
         private Windows8PointerHandler windows8PointerHandler;
         private Windows7PointerHandler windows7PointerHandler;
 #endif
@@ -245,7 +244,6 @@ namespace TouchScript.InputSources
                     {
                         case Windows8APIType.Windows8:
                             enableWindows8Touch();
-                            if (Windows8Mouse) enableWindows8Mouse();
                             break;
                         case Windows8APIType.Windows7:
                             enableWindows7Touch();
@@ -312,7 +310,6 @@ namespace TouchScript.InputSources
             disableMouse();
             disableTouch();
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            disableWindows8Mouse();
             disableWindows7Touch();
             disableWindows8Touch();
 #endif
@@ -358,7 +355,7 @@ namespace TouchScript.InputSources
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private void enableWindows7Touch()
         {
-            windows7PointerHandler = new Windows7PointerHandler(pressPointer, movePointer, releasePointer, cancelPointer);
+            windows7PointerHandler = new Windows7PointerHandler(addPointer, movePointer, pressPointer, releasePointer, removePointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 7 pointer input.");
         }
 
@@ -373,7 +370,8 @@ namespace TouchScript.InputSources
 
         private void enableWindows8Touch()
         {
-            windows8PointerHandler = new Windows8PointerHandler(pressPointer, movePointer, releasePointer, cancelPointer);
+            windows8PointerHandler = new Windows8PointerHandler(addPointer, movePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            windows8PointerHandler.MouseInPointer = windows8Mouse;
             Debug.Log("[TouchScript] Initialized Windows 8 pointer input.");
         }
 
@@ -387,6 +385,6 @@ namespace TouchScript.InputSources
         }
 #endif
 
-#endregion
+        #endregion
     }
 }
