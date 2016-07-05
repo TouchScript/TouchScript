@@ -258,13 +258,13 @@ namespace TouchScript.Gestures
         }
 
 #if TOUCHSCRIPT_DEBUG
-    /// <inheritdoc />
+        /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
             base.pointersReleased(pointers);
 
-            if (NumPointers == 0) return;
-            drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
+            if (NumPointers == 0) clearDebug();
+            else drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
         }
 #endif
 

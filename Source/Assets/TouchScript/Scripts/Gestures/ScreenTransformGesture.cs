@@ -2,8 +2,10 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
+using TouchScript.Pointers;
 using TouchScript.Utils.Geom;
 using UnityEngine;
 
@@ -26,6 +28,22 @@ namespace TouchScript.Gestures
                 target.rotation = Quaternion.Euler(0, 0, DeltaRotation) * target.rotation;
             if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
         }
+
+        #endregion
+
+        #region Gesture callbacks
+
+#if TOUCHSCRIPT_DEBUG
+
+        /// <inheritdoc />
+        protected override void pointersReleased(IList<Pointer> pointers)
+        {
+            base.pointersReleased(pointers);
+
+            if (getNumPoints() == 0) clearDebug();
+            else drawDebugDelayed(getNumPoints());
+        }
+#endif
 
         #endregion
 

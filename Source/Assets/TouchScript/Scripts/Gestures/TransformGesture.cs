@@ -170,6 +170,18 @@ namespace TouchScript.Gestures
             }
         }
 
+#if TOUCHSCRIPT_DEBUG
+
+        /// <inheritdoc />
+        protected override void pointersReleased(IList<Pointer> pointers)
+        {
+            base.pointersReleased(pointers);
+
+            if (getNumPoints() == 0) clearDebug();
+            else drawDebugDelayed(getNumPoints());
+        }
+#endif
+
         #endregion
 
         #region Protected methods

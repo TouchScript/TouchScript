@@ -443,10 +443,6 @@ namespace TouchScript.Gestures.Base
                         break;
                 }
             }
-
-#if TOUCHSCRIPT_DEBUG
-            else drawDebugDelayed(getNumPoints());
-#endif
         }
 
         /// <inheritdoc />
