@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using UnityEngine;
 using TouchScript.Layers;
 using TouchScript.Pointers;
 

@@ -1,4 +1,8 @@
-﻿using TouchScript.Pointers;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using TouchScript.Pointers;
 
 namespace TouchScript.Examples.Cube 
 {
