@@ -31,13 +31,18 @@ namespace TouchScript.InputSources
         /// Cancels the pointer.
         /// </summary>
         /// <param name="pointer">The pointer.</param>
-        /// <param name="return">if set to <c>true</c> returns the pointer back to the system with different id.</param>
+        /// <param name="shouldReturn">if set to <c>true</c> returns the pointer back to the system with different id.</param>
         /// <returns><c>True</c> if the pointer belongs to this Input and was successfully cancelled; <c>false</c> otherwise.</returns>
         bool CancelPointer(Pointer pointer, bool shouldReturn);
     }
 
     public interface INTERNAL_IInputSource
     {
+        /// <summary>
+        /// Used by <see cref="TouchManagerInstance"/> to return a pointer to input source.
+        /// DO NOT CALL IT DIRECTLY FROM YOUR CODE!
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
         void INTERNAL_DiscardPointer(Pointer pointer);
     }
 }

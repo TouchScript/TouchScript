@@ -7,6 +7,9 @@ using TouchScript.Gestures;
 
 namespace TouchScript.Examples.CameraControl
 {
+    /// <summary>
+    /// This component controls camera movement.
+    /// </summary>
     public class CameraController : MonoBehaviour
     {
         public ScreenTransformGesture TwoFingerMoveGesture;

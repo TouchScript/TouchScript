@@ -108,7 +108,6 @@ namespace TouchScript.InputSources
         public TuioInput()
         {
             touchPool = new ObjectPool<TouchPointer>(20, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
-            touchPool.Name = "TUIO";
             objectPool = new ObjectPool<ObjectPointer>(10, () => new ObjectPointer(this), null, (t) => t.INTERNAL_Reset());
         }
 
@@ -211,6 +210,7 @@ namespace TouchScript.InputSources
 
         #region Internal methods
 
+        /// <inheritdoc />
         public override void INTERNAL_DiscardPointer(Pointer pointer)
         {
             if (pointer.Type == Pointer.PointerType.Touch)

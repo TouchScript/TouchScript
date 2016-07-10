@@ -6,9 +6,18 @@ using TouchScript.InputSources;
 
 namespace TouchScript.Pointers
 {
+    /// <summary>
+    /// Static factory to create pointers.
+    /// </summary>
     public static class PointerFactory
     {
 
+        /// <summary>
+        /// Creates a pointer of type <see cref="type"/> attached to <see cref="input"/> input source.
+        /// </summary>
+        /// <param name="type">Pointer type to create.</param>
+        /// <param name="input">Input source to attach the pointer to.</param>
+        /// <returns></returns>
         public static Pointer Create(Pointer.PointerType type, IInputSource input)
         {
             switch (type)

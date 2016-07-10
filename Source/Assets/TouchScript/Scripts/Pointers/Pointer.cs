@@ -57,11 +57,29 @@ namespace TouchScript.Pointers
         /// </summary>
         public const uint FLAG_INCONTACT = FLAG_FIRST_BUTTON | FLAG_SECOND_BUTTON | FLAG_THIRD_BUTTON;
 
+        /// <summary>
+        /// Pointer type.
+        /// </summary>
         public enum PointerType
         {
+            /// <summary>
+            /// Touch.
+            /// </summary>
             Touch,
+
+            /// <summary>
+            /// Mouse.
+            /// </summary>
             Mouse,
+
+            /// <summary>
+            /// Pen.
+            /// </summary>
             Pen,
+
+            /// <summary>
+            /// Object.
+            /// </summary>
             Object
         }
 
@@ -74,15 +92,25 @@ namespace TouchScript.Pointers
         /// </summary>
         public int Id { get; private set; }
 
+        /// <summary>
+        /// Pointer type. See <see cref="PointerType"/>.
+        /// </summary>
         public PointerType Type { get; protected set; }
 
+        /// <summary>
+        /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/>, <see cref="FLAG_FIRST_BUTTON"/>, <see cref="FLAG_SECOND_BUTTON"/>, <see cref="FLAG_THIRD_BUTTON"/>, <see cref="FLAG_INCONTACT"/>.</para>
+        /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
+        /// </summary>
         public uint Flags
         {
             get { return flags; }
             set { newFlags = value; }
         }
 
-        public uint PreviousFlags { get; internal set; }
+        /// <summary>
+        /// Gets the previous value of <see cref="Flags"/>.
+        /// </summary>
+        public uint PreviousFlags { get; private set; }
 
         /// <summary>
         /// Original hit target.
@@ -90,7 +118,8 @@ namespace TouchScript.Pointers
         public Transform Target { get; internal set; }
 
         /// <summary>
-        /// Current position in screen coordinates.
+        /// <para>Current position in screen coordinates.</para>
+        /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
         /// </summary>
         public Vector2 Position
         {
@@ -99,7 +128,7 @@ namespace TouchScript.Pointers
         }
 
         /// <summary>
-        /// Previous position (during last frame) in screen coordinates.
+        /// Previous <see cref="Position"/> (during last frame) in screen coordinates.
         /// </summary>
         public Vector2 PreviousPosition { get; private set; }
 
@@ -142,6 +171,10 @@ namespace TouchScript.Pointers
 
         #region Public methods
 
+        /// <summary>
+        /// Copies values from <see cref="target"/>.
+        /// </summary>
+        /// <param name="target">The target pointer to copy values from.</param>
         public virtual void CopyFrom(Pointer target)
         {
             Type = target.Type;
@@ -204,7 +237,7 @@ namespace TouchScript.Pointers
             Id = INVALID_POINTER;
             INTERNAL_ClearTargetData();
             position = newPosition = PreviousPosition = Vector2.zero;
-            flags = newFlags = PreviousFlags =  0;
+            flags = newFlags = PreviousFlags = 0;
         }
 
         internal virtual void INTERNAL_FrameStarted()

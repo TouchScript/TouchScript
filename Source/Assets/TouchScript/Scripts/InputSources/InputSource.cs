@@ -41,9 +41,7 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-        [SerializeField]
-        [HideInInspector]
-        private bool advancedProps; // is used to save whether advanced properties are opened or closed
+        [SerializeField] [HideInInspector] private bool advancedProps; // is used to save whether advanced properties are opened or closed
 
         private ICoordinatesRemapper coordinatesRemapper;
         private TouchManagerInstance manager;
@@ -53,7 +51,9 @@ namespace TouchScript.InputSources
         #region Public methods
 
         /// <inheritdoc />
-        public virtual void UpdateInput() {}
+        public virtual void UpdateInput()
+        {
+        }
 
         /// <inheritdoc />
         public virtual bool CancelPointer(Pointer pointer, bool shouldReturn)
@@ -65,7 +65,10 @@ namespace TouchScript.InputSources
 
         #region Internal methods
 
-        public virtual void INTERNAL_DiscardPointer(Pointer pointer) {}
+        /// <inheritdoc />
+        public virtual void INTERNAL_DiscardPointer(Pointer pointer)
+        {
+        }
 
         #endregion
 
@@ -97,16 +100,19 @@ namespace TouchScript.InputSources
 
         #region Protected methods
 
+        /// <summary>
+        /// Adds the pointer to the system.
+        /// </summary>
+        /// <param name="pointer">The pointer to add.</param>
         protected virtual void addPointer(Pointer pointer)
         {
             manager.INTERNAL_AddPointer(pointer);
         }
 
         /// <summary>
-        /// Mark pointer as moved.
+        /// Mark pointer as updated.
         /// </summary>
-        /// <param name="id">Pointer id.</param>
-        /// <param name="position">Screen position.</param>
+        /// <param name="pointer">The pointer to update.</param>
         protected virtual void updatePointer(Pointer pointer)
         {
             if (pointer == null) return;
@@ -114,10 +120,9 @@ namespace TouchScript.InputSources
         }
 
         /// <summary>
-        /// Begin pointer in given screen position.
+        /// Mark the pointer as touching the surface.
         /// </summary>
-        /// <param name="position">Screen position.</param>
-        /// <returns> New pointer. </returns>
+        /// <param name="pointer">The pointer.</param>
         protected virtual void pressPointer(Pointer pointer)
         {
             if (pointer == null) return;
@@ -125,9 +130,9 @@ namespace TouchScript.InputSources
         }
 
         /// <summary>
-        /// End pointer with id.
+        /// Mark the pointer as no longer touching the surface.
         /// </summary>
-        /// <param name="id">Pointer id.</param>
+        /// <param name="pointer">The pointer.</param>
         protected virtual void releasePointer(Pointer pointer)
         {
             if (pointer == null) return;
@@ -135,6 +140,10 @@ namespace TouchScript.InputSources
             manager.INTERNAL_ReleasePointer(pointer.Id);
         }
 
+        /// <summary>
+        /// Removes the pointer.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
         protected virtual void removePointer(Pointer pointer)
         {
             if (pointer == null) return;
@@ -142,19 +151,28 @@ namespace TouchScript.InputSources
         }
 
         /// <summary>
-        /// Cancel pointer with id.
+        /// Cancels the pointer.
         /// </summary>
-        /// <param name="id">Pointer id.</param>
+        /// <param name="pointer">The pointer.</param>
         protected virtual void cancelPointer(Pointer pointer)
         {
             if (pointer == null) return;
             manager.INTERNAL_CancelPointer(pointer.Id);
         }
 
+        /// <summary>
+        /// Called from <see cref="CoordinatesRemapper"/> setter to update touch handlers with the new value.
+        /// </summary>
+        /// <param name="remapper">The new remapper.</param>
         protected virtual void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
         {
         }
 
+        /// <summary>
+        /// Remaps the coordinates using the <see cref="CoordinatesRemapper"/> if it is set.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>Remapped position if <see cref="CoordinatesRemapper"/> is set; <see cref="position"/> otherwise.</returns>
         protected virtual Vector2 remapCoordinates(Vector2 position)
         {
             if (coordinatesRemapper != null) return coordinatesRemapper.Remap(position);

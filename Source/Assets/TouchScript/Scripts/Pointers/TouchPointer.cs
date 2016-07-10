@@ -6,11 +6,17 @@ using TouchScript.InputSources;
 
 namespace TouchScript.Pointers
 {
+    /// <summary>
+    /// A pointer of type <see cref="Pointer.PointerType.Touch"/>.
+    /// </summary>
     public class TouchPointer : Pointer
     {
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchPointer"/> class.
+        /// </summary>
         public TouchPointer(IInputSource input) : base(input)
         {
             Type = PointerType.Touch;

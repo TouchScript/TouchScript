@@ -6,11 +6,18 @@ using TouchScript.InputSources;
 
 namespace TouchScript.Pointers
 {
+
+    /// <summary>
+    /// A pointer of type <see cref="Pointer.PointerType.Mouse"/>.
+    /// </summary>
     public class MousePointer : Pointer
     {
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MousePointer"/> class.
+        /// </summary>
         public MousePointer(IInputSource input) : base(input)
         {
             Type = PointerType.Mouse;

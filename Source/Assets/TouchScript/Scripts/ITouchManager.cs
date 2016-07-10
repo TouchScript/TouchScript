@@ -20,9 +20,11 @@ namespace TouchScript
     /// <para>Every frame pointer events are dispatched in this order:</para>
     /// <list type="number">
     /// <item><description>FrameStarted</description></item>
-    /// <item><description>PointersPressed</description></item>
+    /// <item><description>PointersAdded</description></item>
     /// <item><description>PointersUpdated</description></item>
+    /// <item><description>PointersPressed</description></item>
     /// <item><description>PointersReleased</description></item>
+    /// <item><description>PointersRemoved</description></item>
     /// <item><description>PointersCancelled</description></item>
     /// <item><description>FrameFinished</description></item>
     /// </list>
@@ -125,18 +127,25 @@ namespace TouchScript
         float DotsPerCentimeter { get; }
 
         /// <summary>
-        /// Gets number of active pointers.
+        /// Gets number of pointers in the system.
         /// </summary>
         int PointersCount { get; }
 
+        /// <summary>
+        /// Gets the number of pressed pointer in the system.
+        /// </summary>
         int PressedPointersCount { get; }
 
         /// <summary>
-        /// Gets the list of active pointers.
+        /// Gets the list of pointers.
         /// </summary>
-        /// <value>An unsorted list of all pointers which began but have not ended yet.</value>
+        /// <value>An unsorted list of all pointers.</value>
         IList<Pointer> Pointers { get; }
 
+        /// <summary>
+        /// Gets the list of pressed pointers.
+        /// </summary>
+        /// <value>An unsorted list of all pointers which were pressed but not released yet.</value>
         IList<Pointer> PressedPointers { get; }
 
         /// <summary>

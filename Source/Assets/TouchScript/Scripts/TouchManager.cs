@@ -20,15 +20,6 @@ namespace TouchScript
     /// <para>An instance of <see cref="TouchManager"/> may be added to a Unity scene to hold (i.e. serialize them to the scene) parameters needed to configure an instance of <see cref="ITouchManager"/> used in application. Which can be accessed via <see cref="TouchManager.Instance"/> static property.</para>
     /// <para>Though it's not required it is a convenient way to configure <b>TouchScript</b> for your scene. You can use different configuration options for different scenes.</para>
     /// </remarks>
-    /// <example>
-    /// This sample shows how to get Pointer Manager instance and subscribe to events.
-    /// <code>
-    /// TouchManager.Instance.PointersPressed += 
-    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Pressed: " + pointer.Id); }; 
-    /// TouchManager.Instance.PointersReleased += 
-    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Released: " + pointer.Id); }; 
-    /// </code>
-    /// </example>
     [AddComponentMenu("TouchScript/Pointer Manager")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_TouchManager.htm")]
     public sealed class TouchManager : MonoBehaviour
@@ -62,7 +53,7 @@ namespace TouchScript
             PointersAdded = 1 << 2,
 
             /// <summary>
-            /// Some pointers have moved during the frame.
+            /// Some pointers were updated during the frame.
             /// </summary>
             PointersUpdated = 1 << 3,
 

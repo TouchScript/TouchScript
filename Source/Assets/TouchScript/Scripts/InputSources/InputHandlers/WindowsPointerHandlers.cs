@@ -21,7 +21,7 @@ namespace TouchScript.InputSources.InputHandlers
     /// </summary>
     public class Windows8PointerHandler : WindowsPointerHandler
     {
-        #region Public properties
+#region Public properties
 
         public bool MouseInPointer
         {
@@ -45,9 +45,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        #endregion
+#endregion
 
-        #region Private variables
+#region Private variables
 
         private bool mouseInPointer = true;
         private ObjectPool<MousePointer> mousePool;
@@ -55,9 +55,9 @@ namespace TouchScript.InputSources.InputHandlers
         private MousePointer mousePointer;
         private PenPointer penPointer;
 
-        #endregion
+#endregion
 
-        #region Constructor
+#region Constructor
 
         /// <inheritdoc />
         public Windows8PointerHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer) : base(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer)
@@ -70,9 +70,9 @@ namespace TouchScript.InputSources.InputHandlers
             registerWindowProc(wndProcWin8);
         }
 
-        #endregion
+#endregion
 
-        #region Public methods
+#region Public methods
 
         /// <inheritdoc />
         public override bool CancelPointer(Pointer pointer, bool shouldReturn)
@@ -113,10 +113,11 @@ namespace TouchScript.InputSources.InputHandlers
             base.Dispose();
         }
 
-        #endregion
+#endregion
 
-        #region Internal methods
+#region Internal methods
 
+        /// <inheritdoc />
         public override void INTERNAL_DiscardPointer(Pointer pointer)
         {
             if (pointer is MousePointer) mousePool.Release(pointer as MousePointer);
@@ -124,7 +125,7 @@ namespace TouchScript.InputSources.InputHandlers
             else base.INTERNAL_DiscardPointer(pointer);
         }
 
-        #endregion
+#endregion
 
         private IntPtr wndProcWin8(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
@@ -391,7 +392,7 @@ namespace TouchScript.InputSources.InputHandlers
 
     public abstract class WindowsPointerHandler : IInputSource, IDisposable
     {
-        #region Consts
+#region Consts
 
         /// <summary>
         /// Source of pointer input.
@@ -410,15 +411,16 @@ namespace TouchScript.InputSources.InputHandlers
 
         public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        #endregion
+#endregion
 
-        #region Public properties
+#region Public properties
 
+        /// <inheritdoc />
         public ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
-        #endregion
+#endregion
 
-        #region Protected variables
+#region Protected variables
 
         protected PointerDelegate addPointer;
         protected PointerDelegate updatePointer;
@@ -438,17 +440,19 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected ObjectPool<TouchPointer> touchPool;
 
-        #endregion
+#endregion
 
-        #region Constructor
+#region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsPointerHandler"/> class.
         /// </summary>
-        /// <param name="pressPointer"> A function called when a new pointer is detected. As <see cref="InputSource.pressPointer(Vector2)"/> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer"/>. </param>
-        /// <param name="updatePointer"> A function called when a pointer is moved. As <see cref="InputSource.movePointer"/> this function must accept an int id and a Vector2 position. </param>
-        /// <param name="releasePointer"> A function called when a pointer is lifted off. As <see cref="InputSource.releasePointer"/> this function must accept an int id. </param>
-        /// <param name="cancelPointer"> A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer"/> this function must accept an int id. </param>
+        /// <param name="addPointer">A function called when a new pointer is detected.</param>
+        /// <param name="updatePointer">A function called when a pointer is moved or its parameter is updated.</param>
+        /// <param name="pressPointer">A function called when a pointer touches the surface.</param>
+        /// <param name="releasePointer">A function called when a pointer is lifted off.</param>
+        /// <param name="removePointer">A function called when a pointer is removed.</param>
+        /// <param name="cancelPointer">A function called when a pointer is cancelled.</param>
         public WindowsPointerHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
         {
             this.addPointer = addPointer;
@@ -465,9 +469,9 @@ namespace TouchScript.InputSources.InputHandlers
             initScaling();
         }
 
-        #endregion
+#endregion
 
-        #region Public methods
+#region Public methods
 
         /// <inheritdoc />
         public void UpdateInput()
@@ -509,10 +513,11 @@ namespace TouchScript.InputSources.InputHandlers
             unregisterWindowProc();
         }
 
-        #endregion
+#endregion
 
-        #region Internal methods
+#region Internal methods
 
+        /// <inheritdoc />
         public virtual void INTERNAL_DiscardPointer(Pointer pointer)
         {
             var p = pointer as TouchPointer;
@@ -521,9 +526,9 @@ namespace TouchScript.InputSources.InputHandlers
             touchPool.Release(p);
         }
 
-        #endregion
+#endregion
 
-        #region Protected methods
+#region Protected methods
 
         protected TouchPointer internalAddTouchPointer(Vector2 position, uint flags = 0)
         {
@@ -606,9 +611,9 @@ namespace TouchScript.InputSources.InputHandlers
             return position;
         }
 
-        #endregion
+#endregion
 
-        #region Private functions
+#region Private functions
 
         private void getNativeMonitorResolution(out int width, out int height)
         {
@@ -627,9 +632,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        #endregion
+#endregion
 
-        #region p/invoke
+#region p/invoke
 
         public const int WM_CLOSE = 0x0010;
         public const int WM_TOUCH = 0x0240;
@@ -850,7 +855,7 @@ namespace TouchScript.InputSources.InputHandlers
         [DllImport("user32.dll")]
         public static extern IntPtr EnableMouseInPointer(bool value);
 
-        #endregion
+#endregion
     }
 }
 

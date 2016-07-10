@@ -13,7 +13,7 @@ namespace TouchScript.Behaviors.Visualizer
     /// <para>Pointer visualizer which shows pointer circles with debug text using Unity UI.</para>
     /// <para>The script should be placed on an element with RectTransform or a Canvas. A reference prefab is provided in TouchScript package.</para>
     /// </summary>
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_TouchVisualizer.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Visualizer_TouchVisualizer.htm")]
     public class PointerVisualizer : MonoBehaviour
     {
         #region Public properties

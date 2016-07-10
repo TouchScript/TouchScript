@@ -16,8 +16,15 @@ namespace TouchScript.InputSources.InputHandlers
     {
         #region Public properties
 
+        /// <inheritdoc />
         public ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether second pointer emulation using ALT+CLICK should be enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if second pointer emulation is enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool EmulateSecondMousePointer
         {
             get { return emulateSecondMousePointer; }
@@ -50,10 +57,12 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseHandler" /> class.
         /// </summary>
-        /// <param name="pressPointer">A function called when a new pointer is detected. As <see cref="InputSource.pressPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
-        /// <param name="_updatePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
-        /// <param name="releasePointer">A function called when a pointer is lifted off. As <see cref="InputSource.releasePointer" /> this function must accept an int id.</param>
-        /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
+        /// <param name="addPointer">A function called when a new pointer is detected.</param>
+        /// <param name="updatePointer">A function called when a pointer is moved or its parameter is updated.</param>
+        /// <param name="pressPointer">A function called when a pointer touches the surface.</param>
+        /// <param name="releasePointer">A function called when a pointer is lifted off.</param>
+        /// <param name="removePointer">A function called when a pointer is removed.</param>
+        /// <param name="cancelPointer">A function called when a pointer is cancelled.</param>
         public MouseHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
         {
             this.addPointer = addPointer;
@@ -71,9 +80,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Public methods
 
-        /// <summary>
-        /// Updates this instance.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateInput()
         {
             if (fakeMousePointer != null
@@ -180,6 +187,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Internal methods
 
+        /// <inheritdoc />
         public void INTERNAL_DiscardPointer(Pointer pointer)
         {
             var p = pointer as MousePointer;

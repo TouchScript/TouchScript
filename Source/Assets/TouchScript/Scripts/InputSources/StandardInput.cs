@@ -322,6 +322,7 @@ namespace TouchScript.InputSources
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
         {
             base.updateCoordinatesRemapper(remapper);
