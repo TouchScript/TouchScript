@@ -307,9 +307,9 @@ namespace TouchScript.Gestures.Base
         }
 
         /// <inheritdoc />
-        protected override void pointersMoved(IList<Pointer> pointers)
+        protected override void pointersUpdated(IList<Pointer> pointers)
         {
-            base.pointersMoved(pointers);
+            base.pointersUpdated(pointers);
 
             var projectionParams = activePointers[0].ProjectionParams;
             var dP = deltaPosition = Vector3.zero;

@@ -47,10 +47,10 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public event EventHandler<PointerEventArgs> PointersMoved
+        public event EventHandler<PointerEventArgs> PointersUpdated
         {
-            add { pointersMovedInvoker += value; }
-            remove { pointersMovedInvoker -= value; }
+            add { pointersUpdatedInvoker += value; }
+            remove { pointersUpdatedInvoker -= value; }
         }
 
         /// <inheritdoc />
@@ -82,7 +82,7 @@ namespace TouchScript
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<PointerEventArgs> pointersAddedInvoker, pointersMovedInvoker, pointersPressedInvoker, pointersReleasedInvoker, pointersRemovedInvoker, pointersCancelledInvoker;
+        private EventHandler<PointerEventArgs> pointersAddedInvoker, pointersUpdatedInvoker, pointersPressedInvoker, pointersReleasedInvoker, pointersRemovedInvoker, pointersCancelledInvoker;
 
         private EventHandler frameStartedInvoker, frameFinishedInvoker;
 
@@ -376,16 +376,16 @@ namespace TouchScript
 
         #region Internal methods
 
-        internal void INTERNAL_AddPointer(Pointer pointer, Vector2 position)
+        internal void INTERNAL_AddPointer(Pointer pointer)
         {
             lock (pointerLock)
             {
-                pointer.INTERNAL_Init(nextPointerId++, position);
+                pointer.INTERNAL_Init(nextPointerId++);
                 pointersAdded.Add(pointer);
             }
         }
 
-        internal void INTERNAL_MovePointer(int id, Vector2 position)
+        internal void INTERNAL_UpdatePointer(int id)
         {
             lock (pointerLock)
             {
@@ -398,14 +398,12 @@ namespace TouchScript
                     if (pointer == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Pointer with id [" + id + "] is requested to MOVE to " + position +
-                                         " but no pointer with such id found.");
+                        Debug.LogWarning("TouchScript > Pointer with id [" + id + "] is requested to MOVE to but no pointer with such id found.");
 #endif
                         return;
                     }
                 }
 
-                pointer.INTERNAL_SetPosition(position);
                 if (!pointersUpdated.Contains(id)) pointersUpdated.Add(id);
             }
         }
@@ -464,7 +462,6 @@ namespace TouchScript
                     Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to END more than once this frame.");
 #endif
-                pointer.INTERNAL_ClearRefCount();
             }
         }
 
@@ -670,12 +667,6 @@ namespace TouchScript
         {
             var updatedCount = pointers.Count;
             var list = pointerListPool.Get();
-            // Need to loop through all pointers to reset those which did not move
-            var count = this.pointers.Count;
-            for (var i = 0; i < count; i++)
-            {
-                this.pointers[i].INTERNAL_ResetPosition();
-            }
             for (var i = 0; i < updatedCount; i++)
             {
                 var id = pointers[i];
@@ -696,8 +687,8 @@ namespace TouchScript
 #endif
             }
 
-            if (pointersMovedInvoker != null)
-                pointersMovedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
+            if (pointersUpdatedInvoker != null)
+                pointersUpdatedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
         }
 
@@ -754,7 +745,6 @@ namespace TouchScript
                 list.Add(pointer);
                 pressedPointers.Remove(pointer);
                 if (pointer.Layer != null) pointer.Layer.INTERNAL_ReleasePointer(pointer);
-                pointer.Layer = null;
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
@@ -763,6 +753,13 @@ namespace TouchScript
 
             if (pointersReleasedInvoker != null)
                 pointersReleasedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
+
+            releasedCount = list.Count;
+            for (var i = 0; i < releasedCount; i++)
+            {
+                var pointer = list[i];
+                pointer.INTERNAL_ClearTargetData();
+            }
             pointerListPool.Release(list);
         }
 
@@ -794,6 +791,7 @@ namespace TouchScript
             if (pointersRemovedInvoker != null)
                 pointersRemovedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
 
+            removedCount = list.Count;
             for (var i = 0; i < removedCount; i++)
             {
                 var pointer = list[i];
@@ -896,6 +894,14 @@ namespace TouchScript
                 updateAdded(addedList);
                 pointerListPool.Release(addedList);
             }
+
+            // Need to loop through all pointers to update position/previousPosition.
+            var count = pointers.Count;
+            for (var i = 0; i < count; i++)
+            {
+                pointers[i].INTERNAL_FrameStarted();
+            }
+
             if (updatedList != null)
             {
                 updateUpdated(updatedList);

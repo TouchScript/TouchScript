@@ -143,10 +143,10 @@ namespace TouchScript.InputSources
                     }
                     if (cursor != null)
                     {
-                        cancelPointer(pointer.Id);
+                        cancelPointer(pointer);
                         if (shouldReturn)
                         {
-                            cursorToInternalId[cursor] = internalReturnTouch(pointer as TouchPointer, pointer.Position);
+                            cursorToInternalId[cursor] = internalReturnTouch(pointer as TouchPointer);
                         }
                         else
                         {
@@ -168,7 +168,7 @@ namespace TouchScript.InputSources
                 }
                 if (obj != null)
                 {
-                    cancelPointer(pointer.Id);
+                    cancelPointer(pointer);
                     if (shouldReturn)
                     {
                         objectToInternalId[obj] = internalReturnObject(pointer as ObjectPointer, pointer.Position);
@@ -191,7 +191,7 @@ namespace TouchScript.InputSources
                 }
                 if (blob != null)
                 {
-                    cancelPointer(pointer.Id);
+                    cancelPointer(pointer);
                     if (shouldReturn)
                     {
                         blobToInternalId[blob] = internalReturnObject(pointer as ObjectPointer, pointer.Position);
@@ -266,26 +266,28 @@ namespace TouchScript.InputSources
         private TouchPointer internalAddTouch(Vector2 position, uint flags = 0)
         {
             var pointer = touchPool.Get();
-            addPointer(pointer, position, true);
-            pressPointer(pointer.Id);
+            pointer.Position = remapCoordinates(position);
+            addPointer(pointer);
+            pressPointer(pointer);
             pointer.Flags |= flags;
             return pointer;
         }
 
-        private TouchPointer internalReturnTouch(TouchPointer pointer, Vector2 position)
+        private TouchPointer internalReturnTouch(TouchPointer pointer)
         {
             var newPointer = touchPool.Get();
             newPointer.CopyFrom(pointer);
-            addPointer(newPointer, position, false);
-            pressPointer(newPointer.Id);
+            addPointer(newPointer);
+            pressPointer(newPointer);
             return newPointer;
         }
 
         private ObjectPointer internalAddObject(Vector2 position, uint flags = 0)
         {
             var pointer = objectPool.Get();
-            addPointer(pointer, position, true);
-            pressPointer(pointer.Id);
+            pointer.Position = remapCoordinates(position);
+            addPointer(pointer);
+            pressPointer(pointer);
             pointer.Flags |= flags;
             return pointer;
         }
@@ -294,8 +296,8 @@ namespace TouchScript.InputSources
         {
             var newPointer = objectPool.Get();
             newPointer.CopyFrom(pointer);
-            addPointer(newPointer, position, false);
-            pressPointer(newPointer.Id);
+            addPointer(newPointer);
+            pressPointer(newPointer);
             return newPointer;
         }
 
@@ -318,9 +320,12 @@ namespace TouchScript.InputSources
                 server = null;
             }
 
-            foreach (var i in cursorToInternalId) cancelPointer(i.Value.Id);
-            foreach (var i in blobToInternalId) cancelPointer(i.Value.Id);
-            foreach (var i in objectToInternalId) cancelPointer(i.Value.Id);
+            foreach (var i in cursorToInternalId) cancelPointer(i.Value);
+            foreach (var i in blobToInternalId) cancelPointer(i.Value);
+            foreach (var i in objectToInternalId) cancelPointer(i.Value);
+            cursorToInternalId.Clear();
+            blobToInternalId.Clear();
+            objectToInternalId.Clear();
         }
 
         private void updateInputs()
@@ -374,7 +379,8 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                movePointer(touch.Id, new Vector2(x, y));
+                touch.Position = remapCoordinates(new Vector2(x, y));
+                updatePointer(touch);
             }
         }
 
@@ -387,8 +393,8 @@ namespace TouchScript.InputSources
                 if (!cursorToInternalId.TryGetValue(entity, out touch)) return;
 
                 cursorToInternalId.Remove(entity);
-                releasePointer(touch.Id);
-                removePointer(touch.Id);
+                releasePointer(touch);
+                removePointer(touch);
             }
         }
 
@@ -416,8 +422,9 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                movePointer(touch.Id, new Vector2(x, y));
+                touch.Position = remapCoordinates(new Vector2(x, y));
                 updateBlobProperties(touch, entity);
+                updatePointer(touch);
             }
         }
 
@@ -430,8 +437,8 @@ namespace TouchScript.InputSources
                 if (!blobToInternalId.TryGetValue(entity, out touch)) return;
 
                 blobToInternalId.Remove(entity);
-                releasePointer(touch.Id);
-                removePointer(touch.Id);
+                releasePointer(touch);
+                removePointer(touch);
             }
         }
 
@@ -459,8 +466,9 @@ namespace TouchScript.InputSources
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
 
-                movePointer(touch.Id, new Vector2(x, y));
+                touch.Position = remapCoordinates(new Vector2(x, y));
                 updateObjectProperties(touch, entity);
+                updatePointer(touch);
             }
         }
 
@@ -473,8 +481,8 @@ namespace TouchScript.InputSources
                 if (!objectToInternalId.TryGetValue(entity, out touch)) return;
 
                 objectToInternalId.Remove(entity);
-                releasePointer(touch.Id);
-                removePointer(touch.Id);
+                releasePointer(touch);
+                removePointer(touch);
             }
         }
 

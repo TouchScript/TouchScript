@@ -767,12 +767,12 @@ namespace TouchScript.Gestures
             pointersPressed(pointers);
         }
 
-        internal void INTERNAL_PointersMoved(IList<Pointer> pointers)
+        internal void INTERNAL_PointersUpdated(IList<Pointer> pointers)
         {
             pointersNumState = PointersNumState.InRange;
             if (minPointers > 0 && numPointers < minPointers) pointersNumState = PointersNumState.TooFew;
             if (maxPointers > 0 && pointersNumState == PointersNumState.InRange && numPointers > maxPointers) pointersNumState = PointersNumState.TooMany;
-            pointersMoved(pointers);
+            pointersUpdated(pointers);
         }
 
         internal void INTERNAL_PointersReleased(IList<Pointer> pointers)
@@ -963,7 +963,7 @@ namespace TouchScript.Gestures
         /// Called for moved pointers.
         /// </summary>
         /// <param name="pointers"> The pointers. </param>
-        protected virtual void pointersMoved(IList<Pointer> pointers) {}
+        protected virtual void pointersUpdated(IList<Pointer> pointers) {}
 
         /// <summary>
         /// Called if pointers are removed.

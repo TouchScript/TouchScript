@@ -34,11 +34,11 @@ namespace TouchScript.Gestures.Clustered
         }
 
         /// <inheritdoc />
-        protected override void pointersMoved(IList<Pointer> pointers)
+        protected override void pointersUpdated(IList<Pointer> pointers)
         {
             clusters.Invalidate();
 
-            base.pointersMoved(pointers);
+            base.pointersUpdated(pointers);
         }
 
         /// <inheritdoc />

@@ -15,6 +15,13 @@ namespace TouchScript.InputSources
     /// </remarks>
     public interface IInputSource : INTERNAL_IInputSource
     {
+
+        /// <summary>
+        /// Gets or sets current coordinates remapper.
+        /// </summary>
+        /// <value>An object used to change coordinates of pointer points coming from this input source.</value>
+        ICoordinatesRemapper CoordinatesRemapper { get; set; }
+
         /// <summary>
         /// This method is called by <see cref="TouchManagerInstance"/> to synchronously update the input.
         /// </summary>
@@ -27,15 +34,6 @@ namespace TouchScript.InputSources
         /// <param name="return">if set to <c>true</c> returns the pointer back to the system with different id.</param>
         /// <returns><c>True</c> if the pointer belongs to this Input and was successfully cancelled; <c>false</c> otherwise.</returns>
         bool CancelPointer(Pointer pointer, bool shouldReturn);
-    }
-
-    public interface IRemapableInputSource
-    {
-        /// <summary>
-        /// Gets or sets current coordinates remapper.
-        /// </summary>
-        /// <value>An object used to change coordinates of pointer points coming from this input source.</value>
-        ICoordinatesRemapper CoordinatesRemapper { get; set; }
     }
 
     public interface INTERNAL_IInputSource

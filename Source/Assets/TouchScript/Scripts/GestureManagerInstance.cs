@@ -53,7 +53,7 @@ namespace TouchScript
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
 
-        private Action<Gesture, IList<Pointer>> _updatePressed, _updateMoved, _updateReleased, _updateCancelled;
+        private Action<Gesture, IList<Pointer>> _updatePressed, _updateUpdated, _updateReleased, _updateCancelled;
         private Action<Transform> _processTarget, _processTargetBegan;
 
         #endregion
@@ -98,7 +98,7 @@ namespace TouchScript
             _processTarget = processTarget;
             _processTargetBegan = processTargetBegan;
             _updatePressed = doUpdatePressed;
-            _updateMoved = doUpdateMoved;
+            _updateUpdated = doUpdateUpdated;
             _updateReleased = doUpdateReleased;
             _updateCancelled = doUpdateCancelled;
 
@@ -114,7 +114,7 @@ namespace TouchScript
             {
                 touchManager.FrameStarted += frameStartedHandler;
                 touchManager.FrameFinished += frameFinishedHandler;
-                touchManager.PointersMoved += pointersMovedHandler;
+                touchManager.PointersUpdated += PointersUpdatedHandler;
                 touchManager.PointersPressed += pointersPressedHandler;
                 touchManager.PointersReleased += pointersReleasedHandler;
                 touchManager.PointersCancelled += pointersCancelledHandler;
@@ -128,7 +128,7 @@ namespace TouchScript
             {
                 touchManager.FrameStarted -= frameStartedHandler;
                 touchManager.FrameFinished -= frameFinishedHandler;
-                touchManager.PointersMoved -= pointersMovedHandler;
+                touchManager.PointersUpdated -= PointersUpdatedHandler;
                 touchManager.PointersPressed -= pointersPressedHandler;
                 touchManager.PointersReleased -= pointersReleasedHandler;
                 touchManager.PointersCancelled -= pointersCancelledHandler;
@@ -220,9 +220,9 @@ namespace TouchScript
             gesture.INTERNAL_PointersPressed(pointers);
         }
 
-        private void doUpdateMoved(Gesture gesture, IList<Pointer> pointers)
+        private void doUpdateUpdated(Gesture gesture, IList<Pointer> pointers)
         {
-            gesture.INTERNAL_PointersMoved(pointers);
+            gesture.INTERNAL_PointersUpdated(pointers);
         }
 
         private void doUpdateReleased(Gesture gesture, IList<Pointer> pointers)
@@ -568,9 +568,9 @@ namespace TouchScript
             update(pointerEventArgs.Pointers, _processTargetBegan, _updatePressed);
         }
 
-        private void pointersMovedHandler(object sender, PointerEventArgs pointerEventArgs)
+        private void PointersUpdatedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            update(pointerEventArgs.Pointers, _processTarget, _updateMoved);
+            update(pointerEventArgs.Pointers, _processTarget, _updateUpdated);
         }
 
         private void pointersReleasedHandler(object sender, PointerEventArgs pointerEventArgs)

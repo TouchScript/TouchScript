@@ -2,7 +2,6 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
@@ -77,7 +76,13 @@ namespace TouchScript.Pointers
 
         public PointerType Type { get; protected set; }
 
-        public uint Flags { get; internal set; }
+        public uint Flags
+        {
+            get { return flags; }
+            set { newFlags = value; }
+        }
+
+        public uint PreviousFlags { get; internal set; }
 
         /// <summary>
         /// Original hit target.
@@ -90,6 +95,7 @@ namespace TouchScript.Pointers
         public Vector2 Position
         {
             get { return position; }
+            set { newPosition = value; }
         }
 
         /// <summary>
@@ -129,8 +135,8 @@ namespace TouchScript.Pointers
         #region Private variables
 
         private int refCount = 0;
-        private Vector2 position = Vector2.zero;
-        private Vector2 newPosition = Vector2.zero;
+        private Vector2 position, newPosition;
+        private uint flags, newFlags;
 
         #endregion
 
@@ -139,10 +145,12 @@ namespace TouchScript.Pointers
         public virtual void CopyFrom(Pointer target)
         {
             Type = target.Type;
-            Flags = target.Flags;
+            flags = target.flags;
+            newFlags = target.newFlags;
+            PreviousFlags = target.PreviousFlags;
             position = target.position;
-            PreviousPosition = target.PreviousPosition;
             newPosition = target.newPosition;
+            PreviousPosition = target.PreviousPosition;
         }
 
         /// <inheritdoc />
@@ -184,31 +192,27 @@ namespace TouchScript.Pointers
 
         #region Internal methods
 
-        internal void INTERNAL_Init(int id, Vector2 position)
+        internal virtual void INTERNAL_Init(int id)
         {
             Id = id;
-            this.position = PreviousPosition = newPosition = position;
+            PreviousPosition = position = newPosition;
+            PreviousFlags = flags = newFlags;
         }
 
-        internal void INTERNAL_Reset()
+        internal virtual void INTERNAL_Reset()
         {
             Id = INVALID_POINTER;
-            refCount = 0;
-            Hit = default(TouchHit);
-            Target = null;
-            Layer = null;
-            Flags = 0;
+            INTERNAL_ClearTargetData();
+            position = newPosition = PreviousPosition = Vector2.zero;
+            flags = newFlags = PreviousFlags =  0;
         }
 
-        internal void INTERNAL_ResetPosition()
+        internal virtual void INTERNAL_FrameStarted()
         {
             PreviousPosition = position;
             position = newPosition;
-        }
-
-        internal void INTERNAL_SetPosition(Vector2 value)
-        {
-            newPosition = value;
+            PreviousFlags = flags;
+            flags = newFlags;
         }
 
         internal void INTERNAL_Retain()
@@ -221,8 +225,11 @@ namespace TouchScript.Pointers
             return --refCount;
         }
 
-        internal void INTERNAL_ClearRefCount()
+        internal void INTERNAL_ClearTargetData()
         {
+            Hit = default(TouchHit);
+            Target = null;
+            Layer = null;
             refCount = 0;
         }
 

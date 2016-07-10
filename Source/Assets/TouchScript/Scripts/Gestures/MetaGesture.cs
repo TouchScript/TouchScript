@@ -55,10 +55,10 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Occurs when a pointer is updated.
         /// </summary>
-        public event EventHandler<MetaGestureEventArgs> PointerMoved
+        public event EventHandler<MetaGestureEventArgs> PointerUpdated
         {
-            add { pointerMovedInvoker += value; }
-            remove { pointerMovedInvoker -= value; }
+            add { pointerUpdatedInvoker += value; }
+            remove { pointerUpdatedInvoker -= value; }
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace TouchScript.Gestures
 
         // Needed to overcome iOS AOT limitations
         private EventHandler<MetaGestureEventArgs> pointerPressedInvoker,
-                                                   pointerMovedInvoker,
+                                                   pointerUpdatedInvoker,
                                                    pointerReleasedInvoker,
                                                    pointerCancelledInvoker;
 
@@ -109,17 +109,17 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void pointersMoved(IList<Pointer> pointers)
+        protected override void pointersUpdated(IList<Pointer> pointers)
         {
-            base.pointersMoved(pointers);
+            base.pointersUpdated(pointers);
 
             if (State == GestureState.Began || State == GestureState.Changed) setState(GestureState.Changed);
 
             var length = pointers.Count;
-            if (pointerMovedInvoker != null)
+            if (pointerUpdatedInvoker != null)
             {
                 for (var i = 0; i < length; i++)
-                    pointerMovedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
+                    pointerUpdatedInvoker.InvokeHandleExceptions(this, new MetaGestureEventArgs(pointers[i]));
             }
             if (UseSendMessage && SendMessageTarget != null)
             {

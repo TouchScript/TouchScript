@@ -670,7 +670,7 @@ GameObject:
   - 114: {fileID: 963048129}
   - 114: {fileID: 963048128}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -753,7 +753,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1270,7 +1269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd90a8856e1a49eba25728d5aaac9f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

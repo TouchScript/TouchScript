@@ -60,9 +60,9 @@ namespace TouchScript.Gestures.UI
         }
 
         /// <inheritdoc />
-        protected override void pointersMoved(IList<Pointer> pointers)
+        protected override void pointersUpdated(IList<Pointer> pointers)
         {
-            base.pointersMoved(pointers);
+            base.pointersUpdated(pointers);
 
             for (var i = 0; i < pointers.Count; i++)
             {

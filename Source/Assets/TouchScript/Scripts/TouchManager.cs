@@ -64,7 +64,7 @@ namespace TouchScript
             /// <summary>
             /// Some pointers have moved during the frame.
             /// </summary>
-            PointersMoved = 1 << 3,
+            PointersUpdated = 1 << 3,
 
             /// <summary>
             /// Some pointers have touched the surface during the frame.
@@ -108,9 +108,9 @@ namespace TouchScript
             OnPointersAdded = MessageType.PointersAdded,
 
             /// <summary>
-            /// Some pointers have moved during the frame.
+            /// Some pointers have updated during the frame.
             /// </summary>
-            OnPointersMoved = MessageType.PointersMoved,
+            OnPointersUpdated = MessageType.PointersUpdated,
 
             /// <summary>
             /// Some pointers have touched the surface during the frame.
@@ -291,7 +291,7 @@ namespace TouchScript
 
         [SerializeField]
         private MessageType sendMessageEvents = MessageType.PointersPressed | MessageType.PointersCancelled |
-                                                MessageType.PointersReleased | MessageType.PointersMoved;
+                                                MessageType.PointersReleased | MessageType.PointersUpdated;
 
         [SerializeField]
         private GameObject sendMessageTarget;
@@ -344,7 +344,7 @@ namespace TouchScript
             if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedHandler;
             if ((SendMessageEvents & MessageType.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
             if ((SendMessageEvents & MessageType.PointersAdded) != 0) Instance.PointersAdded += pointersAddedHandler;
-            if ((SendMessageEvents & MessageType.PointersMoved) != 0) Instance.PointersMoved += pointersMovedHandler;
+            if ((SendMessageEvents & MessageType.PointersUpdated) != 0) Instance.PointersUpdated += PointersUpdatedHandler;
             if ((SendMessageEvents & MessageType.PointersPressed) != 0) Instance.PointersPressed += pointersPressedHandler;
             if ((SendMessageEvents & MessageType.PointersReleased) != 0) Instance.PointersReleased += pointersReleasedHandler;
             if ((SendMessageEvents & MessageType.PointersRemoved) != 0) Instance.PointersRemoved += pointersRemovedHandler;
@@ -359,7 +359,7 @@ namespace TouchScript
             Instance.FrameStarted -= frameStartedHandler;
             Instance.FrameFinished -= frameFinishedHandler;
             Instance.PointersAdded -= pointersAddedHandler;
-            Instance.PointersMoved -= pointersMovedHandler;
+            Instance.PointersUpdated -= PointersUpdatedHandler;
             Instance.PointersPressed -= pointersPressedHandler;
             Instance.PointersReleased -= pointersReleasedHandler;
             Instance.PointersRemoved -= pointersRemovedHandler;
@@ -372,9 +372,9 @@ namespace TouchScript
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void pointersMovedHandler(object sender, PointerEventArgs e)
+        private void PointersUpdatedHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersMoved.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersUpdated.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 

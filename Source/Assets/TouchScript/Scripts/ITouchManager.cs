@@ -21,7 +21,7 @@ namespace TouchScript
     /// <list type="number">
     /// <item><description>FrameStarted</description></item>
     /// <item><description>PointersPressed</description></item>
-    /// <item><description>PointersMoved</description></item>
+    /// <item><description>PointersUpdated</description></item>
     /// <item><description>PointersReleased</description></item>
     /// <item><description>PointersCancelled</description></item>
     /// <item><description>FrameFinished</description></item>
@@ -59,7 +59,7 @@ namespace TouchScript
         /// <summary>
         /// Occurs when pointers are updated.
         /// </summary>
-        event EventHandler<PointerEventArgs> PointersMoved;
+        event EventHandler<PointerEventArgs> PointersUpdated;
 
         /// <summary>
         /// Occurs when pointers touch the surface.

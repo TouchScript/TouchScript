@@ -18,6 +18,8 @@ namespace TouchScript.InputSources.InputHandlers
     {
         #region Public properties
 
+        public ICoordinatesRemapper CoordinatesRemapper { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether there any active pointers.
         /// </summary>
@@ -31,14 +33,15 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private variables
 
-        private AddPointerDelegate addPointer;
-        private MovePointerDelegate movePointer;
-        private PressPointerDelegate pressPointer;
-        private ReleasePointerDelegate releasePointer;
-        private RemovePointerDelegate removePointer;
-        private CancelPointerDelegate cancelPointer;
+        private PointerDelegate addPointer;
+        private PointerDelegate updatePointer;
+        private PointerDelegate pressPointer;
+        private PointerDelegate releasePointer;
+        private PointerDelegate removePointer;
+        private PointerDelegate cancelPointer;
 
         private ObjectPool<TouchPointer> touchPool;
+        // Unity fingerId -> TouchScript touch info
         private Dictionary<int, TouchState> systemToInternalId = new Dictionary<int, TouchState>();
         private int pointersNum;
 
@@ -48,13 +51,13 @@ namespace TouchScript.InputSources.InputHandlers
         /// Initializes a new instance of the <see cref="TouchHandler" /> class.
         /// </summary>
         /// <param name="beginPointer">A function called when a new pointer is detected. As <see cref="InputSource.pressPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
-        /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
+        /// <param name="_updatePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
         /// <param name="endPointer">A function called when a pointer is lifted off. As <see cref="InputSource.releasePointer" /> this function must accept an int id.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
-        public TouchHandler(AddPointerDelegate addPointer, MovePointerDelegate movePointer, PressPointerDelegate pressPointer, ReleasePointerDelegate releasePointer, RemovePointerDelegate removePointer, CancelPointerDelegate cancelPointer)
+        public TouchHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
         {
             this.addPointer = addPointer;
-            this.movePointer = movePointer;
+            this.updatePointer = updatePointer;
             this.pressPointer = pressPointer;
             this.releasePointer = releasePointer;
             this.removePointer = removePointer;
@@ -82,47 +85,53 @@ namespace TouchScript.InputSources.InputHandlers
                         if (systemToInternalId.TryGetValue(t.fingerId, out touchState) && touchState.Phase != TouchPhase.Canceled)
                         {
                             // Ending previous touch (missed a frame)
-                            internalRemovePointer(touchState.Id);
-                            systemToInternalId[t.fingerId] = new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON).Id);
+                            internalRemovePointer(touchState.Pointer);
+                            systemToInternalId[t.fingerId] = new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON));
                         }
                         else
                         {
-                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON).Id));
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON)));
                         }
                         break;
                     case TouchPhase.Moved:
 						if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
 						{
-							if (touchState.Phase != TouchPhase.Canceled) movePointer(touchState.Id, t.position);
+						    if (touchState.Phase != TouchPhase.Canceled)
+						    {
+						        touchState.Pointer.Position = t.position;
+                                updatePointer(touchState.Pointer);
+						    }
 						}
                         else
                         {
                             // Missed began phase
-                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON).Id));
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON)));
                         }
                         break;
                     case TouchPhase.Ended:
                         if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
                         {
                             systemToInternalId.Remove(t.fingerId);
-                            if (touchState.Phase != TouchPhase.Canceled) internalRemovePointer(touchState.Id);
+                            if (touchState.Phase != TouchPhase.Canceled) internalRemovePointer(touchState.Pointer);
                         }
                         else
                         {
                             // Missed one finger begin-end transition
-                            internalRemovePointer(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON).Id);
+                            var pointer = internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON);
+                            internalRemovePointer(pointer);
                         }
                         break;
                     case TouchPhase.Canceled:
                         if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
                         {
                             systemToInternalId.Remove(t.fingerId);
-                            if (touchState.Phase != TouchPhase.Canceled) internalCancelPointer(touchState.Id);
+                            if (touchState.Phase != TouchPhase.Canceled) internalCancelPointer(touchState.Pointer);
                         }
                         else
                         {
                             // Missed one finger begin-end transition
-                            internalCancelPointer(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON).Id);
+                            var pointer = internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON);
+                            internalCancelPointer(pointer);
                         }
                         break;
                     case TouchPhase.Stationary:
@@ -130,7 +139,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             // Missed begin phase
-                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON).Id));
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON)));
                         }
                         break;
                 }
@@ -146,7 +155,7 @@ namespace TouchScript.InputSources.InputHandlers
             int fingerId = -1;
             foreach (var touchState in systemToInternalId)
             {
-                if (touchState.Value.Id == touch.Id && touchState.Value.Phase != TouchPhase.Canceled)
+                if (touchState.Value.Pointer == touch && touchState.Value.Phase != TouchPhase.Canceled)
                 {
                     fingerId = touchState.Key;
                     break;
@@ -154,9 +163,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
             if (fingerId > -1)
             {
-                internalCancelPointer(touch.Id);
-                if (shouldReturn) systemToInternalId[fingerId] = new TouchState(internalReturnPointer(touch, touch.Position).Id);
-                else systemToInternalId[fingerId] = new TouchState(touch.Id, TouchPhase.Canceled);
+                internalCancelPointer(touch);
+                if (shouldReturn) systemToInternalId[fingerId] = new TouchState(internalReturnPointer(touch));
+                else systemToInternalId[fingerId] = new TouchState(touch, TouchPhase.Canceled);
                 return true;
             }
             return false;
@@ -167,7 +176,7 @@ namespace TouchScript.InputSources.InputHandlers
         {
             foreach (var touchState in systemToInternalId)
             {
-                if (touchState.Value.Phase != TouchPhase.Canceled) internalCancelPointer(touchState.Value.Id);
+                if (touchState.Value.Phase != TouchPhase.Canceled) internalCancelPointer(touchState.Value.Pointer);
             }
             systemToInternalId.Clear();
         }
@@ -192,45 +201,52 @@ namespace TouchScript.InputSources.InputHandlers
         {
             pointersNum++;
             var pointer = touchPool.Get();
-            addPointer(pointer, position, true);
-            pressPointer(pointer.Id);
+            pointer.Position = remapCoordinates(position);
+            addPointer(pointer);
+            pressPointer(pointer);
             pointer.Flags |= flags;
             return pointer;
         }
 
-        private TouchPointer internalReturnPointer(TouchPointer pointer, Vector2 position)
+        private TouchPointer internalReturnPointer(TouchPointer pointer)
         {
             pointersNum++;
             var newPointer = touchPool.Get();
             newPointer.CopyFrom(pointer);
-            addPointer(newPointer, position, false);
-            pressPointer(newPointer.Id);
+            addPointer(newPointer);
+            pressPointer(newPointer);
             return newPointer;
         }
 
-        private void internalRemovePointer(int id)
+        private void internalRemovePointer(Pointer pointer)
         {
             pointersNum--;
-            releasePointer(id);
-            removePointer(id);
+            releasePointer(pointer);
+            removePointer(pointer);
         }
 
-        private void internalCancelPointer(int id)
+        private void internalCancelPointer(Pointer pointer)
         {
             pointersNum--;
-            cancelPointer(id);
+            cancelPointer(pointer);
+        }
+
+        private Vector2 remapCoordinates(Vector2 position)
+        {
+            if (CoordinatesRemapper != null) return CoordinatesRemapper.Remap(position);
+            return position;
         }
 
         #endregion
 
         private struct TouchState
         {
-            public int Id;
+            public Pointer Pointer;
             public TouchPhase Phase;
 
-            public TouchState(int id, TouchPhase phase = TouchPhase.Began)
+            public TouchState(Pointer pointer, TouchPhase phase = TouchPhase.Began)
             {
-                Id = id;
+                Pointer = pointer;
                 Phase = phase;
             }
 

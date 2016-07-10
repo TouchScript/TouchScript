@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointerProxy: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
   showPointerId: 1
-  showTags: 1
+  showFlags: 1
   useDPI: 1
   pointerSize: 1
 --- !u!1002 &11400001

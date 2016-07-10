@@ -16,6 +16,8 @@ namespace TouchScript.InputSources.InputHandlers
     {
         #region Public properties
 
+        public ICoordinatesRemapper CoordinatesRemapper { get; set; }
+
         public bool EmulateSecondMousePointer
         {
             get { return emulateSecondMousePointer; }
@@ -32,12 +34,12 @@ namespace TouchScript.InputSources.InputHandlers
 
         private bool emulateSecondMousePointer = true;
 
-        private AddPointerDelegate addPointer;
-        private MovePointerDelegate movePointer;
-        private PressPointerDelegate pressPointer;
-        private ReleasePointerDelegate releasePointer;
-        private RemovePointerDelegate removePointer;
-        private CancelPointerDelegate cancelPointer;
+        private PointerDelegate addPointer;
+        private PointerDelegate updatePointer;
+        private PointerDelegate pressPointer;
+        private PointerDelegate releasePointer;
+        private PointerDelegate removePointer;
+        private PointerDelegate cancelPointer;
 
         private ObjectPool<MousePointer> mousePool;
         private MousePointer mousePointer, fakeMousePointer;
@@ -49,13 +51,13 @@ namespace TouchScript.InputSources.InputHandlers
         /// Initializes a new instance of the <see cref="MouseHandler" /> class.
         /// </summary>
         /// <param name="pressPointer">A function called when a new pointer is detected. As <see cref="InputSource.pressPointer" /> this function must accept a Vector2 position of the new pointer and return an instance of <see cref="Pointer" />.</param>
-        /// <param name="movePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
+        /// <param name="_updatePointer">A function called when a pointer is moved. As <see cref="InputSource.movePointer" /> this function must accept an int id and a Vector2 position.</param>
         /// <param name="releasePointer">A function called when a pointer is lifted off. As <see cref="InputSource.releasePointer" /> this function must accept an int id.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled. As <see cref="InputSource.cancelPointer" /> this function must accept an int id.</param>
-        public MouseHandler(AddPointerDelegate addPointer, MovePointerDelegate movePointer, PressPointerDelegate pressPointer, ReleasePointerDelegate releasePointer, RemovePointerDelegate removePointer, CancelPointerDelegate cancelPointer)
+        public MouseHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
         {
             this.addPointer = addPointer;
-            this.movePointer = movePointer;
+            this.updatePointer = updatePointer;
             this.pressPointer = pressPointer;
             this.releasePointer = releasePointer;
             this.removePointer = removePointer;
@@ -77,9 +79,8 @@ namespace TouchScript.InputSources.InputHandlers
             if (fakeMousePointer != null
                 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
             {
-                fakeMousePointer.Flags = fakeMousePointer.Flags & ~Pointer.FLAG_INCONTACT;
-                releasePointer(fakeMousePointer.Id);
-                removePointer(fakeMousePointer.Id);
+                releasePointer(fakeMousePointer);
+                removePointer(fakeMousePointer);
                 fakeMousePointer = null;
             }
 
@@ -87,7 +88,8 @@ namespace TouchScript.InputSources.InputHandlers
             if (mousePointPos != pos)
             {
                 mousePointPos = pos;
-                movePointer(mousePointer.Id, new Vector2(pos.x, pos.y));
+                mousePointer.Position = remapCoordinates(new Vector2(pos.x, pos.y));
+                updatePointer(mousePointer);
             }
 
             var flags = mousePointer.Flags;
@@ -100,17 +102,17 @@ namespace TouchScript.InputSources.InputHandlers
                     // But there was a click this frame
                     var newFlags = getMouseButtonFlags();
                     mousePointer.Flags = (flags & ~Pointer.FLAG_INCONTACT) | newFlags;
-                    pressPointer(mousePointer.Id);
+                    pressPointer(mousePointer);
                     if (newFlags == 0)
                     {
                         // And release the same frame
-                        releasePointer(mousePointer.Id);
+                        releasePointer(mousePointer);
                         if (emulateSecondMousePointer
                         && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                         && fakeMousePointer == null)
                         {
                             fakeMousePointer = internalAddPointer(mousePointPos, flags | Pointer.FLAG_ARTIFICIAL);
-                            pressPointer(fakeMousePointer.Id);
+                            pressPointer(fakeMousePointer);
                         }
                     }
                 }
@@ -118,18 +120,23 @@ namespace TouchScript.InputSources.InputHandlers
             else
             {
                 var newFlags = getMouseButtonFlags();
+                var oldFlags = flags & Pointer.FLAG_INCONTACT;
                 mousePointer.Flags = (flags & ~Pointer.FLAG_INCONTACT) | newFlags;
                 if (newFlags == 0)
                 {
                     // Released this frame
-                    releasePointer(mousePointer.Id);
+                    releasePointer(mousePointer);
                     if (emulateSecondMousePointer 
                         && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                         && fakeMousePointer == null)
                     {
                         fakeMousePointer = internalAddPointer(mousePointPos, flags | Pointer.FLAG_ARTIFICIAL);
-                        pressPointer(fakeMousePointer.Id);
+                        pressPointer(fakeMousePointer);
                     }
+                } else if (newFlags != oldFlags)
+                {
+                    // Button state changed
+                    updatePointer(mousePointer);
                 }
             }
         }
@@ -139,15 +146,15 @@ namespace TouchScript.InputSources.InputHandlers
         {
             if (pointer.Equals(mousePointer))
             {
-                cancelPointer(mousePointer.Id);
-                if (shouldReturn) mousePointer = internalReturnPointer(mousePointer, pointer.Position);
+                cancelPointer(mousePointer);
+                if (shouldReturn) mousePointer = internalReturnPointer(mousePointer);
                 else mousePointer = internalAddPointer(mousePointPos); // can't totally cancell mouse pointer
                 return true;
             }
             if (pointer.Equals(fakeMousePointer))
             {
-                cancelPointer(fakeMousePointer.Id);
-                if (shouldReturn) fakeMousePointer = internalReturnPointer(fakeMousePointer, pointer.Position);
+                cancelPointer(fakeMousePointer);
+                if (shouldReturn) fakeMousePointer = internalReturnPointer(fakeMousePointer);
                 else fakeMousePointer = null;
                 return true;
             }
@@ -159,12 +166,12 @@ namespace TouchScript.InputSources.InputHandlers
         {
             if (mousePointer != null)
             {
-                cancelPointer(mousePointer.Id);
+                cancelPointer(mousePointer);
                 mousePointer = null;
             }
             if (fakeMousePointer != null)
             {
-                cancelPointer(fakeMousePointer.Id);
+                cancelPointer(fakeMousePointer);
                 fakeMousePointer = null;
             }
         }
@@ -197,18 +204,25 @@ namespace TouchScript.InputSources.InputHandlers
         private MousePointer internalAddPointer(Vector2 position, uint flags = 0)
         {
             var pointer = mousePool.Get();
-            addPointer(pointer, position);
+            pointer.Position = remapCoordinates(position);
+            addPointer(pointer);
             pointer.Flags |= flags;
             return pointer;
         }
 
-        private MousePointer internalReturnPointer(MousePointer pointer, Vector2 position)
+        private MousePointer internalReturnPointer(MousePointer pointer)
         {
             var newPointer = mousePool.Get();
             newPointer.CopyFrom(pointer);
-            addPointer(newPointer, position, false);
-            if ((newPointer.Flags & Pointer.FLAG_INCONTACT) != 0) pressPointer(newPointer.Id);
+            addPointer(newPointer);
+            if ((newPointer.Flags & Pointer.FLAG_INCONTACT) != 0) pressPointer(newPointer);
             return newPointer;
+        }
+
+        private Vector2 remapCoordinates(Vector2 position)
+        {
+            if (CoordinatesRemapper != null) return CoordinatesRemapper.Remap(position);
+            return position;
         }
 
         #endregion

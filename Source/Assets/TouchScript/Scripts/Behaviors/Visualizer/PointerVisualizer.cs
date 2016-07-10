@@ -121,7 +121,7 @@ namespace TouchScript.Behaviors.Visualizer
             {
                 TouchManager.Instance.PointersPressed += pointersPressedHandler;
                 TouchManager.Instance.PointersReleased += pointersReleasedHandler;
-                TouchManager.Instance.PointersMoved += pointersMovedHandler;
+                TouchManager.Instance.PointersUpdated += PointersUpdatedHandler;
                 TouchManager.Instance.PointersCancelled += pointersCancelledHandler;
             }
         }
@@ -132,7 +132,7 @@ namespace TouchScript.Behaviors.Visualizer
             {
                 TouchManager.Instance.PointersPressed -= pointersPressedHandler;
                 TouchManager.Instance.PointersReleased -= pointersReleasedHandler;
-                TouchManager.Instance.PointersMoved -= pointersMovedHandler;
+                TouchManager.Instance.PointersUpdated -= PointersUpdatedHandler;
                 TouchManager.Instance.PointersCancelled -= pointersCancelledHandler;
             }
         }
@@ -187,7 +187,7 @@ namespace TouchScript.Behaviors.Visualizer
             }
         }
 
-        private void pointersMovedHandler(object sender, PointerEventArgs e)
+        private void PointersUpdatedHandler(object sender, PointerEventArgs e)
         {
             var count = e.Pointers.Count;
             for (var i = 0; i < count; i++)

@@ -11,24 +11,14 @@ namespace TouchScript.InputSources
 
     #region Consts
 
-    public delegate void AddPointerDelegate(Pointer pointer, Vector2 position, bool remap = true);
-
-    public delegate void MovePointerDelegate(int id, Vector2 position);
-
-    public delegate void PressPointerDelegate(int id);
-
-    public delegate void ReleasePointerDelegate(int id);
-
-    public delegate void RemovePointerDelegate(int id);
-
-    public delegate void CancelPointerDelegate(int id);
+    public delegate void PointerDelegate(Pointer pointer);
 
     #endregion
 
     /// <summary>
     /// Base class for all pointer input sources.
     /// </summary>
-    public abstract class InputSource : MonoBehaviour, IInputSource, IRemapableInputSource
+    public abstract class InputSource : MonoBehaviour, IInputSource
     {
         #region Public properties
 
@@ -39,7 +29,12 @@ namespace TouchScript.InputSources
         public ICoordinatesRemapper CoordinatesRemapper
         {
             get { return coordinatesRemapper; }
-            set { coordinatesRemapper = value; }
+            set
+            {
+                if (coordinatesRemapper == value) return;
+                coordinatesRemapper = value;
+                updateCoordinatesRemapper(value);
+            }
         }
 
         #endregion
@@ -102,10 +97,9 @@ namespace TouchScript.InputSources
 
         #region Protected methods
 
-        protected virtual void addPointer(Pointer pointer, Vector2 position, bool remap = true)
+        protected virtual void addPointer(Pointer pointer)
         {
-            if (coordinatesRemapper != null && remap) position = coordinatesRemapper.Remap(position);
-            manager.INTERNAL_AddPointer(pointer, position);
+            manager.INTERNAL_AddPointer(pointer);
         }
 
         /// <summary>
@@ -113,10 +107,10 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="id">Pointer id.</param>
         /// <param name="position">Screen position.</param>
-        protected virtual void movePointer(int id, Vector2 position)
+        protected virtual void updatePointer(Pointer pointer)
         {
-            if (coordinatesRemapper != null) position = coordinatesRemapper.Remap(position);
-            manager.INTERNAL_MovePointer(id, position);
+            if (pointer == null) return;
+            manager.INTERNAL_UpdatePointer(pointer.Id);
         }
 
         /// <summary>
@@ -124,32 +118,47 @@ namespace TouchScript.InputSources
         /// </summary>
         /// <param name="position">Screen position.</param>
         /// <returns> New pointer. </returns>
-        protected virtual void pressPointer(int id)
+        protected virtual void pressPointer(Pointer pointer)
         {
-            manager.INTERNAL_PressPointer(id);
+            if (pointer == null) return;
+            manager.INTERNAL_PressPointer(pointer.Id);
         }
 
         /// <summary>
         /// End pointer with id.
         /// </summary>
         /// <param name="id">Pointer id.</param>
-        protected virtual void releasePointer(int id)
+        protected virtual void releasePointer(Pointer pointer)
         {
-            manager.INTERNAL_ReleasePointer(id);
+            if (pointer == null) return;
+            pointer.Flags = pointer.Flags & ~Pointer.FLAG_INCONTACT;
+            manager.INTERNAL_ReleasePointer(pointer.Id);
         }
 
-        protected virtual void removePointer(int id)
+        protected virtual void removePointer(Pointer pointer)
         {
-            manager.INTERNAL_RemovePointer(id);
+            if (pointer == null) return;
+            manager.INTERNAL_RemovePointer(pointer.Id);
         }
 
         /// <summary>
         /// Cancel pointer with id.
         /// </summary>
         /// <param name="id">Pointer id.</param>
-        protected virtual void cancelPointer(int id)
+        protected virtual void cancelPointer(Pointer pointer)
         {
-            manager.INTERNAL_CancelPointer(id);
+            if (pointer == null) return;
+            manager.INTERNAL_CancelPointer(pointer.Id);
+        }
+
+        protected virtual void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
+        {
+        }
+
+        protected virtual Vector2 remapCoordinates(Vector2 position)
+        {
+            if (coordinatesRemapper != null) return coordinatesRemapper.Remap(position);
+            return position;
         }
 
         #endregion

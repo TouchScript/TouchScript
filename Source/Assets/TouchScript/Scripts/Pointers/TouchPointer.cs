@@ -18,5 +18,14 @@ namespace TouchScript.Pointers
 
         #endregion
 
+        #region Internal functions
+
+        //internal override void INTERNAL_Reset()
+        //{
+        //    base.INTERNAL_Reset();
+        //}
+
+        #endregion
+
     }
 }
