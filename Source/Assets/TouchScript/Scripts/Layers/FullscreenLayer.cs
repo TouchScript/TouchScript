@@ -110,7 +110,7 @@ namespace TouchScript.Layers
                 if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
             }
 
-            hit = new TouchHit(transform);
+            hit = new TouchHit(transform, this);
             transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return LayerHitResult.Hit;

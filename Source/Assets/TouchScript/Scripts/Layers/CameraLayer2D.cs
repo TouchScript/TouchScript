@@ -93,7 +93,7 @@ namespace TouchScript.Layers
 
         private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out TouchHit hit)
         {
-            hit = new TouchHit(raycastHit);
+            hit = new TouchHit(raycastHit, this);
             raycastHit.transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return HitTest.ObjectHitResult.Hit;
