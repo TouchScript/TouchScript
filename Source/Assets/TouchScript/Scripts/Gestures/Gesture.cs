@@ -552,7 +552,7 @@ namespace TouchScript.Gestures
                 if (!touchManager.GetHitTarget(position, out hit, out l)) return false;
             }
 
-            if (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform)) return true;
+            if (cachedTransform == hit.Target || hit.Target.IsChildOf(cachedTransform)) return true;
             return false;
         }
 

@@ -98,6 +98,27 @@ namespace TouchScript.Pointers
         public PointerType Type { get; protected set; }
 
         /// <summary>
+        /// Original input source which created this pointer.
+        /// <seealso cref="IInputSource"/>
+        /// </summary>
+        public IInputSource InputSource { get; private set; }
+
+        /// <summary>
+        /// <para>Current position in screen coordinates.</para>
+        /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
+        /// </summary>
+        public Vector2 Position
+        {
+            get { return position; }
+            set { newPosition = value; }
+        }
+
+        /// <summary>
+        /// Previous <see cref="Position"/> (during last frame) in screen coordinates.
+        /// </summary>
+        public Vector2 PreviousPosition { get; private set; }
+
+        /// <summary>
         /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/>, <see cref="FLAG_FIRST_BUTTON"/>, <see cref="FLAG_SECOND_BUTTON"/>, <see cref="FLAG_THIRD_BUTTON"/>, <see cref="FLAG_INCONTACT"/>.</para>
         /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
         /// </summary>
@@ -118,21 +139,6 @@ namespace TouchScript.Pointers
         public Transform Target { get; internal set; }
 
         /// <summary>
-        /// <para>Current position in screen coordinates.</para>
-        /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
-        /// </summary>
-        public Vector2 Position
-        {
-            get { return position; }
-            set { newPosition = value; }
-        }
-
-        /// <summary>
-        /// Previous <see cref="Position"/> (during last frame) in screen coordinates.
-        /// </summary>
-        public Vector2 PreviousPosition { get; private set; }
-
-        /// <summary>
         /// Original hit information.
         /// </summary>
         public TouchHit Hit { get; internal set; }
@@ -144,12 +150,6 @@ namespace TouchScript.Pointers
         /// <seealso cref="CameraLayer2D"/>
         /// </summary>
         public TouchLayer Layer { get; internal set; }
-
-        /// <summary>
-        /// Original input source which created this pointer.
-        /// <seealso cref="IInputSource"/>
-        /// </summary>
-        public IInputSource InputSource { get; private set; }
 
         /// <summary>
         /// Projection parameters for the layer which created this pointer.

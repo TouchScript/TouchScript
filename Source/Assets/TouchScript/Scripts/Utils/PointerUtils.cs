@@ -25,7 +25,7 @@ namespace TouchScript.Utils
             if (pointer == null || pointer.Layer == null || target == null) return false;
             TouchHit hit;
             if ((pointer.Layer.Hit(pointer.Position, out hit) == TouchLayer.LayerHitResult.Hit) &&
-                (target == hit.Transform || hit.Transform.IsChildOf(target)))
+                (target == hit.Target || hit.Target.IsChildOf(target)))
                 return true;
             return false;
         }

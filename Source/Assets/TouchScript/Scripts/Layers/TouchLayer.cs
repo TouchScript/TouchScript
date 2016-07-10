@@ -180,7 +180,7 @@ namespace TouchScript.Layers
             {
                 pointer.Layer = this;
                 pointer.Hit = hit;
-                if (hit.Transform != null) pointer.Target = hit.Transform;
+                if (hit.Target != null) pointer.Target = hit.Target;
                 if (pointerBeganInvoker != null)
                     pointerBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(pointer));
                 return true;

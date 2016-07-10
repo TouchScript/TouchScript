@@ -323,7 +323,7 @@ namespace TouchScript
         {
             TouchHit hit;
             TouchLayer layer;
-            if (GetHitTarget(position, out hit, out layer)) return hit.Transform;
+            if (GetHitTarget(position, out hit, out layer)) return hit.Target;
             return null;
         }
 
