@@ -51,6 +51,7 @@ namespace TouchScript.InputSources.InputHandlers
         private ObjectPool<MousePointer> mousePool;
         private MousePointer mousePointer, fakeMousePointer;
         private Vector3 mousePointPos = Vector3.zero;
+        private DelayedFakePointer addFakePointer;
 
         #endregion
 
@@ -74,6 +75,7 @@ namespace TouchScript.InputSources.InputHandlers
 
             mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, (t) => t.INTERNAL_Reset());
 
+            addFakePointer.ShouldAdd = false;
             mousePointPos = Input.mousePosition;
             mousePointer = internalAddPointer(mousePointPos);
         }
@@ -83,6 +85,13 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public void UpdateInput()
         {
+            if (addFakePointer.ShouldAdd)
+            {
+                addFakePointer.ShouldAdd = false;
+                fakeMousePointer = internalAddPointer(addFakePointer.Position, addFakePointer.Flags);
+                pressPointer(fakeMousePointer);
+            }
+
             if (fakeMousePointer != null
                 && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
             {
@@ -118,8 +127,9 @@ namespace TouchScript.InputSources.InputHandlers
                         && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                         && fakeMousePointer == null)
                         {
-                            fakeMousePointer = internalAddPointer(mousePointPos, flags | Pointer.FLAG_ARTIFICIAL);
-                            pressPointer(fakeMousePointer);
+                            addFakePointer.ShouldAdd = true;
+                            addFakePointer.Flags = flags | Pointer.FLAG_ARTIFICIAL;
+                            addFakePointer.Position = mousePointPos;
                         }
                     }
                 }
@@ -137,8 +147,9 @@ namespace TouchScript.InputSources.InputHandlers
                         && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                         && fakeMousePointer == null)
                     {
-                        fakeMousePointer = internalAddPointer(mousePointPos, flags | Pointer.FLAG_ARTIFICIAL);
-                        pressPointer(fakeMousePointer);
+                        addFakePointer.ShouldAdd = true;
+                        addFakePointer.Flags = flags | Pointer.FLAG_ARTIFICIAL;
+                        addFakePointer.Position = mousePointPos;
                     }
                 } else if (newFlags != oldFlags)
                 {
@@ -213,8 +224,8 @@ namespace TouchScript.InputSources.InputHandlers
         {
             var pointer = mousePool.Get();
             pointer.Position = remapCoordinates(position);
+			pointer.Flags |= flags;
             addPointer(pointer);
-            pointer.Flags |= flags;
             return pointer;
         }
 
@@ -234,5 +245,13 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         #endregion
+
+        private struct DelayedFakePointer
+        {
+            public bool ShouldAdd;
+            public uint Flags;
+            public Vector2 Position;
+        }
+
     }
 }
