@@ -248,6 +248,7 @@ namespace TouchScript.Pointers
             INTERNAL_ClearPressData();
             position = newPosition = PreviousPosition = Vector2.zero;
             flags = newFlags = PreviousFlags = 0;
+            overDataIsDirty = true;
         }
 
         internal virtual void INTERNAL_FrameStarted()
@@ -273,6 +274,8 @@ namespace TouchScript.Pointers
         internal void INTERNAL_SetPressData(HitData data)
         {
             pressData = data;
+            overData = data;
+            overDataIsDirty = false;
         }
 
         internal void INTERNAL_ClearPressData()
