@@ -14,7 +14,7 @@ namespace TouchScript.Layers
     /// <summary>
     /// Base class for all pointer layers. Used to check if some object is hit by a pointer.
     /// <seealso cref="ITouchManager"/>
-    /// <seealso cref="TouchHit"/>
+    /// <seealso cref="HitData"/>
     /// <seealso cref="Pointer"/>
     /// </summary>
     /// <remarks>
@@ -108,9 +108,9 @@ namespace TouchScript.Layers
         /// <param name="position">Position in screen coordinates.</param>
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public virtual LayerHitResult Hit(Vector2 position, out HitData hit)
         {
-            hit = default(TouchHit);
+            hit = default(HitData);
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             return LayerHitResult.Error;
         }
@@ -173,7 +173,7 @@ namespace TouchScript.Layers
 
         internal bool INTERNAL_PressPointer(Pointer pointer)
         {
-            TouchHit hit;
+            HitData hit;
             if (Delegate != null && Delegate.ShouldReceivePointer(this, pointer) == false) return false;
             var result = beginPointer(pointer, out hit);
             if (result == LayerHitResult.Hit)
@@ -215,7 +215,7 @@ namespace TouchScript.Layers
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult beginPointer(Pointer pointer, out TouchHit hit)
+        protected virtual LayerHitResult beginPointer(Pointer pointer, out HitData hit)
         {
             var result = Hit(pointer.Position, out hit);
             return result;

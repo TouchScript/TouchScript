@@ -42,7 +42,7 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out HitData hit)
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
             if (eventSystem == null) return LayerHitResult.Error;
@@ -151,9 +151,9 @@ namespace TouchScript.Layers
 
         #region Private functions
 
-        private HitTest.ObjectHitResult doHit(RaycastResult raycastHit, out TouchHit hit)
+        private HitTest.ObjectHitResult doHit(RaycastResult raycastHit, out HitData hit)
         {
-            hit = new TouchHit(raycastHit);
+            hit = new HitData(raycastHit);
 
             if (!(raycastHit.module is GraphicRaycaster)) return HitTest.ObjectHitResult.Miss;
             var go = raycastHit.gameObject;

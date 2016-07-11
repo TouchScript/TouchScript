@@ -52,7 +52,7 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out HitData hit)
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
@@ -109,7 +109,7 @@ namespace TouchScript.Layers
         /// <param name="ray">The ray.</param>
         /// <param name="hit">Hit information if the ray has hit something.</param>
         /// <returns>Hit result.</returns>
-        protected abstract LayerHitResult castRay(Ray ray, out TouchHit hit);
+        protected abstract LayerHitResult castRay(Ray ray, out HitData hit);
 
         #endregion
     }

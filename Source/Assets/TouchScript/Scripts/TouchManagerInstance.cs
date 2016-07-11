@@ -321,21 +321,21 @@ namespace TouchScript
         /// <inheritdoc />
         public Transform GetHitTarget(Vector2 position)
         {
-            TouchHit hit;
+            HitData hit;
             if (GetHitTarget(position, out hit)) return hit.Target;
             return null;
         }
 
         /// <inheritdoc />
-        public bool GetHitTarget(Vector2 position, out TouchHit hit)
+        public bool GetHitTarget(Vector2 position, out HitData hit)
         {
-            hit = default(TouchHit);
+            hit = default(HitData);
 
             for (var i = 0; i < layerCount; i++)
             {
                 var touchLayer = layers[i];
                 if (touchLayer == null) continue;
-                TouchHit _hit;
+                HitData _hit;
                 if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
                 {
                     hit = _hit;

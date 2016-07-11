@@ -50,9 +50,9 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult castRay(Ray ray, out TouchHit hit)
+        protected override LayerHitResult castRay(Ray ray, out HitData hit)
         {
-            hit = default(TouchHit);
+            hit = default(HitData);
             var raycastHits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
 
             if (raycastHits.Length == 0) return LayerHitResult.Miss;
@@ -91,9 +91,9 @@ namespace TouchScript.Layers
             return LayerHitResult.Miss;
         }
 
-        private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out TouchHit hit)
+        private HitTest.ObjectHitResult doHit(RaycastHit2D raycastHit, out HitData hit)
         {
-            hit = new TouchHit(raycastHit, this);
+            hit = new HitData(raycastHit, this);
             raycastHit.transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return HitTest.ObjectHitResult.Hit;

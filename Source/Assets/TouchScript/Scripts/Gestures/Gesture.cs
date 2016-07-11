@@ -359,11 +359,11 @@ namespace TouchScript.Gestures
             }
         }
 
-        public TouchHit ScreenPositionHit
+        public HitData ScreenPositionHitData
         {
             get
             {
-                TouchHit hit;
+                HitData hit;
                 touchManager.GetHitTarget(ScreenPosition, out hit);
                 return hit;
             }

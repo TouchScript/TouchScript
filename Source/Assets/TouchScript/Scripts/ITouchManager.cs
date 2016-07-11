@@ -196,12 +196,12 @@ namespace TouchScript
 
         /// <summary>
         /// Checks if a pointer hits anything.
-        /// <seealso cref="TouchHit"/>
+        /// <seealso cref="HitData"/>
         /// </summary>
         /// <param name="position">Screen position of the pointer.</param>
         /// <param name="hit">An object which represents hit information.</param>
         /// <returns>True if the pointer hits any Transform.</returns>
-        bool GetHitTarget(Vector2 position, out TouchHit hit);
+        bool GetHitTarget(Vector2 position, out HitData hit);
 
         /// <summary>
         /// Cancels a pointer and returns it to the system of need.

@@ -101,7 +101,7 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public override LayerHitResult Hit(Vector2 position, out HitData hit)
         {
             if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
 
@@ -110,7 +110,7 @@ namespace TouchScript.Layers
                 if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
             }
 
-            hit = new TouchHit(transform, this);
+            hit = new HitData(transform, this);
             transform.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
             if (count == 0) return LayerHitResult.Hit;

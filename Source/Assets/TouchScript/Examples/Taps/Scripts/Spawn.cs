@@ -28,7 +28,7 @@ namespace TouchScript.Examples.Tap
         private void tappedHandler(object sender, EventArgs e)
         {
             var gesture = sender as TapGesture;
-            TouchHit hit = gesture.ScreenPositionHit;
+            HitData hit = gesture.ScreenPositionHitData;
 
             var cube = Instantiate(CubePrefab) as Transform;
             cube.parent = Container;

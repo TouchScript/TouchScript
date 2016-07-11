@@ -32,7 +32,7 @@ namespace TouchScript.Utils
         /// <returns> <c>true</c> if the pointer is over the GameObject; <c>false</c> otherwise.</returns>
         public static bool IsPointerOnTarget(Pointer pointer, Transform target)
         {
-            TouchHit hit;
+            HitData hit;
             return IsPointerOnTarget(pointer, target, out hit);
         }
 
@@ -43,9 +43,9 @@ namespace TouchScript.Utils
         /// <param name="target">The target.</param>
         /// <param name="hit">The hit.</param>
         /// <returns> <c>true</c> if the pointer is over the GameObject; <c>false</c> otherwise. </returns>
-        public static bool IsPointerOnTarget(Pointer pointer, Transform target, out TouchHit hit)
+        public static bool IsPointerOnTarget(Pointer pointer, Transform target, out HitData hit)
         {
-            hit = default(TouchHit);
+            hit = default(HitData);
             if (pointer == null || target == null) return false;
             hit = pointer.GetOverData();
             if (hit.Target == null) return false;

@@ -152,14 +152,14 @@ namespace TouchScript.Pointers
         private int refCount = 0;
         private Vector2 position, newPosition;
         private uint flags, newFlags;
-        private TouchHit pressData, overData;
+        private HitData pressData, overData;
         private bool overDataIsDirty = true;
 
         #endregion
 
         #region Public methods
 
-        public TouchHit GetOverData(bool forceRecalculate = false)
+        public HitData GetOverData(bool forceRecalculate = false)
         {
             if (overDataIsDirty || forceRecalculate)
             {
@@ -169,7 +169,7 @@ namespace TouchScript.Pointers
             return overData;
         }
 
-        public TouchHit GetPressData()
+        public HitData GetPressData()
         {
             return pressData;
         }
@@ -263,14 +263,14 @@ namespace TouchScript.Pointers
             return --refCount;
         }
 
-        internal void INTERNAL_SetTargetData(TouchHit data)
+        internal void INTERNAL_SetTargetData(HitData data)
         {
             pressData = data;
         }
 
         internal void INTERNAL_ClearTargetData()
         {
-            pressData = default(TouchHit);
+            pressData = default(HitData);
             refCount = 0;
         }
 

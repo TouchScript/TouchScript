@@ -28,7 +28,7 @@ namespace TouchScript.Examples.Cube
             map.Remove(pointer.Id);
             if (shouldReturn)
             {
-                TouchHit hit;
+                HitData hit;
                 if (PointerUtils.IsPointerOnTarget(pointer, transform, out hit))
                 {
                     var newPointer = PointerFactory.Create(pointer.Type, this);
@@ -94,7 +94,7 @@ namespace TouchScript.Examples.Cube
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
-            TouchHit hit;
+            HitData hit;
             if (!PointerUtils.IsPointerOnTarget(pointer, transform, out hit)) return;
             newPointer.Position = processCoords(hit.RaycastHit.textureCoord);
             newPointer.Flags = pointer.Flags | Pointer.FLAG_ARTIFICIAL;
