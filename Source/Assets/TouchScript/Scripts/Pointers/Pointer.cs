@@ -159,6 +159,10 @@ namespace TouchScript.Pointers
 
         #region Public methods
 
+        /// <summary>
+        /// Returns <see cref="HitData"/> for current pointer position, i.e. what is right beneath it. Caches the result for the entire frame.
+        /// </summary>
+        /// <param name="forceRecalculate">if set to <c>true</c> forces to recalculate the value.</param>
         public HitData GetOverData(bool forceRecalculate = false)
         {
             if (overDataIsDirty || forceRecalculate)
@@ -169,6 +173,9 @@ namespace TouchScript.Pointers
             return overData;
         }
 
+        /// <summary>
+        /// Returns <see cref="HitData"/> when the pointer was pressed. If the pointer is not pressed uninitialized <see cref="HitData"/> is returned.
+        /// </summary>
         public HitData GetPressData()
         {
             return pressData;
@@ -238,7 +245,7 @@ namespace TouchScript.Pointers
         internal virtual void INTERNAL_Reset()
         {
             Id = INVALID_POINTER;
-            INTERNAL_ClearTargetData();
+            INTERNAL_ClearPressData();
             position = newPosition = PreviousPosition = Vector2.zero;
             flags = newFlags = PreviousFlags = 0;
         }
@@ -263,12 +270,12 @@ namespace TouchScript.Pointers
             return --refCount;
         }
 
-        internal void INTERNAL_SetTargetData(HitData data)
+        internal void INTERNAL_SetPressData(HitData data)
         {
             pressData = data;
         }
 
-        internal void INTERNAL_ClearTargetData()
+        internal void INTERNAL_ClearPressData()
         {
             pressData = default(HitData);
             refCount = 0;

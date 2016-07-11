@@ -748,7 +748,7 @@ namespace TouchScript
             for (var i = 0; i < releasedCount; i++)
             {
                 var pointer = list[i];
-                pointer.INTERNAL_ClearTargetData();
+                pointer.INTERNAL_ClearPressData();
             }
             pointerListPool.Release(list);
         }
