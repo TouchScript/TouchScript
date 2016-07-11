@@ -670,7 +670,8 @@ namespace TouchScript
                     continue;
                 }
                 list.Add(pointer);
-                if (pointer.GetPressData().Layer != null) pointer.GetPressData().Layer.INTERNAL_UpdatePointer(pointer);
+                var layer = pointer.GetPressData().Layer;
+                if (layer != null) layer.INTERNAL_UpdatePointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
@@ -734,7 +735,8 @@ namespace TouchScript
                 }
                 list.Add(pointer);
                 pressedPointers.Remove(pointer);
-                if (pointer.GetPressData().Layer != null) pointer.GetPressData().Layer.INTERNAL_ReleasePointer(pointer);
+                var layer = pointer.GetPressData().Layer;
+                if (layer != null) layer.INTERNAL_ReleasePointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
@@ -810,7 +812,8 @@ namespace TouchScript
                 this.pointers.Remove(pointer);
                 pressedPointers.Remove(pointer);
                 list.Add(pointer);
-                if (pointer.GetPressData().Layer != null) pointer.GetPressData().Layer.INTERNAL_CancelPointer(pointer);
+                var layer = pointer.GetPressData().Layer;
+                if (layer != null) layer.INTERNAL_CancelPointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForPointer(pointer);

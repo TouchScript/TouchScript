@@ -139,6 +139,7 @@ namespace TouchScript.Gestures.UI
             PointerData data;
             if (!pointerData.TryGetValue(pointer.Id, out data))
             {
+                var raycast = pointer.GetPressData().RaycastResult;
                 data = new PointerData
                 {
                     OnTarget = true,
@@ -153,8 +154,8 @@ namespace TouchScript.Gestures.UI
                         useDragThreshold = true,
                         position = pointer.Position,
                         pressPosition = pointer.Position,
-                        pointerPressRaycast = pointer.GetPressData().RaycastResult,
-                        pointerCurrentRaycast = pointer.GetPressData().RaycastResult
+                        pointerPressRaycast = raycast,
+                        pointerCurrentRaycast = raycast
                     }
                 };
                 pointerData.Add(pointer.Id, data);
