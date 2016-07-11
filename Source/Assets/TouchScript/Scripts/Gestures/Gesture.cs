@@ -357,16 +357,6 @@ namespace TouchScript.Gestures
             }
         }
 
-        public HitData ScreenPositionHitData
-        {
-            get
-            {
-                HitData hit;
-                touchManager.GetHitTarget(ScreenPosition, out hit);
-                return hit;
-            }
-        }
-
         /// <summary>
         /// Gets list of gesture's active pointers.
         /// </summary>
@@ -596,6 +586,16 @@ namespace TouchScript.Gestures
             Cancel(false, false);
         }
 
+        /// <summary>
+        /// Returns <see cref="HitData"/> for gesture's <see cref="ScreenPosition"/>, i.e. what is right beneath it.
+        /// </summary>
+        public virtual HitData GetScreenPositionHitData()
+        {
+            HitData hit;
+            touchManager.GetHitTarget(ScreenPosition, out hit);
+            return hit;
+        }
+
         #endregion
 
         #region Unity methods
@@ -614,7 +614,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Unity3d Start handler.
+        /// Unity Start handler.
         /// </summary>
         protected virtual void OnEnable()
         {
@@ -632,7 +632,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Unity3d OnDisable handler.
+        /// Unity OnDisable handler.
         /// </summary>
         protected virtual void OnDisable()
         {
@@ -640,7 +640,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Unity3d OnDestroy handler.
+        /// Unity OnDestroy handler.
         /// </summary>
         protected virtual void OnDestroy()
         {
