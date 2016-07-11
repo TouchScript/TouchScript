@@ -394,7 +394,7 @@ namespace TouchScript
                     }
                 }
 
-                if (!pointersUpdated.Contains(id)) pointersUpdated.Add(id);
+                pointersUpdated.Add(id);
             }
         }
 
@@ -417,11 +417,12 @@ namespace TouchScript
                         return;
                     }
                 }
-                if (!pointersPressed.Contains(id)) pointersPressed.Add(id);
 #if TOUCHSCRIPT_DEBUG
-                else
+                if (!pointersPressed.Add(id))
                     Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to PRESS more than once this frame.");
+#else
+                pointersPressed.Add(id);
 #endif
             }
         }
@@ -446,11 +447,12 @@ namespace TouchScript
                         return;
                     }
                 }
-                if (!pointersReleased.Contains(id)) pointersReleased.Add(id);
 #if TOUCHSCRIPT_DEBUG
-                else
+                if (!pointersReleased.Add(id))
                     Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to END more than once this frame.");
+#else
+                pointersReleased.Add(id);
 #endif
             }
         }
@@ -475,11 +477,12 @@ namespace TouchScript
                         return;
                     }
                 }
-                if (!pointersRemoved.Contains(id)) pointersRemoved.Add(pointer.Id);
 #if TOUCHSCRIPT_DEBUG
-                else
+                if (!pointersRemoved.Add(pointer.Id))
                     Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to REMOVE more than once this frame.");
+#else
+                pointersRemoved.Add(pointer.Id);
 #endif
             }
         }
@@ -504,11 +507,12 @@ namespace TouchScript
                         return;
                     }
                 }
-                if (!pointersCancelled.Contains(id)) pointersCancelled.Add(pointer.Id);
 #if TOUCHSCRIPT_DEBUG
-                else
+                if (!pointersCancelled.Add(pointer.Id))
                     Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to CANCEL more than once this frame.");
+#else
+                pointersCancelled.Add(pointer.Id);
 #endif
             }
         }
