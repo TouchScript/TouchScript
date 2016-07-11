@@ -467,7 +467,6 @@ namespace TouchScript.Gestures
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
         private int numPointers;
-        private TouchLayer layer;
         private ReadOnlyCollection<Pointer> readonlyActivePointers;
         private TimedSequence<Pointer> pointerSequence = new TimedSequence<Pointer>();
         private GestureManagerInstance gestureManagerInstance;
@@ -677,8 +676,6 @@ namespace TouchScript.Gestures
 
         internal void INTERNAL_PointersPressed(IList<Pointer> pointers)
         {
-            if (numPointers == 0) layer = pointers[0].GetPressData().Layer;
-
             var count = pointers.Count;
             var total = numPointers + count;
             pointersNumState = PointersNumState.InRange;
@@ -953,7 +950,6 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void reset()
         {
-            layer = null;
             cachedScreenPosition = TouchManager.INVALID_POSITION;
             cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
         }
