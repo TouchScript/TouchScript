@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TouchScript.Hit;
-using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using TouchScript.Pointers;
@@ -283,8 +282,7 @@ namespace TouchScript.Gestures
                 }
 
                 if (stateChangedInvoker != null)
-                    stateChangedInvoker.InvokeHandleExceptions(this,
-                        new GestureStateChangeEventArgs(state, PreviousState));
+                    stateChangedInvoker.InvokeHandleExceptions(this, GestureStateChangeEventArgs.GetCachedEventArgs(state, PreviousState));
                 if (useSendMessage && sendStateChangeMessages && SendMessageTarget != null)
                     sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
             }
@@ -1051,7 +1049,7 @@ namespace TouchScript.Gestures
     }
 
     /// <summary>
-    /// Event arguments for Gesture events
+    /// Event arguments for Gesture state change events.
     /// </summary>
     public class GestureStateChangeEventArgs : EventArgs
     {
@@ -1065,15 +1063,26 @@ namespace TouchScript.Gestures
         /// </summary>
         public Gesture.GestureState State { get; private set; }
 
+        private static GestureStateChangeEventArgs instance;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GestureStateChangeEventArgs"/> class.
         /// </summary>
+        public GestureStateChangeEventArgs() {}
+
+        /// <summary>
+        /// Returns cached instance of EventArgs.
+        /// This cached EventArgs is reused throughout the library not to alocate new ones on every call.
+        /// </summary>
         /// <param name="state"> Current gesture state. </param>
         /// <param name="previousState"> Previous gesture state. </param>
-        public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
+        /// <returns>Cached EventArgs object.</returns>
+        public static GestureStateChangeEventArgs GetCachedEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
         {
-            State = state;
-            PreviousState = previousState;
+            if (instance == null) instance = new GestureStateChangeEventArgs();
+            instance.State = state;
+            instance.PreviousState = previousState;
+            return instance;
         }
     }
 }
