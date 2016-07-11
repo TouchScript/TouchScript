@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Hit;
 using UnityEngine;
@@ -16,12 +17,16 @@ namespace TouchScript.Layers
     public class CameraLayer : CameraLayerBase
     {
         #region Private variables
-
+#if UNITY_5_3_OR_NEWER
+        private RaycastHit[] raycastHits = new RaycastHit[20];
+#endif
         private List<RaycastHit> sortedHits = new List<RaycastHit>(20);
         private Transform cachedTransform;
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
-        #endregion
+        private RaycastHitComparer comparer;
+
+#endregion
 
         #region Unity methods
 
@@ -32,26 +37,31 @@ namespace TouchScript.Layers
             if (!Application.isPlaying) return;
 
             cachedTransform = GetComponent<Transform>();
+            comparer = new RaycastHitComparer(cachedTransform);
         }
 
-        #endregion
+#endregion
 
-        #region Protected functions
+#region Protected functions
 
         /// <inheritdoc />
         protected override LayerHitResult castRay(Ray ray, out HitData hit)
         {
             hit = default(HitData);
+#if UNITY_5_3_OR_NEWER
+            var count = Physics.RaycastNonAlloc(ray, raycastHits, float.PositiveInfinity, LayerMask);
+#else
             var raycastHits = Physics.RaycastAll(ray, float.PositiveInfinity, LayerMask);
+            var count = raycastHits.Length;
+#endif
 
-            if (raycastHits.Length == 0) return LayerHitResult.Miss;
-            if (raycastHits.Length > 1)
+            if (count == 0) return LayerHitResult.Miss;
+            if (count > 1)
             {
-                sortHits(raycastHits);
+                sortHits(raycastHits, count);
 
                 RaycastHit raycastHit = default(RaycastHit);
-                var i = 0;
-                while (i < sortedHits.Count)
+                for (var i = 0; i < count; i++)
                 {
                     raycastHit = sortedHits[i];
                     switch (doHit(raycastHit, out hit))
@@ -61,7 +71,6 @@ namespace TouchScript.Layers
                         case HitTest.ObjectHitResult.Discard:
                             return LayerHitResult.Miss;
                     }
-                    i++;
                 }
             }
             else
@@ -99,20 +108,33 @@ namespace TouchScript.Layers
             return hitResult;
         }
 
-        private void sortHits(RaycastHit[] hits)
+        private void sortHits(RaycastHit[] hits, int count)
         {
-            var cameraPos = cachedTransform.position;
             sortedHits.Clear();
-            sortedHits.AddRange(hits);
-            sortedHits.Sort((a, b) =>
+            for (var i = 0; i < count; i++) sortedHits.Add(hits[i]);
+            sortedHits.Sort(comparer);
+        }
+
+        #endregion
+
+        private class RaycastHitComparer : IComparer<RaycastHit>
+        {
+            private Transform transform;
+
+            public RaycastHitComparer(Transform transform)
             {
+                this.transform = transform;
+            }
+
+            public int Compare(RaycastHit a, RaycastHit b)
+            {
+                var cameraPos = transform.position;
                 if (a.collider.transform == b.collider.transform) return 0;
                 var distA = (a.point - cameraPos).sqrMagnitude;
                 var distB = (b.point - cameraPos).sqrMagnitude;
                 return distA < distB ? -1 : 1;
-            });
+            }
         }
 
-        #endregion
     }
 }

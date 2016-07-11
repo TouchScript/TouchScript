@@ -21,9 +21,13 @@ namespace TouchScript.Layers
         [HideInInspector]
         private int[] layerIds = new int[0];
 
+        private RaycastHit2D[] raycastHits = new RaycastHit2D[20];
+
         private Dictionary<int, int> layerById = new Dictionary<int, int>();
         private List<RaycastHit2D> sortedHits = new List<RaycastHit2D>(20);
         private List<HitTest> tmpHitTestList = new List<HitTest>(10);
+
+        private RaycastHit2DComparer comparer;
 
         #endregion
 
@@ -43,6 +47,8 @@ namespace TouchScript.Layers
                 if (layerById.ContainsKey(value)) continue;
                 layerById.Add(value, i);
             }
+
+            comparer = new RaycastHit2DComparer(layerById);
         }
 
         #endregion
@@ -53,12 +59,12 @@ namespace TouchScript.Layers
         protected override LayerHitResult castRay(Ray ray, out HitData hit)
         {
             hit = default(HitData);
-            var raycastHits = Physics2D.GetRayIntersectionAll(ray, float.PositiveInfinity, LayerMask);
+            var count = Physics2D.GetRayIntersectionNonAlloc(ray, raycastHits, float.PositiveInfinity, LayerMask);
 
-            if (raycastHits.Length == 0) return LayerHitResult.Miss;
-            if (raycastHits.Length > 1)
+            if (count == 0) return LayerHitResult.Miss;
+            if (count > 1)
             {
-                sortHits(raycastHits);
+                sortHits(raycastHits, count);
 
                 RaycastHit2D raycastHit = default(RaycastHit2D);
                 var i = 0;
@@ -111,11 +117,25 @@ namespace TouchScript.Layers
             return hitResult;
         }
 
-        private void sortHits(RaycastHit2D[] hits)
+        private void sortHits(RaycastHit2D[] hits, int count)
         {
             sortedHits.Clear();
-            sortedHits.AddRange(hits);
-            sortedHits.Sort((a, b) =>
+            for (var i = 0; i < count; i++) sortedHits.Add(hits[i]);
+            sortedHits.Sort(comparer);
+        }
+
+        #endregion
+
+        private class RaycastHit2DComparer : IComparer<RaycastHit2D>
+        {
+            private Dictionary<int, int> layerById;
+
+            public RaycastHit2DComparer(Dictionary<int, int> layerById)
+            {
+                this.layerById = layerById;
+            }
+
+            public int Compare(RaycastHit2D a, RaycastHit2D b)
             {
                 if (a.collider.transform == b.collider.transform) return 0;
 
@@ -133,9 +153,8 @@ namespace TouchScript.Layers
                 }
 
                 return a.distance < b.distance ? -1 : 1;
-            });
+            }
         }
 
-        #endregion
     }
 }
