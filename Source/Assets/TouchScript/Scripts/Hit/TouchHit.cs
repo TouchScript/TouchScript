@@ -18,7 +18,7 @@ namespace TouchScript.Hit
         /// <summary>
         /// Type of hit
         /// </summary>
-        public enum PointerHitType
+        public enum HitType
         {
             /// <summary>
             /// 3D hit.
@@ -44,7 +44,7 @@ namespace TouchScript.Hit
         /// Gets the type of the hit.
         /// </summary>
         /// <value> The type. </value>
-        public PointerHitType Type
+        public HitType Type
         {
             get { return type; }
         }
@@ -100,11 +100,11 @@ namespace TouchScript.Hit
             {
                 switch (type)
                 {
-                    case PointerHitType.Hit3D:
+                    case HitType.Hit3D:
                         return RaycastHit.point;
-                    case PointerHitType.Hit2D:
+                    case HitType.Hit2D:
                         return RaycastHit2D.point;
-                    case PointerHitType.HitUI:
+                    case HitType.HitUI:
                         return RaycastResult.worldPosition;
                 }
                 return Vector3.zero;
@@ -121,11 +121,11 @@ namespace TouchScript.Hit
             {
                 switch (type)
                 {
-                    case PointerHitType.Hit3D:
+                    case HitType.Hit3D:
                         return RaycastHit.normal;
-                    case PointerHitType.Hit2D:
+                    case HitType.Hit2D:
                         return RaycastHit2D.normal;
-                    case PointerHitType.HitUI:
+                    case HitType.HitUI:
                         return RaycastResult.worldNormal;
                 }
                 return Vector3.forward;
@@ -136,7 +136,7 @@ namespace TouchScript.Hit
 
         #region Private variables
 
-        private PointerHitType type;
+        private HitType type;
         private Transform target;
         private TouchLayer layer;
         private RaycastHit raycastHit;
@@ -158,7 +158,7 @@ namespace TouchScript.Hit
             raycastHit = default(RaycastHit);
             raycastHit2D = default(RaycastHit2D);
             raycastResult = default(RaycastResult);
-            type = PointerHitType.Hit3D;
+            type = HitType.Hit3D;
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace TouchScript.Hit
         public TouchHit(RaycastHit value, TouchLayer layer = null) : this(value.collider.transform, layer)
         {
             raycastHit = value;
-            type = PointerHitType.Hit3D;
+            type = HitType.Hit3D;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace TouchScript.Hit
             this(value.collider.transform, layer)
         {
             raycastHit2D = value;
-            type = PointerHitType.Hit2D;
+            type = HitType.Hit2D;
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace TouchScript.Hit
             this(value.gameObject.transform, layer)
         {
             raycastResult = value;
-            type = PointerHitType.HitUI;
+            type = HitType.HitUI;
         }
 
         #endregion
