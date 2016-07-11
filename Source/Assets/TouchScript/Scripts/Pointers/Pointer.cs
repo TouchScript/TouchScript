@@ -140,7 +140,7 @@ namespace TouchScript.Pointers
         {
             get
             {
-                if (pressData.Layer == null) return default(ProjectionParams);
+                if (pressData.Layer == null) return null;
                 return pressData.Layer.GetProjectionParams(this);
             }
         }

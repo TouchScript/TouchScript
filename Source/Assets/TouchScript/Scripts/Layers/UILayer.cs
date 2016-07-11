@@ -153,7 +153,7 @@ namespace TouchScript.Layers
 
         private HitTest.ObjectHitResult doHit(RaycastResult raycastHit, out HitData hit)
         {
-            hit = new HitData(raycastHit);
+            hit = new HitData(raycastHit, this);
 
             if (!(raycastHit.module is GraphicRaycaster)) return HitTest.ObjectHitResult.Miss;
             var go = raycastHit.gameObject;

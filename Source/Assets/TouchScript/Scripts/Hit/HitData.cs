@@ -155,7 +155,7 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct.
         /// </summary>
         /// <param name="target"> Target Target. </param>
-        public HitData(Transform target, TouchLayer layer = null)
+        public HitData(Transform target, TouchLayer layer)
         {
             this.target = target;
             this.layer = layer;
@@ -169,7 +169,7 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a 3D raycast.
         /// </summary>
         /// <param name="value"> 3D raycast value. </param>
-        public HitData(RaycastHit value, TouchLayer layer = null) : this(value.collider.transform, layer)
+        public HitData(RaycastHit value, TouchLayer layer) : this(value.collider.transform, layer)
         {
             raycastHit = value;
             type = HitType.Hit3D;
@@ -179,7 +179,7 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a 2D raycast.
         /// </summary>
         /// <param name="value"> 2D raycast value. </param>
-        public HitData(RaycastHit2D value, TouchLayer layer = null) :
+        public HitData(RaycastHit2D value, TouchLayer layer) :
             this(value.collider.transform, layer)
         {
             raycastHit2D = value;
@@ -190,7 +190,7 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a UI raycast.
         /// </summary>
         /// <param name="value"> UI raycast value. </param>
-        public HitData(RaycastResult value, TouchLayer layer = null) :
+        public HitData(RaycastResult value, TouchLayer layer) :
             this(value.gameObject.transform, layer)
         {
             raycastResult = value;
