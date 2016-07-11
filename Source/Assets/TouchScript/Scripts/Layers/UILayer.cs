@@ -31,8 +31,6 @@ namespace TouchScript.Layers
         [NonSerialized]
         private List<RaycastResult> raycastResultCache = new List<RaycastResult>(20);
 
-        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
-
         private PointerEventData pointerDataCache;
         private EventSystem eventSystem;
         private Dictionary<Canvas, ProjectionParams> projectionParamsCache = new Dictionary<Canvas, ProjectionParams>();
@@ -156,21 +154,7 @@ namespace TouchScript.Layers
             hit = new HitData(raycastHit, this);
 
             if (!(raycastHit.module is GraphicRaycaster)) return HitTest.ObjectHitResult.Miss;
-            var go = raycastHit.gameObject;
-            if (go == null) return HitTest.ObjectHitResult.Miss;
-            go.GetComponents(tmpHitTestList);
-            var count = tmpHitTestList.Count;
-            if (count == 0) return HitTest.ObjectHitResult.Hit;
-
-            var hitResult = HitTest.ObjectHitResult.Hit;
-            for (var i = 0; i < count; i++)
-            {
-                var test = tmpHitTestList[i];
-                if (!test.enabled) continue;
-                hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
-            }
-            return hitResult;
+            return checkHitFilters(hit);
         }
 
         #endregion

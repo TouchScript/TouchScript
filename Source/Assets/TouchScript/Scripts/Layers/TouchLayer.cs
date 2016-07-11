@@ -7,6 +7,7 @@ using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using TouchScript.Pointers;
 
 namespace TouchScript.Layers
@@ -90,6 +91,17 @@ namespace TouchScript.Layers
 
         #endregion
 
+        #region Private variables
+
+        /// <summary>
+        /// The layer projection parameters.
+        /// </summary>
+        protected ProjectionParams layerProjectionParams;
+
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
+
+        #endregion
+
         #region Public methods
 
         /// <summary>
@@ -114,15 +126,6 @@ namespace TouchScript.Layers
             if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
             return LayerHitResult.Error;
         }
-
-        #endregion
-
-        #region Private variables
-
-        /// <summary>
-        /// The layer projection parameters.
-        /// </summary>
-        protected ProjectionParams layerProjectionParams;
 
         #endregion
 
@@ -175,7 +178,7 @@ namespace TouchScript.Layers
         {
             HitData hit;
             if (Delegate != null && Delegate.ShouldReceivePointer(this, pointer) == false) return false;
-            var result = beginPointer(pointer, out hit);
+            var result = pressPointer(pointer, out hit);
             if (result == LayerHitResult.Hit)
             {
                 pointer.INTERNAL_SetPressData(hit);
@@ -200,6 +203,24 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
+        protected HitTest.ObjectHitResult checkHitFilters(HitData hit)
+        {
+            hit.Target.GetComponents(tmpHitTestList);
+            var count = tmpHitTestList.Count;
+            if (count == 0) return HitTest.ObjectHitResult.Hit;
+
+            var hitResult = HitTest.ObjectHitResult.Hit;
+            for (var i = 0; i < count; i++)
+            {
+                var test = tmpHitTestList[i];
+                if (!test.enabled) continue;
+                hitResult = test.IsHit(hit);
+                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
+            }
+
+            return hitResult;
+        }
+
         /// <summary>
         /// Updates pointer layers's name.
         /// </summary>
@@ -215,7 +236,7 @@ namespace TouchScript.Layers
         /// <param name="hit">Hit result.</param>
         /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult beginPointer(Pointer pointer, out HitData hit)
+        protected virtual LayerHitResult pressPointer(Pointer pointer, out HitData hit)
         {
             var result = Hit(pointer.Position, out hit);
             return result;

@@ -22,7 +22,6 @@ namespace TouchScript.Layers
 #endif
         private List<RaycastHit> sortedHits = new List<RaycastHit>(20);
         private Transform cachedTransform;
-        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         private RaycastHitComparer comparer;
 
@@ -92,20 +91,7 @@ namespace TouchScript.Layers
         private HitTest.ObjectHitResult doHit(RaycastHit raycastHit, out HitData hit)
         {
             hit = new HitData(raycastHit, this);
-            raycastHit.transform.GetComponents(tmpHitTestList);
-            var count = tmpHitTestList.Count;
-            if (count == 0) return HitTest.ObjectHitResult.Hit;
-
-            var hitResult = HitTest.ObjectHitResult.Hit;
-            for (var i = 0; i < count; i++)
-            {
-                var test = tmpHitTestList[i];
-                if (!test.enabled) continue;
-                hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
-            }
-
-            return hitResult;
+            return checkHitFilters(hit);
         }
 
         private void sortHits(RaycastHit[] hits, int count)

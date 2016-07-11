@@ -94,7 +94,6 @@ namespace TouchScript.Layers
         private Camera _camera;
 
         private Transform cameraTransform;
-        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 
@@ -111,20 +110,15 @@ namespace TouchScript.Layers
             }
 
             hit = new HitData(transform, this);
-            transform.GetComponents(tmpHitTestList);
-            var count = tmpHitTestList.Count;
-            if (count == 0) return LayerHitResult.Hit;
-
-            for (var i = 0; i < count; i++)
+            switch (checkHitFilters(hit))
             {
-                var test = tmpHitTestList[i];
-                if (!test.enabled) continue;
-                var hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard)
+                case HitTest.ObjectHitResult.Hit:
+                    return LayerHitResult.Hit;
+                case HitTest.ObjectHitResult.Error:
+                    return LayerHitResult.Error;
+                default:
                     return LayerHitResult.Miss;
             }
-
-            return LayerHitResult.Hit;
         }
 
         #endregion
