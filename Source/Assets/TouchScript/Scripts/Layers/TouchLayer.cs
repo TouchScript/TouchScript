@@ -178,9 +178,7 @@ namespace TouchScript.Layers
             var result = beginPointer(pointer, out hit);
             if (result == LayerHitResult.Hit)
             {
-                pointer.Layer = this;
-                pointer.Hit = hit;
-                if (hit.Target != null) pointer.Target = hit.Target;
+                pointer.INTERNAL_SetTargetData(hit);
                 if (pointerBeganInvoker != null)
                     pointerBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(pointer));
                 return true;

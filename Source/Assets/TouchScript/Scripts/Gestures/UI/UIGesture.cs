@@ -153,8 +153,8 @@ namespace TouchScript.Gestures.UI
                         useDragThreshold = true,
                         position = pointer.Position,
                         pressPosition = pointer.Position,
-                        pointerPressRaycast = pointer.Hit.RaycastResult,
-                        pointerCurrentRaycast = pointer.Hit.RaycastResult
+                        pointerPressRaycast = pointer.GetPressData().RaycastResult,
+                        pointerCurrentRaycast = pointer.GetPressData().RaycastResult
                     }
                 };
                 pointerData.Add(pointer.Id, data);

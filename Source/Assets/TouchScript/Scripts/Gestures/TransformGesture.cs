@@ -165,7 +165,7 @@ namespace TouchScript.Gestures
             if (State != GestureState.Possible) return;
             if (NumPointers == pointers.Count)
             {
-                projectionLayer = activePointers[0].Layer;
+                projectionLayer = activePointers[0].GetPressData().Layer;
                 updateProjectionPlane();
             }
         }

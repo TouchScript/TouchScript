@@ -74,7 +74,7 @@ namespace TouchScript.Gestures
             if (!IgnoreChildren) return base.ShouldReceivePointer(pointer);
             if (!base.ShouldReceivePointer(pointer)) return false;
 
-            if (pointer.Target != cachedTransform) return false;
+            if (pointer.GetPressData().Target != cachedTransform) return false;
             return true;
         }
 

@@ -8,6 +8,7 @@ using TouchScript.Gestures;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Pointers;
+using TouchScript.Utils;
 
 namespace TouchScript.Examples.Cube
 {
@@ -28,11 +29,11 @@ namespace TouchScript.Examples.Cube
             if (shouldReturn)
             {
                 TouchHit hit;
-                if (gesture.GetTargetHitResult(pointer.Position, out hit))
+                if (PointerUtils.IsPointerOnTarget(pointer, transform, out hit))
                 {
                     var newPointer = PointerFactory.Create(pointer.Type, this);
                     newPointer.CopyFrom(pointer);
-                    newPointer.Position = processCoords(pointer.Hit.RaycastHit.textureCoord);
+                    newPointer.Position = processCoords(hit.RaycastHit.textureCoord);
                     addPointer(newPointer);
                     pressPointer(newPointer);
                     map.Add(pointer.Id, newPointer);
@@ -79,7 +80,7 @@ namespace TouchScript.Examples.Cube
 
             var newPointer = PointerFactory.Create(pointer.Type, this);
             newPointer.CopyFrom(pointer);
-            newPointer.Position = processCoords(pointer.Hit.RaycastHit.textureCoord);
+            newPointer.Position = processCoords(pointer.GetPressData().RaycastHit.textureCoord);
             newPointer.Flags = pointer.Flags | Pointer.FLAG_ARTIFICIAL;
             addPointer(newPointer);
             pressPointer(newPointer);
@@ -88,13 +89,13 @@ namespace TouchScript.Examples.Cube
 
         private void pointerUpdatedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-            TouchHit hit;
             var pointer = metaGestureEventArgs.Pointer;
             if (pointer.InputSource == this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
-            if (!gesture.GetTargetHitResult(pointer.Position, out hit)) return;
+            TouchHit hit;
+            if (!PointerUtils.IsPointerOnTarget(pointer, transform, out hit)) return;
             newPointer.Position = processCoords(hit.RaycastHit.textureCoord);
             newPointer.Flags = pointer.Flags | Pointer.FLAG_ARTIFICIAL;
             updatePointer(newPointer);

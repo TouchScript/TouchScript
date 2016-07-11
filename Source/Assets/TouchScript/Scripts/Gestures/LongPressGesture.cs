@@ -169,7 +169,7 @@ namespace TouchScript.Gestures
 
             if (State == GestureState.Possible)
             {
-                if (base.GetTargetHitResult())
+                if (ScreenPositionHit.Target.IsChildOf(cachedTransform))
                 {
                     setState(GestureState.Recognized);
                 }

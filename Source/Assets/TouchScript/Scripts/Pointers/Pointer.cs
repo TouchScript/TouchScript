@@ -134,29 +134,15 @@ namespace TouchScript.Pointers
         public uint PreviousFlags { get; private set; }
 
         /// <summary>
-        /// Original hit target.
-        /// </summary>
-        public Transform Target { get; internal set; }
-
-        /// <summary>
-        /// Original hit information.
-        /// </summary>
-        public TouchHit Hit { get; internal set; }
-
-        /// <summary>
-        /// Original layer which registered this pointer.
-        /// <seealso cref="TouchLayer"/>
-        /// <seealso cref="CameraLayer"/>
-        /// <seealso cref="CameraLayer2D"/>
-        /// </summary>
-        public TouchLayer Layer { get; internal set; }
-
-        /// <summary>
         /// Projection parameters for the layer which created this pointer.
         /// </summary>
         public ProjectionParams ProjectionParams
         {
-            get { return Layer.GetProjectionParams(this); }
+            get
+            {
+                if (pressData.Layer == null) return default(ProjectionParams);
+                return pressData.Layer.GetProjectionParams(this);
+            }
         }
 
         #endregion
@@ -166,10 +152,27 @@ namespace TouchScript.Pointers
         private int refCount = 0;
         private Vector2 position, newPosition;
         private uint flags, newFlags;
+        private TouchHit pressData, overData;
+        private bool overDataIsDirty = true;
 
         #endregion
 
         #region Public methods
+
+        public TouchHit GetOverData(bool forceRecalculate = false)
+        {
+            if (overDataIsDirty || forceRecalculate)
+            {
+                TouchManager.Instance.GetHitTarget(position, out overData);
+                overDataIsDirty = false;
+            }
+            return overData;
+        }
+
+        public TouchHit GetPressData()
+        {
+            return pressData;
+        }
 
         /// <summary>
         /// Copies values from <see cref="target"/>.
@@ -246,6 +249,8 @@ namespace TouchScript.Pointers
             position = newPosition;
             PreviousFlags = flags;
             flags = newFlags;
+
+            overDataIsDirty = true;
         }
 
         internal void INTERNAL_Retain()
@@ -258,11 +263,14 @@ namespace TouchScript.Pointers
             return --refCount;
         }
 
+        internal void INTERNAL_SetTargetData(TouchHit data)
+        {
+            pressData = data;
+        }
+
         internal void INTERNAL_ClearTargetData()
         {
-            Hit = default(TouchHit);
-            Target = null;
-            Layer = null;
+            pressData = default(TouchHit);
             refCount = 0;
         }
 

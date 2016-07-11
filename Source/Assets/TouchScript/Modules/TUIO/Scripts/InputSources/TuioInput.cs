@@ -267,9 +267,9 @@ namespace TouchScript.InputSources
         {
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
+            pointer.Flags |= flags;
             addPointer(pointer);
             pressPointer(pointer);
-            pointer.Flags |= flags;
             return pointer;
         }
 
@@ -286,9 +286,9 @@ namespace TouchScript.InputSources
         {
             var pointer = objectPool.Get();
             pointer.Position = remapCoordinates(position);
+            pointer.Flags |= flags;
             addPointer(pointer);
             pressPointer(pointer);
-            pointer.Flags |= flags;
             return pointer;
         }
 

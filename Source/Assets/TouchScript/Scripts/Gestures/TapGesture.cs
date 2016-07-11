@@ -236,7 +236,7 @@ namespace TouchScript.Gestures
         protected override bool shouldCachePointerPosition(Pointer value)
         {
             // Points must be over target when released
-            return GetTargetHitResult(value.Position);
+            return PointerUtils.IsPointerOnTarget(value, cachedTransform);
         }
 
         #endregion

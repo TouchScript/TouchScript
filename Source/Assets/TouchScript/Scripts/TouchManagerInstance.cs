@@ -322,23 +322,14 @@ namespace TouchScript
         public Transform GetHitTarget(Vector2 position)
         {
             TouchHit hit;
-            TouchLayer layer;
-            if (GetHitTarget(position, out hit, out layer)) return hit.Target;
+            if (GetHitTarget(position, out hit)) return hit.Target;
             return null;
         }
 
         /// <inheritdoc />
         public bool GetHitTarget(Vector2 position, out TouchHit hit)
         {
-            TouchLayer layer;
-            return GetHitTarget(position, out hit, out layer);
-        }
-
-        /// <inheritdoc />
-        public bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer)
-        {
             hit = default(TouchHit);
-            layer = null;
 
             for (var i = 0; i < layerCount; i++)
             {
@@ -348,7 +339,6 @@ namespace TouchScript
                 if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
                 {
                     hit = _hit;
-                    layer = touchLayer;
                     return true;
                 }
             }
@@ -680,7 +670,7 @@ namespace TouchScript
                     continue;
                 }
                 list.Add(pointer);
-                if (pointer.Layer != null) pointer.Layer.INTERNAL_UpdatePointer(pointer);
+                if (pointer.GetPressData().Layer != null) pointer.GetPressData().Layer.INTERNAL_UpdatePointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
@@ -744,7 +734,7 @@ namespace TouchScript
                 }
                 list.Add(pointer);
                 pressedPointers.Remove(pointer);
-                if (pointer.Layer != null) pointer.Layer.INTERNAL_ReleasePointer(pointer);
+                if (pointer.GetPressData().Layer != null) pointer.GetPressData().Layer.INTERNAL_ReleasePointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
@@ -820,7 +810,7 @@ namespace TouchScript
                 this.pointers.Remove(pointer);
                 pressedPointers.Remove(pointer);
                 list.Add(pointer);
-                if (pointer.Layer != null) pointer.Layer.INTERNAL_CancelPointer(pointer);
+                if (pointer.GetPressData().Layer != null) pointer.GetPressData().Layer.INTERNAL_CancelPointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
                 removeDebugFigureForPointer(pointer);

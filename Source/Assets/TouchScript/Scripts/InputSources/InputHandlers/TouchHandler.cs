@@ -204,9 +204,9 @@ namespace TouchScript.InputSources.InputHandlers
             pointersNum++;
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
+            pointer.Flags |= flags;
             addPointer(pointer);
             pressPointer(pointer);
-            pointer.Flags |= flags;
             return pointer;
         }
 

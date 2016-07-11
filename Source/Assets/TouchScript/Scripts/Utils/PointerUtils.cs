@@ -3,7 +3,6 @@
  */
 
 using TouchScript.Hit;
-using TouchScript.Layers;
 using TouchScript.Pointers;
 using UnityEngine;
 
@@ -15,22 +14,6 @@ namespace TouchScript.Utils
     public static class PointerUtils
     {
         /// <summary>
-        /// Determines whether the pointer is over a specific GameObject.
-        /// </summary>
-        /// <param name="pointer"> The pointer. </param>
-        /// <param name="target"> The target. </param>
-        /// <returns> <c>true</c> if the pointer is over the GameObject; <c>false</c> otherwise.</returns>
-        public static bool IsPointerOnTarget(Pointer pointer, Transform target)
-        {
-            if (pointer == null || pointer.Layer == null || target == null) return false;
-            TouchHit hit;
-            if ((pointer.Layer.Hit(pointer.Position, out hit) == TouchLayer.LayerHitResult.Hit) &&
-                (target == hit.Target || hit.Target.IsChildOf(target)))
-                return true;
-            return false;
-        }
-
-        /// <summary>
         /// Determines whether the pointer is over its target GameObject.
         /// </summary>
         /// <param name="pointer"> The pointer. </param>
@@ -38,7 +21,35 @@ namespace TouchScript.Utils
         public static bool IsPointerOnTarget(Pointer pointer)
         {
             if (pointer == null) return false;
-            return IsPointerOnTarget(pointer, pointer.Target);
+            return IsPointerOnTarget(pointer, pointer.GetPressData().Target);
+        }
+
+        /// <summary>
+        /// Determines whether the pointer is over a specific GameObject.
+        /// </summary>
+        /// <param name="pointer"> The pointer. </param>
+        /// <param name="target"> The target. </param>
+        /// <returns> <c>true</c> if the pointer is over the GameObject; <c>false</c> otherwise.</returns>
+        public static bool IsPointerOnTarget(Pointer pointer, Transform target)
+        {
+            TouchHit hit;
+            return IsPointerOnTarget(pointer, target, out hit);
+        }
+
+        /// <summary>
+        /// Determines whether the pointer is over a specific GameObject.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="hit">The hit.</param>
+        /// <returns> <c>true</c> if the pointer is over the GameObject; <c>false</c> otherwise. </returns>
+        public static bool IsPointerOnTarget(Pointer pointer, Transform target, out TouchHit hit)
+        {
+            hit = default(TouchHit);
+            if (pointer == null || target == null) return false;
+            hit = pointer.GetOverData();
+            if (hit.Target == null) return false;
+            return hit.Target.IsChildOf(target);
         }
     }
 }

@@ -86,7 +86,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         public override ProjectionParams GetProjectionParams(Pointer pointer)
         {
-            var graphic = pointer.Target.GetComponent<Graphic>();
+            var graphic = pointer.GetPressData().Target.GetComponent<Graphic>();
             if (graphic == null) return layerProjectionParams;
             var canvas = graphic.canvas;
             if (canvas == null) return layerProjectionParams;

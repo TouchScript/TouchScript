@@ -359,6 +359,16 @@ namespace TouchScript.Gestures
             }
         }
 
+        public TouchHit ScreenPositionHit
+        {
+            get
+            {
+                TouchHit hit;
+                touchManager.GetHitTarget(ScreenPosition, out hit);
+                return hit;
+            }
+        }
+
         /// <summary>
         /// Gets list of gesture's active pointers.
         /// </summary>
@@ -501,59 +511,6 @@ namespace TouchScript.Gestures
         public bool IsFriendly(Gesture gesture)
         {
             return friendlyGestures.Contains(gesture);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from gesture pointers centroid screen position.
-        /// </summary>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public bool GetTargetHitResult()
-        {
-            TouchHit hit;
-            return GetTargetHitResult(ScreenPosition, out hit);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from gesture pointers centroid screen position.
-        /// </summary>
-        /// <param name="hit"> Raycast result </param>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public virtual bool GetTargetHitResult(out TouchHit hit)
-        {
-            return GetTargetHitResult(ScreenPosition, out hit);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from specific screen position.
-        /// </summary>
-        /// <param name="position"> The position. </param>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public bool GetTargetHitResult(Vector2 position)
-        {
-            TouchHit hit;
-            return GetTargetHitResult(position, out hit);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from specific screen position.
-        /// </summary>
-        /// <param name="position"> The position. </param>
-        /// <param name="hit"> Raycast result. </param>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
-        {
-            if (layer != null)
-            {
-                if (layer.Hit(position, out hit) != TouchLayer.LayerHitResult.Hit) return false;
-            }
-            else
-            {
-                TouchLayer l = null;
-                if (!touchManager.GetHitTarget(position, out hit, out l)) return false;
-            }
-
-            if (cachedTransform == hit.Target || hit.Target.IsChildOf(cachedTransform)) return true;
-            return false;
         }
 
         /// <summary>
@@ -720,7 +677,7 @@ namespace TouchScript.Gestures
 
         internal void INTERNAL_PointersPressed(IList<Pointer> pointers)
         {
-            if (numPointers == 0) layer = pointers[0].Layer;
+            if (numPointers == 0) layer = pointers[0].GetPressData().Layer;
 
             var count = pointers.Count;
             var total = numPointers + count;

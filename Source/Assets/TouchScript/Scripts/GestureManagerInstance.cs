@@ -249,14 +249,15 @@ namespace TouchScript
             for (var i = 0; i < count; i++)
             {
                 var pointer = pointers[i];
-                if (pointer.Target != null)
+                var target = pointer.GetPressData().Target;
+                if (target != null)
                 {
                     List<Pointer> list;
-                    if (!targetPointers.TryGetValue(pointer.Target, out list))
+                    if (!targetPointers.TryGetValue(target, out list))
                     {
                         list = pointerListPool.Get();
-                        targetPointers.Add(pointer.Target, list);
-                        targets.Add(pointer.Target);
+                        targetPointers.Add(target, list);
+                        targets.Add(target);
                     }
                     list.Add(pointer);
                 }
