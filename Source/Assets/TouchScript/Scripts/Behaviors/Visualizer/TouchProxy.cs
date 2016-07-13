@@ -34,7 +34,11 @@ namespace TouchScript.Behaviors.Visualizer
             gameObject.name = stringBuilder.ToString();
 
             if (Text == null) return;
-            if (!ShowTouchId && !ShowTags) return;
+            if (!ShowTouchId && !ShowTags)
+            {
+                Text.text = "";
+                return;
+            }
 
             stringBuilder.Length = 0;
             if (ShowTouchId)
