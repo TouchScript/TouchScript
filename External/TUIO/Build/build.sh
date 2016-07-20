@@ -7,6 +7,6 @@ PROJECT=$(cd "$DIR/../TUIOsharp" && pwd)
 LIBS=$(cd "$DIR/../../../Source/Assets/TouchScript/Modules/TUIO/Libraries/" && pwd)
 SLN="$PROJECT/TUIOsharp.sln"
 
-"$DIR/../../../Build/utils/build_solution.sh" $SLN
+"$DIR/../../../Build/utils/build_solution.sh" $SLN "Any CPU"
 cp "$PROJECT/TUIOsharp/bin/Release/TUIOsharp.dll" "$LIBS"
 cp "$PROJECT/TUIOsharp/bin/Release/OSCsharp.dll" "$LIBS"
