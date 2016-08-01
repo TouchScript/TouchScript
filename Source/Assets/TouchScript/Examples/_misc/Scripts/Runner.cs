@@ -4,7 +4,7 @@
 
 using UnityEngine;
 using TouchScript.Layers;
-#if UNITY_5_3
+#if UNITY_5_3 || UNITY_5_4
 using UnityEngine.SceneManagement;
 #endif
 
@@ -17,7 +17,7 @@ namespace TouchScript.Examples
 
         public void LoadNextLevel()
         {
-#if UNITY_5_3
+#if UNITY_5_3 || UNITY_5_4
             SceneManager.LoadScene((SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
 #else
 			Application.LoadLevel((Application.loadedLevel + 1)%Application.levelCount);
@@ -34,7 +34,7 @@ namespace TouchScript.Examples
 
             layer = GetComponent<UILayer>();
 
-#if UNITY_5_3
+#if UNITY_5_3 || UNITY_5_4
             if (SceneManager.GetActiveScene().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)
 #else
 			if (Application.loadedLevelName == "Examples" && Application.levelCount > 1)
