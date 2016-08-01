@@ -34,6 +34,10 @@ namespace TouchScript.Examples
 
             layer = GetComponent<UILayer>();
 
+#if UNITY_5_4
+            SceneManager.sceneLoaded += LevelWasLoaded;
+#endif
+
 #if UNITY_5_3 || UNITY_5_4
             if (SceneManager.GetActiveScene().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)
 #else
@@ -44,9 +48,17 @@ namespace TouchScript.Examples
             }
         }
 
-        private void OnLevelWasLoaded(int num)
+
+#if !UNITY_5_4
+        private void OnLevelWasLoaded(int value)
         {
             TouchManager.Instance.AddLayer(layer, 0);
         }
+#else
+        private void LevelWasLoaded(Scene scene, LoadSceneMode mode)
+        {
+            TouchManager.Instance.AddLayer(layer, 0);
+        }
+#endif
     }
 }
