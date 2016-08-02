@@ -15,7 +15,7 @@ using TouchScript.Utils.Debug;
 #endif
 using UnityEngine;
 
-#if UNITY_5_4
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.SceneManagement;
 #endif
 
@@ -492,7 +492,7 @@ namespace TouchScript
                 return;
             }
 
-#if UNITY_5_4
+#if UNITY_5_4_OR_NEWER
             SceneManager.sceneLoaded += LevelWasLoaded;
 #endif
 
@@ -512,14 +512,14 @@ namespace TouchScript
 #endif
         }
 
-#if !UNITY_5_4
-        private void OnLevelWasLoaded(int value)
+#if UNITY_5_4_OR_NEWER
+        private void LevelWasLoaded(Scene scene, LoadSceneMode mode)
         {
             StopAllCoroutines();
             StartCoroutine(lateAwake());
         }
 #else
-        private void LevelWasLoaded(Scene scene, LoadSceneMode mode)
+        private void OnLevelWasLoaded(int value)
         {
             StopAllCoroutines();
             StartCoroutine(lateAwake());
