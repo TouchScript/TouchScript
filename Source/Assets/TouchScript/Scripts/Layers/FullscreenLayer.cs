@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -100,25 +101,23 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out HitData hit)
+        public override HitResult Hit(IPointer pointer, out HitData hit)
         {
-            if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
+            if (base.Hit(pointer, out hit) != HitResult.Hit) return HitResult.Miss;
 
             if (_camera != null)
             {
-                if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
+                if (!_camera.pixelRect.Contains(pointer.Position)) return HitResult.Miss;
             }
 
             hit = new HitData(transform, this);
-            switch (checkHitFilters(hit))
+            var result = checkHitFilters(pointer, hit);
+            if (result != HitResult.Hit)
             {
-                case HitTest.ObjectHitResult.Hit:
-                    return LayerHitResult.Hit;
-                case HitTest.ObjectHitResult.Error:
-                    return LayerHitResult.Error;
-                default:
-                    return LayerHitResult.Miss;
+                hit = default(HitData);
+                return result;
             }
+            return HitResult.Hit;
         }
 
         #endregion

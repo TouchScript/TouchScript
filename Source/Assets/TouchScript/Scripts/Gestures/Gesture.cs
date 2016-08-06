@@ -402,7 +402,7 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Reference to global TouchManager.
         /// </summary>
-        protected ITouchManager touchManager { get; private set; }
+        protected TouchManagerInstance touchManager { get; private set; }
 
         /// <summary>
         /// The state of min/max number of pointers.
@@ -460,6 +460,7 @@ namespace TouchScript.Gestures
         private GestureManagerInstance gestureManagerInstance;
         private GestureState delayedStateChange = GestureState.Possible;
         private bool requiredGestureFailed = false;
+        private FakePointer fakePointer = new FakePointer();
         private GestureState state = GestureState.Possible;
 
         /// <summary>
@@ -592,7 +593,8 @@ namespace TouchScript.Gestures
         public virtual HitData GetScreenPositionHitData()
         {
             HitData hit;
-            touchManager.GetHitTarget(ScreenPosition, out hit);
+            fakePointer.Position = ScreenPosition;
+            touchManager.INTERNAL_GetHitTarget(fakePointer, out hit);
             return hit;
         }
 
@@ -619,7 +621,7 @@ namespace TouchScript.Gestures
         protected virtual void OnEnable()
         {
             // TouchManager might be different in another scene
-            touchManager = TouchManager.Instance;
+            touchManager = TouchManager.Instance as TouchManagerInstance;
             gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
 
             if (touchManager == null)

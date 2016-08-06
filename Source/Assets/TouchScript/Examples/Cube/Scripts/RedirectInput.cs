@@ -89,7 +89,8 @@ namespace TouchScript.Examples.Cube
 
         private void pointerUpdatedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-            var pointer = metaGestureEventArgs.Pointer;
+			var pointer = metaGestureEventArgs.Pointer;
+
             if (pointer.InputSource == this) return;
 
             Pointer newPointer;

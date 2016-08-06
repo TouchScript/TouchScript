@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Hit
@@ -26,9 +27,9 @@ namespace TouchScript.Hit
         #region Public methods
 
         /// <inheritdoc />
-        public override ObjectHitResult IsHit(HitData hit)
+        public override HitResult IsHit(IPointer pointer, HitData hit)
         {
-            return DiscardPointer ? ObjectHitResult.Discard : ObjectHitResult.Miss;
+            return DiscardPointer ? HitResult.Discard : HitResult.Miss;
         }
 
         #endregion

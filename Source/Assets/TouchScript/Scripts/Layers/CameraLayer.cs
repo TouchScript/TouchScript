@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -17,6 +18,7 @@ namespace TouchScript.Layers
     public class CameraLayer : CameraLayerBase
     {
         #region Private variables
+
 #if UNITY_5_3_OR_NEWER
         private RaycastHit[] raycastHits = new RaycastHit[20];
 #endif
@@ -25,7 +27,7 @@ namespace TouchScript.Layers
 
         private RaycastHitComparer comparer;
 
-#endregion
+        #endregion
 
         #region Unity methods
 
@@ -39,12 +41,12 @@ namespace TouchScript.Layers
             comparer = new RaycastHitComparer(cachedTransform);
         }
 
-#endregion
+        #endregion
 
-#region Protected functions
+        #region Protected functions
 
         /// <inheritdoc />
-        protected override LayerHitResult castRay(Ray ray, out HitData hit)
+        protected override HitResult castRay(IPointer pointer, Ray ray, out HitData hit)
         {
             hit = default(HitData);
 #if UNITY_5_3_OR_NEWER
@@ -54,7 +56,7 @@ namespace TouchScript.Layers
             var count = raycastHits.Length;
 #endif
 
-            if (count == 0) return LayerHitResult.Miss;
+            if (count == 0) return HitResult.Miss;
             if (count > 1)
             {
                 sortHits(raycastHits, count);
@@ -63,35 +65,18 @@ namespace TouchScript.Layers
                 for (var i = 0; i < count; i++)
                 {
                     raycastHit = sortedHits[i];
-                    switch (doHit(raycastHit, out hit))
-                    {
-                        case HitTest.ObjectHitResult.Hit:
-                            return LayerHitResult.Hit;
-                        case HitTest.ObjectHitResult.Discard:
-                            return LayerHitResult.Miss;
-                    }
+                    var result = doHit(pointer, raycastHit, out hit);
+                    if (result != HitResult.Miss) return result;
                 }
+                return HitResult.Miss;
             }
-            else
-            {
-                switch (doHit(raycastHits[0], out hit))
-                {
-                    case HitTest.ObjectHitResult.Hit:
-                        return LayerHitResult.Hit;
-                    case HitTest.ObjectHitResult.Error:
-                        return LayerHitResult.Error;
-                    default:
-                        return LayerHitResult.Miss;
-                }
-            }
-
-            return LayerHitResult.Miss;
+            return doHit(pointer, raycastHits[0], out hit);
         }
 
-        private HitTest.ObjectHitResult doHit(RaycastHit raycastHit, out HitData hit)
+        private HitResult doHit(IPointer pointer, RaycastHit raycastHit, out HitData hit)
         {
             hit = new HitData(raycastHit, this);
-            return checkHitFilters(hit);
+            return checkHitFilters(pointer, hit);
         }
 
         private void sortHits(RaycastHit[] hits, int count)
@@ -121,6 +106,5 @@ namespace TouchScript.Layers
                 return distA < distB ? -1 : 1;
             }
         }
-
     }
 }

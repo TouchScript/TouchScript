@@ -40,45 +40,14 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out HitData hit)
+        public override HitResult Hit(IPointer pointer, out HitData hit)
         {
-            if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
-            if (eventSystem == null) return LayerHitResult.Error;
+            if (base.Hit(pointer, out hit) != HitResult.Hit) return HitResult.Miss;
+            if (eventSystem == null) return HitResult.Miss;
 
-            if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
-            pointerDataCache.position = position;
-            eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
-
-            var count = raycastResultCache.Count;
-            if (count == 0) return LayerHitResult.Miss;
-            if (count > 1)
-            {
-                for (var i = 0; i < count; ++i)
-                {
-                    var raycastHit = raycastResultCache[i];
-                    switch (doHit(raycastHit, out hit))
-                    {
-                        case HitTest.ObjectHitResult.Hit:
-                            return LayerHitResult.Hit;
-                        case HitTest.ObjectHitResult.Discard:
-                            return LayerHitResult.Miss;
-                    }
-                }
-            }
-            else
-            {
-                switch (doHit(raycastResultCache[0], out hit))
-                {
-                    case HitTest.ObjectHitResult.Hit:
-                        return LayerHitResult.Hit;
-                    case HitTest.ObjectHitResult.Error:
-                        return LayerHitResult.Error;
-                    default:
-                        return LayerHitResult.Miss;
-                }
-            }
-
-            return LayerHitResult.Miss;
+            var result = castRay(pointer, out hit);
+            if (result != HitResult.Hit) hit = default(HitData);
+            return result;
         }
 
         /// <inheritdoc />
@@ -145,16 +114,39 @@ namespace TouchScript.Layers
             Name = "UI Layer";
         }
 
+        protected HitResult castRay(IPointer pointer, out HitData hit)
+        {
+            hit = default(HitData);
+            if (pointerDataCache == null) pointerDataCache = new PointerEventData(eventSystem);
+            pointerDataCache.position = pointer.Position;
+            eventSystem.RaycastAll(pointerDataCache, raycastResultCache);
+
+            var count = raycastResultCache.Count;
+            if (count == 0) return HitResult.Miss;
+            if (count > 1)
+            {
+                for (var i = 0; i < count; ++i)
+                {
+                    var raycastHit = raycastResultCache[i];
+                    if (!(raycastHit.module is GraphicRaycaster)) continue;
+                    var result = doHit(pointer, raycastHit, out hit);
+                    if (result != HitResult.Miss) return result;
+                }
+                return HitResult.Miss;
+            }
+
+            if (!(raycastResultCache[0].module is GraphicRaycaster)) return HitResult.Miss;
+            return doHit(pointer, raycastResultCache[0], out hit);
+        }
+
         #endregion
 
         #region Private functions
 
-        private HitTest.ObjectHitResult doHit(RaycastResult raycastHit, out HitData hit)
+        private HitResult doHit(IPointer pointer, RaycastResult raycastHit, out HitData hit)
         {
             hit = new HitData(raycastHit, this);
-
-            if (!(raycastHit.module is GraphicRaycaster)) return HitTest.ObjectHitResult.Miss;
-            return checkHitFilters(hit);
+            return checkHitFilters(pointer, hit);
         }
 
         #endregion

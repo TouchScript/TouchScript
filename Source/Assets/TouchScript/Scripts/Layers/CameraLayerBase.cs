@@ -4,6 +4,7 @@
 
 using System;
 using TouchScript.Hit;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Layers
@@ -52,16 +53,19 @@ namespace TouchScript.Layers
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out HitData hit)
+        public override HitResult Hit(IPointer pointer, out HitData hit)
         {
-            if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
+            if (base.Hit(pointer, out hit) != HitResult.Hit) return HitResult.Miss;
 
-            if (_camera == null) return LayerHitResult.Error;
-            if (_camera.enabled == false || _camera.gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
-            if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
+            if (_camera == null) return HitResult.Miss;
+            if (_camera.enabled == false || _camera.gameObject.activeInHierarchy == false) return HitResult.Miss;
+            var position = pointer.Position;
+            if (!_camera.pixelRect.Contains(position)) return HitResult.Miss;
 
             var ray = _camera.ScreenPointToRay(position);
-            return castRay(ray, out hit);
+            var result = castRay(pointer, ray, out hit);
+            if (result != HitResult.Hit) hit = default(HitData);
+            return result;
         }
 
         #endregion
@@ -82,7 +86,7 @@ namespace TouchScript.Layers
         /// <inheritdoc />
         protected override void setName()
         {
-            if (String.IsNullOrEmpty(Name) && _camera != null) Name = _camera.name;
+            if (string.IsNullOrEmpty(Name) && _camera != null) Name = _camera.name;
         }
 
         /// <inheritdoc />
@@ -109,7 +113,7 @@ namespace TouchScript.Layers
         /// <param name="ray">The ray.</param>
         /// <param name="hit">Hit information if the ray has hit something.</param>
         /// <returns>Hit result.</returns>
-        protected abstract LayerHitResult castRay(Ray ray, out HitData hit);
+        protected abstract HitResult castRay(IPointer pointer, Ray ray, out HitData hit);
 
         #endregion
     }

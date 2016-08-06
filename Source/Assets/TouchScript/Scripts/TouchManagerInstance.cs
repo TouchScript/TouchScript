@@ -21,7 +21,7 @@ namespace TouchScript
     /// <summary>
     /// Default implementation of <see cref="ITouchManager"/>.
     /// </summary>
-    internal sealed class TouchManagerInstance : DebuggableMonoBehaviour, ITouchManager
+    public sealed class TouchManagerInstance : DebuggableMonoBehaviour, ITouchManager
     {
         #region Events
 
@@ -319,34 +319,6 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public Transform GetHitTarget(Vector2 position)
-        {
-            HitData hit;
-            if (GetHitTarget(position, out hit)) return hit.Target;
-            return null;
-        }
-
-        /// <inheritdoc />
-        public bool GetHitTarget(Vector2 position, out HitData hit)
-        {
-            hit = default(HitData);
-
-            for (var i = 0; i < layerCount; i++)
-            {
-                var touchLayer = layers[i];
-                if (touchLayer == null) continue;
-                HitData _hit;
-                if (touchLayer.Hit(position, out _hit) == TouchLayer.LayerHitResult.Hit)
-                {
-                    hit = _hit;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc />
         public void CancelPointer(int id, bool shouldReturn)
         {
             Pointer pointer;
@@ -365,6 +337,28 @@ namespace TouchScript
         #endregion
 
         #region Internal methods
+
+        /// <inheritdoc />
+        internal bool INTERNAL_GetHitTarget(IPointer pointer, out HitData hit)
+        {
+            hit = default(HitData);
+
+            for (var i = 0; i < layerCount; i++)
+            {
+                var touchLayer = layers[i];
+                if (touchLayer == null) continue;
+                var result = touchLayer.Hit(pointer, out hit);
+                switch (result)
+                {
+                    case HitResult.Hit:
+                        return true;
+                    case HitResult.Discard:
+                        return false;
+                }
+            }
+
+            return false;
+        }
 
         internal void INTERNAL_AddPointer(Pointer pointer)
         {
@@ -705,12 +699,12 @@ namespace TouchScript
                 }
                 list.Add(pointer);
                 pressedPointers.Add(pointer);
-                for (var j = 0; j < layerCount; j++)
-                {
-                    var touchLayer = layers[j];
-                    if (touchLayer == null || !touchLayer.enabled) continue;
-                    if (touchLayer.INTERNAL_PressPointer(pointer)) break;
-                }
+				HitData hit = pointer.GetOverData();
+				if (hit.Layer != null) 
+				{
+					pointer.INTERNAL_SetPressData(hit);
+					hit.Layer.INTERNAL_PressPointer(pointer);
+				}
 
 #if TOUCHSCRIPT_DEBUG
                 addDebugFigureForPointer(pointer);
@@ -886,17 +880,16 @@ namespace TouchScript
                 }
             }
 
+			var count = pointers.Count;
+			for (var i = 0; i < count; i++)
+			{
+				pointers[i].INTERNAL_FrameStarted();
+			}
+
             if (addedList != null)
             {
                 updateAdded(addedList);
                 pointerListPool.Release(addedList);
-            }
-
-            // Need to loop through all pointers to update position/previousPosition.
-            var count = pointers.Count;
-            for (var i = 0; i < count; i++)
-            {
-                pointers[i].INTERNAL_FrameStarted();
             }
 
             if (updatedList != null)

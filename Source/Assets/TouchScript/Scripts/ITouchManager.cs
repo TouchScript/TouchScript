@@ -188,22 +188,6 @@ namespace TouchScript
         bool RemoveInput(IInputSource input);
 
         /// <summary>
-        /// Checks if a pointer hits anything.
-        /// </summary>
-        /// <param name="position">Screen position of the pointer.</param>
-        /// <returns>Transform which has been hit or null otherwise.</returns>
-        Transform GetHitTarget(Vector2 position);
-
-        /// <summary>
-        /// Checks if a pointer hits anything.
-        /// <seealso cref="HitData"/>
-        /// </summary>
-        /// <param name="position">Screen position of the pointer.</param>
-        /// <param name="hit">An object which represents hit information.</param>
-        /// <returns>True if the pointer hits any Transform.</returns>
-        bool GetHitTarget(Vector2 position, out HitData hit);
-
-        /// <summary>
         /// Cancels a pointer and returns it to the system of need.
         /// </summary>
         /// <param name="id">Pointer id to cancel.</param>

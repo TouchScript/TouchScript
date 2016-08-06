@@ -14,7 +14,7 @@ namespace TouchScript.Pointers
     /// <para>An instance of this class is created when user touches the screen. A unique id is assigned to it which doesn't change throughout its life.</para>
     /// <para><b>Attention!</b> Do not store references to these objects beyond pointer's lifetime (i.e. when target finger is lifted off). These objects may be reused internally. Store unique ids instead.</para>
     /// </summary>
-    public class Pointer
+    public class Pointer : IPointer
     {
         #region Constants
 
@@ -63,6 +63,11 @@ namespace TouchScript.Pointers
         public enum PointerType
         {
             /// <summary>
+            /// Unknown.
+            /// </summary>
+            Unknown,
+
+            /// <summary>
             /// Touch.
             /// </summary>
             Touch,
@@ -87,14 +92,10 @@ namespace TouchScript.Pointers
 
         #region Public properties
 
-        /// <summary>
-        /// Internal unique pointer id.
-        /// </summary>
+        /// <inheritdoc />
         public int Id { get; private set; }
 
-        /// <summary>
-        /// Pointer type. See <see cref="PointerType"/>.
-        /// </summary>
+        /// <inheritdoc />
         public PointerType Type { get; protected set; }
 
         /// <summary>
@@ -160,10 +161,7 @@ namespace TouchScript.Pointers
 
         #region Public methods
 
-        /// <summary>
-        /// Returns <see cref="HitData"/> for current pointer position, i.e. what is right beneath it. Caches the result for the entire frame.
-        /// </summary>
-        /// <param name="forceRecalculate">if set to <c>true</c> forces to recalculate the value.</param>
+        /// <inheritdoc />
         public HitData GetOverData(bool forceRecalculate = false)
         {
             if (overDataIsDirty || forceRecalculate)
@@ -228,7 +226,7 @@ namespace TouchScript.Pointers
         public Pointer(IInputSource input)
         {
             manager = TouchManager.Instance as TouchManagerInstance;
-            Type = PointerType.Touch;
+            Type = PointerType.Unknown;
             InputSource = input;
             INTERNAL_Reset();
         }

@@ -14,7 +14,7 @@ namespace TouchScript.Examples.Cube
         public RedirectInput Source;
         public TouchLayer RenderTextureLayer;
 
-        public bool ShouldReceivePointer(TouchLayer layer, Pointer pointer)
+        public bool ShouldReceivePointer(TouchLayer layer, IPointer pointer)
         {
             if (layer == RenderTextureLayer)
                 return pointer.InputSource == Source;

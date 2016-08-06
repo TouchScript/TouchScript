@@ -27,30 +27,6 @@ namespace TouchScript.Layers
     [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
-        #region Constants
-
-        /// <summary>
-        /// Result of a pointer's hit test with a layer.
-        /// </summary>
-        public enum LayerHitResult
-        {
-            /// <summary>
-            /// Something wrong happened.
-            /// </summary>
-            Error = 0,
-
-            /// <summary>
-            /// Pointer hit an object.
-            /// </summary>
-            Hit = 1,
-
-            /// <summary>
-            /// Pointer didn't hit any object.
-            /// </summary>
-            Miss = 2
-        }
-
-        #endregion
 
         #region Events
 
@@ -59,12 +35,12 @@ namespace TouchScript.Layers
         /// </summary>
         public event EventHandler<TouchLayerEventArgs> PointerBegan
         {
-            add { pointerBeganInvoker += value; }
-            remove { pointerBeganInvoker -= value; }
+            add { pointerPressInvoker += value; }
+            remove { pointerPressInvoker -= value; }
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<TouchLayerEventArgs> pointerBeganInvoker;
+        private EventHandler<TouchLayerEventArgs> pointerPressInvoker;
 
         #endregion
 
@@ -117,14 +93,19 @@ namespace TouchScript.Layers
         /// <summary>
         /// Checks if a point in screen coordinates hits something in this layer.
         /// </summary>
-        /// <param name="position">Position in screen coordinates.</param>
+        /// <param name="pointer">Pointer.</param>
         /// <param name="hit">Hit result.</param>
-        /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out HitData hit)
+        /// <returns><c>true</c>, if an object is hit, <see cref="LayerHitResult.Miss"/>; <c>false</c> otherwise.</returns>
+        public virtual HitResult Hit(IPointer pointer, out HitData hit)
         {
             hit = default(HitData);
-            if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
-            return LayerHitResult.Error;
+            if (enabled == false || gameObject.activeInHierarchy == false) return HitResult.Miss;
+            if (Delegate != null)
+            {
+                if (Delegate.ShouldReceivePointer(this, pointer)) return HitResult.Hit;
+                return HitResult.Miss;
+            }
+            return HitResult.Hit;
         }
 
         #endregion
@@ -176,17 +157,9 @@ namespace TouchScript.Layers
 
         internal bool INTERNAL_PressPointer(Pointer pointer)
         {
-            HitData hit;
-            if (Delegate != null && Delegate.ShouldReceivePointer(this, pointer) == false) return false;
-            var result = pressPointer(pointer, out hit);
-            if (result == LayerHitResult.Hit)
-            {
-                pointer.INTERNAL_SetPressData(hit);
-                if (pointerBeganInvoker != null)
-                    pointerBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(pointer));
-                return true;
-            }
-            return false;
+            pressPointer(pointer);
+            if (pointerPressInvoker != null) pointerPressInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(pointer));
+			return true;
         }
 
         internal void INTERNAL_ReleasePointer(Pointer pointer)
@@ -203,19 +176,19 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
-        protected HitTest.ObjectHitResult checkHitFilters(HitData hit)
+        protected HitResult checkHitFilters(IPointer pointer, HitData hit)
         {
             hit.Target.GetComponents(tmpHitTestList);
             var count = tmpHitTestList.Count;
-            if (count == 0) return HitTest.ObjectHitResult.Hit;
+            if (count == 0) return HitResult.Hit;
 
-            var hitResult = HitTest.ObjectHitResult.Hit;
+            var hitResult = HitResult.Hit;
             for (var i = 0; i < count; i++)
             {
                 var test = tmpHitTestList[i];
                 if (!test.enabled) continue;
-                hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard) break;
+                hitResult = test.IsHit(pointer, hit);
+                if (hitResult != HitResult.Hit) break;
             }
 
             return hitResult;
@@ -233,14 +206,8 @@ namespace TouchScript.Layers
         /// Called when a layer is touched to query the layer if this pointer hits something.
         /// </summary>
         /// <param name="pointer">Pointer.</param>
-        /// <param name="hit">Hit result.</param>
-        /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult pressPointer(Pointer pointer, out HitData hit)
-        {
-            var result = Hit(pointer.Position, out hit);
-            return result;
-        }
+        protected virtual void pressPointer(Pointer pointer) {}
 
         /// <summary>
         /// Called when a pointer is moved.

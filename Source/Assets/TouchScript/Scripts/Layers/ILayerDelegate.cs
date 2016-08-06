@@ -19,7 +19,7 @@ namespace TouchScript.Layers
         /// <param name="layer"> The layer. </param>
         /// <param name="pointer"> The pointer. </param>
         /// <returns> <c>true</c> if it should; <c>false</c> otherwise. </returns>
-        bool ShouldReceivePointer(TouchLayer layer, Pointer pointer);
+        bool ShouldReceivePointer(TouchLayer layer, IPointer pointer);
 
     }
 }
