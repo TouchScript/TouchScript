@@ -149,6 +149,7 @@ namespace TouchScript.Pointers
 
         #region Private variables
 
+        private TouchManagerInstance manager;
         private int refCount = 0;
         private Vector2 position, newPosition;
         private uint flags, newFlags;
@@ -167,7 +168,7 @@ namespace TouchScript.Pointers
         {
             if (overDataIsDirty || forceRecalculate)
             {
-                TouchManager.Instance.GetHitTarget(position, out overData);
+                manager.INTERNAL_GetHitTarget(this, out overData);
                 overDataIsDirty = false;
             }
             return overData;
@@ -226,6 +227,7 @@ namespace TouchScript.Pointers
         /// </summary>
         public Pointer(IInputSource input)
         {
+            manager = TouchManager.Instance as TouchManagerInstance;
             Type = PointerType.Touch;
             InputSource = input;
             INTERNAL_Reset();
