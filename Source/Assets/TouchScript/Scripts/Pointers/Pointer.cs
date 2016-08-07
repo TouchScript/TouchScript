@@ -304,8 +304,28 @@ namespace TouchScript.Pointers
             builder.Append(Id);
             builder.Append(", flags: ");
             BinaryUtils.ToBinaryString(Flags, builder, 8);
-            //            builder.Append(", buttons: ");
-            //            builder.Append((uint)Buttons);
+            builder.Append(", buttons: ");
+            if (Buttons == PointerButtonState.Nothing)
+            {
+                builder.Append("-");
+            }
+            else
+            {
+                var b = (uint) Buttons;
+                for (int i = 0; i < 5; i++)
+                {
+                    int pressed = 1 << (i * 3);
+                    int down = 1 << (i * 3 + 1);
+                    int up = 1 << (i * 3 + 2);
+                    if ((b & (pressed | down | up)) != 0)
+                    {
+                        builder.Append(i + 1);
+                        if ((b & (pressed)) != 0) builder.Append("+");
+                        if ((b & (down)) != 0) builder.Append("v");
+                        if ((b & (up)) != 0) builder.Append("^");
+                    }
+                }
+            }
             builder.Append(", position: ");
             builder.Append(Position);
             builder.Append(")");
