@@ -122,8 +122,7 @@ namespace TouchScript.InputSources.InputHandlers
                     // Add pressed buttons for processing
                     mousePointer.Buttons = newButtons | (Pointer.PointerButtonState) ((uint) (newButtons & Pointer.PointerButtonState.AnyButtonDown) >> 1);
                     pressPointer(mousePointer);
-                    releasePointer(mousePointer);
-                    tryAddFakePointer(newButtons);
+                    internalReleaseMousePointer(newButtons);
                 }
                 // pressed this frame
                 else
@@ -139,8 +138,7 @@ namespace TouchScript.InputSources.InputHandlers
                 if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
                 {
                     mousePointer.Buttons = newButtons;
-                    releasePointer(mousePointer);
-                    tryAddFakePointer(newButtons);
+                    internalReleaseMousePointer(newButtons);
                 }
                 // button state changed this frame
                 else
@@ -247,6 +245,13 @@ namespace TouchScript.InputSources.InputHandlers
 			pointer.Flags |= flags;
             addPointer(pointer);
             return pointer;
+        }
+
+        private void internalReleaseMousePointer(Pointer.PointerButtonState buttons)
+        {
+            mousePointer.Flags &= ~Pointer.FLAG_RETURNED;
+            releasePointer(mousePointer);
+            tryAddFakePointer(buttons);
         }
 
         private MousePointer internalReturnPointer(MousePointer pointer)
