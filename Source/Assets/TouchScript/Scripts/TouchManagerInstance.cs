@@ -584,6 +584,7 @@ namespace TouchScript
 
         private void Update()
         {
+            sendFrameStartedToPointers();
             updateInputs();
             updatePointers();
         }
@@ -853,6 +854,15 @@ namespace TouchScript
             pointerListPool.Release(list);
         }
 
+        private void sendFrameStartedToPointers()
+        {
+            var count = pointers.Count;
+            for (var i = 0; i < count; i++)
+            {
+                pointers[i].INTERNAL_FrameStarted();
+            }
+        }
+
         private void updatePointers()
         {
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
@@ -907,7 +917,7 @@ namespace TouchScript
 			var count = pointers.Count;
 			for (var i = 0; i < count; i++)
 			{
-				pointers[i].INTERNAL_FrameStarted();
+				pointers[i].INTERNAL_UpdatePosition();
 			}
 
             if (addedList != null)

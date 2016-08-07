@@ -32,7 +32,7 @@ namespace TouchScript.Pointers
         Vector2 Position { get; set; }
 
         /// <summary>
-        /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/>, <see cref="FLAG_FIRST_BUTTON"/>, <see cref="FLAG_SECOND_BUTTON"/>, <see cref="FLAG_THIRD_BUTTON"/>, <see cref="FLAG_INCONTACT"/>.</para>
+        /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/></para>
         /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
         /// </summary>
         uint Flags { get; set; }

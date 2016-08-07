@@ -88,7 +88,7 @@ namespace TouchScript.InputSources.InputHandlers
             if (addFakePointer.ShouldAdd)
             {
                 addFakePointer.ShouldAdd = false;
-                fakeMousePointer = internalAddPointer(addFakePointer.Position, addFakePointer.Flags);
+                fakeMousePointer = internalAddPointer(addFakePointer.Position, addFakePointer.Buttons, addFakePointer.Flags);
                 pressPointer(fakeMousePointer);
             }
 
@@ -108,52 +108,44 @@ namespace TouchScript.InputSources.InputHandlers
                 updatePointer(mousePointer);
             }
 
-            var flags = mousePointer.Flags;
-            var buttonFlags = flags & Pointer.FLAG_INCONTACT;
-            if (buttonFlags == 0)
+            var buttons = mousePointer.Buttons;
+            var newButtons = getMouseButtons();
+
+            if (buttons == newButtons) return; // nothing new happened
+
+            // pressed something
+            if (buttons == Pointer.PointerButtonState.Nothing)
             {
-                // Hovering point
-                if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+                // pressed and released this frame
+                if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
                 {
-                    // But there was a click this frame
-                    var newFlags = getMouseButtonFlags();
-                    mousePointer.Flags = (flags & ~Pointer.FLAG_INCONTACT) | newFlags;
+                    // Add pressed buttons for processing
+                    mousePointer.Buttons = newButtons | (Pointer.PointerButtonState) ((uint) (newButtons & Pointer.PointerButtonState.AnyButtonDown) >> 1);
                     pressPointer(mousePointer);
-                    if (newFlags == 0)
-                    {
-                        // And release the same frame
-                        releasePointer(mousePointer);
-                        if (emulateSecondMousePointer
-                        && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
-                        && fakeMousePointer == null)
-                        {
-                            addFakePointer.ShouldAdd = true;
-                            addFakePointer.Flags = flags | Pointer.FLAG_ARTIFICIAL;
-                            addFakePointer.Position = mousePointPos;
-                        }
-                    }
+                    releasePointer(mousePointer);
+                    tryAddFakePointer(newButtons);
+                }
+                // pressed this frame
+                else
+                {
+                    mousePointer.Buttons = newButtons;
+                    pressPointer(mousePointer);
                 }
             }
+            // released or button state changed
             else
             {
-                var newFlags = getMouseButtonFlags();
-                var oldFlags = flags & Pointer.FLAG_INCONTACT;
-                mousePointer.Flags = (flags & ~Pointer.FLAG_INCONTACT) | newFlags;
-                if (newFlags == 0)
+                // released this frame
+                if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
                 {
-                    // Released this frame
+                    mousePointer.Buttons = newButtons;
                     releasePointer(mousePointer);
-                    if (emulateSecondMousePointer 
-                        && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
-                        && fakeMousePointer == null)
-                    {
-                        addFakePointer.ShouldAdd = true;
-                        addFakePointer.Flags = flags | Pointer.FLAG_ARTIFICIAL;
-                        addFakePointer.Position = mousePointPos;
-                    }
-                } else if (newFlags != oldFlags)
+                    tryAddFakePointer(newButtons);
+                }
+                // button state changed this frame
+                else
                 {
-                    // Button state changed
+                    mousePointer.Buttons = newButtons;
                     updatePointer(mousePointer);
                 }
             }
@@ -211,19 +203,47 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private functions
 
-        private uint getMouseButtonFlags()
+        private Pointer.PointerButtonState getMouseButtons()
         {
-            uint pressedButtons = 0;
-            if (Input.GetMouseButton(0)) pressedButtons |= Pointer.FLAG_FIRST_BUTTON;
-            if (Input.GetMouseButton(1)) pressedButtons |= Pointer.FLAG_SECOND_BUTTON;
-            if (Input.GetMouseButton(2)) pressedButtons |= Pointer.FLAG_THIRD_BUTTON;
-            return pressedButtons;
+            Pointer.PointerButtonState buttons = Pointer.PointerButtonState.Nothing;
+
+            if (Input.GetMouseButton(0)) buttons |= Pointer.PointerButtonState.FirstButtonPressed;
+            if (Input.GetMouseButtonDown(0)) buttons |= Pointer.PointerButtonState.FirstButtonDown;
+            if (Input.GetMouseButtonUp(0)) buttons |= Pointer.PointerButtonState.FirstButtonUp;
+
+            if (Input.GetMouseButton(1)) buttons |= Pointer.PointerButtonState.SecondButtonPressed;
+            if (Input.GetMouseButtonDown(1)) buttons |= Pointer.PointerButtonState.SecondButtonDown;
+            if (Input.GetMouseButtonUp(1)) buttons |= Pointer.PointerButtonState.SecondButtonUp;
+
+            if (Input.GetMouseButton(2)) buttons |= Pointer.PointerButtonState.ThirdButtonPressed;
+            if (Input.GetMouseButtonDown(2)) buttons |= Pointer.PointerButtonState.ThirdButtonDown;
+            if (Input.GetMouseButtonUp(2)) buttons |= Pointer.PointerButtonState.ThirdButtonUp;
+
+            return buttons;
         }
 
-        private MousePointer internalAddPointer(Vector2 position, uint flags = 0)
+        private void tryAddFakePointer(Pointer.PointerButtonState newButtons)
+        {
+            if (emulateSecondMousePointer
+                        && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+                        && fakeMousePointer == null)
+            {
+                var up = (uint)(newButtons & Pointer.PointerButtonState.AnyButtonUp);
+                addFakePointer.ShouldAdd = true;
+                addFakePointer.Flags = mousePointer.Flags | Pointer.FLAG_ARTIFICIAL;
+                addFakePointer.Buttons = newButtons
+                    & ~Pointer.PointerButtonState.AnyButtonUp // remove up state from fake pointer
+                    | (Pointer.PointerButtonState)(up >> 1) // Add down state from pressed buttons
+                    | (Pointer.PointerButtonState)(up >> 2); // Add pressed state from pressed buttons
+                addFakePointer.Position = mousePointPos;
+            }
+        }
+
+        private MousePointer internalAddPointer(Vector2 position, Pointer.PointerButtonState buttons = Pointer.PointerButtonState.Nothing, uint flags = 0)
         {
             var pointer = mousePool.Get();
             pointer.Position = remapCoordinates(position);
+            pointer.Buttons |= buttons;
 			pointer.Flags |= flags;
             addPointer(pointer);
             return pointer;
@@ -233,8 +253,14 @@ namespace TouchScript.InputSources.InputHandlers
         {
             var newPointer = mousePool.Get();
             newPointer.CopyFrom(pointer);
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
-            if ((newPointer.Flags & Pointer.FLAG_INCONTACT) != 0) pressPointer(newPointer);
+            if ((newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
+            {
+                // Adding down state this frame
+                newPointer.Buttons |= (Pointer.PointerButtonState) ((uint) (newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) << 1);
+                pressPointer(newPointer);
+            }
             return newPointer;
         }
 
@@ -250,6 +276,7 @@ namespace TouchScript.InputSources.InputHandlers
         {
             public bool ShouldAdd;
             public uint Flags;
+            public Pointer.PointerButtonState Buttons;
             public Vector2 Position;
         }
 

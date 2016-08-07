@@ -31,34 +31,7 @@ namespace TouchScript.Pointers
         /// </summary>
         public const uint FLAG_ARTIFICIAL = 1 << 0;
 
-        /// <summary>
-        /// Indicates a primary action, analogous to a left mouse button down.
-        /// A <see cref="TouchPointer"/> or <see cref="ObjectPointer"/> has this flag set when it is in contact with the digitizer surface.
-        /// A <see cref="PenPointer"/> has this flag set when it is in contact with the digitizer surface with no buttons pressed.
-        /// A <see cref="MousePointer"/> has this flag set when the left mouse button is down.
-        /// </summary>
-        public const uint FLAG_FIRST_BUTTON = 1 << 1;
-
-        /// <summary>
-        /// Indicates a secondary action, analogous to a right mouse button down.
-        /// A <see cref="TouchPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
-        /// A <see cref="PenPointer"/> has this flag set when it is in contact with the digitizer surface with the pen barrel button pressed.
-        /// A <see cref="MousePointer"/> has this flag set when the right mouse button is down.
-        /// </summary>
-        public const uint FLAG_SECOND_BUTTON = 1 << 2;
-
-        /// <summary>
-        /// Analogous to a mouse wheel button down.
-        /// A <see cref="TouchPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
-        /// A <see cref="PenPointer"/> does not use this flag.
-        /// A <see cref="MousePointer"/> has this flag set when the mouse wheel button is down.
-        /// </summary>
-        public const uint FLAG_THIRD_BUTTON = 1 << 3;
-
-        /// <summary>
-        /// Indicates that this pointer is in contact with the surface. When this flag is not set, it indicates a hovering pointer.
-        /// </summary>
-        public const uint FLAG_INCONTACT = FLAG_FIRST_BUTTON | FLAG_SECOND_BUTTON | FLAG_THIRD_BUTTON;
+        public const uint FLAG_RETURNED = 1 << 1;
 
         /// <summary>
         /// Pointer type.
@@ -91,6 +64,114 @@ namespace TouchScript.Pointers
             Object
         }
 
+        [Flags]
+        public enum PointerButtonState
+        {
+            Nothing = 0,
+
+            /// <summary>
+            /// Indicates a primary action, analogous to a left mouse button down.
+            /// A <see cref="TouchPointer"/> or <see cref="ObjectPointer"/> has this flag set when it is in contact with the digitizer surface.
+            /// A <see cref="PenPointer"/> has this flag set when it is in contact with the digitizer surface with no buttons pressed.
+            /// A <see cref="MousePointer"/> has this flag set when the left mouse button is down.
+            /// </summary>
+            FirstButtonPressed = 1 << 0,
+
+            /// <summary>
+            /// First button pressed this frame.
+            /// </summary>
+            FirstButtonDown = 1 << 1,
+
+            /// <summary>
+            /// First button released this frame.
+            /// </summary>
+            FirstButtonUp = 1 << 2,
+
+            /// <summary>
+            /// Indicates a secondary action, analogous to a right mouse button down.
+            /// A <see cref="TouchPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
+            /// A <see cref="PenPointer"/> has this flag set when it is in contact with the digitizer surface with the pen barrel button pressed.
+            /// A <see cref="MousePointer"/> has this flag set when the right mouse button is down.
+            /// </summary>
+            SecondButtonPressed = 1 << 3,
+
+            /// <summary>
+            /// Second button pressed this frame.
+            /// </summary>
+            SecondButtonDown = 1 << 4,
+
+            /// <summary>
+            /// Second button released this frame.
+            /// </summary>
+            SecondButtonUp = 1 << 5,
+
+            /// <summary>
+            /// Analogous to a mouse wheel button down.
+            /// A <see cref="TouchPointer"/>, <see cref="PenPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
+            /// A <see cref="MousePointer"/> has this flag set when the mouse wheel button is down.
+            /// </summary>
+            ThirdButtonPressed = 1 << 6,
+
+            /// <summary>
+            /// Third button pressed this frame.
+            /// </summary>
+            ThirdButtonDown = 1 << 7,
+
+            /// <summary>
+            /// Third button released this frame.
+            /// </summary>
+            ThirdButtonUp = 1 << 8,
+
+            /// <summary>
+            /// Analogous to the first extended button button down.
+            /// A <see cref="TouchPointer"/>, <see cref="PenPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
+            /// A <see cref="MousePointer"/> has this flag set when the first extended button is down.
+            /// </summary>
+            FourthButtonPressed = 1 << 9,
+
+            /// <summary>
+            /// Fourth button pressed this frame.
+            /// </summary>
+            FourthButtonDown = 1 << 10,
+
+            /// <summary>
+            /// Fourth button released this frame.
+            /// </summary>
+            FourthButtonUp = 1 << 11,
+
+            /// <summary>
+            /// Analogous to the second extended button button down.
+            /// A <see cref="TouchPointer"/>, <see cref="PenPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
+            /// A <see cref="MousePointer"/> has this flag set when the second extended button is down.
+            /// </summary>
+            FifthButtonPressed = 1 << 12,
+
+            /// <summary>
+            /// Fifth button pressed this frame.
+            /// </summary>
+            FifthButtonDown = 1 << 13,
+
+            /// <summary>
+            /// Fifth button released this frame.
+            /// </summary>
+            FifthButtonUp = 1 << 14,
+
+            /// <summary>
+            /// Any button is pressed.
+            /// </summary>
+            AnyButtonPressed = FirstButtonPressed | SecondButtonPressed | ThirdButtonPressed | FourthButtonPressed | FifthButtonPressed,
+
+            /// <summary>
+            /// Any button down this frame.
+            /// </summary>
+            AnyButtonDown = FirstButtonDown | SecondButtonDown | ThirdButtonDown | FourthButtonDown | FifthButtonDown,
+
+            /// <summary>
+            /// Any button up this frame.
+            /// </summary>
+            AnyButtonUp = FirstButtonUp | SecondButtonUp | ThirdButtonUp | FourthButtonUp | FifthButtonUp
+        }
+
         #endregion
 
         #region Public properties
@@ -100,6 +181,8 @@ namespace TouchScript.Pointers
 
         /// <inheritdoc />
         public PointerType Type { get; protected set; }
+
+        public PointerButtonState Buttons { get; set; }
 
         /// <summary>
         /// Original input source which created this pointer.
@@ -123,19 +206,10 @@ namespace TouchScript.Pointers
         public Vector2 PreviousPosition { get; private set; }
 
         /// <summary>
-        /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/>, <see cref="FLAG_FIRST_BUTTON"/>, <see cref="FLAG_SECOND_BUTTON"/>, <see cref="FLAG_THIRD_BUTTON"/>, <see cref="FLAG_INCONTACT"/>.</para>
+        /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/>.</para>
         /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
         /// </summary>
-        public uint Flags
-        {
-            get { return flags; }
-            set { newFlags = value; }
-        }
-
-        /// <summary>
-        /// Gets the previous value of <see cref="Flags"/>.
-        /// </summary>
-        public uint PreviousFlags { get; private set; }
+        public uint Flags { get; set; }
 
         /// <summary>
         /// Projection parameters for the layer which created this pointer.
@@ -158,7 +232,6 @@ namespace TouchScript.Pointers
         private TouchManagerInstance manager;
         private int refCount = 0;
         private Vector2 position, newPosition;
-        private uint flags, newFlags;
         private HitData pressData, overData;
         private bool overDataIsDirty = true;
 
@@ -192,9 +265,8 @@ namespace TouchScript.Pointers
         public virtual void CopyFrom(Pointer target)
         {
             Type = target.Type;
-            flags = target.flags;
-            newFlags = target.newFlags;
-            PreviousFlags = target.PreviousFlags;
+            Flags = target.Flags;
+            Buttons = target.Buttons;
             position = target.position;
             newPosition = target.newPosition;
             PreviousPosition = target.PreviousPosition;
@@ -263,7 +335,6 @@ namespace TouchScript.Pointers
         {
             Id = id;
             PreviousPosition = position = newPosition;
-            PreviousFlags = flags = newFlags;
         }
 
         internal virtual void INTERNAL_Reset()
@@ -271,18 +342,21 @@ namespace TouchScript.Pointers
             Id = INVALID_POINTER;
             INTERNAL_ClearPressData();
             position = newPosition = PreviousPosition = Vector2.zero;
-            flags = newFlags = PreviousFlags = 0;
+            Flags = 0;
+            Buttons = PointerButtonState.Nothing;
             overDataIsDirty = true;
         }
 
         internal virtual void INTERNAL_FrameStarted()
         {
+            Buttons &= ~(PointerButtonState.AnyButtonDown | PointerButtonState.AnyButtonUp);
+            overDataIsDirty = true;
+        }
+
+        internal virtual void INTERNAL_UpdatePosition()
+        {
             PreviousPosition = position;
             position = newPosition;
-            PreviousFlags = flags;
-            flags = newFlags;
-
-            overDataIsDirty = true;
         }
 
         internal void INTERNAL_Retain()

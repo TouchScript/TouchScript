@@ -263,11 +263,11 @@ namespace TouchScript.InputSources
 
         #region Private functions
 
-        private TouchPointer internalAddTouch(Vector2 position, uint flags = 0)
+        private TouchPointer internalAddTouch(Vector2 position)
         {
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Flags |= flags;
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
             addPointer(pointer);
             pressPointer(pointer);
             return pointer;
@@ -277,16 +277,18 @@ namespace TouchScript.InputSources
         {
             var newPointer = touchPool.Get();
             newPointer.CopyFrom(pointer);
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
             pressPointer(newPointer);
             return newPointer;
         }
 
-        private ObjectPointer internalAddObject(Vector2 position, uint flags = 0)
+        private ObjectPointer internalAddObject(Vector2 position)
         {
             var pointer = objectPool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Flags |= flags;
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
             addPointer(pointer);
             pressPointer(pointer);
             return pointer;
@@ -296,6 +298,8 @@ namespace TouchScript.InputSources
         {
             var newPointer = objectPool.Get();
             newPointer.CopyFrom(pointer);
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
             pressPointer(newPointer);
             return newPointer;
@@ -364,7 +368,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                cursorToInternalId.Add(entity, internalAddTouch(new Vector2(x, y), Pointer.FLAG_FIRST_BUTTON));
+                cursorToInternalId.Add(entity, internalAddTouch(new Vector2(x, y)));
             }
         }
 
@@ -405,7 +409,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                var touch = internalAddObject(new Vector2(x, y), Pointer.FLAG_FIRST_BUTTON);
+                var touch = internalAddObject(new Vector2(x, y));
                 updateBlobProperties(touch, entity);
                 blobToInternalId.Add(entity, touch);
             }
@@ -449,7 +453,7 @@ namespace TouchScript.InputSources
             {
                 var x = entity.X * screenWidth;
                 var y = (1 - entity.Y) * screenHeight;
-                var touch = internalAddObject(new Vector2(x, y), Pointer.FLAG_FIRST_BUTTON);
+                var touch = internalAddObject(new Vector2(x, y));
                 updateObjectProperties(touch, entity);
                 objectToInternalId.Add(entity, touch);
             }

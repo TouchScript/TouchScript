@@ -100,7 +100,7 @@ namespace TouchScript.Behaviors
             for (var i = 0; i < count; i++)
             {
                 var pointer = p[i];
-                if ((pointer.Flags & Pointer.FLAG_INCONTACT) != 0) continue; // we ignore pressed pointers
+                if ((pointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0) continue; // we ignore pressed pointers
                 if (PointerUtils.IsPointerOnTarget(pointer, transform)) pointers.Add(pointer.Id);
                 else pointers.Remove(pointer.Id);
             }

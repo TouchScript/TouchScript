@@ -136,7 +136,7 @@ namespace TouchScript.InputSources
         protected virtual void releasePointer(Pointer pointer)
         {
             if (pointer == null) return;
-            pointer.Flags = pointer.Flags & ~Pointer.FLAG_INCONTACT;
+            pointer.Buttons &= ~Pointer.PointerButtonState.AnyButtonPressed;
             manager.INTERNAL_ReleasePointer(pointer.Id);
         }
 

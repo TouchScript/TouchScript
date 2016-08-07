@@ -87,11 +87,11 @@ namespace TouchScript.InputSources.InputHandlers
                         {
                             // Ending previous touch (missed a frame)
                             internalRemovePointer(touchState.Pointer);
-                            systemToInternalId[t.fingerId] = new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON));
+                            systemToInternalId[t.fingerId] = new TouchState(internalAddPointer(t.position));
                         }
                         else
                         {
-                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON)));
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position)));
                         }
                         break;
                     case TouchPhase.Moved:
@@ -106,7 +106,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             // Missed began phase
-                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON)));
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position)));
                         }
                         break;
                     case TouchPhase.Ended:
@@ -118,7 +118,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             // Missed one finger begin-end transition
-                            var pointer = internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON);
+                            var pointer = internalAddPointer(t.position);
                             internalRemovePointer(pointer);
                         }
                         break;
@@ -131,7 +131,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             // Missed one finger begin-end transition
-                            var pointer = internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON);
+                            var pointer = internalAddPointer(t.position);
                             internalCancelPointer(pointer);
                         }
                         break;
@@ -140,7 +140,7 @@ namespace TouchScript.InputSources.InputHandlers
                         else
                         {
                             // Missed begin phase
-                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position, Pointer.FLAG_FIRST_BUTTON)));
+                            systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position)));
                         }
                         break;
                 }
@@ -199,12 +199,12 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private functions
 
-        private Pointer internalAddPointer(Vector2 position, uint flags = 0)
+        private Pointer internalAddPointer(Vector2 position)
         {
             pointersNum++;
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Flags |= flags;
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
             addPointer(pointer);
             pressPointer(pointer);
             return pointer;
@@ -215,6 +215,8 @@ namespace TouchScript.InputSources.InputHandlers
             pointersNum++;
             var newPointer = touchPool.Get();
             newPointer.CopyFrom(pointer);
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
             pressPointer(newPointer);
             return newPointer;
@@ -223,6 +225,8 @@ namespace TouchScript.InputSources.InputHandlers
         private void internalRemovePointer(Pointer pointer)
         {
             pointersNum--;
+            pointer.Buttons &= ~Pointer.PointerButtonState.FirstButtonPressed;
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonUp;
             releasePointer(pointer);
             removePointer(pointer);
         }

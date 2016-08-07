@@ -4,7 +4,6 @@
  * @author Andrew David Griffiths
  */
 
-
 #if UNITY_STANDALONE_WIN
 
 using System;
@@ -38,7 +37,13 @@ namespace TouchScript.InputSources.InputHandlers
                 {
                     if (mousePointer != null)
                     {
-                        if ((mousePointer.Flags & Pointer.FLAG_INCONTACT) != 0) releasePointer(mousePointer);
+                        if ((mousePointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
+                        {
+                            var pressed = (uint) (mousePointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed);
+                            mousePointer.Buttons |= (Pointer.PointerButtonState) (pressed << 2); // add up state
+                            mousePointer.Buttons &= ~Pointer.PointerButtonState.AnyButtonPressed; // remove pressed state
+                            releasePointer(mousePointer);
+                        }
                         removePointer(mousePointer);
                     }
                 }
@@ -170,19 +175,26 @@ namespace TouchScript.InputSources.InputHandlers
                 {
                     if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) break;
                     var position = new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY);
-                    var buttonFlags = (pointerInfo.pointerFlags >> 3) & Pointer.FLAG_INCONTACT;
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_MOUSE:
-                            mousePointer.Flags = (mousePointer.Flags & ~Pointer.FLAG_INCONTACT) | buttonFlags;
+                        {
+                            var buttons = 1 << (((int) pointerInfo.ButtonChangeType - 1) / 2 * 3 + 1); // down state
+                            mousePointer.Buttons |= (Pointer.PointerButtonState) buttons | (Pointer.PointerButtonState) (uint) (buttons >> 1); // add pressed state
                             pressPointer(mousePointer);
+                        }
                             break;
                         case POINTER_INPUT_TYPE.PT_TOUCH:
-                            winTouchToInternalId.Add(pointerId, internalAddTouchPointer(position, buttonFlags));
+                        {
+                            winTouchToInternalId.Add(pointerId, internalAddTouchPointer(position));
+                        }
                             break;
                         case POINTER_INPUT_TYPE.PT_PEN:
-                            penPointer.Flags = (penPointer.Flags & ~Pointer.FLAG_INCONTACT) | buttonFlags;
+                        {
+                            var buttons = 1 << (((int) pointerInfo.ButtonChangeType - 1) / 2 * 3 + 1); // down state
+                            penPointer.Buttons = (Pointer.PointerButtonState) buttons | (Pointer.PointerButtonState) (uint) (buttons >> 1); // add pressed state
                             pressPointer(penPointer);
+                        }
                             break;
                     }
                 }
@@ -198,7 +210,13 @@ namespace TouchScript.InputSources.InputHandlers
                                 cancelPointer(mousePointer);
                                 mousePointer = internalAddMousePointer(mousePointer.Position); // can't totally cancell mouse pointer
                             }
-                            else releasePointer(mousePointer);
+                            else
+                            {
+                                var buttons = 1 << (((int)pointerInfo.ButtonChangeType - 2) / 2 * 3 + 2); // up state
+                                mousePointer.Buttons |= (Pointer.PointerButtonState) buttons;
+                                mousePointer.Buttons &= ~Pointer.PointerButtonState.AnyButtonPressed; // clear pressed state
+                                releasePointer(mousePointer);
+                            }
                             break;
                         case POINTER_INPUT_TYPE.PT_TOUCH:
                             TouchPointer touchPointer;
@@ -208,8 +226,7 @@ namespace TouchScript.InputSources.InputHandlers
                                 if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED) cancelPointer(touchPointer);
                                 else
                                 {
-                                    releasePointer(touchPointer);
-                                    removePointer(touchPointer);
+                                    internalRemoveTouchPointer(touchPointer);
                                 }
                             }
                             break;
@@ -219,7 +236,13 @@ namespace TouchScript.InputSources.InputHandlers
                                 cancelPointer(penPointer);
                                 penPointer = internalAddPenPointer(penPointer.Position); // can't totally cancell mouse pointer;
                             }
-                            else releasePointer(penPointer);
+                            else
+                            {
+                                var buttons = 1 << (((int)pointerInfo.ButtonChangeType - 2) / 2 * 3 + 2); // up state
+                                penPointer.Buttons |= (Pointer.PointerButtonState)buttons;
+                                penPointer.Buttons &= ~Pointer.PointerButtonState.AnyButtonPressed; // clear pressed state
+                                releasePointer(penPointer);
+                            }
                             break;
                     }
                 }
@@ -227,7 +250,7 @@ namespace TouchScript.InputSources.InputHandlers
                 case WM_POINTERUPDATE:
                 {
                     Pointer pointer = null;
-                    var position = remapCoordinates(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY));
+                    var position = new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY);
                     switch (pointerInfo.pointerType)
                     {
                         case POINTER_INPUT_TYPE.PT_MOUSE:
@@ -246,13 +269,26 @@ namespace TouchScript.InputSources.InputHandlers
                     {
                         if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELLED) == POINTER_FLAG_CANCELLED)
                         {
-                            if (pointerInfo.pointerType == POINTER_INPUT_TYPE.PT_TOUCH) winTouchToInternalId.Remove(pointerId);
                             cancelPointer(pointer);
+                            switch (pointerInfo.pointerType)
+                            {
+                                case POINTER_INPUT_TYPE.PT_MOUSE:
+                                    mousePointer = internalAddMousePointer(pointer.Position); // can't totally cancell mouse pointer
+                                    break;
+                                case POINTER_INPUT_TYPE.PT_TOUCH:
+                                    winTouchToInternalId.Remove(pointerId);
+                                    break;
+                                case POINTER_INPUT_TYPE.PT_PEN:
+                                    penPointer = internalAddPenPointer(pointer.Position); // can't totally cancell mouse pointer;
+                                    break;
+                            }
                         }
                         else
                         {
-                            var buttonFlags = (pointerInfo.pointerFlags >> 3) & Pointer.FLAG_INCONTACT;
-                            pointer.Flags = (pointer.Flags & ~Pointer.FLAG_INCONTACT) | buttonFlags;
+                            var down = 1 << (((int)pointerInfo.ButtonChangeType - 1) / 2 * 3 + 1); // down state
+                            var up = 1 << (((int)pointerInfo.ButtonChangeType - 2) / 2 * 3 + 2); // up state
+                            pointer.Buttons |= (Pointer.PointerButtonState)down | (Pointer.PointerButtonState)up | (Pointer.PointerButtonState)(uint)(down >> 1); // add pressed state
+                            pointer.Buttons &= ~(Pointer.PointerButtonState) (uint) (up >> 2); // removed pressed where up is 1
                             pointer.Position = position;
                             updatePointer(pointer);
                         }
@@ -262,11 +298,10 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        private MousePointer internalAddMousePointer(Vector2 position, uint flags = 0)
+        private MousePointer internalAddMousePointer(Vector2 position)
         {
             var pointer = mousePool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Flags |= flags;
             addPointer(pointer);
             return pointer;
         }
@@ -275,16 +310,21 @@ namespace TouchScript.InputSources.InputHandlers
         {
             var newPointer = mousePool.Get();
             newPointer.CopyFrom(pointer);
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
-            if ((newPointer.Flags & Pointer.FLAG_INCONTACT) != 0) pressPointer(newPointer);
+            if ((newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
+            {
+                // Adding down state this frame
+                newPointer.Buttons |= (Pointer.PointerButtonState)((uint)(newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) << 1);
+                pressPointer(newPointer);
+            }
             return newPointer;
         }
 
-        private PenPointer internalAddPenPointer(Vector2 position, uint flags = 0)
+        private PenPointer internalAddPenPointer(Vector2 position)
         {
             var pointer = penPool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Flags |= flags;
             addPointer(pointer);
             return pointer;
         }
@@ -293,8 +333,14 @@ namespace TouchScript.InputSources.InputHandlers
         {
             var newPointer = penPool.Get();
             newPointer.CopyFrom(pointer);
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
-            if ((newPointer.Flags & Pointer.FLAG_INCONTACT) != 0) pressPointer(newPointer);
+            if ((newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
+            {
+                // Adding down state this frame
+                newPointer.Buttons |= (Pointer.PointerButtonState)((uint)(newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) << 1);
+                pressPointer(newPointer);
+            }
             return newPointer;
         }
     }
@@ -358,7 +404,7 @@ namespace TouchScript.InputSources.InputHandlers
                     p.Y = touch.y/100;
                     ScreenToClient(hMainWindow, ref p);
 
-                    winTouchToInternalId.Add(touch.dwID, internalAddTouchPointer(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY), Pointer.FLAG_FIRST_BUTTON));
+                    winTouchToInternalId.Add(touch.dwID, internalAddTouchPointer(new Vector2((p.X - offsetX)*scaleX, Screen.height - (p.Y - offsetY)*scaleY)));
                 }
                 else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_UP) != 0)
                 {
@@ -366,8 +412,7 @@ namespace TouchScript.InputSources.InputHandlers
                     if (winTouchToInternalId.TryGetValue(touch.dwID, out touchPointer))
                     {
                         winTouchToInternalId.Remove(touch.dwID);
-                        releasePointer(touchPointer);
-                        removePointer(touchPointer);
+                        internalRemoveTouchPointer(touchPointer);
                     }
                 }
                 else if ((touch.dwFlags & (int) TOUCH_EVENT.TOUCHEVENTF_MOVE) != 0)
@@ -530,23 +575,33 @@ namespace TouchScript.InputSources.InputHandlers
 
 #region Protected methods
 
-        protected TouchPointer internalAddTouchPointer(Vector2 position, uint flags = 0)
+        protected TouchPointer internalAddTouchPointer(Vector2 position)
         {
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Flags |= flags;
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
             addPointer(pointer);
             pressPointer(pointer);
             return pointer;
         }
 
-        private TouchPointer internalReturnTouchPointer(TouchPointer pointer)
+        protected TouchPointer internalReturnTouchPointer(TouchPointer pointer)
         {
             var newPointer = touchPool.Get();
             newPointer.CopyFrom(pointer);
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
+            newPointer.Flags |= Pointer.FLAG_RETURNED;
             addPointer(newPointer);
             pressPointer(newPointer);
             return newPointer;
+        }
+
+        protected void internalRemoveTouchPointer(TouchPointer pointer)
+        {
+            pointer.Buttons &= ~Pointer.PointerButtonState.FirstButtonPressed;
+            pointer.Buttons |= Pointer.PointerButtonState.FirstButtonUp;
+            releasePointer(pointer);
+            removePointer(pointer);
         }
 
         protected void registerWindowProc(WndProcDelegate windowProc)
