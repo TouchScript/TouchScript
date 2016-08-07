@@ -366,6 +366,10 @@ namespace TouchScript
             {
                 pointer.INTERNAL_Init(nextPointerId++);
                 pointersAdded.Add(pointer);
+
+#if TOUCHSCRIPT_DEBUG
+                if (DebugMode) Debug.Log("TouchScript > Pointer Added: " + pointer);
+#endif
             }
         }
 
@@ -382,13 +386,17 @@ namespace TouchScript
                     if (pointer == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Pointer with id [" + id + "] is requested to MOVE to but no pointer with such id found.");
+                        if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id + "] is requested to MOVE to but no pointer with such id found.");
 #endif
                         return;
                     }
                 }
 
                 pointersUpdated.Add(id);
+
+#if TOUCHSCRIPT_DEBUG
+                if (DebugMode) Debug.Log("TouchScript > Pointer Updated: " + pointer);
+#endif
             }
         }
 
@@ -405,7 +413,7 @@ namespace TouchScript
                     if (pointer == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                        if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                          "] is requested to PRESS but no pointer with such id found.");
 #endif
                         return;
@@ -413,10 +421,14 @@ namespace TouchScript
                 }
 #if TOUCHSCRIPT_DEBUG
                 if (!pointersPressed.Add(id))
-                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to PRESS more than once this frame.");
 #else
                 pointersPressed.Add(id);
+#endif
+
+#if TOUCHSCRIPT_DEBUG
+                if (DebugMode) Debug.Log("TouchScript > Pointer Pressed: " + pointer);
 #endif
             }
         }
@@ -435,7 +447,7 @@ namespace TouchScript
                     if (pointer == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                        if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                          "] is requested to END but no pointer with such id found.");
 #endif
                         return;
@@ -443,10 +455,14 @@ namespace TouchScript
                 }
 #if TOUCHSCRIPT_DEBUG
                 if (!pointersReleased.Add(id))
-                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to END more than once this frame.");
 #else
                 pointersReleased.Add(id);
+#endif
+
+#if TOUCHSCRIPT_DEBUG
+                if (DebugMode) Debug.Log("TouchScript > Pointer Released: " + pointer);
 #endif
             }
         }
@@ -465,7 +481,7 @@ namespace TouchScript
                     if (pointer == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                        if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                          "] is requested to REMOVE but no pointer with such id found.");
 #endif
                         return;
@@ -473,10 +489,14 @@ namespace TouchScript
                 }
 #if TOUCHSCRIPT_DEBUG
                 if (!pointersRemoved.Add(pointer.Id))
-                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to REMOVE more than once this frame.");
 #else
                 pointersRemoved.Add(pointer.Id);
+#endif
+
+#if TOUCHSCRIPT_DEBUG
+                if (DebugMode) Debug.Log("TouchScript > Pointer Removed: " + pointer);
 #endif
             }
         }
@@ -495,7 +515,7 @@ namespace TouchScript
                     if (pointer == null)
                     {
 #if TOUCHSCRIPT_DEBUG
-                        Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                        if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                          "] is requested to CANCEL but no pointer with such id found.");
 #endif
                         return;
@@ -503,10 +523,14 @@ namespace TouchScript
                 }
 #if TOUCHSCRIPT_DEBUG
                 if (!pointersCancelled.Add(pointer.Id))
-                    Debug.LogWarning("TouchScript > Pointer with id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id +
                                      "] is requested to CANCEL more than once this frame.");
 #else
                 pointersCancelled.Add(pointer.Id);
+#endif
+
+#if TOUCHSCRIPT_DEBUG
+                if (DebugMode) Debug.Log("TouchScript > Pointer Cancelled: " + pointer);
 #endif
             }
         }

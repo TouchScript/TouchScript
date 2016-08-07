@@ -2,9 +2,12 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
+using System.Text;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
+using TouchScript.Utils;
 using UnityEngine;
 
 namespace TouchScript.Pointers
@@ -150,6 +153,8 @@ namespace TouchScript.Pointers
 
         #region Private variables
 
+        private static StringBuilder builder;
+
         private TouchManagerInstance manager;
         private int refCount = 0;
         private Vector2 position, newPosition;
@@ -214,6 +219,25 @@ namespace TouchScript.Pointers
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            if (builder == null) builder = new StringBuilder();
+            builder.Length = 0;
+            builder.Append("(Pointer type: ");
+            builder.Append(Type);
+            builder.Append(", id: ");
+            builder.Append(Id);
+            builder.Append(", flags: ");
+            BinaryUtils.ToBinaryString(Flags, builder, 8);
+            //            builder.Append(", buttons: ");
+            //            builder.Append((uint)Buttons);
+            builder.Append(", position: ");
+            builder.Append(Position);
+            builder.Append(")");
+            return builder.ToString();
         }
 
         #endregion

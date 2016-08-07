@@ -22,7 +22,7 @@ namespace TouchScript
     /// </remarks>
     [AddComponentMenu("TouchScript/Pointer Manager")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_TouchManager.htm")]
-    public sealed class TouchManager : MonoBehaviour
+    public sealed class TouchManager : DebuggableMonoBehaviour
     {
         #region Constants
 
@@ -247,7 +247,21 @@ namespace TouchScript
             }
         }
 
-        #endregion
+#if TOUCHSCRIPT_DEBUG
+
+        public override bool DebugMode
+        {
+            get { return base.DebugMode; }
+            set
+            {
+                base.DebugMode = value;
+                if (Application.isPlaying) (Instance as TouchManagerInstance).DebugMode = value;
+            }
+        }
+
+#endif
+
+#endregion
 
         #region Public methods
 
@@ -264,6 +278,9 @@ namespace TouchScript
         #endregion
 
         #region Private variables
+
+        [SerializeField]
+        private bool advancedProps; // is used to save if advanced properties are opened or closed
 
         [SerializeField]
         private Object displayDevice;

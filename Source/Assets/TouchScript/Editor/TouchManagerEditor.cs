@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TouchScript.Devices.Display;
+using TouchScript.Editor.Utils;
 using TouchScript.Layers;
 using UnityEditor;
 using UnityEditorInternal;
@@ -16,6 +17,8 @@ namespace TouchScript.Editor
     [CustomEditor(typeof(TouchManager))]
     internal sealed class TouchManagerEditor : UnityEditor.Editor
     {
+        private static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
+        private static readonly GUIContent DEBUG_MODE = new GUIContent("Debug", "Turns on debug mode.");
         private static readonly GUIContent DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
         private static readonly GUIContent CREATE_CAMERA_LAYER = new GUIContent("Create Camera Layer", "Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene. This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get input from some device.");
         private static readonly GUIContent CREATE_STANDARD_INPUT = new GUIContent("Create Standard Input", "");
@@ -26,11 +29,15 @@ namespace TouchScript.Editor
 
         private TouchManager instance;
         private ReorderableList layersList;
+        private SerializedProperty advanced;
+        private SerializedProperty debugMode;
         private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, shouldCreateStandardInput, useSendMessage, sendMessageTarget, sendMessageEvents;
 
         private void OnEnable()
         {
             instance = target as TouchManager;
+            advanced = serializedObject.FindProperty("advancedProps");
+            debugMode = serializedObject.FindProperty("debugMode");
             layers = serializedObject.FindProperty("layers");
             displayDevice = serializedObject.FindProperty("displayDevice");
             shouldCreateCameraLayer = serializedObject.FindProperty("shouldCreateCameraLayer");
@@ -103,7 +110,37 @@ namespace TouchScript.Editor
             layersList.DoLayoutList();
 
             GUI.enabled = true;
+
+            if (debugMode != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    advanced.isExpanded = expanded;
+                }
+                if (expanded)
+                {
+                    GUILayout.BeginVertical(GUIElements.FoldoutStyle);
+                    drawAdvanced();
+                    GUILayout.EndVertical();
+                }
+                GUIElements.EndFoldout();
+            }
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void drawAdvanced()
+        {
+            drawDebug();
+        }
+
+        private void drawDebug()
+        {
+            if (debugMode == null) return;
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(debugMode, DEBUG_MODE);
+            if (EditorGUI.EndChangeCheck()) instance.DebugMode = debugMode.boolValue;
         }
 
         private void refresh()
