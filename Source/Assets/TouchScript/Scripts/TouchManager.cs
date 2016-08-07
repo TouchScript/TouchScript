@@ -315,6 +315,10 @@ namespace TouchScript
         {
             if (Instance == null) return;
 
+#if TOUCHSCRIPT_DEBUG
+            if (DebugMode) (Instance as TouchManagerInstance).DebugMode = true;
+#endif
+
             Instance.DisplayDevice = displayDevice as IDisplayDevice;
             Instance.ShouldCreateCameraLayer = ShouldCreateCameraLayer;
             Instance.ShouldCreateStandardInput = ShouldCreateStandardInput;

@@ -561,10 +561,6 @@ namespace TouchScript
 
             pointerListPool.WarmUp(2);
             intListPool.WarmUp(3);
-
-#if TOUCHSCRIPT_DEBUG
-            DebugMode = true;
-#endif
         }
 
         private void OnLevelWasLoaded(int value)
@@ -667,7 +663,7 @@ namespace TouchScript
                 idToPointer.Add(pointer.Id, pointer);
 
 #if TOUCHSCRIPT_DEBUG
-                addDebugFigureForPointer(pointer);
+                if (DebugMode) addDebugFigureForPointer(pointer);
 #endif
             }
 
@@ -687,7 +683,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Id [" + id +
                                      "] was in UPDATED list but no pointer with such id found.");
 #endif
                     continue;
@@ -697,7 +693,7 @@ namespace TouchScript
                 if (layer != null) layer.INTERNAL_UpdatePointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
-                addDebugFigureForPointer(pointer);
+                if (DebugMode) addDebugFigureForPointer(pointer);
 #endif
             }
 
@@ -717,7 +713,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Id [" + id +
                                      "] was in PRESSED list but no pointer with such id found.");
 #endif
                     continue;
@@ -732,7 +728,7 @@ namespace TouchScript
 				}
 
 #if TOUCHSCRIPT_DEBUG
-                addDebugFigureForPointer(pointer);
+                if (DebugMode) addDebugFigureForPointer(pointer);
 #endif
             }
 
@@ -752,7 +748,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id + "] was in RELEASED list but no pointer with such id found.");
+                    if (DebugMode) Debug.LogWarning("TouchScript > Id [" + id + "] was in RELEASED list but no pointer with such id found.");
 #endif
                     continue;
                 }
@@ -762,7 +758,7 @@ namespace TouchScript
                 if (layer != null) layer.INTERNAL_ReleasePointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
-                addDebugFigureForPointer(pointer);
+                if (DebugMode) addDebugFigureForPointer(pointer);
 #endif
             }
 
@@ -789,7 +785,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id + "] was in REMOVED list but no pointer with such id found.");
+                    if (DebugMode) Debug.LogWarning("TouchScript > Id [" + id + "] was in REMOVED list but no pointer with such id found.");
 #endif
                     continue;
                 }
@@ -799,7 +795,7 @@ namespace TouchScript
                 list.Add(pointer);
 
 #if TOUCHSCRIPT_DEBUG
-                removeDebugFigureForPointer(pointer);
+                if (DebugMode) removeDebugFigureForPointer(pointer);
 #endif
             }
 
@@ -826,7 +822,7 @@ namespace TouchScript
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
 #if TOUCHSCRIPT_DEBUG
-                    Debug.LogWarning("TouchScript > Id [" + id +
+                    if (DebugMode) Debug.LogWarning("TouchScript > Id [" + id +
                                      "] was in CANCELLED list but no pointer with such id found.");
 #endif
                     continue;
@@ -839,7 +835,7 @@ namespace TouchScript
                 if (layer != null) layer.INTERNAL_CancelPointer(pointer);
 
 #if TOUCHSCRIPT_DEBUG
-                removeDebugFigureForPointer(pointer);
+                if (DebugMode) removeDebugFigureForPointer(pointer);
 #endif
             }
 
