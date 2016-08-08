@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using TouchScript.Layers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,22 +19,25 @@ namespace TouchScript.Hit
         /// <summary>
         /// Type of hit
         /// </summary>
+        [Flags]
         public enum HitType
         {
+            ScreenSpace,
+
             /// <summary>
             /// 3D hit.
             /// </summary>
-            Hit3D,
+            World3D,
 
             /// <summary>
             /// 2D hit.
             /// </summary>
-            Hit2D,
+            World2D,
 
             /// <summary>
             /// UI hit.
             /// </summary>
-            HitUI
+            UI
         }
 
         #endregion
@@ -94,6 +98,11 @@ namespace TouchScript.Hit
             get { return raycastResult; }
         }
 
+        public bool ScreenSpace
+        {
+            get { return screenSpace; }
+        }
+
         /// <summary>
         /// Gets the point in 3D where raycast hit the object.
         /// </summary>
@@ -104,11 +113,11 @@ namespace TouchScript.Hit
             {
                 switch (type)
                 {
-                    case HitType.Hit3D:
+                    case HitType.World3D:
                         return RaycastHit.point;
-                    case HitType.Hit2D:
+                    case HitType.World2D:
                         return RaycastHit2D.point;
-                    case HitType.HitUI:
+                    case HitType.UI:
                         return RaycastResult.worldPosition;
                 }
                 return Vector3.zero;
@@ -125,11 +134,11 @@ namespace TouchScript.Hit
             {
                 switch (type)
                 {
-                    case HitType.Hit3D:
+                    case HitType.World3D:
                         return RaycastHit.normal;
-                    case HitType.Hit2D:
+                    case HitType.World2D:
                         return RaycastHit2D.normal;
-                    case HitType.HitUI:
+                    case HitType.UI:
                         return RaycastResult.worldNormal;
                 }
                 return Vector3.forward;
@@ -142,6 +151,7 @@ namespace TouchScript.Hit
 
         private HitType type;
         private Transform target;
+        private bool screenSpace;
         private TouchLayer layer;
         private RaycastHit raycastHit;
         private RaycastHit2D raycastHit2D;
@@ -155,46 +165,47 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct.
         /// </summary>
         /// <param name="target"> Target Target. </param>
-        public HitData(Transform target, TouchLayer layer)
+        public HitData(Transform target, TouchLayer layer, bool screenSpace = false)
         {
             this.target = target;
             this.layer = layer;
+            this.screenSpace = screenSpace;
             raycastHit = default(RaycastHit);
             raycastHit2D = default(RaycastHit2D);
             raycastResult = default(RaycastResult);
-            type = HitType.Hit3D;
+            type = HitType.ScreenSpace;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HitData"/> struct from a 3D raycast.
         /// </summary>
         /// <param name="value"> 3D raycast value. </param>
-        public HitData(RaycastHit value, TouchLayer layer) : this(value.collider.transform, layer)
+        public HitData(RaycastHit value, TouchLayer layer, bool screenSpace = false) : this(value.collider.transform, layer, screenSpace)
         {
             raycastHit = value;
-            type = HitType.Hit3D;
+            type = HitType.World3D;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HitData"/> struct from a 2D raycast.
         /// </summary>
         /// <param name="value"> 2D raycast value. </param>
-        public HitData(RaycastHit2D value, TouchLayer layer) :
-            this(value.collider.transform, layer)
+        public HitData(RaycastHit2D value, TouchLayer layer, bool screenSpace = false) :
+            this(value.collider.transform, layer, screenSpace)
         {
             raycastHit2D = value;
-            type = HitType.Hit2D;
+            type = HitType.World2D;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HitData"/> struct from a UI raycast.
         /// </summary>
         /// <param name="value"> UI raycast value. </param>
-        public HitData(RaycastResult value, TouchLayer layer) :
-            this(value.gameObject.transform, layer)
+        public HitData(RaycastResult value, TouchLayer layer, bool screenSpace = false) :
+            this(value.gameObject.transform, layer, screenSpace)
         {
             raycastResult = value;
-            type = HitType.HitUI;
+            type = HitType.UI;
         }
 
         #endregion
