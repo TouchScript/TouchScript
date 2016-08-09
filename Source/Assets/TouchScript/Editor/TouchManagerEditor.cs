@@ -145,26 +145,39 @@ namespace TouchScript.Editor
 
         private void refresh()
         {
-            var allLayers = FindObjectsOfType(typeof(TouchLayer)).Cast<TouchLayer>().ToList();
-            var toRemove = new List<int>();
-            for (var i = 0; i < layers.arraySize; i++)
+            if (Application.isPlaying)
             {
-                var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
-                if (layer == null || allLayers.IndexOf(layer) == -1) toRemove.Add(i);
-                else allLayers.Remove(layer);
+                var l = TouchManager.Instance.Layers;
+                layers.arraySize = 0;
+                for (var i = 0; i < l.Count; i++)
+                {
+                    layers.arraySize++;
+                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = l[i];
+                }
             }
-
-            for (var i = toRemove.Count - 1; i >= 0; i--)
+            else
             {
-                var index = toRemove[i];
-                layers.GetArrayElementAtIndex(index).objectReferenceValue = null;
-                layers.DeleteArrayElementAtIndex(index);
-            }
+                var allLayers = FindObjectsOfType(typeof (TouchLayer)).Cast<TouchLayer>().ToList();
+                var toRemove = new List<int>();
+                for (var i = 0; i < layers.arraySize; i++)
+                {
+                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
+                    if (layer == null || allLayers.IndexOf(layer) == -1) toRemove.Add(i);
+                    else allLayers.Remove(layer);
+                }
 
-            for (var i = 0; i < allLayers.Count; i++)
-            {
-                layers.arraySize++;
-                layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = allLayers[i];
+                for (var i = toRemove.Count - 1; i >= 0; i--)
+                {
+                    var index = toRemove[i];
+                    layers.GetArrayElementAtIndex(index).objectReferenceValue = null;
+                    layers.DeleteArrayElementAtIndex(index);
+                }
+
+                for (var i = 0; i < allLayers.Count; i++)
+                {
+                    layers.arraySize++;
+                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = allLayers[i];
+                }
             }
 
             serializedObject.ApplyModifiedProperties();
