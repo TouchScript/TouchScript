@@ -150,6 +150,11 @@ namespace TouchScript.Layers
 
         #region Internal methods
 
+        internal void INTERNAL_AddPointer(Pointer pointer)
+        {
+            addPointer(pointer);
+        }
+
         internal void INTERNAL_UpdatePointer(Pointer pointer)
         {
             updatePointer(pointer);
@@ -165,6 +170,11 @@ namespace TouchScript.Layers
         internal void INTERNAL_ReleasePointer(Pointer pointer)
         {
             endPointer(pointer);
+        }
+
+        internal void INTERNAL_RemovePointer(Pointer pointer)
+        {
+            removePointer(pointer);
         }
 
         internal void INTERNAL_CancelPointer(Pointer pointer)
@@ -202,6 +212,8 @@ namespace TouchScript.Layers
             if (string.IsNullOrEmpty(Name)) Name = "Layer";
         }
 
+        protected virtual void addPointer(Pointer pointer) { }
+
         /// <summary>
         /// Called when a layer is touched to query the layer if this pointer hits something.
         /// </summary>
@@ -222,6 +234,8 @@ namespace TouchScript.Layers
         /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
         protected virtual void endPointer(Pointer pointer) {}
+
+        protected virtual void removePointer(Pointer pointer) { }
 
         /// <summary>
         /// Called when a pointer is cancelled.

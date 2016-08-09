@@ -33,6 +33,13 @@ namespace TouchScript.Layers.UI
             }
         }
 
+        public string HorizontalAxis = "Horizontal";
+        public string VerticalAxis = "Vertical";
+        public string SubmitButton = "Submit";
+        public string CancelButton = "Cancel";
+        public float InputActionsPerSecond = 10;
+        public float RepeatDelay = 0.5f;
+
         #endregion
 
         #region Private variables
@@ -63,6 +70,12 @@ namespace TouchScript.Layers.UI
 
         #region Unity methods
 
+        protected override void Awake()
+        {
+            base.Awake();
+            ui = new UITouchInputModule(this, eventSystem);
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -78,17 +91,12 @@ namespace TouchScript.Layers.UI
                     return;
                 }
             }
-
-            ui = new UIStandardInputModule(this, eventSystem);
-
-            TouchManager.Instance.PointersUpdated += pointerUpdatedHandler;
         }
 
         protected override void OnDisable()
         {
-            if (TouchManager.Instance != null) TouchManager.Instance.PointersUpdated -= pointerUpdatedHandler;
+            disable();
             instance = null;
-
             base.OnDisable();
         }
 
@@ -146,11 +154,12 @@ namespace TouchScript.Layers.UI
         internal void INTERNAL_Retain()
         {
             refCount++;
+            if (refCount == 1) enable();
         }
 
         internal int INTERNAL_Release()
         {
-            if (--refCount <= 0) Destroy(this);
+            if (--refCount <= 0) disable();
             return refCount;
         }
 
@@ -158,13 +167,48 @@ namespace TouchScript.Layers.UI
 
         #region Private functions
 
+        private void enable()
+        {
+            TouchManager.Instance.PointersUpdated += pointersUpdatedHandler;
+            TouchManager.Instance.PointersPressed += pointersPressedHandler;
+            TouchManager.Instance.PointersReleased += pointersReleasedHandler;
+            TouchManager.Instance.PointersCancelled += pointersCancelledHandler;
+        }
+
+        private void disable()
+        {
+            if (TouchManager.Instance != null)
+            {
+                TouchManager.Instance.PointersUpdated -= pointersUpdatedHandler;
+                TouchManager.Instance.PointersPressed -= pointersPressedHandler;
+                TouchManager.Instance.PointersReleased -= pointersReleasedHandler;
+                TouchManager.Instance.PointersCancelled -= pointersCancelledHandler;
+            }
+            refCount = 0;
+        }
+
         #endregion
 
         #region Event handlers
 
-        private void pointerUpdatedHandler(object sender, PointerEventArgs pointerEventArgs)
+        private void pointersUpdatedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
             ui.ProcessUpdated(pointerEventArgs.Pointers);
+        }
+
+        private void pointersPressedHandler(object sender, PointerEventArgs pointerEventArgs)
+        {
+            ui.ProcessPressed(pointerEventArgs.Pointers);
+        }
+
+        private void pointersReleasedHandler(object sender, PointerEventArgs pointerEventArgs)
+        {
+            ui.ProcessReleased(pointerEventArgs.Pointers);
+        }
+
+        private void pointersCancelledHandler(object sender, PointerEventArgs pointerEventArgs)
+        {
+            ui.ProcessCancelled(pointerEventArgs.Pointers);
         }
 
         #endregion
@@ -176,13 +220,11 @@ namespace TouchScript.Layers.UI
         {
 
             protected TouchScriptInputModule input;
-            protected EventSystem eventSystem;
 
             protected Dictionary<int, PointerEventData> m_PointerData = new Dictionary<int, PointerEventData>();
 
-            public UIPointerInputModule(TouchScriptInputModule input, EventSystem eventSystem)
+            public UIPointerInputModule(TouchScriptInputModule input)
             {
-                this.eventSystem = eventSystem;
                 this.input = input;
             }
 
@@ -192,7 +234,7 @@ namespace TouchScript.Layers.UI
             {
                 if (!m_PointerData.TryGetValue(id, out data) && create)
                 {
-                    data = new PointerEventData(eventSystem)
+                    data = new PointerEventData(input.eventSystem)
                     {
                         pointerId = id,
                     };
@@ -200,6 +242,24 @@ namespace TouchScript.Layers.UI
                     return true;
                 }
                 return false;
+            }
+
+            protected void DeselectIfSelectionChanged(GameObject currentOverGo, BaseEventData pointerEvent)
+            {
+                // Selection tracking
+                var selectHandlerGO = ExecuteEvents.GetEventHandler<ISelectHandler>(currentOverGo);
+                // if we have clicked something new, deselect the old thing
+                // leave 'selection handling' up to the press event though.
+                if (selectHandlerGO != input.eventSystem.currentSelectedGameObject)
+                    input.eventSystem.SetSelectedGameObject(null, pointerEvent);
+            }
+
+            private static bool ShouldStartDrag(Vector2 pressPos, Vector2 currentPos, float threshold, bool useDragThreshold)
+            {
+                if (!useDragThreshold)
+                    return true;
+
+                return (pressPos - currentPos).sqrMagnitude >= threshold * threshold;
             }
 
             #endregion
@@ -218,21 +278,202 @@ namespace TouchScript.Layers.UI
                     var pointer = pointers[i];
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
+                    data.Reset();
 
                     data.position = pointer.Position;
                     data.delta = pointer.Position - pointer.PreviousPosition;
 
                     var target = pointer.GetOverData().Target;
-                    input.HandlePointerExitAndEnter(data, target == null ? null : target.gameObject);
+                    var currentOverGo = target == null ? null : target.gameObject;
+                    input.HandlePointerExitAndEnter(data, currentOverGo);
+
+                    bool moving = data.IsPointerMoving();
+
+                    if (moving && data.pointerDrag != null
+                        && !data.dragging
+                        && ShouldStartDrag(data.pressPosition, data.position, input.eventSystem.pixelDragThreshold, data.useDragThreshold))
+                    {
+                        ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.beginDragHandler);
+                        data.dragging = true;
+                    }
+
+                    // Drag notification
+                    if (data.dragging && moving && data.pointerDrag != null)
+                    {
+                        // Before doing drag we should cancel any pointer down state
+                        // And clear selection!
+                        if (data.pointerPress != data.pointerDrag)
+                        {
+                            ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerUpHandler);
+
+                            data.eligibleForClick = false;
+                            data.pointerPress = null;
+                            data.rawPointerPress = null;
+                        }
+                        ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.dragHandler);
+                    }
+                }
+            }
+
+            public virtual void ProcessPressed(IList<Pointer> pointers)
+            {
+                var count = pointers.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    var pointer = pointers[i];
+                    PointerEventData data;
+                    GetPointerData(pointer.Id, out data, true);
+
+                    var target = pointer.GetOverData().Target;
+                    var currentOverGo = target == null ? null : target.gameObject;
+
+                    data.eligibleForClick = true;
+                    data.delta = Vector2.zero;
+                    data.dragging = false;
+                    data.useDragThreshold = true;
+                    data.pressPosition = pointer.Position;
+                    data.pointerPressRaycast = data.pointerCurrentRaycast; // ??
+
+                    DeselectIfSelectionChanged(currentOverGo, data);
+
+                    if (data.pointerEnter != currentOverGo)
+                    {
+                        // send a pointer enter to the touched element if it isn't the one to select...
+                        input.HandlePointerExitAndEnter(data, currentOverGo);
+                        data.pointerEnter = currentOverGo;
+                    }
+
+                    // search for the control that will receive the press
+                    // if we can't find a press handler set the press
+                    // handler to be what would receive a click.
+                    var newPressed = ExecuteEvents.ExecuteHierarchy(currentOverGo, data, ExecuteEvents.pointerDownHandler);
+
+                    // didnt find a press handler... search for a click handler
+                    if (newPressed == null)
+                        newPressed = ExecuteEvents.GetEventHandler<IPointerClickHandler>(currentOverGo);
+
+                    // Debug.Log("Pressed: " + newPressed);
+
+                    float time = Time.unscaledTime;
+
+                    if (newPressed == data.lastPress) // ?
+                    {
+                        var diffTime = time - data.clickTime;
+                        if (diffTime < 0.3f)
+                            ++data.clickCount;
+                        else
+                            data.clickCount = 1;
+
+                        data.clickTime = time;
+                    }
+                    else
+                    {
+                        data.clickCount = 1;
+                    }
+
+                    data.pointerPress = newPressed;
+                    data.rawPointerPress = currentOverGo;
+
+                    data.clickTime = time;
+
+                    // Save the drag handler as well
+                    data.pointerDrag = ExecuteEvents.GetEventHandler<IDragHandler>(currentOverGo);
+
+                    if (data.pointerDrag != null)
+                        ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.initializePotentialDrag);
+                }
+            }
+
+            public virtual void ProcessReleased(IList<Pointer> pointers)
+            {
+                var count = pointers.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    var pointer = pointers[i];
+                    PointerEventData data;
+                    GetPointerData(pointer.Id, out data, true);
+
+                    var target = pointer.GetOverData().Target;
+                    var currentOverGo = target == null ? null : target.gameObject;
+
+                    ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerUpHandler);
+                    var pointerUpHandler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(currentOverGo);
+                    if (data.pointerPress == pointerUpHandler && data.eligibleForClick)
+                    {
+                        ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerClickHandler);
+                    }
+                    else if (data.pointerDrag != null && data.dragging)
+                    {
+                        ExecuteEvents.ExecuteHierarchy(currentOverGo, data, ExecuteEvents.dropHandler);
+                    }
+
+                    data.eligibleForClick = false;
+                    data.pointerPress = null;
+                    data.rawPointerPress = null;
+
+                    if (data.pointerDrag != null && data.dragging)
+                        ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.endDragHandler);
+
+                    data.dragging = false;
+                    data.pointerDrag = null;
+
+                    // send exit events as we need to simulate this on touch up on touch device
+                    ExecuteEvents.ExecuteHierarchy(data.pointerEnter, data, ExecuteEvents.pointerExitHandler);
+                    data.pointerEnter = null;
+
+                    // redo pointer enter / exit to refresh state
+                    // so that if we moused over somethign that ignored it before
+                    // due to having pressed on something else
+                    // it now gets it.
+                    if (currentOverGo != data.pointerEnter)
+                    {
+                        input.HandlePointerExitAndEnter(data, null);
+                        input.HandlePointerExitAndEnter(data, currentOverGo);
+                    }
+                }
+            }
+
+            public virtual void ProcessCancelled(IList<Pointer> pointers)
+            {
+                var count = pointers.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    var pointer = pointers[i];
+                    PointerEventData data;
+                    GetPointerData(pointer.Id, out data, true);
+
+                    var target = pointer.GetOverData().Target;
+                    var currentOverGo = target == null ? null : target.gameObject;
+
+                    ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerUpHandler);
+
+                    if (data.pointerDrag != null && data.dragging)
+                    {
+                        ExecuteEvents.ExecuteHierarchy(currentOverGo, data, ExecuteEvents.dropHandler);
+                    }
+
+                    data.eligibleForClick = false;
+                    data.pointerPress = null;
+                    data.rawPointerPress = null;
+
+                    if (data.pointerDrag != null && data.dragging)
+                        ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.endDragHandler);
+
+                    data.dragging = false;
+                    data.pointerDrag = null;
+
+                    // send exit events as we need to simulate this on touch up on touch device
+                    ExecuteEvents.ExecuteHierarchy(data.pointerEnter, data, ExecuteEvents.pointerExitHandler);
+                    data.pointerEnter = null;
                 }
             }
 
         }
 
-        private abstract class UITouchInputModule : UIPointerInputModule
+        private class UITouchInputModule : UIPointerInputModule
         {
 
-            public UITouchInputModule(TouchScriptInputModule input, EventSystem eventSystem) : base(input, eventSystem)
+            public UITouchInputModule(TouchScriptInputModule input, EventSystem eventSystem) : base(input)
             { }
 
             public override void Process()
@@ -242,17 +483,10 @@ namespace TouchScript.Layers.UI
         private sealed class UIStandardInputModule : UIPointerInputModule
         {
 
-            public UIStandardInputModule(TouchScriptInputModule input, EventSystem eventSystem) : base(input, eventSystem)
+            public UIStandardInputModule(TouchScriptInputModule input, EventSystem eventSystem) : base(input)
             { }
 
             #region Unchanged 
-
-            private string m_HorizontalAxis = "Horizontal";
-            private string m_VerticalAxis = "Vertical";
-            private string m_SubmitButton = "Submit";
-            private string m_CancelButton = "Cancel";
-            private float m_InputActionsPerSecond = 10;
-            private float m_RepeatDelay = 0.5f;
 
             private int m_ConsecutiveMoveCount = 0;
             private Vector2 m_LastMoveVector;
@@ -262,7 +496,7 @@ namespace TouchScript.Layers.UI
             {
                 bool usedEvent = SendUpdateEventToSelectedObject();
 
-                if (eventSystem.sendNavigationEvents)
+                if (input.eventSystem.sendNavigationEvents)
                 {
                     if (!usedEvent)
                         usedEvent |= SendMoveEventToSelectedObject();
@@ -278,11 +512,11 @@ namespace TouchScript.Layers.UI
 
             private bool SendUpdateEventToSelectedObject()
             {
-                if (eventSystem.currentSelectedGameObject == null)
+                if (input.eventSystem.currentSelectedGameObject == null)
                     return false;
 
                 var data = input.GetBaseEventData();
-                ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.updateSelectedHandler);
+                ExecuteEvents.Execute(input.eventSystem.currentSelectedGameObject, data, ExecuteEvents.updateSelectedHandler);
                 return data.used;
             }
 
@@ -298,17 +532,17 @@ namespace TouchScript.Layers.UI
                 }
 
                 // If user pressed key again, always allow event
-                bool allow = Input.GetButtonDown(m_HorizontalAxis) || Input.GetButtonDown(m_VerticalAxis);
+                bool allow = Input.GetButtonDown(input.HorizontalAxis) || Input.GetButtonDown(input.VerticalAxis);
                 bool similarDir = (Vector2.Dot(movement, m_LastMoveVector) > 0);
                 if (!allow)
                 {
                     // Otherwise, user held down key or axis.
                     // If direction didn't change at least 90 degrees, wait for delay before allowing consequtive event.
                     if (similarDir && m_ConsecutiveMoveCount == 1)
-                        allow = (time > m_PrevActionTime + m_RepeatDelay);
+                        allow = (time > m_PrevActionTime + input.RepeatDelay);
                     // If direction changed at least 90 degree, or we already had the delay, repeat at repeat rate.
                     else
-                        allow = (time > m_PrevActionTime + 1f / m_InputActionsPerSecond);
+                        allow = (time > m_PrevActionTime + 1f / input.InputActionsPerSecond);
                 }
                 if (!allow)
                     return false;
@@ -318,7 +552,7 @@ namespace TouchScript.Layers.UI
 
                 if (axisEventData.moveDir != MoveDirection.None)
                 {
-                    ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, ExecuteEvents.moveHandler);
+                    ExecuteEvents.Execute(input.eventSystem.currentSelectedGameObject, axisEventData, ExecuteEvents.moveHandler);
                     if (!similarDir)
                         m_ConsecutiveMoveCount = 0;
                     m_ConsecutiveMoveCount++;
@@ -335,32 +569,32 @@ namespace TouchScript.Layers.UI
 
             private bool SendSubmitEventToSelectedObject()
             {
-                if (eventSystem.currentSelectedGameObject == null)
+                if (input.eventSystem.currentSelectedGameObject == null)
                     return false;
 
                 var data = input.GetBaseEventData();
-                if (Input.GetButtonDown(m_SubmitButton))
-                    ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.submitHandler);
+                if (Input.GetButtonDown(input.SubmitButton))
+                    ExecuteEvents.Execute(input.eventSystem.currentSelectedGameObject, data, ExecuteEvents.submitHandler);
 
-                if (Input.GetButtonDown(m_CancelButton))
-                    ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.cancelHandler);
+                if (Input.GetButtonDown(input.CancelButton))
+                    ExecuteEvents.Execute(input.eventSystem.currentSelectedGameObject, data, ExecuteEvents.cancelHandler);
                 return data.used;
             }
 
             private Vector2 GetRawMoveVector()
             {
                 Vector2 move = Vector2.zero;
-                move.x = Input.GetAxisRaw(m_HorizontalAxis);
-                move.y = Input.GetAxisRaw(m_VerticalAxis);
+                move.x = Input.GetAxisRaw(input.HorizontalAxis);
+                move.y = Input.GetAxisRaw(input.VerticalAxis);
 
-                if (Input.GetButtonDown(m_HorizontalAxis))
+                if (Input.GetButtonDown(input.HorizontalAxis))
                 {
                     if (move.x < 0)
                         move.x = -1f;
                     if (move.x > 0)
                         move.x = 1f;
                 }
-                if (Input.GetButtonDown(m_VerticalAxis))
+                if (Input.GetButtonDown(input.VerticalAxis))
                 {
                     if (move.y < 0)
                         move.y = -1f;

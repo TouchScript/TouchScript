@@ -662,6 +662,13 @@ namespace TouchScript
                 this.pointers.Add(pointer);
                 idToPointer.Add(pointer.Id, pointer);
 
+                for (var j = 0; j < layerCount; j++)
+                {
+                    var touchLayer = layers[j];
+                    if (touchLayer == null) continue;
+                    touchLayer.INTERNAL_AddPointer(pointer);
+                }
+
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) addDebugFigureForPointer(pointer);
 #endif
@@ -691,6 +698,15 @@ namespace TouchScript
                 list.Add(pointer);
                 var layer = pointer.GetPressData().Layer;
                 if (layer != null) layer.INTERNAL_UpdatePointer(pointer);
+                else
+                {
+                    for (var j = 0; j < layerCount; j++)
+                    {
+                        var touchLayer = layers[j];
+                        if (touchLayer == null) continue;
+                        touchLayer.INTERNAL_UpdatePointer(pointer);
+                    }
+                }
 
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) addDebugFigureForPointer(pointer);
@@ -794,6 +810,13 @@ namespace TouchScript
                 pressedPointers.Remove(pointer);
                 list.Add(pointer);
 
+                for (var j = 0; j < layerCount; j++)
+                {
+                    var touchLayer = layers[j];
+                    if (touchLayer == null) continue;
+                    touchLayer.INTERNAL_RemovePointer(pointer);
+                }
+
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) removeDebugFigureForPointer(pointer);
 #endif
@@ -831,8 +854,13 @@ namespace TouchScript
                 this.pointers.Remove(pointer);
                 pressedPointers.Remove(pointer);
                 list.Add(pointer);
-                var layer = pointer.GetPressData().Layer;
-                if (layer != null) layer.INTERNAL_CancelPointer(pointer);
+
+                for (var j = 0; j < layerCount; j++)
+                {
+                    var touchLayer = layers[j];
+                    if (touchLayer == null) continue;
+                    touchLayer.INTERNAL_CancelPointer(pointer);
+                }
 
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) removeDebugFigureForPointer(pointer);
