@@ -144,6 +144,59 @@ namespace TouchScript.Hit
             }
         }
 
+        public float Distance
+        {
+            get
+            {
+                switch (type)
+                {
+                    case HitType.World3D:
+                        return raycastHit.distance;
+                    case HitType.World2D:
+                        return raycastHit2D.distance;
+                    case HitType.UI:
+                        return raycastHitUI.Distance;
+                }
+                return 0f;
+            }
+        }
+
+        public int SortingLayer
+        {
+            get
+            {
+                switch (type)
+                {
+                    case HitType.World3D:
+                        return 0;
+                    case HitType.World2D:
+                        if (sortingLayer == -1) updateSortingValues();
+                        return sortingLayer; 
+                    case HitType.UI:
+                        return raycastHitUI.SortingLayer;
+                }
+                return 0;
+            }
+        }
+
+        public int SortingOrder
+        {
+            get
+            {
+                switch (type)
+                {
+                    case HitType.World3D:
+                        return 0;
+                    case HitType.World2D:
+                        if (sortingLayer == -1) updateSortingValues();
+                        return sortingOrder;
+                    case HitType.UI:
+                        return raycastHitUI.SortingOrder;
+                }
+                return 0;
+            }
+        }
+
         #endregion
 
         #region Private variables
@@ -155,6 +208,9 @@ namespace TouchScript.Hit
         private RaycastHit raycastHit;
         private RaycastHit2D raycastHit2D;
         private RaycastHitUI raycastHitUI;
+
+        private int sortingLayer;
+        private int sortingOrder;
 
         #endregion
 
@@ -169,6 +225,9 @@ namespace TouchScript.Hit
             this.target = target;
             this.layer = layer;
             this.screenSpace = screenSpace;
+
+            sortingLayer = -1;
+            sortingOrder = -1;
             raycastHit = default(RaycastHit);
             raycastHit2D = default(RaycastHit2D);
             raycastHitUI = default(RaycastHitUI);
@@ -205,6 +264,25 @@ namespace TouchScript.Hit
         {
             raycastHitUI = value;
             type = HitType.UI;
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private void updateSortingValues()
+        {
+            var sprite = target.GetComponent<SpriteRenderer>();
+            if (sprite == null)
+            {
+                sortingLayer = 0;
+                sortingOrder = 0;
+            }
+            else
+            {
+                sortingLayer = sprite.sortingLayerID;
+                sortingOrder = sprite.sortingOrder;
+            }
         }
 
         #endregion

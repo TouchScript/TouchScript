@@ -126,10 +126,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 62216951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c21776f7e73345948c045618b3fad6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Camera
+  lookFor3DObjects: 1
+  lookFor2DObjects: 0
+  lookForWorldSpaceUI: 0
+  lookForScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -357,7 +361,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -384,7 +387,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -407,7 +409,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -472,7 +473,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: m_LocalPosition.x
@@ -776,7 +777,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -815,7 +815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -838,7 +837,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -980,7 +978,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1007,7 +1004,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1030,7 +1026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1299,7 +1294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1326,7 +1320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1349,7 +1342,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

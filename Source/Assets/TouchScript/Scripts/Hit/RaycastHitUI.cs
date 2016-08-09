@@ -13,13 +13,14 @@ namespace TouchScript.Hit
 
 		public GameObject GameObject;
 		public BaseRaycaster Raycaster;
-		public float GraphicIndex;
+		public int GraphicIndex;
 		public int Depth;
 		public int SortingLayer;
 		public int SortingOrder;
 		public Graphic Graphic;
 		public Vector3 WorldPosition;
 		public Vector3 WorldNormal;
+	    public float Distance;
 
 	}
 }

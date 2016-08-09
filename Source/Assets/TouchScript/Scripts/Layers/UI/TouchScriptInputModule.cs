@@ -72,12 +72,6 @@ namespace TouchScript.Layers.UI
 
         #region Unity methods
 
-        protected override void Awake()
-        {
-            base.Awake();
-            ui = new UIStandardInputModule(this);
-        }
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -166,6 +160,7 @@ namespace TouchScript.Layers.UI
 
         private void enable()
         {
+            ui = new UIStandardInputModule(this);
             TouchManager.Instance.PointersUpdated += ui.ProcessUpdated;
             TouchManager.Instance.PointersPressed += ui.ProcessPressed;
             TouchManager.Instance.PointersReleased += ui.ProcessReleased;

@@ -60,7 +60,7 @@ namespace TouchScript.Examples
                 DontDestroyOnLoad(gameObject);
             }
 
-            layer = GetComponent<UIOverlayLayer>();
+			layer = GetComponent<TouchLayer>();
 
 #if UNITY_5_3_OR_NEWER
             if (SceneManager.GetActiveScene().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)

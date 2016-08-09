@@ -4211,10 +4211,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1654745586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ad2b146e2cb148fdad573d18694ff59, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: UI Overlay Layer
+  Name: ScreenSpace UI Layer
+  lookFor3DObjects: 0
+  lookFor2DObjects: 0
+  lookForWorldSpaceUI: 0
+  lookForScreenSpaceUI: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1778454009
 GameObject:
   m_ObjectHideFlags: 0

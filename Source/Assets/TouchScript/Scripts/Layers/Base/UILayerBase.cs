@@ -8,7 +8,6 @@ using TouchScript.Hit;
 using TouchScript.Layers.UI;
 using TouchScript.Pointers;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace TouchScript.Layers.Base

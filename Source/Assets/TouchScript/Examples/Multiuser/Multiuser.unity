@@ -719,7 +719,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -921,7 +920,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1359,7 +1357,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1627,10 +1624,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 871116138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c21776f7e73345948c045618b3fad6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Right 3D Camera
+  lookFor3DObjects: 1
+  lookFor2DObjects: 0
+  lookForWorldSpaceUI: 0
+  lookForScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1952,7 +1953,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2106,7 +2106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e07bff8743d4ee38bf724a7a2b4cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2572,7 +2571,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e07bff8743d4ee38bf724a7a2b4cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2769,14 +2767,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1416507462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2c791a2415314ea3b9f44592097a9d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: 2D Camera
+  lookFor3DObjects: 0
+  lookFor2DObjects: 1
+  lookForWorldSpaceUI: 0
+  lookForScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  layerIds: 00000000
 --- !u!4 &1442124646 stripped
 Transform:
   m_PrefabParentObject: {fileID: 491238, guid: bb0a05fd2c374477cba1d93212b4600c, type: 2}
@@ -3476,10 +3477,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1969944222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c21776f7e73345948c045618b3fad6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Left 3D Camera
+  lookFor3DObjects: 1
+  lookFor2DObjects: 0
+  lookForWorldSpaceUI: 0
+  lookForScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -3554,7 +3559,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

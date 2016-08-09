@@ -164,6 +164,7 @@ GameObject:
   - 92: {fileID: 62216956}
   - 124: {fileID: 62216955}
   - 81: {fileID: 62216954}
+  - 114: {fileID: 62216953}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -183,6 +184,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 930800601}
   m_RootOrder: 2
+--- !u!114 &62216953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 62216951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Main Camera
+  lookFor3DObjects: 0
+  lookFor2DObjects: 0
+  lookForWorldSpaceUI: 1
+  lookForScreenSpaceUI: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!81 &62216954
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1778,7 +1798,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: m_LocalPosition.x
@@ -1811,46 +1831,18 @@ Prefab:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[0]
       value: 
-      objectReference: {fileID: 543251038}
+      objectReference: {fileID: 62216953}
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[1]
       value: 
-      objectReference: {fileID: 543251039}
+      objectReference: {fileID: 62216953}
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[2]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 62216953}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &543251037 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
-  m_PrefabInternal: {fileID: 543251036}
---- !u!114 &543251038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 543251037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ad2b146e2cb148fdad573d18694ff59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: UI Overlay Layer
---- !u!114 &543251039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 543251037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26a72f9b3b6704180978dbce08cf231e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: UI Camera Layer
 --- !u!1 &551049734
 GameObject:
   m_ObjectHideFlags: 0

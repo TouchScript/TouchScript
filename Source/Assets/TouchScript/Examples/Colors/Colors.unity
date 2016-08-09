@@ -125,14 +125,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 62216951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2c791a2415314ea3b9f44592097a9d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Camera
+  lookFor3DObjects: 0
+  lookFor2DObjects: 1
+  lookForWorldSpaceUI: 0
+  lookForScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  layerIds: 00000000
 --- !u!81 &62216954
 AudioListener:
   m_ObjectHideFlags: 0
