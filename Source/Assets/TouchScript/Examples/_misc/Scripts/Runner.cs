@@ -16,7 +16,16 @@ namespace TouchScript.Examples
     public class Runner : MonoBehaviour
     {
         private static Runner instance;
-        private UILayer layer;
+        private TouchLayer layer;
+
+		public void LoadLevel(string name)
+		{
+#if UNITY_5_3_OR_NEWER
+			SceneManager.LoadScene(name);
+#else
+			Application.LoadLevel(name);
+#endif
+		}
 
         public void LoadNextLevel()
         {
@@ -27,6 +36,20 @@ namespace TouchScript.Examples
 #endif
         }
 
+		public void LoadPreviousLevel()
+		{
+#if UNITY_5_3_OR_NEWER
+			var newLevel = SceneManager.GetActiveScene().buildIndex - 1;
+			if (newLevel == 0) newLevel = SceneManager.sceneCountInBuildSettings - 1;
+			SceneManager.LoadScene(newLevel);
+#else
+			var newLevel = Application.loadedLevel - 1;
+			if (newLevel == 0) newLevel = Application.levelCount - 1;
+			Application.LoadLevel(newLevel);
+#endif
+		}
+
+
         private void Awake()
         {
             if (instance == null)
@@ -35,7 +58,7 @@ namespace TouchScript.Examples
                 DontDestroyOnLoad(gameObject);
             }
 
-            layer = GetComponent<UILayer>();
+            layer = GetComponent<UIOverlayLayer>();
 
 #if UNITY_5_3_OR_NEWER
             if (SceneManager.GetActiveScene().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)
