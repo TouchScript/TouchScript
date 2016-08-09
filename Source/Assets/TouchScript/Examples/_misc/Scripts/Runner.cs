@@ -4,6 +4,9 @@
 
 using UnityEngine;
 using TouchScript.Layers;
+using System.Collections;
+
+
 #if UNITY_5_3_OR_NEWER
 using UnityEngine.SceneManagement;
 #endif
@@ -71,7 +74,13 @@ namespace TouchScript.Examples
 
         private void OnLevelWasLoaded(int num)
         {
-            TouchManager.Instance.AddLayer(layer, 0);
+			StartCoroutine(resetUILayer());
         }
+
+		private IEnumerator resetUILayer()
+		{
+			yield return new WaitForEndOfFrame();
+			TouchManager.Instance.AddLayer(layer, 0);
+		}
     }
 }

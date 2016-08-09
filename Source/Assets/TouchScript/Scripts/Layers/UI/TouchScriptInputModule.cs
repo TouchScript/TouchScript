@@ -49,8 +49,8 @@ namespace TouchScript.Layers.UI
         private static FieldInfo raycastersProp;
         private static PropertyInfo canvasProp;
         private static Dictionary<int, Canvas> raycasterCanvasCache = new Dictionary<int, Canvas>();
-        private static int refCount = 0;
 
+        private int refCount = 0;
         private UIStandardInputModule ui;
 
         #endregion
@@ -85,19 +85,14 @@ namespace TouchScript.Layers.UI
             else
             {
                 if (instance == this) return;
-                if (eventSystem != EventSystem.current)
-                {
-                    Destroy(this);
-                    instance = null;
-                    return;
-                }
+                Destroy(this);
             }
         }
 
         protected override void OnDisable()
         {
             disable();
-            instance = null;
+            if (instance == this) instance = null;
             base.OnDisable();
         }
 
