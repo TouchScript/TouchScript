@@ -7,8 +7,8 @@ using UnityEditor;
 
 namespace TouchScript.Editor.Layers
 {
-    [CustomEditor(typeof (UILayer))]
-    internal sealed class UILayerEditor : UnityEditor.Editor
+    [CustomEditor(typeof (UICameraLayer))]
+    internal sealed class UICameraLayerEditor : UnityEditor.Editor
     {
         private void OnEnable() {}
 

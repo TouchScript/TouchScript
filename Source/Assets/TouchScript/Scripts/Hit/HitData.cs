@@ -5,7 +5,6 @@
 using System;
 using TouchScript.Layers;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace TouchScript.Hit
 {
@@ -93,9 +92,9 @@ namespace TouchScript.Hit
         /// Gets raycast hit for a UI hit.
         /// </summary>
         /// <value> UI raycast hit object. </value>
-        public RaycastResult RaycastResult
+        public RaycastHitUI RaycastHitUI
         {
-            get { return raycastResult; }
+            get { return raycastHitUI; }
         }
 
         public bool ScreenSpace
@@ -114,11 +113,11 @@ namespace TouchScript.Hit
                 switch (type)
                 {
                     case HitType.World3D:
-                        return RaycastHit.point;
+                        return raycastHit.point;
                     case HitType.World2D:
-                        return RaycastHit2D.point;
+                        return raycastHit2D.point;
                     case HitType.UI:
-                        return RaycastResult.worldPosition;
+                        return raycastHitUI.WorldPosition;
                 }
                 return Vector3.zero;
             }
@@ -135,11 +134,11 @@ namespace TouchScript.Hit
                 switch (type)
                 {
                     case HitType.World3D:
-                        return RaycastHit.normal;
+                        return raycastHit.normal;
                     case HitType.World2D:
-                        return RaycastHit2D.normal;
+                        return raycastHit2D.normal;
                     case HitType.UI:
-                        return RaycastResult.worldNormal;
+                        return raycastHitUI.WorldNormal;
                 }
                 return Vector3.forward;
             }
@@ -155,7 +154,7 @@ namespace TouchScript.Hit
         private TouchLayer layer;
         private RaycastHit raycastHit;
         private RaycastHit2D raycastHit2D;
-        private RaycastResult raycastResult;
+        private RaycastHitUI raycastHitUI;
 
         #endregion
 
@@ -172,7 +171,7 @@ namespace TouchScript.Hit
             this.screenSpace = screenSpace;
             raycastHit = default(RaycastHit);
             raycastHit2D = default(RaycastHit2D);
-            raycastResult = default(RaycastResult);
+            raycastHitUI = default(RaycastHitUI);
             type = HitType.ScreenSpace;
         }
 
@@ -201,10 +200,10 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a UI raycast.
         /// </summary>
         /// <param name="value"> UI raycast value. </param>
-        public HitData(RaycastResult value, TouchLayer layer, bool screenSpace = false) :
-            this(value.gameObject.transform, layer, screenSpace)
+        public HitData(RaycastHitUI value, TouchLayer layer, bool screenSpace = false) :
+            this(value.GameObject.transform, layer, screenSpace)
         {
-            raycastResult = value;
+            raycastHitUI = value;
             type = HitType.UI;
         }
 
