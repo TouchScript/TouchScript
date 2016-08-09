@@ -165,20 +165,22 @@ namespace TouchScript.Layers.UI
 
         private void enable()
         {
-            TouchManager.Instance.PointersUpdated += pointersUpdatedHandler;
-            TouchManager.Instance.PointersPressed += pointersPressedHandler;
-            TouchManager.Instance.PointersReleased += pointersReleasedHandler;
-            TouchManager.Instance.PointersCancelled += pointersCancelledHandler;
+            TouchManager.Instance.PointersUpdated += ui.ProcessUpdated;
+            TouchManager.Instance.PointersPressed += ui.ProcessPressed;
+            TouchManager.Instance.PointersReleased += ui.ProcessReleased;
+            TouchManager.Instance.PointersRemoved += ui.ProcessRemoved;
+            TouchManager.Instance.PointersCancelled += ui.ProcessCancelled;
         }
 
         private void disable()
         {
             if (TouchManager.Instance != null)
             {
-                TouchManager.Instance.PointersUpdated -= pointersUpdatedHandler;
-                TouchManager.Instance.PointersPressed -= pointersPressedHandler;
-                TouchManager.Instance.PointersReleased -= pointersReleasedHandler;
-                TouchManager.Instance.PointersCancelled -= pointersCancelledHandler;
+                TouchManager.Instance.PointersUpdated -= ui.ProcessUpdated;
+                TouchManager.Instance.PointersPressed -= ui.ProcessPressed;
+                TouchManager.Instance.PointersReleased -= ui.ProcessReleased;
+                TouchManager.Instance.PointersRemoved -= ui.ProcessRemoved;
+                TouchManager.Instance.PointersCancelled -= ui.ProcessCancelled;
             }
             refCount = 0;
         }
@@ -186,26 +188,6 @@ namespace TouchScript.Layers.UI
         #endregion
 
         #region Event handlers
-
-        private void pointersUpdatedHandler(object sender, PointerEventArgs pointerEventArgs)
-        {
-            ui.ProcessUpdated(pointerEventArgs.Pointers);
-        }
-
-        private void pointersPressedHandler(object sender, PointerEventArgs pointerEventArgs)
-        {
-            ui.ProcessPressed(pointerEventArgs.Pointers);
-        }
-
-        private void pointersReleasedHandler(object sender, PointerEventArgs pointerEventArgs)
-        {
-            ui.ProcessReleased(pointerEventArgs.Pointers);
-        }
-
-        private void pointersCancelledHandler(object sender, PointerEventArgs pointerEventArgs)
-        {
-            ui.ProcessCancelled(pointerEventArgs.Pointers);
-        }
 
         #endregion
 
@@ -378,6 +360,11 @@ namespace TouchScript.Layers.UI
 
             #region Changed
 
+            protected void RemovePointerData(int id)
+            {
+                m_PointerData.Remove(id);
+            }
+
             #endregion
 
             #region Event processors
@@ -391,8 +378,9 @@ namespace TouchScript.Layers.UI
                 current.sortingLayer = old.SortingLayer;
                 current.sortingOrder = old.SortingOrder;
             }
-            public virtual void ProcessUpdated(IList<Pointer> pointers)
+            public virtual void ProcessUpdated(object sender, PointerEventArgs pointerEventArgs)
             {
+                var pointers = pointerEventArgs.Pointers;
                 var raycast = new RaycastResult();
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
@@ -442,8 +430,9 @@ namespace TouchScript.Layers.UI
                 }
             }
 
-            public virtual void ProcessPressed(IList<Pointer> pointers)
+            public virtual void ProcessPressed(object sender, PointerEventArgs pointerEventArgs)
             {
+                var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
@@ -511,8 +500,9 @@ namespace TouchScript.Layers.UI
                 }
             }
 
-            public virtual void ProcessReleased(IList<Pointer> pointers)
+            public virtual void ProcessReleased(object sender, PointerEventArgs pointerEventArgs)
             {
+                var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
@@ -560,8 +550,9 @@ namespace TouchScript.Layers.UI
                 }
             }
 
-            public virtual void ProcessCancelled(IList<Pointer> pointers)
+            public virtual void ProcessCancelled(object sender, PointerEventArgs pointerEventArgs)
             {
+                var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
@@ -592,6 +583,21 @@ namespace TouchScript.Layers.UI
                     // send exit events as we need to simulate this on touch up on touch device
                     ExecuteEvents.ExecuteHierarchy(data.pointerEnter, data, ExecuteEvents.pointerExitHandler);
                     data.pointerEnter = null;
+                }
+            }
+
+            public virtual void ProcessRemoved(object sender, PointerEventArgs pointerEventArgs)
+            {
+                var pointers = pointerEventArgs.Pointers;
+                var count = pointers.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    var pointer = pointers[i];
+                    PointerEventData data;
+                    GetPointerData(pointer.Id, out data, true);
+
+                    if (data.pointerEnter) ExecuteEvents.ExecuteHierarchy(data.pointerEnter, data, ExecuteEvents.pointerExitHandler);
+                    RemovePointerData(pointer.Id);
                 }
             }
 
