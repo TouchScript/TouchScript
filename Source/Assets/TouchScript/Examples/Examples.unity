@@ -500,6 +500,7 @@ GameObject:
   - 4: {fileID: 174295523}
   - 114: {fileID: 174295522}
   - 114: {fileID: 174295521}
+  - 114: {fileID: 174295524}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -550,6 +551,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1654745587}
   m_RootOrder: 0
+--- !u!114 &174295524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 174295520}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1077351063, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: .5
+  m_ForceModuleActive: 0
 --- !u!1 &201561626
 GameObject:
   m_ObjectHideFlags: 0
@@ -3843,7 +3862,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0, g: .958620548, b: 1, a: 1}
-    m_PressedColor: {r: .904411793, g: .904411793, b: .904411793, a: 1}
+    m_PressedColor: {r: .90196079, g: .90196079, b: .90196079, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: .100000001

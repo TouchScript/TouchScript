@@ -164,7 +164,6 @@ GameObject:
   - 92: {fileID: 62216956}
   - 124: {fileID: 62216955}
   - 81: {fileID: 62216954}
-  - 114: {fileID: 62216953}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -184,18 +183,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 930800601}
   m_RootOrder: 2
---- !u!114 &62216953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 62216951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26a72f9b3b6704180978dbce08cf231e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: UI Camera Layer
 --- !u!81 &62216954
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1834,7 +1821,7 @@ Prefab:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[1]
       value: 
-      objectReference: {fileID: 62216953}
+      objectReference: {fileID: 543251039}
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[2]
       value: 
@@ -1858,6 +1845,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: UI Overlay Layer
+--- !u!114 &543251039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 543251037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a72f9b3b6704180978dbce08cf231e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: UI Camera Layer
 --- !u!1 &551049734
 GameObject:
   m_ObjectHideFlags: 0
@@ -2757,9 +2756,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 894414302}
   - 20: {fileID: 894414306}
-  - 124: {fileID: 894414305}
-  - 92: {fileID: 894414304}
-  - 81: {fileID: 894414303}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -2779,27 +2775,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1292123036}
   m_RootOrder: 1
---- !u!81 &894414303
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 894414301}
-  m_Enabled: 0
---- !u!92 &894414304
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 894414301}
-  m_Enabled: 0
---- !u!124 &894414305
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 894414301}
-  m_Enabled: 0
 --- !u!20 &894414306
 Camera:
   m_ObjectHideFlags: 0
@@ -3681,7 +3656,7 @@ GameObject:
   - 64: {fileID: 1292123038}
   - 23: {fileID: 1292123037}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: World Space Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

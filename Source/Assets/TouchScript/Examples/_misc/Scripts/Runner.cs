@@ -49,8 +49,7 @@ namespace TouchScript.Examples
 #endif
 		}
 
-
-        private void Awake()
+        private void Start()
         {
             if (instance == null)
             {
