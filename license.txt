@@ -19,3 +19,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+Assets used in examples:
+1. Skybox Volume 2 (https://www.assetstore.unity3d.com/en/#!/content/3392)
+2. Planet Earth Free (https://www.assetstore.unity3d.com/en/#!/content/23399)
+3. Wooden Table and Chair (https://www.assetstore.unity3d.com/en/#!/content/18996)
+4. Touch gesture illustrations provided by GestureWorks® (www.gestureworks.com)
+5. Cartoon UI elements (http://opengameart.org/content/free-game-gui)
+6. Cat images are just random images from Google search.
