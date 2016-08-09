@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using TouchScript.Hit;
+using TouchScript.Pointers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -426,6 +427,14 @@ namespace TouchScript.Layers.UI
                             data.rawPointerPress = null;
                         }
                         ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.dragHandler);
+                    }
+
+                    var mousePointer = pointer as MousePointer;
+                    if (mousePointer != null && !Mathf.Approximately(mousePointer.ScrollDelta.sqrMagnitude, 0.0f))
+                    {
+                        data.scrollDelta = mousePointer.ScrollDelta;
+                        var scrollHandler = ExecuteEvents.GetEventHandler<IScrollHandler>(currentOverGo);
+                        ExecuteEvents.ExecuteHierarchy(scrollHandler, data, ExecuteEvents.scrollHandler);
                     }
                 }
             }

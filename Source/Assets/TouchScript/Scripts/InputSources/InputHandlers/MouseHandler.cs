@@ -108,6 +108,13 @@ namespace TouchScript.InputSources.InputHandlers
                 updatePointer(mousePointer);
             }
 
+            var scroll = Input.mouseScrollDelta;
+            mousePointer.ScrollDelta = scroll;
+            if (!Mathf.Approximately(scroll.sqrMagnitude, 0.0f))
+            {
+                updatePointer(mousePointer);
+            }
+
             var buttons = mousePointer.Buttons;
             var newButtons = getMouseButtons();
 

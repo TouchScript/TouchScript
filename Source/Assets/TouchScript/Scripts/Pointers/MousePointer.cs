@@ -3,6 +3,7 @@
  */
 
 using TouchScript.InputSources;
+using UnityEngine;
 
 namespace TouchScript.Pointers
 {
@@ -13,6 +14,12 @@ namespace TouchScript.Pointers
     public class MousePointer : Pointer
     {
 
+        #region Public properties
+
+        public Vector2 ScrollDelta { get; set; }
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -21,6 +28,19 @@ namespace TouchScript.Pointers
         public MousePointer(IInputSource input) : base(input)
         {
             Type = PointerType.Mouse;
+        }
+
+        #endregion
+
+        #region Public methods
+
+        public override void CopyFrom(Pointer target)
+        {
+            base.CopyFrom(target);
+
+            var mouseTarget = target as MousePointer;
+            if (mouseTarget == null) return;
+            ScrollDelta = mouseTarget.ScrollDelta;
         }
 
         #endregion
