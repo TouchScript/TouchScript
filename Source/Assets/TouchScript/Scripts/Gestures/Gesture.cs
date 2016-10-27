@@ -696,6 +696,10 @@ namespace TouchScript.Gestures
                 INTERNAL_RemoveFriendlyGesture(copy[i]);
             }
             RequireGestureToFail = null;
+
+            // remove from exclusive locks
+            if (gestureManagerInstance != null)
+                gestureManagerInstance.RemoveExclusiveLock(this);
         }
 
         #endregion

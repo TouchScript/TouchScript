@@ -97,6 +97,12 @@ namespace TouchScript
         bool ShouldCreateStandardInput { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating can more than one object recieved touches at tne same time or not.
+        /// </summary>
+        /// <value> <c>true</c> if only one object can recieve touches at the same time; otherwise, <c>false</c>. </value>
+        bool ExclusiveObjectLocks { get; set; }
+
+        /// <summary>
         /// Gets the list of <see cref="TouchLayer"/>.
         /// </summary>
         /// <value>A sorted list of currently active touch layers.</value>

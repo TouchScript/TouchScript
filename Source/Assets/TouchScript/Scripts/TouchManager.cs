@@ -192,6 +192,21 @@ namespace TouchScript
         }
 
         /// <summary>
+        /// Gets or sets a value indicating can more than one object recieved touches at tne same time or not.
+        /// </summary>
+        /// <value> <c>true</c> if only one object can recieve touches at the same time; otherwise, <c>false</c>. </value>
+        public bool ExclusiveObjectLocks
+        {
+            get { return exclusiveObjectLocks; }
+            set
+            {
+                exclusiveObjectLocks = value;
+                if (Instance != null)
+                    Instance.ExclusiveObjectLocks = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether Unity messages are sent when <see cref="ITouchManager"/> dispatches events.
         /// </summary>
         /// <value><c>true</c> if Unity messages are used; otherwise, <c>false</c>.</value>
@@ -267,6 +282,10 @@ namespace TouchScript
 
         [SerializeField]
         [ToggleLeft]
+        private bool exclusiveObjectLocks = false;
+
+        [SerializeField]
+        [ToggleLeft]
         private bool useSendMessage = false;
 
         [SerializeField]
@@ -290,6 +309,7 @@ namespace TouchScript
             Instance.DisplayDevice = displayDevice as IDisplayDevice;
             Instance.ShouldCreateCameraLayer = ShouldCreateCameraLayer;
             Instance.ShouldCreateStandardInput = ShouldCreateStandardInput;
+            Instance.ExclusiveObjectLocks = ExclusiveObjectLocks;
             for (var i = 0; i < layers.Count; i++)
             {
                 Instance.AddLayer(layers[i], i);
