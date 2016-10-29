@@ -73,7 +73,6 @@ namespace TouchScript.Layers
 
         private static Dictionary<int, ProjectionParams> projectionParamsCache = new Dictionary<int, ProjectionParams>();
         private static List<BaseRaycaster> raycasters; 
-        private static bool performedSSUISearch = false;
 
         private static List<RaycastHitUI> raycastHitUIList = new List<RaycastHitUI>(20);
         private static List<RaycastHit> raycastHitList = new List<RaycastHit>(20);
@@ -113,7 +112,7 @@ namespace TouchScript.Layers
 
             HitResult result = HitResult.Miss;
 
-            if (lookForScreenSpaceUI && !performedSSUISearch)
+            if (lookForScreenSpaceUI)
             {
                 result = performSSUISearch(pointer, out hit);
                 switch (result)
@@ -228,7 +227,6 @@ namespace TouchScript.Layers
         {
             hit = default(HitData);
 
-            performedSSUISearch = true;
             raycastHitUIList.Clear();
 
             if (raycasters == null) raycasters = TouchScriptInputModule.Instance.GetRaycasters();
@@ -310,7 +308,9 @@ namespace TouchScript.Layers
             if (count == 0) return HitResult.Miss;
             if (count > 1)
             {
-                sortHits(raycastHits, count);
+                raycastHitList.Clear();
+                for (var i = 0; i < count; i++) raycastHitList.Add(raycastHits[i]);
+                raycastHitList.Sort(_raycastHitComparerFunc);
 
                 RaycastHit raycastHit = default(RaycastHit);
                 for (var i = 0; i < count; i++)
@@ -441,13 +441,6 @@ namespace TouchScript.Layers
 
         #region Compare functions
 
-        private void sortHits(RaycastHit[] hits, int count)
-        {
-            raycastHitList.Clear();
-            for (var i = 0; i < count; i++) raycastHitList.Add(hits[i]);
-            raycastHitList.Sort(_raycastHitComparerFunc);
-        }
-
         private static int raycastHitUIComparerFunc(RaycastHitUI lhs, RaycastHitUI rhs)
         {
             if (lhs.SortingLayer != rhs.SortingLayer)
@@ -509,7 +502,6 @@ namespace TouchScript.Layers
 
         private void frameStartedHandler(object sender, EventArgs eventArgs)
         {
-            performedSSUISearch = false;
             raycasters = null;
         }
 
