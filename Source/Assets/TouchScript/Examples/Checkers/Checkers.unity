@@ -2598,6 +2598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e07bff8743d4ee38bf724a7a2b4cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 1
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

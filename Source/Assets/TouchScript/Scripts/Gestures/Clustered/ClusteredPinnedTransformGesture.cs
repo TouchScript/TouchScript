@@ -10,7 +10,7 @@ using UnityEngine;
 namespace TouchScript.Gestures.Clustered
 {
     /// <summary>
-    /// ScreenTransformGesture which works with centroid of all pointers instead of with just the first one.
+    /// PinnedTransformGesture which works with centroid of all pointers instead of with just the first one.
     /// Should be used for large touch surfaces.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Pinned Transform Gesture (Clustered)")]

@@ -745,6 +745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ae431eff8434b0897d3f7f1cff4311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 1
   advancedProps: 0
   minPointers: 1
   maxPointers: 1
@@ -756,8 +757,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 1
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.05
+  minScreenPointsDistance: 0.5
 --- !u!54 &930800603
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -814,6 +815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ae431eff8434b0897d3f7f1cff4311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 1
   advancedProps: 0
   minPointers: 2
   maxPointers: 10
@@ -825,8 +827,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.2
+  minScreenPointsDistance: 0.5
 --- !u!1 &1138005899
 GameObject:
   m_ObjectHideFlags: 0

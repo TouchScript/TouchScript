@@ -19,30 +19,9 @@ namespace TouchScript.Gestures
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Pinned Transform Gesture")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_PinnedTransformGesture.htm")]
-    public class PinnedTransformGesture : PinnedTrasformGestureBase, ITransformGesture
+    public class PinnedTransformGesture : OnePointTrasformGestureBase
     {
         #region Constants
-
-        /// <summary>
-        /// Transform's projection type.
-        /// </summary>
-        public enum ProjectionType
-        {
-            /// <summary>
-            /// Use a plane with normal vector defined by layer.
-            /// </summary>
-            Layer,
-
-            /// <summary>
-            /// Use a plane with certain normal vector in local coordinates.
-            /// </summary>
-            Object,
-
-            /// <summary>
-            /// Use a plane with certain normal vector in global coordinates.
-            /// </summary>
-            Global
-        }
 
         #endregion
 
@@ -52,7 +31,7 @@ namespace TouchScript.Gestures
         /// Gets or sets transform's projection type.
         /// </summary>
         /// <value> Projection type. </value>
-        public ProjectionType Projection
+        public TransformGesture.ProjectionType Projection
         {
             get { return projection; }
             set
@@ -71,12 +50,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (projection == ProjectionType.Layer) return projectionLayer.WorldProjectionNormal;
+                if (projection == TransformGesture.ProjectionType.Layer) return projectionLayer.WorldProjectionNormal;
                 return projectionPlaneNormal;
             }
             set
             {
-                if (projection == ProjectionType.Layer) projection = ProjectionType.Object;
+                if (projection == TransformGesture.ProjectionType.Layer) projection = TransformGesture.ProjectionType.Object;
                 value.Normalize();
                 if (projectionPlaneNormal == value) return;
                 projectionPlaneNormal = value;
@@ -92,21 +71,12 @@ namespace TouchScript.Gestures
             get { return transformPlane; }
         }
 
-        /// <summary>
-        /// Gets rotation axis of the gesture in world coordinates.
-        /// </summary>
-        /// <value> Rotation axis of the gesture in world coordinates. </value>
-        public Vector3 RotationAxis
-        {
-            get { return transformPlane.normal; }
-        }
-
         #endregion
 
         #region Private variables
 
         [SerializeField]
-        private ProjectionType projection = ProjectionType.Layer;
+        private TransformGesture.ProjectionType projection = TransformGesture.ProjectionType.Layer;
 
         [SerializeField]
         private Vector3 projectionPlaneNormal = Vector3.forward;
@@ -117,14 +87,6 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public methods
-
-        /// <inheritdoc />
-        public void ApplyTransform(Transform target)
-        {
-            if (!Mathf.Approximately(DeltaRotation, 0f))
-                target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis) * target.rotation;
-            if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
-        }
 
         #endregion
 
@@ -166,97 +128,6 @@ namespace TouchScript.Gestures
             }
         }
 
-        /// <inheritdoc />
-        protected override void pointersUpdated(IList<Pointer> pointers)
-        {
-            base.pointersUpdated(pointers);
-
-            var projectionParams = activePointers[0].ProjectionParams;
-            var dR = deltaRotation = 0;
-            var dS = deltaScale = 1f;
-
-#if TOUCHSCRIPT_DEBUG
-            var worldCenter = cachedTransform.position;
-            var screenCenter = projectionParams.ProjectFrom(worldCenter);
-            var newScreenPos = getPointScreenPosition();
-            drawDebug(screenCenter, newScreenPos);
-#endif
-
-            if (pointersNumState != PointersNumState.InRange) return;
-
-            var rotationEnabled = (Type & TransformType.Rotation) == TransformType.Rotation;
-            var scalingEnabled = (Type & TransformType.Scaling) == TransformType.Scaling;
-            if (!rotationEnabled && !scalingEnabled) return;
-            if (!relevantPointers(pointers)) return;
-
-#if !TOUCHSCRIPT_DEBUG
-            var thePointer = activePointers[0];
-            var worldCenter = cachedTransform.position;
-            var screenCenter = projectionParams.ProjectFrom(worldCenter);
-            var newScreenPos = thePointer.Position;
-#endif
-
-            // Here we can't reuse last frame screen positions because points 0 and 1 can change.
-            // For example if the first of 3 fingers is lifted off.
-            var oldScreenPos = getPointPreviousScreenPosition();
-
-            if (rotationEnabled)
-            {
-                if (isTransforming)
-                {
-                    dR = doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-                }
-                else
-                {
-                    // Find how much we moved perpendicular to the line (center, oldScreenPos)
-                    screenPixelRotationBuffer += TwoD.PointToLineDistance(screenCenter, oldScreenPos, newScreenPos);
-                    angleBuffer += doRotation(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-
-                    if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
-                        screenTransformPixelThresholdSquared)
-                    {
-                        isTransforming = true;
-                        dR = angleBuffer;
-                    }
-                }
-            }
-
-            if (scalingEnabled)
-            {
-                if (isTransforming)
-                {
-                    dS *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-                }
-                else
-                {
-                    screenPixelScalingBuffer += (newScreenPos - screenCenter).magnitude -
-                                                (oldScreenPos - screenCenter).magnitude;
-                    scaleBuffer *= doScaling(worldCenter, oldScreenPos, newScreenPos, projectionParams);
-
-                    if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
-                        screenTransformPixelThresholdSquared)
-                    {
-                        isTransforming = true;
-                        dS = scaleBuffer;
-                    }
-                }
-            }
-
-            if (dR != 0 || dS != 1)
-            {
-                if (State == GestureState.Possible) setState(GestureState.Began);
-                switch (State)
-                {
-                    case GestureState.Began:
-                    case GestureState.Changed:
-                        deltaRotation = dR;
-                        deltaScale = dS;
-                        setState(GestureState.Changed);
-                        break;
-                }
-            }
-        }
-
 #if TOUCHSCRIPT_DEBUG
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
@@ -272,6 +143,27 @@ namespace TouchScript.Gestures
 
         #region Protected methods
 
+        /// <inheritdoc />
+        protected override float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos,
+                                 ProjectionParams projectionParams)
+        {
+            var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
+            var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
+            var angle = Vector3.Angle(oldVector, newVector);
+            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), TransformPlane.normal) < 0)
+                angle = -angle;
+            return angle;
+        }
+
+        /// <inheritdoc />
+        protected override float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos,
+                                ProjectionParams projectionParams)
+        {
+            var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
+            var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
+            return newVector.magnitude / oldVector.magnitude;
+        }
+
 #if TOUCHSCRIPT_DEBUG
         protected override void clearDebug()
         {
@@ -284,6 +176,7 @@ namespace TouchScript.Gestures
         {
             base.drawDebug(point1, point2);
 
+            if (!DebugMode) return;
             GLDebug.DrawPlaneWithNormal(debugID + 3, cachedTransform.position, RotationAxis, 1f, GLDebug.MULTIPLY, float.PositiveInfinity);
         }
 #endif
@@ -292,45 +185,28 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
-        private float doRotation(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos,
-                                 ProjectionParams projectionParams)
-        {
-            var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
-            var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
-            var angle = Vector3.Angle(oldVector, newVector);
-            if (Vector3.Dot(Vector3.Cross(oldVector, newVector), TransformPlane.normal) < 0)
-                angle = -angle;
-            return angle;
-        }
-
-        private float doScaling(Vector3 center, Vector2 oldScreenPos, Vector2 newScreenPos,
-                                ProjectionParams projectionParams)
-        {
-            var newVector = projectionParams.ProjectTo(newScreenPos, TransformPlane) - center;
-            var oldVector = projectionParams.ProjectTo(oldScreenPos, TransformPlane) - center;
-            return newVector.magnitude / oldVector.magnitude;
-        }
-
         private void updateProjectionPlane()
         {
             if (!Application.isPlaying) return;
 
             switch (projection)
             {
-                case ProjectionType.Layer:
+                case TransformGesture.ProjectionType.Layer:
                     if (projectionLayer == null)
                         transformPlane = new Plane(cachedTransform.TransformDirection(Vector3.forward),
                             cachedTransform.position);
                     else transformPlane = new Plane(projectionLayer.WorldProjectionNormal, cachedTransform.position);
                     break;
-                case ProjectionType.Object:
+                case TransformGesture.ProjectionType.Object:
                     transformPlane = new Plane(cachedTransform.TransformDirection(projectionPlaneNormal),
                         cachedTransform.position);
                     break;
-                case ProjectionType.Global:
+                case TransformGesture.ProjectionType.Global:
                     transformPlane = new Plane(projectionPlaneNormal, cachedTransform.position);
                     break;
             }
+
+            rotationAxis = transformPlane.normal;
         }
 
         #endregion

@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System;
 using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
@@ -19,9 +20,31 @@ namespace TouchScript.Gestures
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGesture.htm")]
-    public class TransformGesture : TransformGestureBase, ITransformGesture
+    public class TransformGesture : TwoPointTransformGestureBase
     {
         #region Constants
+
+        /// <summary>
+        /// Types of transformation.
+        /// </summary>
+        [Flags]
+        public enum TransformType
+        {
+            /// <summary>
+            /// Translation.
+            /// </summary>
+            Translation = 0x1,
+
+            /// <summary>
+            /// Rotation.
+            /// </summary>
+            Rotation = 0x2,
+
+            /// <summary>
+            /// Scaling.
+            /// </summary>
+            Scaling = 0x4
+        }
 
         /// <summary>
         /// Transform's projection type.
@@ -101,15 +124,6 @@ namespace TouchScript.Gestures
             get { return TransformUtils.GlobalToLocalVector(cachedTransform, DeltaPosition); }
         }
 
-        /// <summary>
-        /// Gets rotation axis of the gesture in world coordinates.
-        /// </summary>
-        /// <value>Rotation axis of the gesture in world coordinates.</value>
-        public Vector3 RotationAxis
-        {
-            get { return transformPlane.normal; }
-        }
-
         #endregion
 
         #region Private variables
@@ -126,14 +140,6 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Public methods
-
-        /// <inheritdoc />
-        public void ApplyTransform(Transform target)
-        {
-            if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
-            if (!Mathf.Approximately(DeltaRotation, 0f)) target.rotation = Quaternion.AngleAxis(DeltaRotation, RotationAxis) * target.rotation;
-            if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
-        }
 
         #endregion
 
@@ -316,6 +322,8 @@ namespace TouchScript.Gestures
                     transformPlane = new Plane(projectionPlaneNormal, cachedTransform.position);
                     break;
             }
+
+            rotationAxis = transformPlane.normal;
         }
 
         #endregion

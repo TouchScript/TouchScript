@@ -2,12 +2,14 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using System.Collections.Generic;
 using TouchScript.Gestures.Base;
 using TouchScript.Layers;
-using TouchScript.Pointers;
 using TouchScript.Utils.Geom;
 using UnityEngine;
+#if TOUCHSCRIPT_DEBUG
+using System.Collections.Generic;
+using TouchScript.Pointers;
+#endif
 
 namespace TouchScript.Gestures
 {
@@ -16,18 +18,9 @@ namespace TouchScript.Gestures
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Screen Transform Gesture")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_ScreenTransformGesture.htm")]
-    public class ScreenTransformGesture : TransformGestureBase, ITransformGesture
+    public class ScreenTransformGesture : TwoPointTransformGestureBase
     {
         #region Public methods
-
-        /// <inheritdoc />
-        public void ApplyTransform(Transform target)
-        {
-            if (DeltaPosition != Vector3.zero) target.position += DeltaPosition;
-            if (!Mathf.Approximately(DeltaRotation, 0f))
-                target.rotation = Quaternion.Euler(0, 0, DeltaRotation) * target.rotation;
-            if (!Mathf.Approximately(DeltaScale, 1f)) target.localScale *= DeltaScale;
-        }
 
         #endregion
 

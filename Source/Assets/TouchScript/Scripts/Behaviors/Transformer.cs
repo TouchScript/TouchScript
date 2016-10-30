@@ -60,7 +60,12 @@ namespace TouchScript.Behaviors
         private void transformHandler(object sender, EventArgs e)
         {
             var gesture = sender as ITransformGesture;
-            gesture.ApplyTransform(cachedTransform);
+            var mask = gesture.TransformMask;
+
+            if ((mask & TransformGesture.TransformType.Scaling) != 0) cachedTransform.localScale *= gesture.DeltaScale;
+            if ((mask & TransformGesture.TransformType.Rotation) != 0)
+                cachedTransform.rotation = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * cachedTransform.rotation;
+            if ((mask & TransformGesture.TransformType.Translation) != 0) cachedTransform.position += gesture.DeltaPosition;
         }
 
         #endregion

@@ -12,6 +12,7 @@ namespace TouchScript.Gestures
     /// </summary>
     public interface ITransformGesture
     {
+
         /// <summary>
         /// Occurs when gesture starts.
         /// </summary>
@@ -28,9 +29,30 @@ namespace TouchScript.Gestures
         event EventHandler<EventArgs> TransformCompleted;
 
         /// <summary>
-        /// Applies gesture's transform for this frame to target Transform.
+        /// Contains transform operations which happened this frame.
         /// </summary>
-        /// <param name="target"> Object to transform. </param>
-        void ApplyTransform(Transform target);
+        TransformGesture.TransformType TransformMask { get; }
+
+        /// <summary>
+        /// Gets delta position between this frame and the last frame in world coordinates.
+        /// </summary>
+        Vector3 DeltaPosition { get; }
+
+        /// <summary>
+        /// Gets delta rotation between this frame and last frame in degrees.
+        /// </summary>
+        float DeltaRotation { get; }
+
+        /// <summary>
+        /// Contains local delta scale when gesture is recognized.
+        /// Value is between 0 and +infinity, where 1 is no scale, 0.5 is scaled in half, 2 scaled twice.
+        /// </summary>
+        float DeltaScale { get; }
+
+        /// <summary>
+        /// Gets rotation axis of the gesture in world coordinates.
+        /// </summary>
+        /// <value>Rotation axis of the gesture in world coordinates.</value>
+        Vector3 RotationAxis { get; }
     }
 }
