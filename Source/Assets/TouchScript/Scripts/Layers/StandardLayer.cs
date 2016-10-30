@@ -10,6 +10,7 @@ using TouchScript.Layers.UI;
 using TouchScript.Pointers;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace TouchScript.Layers
 {
@@ -22,25 +23,43 @@ namespace TouchScript.Layers
         public bool LookFor3DObjects
         {
             get { return lookFor3DObjects; }
-            set { lookFor3DObjects = value; }
+            set
+            {
+                lookFor3DObjects = value;
+                updateVariants();
+            }
         }
 
         public bool LookFor2DObjects
         {
             get { return lookFor2DObjects; }
-            set { lookFor2DObjects = value; }
+            set
+            {
+                lookFor2DObjects = value;
+                updateVariants();
+            }
         }
 
         public bool LookForWorldSpaceUI
         {
             get { return lookForWorldSpaceUI; }
-            set { lookForWorldSpaceUI = value; }
+            set
+            {
+                lookForWorldSpaceUI = value;
+                updateVariants();
+            }
         }
 
         public bool LookForScreenSpaceUI
         {
             get { return lookForScreenSpaceUI; }
             set { lookForScreenSpaceUI = value; }
+        }
+
+        public bool UseHitFilters
+        {
+            get { return useHitFilters; }
+            set { useHitFilters = value; }
         }
 
         /// <summary>
@@ -72,7 +91,7 @@ namespace TouchScript.Layers
         private static Comparison<HitData> _hitDataComparerFunc = hitDataComparerFunc;
 
         private static Dictionary<int, ProjectionParams> projectionParamsCache = new Dictionary<int, ProjectionParams>();
-        private static List<BaseRaycaster> raycasters; 
+        private static List<BaseRaycaster> raycasters;
 
         private static List<RaycastHitUI> raycastHitUIList = new List<RaycastHitUI>(20);
         private static List<RaycastHit> raycastHitList = new List<RaycastHit>(20);
@@ -89,13 +108,18 @@ namespace TouchScript.Layers
         private bool lookFor2DObjects = false;
 
         [SerializeField]
-        private bool lookForWorldSpaceUI = true;
+        private bool lookForWorldSpaceUI = false;
 
         [SerializeField]
         private bool lookForScreenSpaceUI = true;
 
         [SerializeField]
         private LayerMask layerMask = -1;
+
+        [SerializeField]
+        private bool useHitFilters = false;
+
+        private bool lookForCameraObjects = false;
 
         /// <summary>
         /// Camera.
@@ -110,7 +134,7 @@ namespace TouchScript.Layers
         {
             if (base.Hit(pointer, out hit) != HitResult.Hit) return HitResult.Miss;
 
-            HitResult result = HitResult.Miss;
+            var result = HitResult.Miss;
 
             if (lookForScreenSpaceUI)
             {
@@ -125,7 +149,7 @@ namespace TouchScript.Layers
                 }
             }
 
-            if (_camera != null && (lookFor3DObjects || lookFor2DObjects || lookForWorldSpaceUI))
+            if (lookForCameraObjects)
             {
                 result = performWorldSearch(pointer, out hit);
                 switch (result)
@@ -138,7 +162,6 @@ namespace TouchScript.Layers
                 }
             }
 
-            hit = default(HitData);
             return HitResult.Miss;
         }
 
@@ -146,8 +169,8 @@ namespace TouchScript.Layers
         public override ProjectionParams GetProjectionParams(Pointer pointer)
         {
             var press = pointer.GetPressData();
-            if (press.Type == HitData.HitType.World2D ||
-                press.Type == HitData.HitType.World3D)
+            if ((press.Type == HitData.HitType.World2D) ||
+                (press.Type == HitData.HitType.World3D))
                 return layerProjectionParams;
 
             var graphic = press.RaycastHitUI.Graphic;
@@ -173,16 +196,23 @@ namespace TouchScript.Layers
         protected override void Awake()
         {
             updateCamera();
+            updateVariants();
             base.Awake();
         }
 
         private void OnEnable()
         {
             if (!Application.isPlaying) return;
-
-            if (TouchScriptInputModule.Instance != null) TouchScriptInputModule.Instance.INTERNAL_Retain();
             TouchManager.Instance.FrameStarted += frameStartedHandler;
+			StartCoroutine(lateEnable());
         }
+
+		private IEnumerator lateEnable()
+		{
+			// Need to wait while EventSystem initializes
+			yield return new WaitForEndOfFrame();
+			if (TouchScriptInputModule.Instance != null) TouchScriptInputModule.Instance.INTERNAL_Retain();
+		}
 
         private void OnDisable()
         {
@@ -213,15 +243,115 @@ namespace TouchScript.Layers
         protected override void setName()
         {
             if (string.IsNullOrEmpty(Name))
-            {
                 if (_camera != null) Name = _camera.name;
                 else Name = "Layer";
-            }
         }
 
         #endregion
 
         #region Private functions
+
+        private HitResult performWorldSearch(IPointer pointer, out HitData hit)
+        {
+            hit = default(HitData);
+
+            if (_camera == null) return HitResult.Miss;
+            if ((_camera.enabled == false) || (_camera.gameObject.activeInHierarchy == false)) return HitResult.Miss;
+            var position = pointer.Position;
+            if (!_camera.pixelRect.Contains(position)) return HitResult.Miss;
+
+            hitList.Clear();
+            var ray = _camera.ScreenPointToRay(position);
+
+            int count;
+            
+            if (lookFor3DObjects)
+            {
+#if UNITY_5_3_OR_NEWER
+                count = Physics.RaycastNonAlloc(ray, raycastHits, float.PositiveInfinity, layerMask);
+#else
+                var raycastHits = Physics.RaycastAll(ray, float.PositiveInfinity, layerMask);
+                var count = raycastHits.Length;
+#endif
+
+                // Try to do some optimizations if 2D and WS UI are not required
+                if (!lookFor2DObjects && !lookForWorldSpaceUI)
+                {
+                    if (count == 0) return HitResult.Miss;
+                    if (count > 1)
+                    {
+                        raycastHitList.Clear();
+                        for (var i = 0; i < count; i++) raycastHitList.Add(raycastHits[i]);
+                        raycastHitList.Sort(_raycastHitComparerFunc);
+                        if (useHitFilters)
+                        {
+                            for (var i = 0; i < count; i++)
+                            {
+                                var result = doHit(pointer, raycastHitList[i], out hit);
+                                if (result != HitResult.Miss) return result;
+                            }
+                            return HitResult.Miss;
+                        }
+                        hit = new HitData(raycastHitList[0], this);
+                        return HitResult.Hit;
+                    }
+                    if (useHitFilters) return doHit(pointer, raycastHits[0], out hit);
+                    hit = new HitData(raycastHits[0], this);
+                    return HitResult.Hit;
+                }
+                for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHits[i], this));
+            }
+
+            if (lookFor2DObjects)
+            {
+                count = Physics2D.GetRayIntersectionNonAlloc(ray, raycastHits2D, float.MaxValue, layerMask);
+                for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHits2D[i], this));
+            }
+
+            if (lookForWorldSpaceUI)
+            {
+                raycastHitUIList.Clear();
+                if (raycasters == null) raycasters = TouchScriptInputModule.Instance.GetRaycasters();
+                count = raycasters.Count;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var raycaster = raycasters[i] as GraphicRaycaster;
+                    if (raycaster == null) continue;
+                    var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster); // TODO: cache
+                    if ((canvas == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay) || (canvas.worldCamera != _camera)) continue;
+                    performUISearchForCanvas(pointer, canvas, raycaster, float.MaxValue, ray);
+                }
+
+                count = raycastHitUIList.Count;
+                for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHitUIList[i], this));
+            }
+
+            count = hitList.Count;
+            if (hitList.Count == 0) return HitResult.Miss;
+            if (count > 1)
+            {
+                hitList.Sort(_hitDataComparerFunc);
+                if (useHitFilters)
+                {
+                    for (var i = 0; i < count; ++i)
+                    {
+                        hit = hitList[i];
+                        var result = checkHitFilters(pointer, hit);
+                        if (result != HitResult.Miss) return result;
+                    }
+                    return HitResult.Miss;
+                }
+                else
+                {
+                    hit = hitList[0];
+                    return HitResult.Hit;
+                }
+            }
+            hit = hitList[0];
+            if (useHitFilters) return checkHitFilters(pointer, hit);
+            return HitResult.Hit;
+        }
 
         private HitResult performSSUISearch(IPointer pointer, out HitData hit)
         {
@@ -237,7 +367,7 @@ namespace TouchScript.Layers
                 var raycaster = raycasters[i] as GraphicRaycaster;
                 if (raycaster == null) continue;
                 var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster); // TODO: cache
-                if (canvas == null || canvas.renderMode != RenderMode.ScreenSpaceOverlay) continue;
+                if ((canvas == null) || (canvas.renderMode != RenderMode.ScreenSpaceOverlay)) continue;
                 performUISearchForCanvas(pointer, canvas, raycaster);
             }
 
@@ -246,114 +376,21 @@ namespace TouchScript.Layers
             if (count > 1)
             {
                 raycastHitUIList.Sort(_raycastHitUIComparerFunc);
-                for (var i = 0; i < count; ++i)
+                if (useHitFilters)
                 {
-                    var result = doHit(pointer, raycastHitUIList[i], out hit);
-                    if (result != HitResult.Miss) return result;
+                    for (var i = 0; i < count; ++i)
+                    {
+                        var result = doHit(pointer, raycastHitUIList[i], out hit);
+                        if (result != HitResult.Miss) return result;
+                    }
+                    return HitResult.Miss;
                 }
-                return HitResult.Miss;
+                hit = new HitData(raycastHitUIList[0], this, true);
+                return HitResult.Hit;
             }
-            return doHit(pointer, raycastHitUIList[0], out hit);
-        }
-
-        private HitResult performWorldSearch(IPointer pointer, out HitData hit)
-        {
-            hit = default(HitData);
-
-            if (_camera == null) return HitResult.Miss;
-            if (_camera.enabled == false || _camera.gameObject.activeInHierarchy == false) return HitResult.Miss;
-            var position = pointer.Position;
-            if (!_camera.pixelRect.Contains(position)) return HitResult.Miss;
-
-            hitList.Clear();
-            var ray = _camera.ScreenPointToRay(position);
-
-            var searchDistance = float.MaxValue;
-            var result3D = HitResult.Miss;
-            if (lookFor3DObjects)
-            {
-                result3D = perform3DSearch(pointer, ray, out hit);
-                if (result3D != HitResult.Miss) searchDistance = hit.Distance;
-            }
-            if (lookFor2DObjects) perform2DSearch(ray, searchDistance);
-            if (lookForWorldSpaceUI) performWSUISearch(pointer, ray, searchDistance);
-
-            var count = hitList.Count;
-            if (hitList.Count == 0) return result3D;
-
-            if (count > 1)
-            {
-                hitList.Sort(_hitDataComparerFunc);
-                for (var i = 0; i < count; ++i)
-                {
-                    hit = hitList[i];
-                    var result = checkHitFilters(pointer, hit);
-                    if (result != HitResult.Miss) return result;
-                }
-                return HitResult.Miss;
-            }
-            hit = hitList[0];
-            return checkHitFilters(pointer, hit);
-        }
-
-        private HitResult perform3DSearch(IPointer pointer, Ray ray, out HitData hit)
-        {
-            hit = default(HitData);
-#if UNITY_5_3_OR_NEWER
-            var count = Physics.RaycastNonAlloc(ray, raycastHits, float.PositiveInfinity, layerMask);
-#else
-            var raycastHits = Physics.RaycastAll(ray, float.PositiveInfinity, layerMask);
-            var count = raycastHits.Length;
-#endif
-            if (count == 0) return HitResult.Miss;
-            if (count > 1)
-            {
-                raycastHitList.Clear();
-                for (var i = 0; i < count; i++) raycastHitList.Add(raycastHits[i]);
-                raycastHitList.Sort(_raycastHitComparerFunc);
-
-                RaycastHit raycastHit = default(RaycastHit);
-                for (var i = 0; i < count; i++)
-                {
-                    raycastHit = raycastHitList[i];
-                    var result = doHit(pointer, raycastHit, out hit);
-                    if (result != HitResult.Miss) return result;
-                }
-                return HitResult.Miss;
-            }
-            return doHit(pointer, raycastHits[0], out hit);
-        }
-
-        private void perform2DSearch(Ray ray, float maxDistance)
-        {
-            var count = Physics2D.GetRayIntersectionNonAlloc(ray, raycastHits2D, maxDistance, layerMask);
-            for (var i = 0; i < count; i++)
-            {
-                hitList.Add(new HitData(raycastHits2D[i], this));
-            }
-        }
-
-        private void performWSUISearch(IPointer pointer, Ray ray, float maxDistance)
-        {
-            raycastHitUIList.Clear();
-
-            if (raycasters == null) raycasters = TouchScriptInputModule.Instance.GetRaycasters();
-            var count = raycasters.Count;
-
-            for (var i = 0; i < count; i++)
-            {
-                var raycaster = raycasters[i] as GraphicRaycaster;
-                if (raycaster == null) continue;
-                var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster); // TODO: cache
-                if (canvas == null || canvas.renderMode == RenderMode.ScreenSpaceOverlay || canvas.worldCamera != _camera) continue;
-                performUISearchForCanvas(pointer, canvas, raycaster, maxDistance, ray);
-            }
-
-            count = raycastHitUIList.Count;
-            for (var i = 0; i < count; i++)
-            {
-                hitList.Add(new HitData(raycastHitUIList[i], this));
-            }
+            if (useHitFilters) return doHit(pointer, raycastHitUIList[0], out hit);
+            hit = new HitData(raycastHitUIList[0], this, true);
+            return HitResult.Hit;
         }
 
         private void performUISearchForCanvas(IPointer pointer, Canvas canvas, GraphicRaycaster raycaster, float maxDistance = float.MaxValue, Ray ray = default(Ray))
@@ -362,14 +399,14 @@ namespace TouchScript.Layers
             var eventCamera = canvas.worldCamera;
             var foundGraphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
             var count2 = foundGraphics.Count;
-            for (int j = 0; j < count2; j++)
+            for (var j = 0; j < count2; j++)
             {
-                Graphic graphic = foundGraphics[j];
-                
-                if (layerMask.value != -1 && (layerMask.value & 1 << graphic.gameObject.layer) == 0) continue;
+                var graphic = foundGraphics[j];
+
+                if ((layerMask.value != -1) && ((layerMask.value & (1 << graphic.gameObject.layer)) == 0)) continue;
 
                 // -1 means it hasn't been processed by the canvas, which means it isn't actually drawn
-                if (graphic.depth == -1 || !graphic.raycastTarget)
+                if ((graphic.depth == -1) || !graphic.raycastTarget)
                     continue;
 
                 if (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, position, eventCamera))
@@ -379,7 +416,6 @@ namespace TouchScript.Layers
                 {
                     var t = graphic.transform;
                     if (raycaster.ignoreReversedGraphics)
-                    {
                         if (eventCamera == null)
                         {
                             // If we dont have a camera we know that we should always be facing forward
@@ -393,16 +429,15 @@ namespace TouchScript.Layers
                             var dir = t.rotation * Vector3.forward;
                             if (Vector3.Dot(cameraFoward, dir) <= 0) continue;
                         }
-                    }
 
                     float distance = 0;
 
-                    if (eventCamera == null || canvas.renderMode == RenderMode.ScreenSpaceOverlay) {}
+                    if ((eventCamera == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay)) { }
                     else
                     {
-                        Vector3 transForward = t.forward;
+                        var transForward = t.forward;
                         // http://geomalgorithms.com/a06-_intersect-2.html
-                        distance = (Vector3.Dot(transForward, t.position - ray.origin) / Vector3.Dot(transForward, ray.direction));
+                        distance = Vector3.Dot(transForward, t.position - ray.origin) / Vector3.Dot(transForward, ray.direction);
 
                         // Check to see if the go is behind the camera.
                         if (distance < 0) continue;
@@ -437,6 +472,11 @@ namespace TouchScript.Layers
             return checkHitFilters(pointer, hit);
         }
 
+        private void updateVariants()
+        {
+            lookForCameraObjects = _camera != null && (lookFor3DObjects || lookFor2DObjects || lookForWorldSpaceUI);
+        }
+
         #endregion
 
         #region Compare functions
@@ -465,7 +505,6 @@ namespace TouchScript.Layers
 
         private static int raycastHitComparerFunc(RaycastHit lhs, RaycastHit rhs)
         {
-            if (lhs.collider.transform == rhs.collider.transform) return 0;
             return lhs.distance < rhs.distance ? -1 : 1;
         }
 
@@ -482,18 +521,19 @@ namespace TouchScript.Layers
             if (lhs.SortingOrder != rhs.SortingOrder)
                 return rhs.SortingOrder.CompareTo(lhs.SortingOrder);
 
-            if (lhs.Type == HitData.HitType.UI && rhs.Type == HitData.HitType.UI && 
-                lhs.RaycastHitUI.Depth != rhs.RaycastHitUI.Depth)
-                return rhs.RaycastHitUI.Depth.CompareTo(lhs.RaycastHitUI.Depth);
+            if ((lhs.Type == HitData.HitType.UI) && (rhs.Type == HitData.HitType.UI))
+            {
+                if (lhs.RaycastHitUI.Depth != rhs.RaycastHitUI.Depth)
+                    return rhs.RaycastHitUI.Depth.CompareTo(lhs.RaycastHitUI.Depth);
 
-            if (!Mathf.Approximately(lhs.Distance, rhs.Distance))
-                return lhs.Distance.CompareTo(rhs.Distance);
+                if (!Mathf.Approximately(lhs.Distance, rhs.Distance))
+                    return lhs.Distance.CompareTo(rhs.Distance);
 
-            if (lhs.Type == HitData.HitType.UI && rhs.Type == HitData.HitType.UI &&
-                lhs.RaycastHitUI.GraphicIndex != rhs.RaycastHitUI.GraphicIndex)
-                return rhs.RaycastHitUI.GraphicIndex.CompareTo(lhs.RaycastHitUI.GraphicIndex);
+                if (lhs.RaycastHitUI.GraphicIndex != rhs.RaycastHitUI.GraphicIndex)
+                    return rhs.RaycastHitUI.GraphicIndex.CompareTo(lhs.RaycastHitUI.GraphicIndex);
+            }
 
-            return 0;
+            return lhs.Distance < rhs.Distance ? -1 : 1;
         }
 
         #endregion
