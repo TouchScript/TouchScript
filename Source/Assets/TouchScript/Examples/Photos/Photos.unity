@@ -198,10 +198,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Main Camera
-  lookFor3DObjects: 0
-  lookFor2DObjects: 0
-  lookForWorldSpaceUI: 1
-  lookForScreenSpaceUI: 1
+  advancedProps: 0
+  hit3DObjects: 1
+  hit2DObjects: 0
+  hitWorldSpaceUI: 0
+  hitScreenSpaceUI: 1
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1866,6 +1867,10 @@ Prefab:
       propertyPath: layers.Array.data[2]
       value: 
       objectReference: {fileID: 62216953}
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
   m_IsPrefabParent: 0
