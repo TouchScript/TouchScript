@@ -23,13 +23,21 @@ namespace TouchScript.Layers.UI
         {
             get
             {
+				if (shuttingDown) return null;
                 if (instance == null)
                 {
-                    if (EventSystem.current != null)
-                    {
-                        instance = EventSystem.current.GetComponent<TouchScriptInputModule>();
-                        if (instance == null) instance = EventSystem.current.gameObject.AddComponent<TouchScriptInputModule>();
-                    }
+					var es = EventSystem.current;
+                    if (es == null)
+					{
+						es = FindObjectOfType<EventSystem>();
+						if (es == null)
+						{
+							var go = new GameObject("EventSystem");
+							es = go.AddComponent<EventSystem>();
+						}
+					}
+                    instance = es.GetComponent<TouchScriptInputModule>();
+					if (instance == null) instance = es.gameObject.AddComponent<TouchScriptInputModule>();
                 }
                 return instance;
             }
@@ -46,6 +54,7 @@ namespace TouchScript.Layers.UI
 
         #region Private variables
 
+		private static bool shuttingDown = false;
         private static TouchScriptInputModule instance;
         private static FieldInfo raycastersProp;
         private static PropertyInfo canvasProp;
@@ -91,6 +100,11 @@ namespace TouchScript.Layers.UI
             base.OnDisable();
         }
 
+		private void OnApplicationQuit()
+		{
+			shuttingDown = true;
+		}
+
         #endregion
 
         #region Public methods
@@ -114,7 +128,7 @@ namespace TouchScript.Layers.UI
 
         public override void Process()
         {
-            ui.Process();
+			if (ui != null) ui.Process();
         }
 
         public override bool IsPointerOverGameObject(int pointerId)
