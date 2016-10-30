@@ -184,7 +184,7 @@ namespace TouchScript.Layers.UI
 
         private void disable()
         {
-            if (TouchManager.Instance != null)
+			if (TouchManager.Instance != null && ui != null)
             {
                 TouchManager.Instance.PointersUpdated -= ui.ProcessUpdated;
                 TouchManager.Instance.PointersPressed -= ui.ProcessPressed;

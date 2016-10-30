@@ -188,7 +188,7 @@ MonoBehaviour:
   hit3DObjects: 1
   hit2DObjects: 0
   hitWorldSpaceUI: 0
-  hitScreenSpaceUI: 1
+  hitScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295

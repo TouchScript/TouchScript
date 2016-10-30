@@ -4661,10 +4661,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: ScreenSpace UI Layer
-  lookFor3DObjects: 0
-  lookFor2DObjects: 0
-  lookForWorldSpaceUI: 0
-  lookForScreenSpaceUI: 1
+  advancedProps: 0
+  hit3DObjects: 0
+  hit2DObjects: 0
+  hitWorldSpaceUI: 0
+  hitScreenSpaceUI: 1
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295

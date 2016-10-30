@@ -134,7 +134,7 @@ MonoBehaviour:
   hit3DObjects: 1
   hit2DObjects: 0
   hitWorldSpaceUI: 0
-  hitScreenSpaceUI: 1
+  hitScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -492,6 +492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0

@@ -182,7 +182,7 @@ Transform:
   m_LocalRotation: {x: -0.2620868, y: 0.3669622, z: -0.108559854, w: -0.88592553}
   m_LocalPosition: {x: 5.56, y: 4.82, z: -5.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 32.96, y: -45, z: 0}
   m_Children: []
   m_Father: {fileID: 930800601}
   m_RootOrder: 2
@@ -199,9 +199,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Main Camera
   advancedProps: 0
-  hit3DObjects: 1
+  hit3DObjects: 0
   hit2DObjects: 0
-  hitWorldSpaceUI: 0
+  hitWorldSpaceUI: 1
   hitScreenSpaceUI: 1
   layerMask:
     serializedVersion: 2
@@ -933,6 +933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -944,8 +945,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &238072902
@@ -959,6 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1524,6 +1526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1557,6 +1560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1568,8 +1572,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &449324832
@@ -1736,6 +1740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1769,6 +1774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -1780,8 +1786,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &536919393
@@ -2683,6 +2689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2716,6 +2723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -2727,8 +2735,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &886654117
@@ -4500,6 +4508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4533,6 +4542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -4544,8 +4554,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &1485721907
@@ -5259,6 +5269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -5292,6 +5303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
@@ -5303,8 +5315,8 @@ MonoBehaviour:
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 7
-  minScreenPointsDistance: 0.5
   screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 2
   projectionPlaneNormal: {x: 0, y: 1, z: 0}
 --- !u!114 &1979821165
