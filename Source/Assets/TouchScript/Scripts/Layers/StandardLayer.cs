@@ -11,6 +11,7 @@ using TouchScript.Pointers;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+using TouchScript.Utils.Attributes;
 
 namespace TouchScript.Layers
 {
@@ -20,40 +21,40 @@ namespace TouchScript.Layers
     {
         #region Public properties
 
-        public bool LookFor3DObjects
+        public bool Hit3DObjects
         {
-            get { return lookFor3DObjects; }
+            get { return hit3DObjects; }
             set
             {
-                lookFor3DObjects = value;
+                hit3DObjects = value;
                 updateVariants();
             }
         }
 
-        public bool LookFor2DObjects
+        public bool Hit2DObjects
         {
-            get { return lookFor2DObjects; }
+            get { return hit2DObjects; }
             set
             {
-                lookFor2DObjects = value;
+                hit2DObjects = value;
                 updateVariants();
             }
         }
 
-        public bool LookForWorldSpaceUI
+        public bool HitWorldSpaceUI
         {
-            get { return lookForWorldSpaceUI; }
+            get { return hitWorldSpaceUI; }
             set
             {
-                lookForWorldSpaceUI = value;
+                hitWorldSpaceUI = value;
                 updateVariants();
             }
         }
 
-        public bool LookForScreenSpaceUI
+        public bool HitScreenSpaceUI
         {
-            get { return lookForScreenSpaceUI; }
-            set { lookForScreenSpaceUI = value; }
+            get { return hitScreenSpaceUI; }
+            set { hitScreenSpaceUI = value; }
         }
 
         public bool UseHitFilters
@@ -102,21 +103,29 @@ namespace TouchScript.Layers
         private static RaycastHit2D[] raycastHits2D = new RaycastHit2D[20];
 
         [SerializeField]
-        private bool lookFor3DObjects = true;
+        private bool advancedProps; // is used to save if advanced properties are opened or closed
 
         [SerializeField]
-        private bool lookFor2DObjects = false;
+        [ToggleLeft]
+        private bool hit3DObjects = true;
 
         [SerializeField]
-        private bool lookForWorldSpaceUI = false;
+        [ToggleLeft]
+        private bool hit2DObjects = false;
 
         [SerializeField]
-        private bool lookForScreenSpaceUI = true;
+        [ToggleLeft]
+        private bool hitWorldSpaceUI = false;
+
+        [SerializeField]
+        [ToggleLeft]
+        private bool hitScreenSpaceUI = true;
 
         [SerializeField]
         private LayerMask layerMask = -1;
 
         [SerializeField]
+        [ToggleLeft]
         private bool useHitFilters = false;
 
         private bool lookForCameraObjects = false;
@@ -136,7 +145,7 @@ namespace TouchScript.Layers
 
             var result = HitResult.Miss;
 
-            if (lookForScreenSpaceUI)
+            if (hitScreenSpaceUI)
             {
                 result = performSSUISearch(pointer, out hit);
                 switch (result)
@@ -265,7 +274,7 @@ namespace TouchScript.Layers
 
             int count;
             
-            if (lookFor3DObjects)
+            if (hit3DObjects)
             {
 #if UNITY_5_3_OR_NEWER
                 count = Physics.RaycastNonAlloc(ray, raycastHits, float.PositiveInfinity, layerMask);
@@ -275,7 +284,7 @@ namespace TouchScript.Layers
 #endif
 
                 // Try to do some optimizations if 2D and WS UI are not required
-                if (!lookFor2DObjects && !lookForWorldSpaceUI)
+                if (!hit2DObjects && !hitWorldSpaceUI)
                 {
                     if (count == 0) return HitResult.Miss;
                     if (count > 1)
@@ -302,13 +311,13 @@ namespace TouchScript.Layers
                 for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHits[i], this));
             }
 
-            if (lookFor2DObjects)
+            if (hit2DObjects)
             {
                 count = Physics2D.GetRayIntersectionNonAlloc(ray, raycastHits2D, float.MaxValue, layerMask);
                 for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHits2D[i], this));
             }
 
-            if (lookForWorldSpaceUI)
+            if (hitWorldSpaceUI)
             {
                 raycastHitUIList.Clear();
                 if (raycasters == null) raycasters = TouchScriptInputModule.Instance.GetRaycasters();
@@ -474,7 +483,7 @@ namespace TouchScript.Layers
 
         private void updateVariants()
         {
-            lookForCameraObjects = _camera != null && (lookFor3DObjects || lookFor2DObjects || lookForWorldSpaceUI);
+            lookForCameraObjects = _camera != null && (hit3DObjects || hit2DObjects || hitWorldSpaceUI);
         }
 
         #endregion
