@@ -2,15 +2,15 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Editor.Gestures.Base;
-using TouchScript.Gestures;
+using TouchScript.Editor.Gestures.TransformGestures.Base;
+using TouchScript.Gestures.TransformGestures;
 using UnityEditor;
 using UnityEngine;
 
-namespace TouchScript.Editor.Gestures
+namespace TouchScript.Editor.Gestures.TransformGestures
 {
-    [CustomEditor(typeof(TransformGesture), true)]
-    internal class TransformGestureEditor : TransformGestureBaseEditor
+    [CustomEditor(typeof(PinnedTransformGesture), true)]
+    internal class PinnedTransformGestureEditor : PinnedTransformGestureBaseEditor
     {
         private static readonly GUIContent PROJECTION = new GUIContent("Projection Type", "Method used to project 2d screen positions of pointers into 3d space.");
         private static readonly GUIContent PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where pointers' positions are projected.");

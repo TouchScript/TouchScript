@@ -3,6 +3,7 @@
  */
 
 using TouchScript.Gestures;
+using TouchScript.Gestures.TransformGestures;
 using TouchScript.Pointers;
 using UnityEngine;
 

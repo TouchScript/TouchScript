@@ -3,7 +3,7 @@
  */
 
 using System.Collections.Generic;
-using TouchScript.Gestures.Base;
+using TouchScript.Gestures.TransformGestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 using TouchScript.Pointers;
@@ -12,7 +12,7 @@ using TouchScript.Utils.DebugUtils;
 #endif
 using UnityEngine;
 
-namespace TouchScript.Gestures
+namespace TouchScript.Gestures.TransformGestures
 {
     /// <summary>
     /// Recognizes a transform gesture around center of the object, i.e. one finger rotation, scaling or a combination of these.

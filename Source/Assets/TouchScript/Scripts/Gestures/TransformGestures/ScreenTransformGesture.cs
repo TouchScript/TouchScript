@@ -2,7 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Gestures.Base;
+using TouchScript.Gestures.TransformGestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 using UnityEngine;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using TouchScript.Pointers;
 #endif
 
-namespace TouchScript.Gestures
+namespace TouchScript.Gestures.TransformGestures
 {
     /// <summary>
     /// Recognizes a transform gesture in screen space, i.e. translation, rotation, scaling or a combination of these.

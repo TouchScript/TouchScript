@@ -13,7 +13,7 @@ using System.Collections;
 using TouchScript.Utils.DebugUtils;
 #endif
 
-namespace TouchScript.Gestures.Base
+namespace TouchScript.Gestures.TransformGestures.Base
 {
     /// <summary>
     /// Abstract base class for Transform Gestures.

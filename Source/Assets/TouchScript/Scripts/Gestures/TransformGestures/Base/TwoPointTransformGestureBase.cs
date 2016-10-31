@@ -13,7 +13,7 @@ using System.Collections;
 using TouchScript.Utils.DebugUtils;
 #endif
 
-namespace TouchScript.Gestures.Base
+namespace TouchScript.Gestures.TransformGestures.Base
 {
     public abstract class TwoPointTransformGestureBase : TransformGestureBase
     {

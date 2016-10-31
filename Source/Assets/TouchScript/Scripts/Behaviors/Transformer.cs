@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Gestures;
+using TouchScript.Gestures.TransformGestures;
 using UnityEngine;
 
 namespace TouchScript.Behaviors

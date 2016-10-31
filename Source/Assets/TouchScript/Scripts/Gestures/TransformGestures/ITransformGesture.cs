@@ -5,7 +5,7 @@
 using System;
 using UnityEngine;
 
-namespace TouchScript.Gestures
+namespace TouchScript.Gestures.TransformGestures
 {
     /// <summary>
     /// Gesture which performs some kind of transformation in 3d space, i.e. translation, rotation, scaling or a combination of these.

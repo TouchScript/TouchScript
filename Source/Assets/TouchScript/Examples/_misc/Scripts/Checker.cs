@@ -4,8 +4,8 @@
 
 using System;
 using UnityEngine;
-using TouchScript.Gestures;
 using TouchScript.Behaviors;
+using TouchScript.Gestures.TransformGestures;
 
 namespace TouchScript.Examples
 {
