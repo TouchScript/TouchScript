@@ -217,6 +217,9 @@ namespace TouchScript.Gestures.Base
                         setState(GestureState.Ended);
                         break;
                 }
+            } else if (pointersNumState == PointersNumState.PassedMinThreshold)
+            {
+                setState(GestureState.Possible);
             }
         }
 
@@ -232,6 +235,9 @@ namespace TouchScript.Gestures.Base
                     case GestureState.Began:
                     case GestureState.Changed:
                         setState(GestureState.Ended);
+                        break;
+                    case GestureState.Possible:
+                        setState(GestureState.Failed);
                         break;
                 }
             }

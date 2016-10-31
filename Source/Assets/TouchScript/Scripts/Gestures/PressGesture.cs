@@ -97,7 +97,16 @@ namespace TouchScript.Gestures
         {
             base.pointersPressed(pointers);
 
-            if (pointersNumState == PointersNumState.PassedMinThreshold) setState(GestureState.Recognized);
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
+            {
+                setState(GestureState.Recognized);
+                return;
+            }
+            if (pointersNumState == PointersNumState.PassedMinMaxThreshold)
+            {
+                setState(GestureState.Failed);
+                return;
+            }
         }
 
         /// <inheritdoc />

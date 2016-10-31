@@ -36,7 +36,12 @@ namespace TouchScript.Gestures
         public enum GestureState
         {
             /// <summary>
-            /// Gesture is possible.
+            /// Gesture is idle.
+            /// </summary>
+            Idle,
+
+            /// <summary>
+            /// Gesture started looking for the patern.
             /// </summary>
             Possible,
 
@@ -255,6 +260,9 @@ namespace TouchScript.Gestures
 
                 switch (value)
                 {
+                    case GestureState.Idle:
+                        onIdle();
+                        break;
                     case GestureState.Possible:
                         onPossible();
                         break;
@@ -458,10 +466,10 @@ namespace TouchScript.Gestures
         private ReadOnlyCollection<Pointer> readonlyActivePointers;
         private TimedSequence<Pointer> pointerSequence = new TimedSequence<Pointer>();
         private GestureManagerInstance gestureManagerInstance;
-        private GestureState delayedStateChange = GestureState.Possible;
+        private GestureState delayedStateChange = GestureState.Idle;
         private bool requiredGestureFailed = false;
         private FakePointer fakePointer = new FakePointer();
-        private GestureState state = GestureState.Possible;
+        private GestureState state = GestureState.Idle;
 
         /// <summary>
         /// Cached screen position. 
@@ -668,7 +676,7 @@ namespace TouchScript.Gestures
         {
             activePointers.Clear();
             numPointers = 0;
-            delayedStateChange = GestureState.Possible;
+            delayedStateChange = GestureState.Idle;
             pointersNumState = PointersNumState.TooFew;
             requiredGestureFailed = false;
             reset();
@@ -889,10 +897,11 @@ namespace TouchScript.Gestures
                             return false;
                         }
                         break;
+                    case GestureState.Idle:
                     case GestureState.Possible:
                     case GestureState.Failed:
                     case GestureState.Cancelled:
-                        delayedStateChange = GestureState.Possible;
+                        delayedStateChange = GestureState.Idle;
                         break;
                 }
             }
@@ -953,6 +962,11 @@ namespace TouchScript.Gestures
             cachedScreenPosition = TouchManager.INVALID_POSITION;
             cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
         }
+
+        /// <summary>
+        /// Called when state is changed to Idle.
+        /// </summary>
+        protected virtual void onIdle() {}
 
         /// <summary>
         /// Called when state is changed to Possible.
@@ -1034,7 +1048,7 @@ namespace TouchScript.Gestures
             {
                 case GestureState.Failed:
                     requiredGestureFailed = true;
-                    if (delayedStateChange != GestureState.Possible)
+                    if (delayedStateChange != GestureState.Idle)
                     {
                         setState(delayedStateChange);
                     }

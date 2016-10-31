@@ -93,6 +93,23 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
+        protected override void pointersPressed(IList<Pointer> pointers)
+        {
+            base.pointersPressed(pointers);
+
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
+            {
+                if (State == GestureState.Idle) setState(GestureState.Possible);
+                return;
+            }
+            if (pointersNumState == PointersNumState.PassedMinMaxThreshold)
+            {
+                setState(GestureState.Failed);
+                return;
+            }
+        }
+
+        /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
             base.pointersReleased(pointers);

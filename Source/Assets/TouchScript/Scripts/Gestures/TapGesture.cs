@@ -103,6 +103,8 @@ namespace TouchScript.Gestures
 
         private float distanceLimitInPixelsSquared;
 
+        // isActive works in a tap cycle (i.e. when double/tripple tap is being recognized)
+        // State -> Possible happens when the first pointer is detected
         private bool isActive = false;
         private int tapsDone;
         private Vector2 startPosition;
@@ -146,7 +148,6 @@ namespace TouchScript.Gestures
                 }
                 else if (tapsDone >= numberOfTapsRequired) // Might be delayed and retapped while waiting
                 {
-                    setState(GestureState.Possible);
                     reset();
                     startPosition = pointers[0].Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
@@ -167,7 +168,11 @@ namespace TouchScript.Gestures
             {
                 // Starting the gesture when it is already active? => we released one finger and pressed again
                 if (isActive) setState(GestureState.Failed);
-                else isActive = true;
+                else
+                {
+                    if (State == GestureState.Idle) setState(GestureState.Possible);
+                    isActive = true;
+                }
             }
         }
 
@@ -249,7 +254,7 @@ namespace TouchScript.Gestures
             var targetTime = Time.unscaledTime + TimeLimit;
             while (targetTime > Time.unscaledTime) yield return null;
 
-            if (State == GestureState.Possible) setState(GestureState.Failed);
+            if (State == GestureState.Idle || State == GestureState.Possible) setState(GestureState.Failed);
         }
 
         #endregion

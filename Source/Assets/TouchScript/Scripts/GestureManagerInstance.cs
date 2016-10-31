@@ -149,15 +149,17 @@ namespace TouchScript
             bool recognized = false;
             switch (state)
             {
+                case Gesture.GestureState.Idle:
                 case Gesture.GestureState.Possible:
                     break;
                 case Gesture.GestureState.Began:
                     switch (gesture.State)
                     {
+                        case Gesture.GestureState.Idle:
                         case Gesture.GestureState.Possible:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
+                            print(string.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
                                 new object[] {gesture, state, gesture.State}));
                             break;
                     }
@@ -175,7 +177,7 @@ namespace TouchScript
                         case Gesture.GestureState.Changed:
                             break;
                         default:
-                            print(String.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
+                            print(string.Format("Gesture {0} erroneously tried to enter state {1} from state {2}",
                                 new object[] {gesture, state, gesture.State}));
                             break;
                     }
@@ -187,12 +189,10 @@ namespace TouchScript
                     if (!gesturesToReset.Contains(gesture)) gesturesToReset.Add(gesture);
                     switch (gesture.State)
                     {
+                        case Gesture.GestureState.Idle:
                         case Gesture.GestureState.Possible:
                             recognized = recognizeGestureIfNotPrevented(gesture);
-                            if (!recognized)
-                            {
-                                return Gesture.GestureState.Failed;
-                            }
+                            if (!recognized) return Gesture.GestureState.Failed;
                             break;
                         case Gesture.GestureState.Began:
                         case Gesture.GestureState.Changed:
@@ -408,7 +408,7 @@ namespace TouchScript
                 var gesture = gesturesToReset[i];
                 if (gesture == null) continue;
                 gesture.INTERNAL_Reset();
-                gesture.INTERNAL_SetState(Gesture.GestureState.Possible);
+                gesture.INTERNAL_SetState(Gesture.GestureState.Idle);
             }
             gesturesToReset.Clear();
         }

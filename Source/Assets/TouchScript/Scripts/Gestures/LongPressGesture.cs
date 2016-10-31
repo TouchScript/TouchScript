@@ -113,6 +113,7 @@ namespace TouchScript.Gestures
             }
             else if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
+                setState(GestureState.Possible);
                 StartCoroutine("wait");
             }
         }

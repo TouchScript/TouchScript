@@ -116,7 +116,7 @@ namespace TouchScript.Gestures
         {
             base.pointersPressed(pointers);
 
-            if (State != GestureState.Possible) return;
+            if (State != GestureState.Idle) return;
             if (NumPointers == pointers.Count)
             {
                 projectionLayer = activePointers[0].GetPressData().Layer;

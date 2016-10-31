@@ -94,7 +94,7 @@ namespace TouchScript.Gestures
         {
             base.pointersPressed(pointers);
 
-            if (State == GestureState.Possible) setState(GestureState.Began);
+            if (State == GestureState.Idle) setState(GestureState.Began);
 
             var length = pointers.Count;
             if (pointerPressedInvoker != null)
