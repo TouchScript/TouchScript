@@ -72,6 +72,11 @@ namespace TouchScript.Examples
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
+        }
+
         private void OnLevelWasLoaded(int num)
         {
 			StartCoroutine(resetUILayer());
