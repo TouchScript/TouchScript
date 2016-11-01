@@ -9,7 +9,6 @@ using TouchScript.Pointers;
 using UnityEngine;
 
 #if TOUCHSCRIPT_DEBUG
-using System.Collections;
 using TouchScript.Utils.DebugUtils;
 #endif
 
@@ -18,6 +17,9 @@ namespace TouchScript.Gestures.TransformGestures.Base
     /// <summary>
     /// Abstract base class for Transform Gestures.
     /// </summary>
+    /// <remarks>
+    /// <para>Relationship with <see cref="Behaviors.Transformer"/> component requires that if current object position is not exactly the one acquired by transformation events from this gesture (i.e. when smoothing is applied current transform is lagging a bit behind target transform), the gesture has to know about this to calculate translation properly. This is where <see cref="OverrideTargetPosition"/> method comes into play. <see cref="Behaviors.Transformer"/> has to call it after every transform event.</para>
+    /// </remarks>
     public abstract class TransformGestureBase : Gesture, ITransformGesture
     {
         #region Constants
@@ -168,7 +170,15 @@ namespace TouchScript.Gestures.TransformGestures.Base
         /// </summary>
         protected bool isTransforming = false;
 
+        /// <summary>
+        /// Indicates if current position is being overridden for the next frame. <see cref="OverrideTargetPosition"/>.
+        /// </summary>
         protected bool targetPositionOverridden = false;
+
+
+        /// <summary>
+        /// Target overridden position. <see cref="OverrideTargetPosition"/>.
+        /// </summary>
         protected Vector3 targetPosition;
 
         [SerializeField]
@@ -182,6 +192,10 @@ namespace TouchScript.Gestures.TransformGestures.Base
 
         #region Public methods
 
+        /// <summary>
+        /// Overrides the target position used in calculations this frame. If used, has to be set after every transform event. <see cref="TransformGestureBase"/>.
+        /// </summary>
+        /// <param name="position">Target position.</param>
         public void OverrideTargetPosition(Vector3 position)
         {
             targetPositionOverridden = true;

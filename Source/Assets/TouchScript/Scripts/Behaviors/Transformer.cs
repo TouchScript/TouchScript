@@ -32,12 +32,24 @@ namespace TouchScript.Behaviors
 
         #region Public properties
 
+        /// <summary>
+        /// Gets or sets a value indicating whether Smoothing is enabled. Smoothing allows to reduce jagged movements but adds some visual lag.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if Smoothing is enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool EnableSmoothing
         {
             get { return enableSmoothing; }
             set { enableSmoothing = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the smoothing factor.
+        /// </summary>
+        /// <value>
+        /// The smoothing factor. Indicates how much smoothing to apply. 0 - no smoothing, 10000 - maximum.
+        /// </value>
         public float SmoothingFactor
         {
             get { return smoothingFactor * 10000f; }
@@ -47,24 +59,48 @@ namespace TouchScript.Behaviors
             }
         }
 
+        /// <summary>
+        /// Gets or sets the position threshold.
+        /// </summary>
+        /// <value>
+        /// Minimum distance between target position and smoothed position when to stop automatic movement.
+        /// </value>
         public float PositionThreshold
         {
             get { return Mathf.Sqrt(positionThreshold); }
             set { positionThreshold = value * value; }
         }
 
+        /// <summary>
+        /// Gets or sets the rotation threshold.
+        /// </summary>
+        /// <value>
+        /// Minimum angle between target rotation and smoothed rotation when to stop automatic movement.
+        /// </value>
         public float RotationThreshold
         {
             get { return rotationThreshold; }
             set { rotationThreshold = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the scale threshold.
+        /// </summary>
+        /// <value>
+        /// Minimum difference between target scale and smoothed scale when to stop automatic movement.
+        /// </value>
         public float ScaleThreshold
         {
             get { return Mathf.Sqrt(scaleThreshold); }
             set { scaleThreshold = value * value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this transform can be changed from another script.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this transform can be changed from another script; otherwise, <c>false</c>.
+        /// </value>
         public bool AllowChangingFromOutside
         {
             get { return allowChangingFromOutside; }
