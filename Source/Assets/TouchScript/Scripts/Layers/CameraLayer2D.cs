@@ -119,8 +119,8 @@ namespace TouchScript.Layers
             {
                 if (a.collider.transform == b.collider.transform) return 0;
 
-                var sprite1 = a.transform.GetComponent<SpriteRenderer>();
-                var sprite2 = b.transform.GetComponent<SpriteRenderer>();
+                var sprite1 = a.transform.GetComponent<Renderer>();
+                var sprite2 = b.transform.GetComponent<Renderer>();
                 if (sprite1 != null && sprite2 != null)
                 {
                     int s1Id, s2Id;
