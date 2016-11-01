@@ -900,7 +900,7 @@ RectTransform:
   m_LocalRotation: {x: 0.000000041385746, y: 0.000000010372778, z: 0.17927851, w: 0.9837984}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 20.6555}
   m_Children:
   - {fileID: 1593048785}
   - {fileID: 994844643}
@@ -922,6 +922,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &238072901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1549,6 +1555,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &449324831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1706,7 +1718,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0.24805124, w: 0.96874696}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 28.7244}
   m_Children:
   - {fileID: 1065855870}
   - {fileID: 1772489001}
@@ -1763,6 +1775,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &536919392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2712,6 +2730,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &886654115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4531,6 +4555,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &1485721906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5292,6 +5322,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 1
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &1979821164
 MonoBehaviour:
   m_ObjectHideFlags: 0

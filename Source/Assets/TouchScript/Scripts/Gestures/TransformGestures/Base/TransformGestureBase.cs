@@ -168,12 +168,25 @@ namespace TouchScript.Gestures.TransformGestures.Base
         /// </summary>
         protected bool isTransforming = false;
 
+        protected bool targetPositionOverridden = false;
+        protected Vector3 targetPosition;
+
         [SerializeField]
         protected TransformGesture.TransformType type = TransformGesture.TransformType.Translation | TransformGesture.TransformType.Scaling |
                                                         TransformGesture.TransformType.Rotation;
 
         [SerializeField]
         private float screenTransformThreshold = 0.1f;
+
+        #endregion
+
+        #region Public methods
+
+        public void OverrideTargetPosition(Vector3 position)
+        {
+            targetPositionOverridden = true;
+            targetPosition = position;
+        }
 
         #endregion
 
@@ -258,6 +271,9 @@ namespace TouchScript.Gestures.TransformGestures.Base
         protected override void onChanged()
         {
             base.onChanged();
+
+            targetPositionOverridden = false;
+
             if (transformedInvoker != null) transformedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_MESSAGE, this, SendMessageOptions.DontRequireReceiver);

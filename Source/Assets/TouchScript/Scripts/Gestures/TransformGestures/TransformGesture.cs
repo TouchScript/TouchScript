@@ -194,10 +194,11 @@ namespace TouchScript.Gestures.TransformGestures
 
         protected Vector3 projectScaledRotated(Vector2 point, float dR, float dS, ProjectionParams projectionParams)
         {
-            var delta = projectionParams.ProjectTo(point, transformPlane) - cachedTransform.position;
+            var center = targetPositionOverridden ? targetPosition : cachedTransform.position;
+            var delta = projectionParams.ProjectTo(point, transformPlane) - center;
             if (dR != 0) delta = Quaternion.AngleAxis(dR, RotationAxis) * delta;
             if (dS != 0) delta = delta * dS;
-            return cachedTransform.position + delta;
+            return center + delta;
         }
 
         /// <inheritdoc />
