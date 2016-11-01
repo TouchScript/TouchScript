@@ -150,26 +150,24 @@ namespace TouchScript.Behaviors
         private void Awake()
         {
             cachedTransform = transform;
-            stateIdle();
         }
 
         private void OnEnable()
         {
             gesture = GetComponent<TransformGestureBase>();
             gesture.StateChanged += stateChangedHandler;
-
             TouchManager.Instance.FrameFinished += frameFinishedHandler;
+
+            stateIdle();
         }
 
         private void OnDisable()
         {
-            if (gesture != null)
-            {
-                gesture.StateChanged -= stateChangedHandler;
-            }
-
+            if (gesture != null) gesture.StateChanged -= stateChangedHandler;
             if (TouchManager.Instance != null)
                 TouchManager.Instance.FrameFinished -= frameFinishedHandler;
+
+            stateIdle();
         }
 
         #endregion
