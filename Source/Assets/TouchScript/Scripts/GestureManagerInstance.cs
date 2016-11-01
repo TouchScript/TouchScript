@@ -52,8 +52,11 @@ namespace TouchScript
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
 
+        // Exclusive locks
+        private Dictionary<Gesture, List<TouchPoint>> _exclusiveLocks;
+
         private Action<Gesture, IList<TouchPoint>> _updateBegan, _updateMoved, _updateEnded, _updateCancelled;
-        private Action<Transform> _processTarget, _processTargetBegan;
+        private Action<Transform> _processTarget, _processTargetBegan, _processTargetEnded;
 
         #endregion
 
@@ -96,6 +99,7 @@ namespace TouchScript
 
             _processTarget = processTarget;
             _processTargetBegan = processTargetBegan;
+            _processTargetEnded = processTargetEnded;
             _updateBegan = doUpdateBegan;
             _updateMoved = doUpdateMoved;
             _updateEnded = doUpdateEnded;
@@ -365,14 +369,105 @@ namespace TouchScript
                 }
 
                 // check gesture's ShouldReceiveTouch callback
-                if (!canReceiveTouches) continue;
+                if (canReceiveTouches)
+                {
+                    List<TouchPoint> locks = null;
+                    if (TouchManager.Instance.ExclusiveObjectLocks)
+                    {
+                        checkForUnlock();
+
+                        // prepare exclusive locks
+                        if (_exclusiveLocks == null)
+                        {
+                            _exclusiveLocks = new Dictionary<Gesture, List<TouchPoint>>();
+                            for (int j = 0; j < endingList.Count; j++)
+                                _exclusiveLocks.Add(endingList[j], new List<TouchPoint>());
+                        }
+
+                        // check locks
+                        if (_exclusiveLocks.TryGetValue(gesture, out locks))
+                            canReceiveTouches = gesture.MaxTouches > 1 || locks.Count == 0;
+                        else
+                            canReceiveTouches = false;
+
+                        if (!canReceiveTouches)
+                            continue;
+                    }
+
+                    var touchList = touchListPool.Get();
+                    for (var j = 0; j < touchCount; j++)
+                    {
+                        var touch = targetList[j];
+                        if (shouldReceiveTouch(gesture, touch)) touchList.Add(touch);
+                    }
+                    if (touchList.Count > 0)
+                    {
+                        if (gesture.MaxTouches <= 1 && touchList.Count > 1)
+                            touchList.RemoveRange(1, touchList.Count - 1);
+
+                        if (gestureTouches.ContainsKey(gesture))
+                        {
+                            gestureTouches[gesture].AddRange(touchList);
+                            touchListPool.Release(touchList);
+                        }
+                        else
+                        {
+                            activeGestures.Add(gesture);
+                            gestureTouches.Add(gesture, touchList);
+                        }
+                    }
+                    else
+                    {
+                        touchListPool.Release(touchList);
+                    }
+
+                    if (TouchManager.Instance.ExclusiveObjectLocks)
+                    {
+                        // update locks
+                        List<TouchPoint> touches = null;
+                        if (gestureTouches.TryGetValue(gesture, out touches))
+                            for (int j = 0; j < touches.Count; j++)
+                                if (!locks.Contains(touches[j]))
+                                    locks.Add(touches[j]);
+                    }
+                }
+            }
+
+            gestureListPool.Release(containingList);
+            gestureListPool.Release(endingList);
+        }
+
+        private void processTargetEnded(Transform target)
+        {
+            var targetList = targetTouches[target];
+            var touchCount = targetList.Count;
+
+            // gestures on objects in the hierarchy from "root" to target
+            var list = gestureListPool.Get();
+            getHierarchyEndingWith(target, list);
+
+            if (_exclusiveLocks != null)
+            {
+                // Remove touches from exclusive locks
+                List<TouchPoint> touches = targetTouches[target];
+                foreach (KeyValuePair<Gesture, List<TouchPoint>> pair in _exclusiveLocks)
+                    for (int i = 0; i < touches.Count; i++)
+                        pair.Value.Remove(touches[i]);
+            }
+
+            var count = list.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var gesture = list[i];
+                if (!gestureIsActive(gesture)) continue;
 
                 var touchList = touchListPool.Get();
                 for (var j = 0; j < touchCount; j++)
                 {
                     var touch = targetList[j];
-                    if (shouldReceiveTouch(gesture, touch)) touchList.Add(touch);
+                    if (gesture.HasTouch(touch)) touchList.Add(touch);
                 }
+
                 if (touchList.Count > 0)
                 {
                     if (gestureTouches.ContainsKey(gesture))
@@ -391,9 +486,28 @@ namespace TouchScript
                     touchListPool.Release(touchList);
                 }
             }
+            gestureListPool.Release(list);
 
-            gestureListPool.Release(containingList);
-            gestureListPool.Release(endingList);
+            // checking for unlock
+            checkForUnlock();
+        }
+
+        private void checkForUnlock()
+        {
+            if (_exclusiveLocks == null)
+                return;
+
+            bool unlock = true;
+
+            foreach (var exclusiveLock in _exclusiveLocks)
+                if (exclusiveLock.Key.gameObject.activeInHierarchy && exclusiveLock.Value.Count > 0)
+                {
+                    unlock = false;
+                    break;
+                }
+
+            if (unlock)
+                _exclusiveLocks = null;
         }
 
         private void resetGestures()
@@ -550,6 +664,22 @@ namespace TouchScript
 
         #endregion
 
+        #region Public Functions
+        
+        /// <summary>
+        /// Free exclusive lock from gesture
+        /// </summary>
+        public void RemoveExclusiveLock(Gesture gesture)
+        {
+            if (_exclusiveLocks == null)
+                return;
+
+            if (_exclusiveLocks.Remove(gesture))
+                checkForUnlock();
+        }
+
+        #endregion
+
         #region Touch events handlers
 
         private void frameFinishedHandler(object sender, EventArgs eventArgs)
@@ -574,12 +704,12 @@ namespace TouchScript
 
         private void touchesEndedHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            update(touchEventArgs.Touches, _processTarget, _updateEnded);
+            update(touchEventArgs.Touches, TouchManager.Instance.ExclusiveObjectLocks ? _processTargetEnded : _processTarget, _updateEnded);
         }
 
         private void touchesCancelledHandler(object sender, TouchEventArgs touchEventArgs)
         {
-            update(touchEventArgs.Touches, _processTarget, _updateCancelled);
+            update(touchEventArgs.Touches, TouchManager.Instance.ExclusiveObjectLocks ? _processTargetEnded : _processTarget, _updateCancelled);
         }
 
         #endregion

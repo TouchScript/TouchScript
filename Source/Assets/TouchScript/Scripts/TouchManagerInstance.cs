@@ -152,6 +152,13 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
+        public bool ExclusiveObjectLocks
+        {
+            get { return exclusiveObjectLocks; }
+            set { exclusiveObjectLocks = value; }
+        }
+
+        /// <inheritdoc />
         public IList<TouchLayer> Layers
         {
             get { return new List<TouchLayer>(layers); }
@@ -189,6 +196,7 @@ namespace TouchScript
         private static TouchManagerInstance instance;
         private bool shouldCreateCameraLayer = true;
         private bool shouldCreateStandardInput = true;
+        private bool exclusiveObjectLocks = false;
 
         private IDisplayDevice displayDevice;
         private float dpi = 96;
