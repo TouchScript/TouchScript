@@ -281,6 +281,8 @@ namespace TouchScript.Behaviors
 
         private void manualUpdate()
         {
+			if (state != TransformerState.Manual) stateManual();
+
             var mask = gesture.TransformMask;
             if ((mask & TransformGesture.TransformType.Scaling) != 0) targetScale *= gesture.DeltaScale;
             if ((mask & TransformGesture.TransformType.Rotation) != 0)
