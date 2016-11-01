@@ -129,7 +129,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
             if (!(pointersNumState == PointersNumState.PassedMaxThreshold ||
                 pointersNumState == PointersNumState.PassedMinMaxThreshold))
                 drawDebugDelayed(getNumPoints());
-    }
+        }
 #endif
 
         /// <inheritdoc />
