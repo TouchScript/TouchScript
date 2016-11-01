@@ -370,7 +370,6 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected void init(TOUCH_API api)
         {
-            Debug.Log("Init! " + api);
             Init(api, nativePointerDownDelegate, nativePointerUpdateDelegate, nativePointerUpDelegate, nativePointerCancelDelegate);
         }
 

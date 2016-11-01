@@ -151,6 +151,8 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
+        private static StandardInput instance;
+
         [SerializeField]
         private Windows8APIType windows8API = Windows8APIType.Windows8;
 
@@ -224,6 +226,9 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnEnable()
         {
+            if (instance != null) Destroy(instance);
+            instance = this;
+
             base.OnEnable();
 
             Input.simulateMouseWithTouches = false;
