@@ -1377,6 +1377,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &723351976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3620,6 +3626,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &2041906759
 MonoBehaviour:
   m_ObjectHideFlags: 0
