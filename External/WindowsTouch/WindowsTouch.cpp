@@ -16,7 +16,7 @@ extern "C"
 		_pointerCancelledFunc = cancelled;
 		_api = api;
 
-		_currentWindow = GetActiveWindow();
+		_currentWindow = FindWindowA("UnityWndClass", NULL);
 		if (api == WIN8)
 		{
 			_oldWindowProc = SetWindowLongPtr(_currentWindow, GWLP_WNDPROC, (LONG_PTR)wndProc8);
