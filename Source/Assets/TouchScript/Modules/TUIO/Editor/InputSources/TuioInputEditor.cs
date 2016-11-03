@@ -1,6 +1,10 @@
+/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+#if TOUCHSCRIPT_TUIO
 using TouchScript.InputSources;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace TouchScript.Editor.InputSources
@@ -46,3 +50,4 @@ namespace TouchScript.Editor.InputSources
         }
     }
 }
+#endif
