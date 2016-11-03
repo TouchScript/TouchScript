@@ -11,10 +11,15 @@ using TouchScript.InputSources;
 using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Pointers;
+using UnityEngine;
+
 #if TOUCHSCRIPT_DEBUG
 using TouchScript.Utils.DebugUtils;
 #endif
-using UnityEngine;
+
+#if UNITY_5_4_OR_NEWER
+using UnityEngine.SceneManagement;
+#endif
 
 namespace TouchScript
 {
@@ -551,6 +556,10 @@ namespace TouchScript
                 return;
             }
 
+#if UNITY_5_4_OR_NEWER
+            SceneManager.sceneLoaded += sceneLoadedHandler;
+#endif
+
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
 
@@ -563,11 +572,19 @@ namespace TouchScript
             intListPool.WarmUp(3);
         }
 
+#if UNITY_5_4_OR_NEWER
+        private void sceneLoadedHandler(Scene scene, LoadSceneMode mode)
+        {
+            StopAllCoroutines();
+            StartCoroutine(lateAwake());
+        }
+#else
         private void OnLevelWasLoaded(int value)
         {
             StopAllCoroutines();
             StartCoroutine(lateAwake());
         }
+#endif
 
         private IEnumerator lateAwake()
         {

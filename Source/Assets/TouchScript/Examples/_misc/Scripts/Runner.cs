@@ -86,6 +86,10 @@ namespace TouchScript.Examples
 			}
 #endif
 
+#if UNITY_5_4_OR_NEWER
+            SceneManager.sceneLoaded += sceneLoadedHandler;
+#endif
+
 #if UNITY_5_3_OR_NEWER
             if (SceneManager.GetActiveScene().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)
 #else
@@ -100,13 +104,19 @@ namespace TouchScript.Examples
         {
             if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
         }
-
+#if UNITY_5_4_OR_NEWER
+        private void sceneLoadedHandler(Scene scene, LoadSceneMode mode)
+        {
+            StartCoroutine(resetUILayer());
+        }
+#else
         private void OnLevelWasLoaded(int num)
         {
 			StartCoroutine(resetUILayer());
         }
+#endif
 
-		private IEnumerator resetUILayer()
+        private IEnumerator resetUILayer()
 		{
 			yield return new WaitForEndOfFrame();
 			TouchManager.Instance.AddLayer(layer, 0);
