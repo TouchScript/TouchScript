@@ -264,7 +264,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
                         setState(GestureState.Ended);
                         break;
                     case GestureState.Possible:
-                        setState(GestureState.Failed);
+                        setState(GestureState.Idle);
                         break;
                 }
             }
