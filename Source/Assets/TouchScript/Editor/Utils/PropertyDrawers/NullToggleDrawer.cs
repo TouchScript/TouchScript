@@ -1,3 +1,7 @@
+/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
 using TouchScript.Utils.Attributes;
 using UnityEditor;
 using UnityEngine;
@@ -133,6 +137,7 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
         private void Begin(Rect position, SerializedProperty property, GUIContent label)
         {
             label = EditorGUI.BeginProperty(position, label, property);
+            label.text = " " + label.text;
             position.height = 16;
             expanded = EditorGUI.ToggleLeft(position, label, expanded == true);
         }

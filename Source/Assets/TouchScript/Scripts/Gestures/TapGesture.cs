@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Gestures
@@ -70,9 +71,9 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets or sets maximum distance for touch cluster must move for the gesture to fail.
+        /// Gets or sets maximum distance for point cluster must move for the gesture to fail.
         /// </summary>
-        /// <value> Distance in cm touches must move before gesture fails. </value>
+        /// <value> Distance in cm pointers must move before gesture fails. </value>
         public float DistanceLimit
         {
             get { return distanceLimit; }
@@ -102,6 +103,8 @@ namespace TouchScript.Gestures
 
         private float distanceLimitInPixelsSquared;
 
+        // isActive works in a tap cycle (i.e. when double/tripple tap is being recognized)
+        // State -> Possible happens when the first pointer is detected
         private bool isActive = false;
         private int tapsDone;
         private Vector2 startPosition;
@@ -124,37 +127,36 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersPressed(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
-                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            if (pointersNumState == PointersNumState.PassedMaxThreshold ||
+                pointersNumState == PointersNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
                 return;
             }
 
-            if (NumTouches == touches.Count)
+            if (NumPointers == pointers.Count)
             {
-                // the first ever touch
+                // the first ever pointer
                 if (tapsDone == 0)
                 {
-                    startPosition = touches[0].Position;
+                    startPosition = pointers[0].Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
                 }
                 else if (tapsDone >= numberOfTapsRequired) // Might be delayed and retapped while waiting
                 {
-                    setState(GestureState.Possible);
                     reset();
-                    startPosition = touches[0].Position;
+                    startPosition = pointers[0].Position;
                     if (timeLimit < float.PositiveInfinity) StartCoroutine("wait");
                 }
                 else
                 {
                     if (distanceLimit < float.PositiveInfinity)
                     {
-                        if ((touches[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared)
+                        if ((pointers[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared)
                         {
                             setState(GestureState.Failed);
                             return;
@@ -162,32 +164,36 @@ namespace TouchScript.Gestures
                     }
                 }
             }
-            if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 // Starting the gesture when it is already active? => we released one finger and pressed again
                 if (isActive) setState(GestureState.Failed);
-                else isActive = true;
+                else
+                {
+                    if (State == GestureState.Idle) setState(GestureState.Possible);
+                    isActive = true;
+                }
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersUpdated(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+            base.pointersUpdated(pointers);
 
             if (distanceLimit < float.PositiveInfinity)
             {
-                totalMovement += touches[0].Position - touches[0].PreviousPosition;
+                totalMovement += pointers[0].Position - pointers[0].PreviousPosition;
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersReleased(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersReleased(pointers);
 
-            if (NumTouches == 0)
+            if (NumPointers == 0)
             {
                 if (!isActive)
                 {
@@ -195,8 +201,8 @@ namespace TouchScript.Gestures
                     return;
                 }
 
-                // touches outside of gesture target are ignored in shouldCacheTouchPosition()
-                // if all touches are outside ScreenPosition will be invalid
+                // pointers outside of gesture target are ignored in shouldCachePointerPosition()
+                // if all pointers are outside ScreenPosition will be invalid
                 if (TouchManager.IsInvalidPosition(ScreenPosition))
                 {
                     setState(GestureState.Failed);
@@ -232,10 +238,10 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override bool shouldCacheTouchPosition(TouchPoint value)
+        protected override bool shouldCachePointerPosition(Pointer value)
         {
             // Points must be over target when released
-            return GetTargetHitResult(value.Position);
+            return PointerUtils.IsPointerOnTarget(value, cachedTransform);
         }
 
         #endregion
@@ -248,7 +254,7 @@ namespace TouchScript.Gestures
             var targetTime = Time.unscaledTime + TimeLimit;
             while (targetTime > Time.unscaledTime) yield return null;
 
-            if (State == GestureState.Possible) setState(GestureState.Failed);
+            if (State == GestureState.Idle || State == GestureState.Possible) setState(GestureState.Failed);
         }
 
         #endregion

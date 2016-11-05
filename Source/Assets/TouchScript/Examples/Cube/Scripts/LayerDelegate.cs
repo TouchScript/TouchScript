@@ -1,5 +1,10 @@
-﻿using UnityEngine;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using UnityEngine;
 using TouchScript.Layers;
+using TouchScript.Pointers;
 
 namespace TouchScript.Examples.Cube
 {
@@ -9,11 +14,11 @@ namespace TouchScript.Examples.Cube
         public RedirectInput Source;
         public TouchLayer RenderTextureLayer;
 
-        public bool ShouldReceiveTouch(TouchLayer layer, TouchPoint touch)
+        public bool ShouldReceivePointer(TouchLayer layer, IPointer pointer)
         {
             if (layer == RenderTextureLayer)
-                return touch.InputSource == Source;
-            return touch.InputSource != Source;
+                return pointer.InputSource == Source;
+            return pointer.InputSource != Source;
         }
     }
 }

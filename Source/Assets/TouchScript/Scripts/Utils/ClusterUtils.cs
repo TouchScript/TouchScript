@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Text;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Utils
@@ -16,49 +17,49 @@ namespace TouchScript.Utils
         private static StringBuilder hashString = new StringBuilder();
 
         /// <summary>
-        /// Calculates the centroid of touch positions.
+        /// Calculates the centroid of pointers' positions.
         /// </summary>
-        /// <param name="touches">List of touch points.</param>
-        /// <returns>Centroid of touch points' positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
-        public static Vector2 Get2DCenterPosition(IList<TouchPoint> touches)
+        /// <param name="pointers">List of pointers.</param>
+        /// <returns>Centroid of pointers' positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
+        public static Vector2 Get2DCenterPosition(IList<Pointer> pointers)
         {
-            var count = touches.Count;
+            var count = pointers.Count;
             if (count == 0) return TouchManager.INVALID_POSITION;
-            if (count == 1) return touches[0].Position;
+            if (count == 1) return pointers[0].Position;
 
             var position = new Vector2();
-            for (var i = 0; i < count; i++) position += touches[i].Position;
+            for (var i = 0; i < count; i++) position += pointers[i].Position;
             return position / count;
         }
 
         /// <summary>
-        /// Calculates the centroid of previous touch positions.
+        /// Calculates the centroid of pointers' previous positions.
         /// </summary>
-        /// <param name="touches">List of touch points.</param>
-        /// <returns>Centroid of previous touch point's positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
-        public static Vector2 GetPrevious2DCenterPosition(IList<TouchPoint> touches)
+        /// <param name="pointers">List of pointers.</param>
+        /// <returns>Centroid of pointers' previous positions or <see cref="TouchManager.INVALID_POSITION"/> if cluster contains no points.</returns>
+        public static Vector2 GetPrevious2DCenterPosition(IList<Pointer> pointers)
         {
-            var count = touches.Count;
+            var count = pointers.Count;
             if (count == 0) return TouchManager.INVALID_POSITION;
-            if (count == 1) return touches[0].PreviousPosition;
+            if (count == 1) return pointers[0].PreviousPosition;
 
             var position = new Vector2();
-            for (var i = 0; i < count; i++) position += touches[i].PreviousPosition;
+            for (var i = 0; i < count; i++) position += pointers[i].PreviousPosition;
             return position / count;
         }
 
         /// <summary>
-        /// Computes a unique hash for a list of touches.
+        /// Computes a unique hash for a list of pointers.
         /// </summary>
-        /// <param name="touches">List of touch points.</param>
-        /// <returns>A unique string for a list of touches.</returns>
-        public static string GetPointsHash(IList<TouchPoint> touches)
+        /// <param name="pointers">List of pointers.</param>
+        /// <returns>A unique string for a list of pointers.</returns>
+        public static string GetPointsHash(IList<Pointer> pointers)
         {
             hashString.Remove(0, hashString.Length);
-            for (var i = 0; i < touches.Count; i++)
+            for (var i = 0; i < pointers.Count; i++)
             {
                 hashString.Append("#");
-                hashString.Append(touches[i].Id);
+                hashString.Append(pointers[i].Id);
             }
             return hashString.ToString();
         }

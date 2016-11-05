@@ -3,6 +3,8 @@
  */
 
 using TouchScript.Gestures;
+using TouchScript.Gestures.TransformGestures;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Examples.Checkers
@@ -45,7 +47,7 @@ namespace TouchScript.Examples.Checkers
             return true;
         }
 
-        public bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch)
+        public bool ShouldReceivePointer(Gesture gesture, Pointer pointer)
         {
             if (exclusive) return gesture == Target;
             return true;

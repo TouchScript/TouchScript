@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -20,18 +20,9 @@ namespace TouchScript
     /// <para>An instance of <see cref="TouchManager"/> may be added to a Unity scene to hold (i.e. serialize them to the scene) parameters needed to configure an instance of <see cref="ITouchManager"/> used in application. Which can be accessed via <see cref="TouchManager.Instance"/> static property.</para>
     /// <para>Though it's not required it is a convenient way to configure <b>TouchScript</b> for your scene. You can use different configuration options for different scenes.</para>
     /// </remarks>
-    /// <example>
-    /// This sample shows how to get Touch Manager instance and subscribe to events.
-    /// <code>
-    /// TouchManager.Instance.TouchesBegan += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Began: " + touch.Id); }; 
-    /// TouchManager.Instance.TouchesEnded += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Ended: " + touch.Id); }; 
-    /// </code>
-    /// </example>
-    [AddComponentMenu("TouchScript/Touch Manager")]
+    [AddComponentMenu("TouchScript/Pointer Manager")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_TouchManager.htm")]
-    public sealed class TouchManager : MonoBehaviour
+    public sealed class TouchManager : DebuggableMonoBehaviour
     {
         #region Constants
 
@@ -47,34 +38,44 @@ namespace TouchScript
         public enum MessageType
         {
             /// <summary>
-            /// Touch frame started.
+            /// Pointer frame started.
             /// </summary>
             FrameStarted = 1 << 0,
 
             /// <summary>
-            /// Touch frame finished.
+            /// Pointer frame finished.
             /// </summary>
             FrameFinished = 1 << 1,
 
             /// <summary>
-            /// Some touches have begun during the frame.
+            /// Some pointers were added during the frame.
             /// </summary>
-            TouchesBegan = 1 << 2,
+            PointersAdded = 1 << 2,
 
             /// <summary>
-            /// Some touches have moved during the frame.
+            /// Some pointers were updated during the frame.
             /// </summary>
-            TouchesMoved = 1 << 3,
+            PointersUpdated = 1 << 3,
 
             /// <summary>
-            /// Some touches have ended during the frame.
+            /// Some pointers have touched the surface during the frame.
             /// </summary>
-            TouchesEnded = 1 << 4,
+            PointersPressed = 1 << 4,
 
             /// <summary>
-            /// Some touches were cancelled during the frame.
+            /// Some pointers were released during the frame.
             /// </summary>
-            TouchesCancelled = 1 << 5
+            PointersReleased = 1 << 5,
+
+            /// <summary>
+            /// Some pointers were removed during the frame.
+            /// </summary>
+            PointersRemoved = 1 << 6,
+
+            /// <summary>
+            /// Some pointers were cancelled during the frame.
+            /// </summary>
+            PointersCancelled = 1 << 7
         }
 
         /// <summary>
@@ -83,34 +84,44 @@ namespace TouchScript
         public enum MessageName
         {
             /// <summary>
-            /// Touch frame started.
+            /// Pointer frame started.
             /// </summary>
-            OnTouchFrameStarted = MessageType.FrameStarted,
+            OnPointerFrameStarted = MessageType.FrameStarted,
 
             /// <summary>
-            /// Touch frame finished.
+            /// Pointer frame finished.
             /// </summary>
-            OnTouchFrameFinished = MessageType.FrameFinished,
+            OnPointerFrameFinished = MessageType.FrameFinished,
 
             /// <summary>
-            /// Some touches have begun during the frame.
+            /// Some pointers were added during the frame.
             /// </summary>
-            OnTouchesBegan = MessageType.TouchesBegan,
+            OnPointersAdded = MessageType.PointersAdded,
 
             /// <summary>
-            /// Some touches have moved during the frame.
+            /// Some pointers have updated during the frame.
             /// </summary>
-            OnTouchesMoved = MessageType.TouchesMoved,
+            OnPointersUpdated = MessageType.PointersUpdated,
 
             /// <summary>
-            /// Some touches have ended during the frame.
+            /// Some pointers have touched the surface during the frame.
             /// </summary>
-            OnTouchesEnded = MessageType.TouchesEnded,
+            OnPointersPressed = MessageType.PointersPressed,
 
             /// <summary>
-            /// Some touches were cancelled during the frame.
+            /// Some pointers were released during the frame.
             /// </summary>
-            OnTouchesCancelled = MessageType.TouchesCancelled
+            OnPointersReleased = MessageType.PointersReleased,
+
+            /// <summary>
+            /// Some pointers were removed during the frame.
+            /// </summary>
+            OnPointersRemoved = MessageType.PointersRemoved,
+
+            /// <summary>
+            /// Some pointers were cancelled during the frame.
+            /// </summary>
+            OnPointersCancelled = MessageType.PointersCancelled
         }
 
         /// <summary>
@@ -131,7 +142,7 @@ namespace TouchScript
         /// <summary>
         /// TouchScript version.
         /// </summary>
-        public static readonly Version VERSION = new Version(8, 2);
+        public static readonly Version VERSION = new Version(9, 0);
 
         #endregion
 
@@ -140,7 +151,7 @@ namespace TouchScript
         /// <summary>
         /// Gets the instance of <see cref="ITouchManager"/> implementation used in the application.
         /// </summary>
-        /// <value>An instance of <see cref="ITouchManager"/> which is in charge of global touch input control in the application.</value>
+        /// <value>An instance of <see cref="ITouchManager"/> which is in charge of global pointer input control in the application.</value>
         public static ITouchManager Instance
         {
             get { return TouchManagerInstance.Instance; }
@@ -173,7 +184,7 @@ namespace TouchScript
         /// Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene.
         /// </summary>
         /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
-        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.</remarks>
+        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get pointer input from some device.</remarks>
         public bool ShouldCreateCameraLayer
         {
             get { return shouldCreateCameraLayer; }
@@ -236,7 +247,21 @@ namespace TouchScript
             }
         }
 
-        #endregion
+#if TOUCHSCRIPT_DEBUG
+
+        public override bool DebugMode
+        {
+            get { return base.DebugMode; }
+            set
+            {
+                base.DebugMode = value;
+                if (Application.isPlaying) (Instance as TouchManagerInstance).DebugMode = value;
+            }
+        }
+
+#endif
+
+#endregion
 
         #region Public methods
 
@@ -255,6 +280,9 @@ namespace TouchScript
         #region Private variables
 
         [SerializeField]
+        private bool advancedProps; // is used to save if advanced properties are opened or closed
+
+        [SerializeField]
         private Object displayDevice;
 
         [SerializeField]
@@ -270,8 +298,8 @@ namespace TouchScript
         private bool useSendMessage = false;
 
         [SerializeField]
-        private MessageType sendMessageEvents = MessageType.TouchesBegan | MessageType.TouchesCancelled |
-                                                MessageType.TouchesEnded | MessageType.TouchesMoved;
+        private MessageType sendMessageEvents = MessageType.PointersPressed | MessageType.PointersCancelled |
+                                                MessageType.PointersReleased | MessageType.PointersUpdated;
 
         [SerializeField]
         private GameObject sendMessageTarget;
@@ -286,6 +314,10 @@ namespace TouchScript
         private void Awake()
         {
             if (Instance == null) return;
+
+#if TOUCHSCRIPT_DEBUG
+            if (DebugMode) (Instance as TouchManagerInstance).DebugMode = true;
+#endif
 
             Instance.DisplayDevice = displayDevice as IDisplayDevice;
             Instance.ShouldCreateCameraLayer = ShouldCreateCameraLayer;
@@ -323,10 +355,12 @@ namespace TouchScript
 
             if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedHandler;
             if ((SendMessageEvents & MessageType.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
-            if ((SendMessageEvents & MessageType.TouchesBegan) != 0) Instance.TouchesBegan += touchesBeganHandler;
-            if ((SendMessageEvents & MessageType.TouchesMoved) != 0) Instance.TouchesMoved += touchesMovedHandler;
-            if ((SendMessageEvents & MessageType.TouchesEnded) != 0) Instance.TouchesEnded += touchesEndedHandler;
-            if ((SendMessageEvents & MessageType.TouchesCancelled) != 0) Instance.TouchesCancelled += touchesCancelledHandler;
+            if ((SendMessageEvents & MessageType.PointersAdded) != 0) Instance.PointersAdded += pointersAddedHandler;
+            if ((SendMessageEvents & MessageType.PointersUpdated) != 0) Instance.PointersUpdated += PointersUpdatedHandler;
+            if ((SendMessageEvents & MessageType.PointersPressed) != 0) Instance.PointersPressed += pointersPressedHandler;
+            if ((SendMessageEvents & MessageType.PointersReleased) != 0) Instance.PointersReleased += pointersReleasedHandler;
+            if ((SendMessageEvents & MessageType.PointersRemoved) != 0) Instance.PointersRemoved += pointersRemovedHandler;
+            if ((SendMessageEvents & MessageType.PointersCancelled) != 0) Instance.PointersCancelled += pointersCancelledHandler;
         }
 
         private void removeSubscriptions()
@@ -336,45 +370,59 @@ namespace TouchScript
 
             Instance.FrameStarted -= frameStartedHandler;
             Instance.FrameFinished -= frameFinishedHandler;
-            Instance.TouchesBegan -= touchesBeganHandler;
-            Instance.TouchesMoved -= touchesMovedHandler;
-            Instance.TouchesEnded -= touchesEndedHandler;
-            Instance.TouchesCancelled -= touchesCancelledHandler;
+            Instance.PointersAdded -= pointersAddedHandler;
+            Instance.PointersUpdated -= PointersUpdatedHandler;
+            Instance.PointersPressed -= pointersPressedHandler;
+            Instance.PointersReleased -= pointersReleasedHandler;
+            Instance.PointersRemoved -= pointersRemovedHandler;
+            Instance.PointersCancelled -= pointersCancelledHandler;
         }
 
-        private void touchesBeganHandler(object sender, TouchEventArgs e)
+        private void pointersAddedHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesBegan.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnPointersAdded.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void touchesMovedHandler(object sender, TouchEventArgs e)
+        private void PointersUpdatedHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesMoved.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnPointersUpdated.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void touchesEndedHandler(object sender, TouchEventArgs e)
+        private void pointersPressedHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesEnded.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnPointersPressed.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void touchesCancelledHandler(object sender, TouchEventArgs e)
+        private void pointersReleasedHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchesCancelled.ToString(), e.Touches,
+            sendMessageTarget.SendMessage(MessageName.OnPointersReleased.ToString(), e.Pointers,
+                SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void pointersRemovedHandler(object sender, PointerEventArgs e)
+        {
+            sendMessageTarget.SendMessage(MessageName.OnPointersRemoved.ToString(), e.Pointers,
+                SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void pointersCancelledHandler(object sender, PointerEventArgs e)
+        {
+            sendMessageTarget.SendMessage(MessageName.OnPointersCancelled.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameStartedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchFrameStarted.ToString(),
+            sendMessageTarget.SendMessage(MessageName.OnPointerFrameStarted.ToString(),
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameFinishedHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnTouchFrameFinished.ToString(),
+            sendMessageTarget.SendMessage(MessageName.OnPointerFrameFinished.ToString(),
                 SendMessageOptions.DontRequireReceiver);
         }
 

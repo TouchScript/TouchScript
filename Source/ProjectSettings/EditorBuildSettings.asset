@@ -12,16 +12,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouchScript/Examples/Camera/Camera.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/Checkers/Checkers.unity
-  - enabled: 1
     path: Assets/TouchScript/Examples/Photos/Photos.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/Multiuser/Multiuser.unity
-  - enabled: 1
-    path: Assets/TouchScript/Examples/Cube/Cube.unity
+    path: Assets/TouchScript/Examples/Checkers/Checkers.unity
   - enabled: 1
     path: Assets/TouchScript/Examples/Portal/Portal.unity
   - enabled: 1
+    path: Assets/TouchScript/Examples/RawInput/RawInput.unity
+  - enabled: 1
     path: Assets/TouchScript/Examples/Colors/Colors.unity
   - enabled: 1
-    path: Assets/TouchScript/Examples/RawInput/RawInput.unity
+    path: Assets/TouchScript/Examples/Cube/Cube.unity
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Multiuser/Multiuser.unity

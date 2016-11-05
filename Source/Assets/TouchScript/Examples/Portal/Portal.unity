@@ -8,25 +8,25 @@ SceneSettings:
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
     smallestOccluder: 5
-    smallestHole: .25
+    smallestHole: 0.25
     backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_Fog: 0
-  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
-  m_FogDensity: .00999999978
+  m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientEquatorColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientGroundColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+  m_AmbientSkyColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientEquatorColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientGroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SkyboxMaterial: {fileID: 2100000, guid: a07fadb24ea940240afba3afc1a692cc, type: 2}
-  m_HaloStrength: .5
+  m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -40,7 +40,7 @@ RenderSettings:
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 5
+  serializedVersion: 6
   m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
@@ -66,7 +66,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightmapSnapshot: {fileID: 0}
+  m_LightingDataAsset: {fileID: 0}
   m_RuntimeCPUUsage: 25
 --- !u!196 &5
 NavMeshSettings:
@@ -74,15 +74,15 @@ NavMeshSettings:
   m_ObjectHideFlags: 0
   m_BuildSettings:
     serializedVersion: 2
-    agentRadius: .5
+    agentRadius: 0.5
     agentHeight: 2
     agentSlope: 45
-    agentClimb: .400000006
+    agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     accuratePlacement: 0
     minRegionArea: 2
-    cellSize: .166666657
+    cellSize: 0.16666666
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &62216951
@@ -111,9 +111,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 62216951}
-  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 89.980194, y: 0, z: 0}
   m_Children:
   - {fileID: 498618157}
   m_Father: {fileID: 930800601}
@@ -126,13 +127,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 62216951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c21776f7e73345948c045618b3fad6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e5768c36d1bb4acea50bd233372843a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Camera
+  advancedProps: 0
+  hit3DObjects: 1
+  hit2DObjects: 0
+  hitWorldSpaceUI: 0
+  hitScreenSpaceUI: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  useHitFilters: 0
 --- !u!81 &62216954
 AudioListener:
   m_ObjectHideFlags: 0
@@ -170,7 +177,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
+  near clip plane: 0.3
   far clip plane: 40
   field of view: 30
   orthographic: 1
@@ -186,7 +193,7 @@ Camera:
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
-  m_StereoSeparation: .0219999999
+  m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
 --- !u!1 &250857269
 GameObject:
@@ -233,6 +240,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1679844150}
   m_Father: {fileID: 1981142013}
@@ -241,7 +249,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &481822342
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,9 +280,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 481822342}
-  m_LocalRotation: {x: -8.94069672e-08, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.30000019, y: -6.05999994, z: .400000006}
+  m_LocalRotation: {x: -0.00000008940697, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.3, y: -6.06, z: 0.4}
   m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 3
@@ -291,7 +300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 100
   RotationSpeed: 40
-  FallSpeed: .00999999978
+  FallSpeed: 0.01
 --- !u!23 &481822345
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -310,8 +319,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -333,8 +344,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: 9.53674316e-07, z: -2.38418579e-07}
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.0000009536743, z: -0.00000023841858}
 --- !u!114 &481822348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +357,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &481822349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,19 +374,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 1
-  minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 1
   projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!114 &481822350
@@ -383,11 +401,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -405,11 +424,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -425,7 +445,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -453,8 +473,9 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 498618156}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1500001, y: 0, z: 10}
+  m_LocalPosition: {x: 2.15, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1283428183}
   - {fileID: 1158035086}
@@ -469,7 +490,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: m_LocalPosition.x
@@ -502,6 +523,10 @@ Prefab:
     - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: layers.Array.data[0]
       value: 
+      objectReference: {fileID: 62216953}
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
@@ -516,7 +541,6 @@ GameObject:
   - 224: {fileID: 740851132}
   - 223: {fileID: 740851135}
   - 114: {fileID: 740851134}
-  - 114: {fileID: 740851133}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -533,6 +557,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1981142013}
   - {fileID: 1552723601}
@@ -543,22 +568,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &740851133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 740851131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &740851134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,8 +604,10 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &762219656
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,9 +632,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 762219656}
-  m_LocalRotation: {x: -5.96046519e-08, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -.100000001}
+  m_LocalRotation: {x: -0.00000005960465, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1283428183}
   m_RootOrder: 1
@@ -657,8 +669,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -701,8 +715,9 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 851559560}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.01000023, y: -3.6400001, z: .100000001}
+  m_LocalPosition: {x: 7.01, y: -3.64, z: 0.1}
   m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 0
@@ -724,8 +739,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -750,7 +767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 100
   RotationSpeed: 10
-  FallSpeed: .00999999978
+  FallSpeed: 0.01
 --- !u!114 &851559565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,6 +779,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &851559566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,19 +796,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 1
-  minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 1
   projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!135 &851559567
@@ -798,8 +822,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: -4.76837158e-07, z: -2.38418579e-07}
+  m_Radius: 0.5
+  m_Center: {x: 0, y: -0.00000047683716, z: -0.00000023841858}
 --- !u!114 &851559568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -811,11 +835,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -833,11 +858,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -853,7 +879,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -889,9 +915,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 893756805}
-  m_LocalRotation: {x: -8.94069672e-08, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.23999977, y: 6.07999992, z: .300000012}
+  m_LocalRotation: {x: -0.00000008940697, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.24, y: 6.08, z: 0.3}
   m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 2
@@ -908,7 +935,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 100
   RotationSpeed: 30
-  FallSpeed: .00999999978
+  FallSpeed: 0.01
 --- !u!23 &893756808
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -927,8 +954,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -950,8 +979,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: -7.15255737e-07, z: -2.38418579e-07}
+  m_Radius: 0.5
+  m_Center: {x: 0, y: -0.00000071525574, z: -0.00000023841858}
 --- !u!114 &893756811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -963,6 +992,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &893756812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -974,19 +1009,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 1
-  minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 1
   projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!114 &893756813
@@ -1000,11 +1036,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1022,11 +1059,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1042,7 +1080,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -1072,6 +1110,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2135305920}
   - {fileID: 62216952}
@@ -1103,6 +1142,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1679844150}
   m_RootOrder: 0
@@ -1110,7 +1150,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 31, y: 0}
   m_SizeDelta: {x: 60, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1138005901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1166,8 +1206,9 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1158035085}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 1.59000003}
+  m_LocalPosition: {x: 0, y: -0, z: 1.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 851559561}
   - {fileID: 1166789652}
@@ -1205,9 +1246,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1166789651}
-  m_LocalRotation: {x: -8.94069672e-08, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.31999969, y: 4.82000017, z: .200000003}
+  m_LocalRotation: {x: -0.00000008940697, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.32, y: 4.82, z: 0.2}
   m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1158035086}
   m_RootOrder: 1
@@ -1224,7 +1266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 100
   RotationSpeed: 20
-  FallSpeed: .00999999978
+  FallSpeed: 0.01
 --- !u!23 &1166789654
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1243,8 +1285,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -1266,8 +1310,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: -4.76837158e-07, z: -2.38418579e-07}
+  m_Radius: 0.5
+  m_Center: {x: 0, y: -0.00000047683716, z: -0.00000023841858}
 --- !u!114 &1166789657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1279,6 +1323,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978a486d8ecf8437cbb87e8534908895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSmoothing: 0
+  smoothingFactor: 0.0001
+  positionThreshold: 0.0001
+  rotationThreshold: 0.01
+  scaleThreshold: 0.0001
+  allowChangingFromOutside: 0
 --- !u!114 &1166789658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1290,19 +1340,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
   requireGestureToFail: {fileID: 0}
   friendlyGestures: []
   type: 1
-  minScreenPointsDistance: .5
-  screenTransformThreshold: .100000001
+  screenTransformThreshold: 0.1
+  minScreenPointsDistance: 0.5
   projection: 1
   projectionPlaneNormal: {x: 0, y: 0, z: 1}
 --- !u!114 &1166789659
@@ -1316,11 +1367,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e75b9b7edb42df80a22a14f03ae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1338,11 +1390,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   advancedProps: 0
-  minTouches: 0
-  maxTouches: 0
-  combineTouches: 0
-  combineTouchesInterval: .300000012
+  minPointers: 0
+  maxPointers: 0
+  combinePointers: 0
+  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1358,7 +1411,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -1390,6 +1443,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1762297559}
   - {fileID: 762219657}
@@ -1405,7 +1459,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.97000003
+  m_Radius: 1.97
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1283428185
 MonoBehaviour:
@@ -1445,14 +1499,15 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1679844150}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 177.5, y: 0}
-  m_SizeDelta: {x: 204.699997, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_SizeDelta: {x: 204.7, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1408280582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,6 +1535,7 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 3
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -1532,6 +1588,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 740851132}
   m_RootOrder: 1
@@ -1539,7 +1596,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 178, y: 78}
   m_SizeDelta: {x: 320, y: 128}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1552723602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1567,6 +1624,7 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 0
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -1625,6 +1683,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1138005900}
   - {fileID: 1408280581}
@@ -1634,7 +1693,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1679844151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1701,8 +1760,10 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
@@ -1723,6 +1784,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1283428183}
   m_RootOrder: 0
@@ -1765,6 +1827,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -1814,15 +1877,16 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 250857271}
   m_Father: {fileID: 740851132}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: .252637833, y: 1}
+  m_AnchorMax: {x: 0.25263783, y: 1}
   m_AnchoredPosition: {x: 5, y: 50}
   m_SizeDelta: {x: -10, y: -120}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2135305919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1845,9 +1909,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2135305919}
-  m_LocalRotation: {x: .241942912, y: -.49854365, z: .221075788, w: .802523136}
-  m_LocalPosition: {x: 6.10041475, y: 15.5403843, z: -20.5662251}
+  m_LocalRotation: {x: 0.24194291, y: -0.49854365, z: 0.22107579, w: 0.80252314}
+  m_LocalPosition: {x: 6.1004148, y: 15.540384, z: -20.566225}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 930800601}
   m_RootOrder: 0
@@ -1861,16 +1926,17 @@ Light:
   serializedVersion: 6
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.29999995
+  m_Intensity: 1.3
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
     m_Resolution: 3
-    m_Strength: .560000002
-    m_Bias: .100000001
-    m_NormalBias: .400000006
+    m_Strength: 0.56
+    m_Bias: 0.1
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}

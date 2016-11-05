@@ -11,7 +11,7 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(ReleaseGesture), true)]
     internal sealed class ReleaseGestureEditor : GestureEditor
     {
-        private static readonly GUIContent IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores touch points from children.");
+        private static readonly GUIContent IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores pointers from children.");
 
         private SerializedProperty ignoreChildren;
 

@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TouchScript.Devices.Display;
+using TouchScript.Editor.Utils;
 using TouchScript.Layers;
 using UnityEditor;
 using UnityEditorInternal;
@@ -16,21 +17,27 @@ namespace TouchScript.Editor
     [CustomEditor(typeof(TouchManager))]
     internal sealed class TouchManagerEditor : UnityEditor.Editor
     {
+        private static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
+        private static readonly GUIContent DEBUG_MODE = new GUIContent("Debug", "Turns on debug mode.");
         private static readonly GUIContent DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
-        private static readonly GUIContent CREATE_CAMERA_LAYER = new GUIContent("Create Camera Layer", "Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene. This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.");
+        private static readonly GUIContent CREATE_CAMERA_LAYER = new GUIContent("Create Camera Layer", "Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene. This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get input from some device.");
         private static readonly GUIContent CREATE_STANDARD_INPUT = new GUIContent("Create Standard Input", "");
         private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
         private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("SendMessage Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
         private static readonly GUIContent SEND_MESSAGE_EVENTS = new GUIContent("SendMessage Events", "Which events should be sent as Unity Messages.");
-        private static readonly GUIContent LAYERS_HEADER = new GUIContent("Touch Layers", "Sorted array of Touch Layers in the scene.");
+        private static readonly GUIContent LAYERS_HEADER = new GUIContent("Pointer Layers", "Sorted array of Pointer Layers in the scene.");
 
         private TouchManager instance;
         private ReorderableList layersList;
+        private SerializedProperty advanced;
+        private SerializedProperty debugMode;
         private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, shouldCreateStandardInput, useSendMessage, sendMessageTarget, sendMessageEvents;
 
         private void OnEnable()
         {
             instance = target as TouchManager;
+            advanced = serializedObject.FindProperty("advancedProps");
+            debugMode = serializedObject.FindProperty("debugMode");
             layers = serializedObject.FindProperty("layers");
             displayDevice = serializedObject.FindProperty("displayDevice");
             shouldCreateCameraLayer = serializedObject.FindProperty("shouldCreateCameraLayer");
@@ -103,31 +110,74 @@ namespace TouchScript.Editor
             layersList.DoLayoutList();
 
             GUI.enabled = true;
+
+            if (debugMode != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    advanced.isExpanded = expanded;
+                }
+                if (expanded)
+                {
+                    GUILayout.BeginVertical(GUIElements.FoldoutStyle);
+                    drawAdvanced();
+                    GUILayout.EndVertical();
+                }
+                GUIElements.EndFoldout();
+            }
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void drawAdvanced()
+        {
+            drawDebug();
+        }
+
+        private void drawDebug()
+        {
+            if (debugMode == null) return;
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(debugMode, DEBUG_MODE);
+            if (EditorGUI.EndChangeCheck()) instance.DebugMode = debugMode.boolValue;
         }
 
         private void refresh()
         {
-            var allLayers = FindObjectsOfType(typeof(TouchLayer)).Cast<TouchLayer>().ToList();
-            var toRemove = new List<int>();
-            for (var i = 0; i < layers.arraySize; i++)
+            if (Application.isPlaying)
             {
-                var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
-                if (layer == null || allLayers.IndexOf(layer) == -1) toRemove.Add(i);
-                else allLayers.Remove(layer);
+                var l = TouchManager.Instance.Layers;
+                layers.arraySize = 0;
+                for (var i = 0; i < l.Count; i++)
+                {
+                    layers.arraySize++;
+                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = l[i];
+                }
             }
-
-            for (var i = toRemove.Count - 1; i >= 0; i--)
+            else
             {
-                var index = toRemove[i];
-                layers.GetArrayElementAtIndex(index).objectReferenceValue = null;
-                layers.DeleteArrayElementAtIndex(index);
-            }
+                var allLayers = FindObjectsOfType(typeof (TouchLayer)).Cast<TouchLayer>().ToList();
+                var toRemove = new List<int>();
+                for (var i = 0; i < layers.arraySize; i++)
+                {
+                    var layer = layers.GetArrayElementAtIndex(i).objectReferenceValue as TouchLayer;
+                    if (layer == null || allLayers.IndexOf(layer) == -1) toRemove.Add(i);
+                    else allLayers.Remove(layer);
+                }
 
-            for (var i = 0; i < allLayers.Count; i++)
-            {
-                layers.arraySize++;
-                layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = allLayers[i];
+                for (var i = toRemove.Count - 1; i >= 0; i--)
+                {
+                    var index = toRemove[i];
+                    layers.GetArrayElementAtIndex(index).objectReferenceValue = null;
+                    layers.DeleteArrayElementAtIndex(index);
+                }
+
+                for (var i = 0; i < allLayers.Count; i++)
+                {
+                    layers.arraySize++;
+                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = allLayers[i];
+                }
             }
 
             serializedObject.ApplyModifiedProperties();

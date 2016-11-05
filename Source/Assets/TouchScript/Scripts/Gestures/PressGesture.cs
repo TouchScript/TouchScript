@@ -6,14 +6,20 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Recognizes when an object is touched.
-    /// Works with any gesture unless a Delegate is set.
+    /// Recognizes when an object is touched. Works with any gesture unless a Delegate is set.
     /// </summary>
+    /// <remarks>
+    /// <para>PressGesture fires immediately and would ultimately kill every other non-friendly gesture. So one would have to manually make it friendly with everything in a general use-case. That's why it's made friendly with everyone by default.</para>
+    /// <para>But there are cases when one would like to determine if parent container was pressed or its child. In current implementation both PressGestures will fire.</para>
+    /// <para>One approach would be to somehow make parent's PressGesture not friendly with child's one. But looking at how gesture recognition works we can see that this won't work. Since we would like child's gesture to fail parent's gesture. When child's PressGesture is recognized the system asks it if it can prevent parent's gesture, and it obviously can't because it's friendly with everything. And it doesn't matter that parent's gesture can be prevented by child's one... because child's one can't prevent parent's gesture and this is asked first.</para>
+    /// <para>This is basically what <see cref="IgnoreChildren"/> is for. It makes parent's PressGesture only listen for TouchPoints which lend directly on it.</para>
+    /// </remarks>
     [AddComponentMenu("TouchScript/Gestures/Press Gesture")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_PressGesture.htm")]
     public class PressGesture : Gesture
@@ -68,12 +74,12 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        public override bool ShouldReceiveTouch(TouchPoint touch)
+        public override bool ShouldReceivePointer(Pointer pointer)
         {
-            if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
-            if (!base.ShouldReceiveTouch(touch)) return false;
+            if (!IgnoreChildren) return base.ShouldReceivePointer(pointer);
+            if (!base.ShouldReceivePointer(pointer)) return false;
 
-            if (touch.Target != cachedTransform) return false;
+            if (pointer.GetPressData().Target != cachedTransform) return false;
             return true;
         }
 
@@ -92,11 +98,20 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+            base.pointersPressed(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
+            {
+                setState(GestureState.Recognized);
+                return;
+            }
+            if (pointersNumState == PointersNumState.PassedMinMaxThreshold)
+            {
+                setState(GestureState.Failed);
+                return;
+            }
         }
 
         /// <inheritdoc />

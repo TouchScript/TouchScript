@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// <see cref="TouchLayer"/> specific projection parameters. Used by layers to project touches in the world and world coordinates onto layers.
+    /// <see cref="TouchLayer"/> specific projection parameters. Used by layers to project pointers in the world and world coordinates onto layers.
     /// </summary>
     public class ProjectionParams
     {
@@ -69,17 +69,12 @@ namespace TouchScript.Layers
     /// <summary>
     /// Projection parameters for a UI based <see cref="TouchLayer"/>.
     /// </summary>
-    public class CanvasProjectionParams : ProjectionParams
+    public class WorldSpaceCanvasProjectionParams : ProjectionParams
     {
         /// <summary>
         /// The canvas.
         /// </summary>
         protected Canvas canvas;
-
-        /// <summary>
-        /// Canvas RectTransform.
-        /// </summary>
-        protected RectTransform rect;
 
         /// <summary>
         /// Canvas mode.
@@ -95,32 +90,22 @@ namespace TouchScript.Layers
         /// Initializes a new instance of the <see cref="CanvasProjectionParams"/> class.
         /// </summary>
         /// <param name="canvas"> The canvas. </param>
-        public CanvasProjectionParams(Canvas canvas)
+        public WorldSpaceCanvasProjectionParams(Canvas canvas)
         {
             this.canvas = canvas;
             mode = canvas.renderMode;
-
-            if (mode == RenderMode.ScreenSpaceOverlay)
-            {
-                rect = canvas.GetComponent<RectTransform>();
-            }
-            else
-            {
-                camera = canvas.worldCamera ?? Camera.main;
-            }
+            camera = canvas.worldCamera ?? Camera.main;
         }
 
         /// <inheritdoc />
         public override Vector3 ProjectTo(Vector2 screenPosition, Plane projectionPlane)
         {
-            if (mode == RenderMode.ScreenSpaceOverlay) return base.ProjectTo(screenPosition, projectionPlane);
             return ProjectionUtils.CameraToPlaneProjection(screenPosition, camera, projectionPlane);
         }
 
         /// <inheritdoc />
         public override Vector2 ProjectFrom(Vector3 worldPosition)
         {
-            if (mode == RenderMode.ScreenSpaceOverlay) return base.ProjectFrom(worldPosition);
             return camera.WorldToScreenPoint(worldPosition);
         }
     }

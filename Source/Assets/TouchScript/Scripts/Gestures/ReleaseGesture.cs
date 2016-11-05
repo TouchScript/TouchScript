@@ -6,14 +6,15 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Gestures
 {
     /// <summary>
-    /// Recognizes when last touch is released from target.
-    /// Works with any gesture unless a Delegate is set.
+    /// Recognizes when last pointer is released from target. Works with any gesture unless a Delegate is set. 
     /// </summary>
+    /// <seealso cref="PressGesture"/>
     [AddComponentMenu("TouchScript/Gestures/Release Gesture")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_ReleaseGesture.htm")]
     public class ReleaseGesture : Gesture
@@ -68,12 +69,12 @@ namespace TouchScript.Gestures
         #region Gesture callbacks
 
         /// <inheritdoc />
-        public override bool ShouldReceiveTouch(TouchPoint touch)
+        public override bool ShouldReceivePointer(Pointer pointer)
         {
-            if (!IgnoreChildren) return base.ShouldReceiveTouch(touch);
-            if (!base.ShouldReceiveTouch(touch)) return false;
+            if (!IgnoreChildren) return base.ShouldReceivePointer(pointer);
+            if (!base.ShouldReceivePointer(pointer)) return false;
 
-            if (touch.Target != cachedTransform) return false;
+            if (pointer.GetPressData().Target != cachedTransform) return false;
             return true;
         }
 
@@ -92,11 +93,28 @@ namespace TouchScript.Gestures
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+            base.pointersPressed(pointers);
 
-            if (touchesNumState == TouchesNumState.PassedMinThreshold) setState(GestureState.Recognized);
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
+            {
+                if (State == GestureState.Idle) setState(GestureState.Possible);
+                return;
+            }
+            if (pointersNumState == PointersNumState.PassedMinMaxThreshold)
+            {
+                setState(GestureState.Failed);
+                return;
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void pointersReleased(IList<Pointer> pointers)
+        {
+            base.pointersReleased(pointers);
+
+            if (pointersNumState == PointersNumState.PassedMinThreshold) setState(GestureState.Recognized);
         }
 
         /// <inheritdoc />

@@ -15,7 +15,7 @@ namespace TouchScript
     public class DebuggableMonoBehaviour : MonoBehaviour, IDebuggable
     {
         /// <inheritdoc />
-        public bool DebugMode
+        public virtual bool DebugMode
         {
             get
             {
