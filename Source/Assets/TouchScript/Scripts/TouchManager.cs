@@ -143,6 +143,7 @@ namespace TouchScript
         /// TouchScript version.
         /// </summary>
         public static readonly Version VERSION = new Version(9, 0);
+		public static readonly string VERSION_SUFFIX = "alpha";
 
         #endregion
 
