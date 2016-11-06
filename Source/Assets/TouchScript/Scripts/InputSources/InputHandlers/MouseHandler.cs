@@ -14,6 +14,33 @@ namespace TouchScript.InputSources.InputHandlers
     /// </summary>
     public class MouseHandler : IInputSource, IDisposable
     {
+		#region Consts
+
+		private enum State
+		{
+			/// <summary>
+			/// Only mouse pointer is active
+			/// </summary>
+			Mouse,
+
+			/// <summary>
+			/// ALT is pressed but mouse isn't
+			/// </summary>
+			WaitingForFake,
+
+			/// <summary>
+			/// Mouse and fake pointers are moving together after ALT+PRESS
+			/// </summary>
+			MouseAndFake,
+
+			/// <summary>
+			/// After ALT+RELEASE fake pointer is stationary while mouse can move freely
+			/// </summary>
+			StationaryFake
+		}
+
+		#endregion
+
         #region Public properties
 
         /// <inheritdoc />
@@ -48,10 +75,10 @@ namespace TouchScript.InputSources.InputHandlers
         private PointerDelegate removePointer;
         private PointerDelegate cancelPointer;
 
+		private State state;
         private ObjectPool<MousePointer> mousePool;
         private MousePointer mousePointer, fakeMousePointer;
         private Vector3 mousePointPos = Vector3.zero;
-        private DelayedFakePointer addFakePointer;
 
         #endregion
 
@@ -75,9 +102,10 @@ namespace TouchScript.InputSources.InputHandlers
 
             mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, (t) => t.INTERNAL_Reset());
 
-            addFakePointer.ShouldAdd = false;
             mousePointPos = Input.mousePosition;
-            mousePointer = internalAddPointer(mousePointPos);
+			mousePointer = internalAddPointer(remapCoordinates(mousePointPos));
+
+			stateMouse();
         }
 
         #region Public methods
@@ -85,75 +113,86 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public void UpdateInput()
         {
-            if (addFakePointer.ShouldAdd)
-            {
-                addFakePointer.ShouldAdd = false;
-                fakeMousePointer = internalAddPointer(addFakePointer.Position, addFakePointer.Buttons, addFakePointer.Flags);
-                pressPointer(fakeMousePointer);
-            }
+			var buttons = state == State.MouseAndFake ? fakeMousePointer.Buttons : mousePointer.Buttons;
+			var newButtons = getMouseButtons();
+			var pos = Input.mousePosition;
+			Vector2 remappedPos = new Vector2(0, 0);
 
-            if (fakeMousePointer != null
-                && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
-            {
-                releasePointer(fakeMousePointer);
-                removePointer(fakeMousePointer);
-                fakeMousePointer = null;
-            }
+			if (mousePointPos != pos)
+			{
+				remappedPos = remapCoordinates(new Vector2(pos.x, pos.y));
+				mousePointer.Position = remappedPos;
+				updatePointer(mousePointer);
+			}
 
-            var pos = Input.mousePosition;
-            if (mousePointPos != pos)
-            {
-                mousePointPos = pos;
-                mousePointer.Position = remapCoordinates(new Vector2(pos.x, pos.y));
-                updatePointer(mousePointer);
-            }
+			var scroll = Input.mouseScrollDelta;
+			if (!Mathf.Approximately(scroll.sqrMagnitude, 0.0f))
+			{
+				mousePointer.ScrollDelta = scroll;
+				updatePointer(mousePointer);
+			}
 
-            var scroll = Input.mouseScrollDelta;
-            mousePointer.ScrollDelta = scroll;
-            if (!Mathf.Approximately(scroll.sqrMagnitude, 0.0f))
+            if (emulateSecondMousePointer)
             {
-                updatePointer(mousePointer);
-            }
+				switch (state)
+				{
+				case State.Mouse:
+					if (Input.GetKeyDown(KeyCode.LeftAlt) && !Input.GetKeyUp(KeyCode.LeftAlt) 
+						&& ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0))
+					{
+						stateWaitingForFake();
+					} else {
+						if (buttons != newButtons) updateButtons(buttons, newButtons);
+					}
+					break;
+				case State.WaitingForFake:
+					if (Input.GetKey(KeyCode.LeftAlt))
+					{
+						if ((newButtons & Pointer.PointerButtonState.AnyButtonDown) != 0)
+						{
+							// A button is down while holding Alt
+							fakeMousePointer = internalAddPointer(pos, newButtons, mousePointer.Flags | Pointer.FLAG_ARTIFICIAL);
+							pressPointer(fakeMousePointer);
+							stateMouseAndFake();
+						}
+					} else {
+						stateMouse();
+					}
+					break;
+				case State.MouseAndFake:
+					if (fakeTouchReleased())
+					{
+						stateMouse();
+					} else {
+						if (mousePointPos != pos)
+						{
+							fakeMousePointer.Position = remappedPos;
+							updatePointer(fakeMousePointer);
+						}
+						if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
+						{
+							// All buttons are released, Alt is still holding
+							stateStationaryFake();
+						} else if (buttons != newButtons)
+						{
+							fakeMousePointer.Buttons = newButtons;
+							updatePointer(fakeMousePointer);
+						}
+					}
+					break;
+				case State.StationaryFake:
+					if (buttons != newButtons) updateButtons(buttons, newButtons);
+					if (fakeTouchReleased())
+					{
+						stateMouse();
+					}
+					break;
+				}
+			} else {
+				if (buttons != newButtons) updateButtons(buttons, newButtons);
+			}
 
-            var buttons = mousePointer.Buttons;
-            var newButtons = getMouseButtons();
-
-            if (buttons == newButtons) return; // nothing new happened
-
-            // pressed something
-            if (buttons == Pointer.PointerButtonState.Nothing)
-            {
-                // pressed and released this frame
-                if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
-                {
-                    // Add pressed buttons for processing
-                    mousePointer.Buttons = newButtons | (Pointer.PointerButtonState) ((uint) (newButtons & Pointer.PointerButtonState.AnyButtonDown) >> 1);
-                    pressPointer(mousePointer);
-                    internalReleaseMousePointer(newButtons);
-                }
-                // pressed this frame
-                else
-                {
-                    mousePointer.Buttons = newButtons;
-                    pressPointer(mousePointer);
-                }
-            }
-            // released or button state changed
-            else
-            {
-                // released this frame
-                if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
-                {
-                    mousePointer.Buttons = newButtons;
-                    internalReleaseMousePointer(newButtons);
-                }
-                // button state changed this frame
-                else
-                {
-                    mousePointer.Buttons = newButtons;
-                    updatePointer(mousePointer);
-                }
-            }
+			mousePointPos = pos;
         }
 
         /// <inheritdoc />
@@ -163,7 +202,7 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 cancelPointer(mousePointer);
                 if (shouldReturn) mousePointer = internalReturnPointer(mousePointer);
-                else mousePointer = internalAddPointer(mousePointPos); // can't totally cancell mouse pointer
+				else mousePointer = internalAddPointer(mousePointer.Position); // can't totally cancel mouse pointer
                 return true;
             }
             if (pointer.Equals(fakeMousePointer))
@@ -227,27 +266,62 @@ namespace TouchScript.InputSources.InputHandlers
             return buttons;
         }
 
-        private void tryAddFakePointer(Pointer.PointerButtonState newButtons)
-        {
-            if (emulateSecondMousePointer
-                        && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
-                        && fakeMousePointer == null)
+		private void updateButtons(Pointer.PointerButtonState oldButtons, Pointer.PointerButtonState newButtons)
+		{
+            // pressed something
+			if (oldButtons == Pointer.PointerButtonState.Nothing)
             {
-                var up = (uint)(newButtons & Pointer.PointerButtonState.AnyButtonUp);
-                addFakePointer.ShouldAdd = true;
-                addFakePointer.Flags = mousePointer.Flags | Pointer.FLAG_ARTIFICIAL;
-                addFakePointer.Buttons = newButtons
-                    & ~Pointer.PointerButtonState.AnyButtonUp // remove up state from fake pointer
-                    | (Pointer.PointerButtonState)(up >> 1) // Add down state from pressed buttons
-                    | (Pointer.PointerButtonState)(up >> 2); // Add pressed state from pressed buttons
-                addFakePointer.Position = mousePointPos;
+                // pressed and released this frame
+                if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
+                {
+                    // Add pressed buttons for processing
+                    mousePointer.Buttons = newButtons | (Pointer.PointerButtonState) ((uint) (newButtons & Pointer.PointerButtonState.AnyButtonDown) >> 1);
+                    pressPointer(mousePointer);
+                    internalReleaseMousePointer(newButtons);
+                }
+                // pressed this frame
+                else
+                {
+                    mousePointer.Buttons = newButtons;
+                    pressPointer(mousePointer);
+                }
             }
-        }
+            // released or button state changed
+            else
+            {
+                // released this frame
+                if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) == 0)
+                {
+                    mousePointer.Buttons = newButtons;
+                    internalReleaseMousePointer(newButtons);
+                }
+                // button state changed this frame
+                else
+                {
+                    mousePointer.Buttons = newButtons;
+                    updatePointer(mousePointer);
+                }
+            }
+		}
+
+		private bool fakeTouchReleased()
+		{
+			if (!Input.GetKey(KeyCode.LeftAlt))
+			{
+				// Alt is released, need to kill the fake touch
+				fakeMousePointer.Buttons = (Pointer.PointerButtonState)((uint)fakeMousePointer.Buttons << 2); // Convert current pressed buttons to UP
+				releasePointer(fakeMousePointer);
+				removePointer(fakeMousePointer);
+				fakeMousePointer = null; // Will be returned to the pool by INTERNAL_DiscardPointer
+				return true;
+			}
+			return false;
+		}
 
         private MousePointer internalAddPointer(Vector2 position, Pointer.PointerButtonState buttons = Pointer.PointerButtonState.Nothing, uint flags = 0)
         {
             var pointer = mousePool.Get();
-            pointer.Position = remapCoordinates(position);
+            pointer.Position = position;
             pointer.Buttons |= buttons;
 			pointer.Flags |= flags;
             addPointer(pointer);
@@ -258,7 +332,6 @@ namespace TouchScript.InputSources.InputHandlers
         {
             mousePointer.Flags &= ~Pointer.FLAG_RETURNED;
             releasePointer(mousePointer);
-            tryAddFakePointer(buttons);
         }
 
         private MousePointer internalReturnPointer(MousePointer pointer)
@@ -284,13 +357,34 @@ namespace TouchScript.InputSources.InputHandlers
 
         #endregion
 
-        private struct DelayedFakePointer
-        {
-            public bool ShouldAdd;
-            public uint Flags;
-            public Pointer.PointerButtonState Buttons;
-            public Vector2 Position;
-        }
+		#region State logic
+
+		private void stateMouse()
+		{
+			setState(State.Mouse);
+		}
+
+		private void stateWaitingForFake()
+		{
+			setState(State.WaitingForFake);
+		}
+
+		private void stateMouseAndFake()
+		{
+			setState(State.MouseAndFake);
+		}
+
+		private void stateStationaryFake()
+		{
+			setState(State.StationaryFake);
+		}
+
+		private void setState(State newState)
+		{
+			state = newState;
+		}
+
+		#endregion
 
     }
 }
