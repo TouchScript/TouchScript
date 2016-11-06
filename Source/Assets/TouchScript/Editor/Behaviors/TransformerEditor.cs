@@ -6,7 +6,7 @@ using TouchScript.Behaviors;
 using UnityEditor;
 using UnityEngine;
 
-namespace TouchScript.Editorr.Behaviors
+namespace TouchScript.Editor.Behaviors
 {
     [CustomEditor(typeof(Transformer), true)]
     internal class TransformerEditor : UnityEditor.Editor
