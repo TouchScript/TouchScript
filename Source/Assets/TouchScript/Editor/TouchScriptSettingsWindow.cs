@@ -117,8 +117,12 @@ namespace TouchScript.Editor
 
 		private void init()
 		{
+			if (initialized) return;
+			initialized = true;
+
 			header = new GUIStyle();
-			header.normal.background = (Texture2D)Resources.Load("SettingsWindow/Header");
+			var assets = AssetDatabase.FindAssets("TouchScript_SW_Header t:Texture");
+			if (assets.Length > 0) header.normal.background = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(assets[0]));
 			header.normal.textColor = Color.white;
 			header.padding = new RectOffset(0, 70, 102, 0);
 			header.alignment = TextAnchor.UpperRight;
