@@ -194,7 +194,7 @@ namespace TouchScript.Behaviors.Visualizer
             {
                 var pointer = e.Pointers[i];
                 PointerProxyBase proxy;
-                if (!proxies.TryGetValue(pointer.Id, out proxy)) return;
+                if (!proxies.TryGetValue(pointer.Id, out proxy)) continue;
                 proxy.UpdatePointer(pointer);
             }
         }
@@ -206,7 +206,7 @@ namespace TouchScript.Behaviors.Visualizer
             {
                 var pointer = e.Pointers[i];
                 PointerProxyBase proxy;
-                if (!proxies.TryGetValue(pointer.Id, out proxy)) return;
+				if (!proxies.TryGetValue(pointer.Id, out proxy)) continue;
                 proxies.Remove(pointer.Id);
                 pool.Release(proxy);
             }
