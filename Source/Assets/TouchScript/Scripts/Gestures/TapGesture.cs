@@ -112,6 +112,19 @@ namespace TouchScript.Gestures
 
         #endregion
 
+		#region Public methods
+
+		/// <inheritdoc />
+		public override bool ShouldReceivePointer(Pointer pointer)
+		{
+			if (!base.ShouldReceivePointer(pointer)) return false;
+			// Ignore redispatched pointers — they come from 2+ pointer gestures when one is left with 1 pointer.
+			// In this state it means that the user doesn't have an intention to tap the object.
+			return (pointer.Flags & Pointer.FLAG_RETURNED) == 0;
+		}
+
+		#endregion
+
         #region Unity methods
 
         /// <inheritdoc />
