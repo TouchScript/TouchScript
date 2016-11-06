@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
+using TouchScript.Pointers;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
+using UnityEngine.Events;
 using Object = UnityEngine.Object;
 
 namespace TouchScript
@@ -30,6 +32,12 @@ namespace TouchScript
         public const int DEBUG_GL_START = int.MinValue;
         public const int DEBUG_GL_TOUCH = DEBUG_GL_START;
 #endif
+
+        [Serializable]
+        public class PointerEvent : UnityEvent<IList<Pointer>> { }
+
+        [Serializable]
+        public class FrameEvent : UnityEvent { }
 
         /// <summary>
         /// Values of a bit-mask representing which Unity messages an instance of <see cref="TouchManager"/> will dispatch.
@@ -215,7 +223,7 @@ namespace TouchScript
             {
                 if (value == useSendMessage) return;
                 useSendMessage = value;
-                updateSubscription();
+                updateSendMessageSubscription();
             }
         }
 
@@ -230,7 +238,7 @@ namespace TouchScript
             {
                 if (sendMessageEvents == value) return;
                 sendMessageEvents = value;
-                updateSubscription();
+                updateSendMessageSubscription();
             }
         }
 
@@ -248,6 +256,70 @@ namespace TouchScript
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether Unity Events should be used.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if TouchManager should use Unity Events; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseUnityEvents
+        {
+            get { return useUnityEvents; }
+            set
+            {
+                if (useUnityEvents == value) return;
+                useUnityEvents = value;
+                updateUnityEventsSubscription();
+            }
+        }
+
+        /// <summary>
+        /// Occurs when a new frame is started before all other events.
+        /// </summary>
+        public FrameEvent FrameStarted = new FrameEvent();
+
+        /// <summary>
+        /// Occurs when a frame is finished. After all other events.
+        /// </summary>
+        [SerializeField]
+        public FrameEvent FrameFinished = new FrameEvent();
+
+        /// <summary>
+        /// Occurs when new hovering pointers are added.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent PointersAdded = new PointerEvent();
+
+        /// <summary>
+        /// Occurs when pointers are updated.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent PointersUpdated = new PointerEvent();
+
+        /// <summary>
+        /// Occurs when pointers touch the surface.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent PointersPressed = new PointerEvent();
+
+        /// <summary>
+        /// Occurs when pointers are released.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent PointersReleased = new PointerEvent();
+
+        /// <summary>
+        /// Occurs when pointers are removed from the system.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent PointersRemoved = new PointerEvent();
+
+        /// <summary>
+        /// Occurs when pointers are cancelled.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent PointersCancelled = new PointerEvent();
+
 #if TOUCHSCRIPT_DEBUG
 
         public override bool DebugMode
@@ -262,7 +334,7 @@ namespace TouchScript
 
 #endif
 
-#endregion
+        #endregion
 
         #region Public methods
 
@@ -306,6 +378,9 @@ namespace TouchScript
         private GameObject sendMessageTarget;
 
         [SerializeField]
+        private bool useUnityEvents = false;
+
+        [SerializeField]
         private List<TouchLayer> layers = new List<TouchLayer>();
 
         #endregion
@@ -331,100 +406,176 @@ namespace TouchScript
 
         private void OnEnable()
         {
-            updateSubscription();
+            updateSendMessageSubscription();
+			updateUnityEventsSubscription();
         }
 
         private void OnDisable()
         {
-            removeSubscriptions();
+            removeSendMessageSubscriptions();
+            removeUnityEventsSubscriptions();
         }
 
         #endregion
 
         #region Private functions
 
-        private void updateSubscription()
+        private void updateSendMessageSubscription()
         {
             if (!Application.isPlaying) return;
             if (Instance == null) return;
 
             if (sendMessageTarget == null) sendMessageTarget = gameObject;
 
-            removeSubscriptions();
+            removeSendMessageSubscriptions();
 
             if (!useSendMessage) return;
 
-            if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedHandler;
-            if ((SendMessageEvents & MessageType.FrameFinished) != 0) Instance.FrameFinished += frameFinishedHandler;
-            if ((SendMessageEvents & MessageType.PointersAdded) != 0) Instance.PointersAdded += pointersAddedHandler;
-            if ((SendMessageEvents & MessageType.PointersUpdated) != 0) Instance.PointersUpdated += PointersUpdatedHandler;
-            if ((SendMessageEvents & MessageType.PointersPressed) != 0) Instance.PointersPressed += pointersPressedHandler;
-            if ((SendMessageEvents & MessageType.PointersReleased) != 0) Instance.PointersReleased += pointersReleasedHandler;
-            if ((SendMessageEvents & MessageType.PointersRemoved) != 0) Instance.PointersRemoved += pointersRemovedHandler;
-            if ((SendMessageEvents & MessageType.PointersCancelled) != 0) Instance.PointersCancelled += pointersCancelledHandler;
+            if ((SendMessageEvents & MessageType.FrameStarted) != 0) Instance.FrameStarted += frameStartedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.FrameFinished) != 0) Instance.FrameFinished += frameFinishedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.PointersAdded) != 0) Instance.PointersAdded += pointersAddedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.PointersUpdated) != 0) Instance.PointersUpdated += pointersUpdatedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.PointersPressed) != 0) Instance.PointersPressed += pointersPressedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.PointersReleased) != 0) Instance.PointersReleased += pointersReleasedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.PointersRemoved) != 0) Instance.PointersRemoved += pointersRemovedSendMessageHandler;
+            if ((SendMessageEvents & MessageType.PointersCancelled) != 0) Instance.PointersCancelled += pointersCancelledSendMessageHandler;
         }
 
-        private void removeSubscriptions()
+        private void removeSendMessageSubscriptions()
         {
             if (!Application.isPlaying) return;
             if (Instance == null) return;
 
-            Instance.FrameStarted -= frameStartedHandler;
-            Instance.FrameFinished -= frameFinishedHandler;
-            Instance.PointersAdded -= pointersAddedHandler;
-            Instance.PointersUpdated -= PointersUpdatedHandler;
-            Instance.PointersPressed -= pointersPressedHandler;
-            Instance.PointersReleased -= pointersReleasedHandler;
-            Instance.PointersRemoved -= pointersRemovedHandler;
-            Instance.PointersCancelled -= pointersCancelledHandler;
+            Instance.FrameStarted -= frameStartedSendMessageHandler;
+            Instance.FrameFinished -= frameFinishedSendMessageHandler;
+            Instance.PointersAdded -= pointersAddedSendMessageHandler;
+            Instance.PointersUpdated -= pointersUpdatedSendMessageHandler;
+            Instance.PointersPressed -= pointersPressedSendMessageHandler;
+            Instance.PointersReleased -= pointersReleasedSendMessageHandler;
+            Instance.PointersRemoved -= pointersRemovedSendMessageHandler;
+            Instance.PointersCancelled -= pointersCancelledSendMessageHandler;
         }
 
-        private void pointersAddedHandler(object sender, PointerEventArgs e)
+        private void pointersAddedSendMessageHandler(object sender, PointerEventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointersAdded.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void PointersUpdatedHandler(object sender, PointerEventArgs e)
+        private void pointersUpdatedSendMessageHandler(object sender, PointerEventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointersUpdated.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void pointersPressedHandler(object sender, PointerEventArgs e)
+        private void pointersPressedSendMessageHandler(object sender, PointerEventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointersPressed.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void pointersReleasedHandler(object sender, PointerEventArgs e)
+        private void pointersReleasedSendMessageHandler(object sender, PointerEventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointersReleased.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void pointersRemovedHandler(object sender, PointerEventArgs e)
+        private void pointersRemovedSendMessageHandler(object sender, PointerEventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointersRemoved.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void pointersCancelledHandler(object sender, PointerEventArgs e)
+        private void pointersCancelledSendMessageHandler(object sender, PointerEventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointersCancelled.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void frameStartedHandler(object sender, EventArgs e)
+        private void frameStartedSendMessageHandler(object sender, EventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointerFrameStarted.ToString(),
                 SendMessageOptions.DontRequireReceiver);
         }
 
-        private void frameFinishedHandler(object sender, EventArgs e)
+        private void frameFinishedSendMessageHandler(object sender, EventArgs e)
         {
             sendMessageTarget.SendMessage(MessageName.OnPointerFrameFinished.ToString(),
                 SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void updateUnityEventsSubscription()
+        {
+            if (!Application.isPlaying) return;
+            if (Instance == null) return;
+
+            removeUnityEventsSubscriptions();
+
+            if (!useUnityEvents) return;
+
+            Instance.FrameStarted += frameStartedUnityEventsHandler;
+            Instance.FrameFinished += frameFinishedUnityEventsHandler;
+            Instance.PointersAdded += pointersAddedUnityEventsHandler;
+            Instance.PointersUpdated += pointersUpdatedUnityEventsHandler;
+            Instance.PointersPressed += pointersPressedUnityEventsHandler;
+            Instance.PointersReleased += pointersReleasedUnityEventsHandler;
+            Instance.PointersRemoved += pointersRemovedUnityEventsHandler;
+            Instance.PointersCancelled += pointersCancelledUnityEventsHandler;
+        }
+
+        private void removeUnityEventsSubscriptions()
+        {
+            if (!Application.isPlaying) return;
+            if (Instance == null) return;
+
+            Instance.FrameStarted -= frameStartedUnityEventsHandler;
+            Instance.FrameFinished -= frameFinishedUnityEventsHandler;
+            Instance.PointersAdded -= pointersAddedUnityEventsHandler;
+            Instance.PointersUpdated -= pointersUpdatedUnityEventsHandler;
+            Instance.PointersPressed -= pointersPressedUnityEventsHandler;
+            Instance.PointersReleased -= pointersReleasedUnityEventsHandler;
+            Instance.PointersRemoved -= pointersRemovedUnityEventsHandler;
+            Instance.PointersCancelled -= pointersCancelledUnityEventsHandler;
+        }
+
+        private void pointersAddedUnityEventsHandler(object sender, PointerEventArgs e)
+        {
+            PointersAdded.Invoke(e.Pointers);
+        }
+
+        private void pointersUpdatedUnityEventsHandler(object sender, PointerEventArgs e)
+        {
+            PointersUpdated.Invoke(e.Pointers);
+        }
+
+        private void pointersPressedUnityEventsHandler(object sender, PointerEventArgs e)
+        {
+            PointersPressed.Invoke(e.Pointers);
+        }
+
+        private void pointersReleasedUnityEventsHandler(object sender, PointerEventArgs e)
+        {
+            PointersReleased.Invoke(e.Pointers);
+        }
+
+        private void pointersRemovedUnityEventsHandler(object sender, PointerEventArgs e)
+        {
+            PointersRemoved.Invoke(e.Pointers);
+        }
+
+        private void pointersCancelledUnityEventsHandler(object sender, PointerEventArgs e)
+        {
+            PointersCancelled.Invoke(e.Pointers);
+        }
+
+        private void frameStartedUnityEventsHandler(object sender, EventArgs e)
+        {
+            FrameStarted.Invoke();
+        }
+
+        private void frameFinishedUnityEventsHandler(object sender, EventArgs e)
+        {
+            FrameFinished.Invoke();
         }
 
         #endregion
