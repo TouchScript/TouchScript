@@ -95,14 +95,6 @@ namespace TouchScript.InputSources
         }
 
         /// <summary>
-        /// Initialize touch input in WebPlayer or not.
-        /// </summary>
-        public bool WebPlayerTouch
-        {
-            get { return webPlayerTouch; }
-        }
-
-        /// <summary>
         /// Initialize touch input in WebGL or not.
         /// </summary>
         public bool WebGLTouch
@@ -158,10 +150,6 @@ namespace TouchScript.InputSources
 
         [SerializeField]
         private Windows7APIType windows7API = Windows7APIType.Windows7;
-
-        [ToggleLeft]
-        [SerializeField]
-        private bool webPlayerTouch = true;
 
         [ToggleLeft]
         [SerializeField]
@@ -292,9 +280,6 @@ namespace TouchScript.InputSources
                 // Some other earlier Windows
                 enableMouse();
             }
-#elif UNITY_WEBPLAYER
-            if (WebPlayerTouch) enableTouch();
-            enableMouse();
 #elif UNITY_WEBGL
             if (WebGLTouch) enableTouch();
             enableMouse();

@@ -12,7 +12,6 @@ namespace TouchScript.Editor.InputSources
     {
         private SerializedProperty windows8Touch,
             windows7Touch,
-            webPlayerTouch,
             webGLTouch,
             windows8Mouse,
             windows7Mouse,
@@ -28,7 +27,6 @@ namespace TouchScript.Editor.InputSources
             instance = target as StandardInput;
             windows8Touch = serializedObject.FindProperty("windows8API");
             windows7Touch = serializedObject.FindProperty("windows7API");
-            webPlayerTouch = serializedObject.FindProperty("webPlayerTouch");
             webGLTouch = serializedObject.FindProperty("webGLTouch");
             windows8Mouse = serializedObject.FindProperty("windows8Mouse");
             windows7Mouse = serializedObject.FindProperty("windows7Mouse");
@@ -42,7 +40,6 @@ namespace TouchScript.Editor.InputSources
 
             EditorGUILayout.PropertyField(windows8Touch);
             EditorGUILayout.PropertyField(windows7Touch);
-            EditorGUILayout.PropertyField(webPlayerTouch);
             EditorGUILayout.PropertyField(webGLTouch);
             EditorGUILayout.PropertyField(windows8Mouse);
             EditorGUILayout.PropertyField(windows7Mouse);
