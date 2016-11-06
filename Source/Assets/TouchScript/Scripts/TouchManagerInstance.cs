@@ -588,7 +588,12 @@ namespace TouchScript
 
         private IEnumerator lateAwake()
         {
+			// Wait 2 frames:
+			// Frame 0: TouchManager adds layers in order
+			// Frame 1: Layers add themselves
+			// Frame 2: We add a layer if there are none
             yield return null;
+			yield return null;
 
             updateLayers();
             createCameraLayer();
