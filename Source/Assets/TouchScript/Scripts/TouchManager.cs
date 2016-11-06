@@ -20,7 +20,7 @@ namespace TouchScript
     /// <para>An instance of <see cref="TouchManager"/> may be added to a Unity scene to hold (i.e. serialize them to the scene) parameters needed to configure an instance of <see cref="ITouchManager"/> used in application. Which can be accessed via <see cref="TouchManager.Instance"/> static property.</para>
     /// <para>Though it's not required it is a convenient way to configure <b>TouchScript</b> for your scene. You can use different configuration options for different scenes.</para>
     /// </remarks>
-    [AddComponentMenu("TouchScript/Pointer Manager")]
+    [AddComponentMenu("TouchScript/Touch Manager")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_TouchManager.htm")]
     public sealed class TouchManager : DebuggableMonoBehaviour
     {
