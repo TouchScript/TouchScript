@@ -105,17 +105,20 @@ namespace TouchScript.Layers
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
 
+		[SerializeField]
+		private bool hitProps;
+
         [SerializeField]
         [ToggleLeft]
         private bool hit3DObjects = true;
 
         [SerializeField]
         [ToggleLeft]
-        private bool hit2DObjects = false;
+		private bool hit2DObjects = true;
 
         [SerializeField]
         [ToggleLeft]
-        private bool hitWorldSpaceUI = false;
+		private bool hitWorldSpaceUI = true;
 
         [SerializeField]
         [ToggleLeft]
