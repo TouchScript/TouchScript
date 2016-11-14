@@ -42,6 +42,8 @@ namespace TouchScript.Gestures
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> tappedInvoker;
 
+		public GestureEvent OnTap = new GestureEvent();
+
         #endregion
 
         #region Public properties
@@ -237,6 +239,7 @@ namespace TouchScript.Gestures
             StopCoroutine("wait");
             if (tappedInvoker != null) tappedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(TAP_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+			if (UseUnityEvents) OnTap.Invoke(this);
         }
 
         /// <inheritdoc />

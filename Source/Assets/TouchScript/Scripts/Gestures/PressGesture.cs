@@ -47,6 +47,8 @@ namespace TouchScript.Gestures
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> pressedInvoker;
 
+		public GestureEvent OnPress = new GestureEvent();
+
         #endregion
 
         #region Public properties
@@ -121,6 +123,7 @@ namespace TouchScript.Gestures
             if (pressedInvoker != null) pressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+			if (UseUnityEvents) OnPress.Invoke(this);
         }
 
         #endregion

@@ -10,6 +10,7 @@ using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TouchScript.Gestures
 {
@@ -19,6 +20,9 @@ namespace TouchScript.Gestures
     public abstract class Gesture : DebuggableMonoBehaviour
     {
         #region Constants
+
+		[Serializable]
+		public class GestureEvent : UnityEvent<Gesture> {}
 
         /// <summary>
         /// Message sent when gesture changes state if SendMessage is used.
@@ -138,6 +142,11 @@ namespace TouchScript.Gestures
         private EventHandler<GestureStateChangeEventArgs> stateChangedInvoker;
         private EventHandler<EventArgs> cancelledInvoker;
 
+		/// <summary>
+		/// Occurs when gesture changes state.
+		/// </summary>
+		public GestureEvent OnStateChange = new GestureEvent();
+
         #endregion
 
         #region Public properties
@@ -181,6 +190,8 @@ namespace TouchScript.Gestures
             get { return requireGestureToFail; }
             set
             {
+				if (!Application.isPlaying) return;
+
                 if (requireGestureToFail != null)
                     requireGestureToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
                 requireGestureToFail = value;
@@ -223,7 +234,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseSendMessage"/> is true..
+        /// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseSendMessage"/> is true.
         /// </summary>
         /// <value> <c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>. </value>
         public bool SendStateChangeMessages
@@ -245,6 +256,26 @@ namespace TouchScript.Gestures
                 if (value == null) sendMessageTarget = gameObject;
             }
         }
+
+		/// <summary>
+		/// Gets or sets whether gesture should use Unity Events in addition to C# events.
+		/// </summary>
+		/// <value> <c>true</c> if gesture uses Unity Events; otherwise, <c>false</c>. </value>
+		public bool UseUnityEvents
+		{
+			get { return useUnityEvents; }
+			set { useUnityEvents = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseUnityEvents"/> is true.
+		/// </summary>
+		/// <value> <c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>. </value>
+		public bool SendStateChangeEvents
+		{
+			get { return sendStateChangeEvents; }
+			set { sendStateChangeEvents = value; }
+		}
 
         /// <summary>
         /// Gets current gesture state.
@@ -293,6 +324,7 @@ namespace TouchScript.Gestures
                     stateChangedInvoker.InvokeHandleExceptions(this, GestureStateChangeEventArgs.GetCachedEventArgs(state, PreviousState));
                 if (useSendMessage && sendStateChangeMessages && SendMessageTarget != null)
                     sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+				if (useUnityEvents && sendStateChangeEvents) OnStateChange.Invoke(this);
             }
         }
 
@@ -427,8 +459,14 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Transform cachedTransform;
 
-        [SerializeField]
-        private bool advancedProps; // is used to save if advanced properties are opened or closed
+		[SerializeField]
+		private bool generalProps; // Used in the custom inspector
+
+		[SerializeField]
+		private bool limitsProps; // Used in the custom inspector
+
+		[SerializeField]
+		private bool advancedProps; // Used in the custom inspector
 
         [SerializeField]
         private int minPointers = 0;
@@ -454,8 +492,15 @@ namespace TouchScript.Gestures
         [SerializeField]
         private GameObject sendMessageTarget;
 
+		[SerializeField]
+		private bool useUnityEvents = false;
+
+		[SerializeField]
+		[ToggleLeft]
+		private bool sendStateChangeEvents = false;
+
         [SerializeField]
-        [NullToggle]
+		[NullToggle]
         private Gesture requireGestureToFail;
 
         [SerializeField]

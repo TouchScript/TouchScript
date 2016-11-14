@@ -42,6 +42,8 @@ namespace TouchScript.Gestures
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> longPressedInvoker;
 
+		public GestureEvent OnLongPress = new GestureEvent();
+
         #endregion
 
         #region Public properties
@@ -147,6 +149,7 @@ namespace TouchScript.Gestures
             base.onRecognized();
             if (longPressedInvoker != null) longPressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+			if (UseUnityEvents) OnLongPress.Invoke(this);
         }
 
         /// <inheritdoc />

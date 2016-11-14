@@ -34,10 +34,10 @@ namespace TouchScript
 #endif
 
         [Serializable]
-        public class PointerEvent : UnityEvent<IList<Pointer>> { }
+        public class PointerEvent : UnityEvent<IList<Pointer>> {}
 
         [Serializable]
-        public class FrameEvent : UnityEvent { }
+        public class FrameEvent : UnityEvent {}
 
         /// <summary>
         /// Values of a bit-mask representing which Unity messages an instance of <see cref="TouchManager"/> will dispatch.
@@ -94,42 +94,42 @@ namespace TouchScript
             /// <summary>
             /// Pointer frame started.
             /// </summary>
-            OnPointerFrameStarted = MessageType.FrameStarted,
+            OnFrameStart = MessageType.FrameStarted,
 
             /// <summary>
             /// Pointer frame finished.
             /// </summary>
-            OnPointerFrameFinished = MessageType.FrameFinished,
+            OnFrameFinish = MessageType.FrameFinished,
 
             /// <summary>
             /// Some pointers were added during the frame.
             /// </summary>
-            OnPointersAdded = MessageType.PointersAdded,
+            OnPointersAdd = MessageType.PointersAdded,
 
             /// <summary>
             /// Some pointers have updated during the frame.
             /// </summary>
-            OnPointersUpdated = MessageType.PointersUpdated,
+            OnPointersUpdate = MessageType.PointersUpdated,
 
             /// <summary>
             /// Some pointers have touched the surface during the frame.
             /// </summary>
-            OnPointersPressed = MessageType.PointersPressed,
+            OnPointersPress = MessageType.PointersPressed,
 
             /// <summary>
             /// Some pointers were released during the frame.
             /// </summary>
-            OnPointersReleased = MessageType.PointersReleased,
+            OnPointersRelease = MessageType.PointersReleased,
 
             /// <summary>
             /// Some pointers were removed during the frame.
             /// </summary>
-            OnPointersRemoved = MessageType.PointersRemoved,
+            OnPointersRemove = MessageType.PointersRemoved,
 
             /// <summary>
             /// Some pointers were cancelled during the frame.
             /// </summary>
-            OnPointersCancelled = MessageType.PointersCancelled
+            OnPointersCancel = MessageType.PointersCancelled
         }
 
         /// <summary>
@@ -154,6 +154,57 @@ namespace TouchScript
 		public static readonly string VERSION_SUFFIX = "alpha";
 
         #endregion
+
+		#region Events
+
+		/// <summary>
+		/// Occurs when a new frame is started before all other events.
+		/// </summary>
+		public FrameEvent OnFrameStart = new FrameEvent();
+
+		/// <summary>
+		/// Occurs when a frame is finished. After all other events.
+		/// </summary>
+		[SerializeField]
+		public FrameEvent OnFrameFinish = new FrameEvent();
+
+		/// <summary>
+		/// Occurs when new hovering pointers are added.
+		/// </summary>
+		[SerializeField]
+		public PointerEvent OnPointersAdd = new PointerEvent();
+
+		/// <summary>
+		/// Occurs when pointers are updated.
+		/// </summary>
+		[SerializeField]
+		public PointerEvent OnPointersUpdate = new PointerEvent();
+
+		/// <summary>
+		/// Occurs when pointers touch the surface.
+		/// </summary>
+		[SerializeField]
+		public PointerEvent OnPointersPress = new PointerEvent();
+
+		/// <summary>
+		/// Occurs when pointers are released.
+		/// </summary>
+		[SerializeField]
+		public PointerEvent OnPointersRelease = new PointerEvent();
+
+		/// <summary>
+		/// Occurs when pointers are removed from the system.
+		/// </summary>
+		[SerializeField]
+		public PointerEvent OnPointersRemove = new PointerEvent();
+
+		/// <summary>
+		/// Occurs when pointers are cancelled.
+		/// </summary>
+		[SerializeField]
+		public PointerEvent OnPointersCancel = new PointerEvent();
+
+		#endregion
 
         #region Public properties
 
@@ -272,53 +323,6 @@ namespace TouchScript
                 updateUnityEventsSubscription();
             }
         }
-
-        /// <summary>
-        /// Occurs when a new frame is started before all other events.
-        /// </summary>
-        public FrameEvent FrameStarted = new FrameEvent();
-
-        /// <summary>
-        /// Occurs when a frame is finished. After all other events.
-        /// </summary>
-        [SerializeField]
-        public FrameEvent FrameFinished = new FrameEvent();
-
-        /// <summary>
-        /// Occurs when new hovering pointers are added.
-        /// </summary>
-        [SerializeField]
-        public PointerEvent PointersAdded = new PointerEvent();
-
-        /// <summary>
-        /// Occurs when pointers are updated.
-        /// </summary>
-        [SerializeField]
-        public PointerEvent PointersUpdated = new PointerEvent();
-
-        /// <summary>
-        /// Occurs when pointers touch the surface.
-        /// </summary>
-        [SerializeField]
-        public PointerEvent PointersPressed = new PointerEvent();
-
-        /// <summary>
-        /// Occurs when pointers are released.
-        /// </summary>
-        [SerializeField]
-        public PointerEvent PointersReleased = new PointerEvent();
-
-        /// <summary>
-        /// Occurs when pointers are removed from the system.
-        /// </summary>
-        [SerializeField]
-        public PointerEvent PointersRemoved = new PointerEvent();
-
-        /// <summary>
-        /// Occurs when pointers are cancelled.
-        /// </summary>
-        [SerializeField]
-        public PointerEvent PointersCancelled = new PointerEvent();
 
 #if TOUCHSCRIPT_DEBUG
 
@@ -458,49 +462,49 @@ namespace TouchScript
 
         private void pointersAddedSendMessageHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersAdded.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersAdd.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void pointersUpdatedSendMessageHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersUpdated.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersUpdate.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void pointersPressedSendMessageHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersPressed.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersPress.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void pointersReleasedSendMessageHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersReleased.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersRelease.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void pointersRemovedSendMessageHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersRemoved.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersRemove.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void pointersCancelledSendMessageHandler(object sender, PointerEventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointersCancelled.ToString(), e.Pointers,
+            sendMessageTarget.SendMessage(MessageName.OnPointersCancel.ToString(), e.Pointers,
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameStartedSendMessageHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointerFrameStarted.ToString(),
+            sendMessageTarget.SendMessage(MessageName.OnFrameStart.ToString(),
                 SendMessageOptions.DontRequireReceiver);
         }
 
         private void frameFinishedSendMessageHandler(object sender, EventArgs e)
         {
-            sendMessageTarget.SendMessage(MessageName.OnPointerFrameFinished.ToString(),
+            sendMessageTarget.SendMessage(MessageName.OnFrameFinish.ToString(),
                 SendMessageOptions.DontRequireReceiver);
         }
 
@@ -540,42 +544,42 @@ namespace TouchScript
 
         private void pointersAddedUnityEventsHandler(object sender, PointerEventArgs e)
         {
-            PointersAdded.Invoke(e.Pointers);
+            OnPointersAdd.Invoke(e.Pointers);
         }
 
         private void pointersUpdatedUnityEventsHandler(object sender, PointerEventArgs e)
         {
-            PointersUpdated.Invoke(e.Pointers);
+            OnPointersUpdate.Invoke(e.Pointers);
         }
 
         private void pointersPressedUnityEventsHandler(object sender, PointerEventArgs e)
         {
-            PointersPressed.Invoke(e.Pointers);
+            OnPointersPress.Invoke(e.Pointers);
         }
 
         private void pointersReleasedUnityEventsHandler(object sender, PointerEventArgs e)
         {
-            PointersReleased.Invoke(e.Pointers);
+            OnPointersRelease.Invoke(e.Pointers);
         }
 
         private void pointersRemovedUnityEventsHandler(object sender, PointerEventArgs e)
         {
-            PointersRemoved.Invoke(e.Pointers);
+            OnPointersRemove.Invoke(e.Pointers);
         }
 
         private void pointersCancelledUnityEventsHandler(object sender, PointerEventArgs e)
         {
-            PointersCancelled.Invoke(e.Pointers);
+            OnPointersCancel.Invoke(e.Pointers);
         }
 
         private void frameStartedUnityEventsHandler(object sender, EventArgs e)
         {
-            FrameStarted.Invoke();
+            OnFrameStart.Invoke();
         }
 
         private void frameFinishedUnityEventsHandler(object sender, EventArgs e)
         {
-            FrameFinished.Invoke();
+            OnFrameFinish.Invoke();
         }
 
         #endregion

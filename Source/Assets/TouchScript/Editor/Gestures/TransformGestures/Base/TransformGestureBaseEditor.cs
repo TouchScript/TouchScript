@@ -8,65 +8,43 @@ using UnityEngine;
 
 namespace TouchScript.Editor.Gestures.TransformGestures.Base
 {
-    internal class TransformGestureBaseEditor : GestureEditor
-    {
-        public static readonly GUIContent TYPE = new GUIContent("Transform Type", "Specifies what gestures should be detected: Translation, Rotation, Scaling.");
-        public static readonly GUIContent TYPE_TRANSLATION = new GUIContent(" Translation", "Dragging with one ore more fingers.");
-        public static readonly GUIContent TYPE_ROTATION = new GUIContent(" Rotation", "Rotating with two or more fingers.");
-        public static readonly GUIContent TYPE_SCALING = new GUIContent(" Scaling", "Scaling with two or more fingers.");
-        public static readonly GUIContent MIN_SCREEN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two pointers (clusters) in cm to consider this gesture started. Used to prevent fake pointers spawned near real ones on cheap multitouch hardware to mess everything up.");
-        public static readonly GUIContent SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm pointers must move for the gesture to begin.");
+	internal class TransformGestureBaseEditor : GestureEditor
+	{
+		public static readonly GUIContent TEXT_PROJECTION_HEADER = new GUIContent("Projection", "Screen to 3D object projection parameters.");
 
-        protected SerializedProperty type;
-        protected SerializedProperty minScreenPointsDistance;
-        protected SerializedProperty screenTransformThreshold;
+		public static readonly GUIContent TEXT_TYPE = new GUIContent("Transform Type", "Specifies what gestures should be detected: Translation, Rotation, Scaling.");
+		public static readonly GUIContent TEXT_TYPE_TRANSLATION = new GUIContent(" Translation", "Dragging with one ore more fingers.");
+		public static readonly GUIContent TEXT_TYPE_ROTATION = new GUIContent(" Rotation", "Rotating with two or more fingers.");
+		public static readonly GUIContent TEXT_TYPE_SCALING = new GUIContent(" Scaling", "Scaling with two or more fingers.");
+		public static readonly GUIContent TEXT_MIN_SCREEN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two pointers (clusters) in cm to consider this gesture started. Used to prevent fake pointers spawned near real ones on cheap multitouch hardware to mess everything up.");
+		public static readonly GUIContent TEXT_SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm pointers must move for the gesture to begin.");
+		public static readonly GUIContent TEXT_PROJECTION = new GUIContent("Type", "Method used to project 2d screen positions of pointers into 3d space.");
+		public static readonly GUIContent TEXT_PROJECTION_NORMAL = new GUIContent("Normal", "Normal of the plane in 3d space where pointers' positions are projected.");
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		protected SerializedProperty type, minScreenPointsDistance, screenTransformThreshold;
+		protected SerializedProperty OnTransformStart, OnTransform, OnTransformComplete;
 
-            type = serializedObject.FindProperty("type");
-            minScreenPointsDistance = serializedObject.FindProperty("minScreenPointsDistance");
-            screenTransformThreshold = serializedObject.FindProperty("screenTransformThreshold");
-        }
+		protected override void OnEnable()
+		{
+			type = serializedObject.FindProperty("type");
+			minScreenPointsDistance = serializedObject.FindProperty("minScreenPointsDistance");
+			screenTransformThreshold = serializedObject.FindProperty("screenTransformThreshold");
+			OnTransformStart = serializedObject.FindProperty("OnTransformStart");
+			OnTransform = serializedObject.FindProperty("OnTransform");
+			OnTransformComplete = serializedObject.FindProperty("OnTransformComplete");
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.UpdateIfDirtyOrScript();
+			base.OnEnable();
+		}
 
-            var typeValue = type.intValue;
-            int newType = 0;
-            EditorGUILayout.LabelField(TYPE);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.BeginHorizontal();
-            if (EditorGUILayout.ToggleLeft(TYPE_TRANSLATION,
-                (typeValue & (int)TransformGesture.TransformType.Translation) != 0, GUILayout.Width(100)))
-                newType |= (int)TransformGesture.TransformType.Translation;
-            EditorGUI.indentLevel--;
-            if (EditorGUILayout.ToggleLeft(TYPE_ROTATION,
-                (typeValue & (int)TransformGesture.TransformType.Rotation) != 0, GUILayout.Width(70)))
-                newType |= (int)TransformGesture.TransformType.Rotation;
-            if (EditorGUILayout.ToggleLeft(TYPE_SCALING,
-                (typeValue & (int)TransformGesture.TransformType.Scaling) != 0, GUILayout.Width(70)))
-                newType |= (int)TransformGesture.TransformType.Scaling;
-            type.intValue = newType;
-            EditorGUILayout.EndHorizontal();
+		protected override void drawUnityEvents ()
+		{
+			EditorGUILayout.PropertyField(OnTransformStart);
+			EditorGUILayout.PropertyField(OnTransform);
+			EditorGUILayout.PropertyField(OnTransformComplete);
 
-            doInspectorGUI();
+			base.drawUnityEvents ();
+		}
 
-            serializedObject.ApplyModifiedProperties();
-            base.OnInspectorGUI();
-        }
-
-        protected virtual void doInspectorGUI() {}
-
-        protected override void drawAdvanced()
-        {
-            EditorGUIUtility.labelWidth = 160;
-            EditorGUILayout.PropertyField(minScreenPointsDistance, MIN_SCREEN_POINTS_DISTANCE);
-            EditorGUILayout.PropertyField(screenTransformThreshold, SCREEN_TRANSFORM_THRESHOLD);
-
-            base.drawAdvanced();
-        }
-    }
+	}
 }
+

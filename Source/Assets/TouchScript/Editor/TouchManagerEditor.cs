@@ -11,45 +11,70 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using System.Reflection;
 
 namespace TouchScript.Editor
 {
     [CustomEditor(typeof(TouchManager))]
     internal sealed class TouchManagerEditor : UnityEditor.Editor
     {
-        private static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
-        private static readonly GUIContent DEBUG_MODE = new GUIContent("Debug", "Turns on debug mode.");
-        private static readonly GUIContent DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
-        private static readonly GUIContent CREATE_CAMERA_LAYER = new GUIContent("Create Camera Layer", "Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene. This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get input from some device.");
-        private static readonly GUIContent CREATE_STANDARD_INPUT = new GUIContent("Create Standard Input", "");
-        private static readonly GUIContent USE_SEND_MESSAGE = new GUIContent("Use SendMessage", "If you use UnityScript or prefer using Unity Messages you can turn them on with this option.");
-        private static readonly GUIContent SEND_MESSAGE_TARGET = new GUIContent("SendMessage Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
-        private static readonly GUIContent SEND_MESSAGE_EVENTS = new GUIContent("SendMessage Events", "Which events should be sent as Unity Messages.");
-        private static readonly GUIContent LAYERS_HEADER = new GUIContent("Pointer Layers", "Sorted array of Pointer Layers in the scene.");
+		public static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
+		public static readonly GUIContent TEXT_LAYERS_HEADER = new GUIContent("Pointer Layers", "Sorted array of Pointer Layers in the scene.");
+		public static readonly GUIContent TEXT_USE_SEND_MESSAGE_HEADER = new GUIContent("Use SendMessage", "Enables sending events through SendMessage. Warnning: this method is slow!");
+		public static readonly GUIContent TEXT_USE_UNITY_EVENTS_HEADER = new GUIContent("Use Unity Events", "Enables sending events through Unity Events.");
+		public static readonly GUIContent TEXT_DEFAULTS_HEADER = new GUIContent("Defaults", "Default actions when some of TouchScript components are not present in the scene.");
+
+		public static readonly GUIContent TEXT_DEBUG_MODE = new GUIContent("Debug", "Turns on debug mode.");
+		public static readonly GUIContent TEXT_DISPLAY_DEVICE = new GUIContent("Display Device", "Display device properties where such parameters as target DPI are stored.");
+		public static readonly GUIContent TEXT_CREATE_CAMERA_LAYER = new GUIContent("Create Camera Layer", "Indicates if TouchScript should create a CameraLayer for you if no layers present in a scene. This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get input from some device.");
+		public static readonly GUIContent TEXT_CREATE_STANDARD_INPUT = new GUIContent("Create Standard Input", "");
+		public static readonly GUIContent TEXT_SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
+		public static readonly GUIContent TEXT_SEND_MESSAGE_EVENTS = new GUIContent("Events", "Which events should be sent as Unity Messages.");
 
         private TouchManager instance;
         private ReorderableList layersList;
-        private SerializedProperty advanced;
+        private SerializedProperty advancedProps;
         private SerializedProperty debugMode;
-        private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, shouldCreateStandardInput, useSendMessage, sendMessageTarget, sendMessageEvents;
+        private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, shouldCreateStandardInput, 
+		useSendMessage, sendMessageTarget, sendMessageEvents;
+		private SerializedProperty OnFrameStart, OnFrameFinish, OnPointersAdd, OnPointersUpdate, OnPointersPress, 
+		OnPointersRelease, OnPointersRemove, OnPointersCancel, useUnityEvents;
+		private PropertyInfo useUnityEvents_prop, useSendMessage_prop;
 
         private void OnEnable()
         {
             instance = target as TouchManager;
-            advanced = serializedObject.FindProperty("advancedProps");
+
+            advancedProps = serializedObject.FindProperty("advancedProps");
             debugMode = serializedObject.FindProperty("debugMode");
             layers = serializedObject.FindProperty("layers");
             displayDevice = serializedObject.FindProperty("displayDevice");
             shouldCreateCameraLayer = serializedObject.FindProperty("shouldCreateCameraLayer");
             shouldCreateStandardInput = serializedObject.FindProperty("shouldCreateStandardInput");
+
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendMessageEvents = serializedObject.FindProperty("sendMessageEvents");
 
+            useUnityEvents = serializedObject.FindProperty("useUnityEvents");
+			OnFrameStart = serializedObject.FindProperty("OnFrameStart");
+			OnFrameFinish = serializedObject.FindProperty("OnFrameFinish");
+			OnPointersAdd = serializedObject.FindProperty("OnPointersAdd");
+			OnPointersUpdate = serializedObject.FindProperty("OnPointersUpdate");
+			OnPointersPress = serializedObject.FindProperty("OnPointersPress");
+			OnPointersRelease = serializedObject.FindProperty("OnPointersRelease");
+			OnPointersRemove = serializedObject.FindProperty("OnPointersRemove");
+			OnPointersCancel = serializedObject.FindProperty("OnPointersCancel");
+
+			var type = instance.GetType();
+			useUnityEvents_prop = type.GetProperty("UseUnityEvents", BindingFlags.Instance | BindingFlags.Public);
+			useSendMessage_prop = type.GetProperty("UseSendMessage", BindingFlags.Instance | BindingFlags.Public);
+
             refresh();
 
-            layersList = new ReorderableList(serializedObject, layers, true, true, false, false);
-            layersList.drawHeaderCallback += rect => GUI.Label(rect, LAYERS_HEADER);
+            layersList = new ReorderableList(serializedObject, layers, true, false, false, false);
+			layersList.headerHeight = 0;
+			layersList.footerHeight = 0;
             layersList.drawElementCallback += (rect, index, active, focused) =>
             {
                 rect.height = 16;
@@ -69,77 +94,108 @@ namespace TouchScript.Editor
         {
             serializedObject.Update();
 
-            var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
-            var label = EditorGUI.BeginProperty(r, DISPLAY_DEVICE, displayDevice);
-            EditorGUI.BeginChangeCheck();
-            r = EditorGUI.PrefixLabel(r, label);
-            var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
-            if (EditorGUI.EndChangeCheck())
-            {
-                instance.DisplayDevice = newDevice;
-                EditorUtility.SetDirty(instance);
-            }
-            EditorGUI.EndProperty();
+			GUILayout.Space(5);
 
-            if (Application.isPlaying) GUI.enabled = false;
-            EditorGUILayout.PropertyField(shouldCreateCameraLayer, CREATE_CAMERA_LAYER);
-            EditorGUILayout.PropertyField(shouldCreateStandardInput, CREATE_STANDARD_INPUT);
-            GUI.enabled = true;
+			var display = GUIElements.Header(TEXT_DEFAULTS_HEADER, shouldCreateCameraLayer);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				using (new EditorGUI.DisabledGroupScope(Application.isPlaying))
+				{
+					EditorGUILayout.PropertyField(shouldCreateCameraLayer, TEXT_CREATE_CAMERA_LAYER);
+					EditorGUILayout.PropertyField(shouldCreateStandardInput, TEXT_CREATE_STANDARD_INPUT);
+				}
+				EditorGUI.indentLevel--;
+			}
 
-            EditorGUIUtility.labelWidth = 160;
-            EditorGUILayout.PropertyField(useSendMessage, USE_SEND_MESSAGE);
-            if (useSendMessage.boolValue)
-            {
-                EditorGUILayout.PropertyField(sendMessageTarget, SEND_MESSAGE_TARGET);
+			display = GUIElements.Header(TEXT_USE_UNITY_EVENTS_HEADER, useUnityEvents, useUnityEvents, useUnityEvents_prop);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				using (new EditorGUI.DisabledGroupScope(!useUnityEvents.boolValue))
+				{
+					EditorGUILayout.PropertyField(OnFrameStart);
+					EditorGUILayout.PropertyField(OnFrameFinish);
+					EditorGUILayout.PropertyField(OnPointersAdd);
+					EditorGUILayout.PropertyField(OnPointersUpdate);
+					EditorGUILayout.PropertyField(OnPointersPress);
+					EditorGUILayout.PropertyField(OnPointersRelease);
+					EditorGUILayout.PropertyField(OnPointersRemove);
+					EditorGUILayout.PropertyField(OnPointersCancel);
+				}
+				EditorGUI.indentLevel--;
+			}
 
-                r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.layerMaskField);
-                label = EditorGUI.BeginProperty(r, SEND_MESSAGE_EVENTS, sendMessageEvents);
-                EditorGUI.BeginChangeCheck();
-                r = EditorGUI.PrefixLabel(r, label);
-                var sMask = (TouchManager.MessageType)EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    instance.SendMessageEvents = sMask;
-                    EditorUtility.SetDirty(instance);
-                }
-                EditorGUI.EndProperty();
-            }
+			display = GUIElements.Header(TEXT_USE_SEND_MESSAGE_HEADER, useSendMessage, useSendMessage, useSendMessage_prop);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				using (new EditorGUI.DisabledGroupScope(!useSendMessage.boolValue))
+				{
+					EditorGUILayout.PropertyField(sendMessageTarget, TEXT_SEND_MESSAGE_TARGET);
 
-            if (Application.isPlaying) GUI.enabled = false;
+					var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.layerMaskField);
+					var label = EditorGUI.BeginProperty(r, TEXT_SEND_MESSAGE_EVENTS, sendMessageEvents);
+					EditorGUI.BeginChangeCheck();
+					r = EditorGUI.PrefixLabel(r, label);
+					var sMask = (TouchManager.MessageType)EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
+					if (EditorGUI.EndChangeCheck())
+					{
+						instance.SendMessageEvents = sMask;
+						EditorUtility.SetDirty(instance);
+					}
+					EditorGUI.EndProperty();
+				}
+				EditorGUI.indentLevel--;
+			}
 
-            layersList.DoLayoutList();
+			display = GUIElements.Header(TEXT_LAYERS_HEADER, layers);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				using (new EditorGUI.DisabledGroupScope(Application.isPlaying))
+				{
+					layersList.DoLayoutList();
+				}
+				EditorGUI.indentLevel--;
+			}
 
-            GUI.enabled = true;
+			display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				drawAdvanced();
+				EditorGUI.indentLevel--;
+			}
 
-            if (debugMode != null)
-            {
-                EditorGUI.BeginChangeCheck();
-                var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    advanced.isExpanded = expanded;
-                }
-                if (expanded)
-                {
-                    GUILayout.BeginVertical(GUIElements.FoldoutStyle);
-                    drawAdvanced();
-                    GUILayout.EndVertical();
-                }
-                GUIElements.EndFoldout();
-            }
             serializedObject.ApplyModifiedProperties();
         }
 
         private void drawAdvanced()
         {
-            drawDebug();
+			if (debugMode != null)
+			{
+				var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
+				var label = EditorGUI.BeginProperty(r, TEXT_DISPLAY_DEVICE, displayDevice);
+				EditorGUI.BeginChangeCheck();
+				r = EditorGUI.PrefixLabel(r, label);
+				var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
+				if (EditorGUI.EndChangeCheck())
+				{
+					instance.DisplayDevice = newDevice;
+					EditorUtility.SetDirty(instance);
+				}
+				EditorGUI.EndProperty();
+
+            	drawDebug();
+			}
         }
 
         private void drawDebug()
         {
             if (debugMode == null) return;
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(debugMode, DEBUG_MODE);
+            EditorGUILayout.PropertyField(debugMode, TEXT_DEBUG_MODE);
             if (EditorGUI.EndChangeCheck()) instance.DebugMode = debugMode.boolValue;
         }
 

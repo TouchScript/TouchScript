@@ -67,6 +67,10 @@ namespace TouchScript.Gestures.TransformGestures.Base
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> transformStartedInvoker, transformedInvoker, transformCompletedInvoker;
 
+		public GestureEvent OnTransformStart = new GestureEvent();
+		public GestureEvent OnTransform = new GestureEvent();
+		public GestureEvent OnTransformComplete = new GestureEvent();
+
         #endregion
 
         #region Public properties
@@ -276,9 +280,8 @@ namespace TouchScript.Gestures.TransformGestures.Base
             base.onBegan();
             if (transformStartedInvoker != null) transformStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
-            {
                 SendMessageTarget.SendMessage(TRANSFORM_START_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
-            }
+			if (UseUnityEvents) OnTransformStart.Invoke(this);
         }
 
         /// <inheritdoc />
@@ -291,6 +294,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
             if (transformedInvoker != null) transformedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+			if (UseUnityEvents) OnTransform.Invoke(this);
         }
 
         /// <inheritdoc />
@@ -302,6 +306,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 transformCompletedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null)
                 SendMessageTarget.SendMessage(TRANSFORM_COMPLETE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+			if (UseUnityEvents) OnTransformComplete.Invoke(this);
         }
 
         /// <inheritdoc />

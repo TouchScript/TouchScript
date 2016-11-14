@@ -6,34 +6,40 @@ using TouchScript.Editor.Gestures.TransformGestures.Base;
 using TouchScript.Gestures.TransformGestures;
 using UnityEditor;
 using UnityEngine;
+using TouchScript.Editor.Utils;
 
 namespace TouchScript.Editor.Gestures.TransformGestures
 {
     [CustomEditor(typeof(PinnedTransformGesture), true)]
-    internal class PinnedTransformGestureEditor : PinnedTransformGestureBaseEditor
+    internal class PinnedTransformGestureEditor : OnePointTransformGestureBaseEditor
     {
-        private static readonly GUIContent PROJECTION = new GUIContent("Projection Type", "Method used to project 2d screen positions of pointers into 3d space.");
-        private static readonly GUIContent PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where pointers' positions are projected.");
-
-        private SerializedProperty projection;
-        private SerializedProperty projectionPlaneNormal;
+		public SerializedProperty projection, projectionPlaneNormal;
+		public SerializedProperty projectionProps;
 
         protected override void OnEnable()
         {
-            base.OnEnable();
-
             projection = serializedObject.FindProperty("projection");
             projectionPlaneNormal = serializedObject.FindProperty("projectionPlaneNormal");
+
+			projectionProps = serializedObject.FindProperty("projectionProps");
+
+			base.OnEnable();
         }
 
-        protected override void doInspectorGUI()
-        {
-            EditorGUILayout.PropertyField(projection, PROJECTION);
-            if (projection.enumValueIndex != (int)TransformGesture.ProjectionType.Layer)
-            {
-                EditorGUILayout.PropertyField(projectionPlaneNormal, PROJECTION_NORMAL);
-            }
-        }
+		protected override void drawOtherGUI()
+		{
+			var display = GUIElements.Header(TEXT_PROJECTION_HEADER, projectionProps);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				EditorGUILayout.PropertyField(projection, TEXT_PROJECTION);
+				if (projection.enumValueIndex != (int)TransformGesture.ProjectionType.Layer)
+				{
+					EditorGUILayout.PropertyField(projectionPlaneNormal, TEXT_PROJECTION_NORMAL);
+				}
+				EditorGUI.indentLevel--;
+			}
+		}
 
     }
 }
