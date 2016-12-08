@@ -48,14 +48,14 @@ namespace TouchScript.Behaviors
         /// Gets or sets the smoothing factor.
         /// </summary>
         /// <value>
-        /// The smoothing factor. Indicates how much smoothing to apply. 0 - no smoothing, 10000 - maximum.
+        /// The smoothing factor. Indicates how much smoothing to apply. 0 - no smoothing, 100000 - maximum.
         /// </value>
         public float SmoothingFactor
         {
-            get { return smoothingFactor * 10000f; }
+            get { return smoothingFactor * 100000f; }
             set
             {
-                smoothingFactor = Mathf.Clamp(value / 10000f, 0, 1);
+                smoothingFactor = Mathf.Clamp(value / 100000f, 0, 1);
             }
         }
 
@@ -116,7 +116,7 @@ namespace TouchScript.Behaviors
         private bool enableSmoothing = false;
 
         [SerializeField]
-        private float smoothingFactor = 1f/10000f;
+        private float smoothingFactor = 1f/100000f;
 
         [SerializeField]
         private float positionThreshold = 0.0001f; 
