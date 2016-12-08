@@ -128,6 +128,9 @@ namespace TouchScript.Gestures.TransformGestures
 
         #region Private variables
 
+		[SerializeField]
+		private bool projectionProps; // Used in the custom inspector
+
         [SerializeField]
         private ProjectionType projection = ProjectionType.Layer;
 

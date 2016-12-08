@@ -145,6 +145,12 @@ namespace TouchScript.InputSources
 
         private static StandardInput instance;
 
+		[SerializeField]
+		private bool generalProps; // Used in the custom inspector
+
+		[SerializeField]
+		private bool windowsProps; // Used in the custom inspector
+
         [SerializeField]
         private Windows8APIType windows8API = Windows8APIType.Windows8;
 

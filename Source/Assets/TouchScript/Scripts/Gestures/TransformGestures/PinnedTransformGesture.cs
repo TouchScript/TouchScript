@@ -75,6 +75,9 @@ namespace TouchScript.Gestures.TransformGestures
 
         #region Private variables
 
+		[SerializeField]
+		private bool projectionProps; // Used in the custom inspector
+
         [SerializeField]
         private TransformGesture.ProjectionType projection = TransformGesture.ProjectionType.Layer;
 

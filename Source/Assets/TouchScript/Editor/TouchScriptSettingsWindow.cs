@@ -106,7 +106,7 @@ namespace TouchScript.Editor
 			setDefine(DEFINE_DEBUG, EditorGUILayout.ToggleLeft("Enable Debug Mode", enabledDefines[DEFINE_DEBUG]));
 			EditorGUILayout.LabelField("Enables " + DEFINE_DEBUG + " define to turn on some TouchScript debug features.", EditorStyles.miniLabel);
 			setDefine(DEFINE_TUIO, EditorGUILayout.ToggleLeft("Enable TUIO", enabledDefines[DEFINE_TUIO]));
-			EditorGUILayout.LabelField("Enables " + DEFINE_TUIO + " define, this adds TUIOInput for working with TUIO protocol.", EditorStyles.miniLabel);
+			EditorGUILayout.LabelField("Enables " + DEFINE_TUIO + " define, this adds TUIO protocol support.", EditorStyles.miniLabel);
 
 			EditorGUILayout.EndVertical();
 			GUILayout.Space(10);
@@ -150,7 +150,7 @@ namespace TouchScript.Editor
 
 		private void drawShowAtStartup()
 		{
-			bool show = GUI.Toggle(new Rect(10, height - 24, 100, 30), showAtStartup, "Show at startup");
+			bool show = GUI.Toggle(new Rect(10, height - 24, 120, 30), showAtStartup, "Show at startup");
 			if (show != showAtStartup)
 			{
 				showAtStartup = show;

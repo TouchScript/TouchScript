@@ -12,9 +12,9 @@ namespace TouchScript.Editor.Utils
     {
 		public static GUIStyle BoxStyle;
 		public static GUIStyle BoxLabelStyle;
-		public static GUIStyle FoldoutStyle;
+
+		public static GUIStyle HelpBox;
 		public static GUIStyle HeaderStyle;
-		public static GUIStyle Header2Style;
 		public static GUIStyle HeaderCheckbox;
 		public static GUIStyle HeaderFoldout;
 
@@ -37,17 +37,12 @@ namespace TouchScript.Editor.Utils
 				padding = new RectOffset(0, 0, 5, 0),
 			};
 
-			FoldoutStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleBg"))
+			HelpBox = new GUIStyle("HelpBox")
 			{
-				padding = new RectOffset(10, 10, 10, 10),
+				wordWrap = true,
 			};
 
-			HeaderStyle = new GUIStyle(GUI.skin.FindStyle("ShurikenModuleTitle"))
-			{
-				contentOffset = new Vector2(3, -2),
-			};
-
-			Header2Style = new GUIStyle("ShurikenModuleTitle")
+			HeaderStyle = new GUIStyle("ShurikenModuleTitle")
 			{
 				font = (new GUIStyle("Label")).font,
 				border = new RectOffset(15, 7, 4, 4),
@@ -64,22 +59,10 @@ namespace TouchScript.Editor.Utils
 				PaneOptionsIcon = (Texture2D)EditorGUIUtility.LoadRequired("Builtin Skins/LightSkin/Images/pane options.png");
         }
 
-        public static bool BeginFoldout(bool open, GUIContent header)
-        {
-            GUILayout.BeginVertical("ShurikenEffectBg", GUILayout.MinHeight(16f));
-
-			return GUI.Toggle(GUILayoutUtility.GetRect(0, 16), open, header, HeaderStyle);
-        }
-
-        public static void EndFoldout()
-        {
-            GUILayout.EndVertical();
-        }
-
 		public static bool Header(GUIContent title, SerializedProperty expanded, SerializedProperty enabled = null, PropertyInfo enabledProp = null)
 		{
-			var rect = GUILayoutUtility.GetRect(16f, 22f, Header2Style);
-			GUI.Box(rect, title, Header2Style);
+			var rect = GUILayoutUtility.GetRect(16f, 22f, HeaderStyle);
+			GUI.Box(rect, title, HeaderStyle);
 
 			var display = expanded == null || expanded.isExpanded;
 

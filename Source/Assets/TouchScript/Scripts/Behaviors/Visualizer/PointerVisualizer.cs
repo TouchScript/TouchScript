@@ -76,6 +76,12 @@ namespace TouchScript.Behaviors.Visualizer
 
         #region Private variables
 
+		[SerializeField]
+		private bool generalProps; // Used in the custom inspector
+
+		[SerializeField]
+		private bool advancedProps; // Used in the custom inspector
+
         [SerializeField]
         private PointerProxyBase pointerProxy;
 
