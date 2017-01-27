@@ -5,6 +5,7 @@
 using UnityEngine;
 using TouchScript.Layers;
 using TouchScript.Pointers;
+using TouchScript.InputSources;
 
 namespace TouchScript.Examples.Cube
 {
@@ -17,8 +18,8 @@ namespace TouchScript.Examples.Cube
         public bool ShouldReceivePointer(TouchLayer layer, IPointer pointer)
         {
             if (layer == RenderTextureLayer)
-                return pointer.InputSource == Source;
-            return pointer.InputSource != Source;
+				return pointer.InputSource == (IInputSource)Source;
+			return pointer.InputSource != (IInputSource)Source;
         }
     }
 }

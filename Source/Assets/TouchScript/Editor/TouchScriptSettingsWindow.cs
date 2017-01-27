@@ -45,13 +45,13 @@ namespace TouchScript.Editor
 
         static TouchScriptSettingsWindow()
         {
-            showAtStartup = EditorPrefs.GetBool(SHOW_AT_STARTUP, true);
 			EditorApplication.update += doShow;
         }
 
 		private static void doShow() 
 		{
 			EditorApplication.update -= doShow;
+			showAtStartup = EditorPrefs.GetBool(SHOW_AT_STARTUP, true);
 
 			if (so == null) 
 			{

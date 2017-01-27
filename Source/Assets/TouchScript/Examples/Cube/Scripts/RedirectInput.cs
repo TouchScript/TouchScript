@@ -76,7 +76,7 @@ namespace TouchScript.Examples.Cube
         private void pointerPressedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
-            if (pointer.InputSource == this) return;
+			if (pointer.InputSource == (IInputSource)this) return;
 
             var newPointer = PointerFactory.Create(pointer.Type, this);
             newPointer.CopyFrom(pointer);
@@ -91,7 +91,7 @@ namespace TouchScript.Examples.Cube
         {
 			var pointer = metaGestureEventArgs.Pointer;
 
-            if (pointer.InputSource == this) return;
+			if (pointer.InputSource == (IInputSource)this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
@@ -105,7 +105,7 @@ namespace TouchScript.Examples.Cube
         private void pointerReleasedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
-            if (pointer.InputSource == this) return;
+			if (pointer.InputSource == (IInputSource)this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
@@ -117,7 +117,7 @@ namespace TouchScript.Examples.Cube
         private void pointerCancelledhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
-            if (pointer.InputSource == this) return;
+			if (pointer.InputSource == (IInputSource)this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
