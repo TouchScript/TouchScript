@@ -133,7 +133,8 @@ namespace TouchScript.Layers.UI
 
         public override bool IsPointerOverGameObject(int pointerId)
         {
-            return base.IsPointerOverGameObject(pointerId);
+			if (ui != null) return ui.IsPointerOverGameObject(pointerId);
+			return false;
         }
 
         public override bool ShouldActivateModule()
@@ -214,7 +215,7 @@ namespace TouchScript.Layers.UI
                 this.input = input;
             }
 
-            #region Unchanged
+            #region Unchanged from PointerInputModule
 
             private int m_ConsecutiveMoveCount = 0;
             private Vector2 m_LastMoveVector;
@@ -222,8 +223,17 @@ namespace TouchScript.Layers.UI
 
             private Dictionary<int, PointerEventData> m_PointerData = new Dictionary<int, PointerEventData>();
 
+			public bool IsPointerOverGameObject(int pointerId)
+			{
+				var lastPointer = GetLastPointerEventData(pointerId);
+				if (lastPointer != null)
+					return lastPointer.pointerEnter != null;
+				return false;
+			}
+
             protected bool GetPointerData(int id, out PointerEventData data, bool create)
             {
+				Debug.Log(id);
                 if (!m_PointerData.TryGetValue(id, out data) && create)
                 {
                     data = new PointerEventData(input.eventSystem)
@@ -245,6 +255,13 @@ namespace TouchScript.Layers.UI
                 if (selectHandlerGO != input.eventSystem.currentSelectedGameObject)
                     input.eventSystem.SetSelectedGameObject(null, pointerEvent);
             }
+
+			protected PointerEventData GetLastPointerEventData(int id)
+			{
+				PointerEventData data;
+				GetPointerData(id, out data, false);
+				return data;
+			}
 
             private static bool ShouldStartDrag(Vector2 pressPos, Vector2 currentPos, float threshold, bool useDragThreshold)
             {
@@ -375,19 +392,20 @@ namespace TouchScript.Layers.UI
                 m_PointerData.Remove(id);
             }
 
+			private void convertRaycast(RaycastHitUI old, ref RaycastResult current)
+			{
+				current.module = old.Raycaster;
+				current.gameObject = old.GameObject;
+				current.depth = old.Depth;
+				current.index = old.GraphicIndex;
+				current.sortingLayer = old.SortingLayer;
+				current.sortingOrder = old.SortingOrder;
+			}
+
             #endregion
 
             #region Event processors
 
-            private void convertRaycast(RaycastHitUI old, ref RaycastResult current)
-            {
-                current.module = old.Raycaster;
-                current.gameObject = old.GameObject;
-                current.depth = old.Depth;
-                current.index = old.GraphicIndex;
-                current.sortingLayer = old.SortingLayer;
-                current.sortingOrder = old.SortingOrder;
-            }
             public virtual void ProcessUpdated(object sender, PointerEventArgs pointerEventArgs)
             {
                 var pointers = pointerEventArgs.Pointers;
