@@ -233,7 +233,6 @@ namespace TouchScript.Layers.UI
 
             protected bool GetPointerData(int id, out PointerEventData data, bool create)
             {
-				Debug.Log(id);
                 if (!m_PointerData.TryGetValue(id, out data) && create)
                 {
                     data = new PointerEventData(input.eventSystem)
