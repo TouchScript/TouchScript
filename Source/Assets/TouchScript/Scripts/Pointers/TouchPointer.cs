@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -11,6 +11,14 @@ namespace TouchScript.Pointers
     /// </summary>
     public class TouchPointer : Pointer
     {
+
+        #region Public properties
+
+        public uint Orientation { get; set; }
+
+        public float Pressure { get; set; }
+
+        #endregion
 
         #region Constructor
 
