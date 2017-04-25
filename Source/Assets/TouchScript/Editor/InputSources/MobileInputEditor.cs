@@ -21,7 +21,11 @@ namespace TouchScript.Editor.InputSources
 
         public override void OnInspectorGUI()
         {
-            serializedObject.UpdateIfDirtyOrScript();
+#if UNITY_5_6_OR_NEWER
+			serializedObject.UpdateIfRequiredOrScript();
+#else
+			serializedObject.UpdateIfDirtyOrScript();
+#endif
 
             EditorGUILayout.PropertyField(disableOnNonTouchPlatforms);
 

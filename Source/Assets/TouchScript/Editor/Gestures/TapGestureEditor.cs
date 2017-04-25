@@ -32,7 +32,11 @@ namespace TouchScript.Editor.Gestures
 
         public override void OnInspectorGUI()
         {
-            serializedObject.UpdateIfDirtyOrScript();
+#if UNITY_5_6_OR_NEWER
+			serializedObject.UpdateIfRequiredOrScript();
+#else
+			serializedObject.UpdateIfDirtyOrScript();
+#endif
 
             EditorGUIUtility.labelWidth = 180;
             EditorGUILayout.IntPopup(numberOfTapsRequired, new[] {new GUIContent("One"), new GUIContent("Two"), new GUIContent("Three")}, new[] {1, 2, 3}, NUMBER_OF_TAPS_REQUIRED, GUILayout.ExpandWidth(true));

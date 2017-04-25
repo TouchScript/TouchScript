@@ -80,7 +80,11 @@ namespace TouchScript.Editor.Gestures
 
         public override void OnInspectorGUI()
         {
-            serializedObject.UpdateIfDirtyOrScript();
+#if UNITY_5_6_OR_NEWER
+			serializedObject.UpdateIfRequiredOrScript();
+#else
+			serializedObject.UpdateIfDirtyOrScript();
+#endif
 
             EditorGUI.BeginChangeCheck();
             var expanded = GUIElements.BeginFoldout(advanced.isExpanded, TEXT_ADVANCED_HEADER);

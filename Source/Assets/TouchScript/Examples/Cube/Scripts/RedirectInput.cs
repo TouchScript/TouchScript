@@ -62,7 +62,7 @@ namespace TouchScript.Examples.Cube
         private void touchBeganHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
+			if (touch.InputSource.Equals(this)) return;
             map.Add(touch.Id, beginTouch(processCoords(touch.Hit.RaycastHit.textureCoord), touch.Tags).Id);
         }
 
@@ -71,7 +71,7 @@ namespace TouchScript.Examples.Cube
             int id;
             TouchHit hit;
             var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
+			if (touch.InputSource.Equals(this)) return;
             if (!map.TryGetValue(touch.Id, out id)) return;
             if (!gesture.GetTargetHitResult(touch.Position, out hit)) return;
             moveTouch(id, processCoords(hit.RaycastHit.textureCoord));
@@ -81,7 +81,7 @@ namespace TouchScript.Examples.Cube
         {
             int id;
             var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
+			if (touch.InputSource.Equals(this)) return;
             if (!map.TryGetValue(touch.Id, out id)) return;
             endTouch(id);
         }
@@ -90,7 +90,7 @@ namespace TouchScript.Examples.Cube
         {
             int id;
             var touch = metaGestureEventArgs.Touch;
-            if (touch.InputSource == this) return;
+			if (touch.InputSource.Equals(this)) return;
             if (!map.TryGetValue(touch.Id, out id)) return;
             cancelTouch(id);
         }

@@ -32,7 +32,11 @@ namespace TouchScript.Editor.Gestures.Base
 
         public override void OnInspectorGUI()
         {
-            serializedObject.UpdateIfDirtyOrScript();
+#if UNITY_5_6_OR_NEWER
+			serializedObject.UpdateIfRequiredOrScript();
+#else
+			serializedObject.UpdateIfDirtyOrScript();
+#endif
 
             var typeValue = type.intValue;
             int newType = 0;

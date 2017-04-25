@@ -12,8 +12,8 @@ namespace TouchScript.Examples.Cube
         public bool ShouldReceiveTouch(TouchLayer layer, TouchPoint touch)
         {
             if (layer == RenderTextureLayer)
-                return touch.InputSource == Source;
-            return touch.InputSource != Source;
+				return touch.InputSource.Equals(Source);
+			return !touch.InputSource.Equals(Source);
         }
     }
 }
