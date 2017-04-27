@@ -19,6 +19,9 @@ extern "C"
 		_currentWindow = FindWindowA("UnityWndClass", NULL);
 		if (api == WIN8)
 		{
+			HINSTANCE h = LoadLibrary(TEXT("user32.dll"));
+			GetPointerInfo = (GET_POINTER_INFO) GetProcAddress(h, "GetPointerInfo");
+
 			_oldWindowProc = SetWindowLongPtr(_currentWindow, GWLP_WNDPROC, (LONG_PTR)wndProc8);
 		}
 		else
