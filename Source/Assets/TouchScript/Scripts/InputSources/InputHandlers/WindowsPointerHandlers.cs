@@ -160,8 +160,12 @@ namespace TouchScript.InputSources.InputHandlers
         /// </summary>
         public const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
 
-        protected delegate void NativePointerDown(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttons, Vector2 position);
-        protected delegate void NativePointerUpdate(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position);
+        protected delegate void NativeMousePointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position);
+        protected delegate void NativeMousePointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position);
+        protected delegate void NativeTouchPointerDown(int id, Pointer.PointerButtonState buttons, uint orientation, uint pressure, Vector2 position);
+        protected delegate void NativeTouchPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, uint orientation, uint pressure, Vector2 position);
+        protected delegate void NativePenPointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position);
+        protected delegate void NativePenPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position);
         protected delegate void NativePointerUp(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttons);
         protected delegate void NativePointerCancel(int id, POINTER_INPUT_TYPE type);
 
@@ -176,8 +180,12 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Protected variables
 
-        private NativePointerDown nativePointerDownDelegate;
-        private NativePointerUpdate nativePointerUpdateDelegate;
+        private NativeMousePointerDown nativeMousePointerDownDelegate;
+        private NativeMousePointerUpdate nativeMousePointerUpdateDelegate;
+        private NativeTouchPointerDown nativeTouchPointerDownDelegate;
+        private NativeTouchPointerUpdate nativeTouchPointerUpdateDelegate;
+        private NativePenPointerDown nativePenPointerDownDelegate;
+        private NativePenPointerUpdate nativePenPointerUpdateDelegate;
         private NativePointerUp nativePointerUpDelegate;
         private NativePointerCancel nativePointerCancelDelegate;
 
@@ -220,8 +228,12 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            nativePointerDownDelegate = nativePointerDown;
-            nativePointerUpdateDelegate = nativePointerUpdate;
+            nativeMousePointerDownDelegate = nativeMousePointerDown;
+            nativeMousePointerUpdateDelegate = nativeMousePointerUpdate;
+            nativeTouchPointerDownDelegate = nativeTouchPointerDown;
+            nativeTouchPointerUpdateDelegate = nativeTouchPointerUpdate;
+            nativePenPointerDownDelegate = nativePenPointerDown;
+            nativePenPointerUpdateDelegate = nativePenPointerUpdate;
             nativePointerUpDelegate = nativePointerUp;
             nativePointerCancelDelegate = nativePointerCancel;
 
@@ -293,10 +305,12 @@ namespace TouchScript.InputSources.InputHandlers
 
 #region Protected methods
 
-        protected TouchPointer internalAddTouchPointer(Vector2 position)
+        protected TouchPointer internalAddTouchPointer(Vector2 position, uint orientation = 0, float pressure = 0)
         {
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
+            pointer.Orientation = orientation;
+            pointer.Pressure = pressure;
             pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
             addPointer(pointer);
             pressPointer(pointer);
@@ -370,7 +384,11 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected void init(TOUCH_API api)
         {
-            Init(api, nativePointerDownDelegate, nativePointerUpdateDelegate, nativePointerUpDelegate, nativePointerCancelDelegate);
+            Init(api, 
+                nativeMousePointerDownDelegate, nativeMousePointerUpdateDelegate,
+                nativeTouchPointerDownDelegate, nativeTouchPointerUpdateDelegate,
+                nativePenPointerDownDelegate, nativePenPointerUpdateDelegate,
+                nativePointerUpDelegate, nativePointerCancelDelegate);
         }
 
         protected Vector2 remapCoordinates(Vector2 position)
@@ -439,69 +457,55 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Pointer callbacks
 
-        private void nativePointerDown(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttons, Vector2 position)
+        private void nativeMousePointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position)
         {
-            switch (type)
-            {
-                case POINTER_INPUT_TYPE.PT_MOUSE:
-                {
-                    mousePointer.Buttons = buttons;
-                    pressPointer(mousePointer);
-                }
-                break;
-                case POINTER_INPUT_TYPE.PT_TOUCH:
-                {
-                    winTouchToInternalId.Add(id, internalAddTouchPointer(position));
-                }
-                break;
-                case POINTER_INPUT_TYPE.PT_PEN:
-                {
-                    penPointer.Buttons = buttons;
-                    pressPointer(penPointer);
-                }
-                break;
-            }
+            mousePointer.Buttons = buttons;
+            pressPointer(mousePointer);
         }
 
-        private void nativePointerUpdate(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position)
+        private void nativeTouchPointerDown(int id, Pointer.PointerButtonState buttons, uint orientation, uint pressure, Vector2 position)
         {
-            //            int existingId;
-            //            if (winTouchToInternalId.TryGetValue(id, out existingId))
-            //            {
-            //                moveTouch(existingId, position);
-            //            }
-            Pointer pointer = null;
-            switch (type)
-            {
-                case POINTER_INPUT_TYPE.PT_MOUSE:
-                    pointer = mousePointer;
-                    break;
-                case POINTER_INPUT_TYPE.PT_TOUCH:
-                    TouchPointer touchPointer;
-                    if (winTouchToInternalId.TryGetValue(id, out touchPointer)) pointer = touchPointer;
-                    break;
-                case POINTER_INPUT_TYPE.PT_PEN:
-                    if (penPointer == null) internalAddPenPointer(position);
-                    pointer = penPointer;
-                    break;
-            }
-            if (pointer != null)
-            {
-                pointer.Position = position;
-                pointer.Buttons &= ~buttonsClear;
-                pointer.Buttons |= buttonsSet;
-                updatePointer(pointer);
-            }
+            winTouchToInternalId.Add(id, internalAddTouchPointer(position, orientation, pressure / 1024f));
+        }
+
+        private void nativePenPointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position)
+        {
+            penPointer.Buttons = buttons;
+            pressPointer(penPointer);
+        }
+
+        private void nativeMousePointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position)
+        {
+            if (mousePointer == null) return;
+            mousePointer.Position = position;
+            mousePointer.Buttons &= ~buttonsClear;
+            mousePointer.Buttons |= buttonsSet;
+            updatePointer(mousePointer);
+        }
+
+        private void nativeTouchPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, uint orientation, uint pressure, Vector2 position)
+        {
+            TouchPointer touchPointer;
+            if (!winTouchToInternalId.TryGetValue(id, out touchPointer)) return;
+            touchPointer.Position = position;
+            touchPointer.Orientation = orientation;
+            touchPointer.Pressure = pressure / 1024f;
+            touchPointer.Buttons &= ~buttonsClear;
+            touchPointer.Buttons |= buttonsSet;
+            updatePointer(touchPointer);
+        }
+
+        private void nativePenPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position)
+        {
+            if (penPointer == null) return;
+            penPointer.Position = position;
+            penPointer.Buttons &= ~buttonsClear;
+            penPointer.Buttons |= buttonsSet;
+            updatePointer(penPointer);
         }
 
         private void nativePointerUp(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttons)
         {
-            //            int existingId;
-            //            if (winTouchToInternalId.TryGetValue(id, out existingId))
-            //            {
-            //                winToInternalId.Remove(id);
-            //                endTouch(existingId);
-            //            }
             switch (type)
             {
                 case POINTER_INPUT_TYPE.PT_MOUSE:
@@ -525,13 +529,6 @@ namespace TouchScript.InputSources.InputHandlers
 
         private void nativePointerCancel(int id, POINTER_INPUT_TYPE type)
         {
-            //            int existingId;
-            //            if (winTouchToInternalId.TryGetValue(id, out existingId))
-            //            {
-            //                winToInternalId.Remove(id);
-            //                cancelTouch(existingId);
-            //            }
-
             switch (type)
             {
                 case POINTER_INPUT_TYPE.PT_MOUSE:
@@ -614,7 +611,11 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
-        private static extern void Init(TOUCH_API api, NativePointerDown nativePointerDown, NativePointerUpdate nativePointerUpdate, NativePointerUp nativePointerUp, NativePointerCancel nativePointerCancel);
+        private static extern void Init(TOUCH_API api, 
+            NativeMousePointerDown nativeMousePointerDown, NativeMousePointerUpdate nativeMousePointerUpdate,
+            NativeTouchPointerDown nativeTouchPointerDown, NativeTouchPointerUpdate nativeTouchPointerUpdate,
+            NativePenPointerDown nativePenPointerDown, NativePenPointerUpdate nativePenPointerUpdate,
+            NativePointerUp nativePointerUp, NativePointerCancel nativePointerCancel);
 
         [DllImport("WindowsTouch", EntryPoint = "Dispose", CallingConvention = CallingConvention.StdCall)]
         private static extern void DisposePlugin();

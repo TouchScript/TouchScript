@@ -7,11 +7,18 @@
 extern "C" 
 {
 
-	void __stdcall Init(TOUCH_API api, PointerBeganFuncPtr began, PointerMovedFuncPtr moved,
+	void __stdcall Init(TOUCH_API api, 
+		MousePointerBeganFuncPtr mouseBegan, MousePointerMovedFuncPtr mouseMoved,
+		TouchPointerBeganFuncPtr touchBegan, TouchPointerMovedFuncPtr touchMoved,
+		PenPointerBeganFuncPtr penBegan, PenPointerMovedFuncPtr penMoved,
 		PointerEndedFuncPtr ended, PointerCancelledFuncPtr cancelled)
 	{
-		_pointerBeganFunc = began;
-		_pointerMovedFunc = moved;
+		_mousePointerBeganFunc = mouseBegan;
+		_mousePointerMovedFunc = mouseMoved;
+		_touchPointerBeganFunc = touchBegan;
+		_touchPointerMovedFunc = touchMoved;
+		_penPointerBeganFunc = penBegan;
+		_penPointerMovedFunc = penMoved;
 		_pointerEndedFunc = ended;
 		_pointerCancelledFunc = cancelled;
 		_api = api;
@@ -21,6 +28,7 @@ extern "C"
 		{
 			HINSTANCE h = LoadLibrary(TEXT("user32.dll"));
 			GetPointerInfo = (GET_POINTER_INFO) GetProcAddress(h, "GetPointerInfo");
+			GetPointerTouchInfo = (GET_POINTER_TOUCH_INFO) GetProcAddress(h, "GetPointerTouchInfo");
 
 			_oldWindowProc = SetWindowLongPtr(_currentWindow, GWLP_WNDPROC, (LONG_PTR)wndProc8);
 		}
@@ -105,21 +113,29 @@ void decodeWin8Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		if ((pointerInfo.pointerFlags & POINTER_FLAG_CANCELED) != 0) return;
 
+		Vector2 position = Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY);
 		unsigned int buttons = 0, b;
 		switch (pointerInfo.pointerType)
 		{
 		case PT_MOUSE:
+			b = (((unsigned int)pointerInfo.ButtonChangeType - 1) / 2) * 3;
+			buttons |= 1 << (b + 1); // add down
+			buttons |= 1 << b; // add pressed
+			_mousePointerBeganFunc(pointerId, buttons, position);
+			break;
+		case PT_TOUCH:
+			POINTER_TOUCH_INFO touchInfo;
+			GetPointerTouchInfo(pointerId, &touchInfo);
+			buttons = 1 + 2; // first button down, pressed
+			_touchPointerBeganFunc(pointerId, buttons, touchInfo.orientation, touchInfo.pressure, position);
+			break;
 		case PT_PEN:
 			b = (((unsigned int)pointerInfo.ButtonChangeType - 1) / 2) * 3;
 			buttons |= 1 << (b + 1); // add down
 			buttons |= 1 << b; // add pressed
-			break;
-		case PT_TOUCH:
-			buttons = 1 + 2; // first button down, pressed
+			_penPointerBeganFunc(pointerId, buttons, position);
 			break;
 		}
-
-		_pointerBeganFunc(pointerId, pointerInfo.pointerType, buttons, Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY));
 		break;
 	}
 	case WM_POINTERUP:
@@ -128,7 +144,8 @@ void decodeWin8Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			_pointerCancelledFunc(pointerId, pointerInfo.pointerType);
 		}
-		else {
+		else 
+		{
 			unsigned int buttons = 0, b;
 			switch (pointerInfo.pointerType)
 			{
@@ -151,7 +168,9 @@ void decodeWin8Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			_pointerCancelledFunc(pointerId, pointerInfo.pointerType);
 		}
-		else {
+		else 
+		{
+			Vector2 position = Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY);
 			unsigned int buttonsSet = 0, buttonsClear = 0;
 			if (pointerInfo.ButtonChangeType != POINTER_CHANGE_NONE)
 			{
@@ -169,7 +188,20 @@ void decodeWin8Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 					buttonsSet |= 1 << b; // add pressed
 				}
 			}
-			_pointerMovedFunc(pointerId, pointerInfo.pointerType, buttonsSet, buttonsClear, Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY));
+			switch (pointerInfo.pointerType)
+			{
+			case PT_MOUSE:
+				_mousePointerMovedFunc(pointerId, buttonsSet, buttonsClear, position);
+				break;
+			case PT_TOUCH:
+				POINTER_TOUCH_INFO touchInfo;
+				GetPointerTouchInfo(pointerId, &touchInfo);
+				_touchPointerMovedFunc(pointerId, buttonsSet, buttonsClear, touchInfo.orientation, touchInfo.pressure, position);
+				break;
+			case PT_PEN:
+				_penPointerMovedFunc(pointerId, buttonsSet, buttonsClear, position);
+				break;
+			}
 		}
 		break;
 	}
@@ -195,7 +227,8 @@ void decodeWin7Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 
 		if ((touch.dwFlags & TOUCHEVENTF_DOWN) != 0)
 		{
-			_pointerBeganFunc(touch.dwID, PT_TOUCH, 3, Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY));
+			Vector2 position = Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY);
+			_touchPointerBeganFunc(touch.dwID, 3, 0, 0, position);
 		}
 		else if ((touch.dwFlags & TOUCHEVENTF_UP) != 0)
 		{
@@ -203,7 +236,8 @@ void decodeWin7Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		else if ((touch.dwFlags & TOUCHEVENTF_MOVE) != 0)
 		{
-			_pointerMovedFunc(touch.dwID, PT_TOUCH, 0, 0, Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY));
+			Vector2 position = Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY);
+			_touchPointerMovedFunc(touch.dwID, 0, 0, 0, 0, position);
 		}
 	}
 

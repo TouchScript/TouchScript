@@ -60,6 +60,17 @@ typedef enum {
 	POINTER_CHANGE_FIFTHBUTTON_UP,
 } POINTER_BUTTON_CHANGE_TYPE;
 
+typedef enum {
+	TOUCH_FLAG_NONE			= 0x00000000
+} TOUCH_FLAGS;
+
+typedef enum {
+	TOUCH_MASK_NONE			= 0x00000000,
+	TOUCH_MASK_CONTACTAREA	= 0x00000001,
+	TOUCH_MASK_ORIENTATION	= 0x00000002,
+	TOUCH_MASK_PRESSURE		= 0x00000004
+} TOUCH_MASK;
+
 typedef struct {
 	POINTER_INPUT_TYPE    pointerType;
 	UINT32          pointerId;
@@ -79,19 +90,39 @@ typedef struct {
 	POINTER_BUTTON_CHANGE_TYPE ButtonChangeType;
 } POINTER_INFO;
 
-typedef BOOL (WINAPI *GET_POINTER_INFO)(UINT32 pointerId, POINTER_INFO *pointerInfo);
+typedef struct {
+	POINTER_INFO pointerInfo;
+	TOUCH_FLAGS  touchFlags;
+	TOUCH_MASK   touchMask;
+	RECT         rcContact;
+	RECT         rcContactRaw;
+	UINT32       orientation;
+	UINT32       pressure;
+} POINTER_TOUCH_INFO;
 
-GET_POINTER_INFO	GetPointerInfo;
+typedef BOOL (WINAPI *GET_POINTER_INFO)(UINT32 pointerId, POINTER_INFO *pointerInfo);
+typedef BOOL (WINAPI *GET_POINTER_TOUCH_INFO)(UINT32 pointerId, POINTER_TOUCH_INFO *pointerInfo);
+
+GET_POINTER_INFO		GetPointerInfo;
+GET_POINTER_TOUCH_INFO	GetPointerTouchInfo;
 
 // </Windows 8 touch API>
 
-typedef void(__stdcall * PointerBeganFuncPtr)(int id, POINTER_INPUT_TYPE type, unsigned int buttons, Vector2 position);
-typedef void(__stdcall * PointerMovedFuncPtr)(int id, POINTER_INPUT_TYPE type, unsigned int buttonsSet, unsigned int buttonsClear, Vector2 position);
+typedef void(__stdcall * MousePointerBeganFuncPtr)(int id, unsigned int buttons, Vector2 position);
+typedef void(__stdcall * MousePointerMovedFuncPtr)(int id, unsigned int buttonsSet, unsigned int buttonsClear, Vector2 position);
+typedef void(__stdcall * TouchPointerBeganFuncPtr)(int id, unsigned int buttons, unsigned int orientation, unsigned int pressure, Vector2 position);
+typedef void(__stdcall * TouchPointerMovedFuncPtr)(int id, unsigned int buttonsSet, unsigned int orientation, unsigned int pressure, unsigned int buttonsClear, Vector2 position);
+typedef void(__stdcall * PenPointerBeganFuncPtr)(int id, unsigned int buttons, Vector2 position);
+typedef void(__stdcall * PenPointerMovedFuncPtr)(int id, unsigned int buttonsSet, unsigned int buttonsClear, Vector2 position);
 typedef void(__stdcall * PointerEndedFuncPtr)(int id, POINTER_INPUT_TYPE type, unsigned int buttons);
 typedef void(__stdcall * PointerCancelledFuncPtr)(int id, POINTER_INPUT_TYPE type);
 
-PointerBeganFuncPtr			_pointerBeganFunc;
-PointerMovedFuncPtr			_pointerMovedFunc;
+MousePointerBeganFuncPtr	_mousePointerBeganFunc;
+MousePointerMovedFuncPtr	_mousePointerMovedFunc;
+TouchPointerBeganFuncPtr	_touchPointerBeganFunc;
+TouchPointerMovedFuncPtr	_touchPointerMovedFunc;
+PenPointerBeganFuncPtr		_penPointerBeganFunc;
+PenPointerMovedFuncPtr		_penPointerMovedFunc;
 PointerEndedFuncPtr			_pointerEndedFunc;
 PointerCancelledFuncPtr		_pointerCancelledFunc;
 HWND						_currentWindow;
@@ -106,7 +137,10 @@ LONG_PTR					_oldWindowProc;
 
 extern "C" 
 {
-	EXPORT_API void __stdcall Init(TOUCH_API api, PointerBeganFuncPtr began, PointerMovedFuncPtr moved, 
+	EXPORT_API void __stdcall Init(TOUCH_API api, 
+		MousePointerBeganFuncPtr mouseBegan, MousePointerMovedFuncPtr mouseMoved,
+		TouchPointerBeganFuncPtr touchBegan, TouchPointerMovedFuncPtr touchMoved,
+		PenPointerBeganFuncPtr penBegan, PenPointerMovedFuncPtr penMoved,
 		PointerEndedFuncPtr ended, PointerCancelledFuncPtr cancelled);
 	EXPORT_API void __stdcall SetScreenParams(int width, int height, float offsetX, float offsetY, float scaleX, float scaleY);
 	EXPORT_API void __stdcall Dispose();
