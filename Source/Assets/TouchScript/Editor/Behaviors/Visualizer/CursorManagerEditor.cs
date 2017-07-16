@@ -1,8 +1,8 @@
 /*
  * @author Valentin Simonov / http://va.lent.in/
  */
- 
-using TouchScript.Behaviors.Visualizer;
+
+using TouchScript.Behaviors.Cursors;
 using UnityEditor;
 using UnityEngine;
 using TouchScript.Editor.Utils;
@@ -10,8 +10,8 @@ using TouchScript.Editor.Utils;
 namespace TouchScript.Editor.Behaviors.Visualizer
 {
 
-    [CustomEditor(typeof(PointerVisualizer))]
-	internal sealed class TouchVisualizerEditor : UnityEditor.Editor
+    [CustomEditor(typeof(CursorManager))]
+	internal sealed class CursorManagerEditor : UnityEditor.Editor
     {
 
 		public static readonly GUIContent TEXT_DPI_HEADER = new GUIContent("Use DPI", "Scale touch pointer based on DPI.");
@@ -24,13 +24,13 @@ namespace TouchScript.Editor.Behaviors.Visualizer
 
         private void OnEnable()
         {
-            mousePointerProxy = serializedObject.FindProperty("mousePointerProxy");
-            touchPointerProxy = serializedObject.FindProperty("touchPointerProxy");
-            penPointerProxy = serializedObject.FindProperty("penPointerProxy");
-            objectPointerProxy = serializedObject.FindProperty("objectPointerProxy");
+            mousePointerProxy = serializedObject.FindProperty("mouseCursor");
+            touchPointerProxy = serializedObject.FindProperty("touchCursor");
+            penPointerProxy = serializedObject.FindProperty("penCursor");
+            objectPointerProxy = serializedObject.FindProperty("objectCursor");
 
             useDPI = serializedObject.FindProperty("useDPI");
-            touchSize = serializedObject.FindProperty("pointerSize");
+            touchSize = serializedObject.FindProperty("cursorSize");
 
 			advancedProps = serializedObject.FindProperty("advancedProps");
         }

@@ -8,13 +8,13 @@ using TouchScript.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TouchScript.Behaviors.Visualizer
+namespace TouchScript.Behaviors.Cursors
 {
     /// <summary>
     /// Visual cursor implementation used by TouchScript.
     /// </summary>
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Visualizer_TouchProxy.htm")]
-    public abstract class TextPointerProxy<T> : PointerProxy where T : IPointer
+    public abstract class TextPointerCursor<T> : PointerCursor where T : IPointer
     {
         #region Public properties
 
@@ -110,7 +110,7 @@ namespace TouchScript.Behaviors.Visualizer
     /// <summary>
     /// Base class for <see cref="PointerVisualizer"/> cursors.
     /// </summary>
-    public class PointerProxy : MonoBehaviour
+    public class PointerCursor : MonoBehaviour
     {
         #region Consts
 
@@ -230,7 +230,7 @@ namespace TouchScript.Behaviors.Visualizer
             rect = transform as RectTransform;
             if (rect == null)
             {
-                Debug.LogError("PointerProxy must be on an UI element!");
+                Debug.LogError("PointerCursor must be on an UI element!");
                 enabled = false;
                 return;
             }

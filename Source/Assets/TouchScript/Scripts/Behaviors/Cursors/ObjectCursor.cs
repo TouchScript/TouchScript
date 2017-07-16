@@ -5,9 +5,9 @@
 using System.Text;
 using TouchScript.Pointers;
 
-namespace TouchScript.Behaviors.Visualizer
+namespace TouchScript.Behaviors.Cursors
 {
-    public class ObjectPointerProxy : TextPointerProxy<ObjectPointer>
+    public class ObjectCursor : TextPointerCursor<ObjectPointer>
     {
         #region Public properties
 

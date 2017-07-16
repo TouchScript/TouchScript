@@ -8,43 +8,43 @@ using TouchScript.Pointers;
 using TouchScript.Utils.Attributes;
 using UnityEngine;
 
-namespace TouchScript.Behaviors.Visualizer
+namespace TouchScript.Behaviors.Cursors
 {
     /// <summary>
     /// <para>Pointer visualizer which shows pointer circles with debug text using Unity UI.</para>
     /// <para>The script should be placed on an element with RectTransform or a Canvas. A reference prefab is provided in TouchScript package.</para>
     /// </summary>
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Visualizer_TouchVisualizer.htm")]
-    public class PointerVisualizer : MonoBehaviour
+    public class CursorManager : MonoBehaviour
     {
         #region Public properties
 
-        public PointerProxy MousePointerProxy
+        public PointerCursor MouseCursor
         {
-            get { return mousePointerProxy; }
-            set { mousePointerProxy = value; }
+            get { return mouseCursor; }
+            set { mouseCursor = value; }
         }
 
-        public PointerProxy TouchPointerProxy
+        public PointerCursor TouchCursor
         {
-            get { return touchPointerProxy; }
-            set { touchPointerProxy = value; }
+            get { return touchCursor; }
+            set { touchCursor = value; }
         }
 
-        public PointerProxy PenPointerProxy
+        public PointerCursor PenCursor
         {
-            get { return penPointerProxy; }
-            set { penPointerProxy = value; }
+            get { return penCursor; }
+            set { penCursor = value; }
         }
 
-        public PointerProxy ObjectPointerProxy
+        public PointerCursor ObjectCursor
         {
-            get { return objectPointerProxy; }
-            set { objectPointerProxy = value; }
+            get { return objectCursor; }
+            set { objectCursor = value; }
         }
 
         /// <summary>
-        /// Gets or sets whether <see cref="PointerVisualizer"/> is using DPI to scale pointer cursors.
+        /// Gets or sets whether <see cref="CursorManager"/> is using DPI to scale pointer cursors.
         /// </summary>
         /// <value> <c>true</c> if DPI value is used; otherwise, <c>false</c>. </value>
         public bool UseDPI
@@ -57,10 +57,10 @@ namespace TouchScript.Behaviors.Visualizer
         /// Gets or sets the size of pointer cursors in cm. This value is only used when <see cref="UseDPI"/> is set to <c>true</c>.
         /// </summary>
         /// <value> The size of pointer cursors in cm. </value>
-        public float PointerSize
+        public float CursorSize
         {
-            get { return pointerSize; }
-            set { pointerSize = value; }
+            get { return cursorSize; }
+            set { cursorSize = value; }
         }
 
         #endregion
@@ -74,30 +74,30 @@ namespace TouchScript.Behaviors.Visualizer
         private bool advancedProps; // Used in the custom inspector
 
         [SerializeField]
-        private PointerProxy mousePointerProxy;
+        private PointerCursor mouseCursor;
 
         [SerializeField]
-        private PointerProxy touchPointerProxy;
+        private PointerCursor touchCursor;
 
         [SerializeField]
-        private PointerProxy penPointerProxy;
+        private PointerCursor penCursor;
 
         [SerializeField]
-        private PointerProxy objectPointerProxy;
+        private PointerCursor objectCursor;
 
         [SerializeField]
         [ToggleLeft]
         private bool useDPI = true;
 
         [SerializeField]
-        private float pointerSize = 1f;
+        private float cursorSize = 1f;
 
         private RectTransform rect;
-        private ObjectPool<PointerProxy> mousePool;
-        private ObjectPool<PointerProxy> touchPool;
-        private ObjectPool<PointerProxy> penPool;
-        private ObjectPool<PointerProxy> objectPool;
-        private Dictionary<int, PointerProxy> proxies = new Dictionary<int, PointerProxy>(10);
+        private ObjectPool<PointerCursor> mousePool;
+        private ObjectPool<PointerCursor> touchPool;
+        private ObjectPool<PointerCursor> penPool;
+        private ObjectPool<PointerCursor> objectPool;
+        private Dictionary<int, PointerCursor> cursors = new Dictionary<int, PointerCursor>(10);
 
         #endregion
 
@@ -105,15 +105,15 @@ namespace TouchScript.Behaviors.Visualizer
 
         private void Awake()
         {
-            mousePool = new ObjectPool<PointerProxy>(2, instantiateMouseProxy, null, clearProxy);
-            touchPool = new ObjectPool<PointerProxy>(10, instantiateTouchProxy, null, clearProxy);
-            penPool = new ObjectPool<PointerProxy>(2, instantiatePenProxy, null, clearProxy);
-            objectPool = new ObjectPool<PointerProxy>(2, instantiateObjectProxy, null, clearProxy);
+            mousePool = new ObjectPool<PointerCursor>(2, instantiateMouseProxy, null, clearProxy);
+            touchPool = new ObjectPool<PointerCursor>(10, instantiateTouchProxy, null, clearProxy);
+            penPool = new ObjectPool<PointerCursor>(2, instantiatePenProxy, null, clearProxy);
+            objectPool = new ObjectPool<PointerCursor>(2, instantiateObjectProxy, null, clearProxy);
 
             rect = transform as RectTransform;
             if (rect == null)
             {
-                Debug.LogError("PointerVisualizer must be on an UI element!");
+                Debug.LogError("CursorManager must be on an UI element!");
                 enabled = false;
             }
         }
@@ -148,34 +148,34 @@ namespace TouchScript.Behaviors.Visualizer
 
         #region Private functions
 
-        private PointerProxy instantiateMouseProxy()
+        private PointerCursor instantiateMouseProxy()
         {
-            return Instantiate(mousePointerProxy);
+            return Instantiate(mouseCursor);
         }
 
-        private PointerProxy instantiateTouchProxy()
+        private PointerCursor instantiateTouchProxy()
         {
-            return Instantiate(touchPointerProxy);
+            return Instantiate(touchCursor);
         }
 
-        private PointerProxy instantiatePenProxy()
+        private PointerCursor instantiatePenProxy()
         {
-            return Instantiate(penPointerProxy);
+            return Instantiate(penCursor);
         }
 
-        private PointerProxy instantiateObjectProxy()
+        private PointerCursor instantiateObjectProxy()
         {
-            return Instantiate(objectPointerProxy);
+            return Instantiate(objectCursor);
         }
 
-        private void clearProxy(PointerProxy proxy)
+        private void clearProxy(PointerCursor cursor)
         {
-            proxy.Hide();
+            cursor.Hide();
         }
 
         private uint getPointerSize()
         {
-            if (useDPI) return (uint) (pointerSize * TouchManager.Instance.DotsPerCentimeter);
+            if (useDPI) return (uint) (cursorSize * TouchManager.Instance.DotsPerCentimeter);
             return 0;
         }
 
@@ -189,28 +189,28 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var pointer = e.Pointers[i];
-                PointerProxy proxy;
+                PointerCursor cursor;
                 switch (pointer.Type)
                 {
                     case Pointer.PointerType.Mouse:
-                        proxy = mousePool.Get();
+                        cursor = mousePool.Get();
                         break;
                     case Pointer.PointerType.Touch:
-                        proxy = touchPool.Get();
+                        cursor = touchPool.Get();
                         break;
                     case Pointer.PointerType.Pen:
-                        proxy = penPool.Get();
+                        cursor = penPool.Get();
                         break;
                     case Pointer.PointerType.Object:
-                        proxy = objectPool.Get();
+                        cursor = objectPool.Get();
                         break;
                     default:
                         continue;
                 }
 
-                proxy.Size = getPointerSize();
-                proxy.Init(rect, pointer);
-                proxies.Add(pointer.Id, proxy);
+                cursor.Size = getPointerSize();
+                cursor.Init(rect, pointer);
+                cursors.Add(pointer.Id, cursor);
             }
         }
 
@@ -220,23 +220,23 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var pointer = e.Pointers[i];
-                PointerProxy proxy;
-                if (!proxies.TryGetValue(pointer.Id, out proxy)) continue;
-                proxies.Remove(pointer.Id);
+                PointerCursor cursor;
+                if (!cursors.TryGetValue(pointer.Id, out cursor)) continue;
+                cursors.Remove(pointer.Id);
 
                 switch (pointer.Type)
                 {
                     case Pointer.PointerType.Mouse:
-                        mousePool.Release(proxy);
+                        mousePool.Release(cursor);
                         break;
                     case Pointer.PointerType.Touch:
-                        touchPool.Release(proxy);
+                        touchPool.Release(cursor);
                         break;
                     case Pointer.PointerType.Pen:
-                        penPool.Release(proxy);
+                        penPool.Release(cursor);
                         break;
                     case Pointer.PointerType.Object:
-                        objectPool.Release(proxy);
+                        objectPool.Release(cursor);
                         break;
                 }
             }
@@ -248,9 +248,9 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var pointer = e.Pointers[i];
-                PointerProxy proxy;
-                if (!proxies.TryGetValue(pointer.Id, out proxy)) continue;
-                proxy.SetState(pointer, PointerProxy.ProxyState.Pressed);
+                PointerCursor cursor;
+                if (!cursors.TryGetValue(pointer.Id, out cursor)) continue;
+                cursor.SetState(pointer, PointerCursor.ProxyState.Pressed);
             }
         }
 
@@ -260,9 +260,9 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var pointer = e.Pointers[i];
-                PointerProxy proxy;
-                if (!proxies.TryGetValue(pointer.Id, out proxy)) continue;
-                proxy.UpdatePointer(pointer);
+                PointerCursor cursor;
+                if (!cursors.TryGetValue(pointer.Id, out cursor)) continue;
+                cursor.UpdatePointer(pointer);
             }
         }
 
@@ -272,9 +272,9 @@ namespace TouchScript.Behaviors.Visualizer
             for (var i = 0; i < count; i++)
             {
                 var pointer = e.Pointers[i];
-                PointerProxy proxy;
-                if (!proxies.TryGetValue(pointer.Id, out proxy)) continue;
-                proxy.SetState(pointer, PointerProxy.ProxyState.Released);
+                PointerCursor cursor;
+                if (!cursors.TryGetValue(pointer.Id, out cursor)) continue;
+                cursor.SetState(pointer, PointerCursor.ProxyState.Released);
             }
         }
 

@@ -3,8 +3,7 @@
  */
 
 using UnityEngine;
-using System.Collections;
-using TouchScript.Behaviors;
+using TouchScript.Behaviors.UI;
 
 public class Highlight : MonoBehaviour 
 {

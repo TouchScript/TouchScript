@@ -7,9 +7,9 @@ using TouchScript.Pointers;
 using TouchScript.Utils;
 using UnityEngine;
 
-namespace TouchScript.Behaviors.Visualizer
+namespace TouchScript.Behaviors.Cursors
 {
-    public class PenPointerProxy : TextPointerProxy<PenPointer>
+    public class PenCursor : TextPointerCursor<PenPointer>
     {
         #region Public properties
 

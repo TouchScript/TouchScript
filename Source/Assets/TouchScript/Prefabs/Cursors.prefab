@@ -11,7 +11,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 223: {fileID: 22341586}
   m_Layer: 0
-  m_Name: Pointer Visualizer
+  m_Name: Cursors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,12 +45,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generalProps: 0
   advancedProps: 0
-  mousePointerProxy: {fileID: 11416202, guid: a71503570adc6194b9bbc69bf19cc2de, type: 2}
-  touchPointerProxy: {fileID: 11435582, guid: 7fd82b375cf1cdc45b55e2751d814207, type: 2}
-  penPointerProxy: {fileID: 11486812, guid: 7af150e8b98b05449aaf9462bd6c7109, type: 2}
-  objectPointerProxy: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
+  mouseCursor: {fileID: 11416202, guid: a71503570adc6194b9bbc69bf19cc2de, type: 2}
+  touchCursor: {fileID: 11435582, guid: 7fd82b375cf1cdc45b55e2751d814207, type: 2}
+  penCursor: {fileID: 11486812, guid: 7af150e8b98b05449aaf9462bd6c7109, type: 2}
+  objectCursor: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
   useDPI: 1
-  pointerSize: 3
+  cursorSize: 2
 --- !u!1002 &11400001
 EditorExtensionImpl:
   serializedVersion: 6

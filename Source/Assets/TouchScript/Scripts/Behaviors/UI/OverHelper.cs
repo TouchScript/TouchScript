@@ -8,7 +8,7 @@ using TouchScript.Pointers;
 using TouchScript.Utils;
 using UnityEngine;
 
-namespace TouchScript.Behaviors
+namespace TouchScript.Behaviors.UI
 {
 
     /// <summary>
