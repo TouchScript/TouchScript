@@ -43,11 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75324aa372886435faa21a4145210f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointerProxy: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
-  showPointerId: 1
-  showFlags: 1
+  generalProps: 0
+  advancedProps: 0
+  mousePointerProxy: {fileID: 11416202, guid: a71503570adc6194b9bbc69bf19cc2de, type: 2}
+  touchPointerProxy: {fileID: 11435582, guid: 7fd82b375cf1cdc45b55e2751d814207, type: 2}
+  penPointerProxy: {fileID: 11486812, guid: 7af150e8b98b05449aaf9462bd6c7109, type: 2}
+  objectPointerProxy: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602, type: 2}
   useDPI: 1
-  pointerSize: 1
+  pointerSize: 3
 --- !u!1002 &11400001
 EditorExtensionImpl:
   serializedVersion: 6
@@ -69,8 +72,10 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 9000
+  m_TargetDisplay: 0
 --- !u!224 &22401058
 RectTransform:
   m_ObjectHideFlags: 1
@@ -80,6 +85,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -98,8 +104,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: pointerProxy
       value: 
-      objectReference: {fileID: 11468960, guid: 4230502e1973f4c9e9ef6767dcc8c602,
-        type: 2}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}

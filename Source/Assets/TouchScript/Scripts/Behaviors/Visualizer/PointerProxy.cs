@@ -4,6 +4,7 @@
 
 using System.Text;
 using TouchScript.Pointers;
+using TouchScript.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,19 +14,43 @@ namespace TouchScript.Behaviors.Visualizer
     /// Visual cursor implementation used by TouchScript.
     /// </summary>
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Visualizer_TouchProxy.htm")]
-    public class PointerProxy : PointerProxyBase
+    public abstract class TextPointerProxy<T> : PointerProxy where T : IPointer
     {
+        #region Public properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether pointer id text should be displayed on screen.
+        /// </summary>
+        /// <value> <c>true</c> if pointer id text should be displayed on screen; otherwise, <c>false</c>. </value>
+        public bool ShowPointerId = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether pointer flags text should be displayed on screen.
+        /// </summary>
+        /// <value> <c>true</c> if pointer flags text should be displayed on screen; otherwise, <c>false</c>. </value>
+        public bool ShowFlags = false;
+
         /// <summary>
         /// The link to UI.Text component.
         /// </summary>
         public Text Text;
 
-        private StringBuilder stringBuilder = new StringBuilder(64);
+        #endregion
+
+        #region Private variables
+
+        private static StringBuilder stringBuilder = new StringBuilder(64);
+
+        #endregion
+
+        #region Public methods
+
+        #endregion
 
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void updateOnce(Pointer pointer)
+        protected override void updateOnce(IPointer pointer)
         {
             base.updateOnce(pointer);
 
@@ -35,26 +60,48 @@ namespace TouchScript.Behaviors.Visualizer
             gameObject.name = stringBuilder.ToString();
 
             if (Text == null) return;
-			if (!ShowPointerId && !ShowFlags)
+            if (!shouldShowText())
             {
                 Text.text = "";
                 return;
             }
 
             stringBuilder.Length = 0;
+            generateText((T) pointer, stringBuilder);
+
+            Text.text = stringBuilder.ToString();
+        }
+
+        protected virtual void generateText(T pointer, StringBuilder str)
+        {
             if (ShowPointerId)
             {
-                stringBuilder.Append("Id: ");
-                stringBuilder.Append(pointer.Id);
+                str.Append("Id: ");
+                str.Append(pointer.Id);
             }
             if (ShowFlags)
             {
-                if (stringBuilder.Length > 0) stringBuilder.Append("\n");
-                stringBuilder.Append("Flags: ");
-                stringBuilder.Append(pointer.Flags);
+                if (str.Length > 0) str.Append("\n");
+                str.Append("Flags: ");
+                BinaryUtils.ToBinaryString(pointer.Flags, str, 8);
             }
+        }
 
-            Text.text = stringBuilder.ToString();
+        protected virtual bool shouldShowText()
+        {
+            return ShowPointerId || ShowFlags;
+        }
+
+        protected virtual uint gethash(T pointer)
+        {
+            var hash = (uint) state;
+            if (ShowFlags) hash += pointer.Flags << 3;
+            return hash;
+        }
+
+        protected sealed override uint getPointerHash(IPointer pointer)
+        {
+            return gethash((T) pointer);
         }
 
         #endregion
@@ -63,39 +110,50 @@ namespace TouchScript.Behaviors.Visualizer
     /// <summary>
     /// Base class for <see cref="PointerVisualizer"/> cursors.
     /// </summary>
-    public class PointerProxyBase : MonoBehaviour
+    public class PointerProxy : MonoBehaviour
     {
+        #region Consts
+
+        public enum ProxyState
+        {
+            Released,
+            Pressed,
+            Over,
+            OverPressed
+        }
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
         /// Gets or sets cursor size.
         /// </summary>
         /// <value> Cursor size in pixels. </value>
-        public uint Size
+        public float Size
         {
             get { return size; }
             set
             {
                 size = value;
-                rect.sizeDelta = Vector2.one * size;
+                if (size > 0)
+                {
+                    rect.sizeDelta = Vector2.one * size;
+                }
+                else
+                {
+                    size = 0;
+                    rect.sizeDelta = Vector2.one * defaultSize;
+                }
             }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pointer id text should be displayed on screen.
-        /// </summary>
-        /// <value> <c>true</c> if pointer id text should be displayed on screen; otherwise, <c>false</c>. </value>
-        public bool ShowPointerId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pointer flags text should be displayed on screen.
-        /// </summary>
-        /// <value> <c>true</c> if pointer flags text should be displayed on screen; otherwise, <c>false</c>. </value>
-        public bool ShowFlags { get; set; }
 
         #endregion
 
         #region Private variables
+
+        protected ProxyState state;
+        protected object stateData;
 
         /// <summary>
         /// Cached RectTransform.
@@ -105,7 +163,9 @@ namespace TouchScript.Behaviors.Visualizer
         /// <summary>
         /// Cursor size.
         /// </summary>
-        protected uint size = 1;
+        protected float size = 0;
+
+        protected float defaultSize;
 
         protected uint hash = uint.MaxValue;
 
@@ -118,23 +178,39 @@ namespace TouchScript.Behaviors.Visualizer
         /// </summary>
         /// <param name="parent"> Parent container. </param>
         /// <param name="pointer"> Pointer this cursor represents. </param>
-        public void Init(RectTransform parent, Pointer pointer)
+        public void Init(RectTransform parent, IPointer pointer)
         {
             hash = uint.MaxValue;
 
             show();
             rect.SetParent(parent);
             rect.SetAsLastSibling();
-            update(pointer);
+            state = ProxyState.Released;
+            UpdatePointer(pointer);
         }
 
         /// <summary>
         /// Updates the pointer. This method is called when the pointer is moved.
         /// </summary>
         /// <param name="pointer"> Pointer this cursor represents. </param>
-        public void UpdatePointer(Pointer pointer)
+        public void UpdatePointer(IPointer pointer)
         {
+            rect.anchoredPosition = pointer.Position;
+            var newHash = getPointerHash(pointer);
+            if (newHash != hash) updateOnce(pointer);
+            hash = newHash;
+
             update(pointer);
+        }
+
+        public void SetState(IPointer pointer, ProxyState newState, object data = null)
+        {
+            state = newState;
+            stateData = data;
+
+            var newHash = getPointerHash(pointer);
+            if (newHash != hash) updateOnce(pointer);
+            hash = newHash;
         }
 
         /// <summary>
@@ -159,6 +235,7 @@ namespace TouchScript.Behaviors.Visualizer
                 return;
             }
             rect.anchorMin = rect.anchorMax = Vector2.zero;
+            defaultSize = rect.sizeDelta.x;
         }
 
         #endregion
@@ -186,27 +263,17 @@ namespace TouchScript.Behaviors.Visualizer
         /// This method is called once when the cursor is initialized.
         /// </summary>
         /// <param name="pointer"> The pointer. </param>
-        protected virtual void updateOnce(Pointer pointer) {}
+        protected virtual void updateOnce(IPointer pointer) {}
 
         /// <summary>
         /// This method is called every time when the pointer changes.
         /// </summary>
         /// <param name="pointer"> The pointer. </param>
-        public virtual void update(Pointer pointer)
+        protected virtual void update(IPointer pointer) {}
+
+        protected virtual uint getPointerHash(IPointer pointer)
         {
-            rect.anchoredPosition = pointer.Position;
-            var newHash = getPointerHash(pointer);
-            if (newHash != hash) updateOnce(pointer);
-            hash = newHash;
-        }
-
-        #endregion
-
-        #region Private functions
-
-        private uint getPointerHash(Pointer pointer)
-        {
-            return pointer.Flags;
+            return (uint) state;
         }
 
         #endregion
