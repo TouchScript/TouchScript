@@ -7,13 +7,11 @@ using UnityEngine;
 
 namespace TouchScript.Pointers
 {
-
     /// <summary>
     /// A pointer of type <see cref="Pointer.PointerType.Mouse"/>.
     /// </summary>
     public class MousePointer : Pointer
     {
-
         #region Public properties
 
         public Vector2 ScrollDelta { get; set; }
@@ -53,6 +51,5 @@ namespace TouchScript.Pointers
         //}
 
         #endregion
-
     }
 }

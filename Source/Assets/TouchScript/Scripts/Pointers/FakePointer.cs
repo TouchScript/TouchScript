@@ -10,23 +10,26 @@ namespace TouchScript.Pointers
 {
     public class FakePointer : IPointer
     {
-
         #region Public properties
 
         /// <inheritdoc />
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         /// <inheritdoc />
-        public Pointer.PointerType Type { get; set; }
+        public Pointer.PointerType Type { get; private set; }
 
         /// <inheritdoc />
-        public IInputSource InputSource { get; set; }
+        public IInputSource InputSource { get; private set; }
 
         /// <inheritdoc />
         public Vector2 Position { get; set; }
 
         /// <inheritdoc />
-        public uint Flags { get; set; }
+        public uint Flags { get; private set; }
+
+        public Pointer.PointerButtonState Buttons { get; private set; }
+
+        public Vector2 PreviousPosition { get; private set; }
 
         #endregion
 

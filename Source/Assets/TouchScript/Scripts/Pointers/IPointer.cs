@@ -20,6 +20,8 @@ namespace TouchScript.Pointers
         /// </summary>
         Pointer.PointerType Type { get; }
 
+        Pointer.PointerButtonState Buttons { get; }
+
         /// <summary>
         /// Original input source which created this pointer.
         /// <seealso cref="IInputSource"/>
@@ -31,11 +33,13 @@ namespace TouchScript.Pointers
         /// </summary>
         Vector2 Position { get; set; }
 
+        Vector2 PreviousPosition { get; }
+
         /// <summary>
         /// <para>Gets or sets pointer flags: <see cref="FLAG_ARTIFICIAL"/></para>
         /// <para>Note: setting this property doesn't immediately change its value, the value actually changes during the next TouchManager update phase.</para>
         /// </summary>
-        uint Flags { get; set; }
+        uint Flags { get; }
 
         /// <summary>
         /// Returns <see cref="HitData"/> for current pointer position, i.e. what is right beneath it. Caches the result for the entire frame.

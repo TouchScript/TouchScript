@@ -78,83 +78,83 @@ namespace TouchScript.Pointers
             FirstButtonPressed = 1 << 0,
 
             /// <summary>
-            /// First button pressed this frame.
-            /// </summary>
-            FirstButtonDown = 1 << 1,
-
-            /// <summary>
-            /// First button released this frame.
-            /// </summary>
-            FirstButtonUp = 1 << 2,
-
-            /// <summary>
             /// Indicates a secondary action, analogous to a right mouse button down.
             /// A <see cref="TouchPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
             /// A <see cref="PenPointer"/> has this flag set when it is in contact with the digitizer surface with the pen barrel button pressed.
             /// A <see cref="MousePointer"/> has this flag set when the right mouse button is down.
             /// </summary>
-            SecondButtonPressed = 1 << 3,
-
-            /// <summary>
-            /// Second button pressed this frame.
-            /// </summary>
-            SecondButtonDown = 1 << 4,
-
-            /// <summary>
-            /// Second button released this frame.
-            /// </summary>
-            SecondButtonUp = 1 << 5,
+            SecondButtonPressed = 1 << 1,
 
             /// <summary>
             /// Analogous to a mouse wheel button down.
             /// A <see cref="TouchPointer"/>, <see cref="PenPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
             /// A <see cref="MousePointer"/> has this flag set when the mouse wheel button is down.
             /// </summary>
-            ThirdButtonPressed = 1 << 6,
-
-            /// <summary>
-            /// Third button pressed this frame.
-            /// </summary>
-            ThirdButtonDown = 1 << 7,
-
-            /// <summary>
-            /// Third button released this frame.
-            /// </summary>
-            ThirdButtonUp = 1 << 8,
+            ThirdButtonPressed = 1 << 2,
 
             /// <summary>
             /// Analogous to the first extended button button down.
             /// A <see cref="TouchPointer"/>, <see cref="PenPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
             /// A <see cref="MousePointer"/> has this flag set when the first extended button is down.
             /// </summary>
-            FourthButtonPressed = 1 << 9,
-
-            /// <summary>
-            /// Fourth button pressed this frame.
-            /// </summary>
-            FourthButtonDown = 1 << 10,
-
-            /// <summary>
-            /// Fourth button released this frame.
-            /// </summary>
-            FourthButtonUp = 1 << 11,
+            FourthButtonPressed = 1 << 3,
 
             /// <summary>
             /// Analogous to the second extended button button down.
             /// A <see cref="TouchPointer"/>, <see cref="PenPointer"/> or <see cref="ObjectPointer"/> does not use this flag.
             /// A <see cref="MousePointer"/> has this flag set when the second extended button is down.
             /// </summary>
-            FifthButtonPressed = 1 << 12,
+            FifthButtonPressed = 1 << 4,
+
+            /// <summary>
+            /// First button pressed this frame.
+            /// </summary>
+            FirstButtonDown = 1 << 11,
+
+            /// <summary>
+            /// First button released this frame.
+            /// </summary>
+            FirstButtonUp = 1 << 12,
+
+            /// <summary>
+            /// Second button pressed this frame.
+            /// </summary>
+            SecondButtonDown = 1 << 13,
+
+            /// <summary>
+            /// Second button released this frame.
+            /// </summary>
+            SecondButtonUp = 1 << 14,
+
+            /// <summary>
+            /// Third button pressed this frame.
+            /// </summary>
+            ThirdButtonDown = 1 << 15,
+
+            /// <summary>
+            /// Third button released this frame.
+            /// </summary>
+            ThirdButtonUp = 1 << 16,
+
+            /// <summary>
+            /// Fourth button pressed this frame.
+            /// </summary>
+            FourthButtonDown = 1 << 17,
+
+            /// <summary>
+            /// Fourth button released this frame.
+            /// </summary>
+            FourthButtonUp = 1 << 18,
 
             /// <summary>
             /// Fifth button pressed this frame.
             /// </summary>
-            FifthButtonDown = 1 << 13,
+            FifthButtonDown = 1 << 19,
 
             /// <summary>
             /// Fifth button released this frame.
             /// </summary>
-            FifthButtonUp = 1 << 14,
+            FifthButtonUp = 1 << 20,
 
             /// <summary>
             /// Any button is pressed.
@@ -304,28 +304,6 @@ namespace TouchScript.Pointers
             builder.Append(Id);
             builder.Append(", flags: ");
             BinaryUtils.ToBinaryString(Flags, builder, 8);
-            builder.Append(", buttons: ");
-            if (Buttons == PointerButtonState.Nothing)
-            {
-                builder.Append("-");
-            }
-            else
-            {
-                var b = (uint) Buttons;
-                for (int i = 0; i < 5; i++)
-                {
-                    int pressed = 1 << (i * 3);
-                    int down = 1 << (i * 3 + 1);
-                    int up = 1 << (i * 3 + 2);
-                    if ((b & (pressed | down | up)) != 0)
-                    {
-                        builder.Append(i + 1);
-                        if ((b & (pressed)) != 0) builder.Append("+");
-                        if ((b & (down)) != 0) builder.Append("v");
-                        if ((b & (up)) != 0) builder.Append("^");
-                    }
-                }
-            }
             builder.Append(", position: ");
             builder.Append(Position);
             builder.Append(")");

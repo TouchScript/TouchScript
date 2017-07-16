@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -6,12 +6,20 @@ using TouchScript.InputSources;
 
 namespace TouchScript.Pointers
 {
-
     /// <summary>
     /// A pointer of type <see cref="Pointer.PointerType.Object"/>.
     /// </summary>
     public class ObjectPointer : Pointer
     {
+        #region Public consts
+
+        public const int DEFAULT_OBJECT_ID = 0;
+        public const float DEFAULT_WIDTH = 1f;
+        public const float DEFAULT_HEIGHT = 1f;
+        public const float DEFAULT_ANGLE = 0f;
+
+        #endregion
+
         #region Public properties
 
         /// <summary>
@@ -71,10 +79,10 @@ namespace TouchScript.Pointers
         internal override void INTERNAL_Reset()
         {
             base.INTERNAL_Reset();
-            ObjectId = 0;
-            Width = 0;
-            Height = 0;
-            Angle = 0;
+            ObjectId = DEFAULT_OBJECT_ID;
+            Width = DEFAULT_WIDTH;
+            Height = DEFAULT_HEIGHT;
+            Angle = DEFAULT_ANGLE;
         }
 
         #endregion

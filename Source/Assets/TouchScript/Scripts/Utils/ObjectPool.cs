@@ -94,6 +94,13 @@ namespace TouchScript.Utils
 #endif
         }
 
+        public void Release(object element)
+        {
+            var obj = (T)element;
+            if (obj == null) return;
+            Release(obj);
+        }
+
 #if OBJECTPOOL_DEBUG
         private void log(string message)
         {

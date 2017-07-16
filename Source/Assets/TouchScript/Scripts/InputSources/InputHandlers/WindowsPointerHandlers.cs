@@ -20,7 +20,7 @@ namespace TouchScript.InputSources.InputHandlers
     /// </summary>
     public class Windows8PointerHandler : WindowsPointerHandler
     {
-#region Public properties
+        #region Public properties
 
         public bool MouseInPointer
         {
@@ -39,9 +39,7 @@ namespace TouchScript.InputSources.InputHandlers
                     {
                         if ((mousePointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
                         {
-                            var pressed = (uint) (mousePointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed);
-                            mousePointer.Buttons |= (Pointer.PointerButtonState) (pressed << 2); // add up state
-                            mousePointer.Buttons &= ~Pointer.PointerButtonState.AnyButtonPressed; // remove pressed state
+                            mousePointer.Buttons = PointerUtils.UpPressedButtons(mousePointer.Buttons);
                             releasePointer(mousePointer);
                         }
                         removePointer(mousePointer);
@@ -50,30 +48,36 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-#endregion
+        #endregion
 
-#region Private variables
+        #region Private variables
 
         private bool mouseInPointer = true;
 
-#endregion
+        #endregion
 
-#region Constructor
+        #region Constructor
 
         /// <inheritdoc />
         public Windows8PointerHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer) : base(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer)
         {
-            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, (t) => t.INTERNAL_Reset());
-            penPool = new ObjectPool<PenPointer>(2, () => new PenPointer(this), null, (t) => t.INTERNAL_Reset());
+            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, resetPointer);
+            penPool = new ObjectPool<PenPointer>(2, () => new PenPointer(this), null, resetPointer);
 
             mousePointer = internalAddMousePointer(Vector3.zero);
 
             init(TOUCH_API.WIN8);
         }
 
-#endregion
+        #endregion
 
-#region Public methods
+        #region Public methods
+
+        /// <inheritdoc />
+        public override bool UpdateInput()
+        {
+            return true;
+        }
 
         /// <inheritdoc />
         public override bool CancelPointer(Pointer pointer, bool shouldReturn)
@@ -82,14 +86,13 @@ namespace TouchScript.InputSources.InputHandlers
             {
                 cancelPointer(mousePointer);
                 if (shouldReturn) mousePointer = internalReturnMousePointer(mousePointer);
-                else mousePointer = internalAddMousePointer(pointer.Position); // can't totally cancell mouse pointer
+                else mousePointer = internalAddMousePointer(pointer.Position); // can't totally cancel mouse pointer
                 return true;
             }
             if (pointer.Equals(penPointer))
             {
                 cancelPointer(penPointer);
                 if (shouldReturn) penPointer = internalReturnPenPointer(penPointer);
-                else penPointer = internalAddPenPointer(pointer.Position); // can't totally cancell mouse pointer
                 return true;
             }
             return base.CancelPointer(pointer, shouldReturn);
@@ -114,9 +117,9 @@ namespace TouchScript.InputSources.InputHandlers
             base.Dispose();
         }
 
-#endregion
+        #endregion
 
-#region Internal methods
+        #region Internal methods
 
         /// <inheritdoc />
         public override void INTERNAL_DiscardPointer(Pointer pointer)
@@ -126,8 +129,7 @@ namespace TouchScript.InputSources.InputHandlers
             else base.INTERNAL_DiscardPointer(pointer);
         }
 
-#endregion
-
+        #endregion
     }
 
     public class Windows7PointerHandler : WindowsPointerHandler
@@ -139,35 +141,30 @@ namespace TouchScript.InputSources.InputHandlers
         {
             init(TOUCH_API.WIN7);
         }
+
+        #region Public methods
+
+        /// <inheritdoc />
+        public override bool UpdateInput()
+        {
+            return winTouchToInternalId.Count > 0;
+        }
+
+        #endregion
     }
 
     public abstract class WindowsPointerHandler : IInputSource, IDisposable
     {
-#region Consts
-
-        /// <summary>
-        /// Source of pointer input.
-        /// </summary>
-        public enum PointerSource
-        {
-            Pointer,
-            Pen,
-            Mouse
-        }
+        #region Consts
 
         /// <summary>
         /// Windows constant to turn off press and hold visual effect.
         /// </summary>
         public const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
 
-        protected delegate void NativeMousePointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position);
-        protected delegate void NativeMousePointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position);
-        protected delegate void NativeTouchPointerDown(int id, Pointer.PointerButtonState buttons, uint orientation, uint pressure, Vector2 position);
-        protected delegate void NativeTouchPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, uint orientation, uint pressure, Vector2 position);
-        protected delegate void NativePenPointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position);
-        protected delegate void NativePenPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position);
-        protected delegate void NativePointerUp(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttons);
-        protected delegate void NativePointerCancel(int id, POINTER_INPUT_TYPE type);
+        protected delegate void NativePointerDelegate(int id, PointerEvent evt, PointerType type, Vector2 position, PointerData data);
+
+        protected delegate void NativeLog([MarshalAs(UnmanagedType.BStr)] string log);
 
         #endregion
 
@@ -180,14 +177,8 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Protected variables
 
-        private NativeMousePointerDown nativeMousePointerDownDelegate;
-        private NativeMousePointerUpdate nativeMousePointerUpdateDelegate;
-        private NativeTouchPointerDown nativeTouchPointerDownDelegate;
-        private NativeTouchPointerUpdate nativeTouchPointerUpdateDelegate;
-        private NativePenPointerDown nativePenPointerDownDelegate;
-        private NativePenPointerUpdate nativePenPointerUpdateDelegate;
-        private NativePointerUp nativePointerUpDelegate;
-        private NativePointerCancel nativePointerCancelDelegate;
+        private NativePointerDelegate nativePointerDelegate;
+        private NativeLog nativeLogDelegate;
 
         protected PointerDelegate addPointer;
         protected PointerDelegate updatePointer;
@@ -228,29 +219,24 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            nativeMousePointerDownDelegate = nativeMousePointerDown;
-            nativeMousePointerUpdateDelegate = nativeMousePointerUpdate;
-            nativeTouchPointerDownDelegate = nativeTouchPointerDown;
-            nativeTouchPointerUpdateDelegate = nativeTouchPointerUpdate;
-            nativePenPointerDownDelegate = nativePenPointerDown;
-            nativePenPointerUpdateDelegate = nativePenPointerUpdate;
-            nativePointerUpDelegate = nativePointerUp;
-            nativePointerCancelDelegate = nativePointerCancel;
+            nativeLogDelegate = nativeLog;
+            nativePointerDelegate = nativePointer;
 
-            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
+            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, resetPointer);
 
             hMainWindow = GetActiveWindow();
             disablePressAndHold();
             initScaling();
         }
 
-#endregion
+        #endregion
 
-#region Public methods
+        #region Public methods
 
         /// <inheritdoc />
-        public void UpdateInput()
+        public virtual bool UpdateInput()
         {
+            return false;
         }
 
         /// <inheritdoc />
@@ -288,9 +274,9 @@ namespace TouchScript.InputSources.InputHandlers
             DisposePlugin();
         }
 
-#endregion
+        #endregion
 
-#region Internal methods
+        #region Internal methods
 
         /// <inheritdoc />
         public virtual void INTERNAL_DiscardPointer(Pointer pointer)
@@ -301,16 +287,14 @@ namespace TouchScript.InputSources.InputHandlers
             touchPool.Release(p);
         }
 
-#endregion
+        #endregion
 
-#region Protected methods
+        #region Protected methods
 
-        protected TouchPointer internalAddTouchPointer(Vector2 position, uint orientation = 0, float pressure = 0)
+        protected TouchPointer internalAddTouchPointer(Vector2 position)
         {
             var pointer = touchPool.Get();
             pointer.Position = remapCoordinates(position);
-            pointer.Orientation = orientation;
-            pointer.Pressure = pressure;
             pointer.Buttons |= Pointer.PointerButtonState.FirstButtonDown | Pointer.PointerButtonState.FirstButtonPressed;
             addPointer(pointer);
             pressPointer(pointer);
@@ -353,7 +337,7 @@ namespace TouchScript.InputSources.InputHandlers
             if ((newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
             {
                 // Adding down state this frame
-                newPointer.Buttons |= (Pointer.PointerButtonState)((uint)(newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) << 1);
+                newPointer.Buttons = PointerUtils.DownPressedButtons(newPointer.Buttons);
                 pressPointer(newPointer);
             }
             return newPointer;
@@ -361,10 +345,17 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected PenPointer internalAddPenPointer(Vector2 position)
         {
+            if (penPointer != null) throw new InvalidOperationException("One pen pointer is already registered! Trying to add another one.");
             var pointer = penPool.Get();
             pointer.Position = remapCoordinates(position);
             addPointer(pointer);
             return pointer;
+        }
+
+        protected void internalRemovePenPointer(PenPointer pointer)
+        {
+            removePointer(pointer);
+            penPointer = null;
         }
 
         protected PenPointer internalReturnPenPointer(PenPointer pointer)
@@ -376,7 +367,7 @@ namespace TouchScript.InputSources.InputHandlers
             if ((newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
             {
                 // Adding down state this frame
-                newPointer.Buttons |= (Pointer.PointerButtonState)((uint)(newPointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) << 1);
+                newPointer.Buttons = PointerUtils.DownPressedButtons(newPointer.Buttons);
                 pressPointer(newPointer);
             }
             return newPointer;
@@ -384,17 +375,18 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected void init(TOUCH_API api)
         {
-            Init(api, 
-                nativeMousePointerDownDelegate, nativeMousePointerUpdateDelegate,
-                nativeTouchPointerDownDelegate, nativeTouchPointerUpdateDelegate,
-                nativePenPointerDownDelegate, nativePenPointerUpdateDelegate,
-                nativePointerUpDelegate, nativePointerCancelDelegate);
+            Init(api, nativeLogDelegate, nativePointerDelegate);
         }
 
         protected Vector2 remapCoordinates(Vector2 position)
         {
             if (CoordinatesRemapper != null) return CoordinatesRemapper.Remap(position);
             return position;
+        }
+
+        protected void resetPointer(Pointer p)
+        {
+            p.INTERNAL_Reset();
         }
 
         #endregion
@@ -432,7 +424,7 @@ namespace TouchScript.InputSources.InputHandlers
 
             int width, height;
             getNativeMonitorResolution(out width, out height);
-            float scale = Mathf.Max(Screen.width / ((float)width), Screen.height / ((float)height));
+            float scale = Mathf.Max(Screen.width / ((float) width), Screen.height / ((float) height));
             SetScreenParams(Screen.width, Screen.height, (width - Screen.width / scale) * .5f, (height - Screen.height / scale) * .5f, scale, scale);
         }
 
@@ -457,97 +449,157 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Pointer callbacks
 
-        private void nativeMousePointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position)
+        private void nativeLog(string log)
         {
-            mousePointer.Buttons = buttons;
-            pressPointer(mousePointer);
+            Debug.Log("[WindowsTouch.dll]: " + log);
         }
 
-        private void nativeTouchPointerDown(int id, Pointer.PointerButtonState buttons, uint orientation, uint pressure, Vector2 position)
-        {
-            winTouchToInternalId.Add(id, internalAddTouchPointer(position, orientation, pressure / 1024f));
-        }
-
-        private void nativePenPointerDown(int id, Pointer.PointerButtonState buttons, Vector2 position)
-        {
-            penPointer.Buttons = buttons;
-            pressPointer(penPointer);
-        }
-
-        private void nativeMousePointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position)
-        {
-            if (mousePointer == null) return;
-            mousePointer.Position = position;
-            mousePointer.Buttons &= ~buttonsClear;
-            mousePointer.Buttons |= buttonsSet;
-            updatePointer(mousePointer);
-        }
-
-        private void nativeTouchPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, uint orientation, uint pressure, Vector2 position)
-        {
-            TouchPointer touchPointer;
-            if (!winTouchToInternalId.TryGetValue(id, out touchPointer)) return;
-            touchPointer.Position = position;
-            touchPointer.Orientation = orientation;
-            touchPointer.Pressure = pressure / 1024f;
-            touchPointer.Buttons &= ~buttonsClear;
-            touchPointer.Buttons |= buttonsSet;
-            updatePointer(touchPointer);
-        }
-
-        private void nativePenPointerUpdate(int id, Pointer.PointerButtonState buttonsSet, Pointer.PointerButtonState buttonsClear, Vector2 position)
-        {
-            if (penPointer == null) return;
-            penPointer.Position = position;
-            penPointer.Buttons &= ~buttonsClear;
-            penPointer.Buttons |= buttonsSet;
-            updatePointer(penPointer);
-        }
-
-        private void nativePointerUp(int id, POINTER_INPUT_TYPE type, Pointer.PointerButtonState buttons)
+        private void nativePointer(int id, PointerEvent evt, PointerType type, Vector2 position, PointerData data)
         {
             switch (type)
             {
-                case POINTER_INPUT_TYPE.PT_MOUSE:
-                    mousePointer.Buttons = buttons;
-                    releasePointer(mousePointer);
-                    break;
-                case POINTER_INPUT_TYPE.PT_TOUCH:
-                    TouchPointer touchPointer;
-                    if (winTouchToInternalId.TryGetValue(id, out touchPointer))
+                case PointerType.Mouse:
+                    switch (evt)
                     {
-                        winTouchToInternalId.Remove(id);
-                        internalRemoveTouchPointer(touchPointer);
+                        // Enter and Exit are not used - mouse is always present
+                        // TODO: how does it work with 2+ mice?
+                        case PointerEvent.Enter:
+                            throw new NotImplementedException("This is not supposed to be called o.O");
+                        case PointerEvent.Leave:
+                            break;
+                        case PointerEvent.Down:
+                            mousePointer.Buttons = updateButtons(mousePointer.Buttons, data.PointerFlags, data.ChangedButtons);
+                            pressPointer(mousePointer);
+                            break;
+                        case PointerEvent.Up:
+                            mousePointer.Buttons = updateButtons(mousePointer.Buttons, data.PointerFlags, data.ChangedButtons);
+                            releasePointer(mousePointer);
+                            break;
+                        case PointerEvent.Update:
+                            mousePointer.Position = position;
+                            mousePointer.Buttons = updateButtons(mousePointer.Buttons, data.PointerFlags, data.ChangedButtons);
+                            updatePointer(mousePointer);
+                            break;
+                        case PointerEvent.Cancelled:
+                            cancelPointer(mousePointer);
+                            // can't cancel the mouse pointer, it is always present
+                            mousePointer = internalAddMousePointer(mousePointer.Position);
+                            break;
                     }
                     break;
-                case POINTER_INPUT_TYPE.PT_PEN:
-                    penPointer.Buttons = buttons;
-                    releasePointer(penPointer);
+                case PointerType.Touch:
+                    switch (evt)
+                    {
+                        // Enter/Leave logic is handles in Down/Up
+                        case PointerEvent.Enter:
+                        case PointerEvent.Leave:
+                            break;
+                        case PointerEvent.Down:
+                            TouchPointer touchPointer = internalAddTouchPointer(position);
+                            touchPointer.Rotation = getTouchRotation(ref data);
+                            touchPointer.Pressure = getTouchPressure(ref data);
+                            winTouchToInternalId.Add(id, touchPointer);
+                            break;
+                        case PointerEvent.Up:
+                            if (winTouchToInternalId.TryGetValue(id, out touchPointer))
+                            {
+                                winTouchToInternalId.Remove(id);
+                                internalRemoveTouchPointer(touchPointer);
+                            }
+                            break;
+                        case PointerEvent.Update:
+                            if (!winTouchToInternalId.TryGetValue(id, out touchPointer)) return;
+                            touchPointer.Position = position;
+                            touchPointer.Rotation = getTouchRotation(ref data);
+                            touchPointer.Pressure = getTouchPressure(ref data);
+                            updatePointer(touchPointer);
+                            break;
+                        case PointerEvent.Cancelled:
+                            if (winTouchToInternalId.TryGetValue(id, out touchPointer))
+                            {
+                                winTouchToInternalId.Remove(id);
+                                cancelPointer(touchPointer);
+                            }
+                            break;
+                    }
+                    break;
+                case PointerType.Pen:
+                    switch (evt)
+                    {
+                        case PointerEvent.Enter:
+                            penPointer = internalAddPenPointer(position);
+                            penPointer.Pressure = getPenPressure(ref data);
+                            penPointer.Rotation = getPenRotation(ref data);
+                            break;
+                        case PointerEvent.Leave:
+                            if (penPointer == null) break;
+                            internalRemovePenPointer(penPointer);
+                            break;
+                        case PointerEvent.Down:
+                            if (penPointer == null) break;
+                            penPointer.Buttons = updateButtons(penPointer.Buttons, data.PointerFlags, data.ChangedButtons);
+                            penPointer.Pressure = getPenPressure(ref data);
+                            penPointer.Rotation = getPenRotation(ref data);
+                            pressPointer(penPointer);
+                            break;
+                        case PointerEvent.Up:
+                            if (penPointer == null) break;
+                            mousePointer.Buttons = updateButtons(penPointer.Buttons, data.PointerFlags, data.ChangedButtons);
+                            releasePointer(penPointer);
+                            break;
+                        case PointerEvent.Update:
+                            if (penPointer == null) break;
+                            penPointer.Position = position;
+                            penPointer.Pressure = getPenPressure(ref data);
+                            penPointer.Rotation = getPenRotation(ref data);
+                            penPointer.Buttons = updateButtons(penPointer.Buttons, data.PointerFlags, data.ChangedButtons);
+                            updatePointer(penPointer);
+                            break;
+                        case PointerEvent.Cancelled:
+                            if (penPointer == null) break;
+                            cancelPointer(penPointer);
+                            break;
+                    }
                     break;
             }
         }
 
-        private void nativePointerCancel(int id, POINTER_INPUT_TYPE type)
+        private Pointer.PointerButtonState updateButtons(Pointer.PointerButtonState current, PointerFlags flags, ButtonChangeType change)
         {
-            switch (type)
-            {
-                case POINTER_INPUT_TYPE.PT_MOUSE:
-                    cancelPointer(mousePointer);
-                    mousePointer = internalAddMousePointer(mousePointer.Position); // can't totally cancell mouse pointer
-                    break;
-                case POINTER_INPUT_TYPE.PT_TOUCH:
-                    TouchPointer touchPointer;
-                    if (winTouchToInternalId.TryGetValue(id, out touchPointer))
-                    {
-                        winTouchToInternalId.Remove(id);
-                        cancelPointer(touchPointer);
-                    }
-                    break;
-                case POINTER_INPUT_TYPE.PT_PEN:
-                    cancelPointer(penPointer);
-                    penPointer = internalAddPenPointer(penPointer.Position); // can't totally cancell mouse pointer;
-                    break;
-            }
+            var currentUpDown = ((uint) current) & 0xFFFFFC00;
+            var pressed = ((uint) flags >> 4) & 0x1F;
+            var newUpDown = 0U;
+            if (change != ButtonChangeType.None) newUpDown = 1U << (10 + (int) change);
+            var combined = (Pointer.PointerButtonState) (pressed | newUpDown | currentUpDown);
+            return combined;
+        }
+
+        private float getTouchPressure(ref PointerData data)
+        {
+            var reliable = (data.Mask & (uint) TouchMask.Pressure) > 0;
+            if (reliable) return data.Pressure / 1024f;
+            return TouchPointer.DEFAULT_PRESSURE;
+        }
+
+        private float getTouchRotation(ref PointerData data)
+        {
+            var reliable = (data.Mask & (uint) TouchMask.Orientation) > 0;
+            if (reliable) return data.Rotation / 180f * Mathf.PI;
+            return TouchPointer.DEFAULT_ROTATION;
+        }
+
+        private float getPenPressure(ref PointerData data)
+        {
+            var reliable = (data.Mask & (uint) PenMask.Pressure) > 0;
+            if (reliable) return data.Pressure / 1024f;
+            return PenPointer.DEFAULT_PRESSURE;
+        }
+
+        private float getPenRotation(ref PointerData data)
+        {
+            var reliable = (data.Mask & (uint) PenMask.Rotation) > 0;
+            if (reliable) return data.Rotation / 180f * Mathf.PI;
+            return PenPointer.DEFAULT_ROTATION;
         }
 
         #endregion
@@ -558,6 +610,111 @@ namespace TouchScript.InputSources.InputHandlers
         {
             WIN7,
             WIN8
+        }
+
+        protected enum PointerEvent : uint
+        {
+            Enter = 0x0249,
+            Leave = 0x024A,
+            Update = 0x0245,
+            Down = 0x0246,
+            Up = 0x0247,
+            Cancelled = 0x1000
+        }
+
+        protected enum PointerType
+        {
+            Pointer = 0x00000001,
+            Touch = 0x00000002,
+            Pen = 0x00000003,
+            Mouse = 0x00000004,
+            TouchPad = 0x00000005
+        }
+
+        [Flags]
+        protected enum PointerFlags
+        {
+            None = 0x00000000,
+            New = 0x00000001,
+            InRange = 0x00000002,
+            InContact = 0x00000004,
+            FirstButton = 0x00000010,
+            SecondButton = 0x00000020,
+            ThirdButton = 0x00000040,
+            FourthButton = 0x00000080,
+            FifthButton = 0x00000100,
+            Primary = 0x00002000,
+            Confidence = 0x00004000,
+            Canceled = 0x00008000,
+            Down = 0x00010000,
+            Update = 0x00020000,
+            Up = 0x00040000,
+            Wheel = 0x00080000,
+            HWheel = 0x00100000,
+            CaptureChanged = 0x00200000,
+            HasTransform = 0x00400000
+        }
+
+        protected enum ButtonChangeType
+        {
+            None,
+            FirstDown,
+            FirstUp,
+            SecondDown,
+            SecondUp,
+            ThirdDown,
+            ThirdUp,
+            FourthDown,
+            FourthUp,
+            FifthDown,
+            FifthUp
+        }
+
+        [Flags]
+        protected enum TouchFlags
+        {
+            None = 0x00000000
+        }
+
+        [Flags]
+        protected enum TouchMask
+        {
+            None = 0x00000000,
+            ContactArea = 0x00000001,
+            Orientation = 0x00000002,
+            Pressure = 0x00000004
+        }
+
+        [Flags]
+        protected enum PenFlags
+        {
+            None = 0x00000000,
+            Barrel = 0x00000001,
+            Inverted = 0x00000002,
+            Eraser = 0x00000004
+        }
+
+        [Flags]
+        protected enum PenMask
+        {
+            None = 0x00000000,
+            Pressure = 0x00000001,
+            Rotation = 0x00000002,
+            TiltX = 0x00000004,
+            TiltY = 0x00000008
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        protected struct PointerData
+        {
+            public PointerFlags PointerFlags;
+            public uint Flags;
+            public uint Mask;
+            public ButtonChangeType ChangedButtons;
+            public uint Rotation;
+            public uint Pressure;
+            public int TiltX;
+            public int TiltY;
         }
 
         private const int TABLET_DISABLE_PRESSANDHOLD = 0x00000001;
@@ -602,20 +759,8 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        protected enum POINTER_INPUT_TYPE
-        {
-            PT_POINTER = 0x00000001,
-            PT_TOUCH = 0x00000002,
-            PT_PEN = 0x00000003,
-            PT_MOUSE = 0x00000004,
-        }
-
         [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
-        private static extern void Init(TOUCH_API api, 
-            NativeMousePointerDown nativeMousePointerDown, NativeMousePointerUpdate nativeMousePointerUpdate,
-            NativeTouchPointerDown nativeTouchPointerDown, NativeTouchPointerUpdate nativeTouchPointerUpdate,
-            NativePenPointerDown nativePenPointerDown, NativePenPointerUpdate nativePenPointerUpdate,
-            NativePointerUp nativePointerUp, NativePointerCancel nativePointerCancel);
+        private static extern void Init(TOUCH_API api, NativeLog log, NativePointerDelegate pointerDelegate);
 
         [DllImport("WindowsTouch", EntryPoint = "Dispose", CallingConvention = CallingConvention.StdCall)]
         private static extern void DisposePlugin();

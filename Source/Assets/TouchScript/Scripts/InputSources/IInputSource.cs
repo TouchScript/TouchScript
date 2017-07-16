@@ -25,7 +25,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// This method is called by <see cref="TouchManagerInstance"/> to synchronously update the input.
         /// </summary>
-        void UpdateInput();
+        bool UpdateInput();
 
         /// <summary>
         /// Cancels the pointer.

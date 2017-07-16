@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Michael Holub
  * @author Valentin Simonov / http://va.lent.in/
  */
@@ -66,14 +66,14 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
+            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, resetPointer);
             touchPool.Name = "Touch";
         }
 
         #region Public methods
 
         /// <inheritdoc />
-        public void UpdateInput()
+        public bool UpdateInput()
         {
             for (var i = 0; i < Input.touchCount; ++i)
             {
@@ -95,20 +95,22 @@ namespace TouchScript.InputSources.InputHandlers
                         }
                         break;
                     case TouchPhase.Moved:
-						if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
-						{
-						    if (touchState.Phase != TouchPhase.Canceled)
-						    {
-						        touchState.Pointer.Position = t.position;
+                        if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
+                        {
+                            if (touchState.Phase != TouchPhase.Canceled)
+                            {
+                                touchState.Pointer.Position = t.position;
                                 updatePointer(touchState.Pointer);
-						    }
-						}
+                            }
+                        }
                         else
                         {
                             // Missed began phase
                             systemToInternalId.Add(t.fingerId, new TouchState(internalAddPointer(t.position)));
                         }
                         break;
+                    // NOTE: Unity touch on Windows reports Cancelled as Ended
+                    // when a touch goes out of display boundary
                     case TouchPhase.Ended:
                         if (systemToInternalId.TryGetValue(t.fingerId, out touchState))
                         {
@@ -145,6 +147,8 @@ namespace TouchScript.InputSources.InputHandlers
                         break;
                 }
             }
+
+            return Input.touchCount > 0;
         }
 
         /// <inheritdoc />
@@ -243,6 +247,11 @@ namespace TouchScript.InputSources.InputHandlers
             return position;
         }
 
+        private void resetPointer(Pointer p)
+        {
+            p.INTERNAL_Reset();
+        }
+
         #endregion
 
         private struct TouchState
@@ -255,8 +264,6 @@ namespace TouchScript.InputSources.InputHandlers
                 Pointer = pointer;
                 Phase = phase;
             }
-
         }
-
     }
 }

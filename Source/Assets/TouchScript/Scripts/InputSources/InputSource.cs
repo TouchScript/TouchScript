@@ -51,8 +51,9 @@ namespace TouchScript.InputSources
         #region Public methods
 
         /// <inheritdoc />
-        public virtual void UpdateInput()
+        public virtual bool UpdateInput()
         {
+            return false;
         }
 
         /// <inheritdoc />

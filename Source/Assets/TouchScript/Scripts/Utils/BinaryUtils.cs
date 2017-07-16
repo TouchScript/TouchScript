@@ -8,10 +8,9 @@ namespace TouchScript.Utils
 {
     public static class BinaryUtils
     {
-
         public static void ToBinaryString(uint value, StringBuilder builder, int digits = 32)
         {
-            int i = digits-1;
+            int i = digits - 1;
 
             while (i >= 0)
             {
@@ -20,5 +19,11 @@ namespace TouchScript.Utils
             }
         }
 
+        public static string ToBinaryString(uint value, int digits = 32)
+        {
+            var sb = new StringBuilder(digits);
+            ToBinaryString(value, sb, digits);
+            return sb.ToString();
+        }
     }
 }
