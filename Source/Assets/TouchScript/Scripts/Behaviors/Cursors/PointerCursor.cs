@@ -54,18 +54,21 @@ namespace TouchScript.Behaviors.Cursors
         {
             base.updateOnce(pointer);
 
+#if UNITY_EDITOR
             stringBuilder.Length = 0;
             stringBuilder.Append("Pointer id: ");
             stringBuilder.Append(pointer.Id);
             gameObject.name = stringBuilder.ToString();
+#endif
 
             if (Text == null) return;
             if (!shouldShowText())
             {
-                Text.text = "";
+                Text.enabled = false;
                 return;
             }
 
+            Text.enabled = true;
             stringBuilder.Length = 0;
             generateText((T) pointer, stringBuilder);
 
