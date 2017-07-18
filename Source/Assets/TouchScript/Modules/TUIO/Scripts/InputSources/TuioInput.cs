@@ -13,7 +13,7 @@ using TUIOsharp.DataProcessors;
 using TUIOsharp.Entities;
 using UnityEngine;
 
-namespace TouchScript.InputSources 
+namespace TouchScript.InputSources
 {
     /// <summary>
     /// Processes TUIO 1.1 input.
@@ -108,8 +108,8 @@ namespace TouchScript.InputSources
 
         public TuioInput()
         {
-            touchPool = new ObjectPool<TouchPointer>(20, () => new TouchPointer(this), null, (t) => t.INTERNAL_Reset());
-            objectPool = new ObjectPool<ObjectPointer>(10, () => new ObjectPointer(this), null, (t) => t.INTERNAL_Reset());
+            touchPool = new ObjectPool<TouchPointer>(20, () => new TouchPointer(this), null, resetPointer);
+            objectPool = new ObjectPool<ObjectPointer>(10, () => new ObjectPointer(this), null, resetPointer);
         }
 
         #endregion
@@ -117,11 +117,14 @@ namespace TouchScript.InputSources
         #region Public methods
 
         /// <inheritdoc />
-        public override void UpdateInput()
+        public override bool UpdateInput()
         {
-            base.UpdateInput();
+            if (base.UpdateInput()) return true;
+
             screenWidth = Screen.width;
             screenHeight = Screen.height;
+
+            return true;
         }
 
         /// <inheritdoc />
@@ -217,7 +220,8 @@ namespace TouchScript.InputSources
             if (pointer.Type == Pointer.PointerType.Touch)
             {
                 touchPool.Release(pointer as TouchPointer);
-            } else if (pointer.Type == Pointer.PointerType.Object)
+            }
+            else if (pointer.Type == Pointer.PointerType.Object)
             {
                 objectPool.Release(pointer as ObjectPointer);
             }
@@ -358,6 +362,11 @@ namespace TouchScript.InputSources
             obj.Angle = target.Angle;
         }
 
+        private void resetPointer(Pointer p)
+        {
+            p.INTERNAL_Reset();
+        }
+
         #endregion
 
         #region Event handlers
@@ -493,8 +502,7 @@ namespace TouchScript.InputSources
 
         #endregion
     }
-
 }
 
 #endif
- #endif
+#endif
