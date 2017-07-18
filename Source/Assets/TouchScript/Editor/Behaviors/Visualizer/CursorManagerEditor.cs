@@ -17,9 +17,10 @@ namespace TouchScript.Editor.Behaviors.Visualizer
 		public static readonly GUIContent TEXT_DPI_HEADER = new GUIContent("Use DPI", "Scale touch pointer based on DPI.");
 		public static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced settings.");
 		public static readonly GUIContent TEXT_POINTER_SIZE = new GUIContent("Pointer size (cm)", "Pointer size in cm based on current DPI.");
+        public static readonly GUIContent TEXT_POINTER_PIXEL_SIZE = new GUIContent("Pointer size (px)", "Pointer size in pixels.");
 
         private SerializedProperty mousePointerProxy, touchPointerProxy, penPointerProxy, objectPointerProxy;
-        private SerializedProperty useDPI, touchSize;
+        private SerializedProperty useDPI, cursorSize, cursorPixelSize;
 		private SerializedProperty advancedProps;
 
         private void OnEnable()
@@ -30,9 +31,10 @@ namespace TouchScript.Editor.Behaviors.Visualizer
             objectPointerProxy = serializedObject.FindProperty("objectCursor");
 
             useDPI = serializedObject.FindProperty("useDPI");
-            touchSize = serializedObject.FindProperty("cursorSize");
+            cursorSize = serializedObject.FindProperty("cursorSize");
+            cursorPixelSize = serializedObject.FindProperty("cursorPixelSize");
 
-			advancedProps = serializedObject.FindProperty("advancedProps");
+            advancedProps = serializedObject.FindProperty("advancedProps");
         }
 
         public override void OnInspectorGUI()
@@ -41,18 +43,28 @@ namespace TouchScript.Editor.Behaviors.Visualizer
 
 			GUILayout.Space(5);
 
-			var display = GUIElements.Header(TEXT_DPI_HEADER, useDPI, useDPI);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				using (new EditorGUI.DisabledGroupScope(!useDPI.boolValue))
-				{
-					EditorGUILayout.PropertyField(touchSize, TEXT_POINTER_SIZE);
-				}
-				EditorGUI.indentLevel--;
-			}
+            //			var display = GUIElements.Header(TEXT_DPI_HEADER, useDPI, useDPI);
+            //			if (display)
+            //			{
+            //				EditorGUI.indentLevel++;
+            //				using (new EditorGUI.DisabledGroupScope(!useDPI.boolValue))
+            //				{
+            //					EditorGUILayout.PropertyField(useDPI, TEXT_DPI_HEADER);
+            //				}
+            //				EditorGUI.indentLevel--;
+            //			}
 
-			display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
+            EditorGUILayout.PropertyField(useDPI, TEXT_DPI_HEADER);
+            if (useDPI.boolValue)
+            {
+                EditorGUILayout.PropertyField(cursorSize, TEXT_POINTER_SIZE);
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(cursorPixelSize, TEXT_POINTER_PIXEL_SIZE);
+            }
+
+            var display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
 			if (display)
 			{
 				EditorGUI.indentLevel++;

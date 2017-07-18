@@ -50,7 +50,11 @@ namespace TouchScript.Behaviors.Cursors
         public bool UseDPI
         {
             get { return useDPI; }
-            set { useDPI = value; }
+            set
+            {
+                useDPI = value;
+                updateCursorSize();
+            }
         }
 
         /// <summary>
@@ -60,7 +64,21 @@ namespace TouchScript.Behaviors.Cursors
         public float CursorSize
         {
             get { return cursorSize; }
-            set { cursorSize = value; }
+            set
+            {
+                cursorSize = value;
+                updateCursorSize();
+            }
+        }
+
+        public uint CursorPixelSize
+        {
+            get { return cursorPixelSize; }
+            set
+            {
+                cursorPixelSize = value;
+                updateCursorSize();
+            }
         }
 
         #endregion
@@ -92,6 +110,9 @@ namespace TouchScript.Behaviors.Cursors
         [SerializeField]
         private float cursorSize = 1f;
 
+        [SerializeField]
+        private uint cursorPixelSize = 64;
+
         private RectTransform rect;
         private ObjectPool<PointerCursor> mousePool;
         private ObjectPool<PointerCursor> touchPool;
@@ -109,6 +130,8 @@ namespace TouchScript.Behaviors.Cursors
             touchPool = new ObjectPool<PointerCursor>(10, instantiateTouchProxy, null, clearProxy);
             penPool = new ObjectPool<PointerCursor>(2, instantiatePenProxy, null, clearProxy);
             objectPool = new ObjectPool<PointerCursor>(2, instantiateObjectProxy, null, clearProxy);
+
+            updateCursorSize();
 
             rect = transform as RectTransform;
             if (rect == null)
@@ -173,10 +196,9 @@ namespace TouchScript.Behaviors.Cursors
             cursor.Hide();
         }
 
-        private uint getPointerSize()
+        private void updateCursorSize()
         {
-            if (useDPI) return (uint) (cursorSize * TouchManager.Instance.DotsPerCentimeter);
-            return 0;
+            if (useDPI) cursorPixelSize = (uint)(cursorSize * TouchManager.Instance.DotsPerCentimeter);
         }
 
         #endregion
@@ -189,6 +211,9 @@ namespace TouchScript.Behaviors.Cursors
             for (var i = 0; i < count; i++)
             {
                 var pointer = e.Pointers[i];
+                // Don't show internal pointers
+                if ((pointer.Flags & Pointer.FLAG_INTERNAL) > 0) continue;
+
                 PointerCursor cursor;
                 switch (pointer.Type)
                 {
@@ -208,7 +233,7 @@ namespace TouchScript.Behaviors.Cursors
                         continue;
                 }
 
-                cursor.Size = getPointerSize();
+                cursor.Size = cursorPixelSize;
                 cursor.Init(rect, pointer);
                 cursors.Add(pointer.Id, cursor);
             }

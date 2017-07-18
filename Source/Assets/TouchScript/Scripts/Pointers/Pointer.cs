@@ -33,6 +33,8 @@ namespace TouchScript.Pointers
 
         public const uint FLAG_RETURNED = 1 << 1;
 
+        public const uint FLAG_INTERNAL = 1 << 2;
+
         /// <summary>
         /// Pointer type.
         /// </summary>

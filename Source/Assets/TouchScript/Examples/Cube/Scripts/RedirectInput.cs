@@ -81,7 +81,7 @@ namespace TouchScript.Examples.Cube
             var newPointer = PointerFactory.Create(pointer.Type, this);
             newPointer.CopyFrom(pointer);
             newPointer.Position = processCoords(pointer.GetPressData().RaycastHit.textureCoord);
-            newPointer.Flags = pointer.Flags | Pointer.FLAG_ARTIFICIAL;
+            newPointer.Flags = pointer.Flags | Pointer.FLAG_ARTIFICIAL | Pointer.FLAG_INTERNAL;
             addPointer(newPointer);
             pressPointer(newPointer);
             map.Add(pointer.Id, newPointer);
