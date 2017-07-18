@@ -46,7 +46,11 @@ namespace TouchScript.Editor.Layers
 
         public override void OnInspectorGUI()
         {
-            serializedObject.UpdateIfDirtyOrScript();
+#if UNITY_5_6_OR_NEWER
+			serializedObject.UpdateIfRequiredOrScript();
+#else
+			serializedObject.UpdateIfDirtyOrScript();
+#endif
 
 			GUILayout.Space(5);
 			var display = GUIElements.Header(TEXT_HIT_HEADER, hit);

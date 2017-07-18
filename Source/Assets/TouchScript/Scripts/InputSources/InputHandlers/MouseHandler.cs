@@ -103,7 +103,6 @@ namespace TouchScript.InputSources.InputHandlers
             mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, resetPointer);
 
             mousePointPos = Input.mousePosition;
-            Debug.Log(mousePointPos);
             mousePointer = internalAddPointer(remapCoordinates(mousePointPos));
 
             stateMouse();
