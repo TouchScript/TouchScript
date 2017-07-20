@@ -76,6 +76,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public override bool UpdateInput()
         {
+            base.UpdateInput();
             return true;
         }
 
@@ -147,6 +148,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public override bool UpdateInput()
         {
+            base.UpdateInput();
             return winTouchToInternalId.Count > 0;
         }
 
@@ -175,7 +177,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         #endregion
 
-        #region Protected variables
+        #region Private variables
 
         private NativePointerDelegate nativePointerDelegate;
         private NativeLog nativeLogDelegate;
@@ -196,6 +198,8 @@ namespace TouchScript.InputSources.InputHandlers
         protected ObjectPool<PenPointer> penPool;
         protected MousePointer mousePointer;
         protected PenPointer penPointer;
+
+        private int screenWidth, screenHeight;
 
         #endregion
 
@@ -226,7 +230,7 @@ namespace TouchScript.InputSources.InputHandlers
 
             hMainWindow = GetActiveWindow();
             disablePressAndHold();
-            initScaling();
+            setScaling();
         }
 
         #endregion
@@ -236,6 +240,7 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public virtual bool UpdateInput()
         {
+            if (Screen.width != screenWidth || Screen.height != screenHeight) setScaling();
             return false;
         }
 
@@ -414,18 +419,21 @@ namespace TouchScript.InputSources.InputHandlers
             }
         }
 
-        private void initScaling()
+        private void setScaling()
         {
+            screenWidth = Screen.width;
+            screenHeight = Screen.height;
+
             if (!Screen.fullScreen)
             {
-                SetScreenParams(Screen.width, Screen.height, 0, 0, 1, 1);
+                SetScreenParams(screenWidth, screenHeight, 0, 0, 1, 1);
                 return;
             }
 
             int width, height;
             getNativeMonitorResolution(out width, out height);
-            float scale = Mathf.Max(Screen.width / ((float) width), Screen.height / ((float) height));
-            SetScreenParams(Screen.width, Screen.height, (width - Screen.width / scale) * .5f, (height - Screen.height / scale) * .5f, scale, scale);
+            float scale = Mathf.Max(screenWidth / ((float) width), screenHeight / ((float) height));
+            SetScreenParams(screenWidth, screenHeight, (width - screenWidth / scale) * .5f, (height - screenHeight / scale) * .5f, scale, scale);
         }
 
         private void getNativeMonitorResolution(out int width, out int height)

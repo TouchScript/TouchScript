@@ -5,7 +5,6 @@
 #if TOUCHSCRIPT_DEBUG
 
 using UnityEngine;
-using UnityEditor;
 using TouchScript.Debugging.Loggers;
 
 namespace TouchScript.Debugging
