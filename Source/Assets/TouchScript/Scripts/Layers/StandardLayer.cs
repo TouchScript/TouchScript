@@ -47,6 +47,7 @@ namespace TouchScript.Layers
             set
             {
                 hitWorldSpaceUI = value;
+                setupInputModule();
                 updateVariants();
             }
         }
@@ -54,7 +55,11 @@ namespace TouchScript.Layers
         public bool HitScreenSpaceUI
         {
             get { return hitScreenSpaceUI; }
-            set { hitScreenSpaceUI = value; }
+            set
+            {
+                hitScreenSpaceUI = value;
+                setupInputModule();
+            }
         }
 
         public bool UseHitFilters
@@ -132,6 +137,7 @@ namespace TouchScript.Layers
         private bool useHitFilters = false;
 
         private bool lookForCameraObjects = false;
+        private TouchScriptInputModule inputModule;
 
         /// <summary>
         /// Camera.
@@ -223,13 +229,13 @@ namespace TouchScript.Layers
 		{
 			// Need to wait while EventSystem initializes
 			yield return new WaitForEndOfFrame();
-			if (TouchScriptInputModule.Instance != null) TouchScriptInputModule.Instance.INTERNAL_Retain();
+		    setupInputModule();
 		}
 
         private void OnDisable()
         {
             if (!Application.isPlaying) return;
-            if (TouchScriptInputModule.Instance != null) TouchScriptInputModule.Instance.INTERNAL_Release();
+            if (inputModule != null) inputModule.INTERNAL_Release();
             if (TouchManager.Instance != null) TouchManager.Instance.FrameStarted -= frameStartedHandler;
         }
 
@@ -262,6 +268,22 @@ namespace TouchScript.Layers
         #endregion
 
         #region Private functions
+
+        private void setupInputModule()
+        {
+            if (inputModule == null)
+            {
+                if (!hitWorldSpaceUI && !hitScreenSpaceUI) return;
+                inputModule = TouchScriptInputModule.Instance;
+                if (inputModule != null) TouchScriptInputModule.Instance.INTERNAL_Retain();
+            }
+            else
+            {
+                if (hitWorldSpaceUI || hitScreenSpaceUI) return;
+                inputModule.INTERNAL_Release();
+                inputModule = null;
+            }
+        }
 
         private HitResult performWorldSearch(IPointer pointer, out HitData hit)
         {
