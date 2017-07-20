@@ -424,7 +424,7 @@ namespace TouchScript.Layers
                 if (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, position, eventCamera))
                     continue;
 
-                if (graphic.Raycast(position, null))
+                if (graphic.Raycast(position, eventCamera))
                 {
                     var t = graphic.transform;
                     if (raycaster.ignoreReversedGraphics)
