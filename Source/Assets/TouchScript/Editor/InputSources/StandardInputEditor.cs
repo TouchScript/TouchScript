@@ -5,8 +5,7 @@
 using TouchScript.InputSources;
 using UnityEditor;
 using UnityEngine;
-using TouchScript.Editor.Utils;
-using System.Reflection;
+using TouchScript.Editor.EditorUI;
 
 namespace TouchScript.Editor.InputSources
 {

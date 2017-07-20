@@ -1,0 +1,67 @@
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+#if TOUCHSCRIPT_DEBUG
+
+using System;
+using System.Collections.Generic;
+using TouchScript.Debugging.Filters;
+using TouchScript.InputSources;
+using TouchScript.Pointers;
+using UnityEngine;
+
+namespace TouchScript.Debugging.Loggers
+{
+    public interface IPointerLogger
+    {
+        int PointerCount { get; }
+
+        void Log(Pointer pointer, PointerEvent evt);
+        List<PointerData> GetFilteredPointerData(IPointerDataFilter filter = null);
+        List<PointerLog> GetFilteredLogsForPointer(int id, IPointerLogFilter filter = null);
+    }
+
+    [Serializable]
+    public struct PointerLog
+    {
+        public int Id;
+        public long Tick;
+        public int PointerId;
+        public PointerEvent Event;
+        public PointerState State;
+    }
+
+    [Serializable]
+    public struct PointerState
+    {
+        public Pointer.PointerButtonState Buttons;
+        public Vector2 Position;
+        public Vector2 PreviousPosition;
+        public uint Flags;
+        public Transform Target;
+        public string TargetPath;
+    }
+
+    [Serializable]
+    public struct PointerData
+    {
+        public int Id;
+        public Pointer.PointerType Type;
+        public IInputSource InputSource;
+    }
+
+    public enum PointerEvent
+    {
+        None,
+        IDAllocated,
+        Added,
+        Updated,
+        Pressed,
+        Released,
+        Removed,
+        Cancelled
+    }
+}
+
+#endif

@@ -6,7 +6,7 @@ using TouchScript.Editor.Gestures.TransformGestures.Base;
 using TouchScript.Gestures.TransformGestures;
 using UnityEditor;
 using UnityEngine;
-using TouchScript.Editor.Utils;
+using TouchScript.Editor.EditorUI;
 
 namespace TouchScript.Editor.Gestures.TransformGestures
 {

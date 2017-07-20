@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Collections.Generic;
 using System.Text;
 
 namespace TouchScript.Utils
@@ -24,6 +25,18 @@ namespace TouchScript.Utils
             var sb = new StringBuilder(digits);
             ToBinaryString(value, sb, digits);
             return sb.ToString();
+        }
+
+        public static uint ToBinaryMask(IEnumerable<bool> collection)
+        {
+            uint mask = 0;
+            var count = 0;
+            foreach (bool value in collection)
+            {
+                if (value) mask |= (uint)(1 << count);
+                if (++count >= 32) break;
+            }
+            return mask;
         }
     }
 }

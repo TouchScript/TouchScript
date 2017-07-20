@@ -57,7 +57,7 @@ namespace TouchScript.Behaviors.Cursors
             {
                 if (str.Length > 0) str.Append("\n");
                 str.Append("Buttons: ");
-                PointerUtils.ButtonsToString(pointer.Buttons, str);
+                PointerUtils.PressedButtonsToString(pointer.Buttons, str);
             }
             if (ShowPressure)
             {

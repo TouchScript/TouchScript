@@ -79,7 +79,7 @@ namespace TouchScript.Editor
 			init();
 
 			var headerRect = GUILayoutUtility.GetRect(width, 165);
-			GUI.Box(headerRect, "v. " + TouchManager.VERSION 
+            GUI.Box(headerRect, "v. " + TouchManager.VERSION 
 				+ (string.IsNullOrEmpty(TouchManager.VERSION_SUFFIX) ? "" : " " + TouchManager.VERSION_SUFFIX), header);
 
 			EditorGUILayout.BeginHorizontal();

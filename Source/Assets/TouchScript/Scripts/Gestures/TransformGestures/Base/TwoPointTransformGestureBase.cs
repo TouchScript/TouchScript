@@ -10,7 +10,7 @@ using UnityEngine;
 
 #if TOUCHSCRIPT_DEBUG
 using System.Collections;
-using TouchScript.Utils.DebugUtils;
+using TouchScript.Debugging.GL;
 #endif
 
 namespace TouchScript.Gestures.TransformGestures.Base

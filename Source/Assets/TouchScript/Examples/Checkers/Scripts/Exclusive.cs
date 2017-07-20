@@ -27,7 +27,7 @@ namespace TouchScript.Examples.Checkers
 
         private void Update()
         {
-            if (UnityEngine.Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 exclusive = true;
                 cachedRenderer.material.SetColor("_SpecColor", Color);

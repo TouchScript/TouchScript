@@ -5,7 +5,7 @@
 using TouchScript.Behaviors.Cursors;
 using UnityEditor;
 using UnityEngine;
-using TouchScript.Editor.Utils;
+using TouchScript.Editor.EditorUI;
 
 namespace TouchScript.Editor.Behaviors.Visualizer
 {

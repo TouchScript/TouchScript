@@ -9,7 +9,7 @@ using TouchScript.Pointers;
 using UnityEngine;
 
 #if TOUCHSCRIPT_DEBUG
-using TouchScript.Utils.DebugUtils;
+using TouchScript.Debugging.GL;
 #endif
 
 namespace TouchScript.Gestures.TransformGestures.Base

@@ -3,7 +3,7 @@
  */
 
 using System;
-using TouchScript.Editor.Utils;
+using TouchScript.Editor.EditorUI;
 using TouchScript.Gestures;
 using UnityEditor;
 using UnityEditorInternal;
@@ -83,7 +83,7 @@ namespace TouchScript.Editor.Gestures
             maxPointersFloat = maxPointers.intValue;
 
             friendlyGesturesList = new ReorderableList(serializedObject, friendlyGestures, false, true, false, true);
-			friendlyGesturesList.drawHeaderCallback += (rect) => GUI.Label(rect, TEXT_FRIENDLY);
+            friendlyGesturesList.drawHeaderCallback += (rect) => GUI.Label(rect, TEXT_FRIENDLY);
             friendlyGesturesList.drawElementCallback += (rect, index, active, focused) =>
             {
                 rect.height = 16;

@@ -304,6 +304,8 @@ namespace TouchScript.Pointers
             builder.Append(Type);
             builder.Append(", id: ");
             builder.Append(Id);
+			builder.Append(", buttons: ");
+			PointerUtils.PressedButtonsToString(Buttons, builder);
             builder.Append(", flags: ");
             BinaryUtils.ToBinaryString(Flags, builder, 8);
             builder.Append(", position: ");

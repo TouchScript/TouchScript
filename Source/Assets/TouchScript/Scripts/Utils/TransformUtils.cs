@@ -2,12 +2,16 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using System.Text;
 using UnityEngine;
 
 namespace TouchScript.Utils
 {
-    internal static class TransformUtils
+    public static class TransformUtils
     {
+
+        private static StringBuilder sb;
+
         public static Vector3 GlobalToLocalPosition(Transform transform, Vector3 global)
         {
             if (transform.parent == null) return global;
@@ -34,5 +38,26 @@ namespace TouchScript.Utils
 
             return vector;
         }
+
+        public static string GetHeirarchyPath(Transform transform)
+        {
+            initStringBuilder();
+
+            if (transform == null) return null;
+
+            while (transform != null)
+            {
+                sb.Insert(0, transform.name);
+                sb.Insert(0, "/");
+                transform = transform.parent;
+            }
+            return sb.ToString();
+        }
+
+		private static void initStringBuilder()
+		{
+			if (sb == null) sb = new StringBuilder();
+			sb.Length = 0;
+		}
     }
 }

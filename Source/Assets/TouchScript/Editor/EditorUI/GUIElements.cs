@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 
-namespace TouchScript.Editor.Utils
+namespace TouchScript.Editor.EditorUI
 {
     internal static class GUIElements
     {

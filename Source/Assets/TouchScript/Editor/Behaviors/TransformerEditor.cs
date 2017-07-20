@@ -6,7 +6,7 @@ using TouchScript.Behaviors;
 using UnityEditor;
 using UnityEngine;
 using System.Reflection;
-using TouchScript.Editor.Utils;
+using TouchScript.Editor.EditorUI;
 
 namespace TouchScript.Editor.Behaviors
 {

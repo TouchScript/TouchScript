@@ -8,7 +8,7 @@ using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 using TouchScript.Pointers;
 #if TOUCHSCRIPT_DEBUG
-using TouchScript.Utils.DebugUtils;
+using TouchScript.Debugging.GL;
 #endif
 using UnityEngine;
 

@@ -2,7 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Editor.Utils;
+using TouchScript.Editor.EditorUI;
 using TouchScript.Layers;
 using UnityEditor;
 using UnityEngine;
