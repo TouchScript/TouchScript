@@ -187,7 +187,8 @@ namespace TouchScript.Gestures.TransformGestures.Base
                         deltaRotation = dR;
                         deltaScale = dS;
                         setState(GestureState.Changed);
-                        break;
+						resetValues();
+						break;
                 }
             }
         }

@@ -314,11 +314,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
         {
             base.reset();
 
-            deltaPosition = Vector3.zero;
-            deltaRotation = 0f;
-            deltaScale = 1f;
-
-            transformMask = 0;
+            resetValues();
             isTransforming = false;
         }
 
@@ -327,6 +323,14 @@ namespace TouchScript.Gestures.TransformGestures.Base
         #region Protected methods
 
         protected virtual void updateType() {}
+
+		protected void resetValues()
+		{
+			deltaPosition = Vector3.zero;
+			deltaRotation = 0f;
+			deltaScale = 1f;
+			transformMask = 0;
+		}
 
 #if TOUCHSCRIPT_DEBUG
         protected int debugID;
