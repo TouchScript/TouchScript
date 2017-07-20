@@ -100,6 +100,13 @@ namespace TouchScript.Examples
             }
         }
 
+        private void OnDestroy()
+        {
+#if UNITY_5_4_OR_NEWER
+			SceneManager.sceneLoaded -= sceneLoadedHandler;
+#endif
+		}
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
