@@ -332,7 +332,7 @@ namespace TouchScript.Layers
                     if (raycaster == null) continue;
                     var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster); // TODO: cache
                     if ((canvas == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay) || (canvas.worldCamera != _camera)) continue;
-                    performUISearchForCanvas(pointer, canvas, raycaster, float.MaxValue, ray);
+                    performUISearchForCanvas(pointer, canvas, raycaster, _camera, float.MaxValue, ray);
                 }
 
                 count = raycastHitUIList.Count;
@@ -405,12 +405,12 @@ namespace TouchScript.Layers
             return HitResult.Hit;
         }
 
-        private void performUISearchForCanvas(IPointer pointer, Canvas canvas, GraphicRaycaster raycaster, float maxDistance = float.MaxValue, Ray ray = default(Ray))
+        private void performUISearchForCanvas(IPointer pointer, Canvas canvas, GraphicRaycaster raycaster, Camera eventCamera = null, float maxDistance = float.MaxValue, Ray ray = default(Ray))
         {
             var position = pointer.Position;
-            var eventCamera = canvas.worldCamera;
             var foundGraphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
             var count2 = foundGraphics.Count;
+
             for (var j = 0; j < count2; j++)
             {
                 var graphic = foundGraphics[j];
