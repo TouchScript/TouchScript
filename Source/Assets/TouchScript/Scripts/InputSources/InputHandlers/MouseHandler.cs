@@ -152,6 +152,10 @@ namespace TouchScript.InputSources.InputHandlers
                 mousePointer.ScrollDelta = scroll;
                 updatePointer(mousePointer);
             }
+            else
+            {
+                mousePointer.ScrollDelta = Vector2.zero;
+            }
 
             if (emulateSecondMousePointer)
             {
