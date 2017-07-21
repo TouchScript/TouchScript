@@ -17,7 +17,7 @@ namespace TouchScript.Pointers
     /// <para>An instance of this class is created when user touches the screen. A unique id is assigned to it which doesn't change throughout its life.</para>
     /// <para><b>Attention!</b> Do not store references to these objects beyond pointer's lifetime (i.e. when target finger is lifted off). These objects may be reused internally. Store unique ids instead.</para>
     /// </summary>
-    public class Pointer : IPointer
+    public class Pointer : IPointer, IEquatable<Pointer>
     {
         #region Constants
 
