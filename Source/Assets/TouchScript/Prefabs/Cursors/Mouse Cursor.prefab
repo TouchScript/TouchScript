@@ -5,12 +5,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22498922}
-  - 222: {fileID: 22253470}
-  - 114: {fileID: 11415522}
-  - 114: {fileID: 11446012}
+  - component: {fileID: 22498922}
+  - component: {fileID: 22253470}
+  - component: {fileID: 11415522}
+  - component: {fileID: 11446012}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -23,12 +23,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22471328}
-  - 222: {fileID: 22246154}
-  - 114: {fileID: 11446800}
-  - 114: {fileID: 11419342}
+  - component: {fileID: 22471328}
+  - component: {fileID: 22246154}
+  - component: {fileID: 11446800}
+  - component: {fileID: 11419342}
+  - component: {fileID: 114695260886518812}
   m_Layer: 0
   m_Name: Pressed
   m_TagString: Untagged
@@ -41,10 +42,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22499528}
-  - 114: {fileID: 11416202}
+  - component: {fileID: 22499528}
+  - component: {fileID: 11416202}
+  - component: {fileID: 223878911915740246}
   m_Layer: 0
   m_Name: Mouse Cursor
   m_TagString: Untagged
@@ -57,12 +59,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22497446}
-  - 222: {fileID: 22249184}
-  - 114: {fileID: 11453278}
-  - 114: {fileID: 11448672}
+  - component: {fileID: 22497446}
+  - component: {fileID: 22249184}
+  - component: {fileID: 11453278}
+  - component: {fileID: 11448672}
+  - component: {fileID: 114973988835986202}
   m_Layer: 0
   m_Name: Default
   m_TagString: Untagged
@@ -117,8 +120,8 @@ MonoBehaviour:
   ShowPointerId: 0
   ShowFlags: 0
   Text: {fileID: 11415522}
-  DefaultCursor: {fileID: 189110}
-  PressedCursor: {fileID: 183852}
+  DefaultCursor: {fileID: 0}
+  PressedCursor: {fileID: 114695260886518812}
   ShowButtons: 0
 --- !u!114 &11419342
 MonoBehaviour:
@@ -132,30 +135,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gradient:
-    key0:
-      serializedVersion: 2
-      rgba: 0
-    key1:
-      serializedVersion: 2
-      rgba: 1006698240
-    key2:
-      serializedVersion: 2
-      rgba: 1006698240
-    key3:
-      serializedVersion: 2
-      rgba: 4278190080
-    key4:
-      serializedVersion: 2
-      rgba: 4278190080
-    key5:
-      serializedVersion: 2
-      rgba: 1006632960
-    key6:
-      serializedVersion: 2
-      rgba: 1090519040
-    key7:
-      serializedVersion: 2
-      rgba: 0
+    serializedVersion: 2
+    key0: {r: 0, g: 0, b: 0, a: 0}
+    key1: {r: 0, g: 1, b: 0, a: 0.23529412}
+    key2: {r: 0, g: 1, b: 0, a: 0.23529412}
+    key3: {r: 0, g: 0, b: 0, a: 1}
+    key4: {r: 0, g: 0, b: 0, a: 1}
+    key5: {r: 0, g: 0, b: 0, a: 0.23529412}
+    key6: {r: 0, g: 0, b: 0, a: 0.25490198}
+    key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 31905
     ctime1: 33371
     ctime2: 44754
@@ -172,6 +160,7 @@ MonoBehaviour:
     atime5: 56826
     atime6: 64242
     atime7: 64571
+    m_Mode: 0
     m_NumColorKeys: 4
     m_NumAlphaKeys: 8
   Name: Mouse Pressed
@@ -228,30 +217,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gradient:
-    key0:
-      serializedVersion: 2
-      rgba: 4278255360
-    key1:
-      serializedVersion: 2
-      rgba: 4278255360
-    key2:
-      serializedVersion: 2
-      rgba: 1006632960
-    key3:
-      serializedVersion: 2
-      rgba: 1006632960
-    key4:
-      serializedVersion: 2
-      rgba: 0
-    key5:
-      serializedVersion: 2
-      rgba: 0
-    key6:
-      serializedVersion: 2
-      rgba: 0
-    key7:
-      serializedVersion: 2
-      rgba: 0
+    serializedVersion: 2
+    key0: {r: 0, g: 1, b: 0, a: 1}
+    key1: {r: 0, g: 1, b: 0, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0.23529412}
+    key3: {r: 0, g: 0, b: 0, a: 0.23529412}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
     ctime1: 9572
     ctime2: 10779
@@ -268,6 +242,7 @@ MonoBehaviour:
     atime5: 64571
     atime6: 64571
     atime7: 64571
+    m_Mode: 0
     m_NumColorKeys: 3
     m_NumAlphaKeys: 5
   Name: Mouse Default
@@ -325,10 +300,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 22499528}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -343,10 +318,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 22499528}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -361,10 +336,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 22499528}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 3, y: 0}
@@ -379,13 +354,13 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 22497446}
   - {fileID: 22471328}
   - {fileID: 22498922}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 500, y: 300}
@@ -402,3 +377,45 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 185820}
   m_IsPrefabParent: 1
+--- !u!114 &114695260886518812
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a709300256ec1e4995018f4f91470aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114973988835986202
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a709300256ec1e4995018f4f91470aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!223 &223878911915740246
+Canvas:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 185820}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0

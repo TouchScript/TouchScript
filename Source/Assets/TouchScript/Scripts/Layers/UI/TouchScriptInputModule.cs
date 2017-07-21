@@ -413,11 +413,13 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+
+                    var over = pointer.GetOverData();
+                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
+
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
                     data.Reset();
-
-                    var over = pointer.GetOverData();
                     var target = over.Target;
                     var currentOverGo = target == null ? null : target.gameObject;
 
@@ -472,9 +474,12 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+                    
+                    var over = pointer.GetOverData();
+                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
+
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
-                    var over = pointer.GetOverData();
                     var target = over.Target;
                     var currentOverGo = target == null ? null : target.gameObject;
 
@@ -542,10 +547,13 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+
+                    var over = pointer.GetOverData();
+                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
+
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
-
-                    var target = pointer.GetOverData().Target;
+                    var target = over.Target;
                     var currentOverGo = target == null ? null : target.gameObject;
 
                     ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerUpHandler);
@@ -592,10 +600,13 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+
+                    var over = pointer.GetOverData();
+                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
+
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
-
-                    var target = pointer.GetOverData().Target;
+                    var target = over.Target;
                     var currentOverGo = target == null ? null : target.gameObject;
 
                     ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerUpHandler);

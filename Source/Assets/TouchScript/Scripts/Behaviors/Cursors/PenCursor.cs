@@ -3,6 +3,7 @@
  */
 
 using System.Text;
+using TouchScript.Behaviors.Cursors.UI;
 using TouchScript.Pointers;
 using TouchScript.Utils;
 using UnityEngine;
@@ -13,8 +14,8 @@ namespace TouchScript.Behaviors.Cursors
     {
         #region Public properties
 
-        public GameObject DefaultCursor;
-        public GameObject PressedCursor;
+        public TextureSwitch DefaultCursor;
+        public TextureSwitch PressedCursor;
 
         public bool ShowButtons = false;
 
@@ -36,13 +37,13 @@ namespace TouchScript.Behaviors.Cursors
             {
                 case ProxyState.Released:
                 case ProxyState.Over:
-                    if (DefaultCursor != null) DefaultCursor.SetActive(true);
-                    if (PressedCursor != null) PressedCursor.SetActive(false);
+                    if (DefaultCursor != null) DefaultCursor.Show();
+                    if (PressedCursor != null) PressedCursor.Hide();
                     break;
                 case ProxyState.Pressed:
                 case ProxyState.OverPressed:
-                    if (DefaultCursor != null) DefaultCursor.SetActive(false);
-                    if (PressedCursor != null) PressedCursor.SetActive(true);
+                    if (DefaultCursor != null) DefaultCursor.Hide();
+                    if (PressedCursor != null) PressedCursor.Show();
                     break;
             }
 

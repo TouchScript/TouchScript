@@ -352,7 +352,7 @@ namespace TouchScript.Layers
                 {
                     var raycaster = raycasters[i] as GraphicRaycaster;
                     if (raycaster == null) continue;
-                    var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster); // TODO: cache
+                    var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster);
                     if ((canvas == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay) || (canvas.worldCamera != _camera)) continue;
                     performUISearchForCanvas(pointer, canvas, raycaster, _camera, float.MaxValue, ray);
                 }
@@ -400,7 +400,7 @@ namespace TouchScript.Layers
             {
                 var raycaster = raycasters[i] as GraphicRaycaster;
                 if (raycaster == null) continue;
-                var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster); // TODO: cache
+                var canvas = TouchScriptInputModule.Instance.GetCanvasForRaycaster(raycaster);
                 if ((canvas == null) || (canvas.renderMode != RenderMode.ScreenSpaceOverlay)) continue;
                 performUISearchForCanvas(pointer, canvas, raycaster);
             }

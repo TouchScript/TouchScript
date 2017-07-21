@@ -5,12 +5,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22436736}
-  - 222: {fileID: 22287504}
-  - 114: {fileID: 11421528}
-  - 114: {fileID: 11442452}
+  - component: {fileID: 22436736}
+  - component: {fileID: 22287504}
+  - component: {fileID: 11421528}
+  - component: {fileID: 11442452}
   m_Layer: 0
   m_Name: Pressed
   m_TagString: Untagged
@@ -23,10 +23,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22471328}
-  - 114: {fileID: 11468960}
+  - component: {fileID: 22471328}
+  - component: {fileID: 11468960}
+  - component: {fileID: 223813922742015622}
   m_Layer: 0
   m_Name: Pointer
   m_TagString: Untagged
@@ -72,30 +73,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gradient:
-    key0:
-      serializedVersion: 2
-      rgba: 0
-    key1:
-      serializedVersion: 2
-      rgba: 1023344129
-    key2:
-      serializedVersion: 2
-      rgba: 1023344129
-    key3:
-      serializedVersion: 2
-      rgba: 4278190080
-    key4:
-      serializedVersion: 2
-      rgba: 4278190080
-    key5:
-      serializedVersion: 2
-      rgba: 1006632960
-    key6:
-      serializedVersion: 2
-      rgba: 1090519040
-    key7:
-      serializedVersion: 2
-      rgba: 0
+    serializedVersion: 2
+    key0: {r: 0, g: 0, b: 0, a: 0}
+    key1: {r: 0.003921569, g: 0.99607843, b: 0.99607843, a: 0.23529412}
+    key2: {r: 0.003921569, g: 0.99607843, b: 0.99607843, a: 0.23529412}
+    key3: {r: 0, g: 0, b: 0, a: 1}
+    key4: {r: 0, g: 0, b: 0, a: 1}
+    key5: {r: 0, g: 0, b: 0, a: 0.23529412}
+    key6: {r: 0, g: 0, b: 0, a: 0.25490198}
+    key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 31905
     ctime1: 33371
     ctime2: 44754
@@ -112,11 +98,11 @@ MonoBehaviour:
     atime5: 56826
     atime6: 64242
     atime7: 64571
+    m_Mode: 0
     m_NumColorKeys: 4
     m_NumAlphaKeys: 8
   Name: Pointer Pressed
   Resolution: 256
-  texture: {fileID: 0}
 --- !u!114 &11468960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -143,10 +129,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 22471328}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000091552734, y: 0}
@@ -161,11 +147,11 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 22436736}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 500, y: 100}
@@ -182,3 +168,23 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 183852}
   m_IsPrefabParent: 1
+--- !u!223 &223813922742015622
+Canvas:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183852}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
