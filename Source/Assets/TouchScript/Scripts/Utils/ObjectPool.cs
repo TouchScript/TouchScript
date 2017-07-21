@@ -36,14 +36,15 @@ namespace TouchScript.Utils
             get { return stack.Count; }
         }
 
-        public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet,
-                          UnityAction<T> actionOnRelease)
+        public ObjectPool(int capacity, UnityFunc<T> actionNew, UnityAction<T> actionOnGet = null,
+                          UnityAction<T> actionOnRelease = null, string name = null)
         {
             if (actionNew == null) throw new ArgumentException("New action can't be null!");
             stack = new Stack<T>(capacity);
             onNew = actionNew;
             onGet = actionOnGet;
             onRelease = actionOnRelease;
+            Name = name;
         }
 
         public void WarmUp(int count)
@@ -66,6 +67,7 @@ namespace TouchScript.Utils
             {
 #if OBJECTPOOL_DEBUG
                 created = true;
+                logWarning("Created an object.");
 #endif
                 element = onNew();
                 CountAll++;
@@ -106,6 +108,12 @@ namespace TouchScript.Utils
         {
             if (string.IsNullOrEmpty(Name)) return;
             UnityEngine.Debug.LogFormat("[{0}] ObjectPool ({1}): {2}", DateTime.Now.ToString("hh:mm:ss.fff"), Name, message);
+        }
+
+        private void logWarning(string message)
+        {
+            if (string.IsNullOrEmpty(Name)) return;
+            UnityEngine.Debug.LogWarningFormat("[{0}] ObjectPool ({1}): {2}", DateTime.Now.ToString("hh:mm:ss.fff"), Name, message);
         }
 
         private void logError(string message)

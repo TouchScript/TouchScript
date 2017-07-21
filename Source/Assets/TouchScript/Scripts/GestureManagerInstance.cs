@@ -52,29 +52,34 @@ namespace TouchScript
 
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
-
-        private Action<Gesture, IList<Pointer>> _updatePressed, _updateUpdated, _updateReleased, _updateCancelled;
-        private Action<Transform> _processTarget, _processTargetBegan;
+        private Dictionary<int, List<Gesture>> pointerToGestures = new Dictionary<int, List<Gesture>>(); 
 
         #endregion
 
-        #region Temporary variables
+        #region Temporary collections
 
-        // Temporary variables for update methods.
+        // Temporary collections for update methods.
         // Dictionary<Transform, List<Pointer>> - pointers sorted by targets
-        private Dictionary<Transform, List<Pointer>> targetPointers = new Dictionary<Transform, List<Pointer>>(10);
+        private Dictionary<Transform, List<Pointer>> pointersOnTarget = new Dictionary<Transform, List<Pointer>>(10);
         // Dictionary<Gesture, List<Pointer>> - pointers sorted by gesture
-        private Dictionary<Gesture, List<Pointer>> gesturePointers = new Dictionary<Gesture, List<Pointer>>(10);
-        private List<Gesture> activeGestures = new List<Gesture>(20);
+        private Dictionary<Gesture, List<Pointer>> pointersToDispatchForGesture = new Dictionary<Gesture, List<Pointer>>(10);
+        private List<Gesture> activeGesturesThisUpdate = new List<Gesture>(20);
+
+        private Dictionary<Transform, List<Gesture>> hierarchyEndingWithCache = new Dictionary<Transform, List<Gesture>>();
+        private Dictionary<Transform, List<Gesture>> hierarchyBeginningWithCache = new Dictionary<Transform, List<Gesture>>();
+
+        #endregion
+
+        #region Pools
 
         private static ObjectPool<List<Gesture>> gestureListPool = new ObjectPool<List<Gesture>>(10,
-            () => new List<Gesture>(20), null, (l) => l.Clear());
+            () => new List<Gesture>(10), null, (l) => l.Clear(), "GestureManager/Gesture");
 
         private static ObjectPool<List<Pointer>> pointerListPool = new ObjectPool<List<Pointer>>(20,
-            () => new List<Pointer>(10), null, (l) => l.Clear());
+            () => new List<Pointer>(10), null, (l) => l.Clear(), "GestureManager/Pointer");
 
         private static ObjectPool<List<Transform>> transformListPool = new ObjectPool<List<Transform>>(10,
-            () => new List<Transform>(10), null, (l) => l.Clear());
+            () => new List<Transform>(10), null, (l) => l.Clear(), "GestureManager/Transform");
 
         #endregion
 
@@ -95,16 +100,9 @@ namespace TouchScript
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
 
-            _processTarget = processTarget;
-            _processTargetBegan = processTargetBegan;
-            _updatePressed = doUpdatePressed;
-            _updateUpdated = doUpdateUpdated;
-            _updateReleased = doUpdateReleased;
-            _updateCancelled = doUpdateCancelled;
-
-            gestureListPool.WarmUp(5);
-            pointerListPool.WarmUp(10);
-            transformListPool.WarmUp(5);
+            gestureListPool.WarmUp(20);
+            pointerListPool.WarmUp(20);
+            transformListPool.WarmUp(1);
         }
 
         private void OnEnable()
@@ -114,7 +112,7 @@ namespace TouchScript
             {
                 touchManager.FrameStarted += frameStartedHandler;
                 touchManager.FrameFinished += frameFinishedHandler;
-                touchManager.PointersUpdated += PointersUpdatedHandler;
+                touchManager.PointersUpdated += pointersUpdatedHandler;
                 touchManager.PointersPressed += pointersPressedHandler;
                 touchManager.PointersReleased += pointersReleasedHandler;
                 touchManager.PointersCancelled += pointersCancelledHandler;
@@ -128,7 +126,7 @@ namespace TouchScript
             {
                 touchManager.FrameStarted -= frameStartedHandler;
                 touchManager.FrameFinished -= frameFinishedHandler;
-                touchManager.PointersUpdated -= PointersUpdatedHandler;
+                touchManager.PointersUpdated -= pointersUpdatedHandler;
                 touchManager.PointersPressed -= pointersPressedHandler;
                 touchManager.PointersReleased -= pointersReleasedHandler;
                 touchManager.PointersCancelled -= pointersCancelledHandler;
@@ -215,187 +213,258 @@ namespace TouchScript
 
         #region Private functions
 
-        private void doUpdatePressed(Gesture gesture, IList<Pointer> pointers)
+        private void updatePressed(IList<Pointer> pointers)
         {
-            gesture.INTERNAL_PointersPressed(pointers);
-        }
+            var activeTargets = transformListPool.Get();
+            var gesturesInHierarchy = gestureListPool.Get();
+            var startedGestures = gestureListPool.Get();
 
-        private void doUpdateUpdated(Gesture gesture, IList<Pointer> pointers)
-        {
-            gesture.INTERNAL_PointersUpdated(pointers);
-        }
-
-        private void doUpdateReleased(Gesture gesture, IList<Pointer> pointers)
-        {
-            gesture.INTERNAL_PointersReleased(pointers);
-        }
-
-        private void doUpdateCancelled(Gesture gesture, IList<Pointer> pointers)
-        {
-            gesture.INTERNAL_PointersCancelled(pointers);
-        }
-
-        private void update(IList<Pointer> pointers, Action<Transform> process,
-                            Action<Gesture, IList<Pointer>> dispatch)
-        {
-            // WARNING! Arcane magic ahead!
-            // gestures which got any pointers
-            // needed because there's no order in dictionary
-            activeGestures.Clear();
-            var targets = transformListPool.Get();
-
-            // arrange pointers by target
+            // Arrange pointers by target.
             var count = pointers.Count;
             for (var i = 0; i < count; i++)
             {
                 var pointer = pointers[i];
                 var target = pointer.GetPressData().Target;
-                if (target != null)
+                if (target == null) continue;
+
+                List<Pointer> list;
+                if (!pointersOnTarget.TryGetValue(target, out list))
                 {
-                    List<Pointer> list;
-                    if (!targetPointers.TryGetValue(target, out list))
-                    {
-                        list = pointerListPool.Get();
-                        targetPointers.Add(target, list);
-                        targets.Add(target);
-                    }
-                    list.Add(pointer);
+                    list = pointerListPool.Get();
+                    pointersOnTarget.Add(target, list);
+                    activeTargets.Add(target);
                 }
+                list.Add(pointer);
             }
 
-            // process all targets - get and sort all gestures on targets in hierarchy
-            count = targets.Count;
+            // Process all targets - get and sort all gestures on targets in hierarchy.
+            count = activeTargets.Count;
             for (var i = 0; i < count; i++)
             {
-                var target = targets[i];
-                process(target);
-                pointerListPool.Release(targetPointers[target]);
-            }
-            transformListPool.Release(targets);
+                var target = activeTargets[i];
 
-            // dispatch gesture events with pointers assigned to them
-            count = activeGestures.Count;
+                // Pointers that hit <target>.
+                var targetPointers = pointersOnTarget[target];
+                var targetPointersCount = targetPointers.Count;
+
+                // Gestures on objects in the hierarchy from "root" to target.
+                var gesturesOnParentsAndMe = getHierarchyEndingWith(target);
+
+                // Gestures in the target's hierarchy which might affect gestures on the target.
+                // Gestures on all parents and all children.
+                gesturesInHierarchy.AddRange(gesturesOnParentsAndMe);
+                gesturesInHierarchy.AddRange(getHierarchyBeginningWith(target));
+                var gesturesInHierarchyCount = gesturesInHierarchy.Count;
+
+                for (var j = 0; j < gesturesInHierarchyCount; j++)
+                {
+                    var gesture = gesturesInHierarchy[j];
+                    if (gesture.State == Gesture.GestureState.Began || gesture.State == Gesture.GestureState.Changed) startedGestures.Add(gesture);
+                }
+
+                var startedCount = startedGestures.Count;
+                var possibleGestureCount = gesturesOnParentsAndMe.Count;
+                for (var j = 0; j < possibleGestureCount; j++)
+                {
+                    // WARNING! Gesture state might change during this loop.
+                    // For example when one of them recognizes.
+
+                    var possibleGesture = gesturesOnParentsAndMe[j];
+
+                    // If the gesture is not active it can't start or recognize.
+                    if (!gestureIsActive(possibleGesture)) continue;
+
+                    var canReceivePointers = true;
+
+                    // For every possible gesture in gesturesInHierarchy we need to check if it prevents gestureOnParentOrMe from getting pointers.
+                    for (var k = 0; k < startedCount; k++)
+                    {
+                        var startedGesture = startedGestures[k];
+
+                        if (possibleGesture == startedGesture) continue;
+
+                        // This gesture has started. Is gestureOnParentOrMe allowed to work in parallel?
+                        if (canPreventGesture(startedGesture, possibleGesture))
+                        {
+                            // activeGesture has already began and prevents gestureOnParentOrMe from getting pointers.
+                            canReceivePointers = false;
+                            break;
+                        }
+                    }
+
+                    if (!canReceivePointers) continue;
+
+                    // Filter incoming pointers for gesture.
+                    var pointersSentToGesture = pointerListPool.Get();
+                    for (var k = 0; k < targetPointersCount; k++)
+                    {
+                        var pointer = targetPointers[k];
+                        if (shouldReceivePointer(possibleGesture, pointer)) pointersSentToGesture.Add(pointer);
+                    }
+
+                    // If there are any pointers to send.
+                    if (pointersSentToGesture.Count > 0)
+                    {
+                        if (pointersToDispatchForGesture.ContainsKey(possibleGesture))
+                        {
+                            pointersToDispatchForGesture[possibleGesture].AddRange(pointersSentToGesture);
+                            pointerListPool.Release(pointersSentToGesture);
+                        }
+                        else
+                        {
+                            // Add gesture to the list of active gestures this update.
+                            activeGesturesThisUpdate.Add(possibleGesture);
+                            pointersToDispatchForGesture.Add(possibleGesture, pointersSentToGesture);
+                        }
+                    }
+                    else
+                    {
+                        pointerListPool.Release(pointersSentToGesture);
+                    }
+                }
+
+                gesturesInHierarchy.Clear();
+                startedGestures.Clear();
+                pointerListPool.Release(targetPointers);
+            }
+
+            gestureListPool.Release(gesturesInHierarchy);
+            gestureListPool.Release(startedGestures);
+            transformListPool.Release(activeTargets);
+
+            // Dispatch gesture events with pointers assigned to them.
+            count = activeGesturesThisUpdate.Count;
             for (var i = 0; i < count; i++)
             {
-                var gesture = activeGestures[i];
-                var list = gesturePointers[gesture];
-                if (gestureIsActive(gesture)) dispatch(gesture, list);
+                var gesture = activeGesturesThisUpdate[i];
+                var list = pointersToDispatchForGesture[gesture];
+                if (!gestureIsActive(gesture))
+                {
+                    pointerListPool.Release(list);
+                    continue;
+                }
+
+                var numPointers = list.Count;
+                for (var j = 0; j < numPointers; j++)
+                {
+                    var pointer = list[j];
+                    List<Gesture> gestureList;
+                    if (!pointerToGestures.TryGetValue(pointer.Id, out gestureList))
+                    {
+                        gestureList = gestureListPool.Get();
+                        pointerToGestures.Add(pointer.Id, gestureList);
+                    }
+                    gestureList.Add(gesture);
+                }
+
+                gesture.INTERNAL_PointersPressed(list);
                 pointerListPool.Release(list);
             }
 
-            targetPointers.Clear();
-            gesturePointers.Clear();
+            pointersOnTarget.Clear();
+            activeGesturesThisUpdate.Clear();
+            pointersToDispatchForGesture.Clear();
         }
 
-        private void processTarget(Transform target)
+        private void updateUpdated(IList<Pointer> pointers)
         {
-            var targetList = targetPointers[target];
-            var pointerCount = targetList.Count;
+            sortPointersForActiveGestures(pointers);
 
-            // gestures on objects in the hierarchy from "root" to target
-            var list = gestureListPool.Get();
-            getHierarchyEndingWith(target, list);
-
-            var count = list.Count;
+            var count = activeGesturesThisUpdate.Count;
             for (var i = 0; i < count; i++)
             {
-                var gesture = list[i];
-                if (!gestureIsActive(gesture)) continue;
-
-                var pointerList = pointerListPool.Get();
-                for (var j = 0; j < pointerCount; j++)
+                var gesture = activeGesturesThisUpdate[i];
+                var list = pointersToDispatchForGesture[gesture];
+                if (gestureIsActive(gesture))
                 {
-                    var pointer = targetList[j];
-                    if (gesture.HasPointer(pointer)) pointerList.Add(pointer);
+                    gesture.INTERNAL_PointersUpdated(list);
                 }
-
-                if (pointerList.Count > 0)
-                {
-                    if (gesturePointers.ContainsKey(gesture))
-                    {
-                        gesturePointers[gesture].AddRange(pointerList);
-                        pointerListPool.Release(pointerList);
-                    }
-                    else
-                    {
-                        activeGestures.Add(gesture);
-                        gesturePointers.Add(gesture, pointerList);
-                    }
-                }
-                else
-                {
-                    pointerListPool.Release(pointerList);
-                }
+                pointerListPool.Release(list);
             }
-            gestureListPool.Release(list);
+
+            activeGesturesThisUpdate.Clear();
+            pointersToDispatchForGesture.Clear();
         }
 
-        private void processTargetBegan(Transform target)
+        private void updateReleased(IList<Pointer> pointers)
         {
-            var targetList = targetPointers[target];
-            var pointerCount = targetList.Count;
+            sortPointersForActiveGestures(pointers);
 
-            var containingList = gestureListPool.Get();
-            var endingList = gestureListPool.Get();
-            // gestures in the target's hierarchy which might affect gesture on the target
-            getHierarchyContaining(target, containingList);
-            // gestures on objects in the hierarchy from "root" to target
-            getHierarchyEndingWith(target, endingList);
-            var count = endingList.Count;
+            var count = activeGesturesThisUpdate.Count;
             for (var i = 0; i < count; i++)
             {
-                var gesture = endingList[i];
-                // WARNING! Gestures might change during this loop.
-                // For example when one of them recognizes.
-                if (!gestureIsActive(gesture)) continue;
-
-                var canReceivePointers = true;
-                var activeCount = containingList.Count;
-                for (var j = 0; j < activeCount; j++)
+                var gesture = activeGesturesThisUpdate[i];
+                var list = pointersToDispatchForGesture[gesture];
+                if (gestureIsActive(gesture))
                 {
-                    var activeGesture = containingList[j];
-
-                    if (gesture == activeGesture) continue;
-                    if ((activeGesture.State == Gesture.GestureState.Began ||
-                         activeGesture.State == Gesture.GestureState.Changed) &&
-                        (canPreventGesture(activeGesture, gesture)))
-                    {
-                        // there's a started gesture which prevents this one
-                        canReceivePointers = false;
-                        break;
-                    }
+                    gesture.INTERNAL_PointersReleased(list);
                 }
-
-                // check gesture's ShouldReceivePointer callback
-                if (!canReceivePointers) continue;
-
-                var pointerList = pointerListPool.Get();
-                for (var j = 0; j < pointerCount; j++)
-                {
-                    var pointer = targetList[j];
-                    if (shouldReceivePointer(gesture, pointer)) pointerList.Add(pointer);
-                }
-                if (pointerList.Count > 0)
-                {
-                    if (gesturePointers.ContainsKey(gesture))
-                    {
-                        gesturePointers[gesture].AddRange(pointerList);
-                        pointerListPool.Release(pointerList);
-                    }
-                    else
-                    {
-                        activeGestures.Add(gesture);
-                        gesturePointers.Add(gesture, pointerList);
-                    }
-                }
-                else
-                {
-                    pointerListPool.Release(pointerList);
-                }
+                pointerListPool.Release(list);
             }
 
-            gestureListPool.Release(containingList);
-            gestureListPool.Release(endingList);
+            removePointers(pointers);
+            activeGesturesThisUpdate.Clear();
+            pointersToDispatchForGesture.Clear();
+        }
+
+        private void updateCancelled(IList<Pointer> pointers)
+        {
+            sortPointersForActiveGestures(pointers);
+
+            var count = activeGesturesThisUpdate.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var gesture = activeGesturesThisUpdate[i];
+                var list = pointersToDispatchForGesture[gesture];
+                if (gestureIsActive(gesture))
+                {
+                    gesture.INTERNAL_PointersCancelled(list);
+                }
+                pointerListPool.Release(list);
+            }
+
+            removePointers(pointers);
+            activeGesturesThisUpdate.Clear();
+            pointersToDispatchForGesture.Clear();
+        }
+
+        private void sortPointersForActiveGestures(IList<Pointer> pointers)
+        {
+            var count = pointers.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var pointer = pointers[i];
+                List<Gesture> gestures;
+                if (!pointerToGestures.TryGetValue(pointer.Id, out gestures)) continue;
+
+                var gestureCount = gestures.Count;
+                for (var j = 0; j < gestureCount; j++)
+                {
+                    var gesture = gestures[j];
+                    List<Pointer> toDispatch;
+                    if (!pointersToDispatchForGesture.TryGetValue(gesture, out toDispatch))
+                    {
+                        toDispatch = pointerListPool.Get();
+                        pointersToDispatchForGesture.Add(gesture, toDispatch);
+                        activeGesturesThisUpdate.Add(gesture);
+                    }
+                    toDispatch.Add(pointer);
+                }
+            }
+        }
+
+        private void removePointers(IList<Pointer> pointers)
+        {
+            var count = pointers.Count;
+            for (var i = 0; i < count; i++)
+            {
+                var pointer = pointers[i];
+                List<Gesture> list;
+                if (!pointerToGestures.TryGetValue(pointer.Id, out list)) continue;
+
+                pointerToGestures.Remove(pointer.Id);
+                gestureListPool.Release(list);
+            }
         }
 
         private void resetGestures()
@@ -406,58 +475,56 @@ namespace TouchScript
             for (var i = 0; i < count; i++)
             {
                 var gesture = gesturesToReset[i];
-                if (gesture == null) continue;
+                if (Equals(gesture, null)) continue; // Reference comparison
+
+                var activePointers = gesture.ActivePointers;
+                var activeCount = activePointers.Count;
+                for (var j = 0; j < activeCount; j++)
+                {
+                    var pointer = activePointers[j];
+                    List<Gesture> list;
+                    if (pointerToGestures.TryGetValue(pointer.Id, out list)) list.Remove(gesture);
+                }
+
+                if (gesture == null) continue; // Unity "null" comparison
                 gesture.INTERNAL_Reset();
                 gesture.INTERNAL_SetState(Gesture.GestureState.Idle);
             }
             gesturesToReset.Clear();
         }
 
-        // parent <- parent <- target
-        private void getHierarchyEndingWith(Transform target, List<Gesture> outputList)
+        private void clearFrameCaches()
         {
-            while (target != null)
-            {
-                getEnabledGesturesOnTarget(target, outputList);
-                target = target.parent;
-            }
+            foreach (var list in hierarchyEndingWithCache.Values) gestureListPool.Release(list);
+            foreach (var list in hierarchyBeginningWithCache.Values) gestureListPool.Release(list);
+            hierarchyEndingWithCache.Clear();
+            hierarchyBeginningWithCache.Clear();
+        }
+
+        // parent <- parent <- target
+        private List<Gesture> getHierarchyEndingWith(Transform target)
+        {
+            List<Gesture> list;
+            if (hierarchyEndingWithCache.TryGetValue(target, out list)) return list;
+
+            list = gestureListPool.Get();
+            target.GetComponentsInParent(false, list);
+            hierarchyEndingWithCache.Add(target, list);
+
+            return list;
         }
 
         // target <- child*
-        private void getHierarchyBeginningWith(Transform target, List<Gesture> outputList, bool includeSelf)
+        private List<Gesture> getHierarchyBeginningWith(Transform target)
         {
-            if (includeSelf)
-            {
-                getEnabledGesturesOnTarget(target, outputList);
-            }
+            List<Gesture> list;
+            if (hierarchyBeginningWithCache.TryGetValue(target, out list)) return list;
 
-            var count = target.childCount;
-            for (var i = 0; i < count; i++)
-            {
-                getHierarchyBeginningWith(target.GetChild(i), outputList, true);
-            }
-        }
+            list = gestureListPool.Get();
+            target.GetComponentsInChildren(list);
+            hierarchyBeginningWithCache.Add(target, list);
 
-        private void getHierarchyContaining(Transform target, List<Gesture> outputList)
-        {
-            getHierarchyEndingWith(target, outputList);
-            getHierarchyBeginningWith(target, outputList, false);
-        }
-
-        private void getEnabledGesturesOnTarget(Transform target, List<Gesture> outputList)
-        {
-            if (target.gameObject.activeInHierarchy)
-            {
-                var list = gestureListPool.Get();
-                target.GetComponents(list);
-                var count = list.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    var gesture = list[i];
-                    if (gesture != null && gesture.enabled) outputList.Add(gesture);
-                }
-                gestureListPool.Release(list);
-            }
+            return list;
         }
 
         private bool gestureIsActive(Gesture gesture)
@@ -480,9 +547,12 @@ namespace TouchScript
             if (!shouldBegin(gesture)) return false;
 
             var gesturesToFail = gestureListPool.Get();
-            var gesturesInHierarchy = gestureListPool.Get();
             bool canRecognize = true;
-            getHierarchyContaining(gesture.transform, gesturesInHierarchy);
+            var target = gesture.transform;
+
+            var gesturesInHierarchy = gestureListPool.Get();
+            gesturesInHierarchy.AddRange(getHierarchyEndingWith(target));
+            gesturesInHierarchy.AddRange(getHierarchyBeginningWith(target));
 
             var count = gesturesInHierarchy.Count;
             for (var i = 0; i < count; i++)
@@ -500,7 +570,7 @@ namespace TouchScript
                         break;
                     }
                 }
-                else
+                else if (otherGesture.State == Gesture.GestureState.Possible)
                 {
                     if (canPreventGesture(gesture, otherGesture))
                     {
@@ -557,6 +627,7 @@ namespace TouchScript
         private void frameFinishedHandler(object sender, EventArgs eventArgs)
         {
             resetGestures();
+            clearFrameCaches();
         }
 
         private void frameStartedHandler(object sender, EventArgs eventArgs)
@@ -566,22 +637,22 @@ namespace TouchScript
 
         private void pointersPressedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            update(pointerEventArgs.Pointers, _processTargetBegan, _updatePressed);
+            updatePressed(pointerEventArgs.Pointers);
         }
 
-        private void PointersUpdatedHandler(object sender, PointerEventArgs pointerEventArgs)
+        private void pointersUpdatedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            update(pointerEventArgs.Pointers, _processTarget, _updateUpdated);
+            updateUpdated(pointerEventArgs.Pointers);
         }
 
         private void pointersReleasedHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            update(pointerEventArgs.Pointers, _processTarget, _updateReleased);
+            updateReleased(pointerEventArgs.Pointers);
         }
 
         private void pointersCancelledHandler(object sender, PointerEventArgs pointerEventArgs)
         {
-            update(pointerEventArgs.Pointers, _processTarget, _updateCancelled);
+            updateCancelled(pointerEventArgs.Pointers);
         }
 
         #endregion
