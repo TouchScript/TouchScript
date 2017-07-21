@@ -200,8 +200,6 @@ namespace TouchScript.InputSources.InputHandlers
         protected MousePointer mousePointer;
         protected PenPointer penPointer;
 
-        private int screenWidth, screenHeight;
-
         #endregion
 
         #region Constructor
@@ -241,8 +239,14 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public virtual bool UpdateInput()
         {
-            if (Screen.width != screenWidth || Screen.height != screenHeight) setScaling();
             return false;
+        }
+
+        /// <inheritdoc />
+        public virtual void UpdateResolution()
+        {
+            setScaling();
+            TouchManager.Instance.CancelPointer(mousePointer.Id);
         }
 
         /// <inheritdoc />
@@ -422,8 +426,8 @@ namespace TouchScript.InputSources.InputHandlers
 
         private void setScaling()
         {
-            screenWidth = Screen.width;
-            screenHeight = Screen.height;
+            var screenWidth = Screen.width;
+            var screenHeight = Screen.height;
 
             if (!Screen.fullScreen)
             {

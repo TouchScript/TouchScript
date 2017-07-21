@@ -173,22 +173,19 @@ namespace TouchScript.Editor
 
         private void drawAdvanced()
         {
-			if (debugMode != null)
+			var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
+			var label = EditorGUI.BeginProperty(r, TEXT_DISPLAY_DEVICE, displayDevice);
+			EditorGUI.BeginChangeCheck();
+			r = EditorGUI.PrefixLabel(r, label);
+			var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
+			if (EditorGUI.EndChangeCheck())
 			{
-				var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
-				var label = EditorGUI.BeginProperty(r, TEXT_DISPLAY_DEVICE, displayDevice);
-				EditorGUI.BeginChangeCheck();
-				r = EditorGUI.PrefixLabel(r, label);
-				var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
-				if (EditorGUI.EndChangeCheck())
-				{
-					instance.DisplayDevice = newDevice;
-					EditorUtility.SetDirty(instance);
-				}
-				EditorGUI.EndProperty();
-
-            	drawDebug();
+				instance.DisplayDevice = newDevice;
+				EditorUtility.SetDirty(instance);
 			}
+			EditorGUI.EndProperty();
+
+            drawDebug();
         }
 
         private void drawDebug()

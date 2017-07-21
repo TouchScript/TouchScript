@@ -152,6 +152,9 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
+        public void UpdateResolution() { }
+
+        /// <inheritdoc />
         public bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
             var touch = pointer as TouchPointer;

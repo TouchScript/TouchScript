@@ -235,6 +235,12 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
+        public void UpdateResolution()
+        {
+            TouchManager.Instance.CancelPointer(mousePointer.Id);
+        }
+
+        /// <inheritdoc />
         public bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
             if (pointer.Equals(mousePointer))

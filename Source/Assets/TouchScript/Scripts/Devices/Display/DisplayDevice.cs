@@ -2,6 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+ #if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace TouchScript.Devices.Display
@@ -11,6 +14,17 @@ namespace TouchScript.Devices.Display
     /// </summary>
     public class DisplayDevice : ScriptableObject, IDisplayDevice
     {
+
+#if UNITY_EDITOR
+        [MenuItem("Window/TouchScript/CreateDisplayDevice")]
+        private static DisplayDevice CreateDisplayDevice()
+        {
+            var dd = CreateInstance<DisplayDevice>();
+            AssetDatabase.CreateAsset(dd,"Assets/DisplayDevice.asset");
+            return dd;
+        }
+#endif
+
         /// <inheritdoc />
         public string Name
         {
@@ -26,7 +40,16 @@ namespace TouchScript.Devices.Display
         public virtual float DPI
         {
             get { return dpi; }
-            set { dpi = value; }
+        }
+
+        public virtual float NativeDPI
+        {
+            get { return nativeDPI; }
+        }
+
+        public virtual Vector2 NativeResolution
+        {
+            get { return nativeResolution; }
         }
 
         /// <summary>
@@ -40,6 +63,14 @@ namespace TouchScript.Devices.Display
         /// </summary>
         [SerializeField]
         protected float dpi = 96;
+
+        [SerializeField]
+        protected float nativeDPI = 96;
+
+        [SerializeField]
+        protected Vector2 nativeResolution = new Vector2(1920, 1080);
+
+        public virtual void UpdateDPI() {}
 
         /// <summary>
         /// OnEnable Unity method.

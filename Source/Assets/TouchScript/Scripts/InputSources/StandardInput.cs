@@ -224,6 +224,17 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
+        public override void UpdateResolution()
+        {
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            if (windows8PointerHandler != null) windows8PointerHandler.UpdateResolution();
+            else if (windows7PointerHandler != null) windows7PointerHandler.UpdateResolution();
+#endif
+            if (touchHandler != null) touchHandler.UpdateResolution();
+            if (mouseHandler != null) mouseHandler.UpdateResolution();
+        }
+
+        /// <inheritdoc />
         public override bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
             base.CancelPointer(pointer, shouldReturn);

@@ -207,6 +207,8 @@ namespace TouchScript.Behaviors.Cursors
 
         private void pointersAddedHandler(object sender, PointerEventArgs e)
         {
+            updateCursorSize();
+
             var count = e.Pointers.Count;
             for (var i = 0; i < count; i++)
             {

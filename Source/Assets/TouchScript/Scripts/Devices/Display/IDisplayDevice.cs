@@ -2,6 +2,8 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using UnityEngine;
+
 namespace TouchScript.Devices.Display
 {
     /// <summary>
@@ -17,12 +19,18 @@ namespace TouchScript.Devices.Display
         /// Gets or sets the name of display device.
         /// </summary>
         /// <value> The name of display device. </value>
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// Gets or sets DPI of display device.
         /// </summary>
         /// <value> DPI used by display device. </value>
-        float DPI { get; set; }
+        float DPI { get; }
+
+        float NativeDPI { get; }
+
+        Vector2 NativeResolution { get; }
+
+        void UpdateDPI();
     }
 }

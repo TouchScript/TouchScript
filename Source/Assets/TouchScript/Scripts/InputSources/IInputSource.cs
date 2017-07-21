@@ -27,6 +27,8 @@ namespace TouchScript.InputSources
         /// </summary>
         bool UpdateInput();
 
+        void UpdateResolution();
+
         /// <summary>
         /// Cancels the pointer.
         /// </summary>

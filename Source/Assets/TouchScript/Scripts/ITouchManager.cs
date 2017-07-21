@@ -197,6 +197,8 @@ namespace TouchScript
         /// </summary>
         /// <param name="id">Pointer id to cancel.</param>
         void CancelPointer(int id);
+
+        void UpdateResolution();
     }
 
     /// <summary>

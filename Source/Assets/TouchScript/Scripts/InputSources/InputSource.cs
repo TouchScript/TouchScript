@@ -57,6 +57,9 @@ namespace TouchScript.InputSources
         }
 
         /// <inheritdoc />
+        public virtual void UpdateResolution() {}
+
+        /// <inheritdoc />
         public virtual bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
             return false;
