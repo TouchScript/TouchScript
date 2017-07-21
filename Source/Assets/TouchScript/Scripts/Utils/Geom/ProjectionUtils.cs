@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace TouchScript.Utils
+namespace TouchScript.Utils.Geom
 {
     /// <summary>
     /// Projection utils.

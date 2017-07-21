@@ -2,7 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Utils;
+using TouchScript.Utils.Geom;
 using UnityEngine;
 
 namespace TouchScript.Layers

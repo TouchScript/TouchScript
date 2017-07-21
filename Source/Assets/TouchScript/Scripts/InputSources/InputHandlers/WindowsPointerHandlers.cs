@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using TouchScript.Pointers;
 using TouchScript.Utils;
+using TouchScript.Utils.Platform;
 using UnityEngine;
 
 namespace TouchScript.InputSources.InputHandlers
@@ -27,7 +28,7 @@ namespace TouchScript.InputSources.InputHandlers
             get { return mouseInPointer; }
             set
             {
-                EnableMouseInPointer(value);
+                WindowsUtils.EnableMouseInPointer(value);
                 mouseInPointer = value;
                 if (mouseInPointer)
                 {
@@ -113,7 +114,7 @@ namespace TouchScript.InputSources.InputHandlers
                 penPointer = null;
             }
 
-            EnableMouseInPointer(false);
+            WindowsUtils.EnableMouseInPointer(false);
 
             base.Dispose();
         }
@@ -228,7 +229,7 @@ namespace TouchScript.InputSources.InputHandlers
 
             touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, resetPointer);
 
-            hMainWindow = GetActiveWindow();
+            hMainWindow = WindowsUtils.GetActiveWindow();
             disablePressAndHold();
             setScaling();
         }
@@ -401,12 +402,12 @@ namespace TouchScript.InputSources.InputHandlers
         private void disablePressAndHold()
         {
             // https://msdn.microsoft.com/en-us/library/bb969148(v=vs.85).aspx
-            pressAndHoldAtomID = GlobalAddAtom(PRESS_AND_HOLD_ATOM);
-            SetProp(hMainWindow, PRESS_AND_HOLD_ATOM,
-                TABLET_DISABLE_PRESSANDHOLD | // disables press and hold (right-click) gesture
-                TABLET_DISABLE_PENTAPFEEDBACK | // disables UI feedback on pen up (waves)
-                TABLET_DISABLE_PENBARRELFEEDBACK | // disables UI feedback on pen button down (circle)
-                TABLET_DISABLE_FLICKS // disables pen flicks (back, forward, drag down, drag up);
+            pressAndHoldAtomID = WindowsUtils.GlobalAddAtom(PRESS_AND_HOLD_ATOM);
+            WindowsUtils.SetProp(hMainWindow, PRESS_AND_HOLD_ATOM,
+                WindowsUtils.TABLET_DISABLE_PRESSANDHOLD | // disables press and hold (right-click) gesture
+                WindowsUtils.TABLET_DISABLE_PENTAPFEEDBACK | // disables UI feedback on pen up (waves)
+                WindowsUtils.TABLET_DISABLE_PENBARRELFEEDBACK | // disables UI feedback on pen button down (circle)
+                WindowsUtils.TABLET_DISABLE_FLICKS // disables pen flicks (back, forward, drag down, drag up);
                 );
         }
 
@@ -414,8 +415,8 @@ namespace TouchScript.InputSources.InputHandlers
         {
             if (pressAndHoldAtomID != 0)
             {
-                RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
-                GlobalDeleteAtom(pressAndHoldAtomID);
+                WindowsUtils.RemoveProp(hMainWindow, PRESS_AND_HOLD_ATOM);
+                WindowsUtils.GlobalDeleteAtom(pressAndHoldAtomID);
             }
         }
 
@@ -431,26 +432,9 @@ namespace TouchScript.InputSources.InputHandlers
             }
 
             int width, height;
-            getNativeMonitorResolution(out width, out height);
+            WindowsUtils.GetNativeMonitorResolution(out width, out height);
             float scale = Mathf.Max(screenWidth / ((float) width), screenHeight / ((float) height));
             SetScreenParams(screenWidth, screenHeight, (width - screenWidth / scale) * .5f, (height - screenHeight / scale) * .5f, scale, scale);
-        }
-
-        private void getNativeMonitorResolution(out int width, out int height)
-        {
-            var monitor = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
-            MONITORINFO monitorInfo = new MONITORINFO();
-            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
-            if (!GetMonitorInfo(monitor, ref monitorInfo))
-            {
-                width = Screen.width;
-                height = Screen.height;
-            }
-            else
-            {
-                width = monitorInfo.rcMonitor.Width;
-                height = monitorInfo.rcMonitor.Height;
-            }
         }
 
         #endregion
@@ -725,48 +709,6 @@ namespace TouchScript.InputSources.InputHandlers
             public int TiltY;
         }
 
-        private const int TABLET_DISABLE_PRESSANDHOLD = 0x00000001;
-        private const int TABLET_DISABLE_PENTAPFEEDBACK = 0x00000008;
-        private const int TABLET_DISABLE_PENBARRELFEEDBACK = 0x00000010;
-        private const int TABLET_DISABLE_FLICKS = 0x00010000;
-
-        private const int MONITOR_DEFAULTTONEAREST = 2;
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct MONITORINFO
-        {
-            public int cbSize;
-            public RECT rcMonitor;
-            public RECT rcWork;
-            public uint dwFlags;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct RECT
-        {
-            public int Left, Top, Right, Bottom;
-
-            public RECT(int left, int top, int right, int bottom)
-            {
-                Left = left;
-                Top = top;
-                Right = right;
-                Bottom = bottom;
-            }
-
-            public int Height
-            {
-                get { return Bottom - Top; }
-                set { Bottom = value + Top; }
-            }
-
-            public int Width
-            {
-                get { return Right - Left; }
-                set { Right = value + Left; }
-            }
-        }
-
         [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
         private static extern void Init(TOUCH_API api, NativeLog log, NativePointerDelegate pointerDelegate);
 
@@ -775,30 +717,6 @@ namespace TouchScript.InputSources.InputHandlers
 
         [DllImport("WindowsTouch", CallingConvention = CallingConvention.StdCall)]
         private static extern void SetScreenParams(int width, int height, float offsetX, float offsetY, float scaleX, float scaleY);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetActiveWindow();
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
-
-        [DllImport("Kernel32.dll")]
-        private static extern ushort GlobalAddAtom(string lpString);
-
-        [DllImport("Kernel32.dll")]
-        private static extern ushort GlobalDeleteAtom(ushort nAtom);
-
-        [DllImport("user32.dll")]
-        private static extern int SetProp(IntPtr hWnd, string lpString, int hData);
-
-        [DllImport("user32.dll")]
-        private static extern int RemoveProp(IntPtr hWnd, string lpString);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr EnableMouseInPointer(bool value);
 
         #endregion
     }
