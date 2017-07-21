@@ -51,7 +51,7 @@ namespace TouchScript.Examples.Tap
         {
             if (growing)
             {
-                growingTime += Time.deltaTime;
+                growingTime += Time.unscaledDeltaTime;
                 rnd.material.color = Color.Lerp(Color.white, Color.red, growingTime);
             }
         }

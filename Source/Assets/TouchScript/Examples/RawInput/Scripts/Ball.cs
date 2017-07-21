@@ -13,7 +13,7 @@ namespace TouchScript.Examples.RawInput
         private void Update()
         {
             Speed *= 1.01f;
-            transform.position += transform.forward*Speed*Time.deltaTime;
+            transform.position += transform.forward * Speed * Time.unscaledDeltaTime;
             if (Speed > 1000) Destroy(gameObject);
         }
     }

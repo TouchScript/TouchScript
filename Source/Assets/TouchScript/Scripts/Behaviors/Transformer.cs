@@ -220,7 +220,7 @@ namespace TouchScript.Behaviors
 
             if (!enableSmoothing) return;
 
-            var fraction = 1 - Mathf.Pow(smoothingFactor, Time.deltaTime);
+            var fraction = 1 - Mathf.Pow(smoothingFactor, Time.unscaledDeltaTime);
 
             var scale = transform.localScale;
             if (allowChangingFromOutside)
