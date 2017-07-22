@@ -621,7 +621,6 @@ namespace TouchScript.Gestures
             switch (state)
             {
                 case GestureState.Cancelled:
-                case GestureState.Ended:
                 case GestureState.Failed:
                     return;
             }
