@@ -19,7 +19,6 @@ using TouchScript.Debugging.Loggers;
 #endif
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.SceneManagement;
-
 #endif
 
 namespace TouchScript
@@ -166,12 +165,6 @@ namespace TouchScript
         }
 
         /// <inheritdoc />
-        public IList<TouchLayer> Layers
-        {
-            get { return new List<TouchLayer>(layers); }
-        }
-
-        /// <inheritdoc />
         public IList<IInputSource> Inputs
         {
             get { return new List<IInputSource>(inputs); }
@@ -213,6 +206,7 @@ namespace TouchScript
 
         private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
+
         private bool shouldCreateCameraLayer = true;
         private bool shouldCreateStandardInput = true;
 
@@ -220,8 +214,8 @@ namespace TouchScript
         private float dpi = 96;
         private float dotsPerCentimeter = TouchManager.CM_TO_INCH * 96;
 
-        private List<TouchLayer> layers = new List<TouchLayer>(10);
-        private int layerCount = 0;
+        private ILayerManager layerManager;
+
         private List<IInputSource> inputs = new List<IInputSource>(3);
         private int inputCount = 0;
 
@@ -248,6 +242,12 @@ namespace TouchScript
 
         #endregion
 
+        #region Temporary variables
+
+        private Pointer tmpPointer;
+
+        #endregion
+
         #region Debug
 
 #if TOUCHSCRIPT_DEBUG
@@ -260,61 +260,6 @@ namespace TouchScript
         #endregion
 
         #region Public methods
-
-        /// <inheritdoc />
-        public bool AddLayer(TouchLayer layer, int index = -1, bool addIfExists = true)
-        {
-            if (layer == null) return false;
-
-            var i = layers.IndexOf(layer);
-            if (i != -1)
-            {
-                if (!addIfExists) return false;
-                layers.RemoveAt(i);
-                layerCount--;
-            }
-            if (index == 0)
-            {
-                layers.Insert(0, layer);
-                layerCount++;
-                return i == -1;
-            }
-            if (index == -1 || index >= layerCount)
-            {
-                layers.Add(layer);
-                layerCount++;
-                return i == -1;
-            }
-            if (i != -1)
-            {
-                if (index < i) layers.Insert(index, layer);
-                else layers.Insert(index - 1, layer);
-                layerCount++;
-                return false;
-            }
-            layers.Insert(index, layer);
-            layerCount++;
-            return true;
-        }
-
-        /// <inheritdoc />
-        public bool RemoveLayer(TouchLayer layer)
-        {
-            if (layer == null) return false;
-            var result = layers.Remove(layer);
-            if (result) layerCount--;
-            return result;
-        }
-
-        /// <inheritdoc />
-        public void ChangeLayerIndex(int at, int to)
-        {
-            if (at < 0 || at >= layerCount) return;
-            if (to < 0 || to >= layerCount) return;
-            var data = layers[at];
-            layers.RemoveAt(at);
-            layers.Insert(to, data);
-        }
 
         /// <inheritdoc />
         public bool AddInput(IInputSource input)
@@ -373,28 +318,6 @@ namespace TouchScript
         #endregion
 
         #region Internal methods
-
-        /// <inheritdoc />
-        internal bool INTERNAL_GetHitTarget(IPointer pointer, out HitData hit)
-        {
-            hit = default(HitData);
-
-            for (var i = 0; i < layerCount; i++)
-            {
-                var touchLayer = layers[i];
-                if (touchLayer == null) continue;
-                var result = touchLayer.Hit(pointer, out hit);
-                switch (result)
-                {
-                    case HitResult.Hit:
-                        return true;
-                    case HitResult.Discard:
-                        return false;
-                }
-            }
-
-            return false;
-        }
 
         internal void INTERNAL_AddPointer(Pointer pointer)
         {
@@ -609,6 +532,8 @@ namespace TouchScript
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
 
+            layerManager = LayerManager.Instance;
+
             UpdateResolution();
 
             StopAllCoroutines();
@@ -644,7 +569,6 @@ namespace TouchScript
             yield return null;
             yield return null;
 
-            updateLayers();
             createCameraLayer();
             createInput();
         }
@@ -665,16 +589,9 @@ namespace TouchScript
 
         #region Private functions
 
-        private void updateLayers()
-        {
-            // filter empty layers
-            layers = layers.FindAll(l => l != null);
-            layerCount = layers.Count;
-        }
-
         private void createCameraLayer()
         {
-            if (layerCount == 0 && shouldCreateCameraLayer)
+            if (layerManager.LayerCount == 0 && shouldCreateCameraLayer)
             {
                 if (Camera.main != null)
                 {
@@ -682,7 +599,7 @@ namespace TouchScript
                         Debug.Log(
                             "[TouchScript] No touch layers found, adding StandardLayer for the main camera. (this message is harmless)");
                     var layer = Camera.main.gameObject.AddComponent<StandardLayer>();
-                    AddLayer(layer);
+                    layerManager.AddLayer(layer);
                 }
             }
         }
@@ -730,12 +647,9 @@ namespace TouchScript
                 pLogger.Log(pointer, PointerEvent.Added);
 #endif
 
-                for (var j = 0; j < layerCount; j++)
-                {
-                    var touchLayer = layers[j];
-                    if (touchLayer == null) continue;
-                    touchLayer.INTERNAL_AddPointer(pointer);
-                }
+                tmpPointer = pointer;
+                layerManager.ForEach(layerAddPointer);
+                tmpPointer = null;
 
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) addDebugFigureForPointer(pointer);
@@ -745,6 +659,12 @@ namespace TouchScript
             if (pointersAddedInvoker != null)
                 pointersAddedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
+        }
+
+        private bool layerAddPointer(TouchLayer layer)
+        {
+            layer.INTERNAL_AddPointer(tmpPointer);
+            return true;
         }
 
         private void updateUpdated(List<int> pointers)
@@ -774,12 +694,9 @@ namespace TouchScript
                 if (layer != null) layer.INTERNAL_UpdatePointer(pointer);
                 else
                 {
-                    for (var j = 0; j < layerCount; j++)
-                    {
-                        var touchLayer = layers[j];
-                        if (touchLayer == null) continue;
-                        touchLayer.INTERNAL_UpdatePointer(pointer);
-                    }
+                    tmpPointer = pointer;
+                    layerManager.ForEach(layerUpdatePointer);
+                    tmpPointer = null;
                 }
 
 #if TOUCHSCRIPT_DEBUG
@@ -790,6 +707,12 @@ namespace TouchScript
             if (pointersUpdatedInvoker != null)
                 pointersUpdatedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
+        }
+
+        private bool layerUpdatePointer(TouchLayer layer)
+        {
+            layer.INTERNAL_UpdatePointer(tmpPointer);
+            return true;
         }
 
         private void updatePressed(List<int> pointers)
@@ -899,12 +822,9 @@ namespace TouchScript
                 pLogger.Log(pointer, PointerEvent.Removed);
 #endif
 
-                for (var j = 0; j < layerCount; j++)
-                {
-                    var touchLayer = layers[j];
-                    if (touchLayer == null) continue;
-                    touchLayer.INTERNAL_RemovePointer(pointer);
-                }
+                tmpPointer = pointer;
+                layerManager.ForEach(layerRemovePointer);
+                tmpPointer = null;
 
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) removeDebugFigureForPointer(pointer);
@@ -921,6 +841,12 @@ namespace TouchScript
                 pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
+        }
+
+        private bool layerRemovePointer(TouchLayer layer)
+        {
+            layer.INTERNAL_RemovePointer(tmpPointer);
+            return true;
         }
 
         private void updateCancelled(List<int> pointers)
@@ -949,12 +875,9 @@ namespace TouchScript
                 pLogger.Log(pointer, PointerEvent.Cancelled);
 #endif
 
-                for (var j = 0; j < layerCount; j++)
-                {
-                    var touchLayer = layers[j];
-                    if (touchLayer == null) continue;
-                    touchLayer.INTERNAL_CancelPointer(pointer);
-                }
+                tmpPointer = pointer;
+                layerManager.ForEach(layerCancelPointer);
+                tmpPointer = null;
 
 #if TOUCHSCRIPT_DEBUG
                 if (DebugMode) removeDebugFigureForPointer(pointer);
@@ -970,6 +893,12 @@ namespace TouchScript
                 pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
+        }
+
+        private bool layerCancelPointer(TouchLayer layer)
+        {
+            layer.INTERNAL_CancelPointer(tmpPointer);
+            return true;
         }
 
         private void sendFrameStartedToPointers()

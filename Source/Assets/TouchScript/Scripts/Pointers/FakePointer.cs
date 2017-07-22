@@ -55,7 +55,7 @@ namespace TouchScript.Pointers
         public HitData GetOverData(bool forceRecalculate = false)
         {
             HitData overData;
-            TouchManagerInstance.Instance.INTERNAL_GetHitTarget(this, out overData);
+            LayerManager.Instance.GetHitTarget(this, out overData);
             return overData;
         }
 

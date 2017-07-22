@@ -200,13 +200,13 @@ namespace TouchScript.Editor
         {
             if (Application.isPlaying)
             {
-                var l = TouchManager.Instance.Layers;
                 layers.arraySize = 0;
-                for (var i = 0; i < l.Count; i++)
+                LayerManager.Instance.ForEach((l) =>
                 {
                     layers.arraySize++;
-                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = l[i];
-                }
+                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = l;
+                    return true;
+                });
             }
             else
             {

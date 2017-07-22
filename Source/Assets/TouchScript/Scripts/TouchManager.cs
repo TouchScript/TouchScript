@@ -404,7 +404,8 @@ namespace TouchScript
             Instance.ShouldCreateStandardInput = ShouldCreateStandardInput;
             for (var i = 0; i < layers.Count; i++)
             {
-                Instance.AddLayer(layers[i], i);
+                var layer = layers[i];
+                if (layer != null) LayerManager.Instance.AddLayer(layer, i);
             }
         }
 

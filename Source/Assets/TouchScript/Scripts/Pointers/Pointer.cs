@@ -231,7 +231,7 @@ namespace TouchScript.Pointers
 
         private static StringBuilder builder;
 
-        private TouchManagerInstance manager;
+        private LayerManagerInstance layerManager;
         private int refCount = 0;
         private Vector2 position, newPosition;
         private HitData pressData, overData;
@@ -246,7 +246,7 @@ namespace TouchScript.Pointers
         {
             if (overDataIsDirty || forceRecalculate)
             {
-                manager.INTERNAL_GetHitTarget(this, out overData);
+                layerManager.GetHitTarget(this, out overData);
                 overDataIsDirty = false;
             }
             return overData;
@@ -323,7 +323,7 @@ namespace TouchScript.Pointers
         /// </summary>
         public Pointer(IInputSource input)
         {
-            manager = TouchManager.Instance as TouchManagerInstance;
+            layerManager = LayerManager.Instance as LayerManagerInstance;
             Type = PointerType.Unknown;
             InputSource = input;
             INTERNAL_Reset();

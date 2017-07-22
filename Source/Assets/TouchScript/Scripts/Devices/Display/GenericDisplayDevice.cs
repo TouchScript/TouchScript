@@ -56,9 +56,6 @@ namespace TouchScript.Devices.Display
             updateNativeResulotion();
             updateNativeDPI();
             UpdateDPI();
-
-            Debug.LogFormat("{0}x{1} {2}x{3}", Screen.width, Screen.height, Screen.currentResolution.width, Screen.currentResolution.height);
-            Debug.LogFormat("Device Model: {0}, Device Name: {1}, GPU: {2}", SystemInfo.deviceModel, SystemInfo.deviceName, SystemInfo.graphicsDeviceName);
         }
 
         private void updateNativeResulotion()

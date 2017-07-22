@@ -129,7 +129,7 @@ namespace TouchScript.Layers
             yield return null;
 
             // Add ourselves after TouchManager finished adding layers in order
-            TouchManager.Instance.AddLayer(this, -1, false);
+            LayerManager.Instance.AddLayer(this, -1, false);
         }
 
         // To be able to turn layers off
@@ -143,7 +143,7 @@ namespace TouchScript.Layers
             if (!Application.isPlaying || TouchManager.Instance == null) return;
 
             StopAllCoroutines();
-            TouchManager.Instance.RemoveLayer(this);
+            LayerManager.Instance.RemoveLayer(this);
         }
 
         #endregion

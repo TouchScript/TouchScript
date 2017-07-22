@@ -647,7 +647,7 @@ namespace TouchScript.Gestures
         {
             HitData hit;
             fakePointer.Position = ScreenPosition;
-            touchManager.INTERNAL_GetHitTarget(fakePointer, out hit);
+            LayerManager.Instance.GetHitTarget(fakePointer, out hit);
             return hit;
         }
 
