@@ -200,6 +200,8 @@ namespace TouchScript
             get { return new List<Pointer>(pressedPointers); }
         }
 
+        public bool IsInsidePointerFrame { get; private set; }
+
         #endregion
 
         #region Private variables
@@ -913,6 +915,8 @@ namespace TouchScript
         private void updatePointers()
         {
             samplerUpdatePointers.Begin();
+
+            IsInsidePointerFrame = true;
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
             // need to copy buffers since they might get updated during execution
@@ -1001,6 +1005,8 @@ namespace TouchScript
             }
 
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
+            IsInsidePointerFrame = false;
+
             samplerUpdatePointers.End();
         }
 

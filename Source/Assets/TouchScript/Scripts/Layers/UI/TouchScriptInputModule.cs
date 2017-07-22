@@ -394,7 +394,7 @@ namespace TouchScript.Layers.UI
 			private void convertRaycast(RaycastHitUI old, ref RaycastResult current)
 			{
 				current.module = old.Raycaster;
-				current.gameObject = old.GameObject;
+				current.gameObject = old.Target == null ? null : old.Target.gameObject;
 				current.depth = old.Depth;
 				current.index = old.GraphicIndex;
 				current.sortingLayer = old.SortingLayer;

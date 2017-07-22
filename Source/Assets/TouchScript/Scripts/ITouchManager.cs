@@ -139,6 +139,8 @@ namespace TouchScript
         /// <value>An unsorted list of all pointers which were pressed but not released yet.</value>
         IList<Pointer> PressedPointers { get; }
 
+        bool IsInsidePointerFrame { get; }
+
         /// <summary>
         /// Adds an input source.
         /// </summary>

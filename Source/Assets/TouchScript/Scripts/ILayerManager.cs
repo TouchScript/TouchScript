@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TouchScript.Hit;
 using TouchScript.Layers;
 using TouchScript.Pointers;
+using UnityEngine;
 
 namespace TouchScript
 {
@@ -19,6 +20,8 @@ namespace TouchScript
         IList<TouchLayer> Layers { get; }
 
         int LayerCount { get; }
+
+        bool HasExclusive { get; }
 
         /// <summary>
         /// Adds a layer in a specific position.
@@ -48,6 +51,14 @@ namespace TouchScript
         void ForEach(Func<TouchLayer, bool> action);
 
         bool GetHitTarget(IPointer pointer, out HitData hit);
+
+        void SetExclusive(Transform target, bool includeChildren = false);
+
+        void SetExclusive(IEnumerable<Transform> targets);
+
+        bool IsExclusive(Transform target);
+
+        void ClearExclusive();
 
     }
 }

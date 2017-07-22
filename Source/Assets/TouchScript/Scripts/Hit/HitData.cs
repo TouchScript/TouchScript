@@ -21,6 +21,8 @@ namespace TouchScript.Hit
         [Flags]
         public enum HitType
         {
+            Unknown,
+
             ScreenSpace,
 
             /// <summary>
@@ -260,7 +262,7 @@ namespace TouchScript.Hit
         /// </summary>
         /// <param name="value"> UI raycast value. </param>
         public HitData(RaycastHitUI value, TouchLayer layer, bool screenSpace = false) :
-            this(value.GameObject.transform, layer, screenSpace)
+            this(value.Target, layer, screenSpace)
         {
             raycastHitUI = value;
             type = HitType.UI;

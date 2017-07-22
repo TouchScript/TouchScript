@@ -11,7 +11,7 @@ namespace TouchScript.Hit
 	public struct RaycastHitUI
 	{
 
-		public GameObject GameObject;
+		public Transform Target;
 		public BaseRaycaster Raycaster;
 		public int GraphicIndex;
 		public int Depth;

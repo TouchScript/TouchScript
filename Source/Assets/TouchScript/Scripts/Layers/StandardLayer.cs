@@ -298,7 +298,8 @@ namespace TouchScript.Layers
             var ray = _camera.ScreenPointToRay(position);
 
             int count;
-            
+            bool exclusiveSet = manager.HasExclusive;
+
             if (hit3DObjects)
             {
 #if UNITY_5_3_OR_NEWER
@@ -311,11 +312,20 @@ namespace TouchScript.Layers
                 // Try to do some optimizations if 2D and WS UI are not required
                 if (!hit2DObjects && !hitWorldSpaceUI)
                 {
+                    RaycastHit raycast;
+
                     if (count == 0) return HitResult.Miss;
                     if (count > 1)
                     {
                         raycastHitList.Clear();
-                        for (var i = 0; i < count; i++) raycastHitList.Add(raycastHits[i]);
+                        for (var i = 0; i < count; i++)
+                        {
+                            raycast = raycastHits[i];
+                            if (exclusiveSet && !manager.IsExclusive(raycast.transform)) continue;
+                            raycastHitList.Add(raycast);
+                        }
+                        if (raycastHitList.Count == 0) return HitResult.Miss;
+
                         raycastHitList.Sort(_raycastHitComparerFunc);
                         if (useHitFilters)
                         {
@@ -329,17 +339,30 @@ namespace TouchScript.Layers
                         hit = new HitData(raycastHitList[0], this);
                         return HitResult.Hit;
                     }
-                    if (useHitFilters) return doHit(pointer, raycastHits[0], out hit);
-                    hit = new HitData(raycastHits[0], this);
+
+                    raycast = raycastHits[0];
+                    if (exclusiveSet && !manager.IsExclusive(raycast.transform)) return HitResult.Miss;
+                    if (useHitFilters) return doHit(pointer, raycast, out hit);
+                    hit = new HitData(raycast, this);
                     return HitResult.Hit;
                 }
-                for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHits[i], this));
+                for (var i = 0; i < count; i++)
+                {
+                    var raycast = raycastHits[i];
+                    if (exclusiveSet && !manager.IsExclusive(raycast.transform)) continue;
+                    hitList.Add(new HitData(raycastHits[i], this));
+                }
             }
 
             if (hit2DObjects)
             {
                 count = Physics2D.GetRayIntersectionNonAlloc(ray, raycastHits2D, float.MaxValue, layerMask);
-                for (var i = 0; i < count; i++) hitList.Add(new HitData(raycastHits2D[i], this));
+                for (var i = 0; i < count; i++)
+                {
+                    var raycast = raycastHits2D[i];
+                    if (exclusiveSet && !manager.IsExclusive(raycast.transform)) continue;
+                    hitList.Add(new HitData(raycast, this));
+                }
             }
 
             if (hitWorldSpaceUI)
@@ -390,7 +413,6 @@ namespace TouchScript.Layers
         private HitResult performSSUISearch(IPointer pointer, out HitData hit)
         {
             hit = default(HitData);
-
             raycastHitUIList.Clear();
 
             if (raycasters == null) raycasters = TouchScriptInputModule.Instance.GetRaycasters();
@@ -419,9 +441,11 @@ namespace TouchScript.Layers
                     }
                     return HitResult.Miss;
                 }
+
                 hit = new HitData(raycastHitUIList[0], this, true);
                 return HitResult.Hit;
             }
+
             if (useHitFilters) return doHit(pointer, raycastHitUIList[0], out hit);
             hit = new HitData(raycastHitUIList[0], this, true);
             return HitResult.Hit;
@@ -431,11 +455,15 @@ namespace TouchScript.Layers
         {
             var position = pointer.Position;
             var foundGraphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
-            var count2 = foundGraphics.Count;
+            var count = foundGraphics.Count;
+            var exclusiveSet = manager.HasExclusive;
 
-            for (var j = 0; j < count2; j++)
+            for (var i = 0; i < count; i++)
             {
-                var graphic = foundGraphics[j];
+                var graphic = foundGraphics[i];
+                var t = graphic.transform;
+
+                if (exclusiveSet && !manager.IsExclusive(t)) continue;
 
                 if ((layerMask.value != -1) && ((layerMask.value & (1 << graphic.gameObject.layer)) == 0)) continue;
 
@@ -448,7 +476,6 @@ namespace TouchScript.Layers
 
                 if (graphic.Raycast(position, eventCamera))
                 {
-                    var t = graphic.transform;
                     if (raycaster.ignoreReversedGraphics)
                         if (eventCamera == null)
                         {
@@ -481,7 +508,7 @@ namespace TouchScript.Layers
                     raycastHitUIList.Add(
                             new RaycastHitUI()
                             {
-                                GameObject = graphic.gameObject,
+                                Target = graphic.transform,
                                 Raycaster = raycaster,
                                 Graphic = graphic,
                                 GraphicIndex = raycastHitUIList.Count,

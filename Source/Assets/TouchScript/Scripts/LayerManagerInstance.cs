@@ -50,6 +50,11 @@ namespace TouchScript
             get { return layerCount; }
         }
 
+        public bool HasExclusive
+        {
+            get { return exclusiveCount > 0; }
+        }
+
         #endregion
 
         #region Private variables
@@ -57,8 +62,20 @@ namespace TouchScript
         private static LayerManagerInstance instance;
         private static bool shuttingDown = false;
 
+        private ITouchManager manager;
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private int layerCount = 0;
+
+        private HashSet<int> exclusive = new HashSet<int>();
+        private int exclusiveCount = 0;
+        private int clearExclusiveDelay = -1;
+
+        #endregion
+
+        #region Temporary variables
+
+        // Used in SetExclusive().
+        private List<Transform> tmpList = new List<Transform>(20);
 
         #endregion
 
@@ -150,6 +167,46 @@ namespace TouchScript
             return false;
         }
 
+        /// <inheritdoc />
+        public void SetExclusive(Transform target, bool includeChildren = false)
+        {
+            if (target == null) return;
+            exclusive.Clear();
+            clearExclusiveDelay = -1;
+
+            exclusive.Add(target.GetHashCode());
+            exclusiveCount = 1;
+            if (includeChildren)
+            {
+                target.GetComponentsInChildren(tmpList);
+                foreach (var t in tmpList) exclusive.Add(t.GetHashCode());
+                exclusiveCount += tmpList.Count;
+            }
+        }
+
+        public void SetExclusive(IEnumerable<Transform> targets)
+        {
+            if (targets == null) return;
+            exclusive.Clear();
+            clearExclusiveDelay = -1;
+
+            foreach (var t in targets)
+            {
+                exclusive.Add(t.GetHashCode());
+                exclusiveCount++;
+            }
+        }
+
+        public bool IsExclusive(Transform target)
+        {
+            return exclusive.Contains(target.GetHashCode());
+        }
+
+        public void ClearExclusive()
+        {
+            clearExclusiveDelay = manager.IsInsidePointerFrame ? 2 : 1;
+        }
+
         #endregion
 
         #region Unity
@@ -166,8 +223,20 @@ namespace TouchScript
                 return;
             }
 
+            manager = TouchManager.Instance;
+
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnEnable()
+        {
+            manager.FrameFinished += frameFinishedHandler;
+        }
+
+        private void OnDisable()
+        {
+            manager.FrameFinished -= frameFinishedHandler;
         }
 
         private void OnApplicationQuit()
@@ -178,6 +247,20 @@ namespace TouchScript
         #endregion
 
         #region Private functions
+
+        #endregion
+
+        #region Event handlers
+
+        private void frameFinishedHandler(object sender, EventArgs eventArgs)
+        {
+            clearExclusiveDelay--;
+            if (clearExclusiveDelay == 0)
+            {
+                exclusive.Clear();
+                exclusiveCount = 0;
+            }
+        }
 
         #endregion
 
