@@ -262,7 +262,7 @@ namespace TouchScript.InputSources.InputHandlers
         public virtual void UpdateResolution()
         {
             setScaling();
-            TouchManager.Instance.CancelPointer(mousePointer.Id);
+            if (mousePointer != null) TouchManager.Instance.CancelPointer(mousePointer.Id);
         }
 
         /// <inheritdoc />
@@ -500,24 +500,27 @@ namespace TouchScript.InputSources.InputHandlers
                     }
                     break;
                 case PointerType.Touch:
+                    TouchPointer touchPointer;
                     switch (evt)
                     {
-                        // Enter/Leave logic is handles in Down/Up
                         case PointerEvent.Enter:
+                            break;
                         case PointerEvent.Leave:
-                            break;
-                        case PointerEvent.Down:
-                            TouchPointer touchPointer = internalAddTouchPointer(position);
-                            touchPointer.Rotation = getTouchRotation(ref data);
-                            touchPointer.Pressure = getTouchPressure(ref data);
-                            winTouchToInternalId.Add(id, touchPointer);
-                            break;
-                        case PointerEvent.Up:
+                            // Sometimes Windows might not send Up, so have to execute touch release logic here.
+                            // Has been working fine on test devices so far.
                             if (winTouchToInternalId.TryGetValue(id, out touchPointer))
                             {
                                 winTouchToInternalId.Remove(id);
                                 internalRemoveTouchPointer(touchPointer);
                             }
+                            break;
+                        case PointerEvent.Down:
+                            touchPointer = internalAddTouchPointer(position);
+                            touchPointer.Rotation = getTouchRotation(ref data);
+                            touchPointer.Pressure = getTouchPressure(ref data);
+                            winTouchToInternalId.Add(id, touchPointer);
+                            break;
+                        case PointerEvent.Up:
                             break;
                         case PointerEvent.Update:
                             if (!winTouchToInternalId.TryGetValue(id, out touchPointer)) return;

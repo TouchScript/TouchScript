@@ -104,7 +104,7 @@ void decodeWin8Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 	ScreenToClient(_currentWindow, &p);
 
 	Vector2 position = Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY);
-	PointerData data;
+	PointerData data {};
 	data.pointerFlags = pointerInfo.pointerFlags;
 	data.changedButtons = pointerInfo.ButtonChangeType;
 
@@ -156,7 +156,7 @@ void decodeWin7Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 		ScreenToClient(_currentWindow, &p);
 
 		Vector2 position = Vector2(((float)p.x - _offsetX) * _scaleX, _screenHeight - ((float)p.y - _offsetY) * _scaleY);
-		PointerData data;
+		PointerData data {};
 
 		if ((touch.dwFlags & TOUCHEVENTF_DOWN) != 0)
 		{
@@ -165,7 +165,7 @@ void decodeWin7Touches(UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		else if ((touch.dwFlags & TOUCHEVENTF_UP) != 0)
 		{
-			msg = WM_POINTERUP;
+			msg = WM_POINTERLEAVE;
 			data.changedButtons = POINTER_CHANGE_FIRSTBUTTON_UP;
 		}
 		else if ((touch.dwFlags & TOUCHEVENTF_MOVE) != 0)
