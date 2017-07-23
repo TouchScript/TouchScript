@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  * Based on http://pastebin.com/69QP1s45
  */
@@ -6,14 +6,19 @@
 
 #if TOUCHSCRIPT_DEBUG
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+#if UNITY_EDITOR 
+using UnityEditor;
+using UnityEditor.Build;
+#endif
 
 namespace TouchScript.Debugging.GL
 {
     public class GLDebug : MonoBehaviour
     {
-
         public static readonly Color MULTIPLY = new Color(0, 0, 0, 0);
         public static readonly Vector2 DEFAULT_SCREEN_SPACE_SCALE = new Vector2(10, 10);
 
@@ -58,6 +63,8 @@ namespace TouchScript.Debugging.GL
         private Dictionary<int, Figure> figuresMultiplyScreenSpace;
         private Dictionary<int, Figure> figuresTmp;
 
+        private WaitForEndOfFrame wait;
+
         #region Public methods
 
         public static void RemoveFigure(int id)
@@ -79,7 +86,7 @@ namespace TouchScript.Debugging.GL
 
         public static int DrawLine(int? id, Vector3 start, Vector3 end, Color? color = null, float duration = 0, bool depthTest = false)
         {
-            return drawFigure(id, new List<Line>() { new Line(start, end) }, color ?? Color.white, duration, depthTest);
+            return drawFigure(id, new List<Line>() {new Line(start, end)}, color ?? Color.white, duration, depthTest);
         }
 
         public static int DrawLineScreenSpace(Vector2 start, Vector2 end, Color? color = null, float duration = 0)
@@ -89,7 +96,7 @@ namespace TouchScript.Debugging.GL
 
         public static int DrawLineScreenSpace(int? id, Vector2 start, Vector2 end, Color? color = null, float duration = 0)
         {
-            return drawFigureScreenSpace(id, new List<Line>() { new Line(start, end) }, color ?? Color.white, duration);
+            return drawFigureScreenSpace(id, new List<Line>() {new Line(start, end)}, color ?? Color.white, duration);
         }
 
         #endregion
@@ -285,6 +292,7 @@ namespace TouchScript.Debugging.GL
             figuresMultiplyNoDepthTest = new Dictionary<int, Figure>();
             figuresMultiplyScreenSpace = new Dictionary<int, Figure>();
             figuresTmp = new Dictionary<int, Figure>();
+            wait = new WaitForEndOfFrame();
 
             setMaterials();
         }
@@ -295,9 +303,11 @@ namespace TouchScript.Debugging.GL
                 DisplayLines = !DisplayLines;
         }
 
-        private void OnPostRender()
+        private IEnumerator OnPostRender()
         {
-            if (!DisplayLines) return;
+            if (!DisplayLines) yield break;
+
+            yield return wait;
 
             materialDepthTest.SetPass(0);
             UnityEngine.GL.Begin(UnityEngine.GL.LINES);
@@ -554,12 +564,10 @@ namespace TouchScript.Debugging.GL
                 new Line(down_2, down_3),
                 new Line(down_3, down_4),
                 new Line(down_4, down_1),
-
                 new Line(down_1, up_1),
                 new Line(down_2, up_2),
                 new Line(down_3, up_3),
                 new Line(down_4, up_4),
-
                 new Line(up_1, up_2),
                 new Line(up_2, up_3),
                 new Line(up_3, up_4),
@@ -618,8 +626,47 @@ namespace TouchScript.Debugging.GL
         }
 
         #endregion
-
     }
+
+#if UNITY_EDITOR
+    internal class BuildProcessor : IPreprocessBuild, IPostprocessBuild
+    {
+        public int callbackOrder
+        {
+            get { return 0; }
+        }
+
+        public void OnPreprocessBuild(BuildTarget target, string path)
+        {
+            // Add hidden shaders to the build.
+            var objs = Resources.FindObjectsOfTypeAll<GraphicsSettings>();
+            var graphicsSettings = new SerializedObject(objs[0]);
+            var alwaysIncludedShaders = graphicsSettings.FindProperty("m_AlwaysIncludedShaders");
+            insertShaderInProperty(alwaysIncludedShaders, "Hidden/DebugDepthTest");
+            insertShaderInProperty(alwaysIncludedShaders, "Hidden/DebugNoDepthTest");
+            insertShaderInProperty(alwaysIncludedShaders, "Hidden/DebugMultiplyDepthTest");
+            insertShaderInProperty(alwaysIncludedShaders, "Hidden/DebugMultiplyNoDepthTest");
+            graphicsSettings.ApplyModifiedProperties();
+        }
+
+        public void OnPostprocessBuild(BuildTarget target, string path)
+        {
+            // Reverd GraphicsSettings.
+            var objs = Resources.FindObjectsOfTypeAll<GraphicsSettings>();
+            var graphicsSettings = new SerializedObject(objs[0]);
+            var alwaysIncludedShaders = graphicsSettings.FindProperty("m_AlwaysIncludedShaders");
+            alwaysIncludedShaders.arraySize = alwaysIncludedShaders.arraySize - 4;
+            graphicsSettings.ApplyModifiedProperties();
+        }
+
+        private void insertShaderInProperty(SerializedProperty prop, string shaderName)
+        {
+            var index = prop.arraySize;
+            prop.InsertArrayElementAtIndex(index);
+            prop.GetArrayElementAtIndex(index).objectReferenceValue = Shader.Find(shaderName);
+        }
+    }
+#endif
 }
 
 #endif

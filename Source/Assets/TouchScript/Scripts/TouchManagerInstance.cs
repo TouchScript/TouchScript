@@ -335,7 +335,6 @@ namespace TouchScript
 
 #if TOUCHSCRIPT_DEBUG
                 pLogger.Log(pointer, PointerEvent.IdAllocated);
-                if (DebugMode) Debug.Log("TouchScript > Pointer Added: " + pointer);
 #endif
 
                 nextPointerId++;
@@ -362,10 +361,6 @@ namespace TouchScript
                 }
 
                 pointersUpdated.Add(id);
-
-#if TOUCHSCRIPT_DEBUG
-                if (DebugMode) Debug.Log("TouchScript > Pointer Updated: " + pointer);
-#endif
             }
         }
 
@@ -398,9 +393,6 @@ namespace TouchScript
                 pointersPressed.Add(id);
 #endif
 
-#if TOUCHSCRIPT_DEBUG
-                if (DebugMode) Debug.Log("TouchScript > Pointer Pressed: " + pointer);
-#endif
             }
         }
 
@@ -434,9 +426,6 @@ namespace TouchScript
                 pointersReleased.Add(id);
 #endif
 
-#if TOUCHSCRIPT_DEBUG
-                if (DebugMode) Debug.Log("TouchScript > Pointer Released: " + pointer);
-#endif
             }
         }
 
@@ -470,9 +459,6 @@ namespace TouchScript
                 pointersRemoved.Add(pointer.Id);
 #endif
 
-#if TOUCHSCRIPT_DEBUG
-                if (DebugMode) Debug.Log("TouchScript > Pointer Removed: " + pointer);
-#endif
             }
         }
 
@@ -506,9 +492,6 @@ namespace TouchScript
                 pointersCancelled.Add(pointer.Id);
 #endif
 
-#if TOUCHSCRIPT_DEBUG
-                if (DebugMode) Debug.Log("TouchScript > Pointer Cancelled: " + pointer);
-#endif
             }
         }
 
