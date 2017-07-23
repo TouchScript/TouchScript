@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using TouchScript.Debugging;
 using TouchScript.Debugging.Filters;
 using TouchScript.Debugging.GL;
@@ -21,7 +22,6 @@ namespace TouchScript.Editor.Debugging
     {
         private class Styles : IDisposable
         {
-
             public Texture2D BG;
 
             public int Padding = 5;
@@ -41,6 +41,7 @@ namespace TouchScript.Editor.Debugging
             public GUIStyle PointerItemStyle;
             public GUIStyle EnterPlayModeText;
             public GUIStyle SmallText;
+            public GUIStyle SmallButton;
             public GUIStyle FilterToggle;
 
             public Styles()
@@ -65,8 +66,21 @@ namespace TouchScript.Editor.Debugging
                     alignment = TextAnchor.UpperLeft,
                 };
 
+                SmallButton = new GUIStyle("Button")
+                {
+                    fontSize = SmallText.fontSize,
+                    fontStyle = SmallText.fontStyle,
+                    font = SmallText.font,
+                };
+
                 FilterToggle = new GUIStyle("ShurikenToggle")
-                { };
+                {
+                    fontSize = SmallText.fontSize,
+                    fontStyle = SmallText.fontStyle,
+                    font = SmallText.font,
+                };
+                FilterToggle.normal.textColor = SmallText.normal.textColor;
+                FilterToggle.onNormal.textColor = SmallText.normal.textColor;
             }
 
             public void Dispose()
@@ -83,6 +97,12 @@ namespace TouchScript.Editor.Debugging
                 texture.Apply();
                 return texture;
             }
+        }
+
+        public enum LogType
+        {
+            Editor,
+            File
         }
 
         // sec
@@ -104,11 +124,9 @@ namespace TouchScript.Editor.Debugging
             window.Show();
         }
 
-        [NonSerialized]
-        private bool initializedForPlayMode = false;
-
         private Styles styles;
 
+        private LogType logType;
         private IPointerLogger pLogger;
         private PointerVisualizer pointerVisualizer;
         private PagedList pointerList;
@@ -119,32 +137,49 @@ namespace TouchScript.Editor.Debugging
 
         [NonSerialized]
         private int pointerDataCount = 0;
+
         [NonSerialized]
         private List<PointerData> pointerData = new List<PointerData>();
+
         [NonSerialized]
         private List<string> pointerStrings = new List<string>();
+
         [NonSerialized]
         private List<PointerLog> pointerEvents = new List<PointerLog>();
+
         [NonSerialized]
         private PointerLog selectedEvent;
+
+        [NonSerialized]
+        private int selectedEventId = -1;
+
         [NonSerialized]
         private Dictionary<int, string> pointerEventStrings = new Dictionary<int, string>();
+
         [NonSerialized]
         private PointerLogFilter logFilter;
+
         private FilterState filterState;
         //private Vector2 filterScroll;
 
         private bool autoRefresh = true;
+
         [NonSerialized]
         private float refreshTime;
 
         private void OnEnable()
         {
+            setupLogging();
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                setupPlaymodeLogging();
+
             if (filterState == null)
             {
                 filterState = new FilterState();
                 filterState.Load();
             }
+
+            EditorApplication.update += updateHandler;
         }
 
         private void OnDisable()
@@ -156,7 +191,7 @@ namespace TouchScript.Editor.Debugging
 
         private void updateHandler()
         {
-            if (!Application.isPlaying) return;
+            if (pLogger == null) return;
 
             if (pLogger.PointerCount != pointerDataCount)
             {
@@ -173,22 +208,47 @@ namespace TouchScript.Editor.Debugging
             }
         }
 
-        #region Update
+        #region Init
 
-        private void initPlayMode()
+        private void setupPlaymodeLogging()
         {
-            if (initializedForPlayMode || !Application.isPlaying) return;
-
-            pLogger = TouchScriptDebugger.Instance.PointerLogger;
-            pointerVisualizer = new PointerVisualizer();
-            pointerList = new PagedList(styles.PointerItemHeight, drawPointerItem, pointerSelectionChangeHandler);
-            eventList = new PagedList(styles.PointerItemHeight, drawEventItem, eventSelectionChangeHandler);
-            logFilter = new PointerLogFilter();
-
-            EditorApplication.update += updateHandler;
-
-            initializedForPlayMode = true;
+            TouchScriptDebugger.Instance.PointerLogger = pLogger = new PointerLogger();
         }
+
+        private void setupLogging()
+        {
+            pointerVisualizer = new PointerVisualizer();
+            pointerList = new PagedList(22, drawPointerItem, pointerSelectionChangeHandler);
+            eventList = new PagedList(22, drawEventItem, eventSelectionChangeHandler);
+            logFilter = new PointerLogFilter();
+        }
+
+        private void loadLogFile()
+        {
+            var path = EditorUtility.OpenFilePanel("Load log data", Application.dataPath, "bin");
+            if (string.IsNullOrEmpty(path)) return;
+            pLogger = new FileReaderLogger(path);
+            updatePointers();
+        }
+
+        private void updateLogType(LogType type)
+        {
+            logType = type;
+
+            if (type == LogType.Editor)
+            {
+                if (pLogger != null) pLogger.Dispose();
+                if (EditorApplication.isPlayingOrWillChangePlaymode) setupPlaymodeLogging();
+            }
+            else
+            {
+                TouchScriptDebugger.Instance.ClearPointerLogger();
+            }
+        }
+
+        #endregion
+
+        #region Update
 
         private void updatePointers()
         {
@@ -234,10 +294,12 @@ namespace TouchScript.Editor.Debugging
             if (eventList.SelectedId == -1)
             {
                 pointerVisualizer.Hide();
+                selectedEventId = -1;
                 return;
             }
 
-            selectedEvent = pointerEvents[eventList.SelectedId];
+            selectedEventId = eventList.SelectedId;
+            selectedEvent = pointerEvents[selectedEventId];
             pointerVisualizer.Show(selectedEvent.State.Position);
             switchTab(Tab.Event);
         }
@@ -284,9 +346,6 @@ namespace TouchScript.Editor.Debugging
         {
             if (styles == null) styles = new Styles();
 
-            var playmode = Application.isPlaying;
-            if (playmode) initPlayMode();
-
             int height = styles.TopWindowHeight;
             //int height = pointerList.FitHeight(10);
 
@@ -298,16 +357,16 @@ namespace TouchScript.Editor.Debugging
             switch (activeTab)
             {
                 case Tab.Pointers:
-                    if (playmode)
-                        pointerList.Draw(rect);
+                    if (pointerData.Count == 0)
+                        drawNoData(rect);
                     else
-                        drawPlaymodeText(rect);
+                        pointerList.Draw(rect);
                     break;
                 case Tab.Event:
-                    if (playmode)
-                        drawSelectedEvent(rect);
+                    if (selectedEventId == -1)
+                        drawNoData(rect);
                     else
-                        drawPlaymodeText(rect);
+                        drawSelectedEvent(rect);
                     break;
                 case Tab.Filters:
                     drawFilters(rect);
@@ -323,10 +382,10 @@ namespace TouchScript.Editor.Debugging
             GUI.DrawTexture(rect, styles.BG);
             GUIUtils.ContractRect(ref rect, styles.GlobalPadding);
 
-            if (playmode)
-                eventList.Draw(rect);
+            if (pointerEvents.Count == 0)
+                drawNoData(rect);
             else
-                drawPlaymodeText(rect);
+                eventList.Draw(rect);
         }
 
         private void drawFilters(Rect rect)
@@ -335,7 +394,8 @@ namespace TouchScript.Editor.Debugging
 
             GUI.Label(rect, "Show pointer events:");
 
-            rect.y += 20; rect.height -= 20;
+            rect.y += 20;
+            rect.height -= 20;
             var scrollRect = new Rect(rect);
             scrollRect.height *= 2;
             scrollRect.width -= 40;
@@ -345,14 +405,14 @@ namespace TouchScript.Editor.Debugging
             //using (var scope = new GUI.ScrollViewScope(rect, filterScroll, scrollRect))
             //{
             scrollRect.height = 14;
-            var names = Enum.GetNames(typeof(PointerEvent));
+            var names = Enum.GetNames(typeof (PointerEvent));
             using (var changeScope = new EditorGUI.ChangeCheckScope())
             {
                 for (var i = 1; i < names.Length; i++)
                 {
-                    var evt = (PointerEvent)i;
+                    var evt = (PointerEvent) i;
                     filterState.SetEventValue(evt,
-                                              GUI.Toggle(scrollRect, filterState.IsEventEnabled(evt), "     " + names[i], styles.FilterToggle));
+                        GUI.Toggle(scrollRect, filterState.IsEventEnabled(evt), "     " + names[i], styles.FilterToggle));
                     scrollRect.y += scrollRect.height;
                 }
                 if (changeScope.changed) filterState.Save();
@@ -360,7 +420,9 @@ namespace TouchScript.Editor.Debugging
             //    filterScroll = scope.scrollPosition;
             //}
 
-            using (var scope = new EditorGUI.DisabledScope(!Application.isPlaying))
+            scrollRect.y += 4;
+            scrollRect.height = 20;
+            using (var scope = new EditorGUI.DisabledScope(pointerList.SelectedId == -1))
             {
                 if (GUI.Button(scrollRect, "Apply filter"))
                 {
@@ -391,18 +453,39 @@ namespace TouchScript.Editor.Debugging
             var rect = GUILayoutUtility.GetRect(0, styles.RefreshHeight, GUILayout.ExpandWidth(true));
             GUIUtils.ContractRect(ref rect, styles.Padding);
 
+            var sourceRect = new Rect(rect);
+            sourceRect.width = 50;
+            GUI.Label(sourceRect, "  Source", styles.SmallText);
+            sourceRect.x += sourceRect.width;
+            using (var scope = new EditorGUI.ChangeCheckScope())
+            {
+                logType = (LogType) EditorGUI.EnumPopup(sourceRect, "", logType);
+                if (scope.changed) updateLogType(logType);
+            }
+
+            if (logType == LogType.File)
+            {
+                sourceRect.x += sourceRect.width + 2;
+                sourceRect.width = 40;
+                sourceRect.height = 15;
+                if (GUI.Button(sourceRect, "Load", styles.SmallButton))
+                {
+                    loadLogFile();
+                }
+            }
+
             var refreshRect = new Rect(rect);
-            refreshRect.x = refreshRect.width - 100 - 60;
-            refreshRect.width = 100;
-            autoRefresh = GUI.Toggle(refreshRect, autoRefresh, "     Auto Refresh", styles.FilterToggle);
+            refreshRect.x = refreshRect.width - 50 - 60;
+            refreshRect.width = 50;
+            autoRefresh = GUI.Toggle(refreshRect, autoRefresh, "     Auto", styles.FilterToggle);
 
             using (var scope = new EditorGUI.DisabledScope(autoRefresh))
             {
                 rect.x = rect.width - 60;
                 rect.width = 60;
-                rect.height = 20;
-                rect.y -= 4;
-                if (GUI.Button(rect, "Refresh"))
+                rect.height = 15;
+                rect.y -= 1;
+                if (GUI.Button(rect, "Refresh", styles.SmallButton))
                 {
                     updateEventList();
                 }
@@ -411,7 +494,7 @@ namespace TouchScript.Editor.Debugging
 
         private void drawSelectedEvent(Rect rect)
         {
-            if (eventList.SelectedId == -1)
+            if (selectedEvent.Id == -1)
             {
                 GUI.Label(rect, "No event selected.", styles.EnterPlayModeText);
                 return;
@@ -421,9 +504,9 @@ namespace TouchScript.Editor.Debugging
             var path = selectedEvent.State.TargetPath;
 
             GUI.Label(rect, string.Format("{0}\nPosition: {1}\nPrevious: {2}\nFlags: {3}, Buttons: {4}",
-                                          getEventString(eventList.SelectedId), selectedEvent.State.Position,
-                                          selectedEvent.State.PreviousPosition, selectedEvent.State.Flags,
-                                          PointerUtils.ButtonsToString(selectedEvent.State.Buttons)));
+                getEventString(selectedEventId), selectedEvent.State.Position,
+                selectedEvent.State.PreviousPosition, selectedEvent.State.Flags,
+                PointerUtils.ButtonsToString(selectedEvent.State.Buttons)));
             rect.y += 64;
             rect.height = 20;
             GUI.Label(rect, "Target: ");
@@ -432,7 +515,7 @@ namespace TouchScript.Editor.Debugging
                 var fieldRect = new Rect(rect);
                 fieldRect.x += 50;
                 fieldRect.width -= 50;
-                EditorGUI.ObjectField(fieldRect, transform, typeof(Transform), true);
+                EditorGUI.ObjectField(fieldRect, transform, typeof (Transform), true);
             }
 
             if (path != null)
@@ -463,6 +546,11 @@ namespace TouchScript.Editor.Debugging
             }
 
             return false;
+        }
+
+        private void drawNoData(Rect rect)
+        {
+            GUI.Label(rect, "No data available.", styles.EnterPlayModeText);
         }
 
         private void drawPlaymodeText(Rect rect)
@@ -508,7 +596,6 @@ namespace TouchScript.Editor.Debugging
 
             GUI.Box(rect, getEventString(id), styles.PointerItemStyle);
             GUI.backgroundColor = bg;
-
         }
 
         #endregion
@@ -527,33 +614,32 @@ namespace TouchScript.Editor.Debugging
 
         #endregion
 
-        private class PointerVisualizer : UnityEngine.Object
+        private class PointerVisualizer
         {
-
             private int currentDebugId = -1;
 
-            public PointerVisualizer()
-            {
-            }
+            public PointerVisualizer() {}
 
             public void Show(Vector2 position)
             {
+                if (!Application.isPlaying) return;
+
                 if (currentDebugId != -1) Hide();
                 currentDebugId = GLDebug.DrawSquareScreenSpace(position, 0, Vector2.one * 20, GLDebug.MULTIPLY, float.MaxValue);
             }
 
             public void Hide()
             {
+                if (!Application.isPlaying) return;
+
                 GLDebug.RemoveFigure(currentDebugId);
                 currentDebugId = -1;
             }
-
         }
 
         [Serializable]
         private class FilterState : ISerializationCallbackReceiver
         {
-
             private const string KEY = "TouchScript:Debugger:FilterState";
 
             [SerializeField]
@@ -561,29 +647,26 @@ namespace TouchScript.Editor.Debugging
 
             public uint PointerEventMask
             {
-                get
-                {
-                    return BinaryUtils.ToBinaryMask(pointerEvents);
-                }
+                get { return BinaryUtils.ToBinaryMask(pointerEvents); }
             }
 
             public FilterState()
             {
-                var eventsCount = Enum.GetValues(typeof(PointerEvent)).Length;
+                var eventsCount = Enum.GetValues(typeof (PointerEvent)).Length;
                 pointerEvents = new List<bool>(eventsCount);
                 syncPointerEvents(eventsCount);
             }
 
             public bool IsEventEnabled(PointerEvent evt)
             {
-                var id = (int)evt;
+                var id = (int) evt;
                 if (id >= pointerEvents.Count) return false;
                 return pointerEvents[id];
             }
 
             public void SetEventValue(PointerEvent evt, bool value)
             {
-                pointerEvents[(int)evt] = value;
+                pointerEvents[(int) evt] = value;
             }
 
             public void Save()
@@ -604,13 +687,11 @@ namespace TouchScript.Editor.Debugging
                 for (var i = pointerEvents.Count; i < count; i++) pointerEvents.Add(true);
             }
 
-            public void OnBeforeSerialize()
-            {
-            }
+            public void OnBeforeSerialize() {}
 
             public void OnAfterDeserialize()
             {
-                var eventsCount = Enum.GetValues(typeof(PointerEvent)).Length;
+                var eventsCount = Enum.GetValues(typeof (PointerEvent)).Length;
                 if (pointerEvents.Count != eventsCount)
                 {
                     Debug.Log("FilterState serialization error!");
@@ -622,7 +703,6 @@ namespace TouchScript.Editor.Debugging
                 }
             }
         }
-
     }
 }
 

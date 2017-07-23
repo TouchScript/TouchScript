@@ -4,15 +4,18 @@
 
 #if TOUCHSCRIPT_DEBUG
 
+using System.Collections.Generic;
+using TouchScript.Debugging.Filters;
 using UnityEngine;
 using TouchScript.Debugging.Loggers;
+using TouchScript.Pointers;
 
 namespace TouchScript.Debugging
 {
     /// <summary>
     /// A set of debugging tools for TouchScript.
     /// </summary>
-    public class TouchScriptDebugger
+    public class TouchScriptDebugger : ScriptableObject
     {
         /// <summary>
         /// The singleton instance of the debugger.
@@ -21,10 +24,15 @@ namespace TouchScript.Debugging
         {
             get
             {
-                if (!Application.isPlaying) return null;
                 if (instance == null)
                 {
-                    instance = new TouchScriptDebugger();
+                    var objs = Resources.FindObjectsOfTypeAll<TouchScriptDebugger>();
+                    if (objs.Length > 0) instance = objs[0];
+                    else
+                    {
+                        instance = CreateInstance<TouchScriptDebugger>();
+                        instance.hideFlags = HideFlags.HideAndDontSave;
+                    }
                 }
                 return instance;
             }
@@ -36,17 +44,56 @@ namespace TouchScript.Debugging
         public IPointerLogger PointerLogger
         {
             get { return pointerLogger; }
+            set
+            {
+                if (value == null) return;
+                if (pointerLogger == value) return;
+                pointerLogger.Dispose();
+                pointerLogger = value;
+            }
         }
 
         private static TouchScriptDebugger instance;
         private IPointerLogger pointerLogger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TouchScriptDebugger"/> class.
-        /// </summary>
-        public TouchScriptDebugger()
+        public void ClearPointerLogger()
         {
-            pointerLogger = new PointerLogger();
+            if (Application.isEditor)
+                pointerLogger = new DummyLogger();
+            else
+                pointerLogger = new FileWriterLogger();
+        }
+
+        private void OnEnable()
+        {
+            if (pointerLogger == null) ClearPointerLogger();
+        }
+
+        private void OnDisable()
+        {
+            if (pointerLogger != null) pointerLogger.Dispose();
+        }
+
+        private class DummyLogger : IPointerLogger
+        {
+            public int PointerCount
+            {
+                get { return 0; }
+            }
+
+            public void Log(Pointer pointer, PointerEvent evt) {}
+
+            public List<PointerData> GetFilteredPointerData(IPointerDataFilter filter = null)
+            {
+                return new List<PointerData>();
+            }
+
+            public List<PointerLog> GetFilteredLogsForPointer(int id, IPointerLogFilter filter = null)
+            {
+                return new List<PointerLog>();
+            }
+
+            public void Dispose() {}
         }
     }
 }

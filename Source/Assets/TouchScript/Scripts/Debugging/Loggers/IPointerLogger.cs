@@ -30,14 +30,12 @@ namespace TouchScript.Debugging.Loggers
         /// <param name="evt">The event.</param>
         void Log(Pointer pointer, PointerEvent evt);
 
-
         /// <summary>
         /// Returns a list of pointers.
         /// </summary>
         /// <param name="filter">The filter to use.</param>
         /// <returns>A list of <see cref="PointerData"/> objects.</returns>
         List<PointerData> GetFilteredPointerData(IPointerDataFilter filter = null);
-
 
         /// <summary>
         /// Returns a lost of pointer events for a pointer.
@@ -46,6 +44,11 @@ namespace TouchScript.Debugging.Loggers
         /// <param name="filter">The filter to use.</param>
         /// <returns>A list of <see cref="PointerLog"/> entries.</returns>
         List<PointerLog> GetFilteredLogsForPointer(int id, IPointerLogFilter filter = null);
+
+        /// <summary>
+        /// Releases resources.
+        /// </summary>
+        void Dispose();
     }
 
     /// <summary>

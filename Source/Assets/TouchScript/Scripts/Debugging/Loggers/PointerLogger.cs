@@ -20,7 +20,7 @@ namespace TouchScript.Debugging.Loggers
     {
         #region Consts
 
-        private const int MIN_POINTER_LIST_SIZE = 1000;
+        public const int MIN_POINTER_LIST_SIZE = 1000;
 
         #endregion
 
@@ -39,20 +39,20 @@ namespace TouchScript.Debugging.Loggers
         private int pointerCount = 0;
         private int eventCount = 0;
 
-        private List<PointerData> data = new List<PointerData>(1);
-        private List<List<PointerLog>> events = new List<List<PointerLog>>(1);
+        protected List<PointerData> data = new List<PointerData>(1);
+        protected List<List<PointerLog>> events = new List<List<PointerLog>>(1);
 
         #endregion
 
         #region Public methods
 
         /// <inheritdoc />
-        public void Log(Pointer pointer, PointerEvent evt)
+        public virtual void Log(Pointer pointer, PointerEvent evt)
         {
             var id = checkId(pointer);
 
             var list = getPointerList(id);
-            list.Add(new PointerLog()
+            var log = new PointerLog()
             {
                 Id = eventCount,
                 Tick = DateTime.Now.Ticks,
@@ -67,19 +67,20 @@ namespace TouchScript.Debugging.Loggers
                     Target = pointer.GetPressData().Target,
                     TargetPath = TransformUtils.GetHeirarchyPath(pointer.GetPressData().Target),
                 }
-            });
+            };
+            list.Add(log);
             eventCount++;
         }
 
         /// <inheritdoc />
-        public List<PointerData> GetFilteredPointerData(IPointerDataFilter filter = null)
+        public virtual List<PointerData> GetFilteredPointerData(IPointerDataFilter filter = null)
         {
             //if (filter == null) 
             return new List<PointerData>(data);
         }
 
         /// <inheritdoc />
-        public List<PointerLog> GetFilteredLogsForPointer(int id, IPointerLogFilter filter = null)
+        public virtual List<PointerLog> GetFilteredLogsForPointer(int id, IPointerLogFilter filter = null)
         {
             if (id < 0 || id >= pointerCount)
                 return new List<PointerLog>();
@@ -98,6 +99,9 @@ namespace TouchScript.Debugging.Loggers
             return filtered;
         }
 
+        /// <inheritdoc />
+        public virtual void Dispose() {}
+
         #endregion
 
         #region Private functions
@@ -111,17 +115,16 @@ namespace TouchScript.Debugging.Loggers
         {
             var id = pointer.Id;
             if (id > pointerCount) throw new InvalidOperationException("Pointer id desync!");
-            else if (id == pointerCount)
+            if (id != pointerCount) return id;
+
+            var list = new List<PointerLog>(MIN_POINTER_LIST_SIZE);
+            events.Add(list);
+            data.Add(new PointerData()
             {
-                var list = new List<PointerLog>(MIN_POINTER_LIST_SIZE);
-                events.Add(list);
-                data.Add(new PointerData()
-                {
-                    Id = id,
-                    Type = pointer.Type,
-                });
-                pointerCount++;
-            }
+                Id = id,
+                Type = pointer.Type,
+            });
+            pointerCount++;
 
             return id;
         }
