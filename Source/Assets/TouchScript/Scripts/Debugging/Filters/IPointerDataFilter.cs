@@ -2,9 +2,9 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
-using TouchScript.Debugging.Loggers;
-
 #if TOUCHSCRIPT_DEBUG
+
+using TouchScript.Debugging.Loggers;
 
 namespace TouchScript.Debugging.Filters
 {
