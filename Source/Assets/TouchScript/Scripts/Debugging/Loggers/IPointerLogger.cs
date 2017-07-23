@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -13,15 +13,44 @@ using UnityEngine;
 
 namespace TouchScript.Debugging.Loggers
 {
+    /// <summary>
+    /// A logger to record pointer events.
+    /// </summary>
     public interface IPointerLogger
     {
+        /// <summary>
+        /// The number of different pointers recorded by this logger.
+        /// </summary>
         int PointerCount { get; }
 
+        /// <summary>
+        /// Logs the specified event.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="evt">The event.</param>
         void Log(Pointer pointer, PointerEvent evt);
+
+
+        /// <summary>
+        /// Returns a list of pointers.
+        /// </summary>
+        /// <param name="filter">The filter to use.</param>
+        /// <returns>A list of <see cref="PointerData"/> objects.</returns>
         List<PointerData> GetFilteredPointerData(IPointerDataFilter filter = null);
+
+
+        /// <summary>
+        /// Returns a lost of pointer events for a pointer.
+        /// </summary>
+        /// <param name="id">The pointer id.</param>
+        /// <param name="filter">The filter to use.</param>
+        /// <returns>A list of <see cref="PointerLog"/> entries.</returns>
         List<PointerLog> GetFilteredLogsForPointer(int id, IPointerLogFilter filter = null);
     }
 
+    /// <summary>
+    /// Pointer event.
+    /// </summary>
     [Serializable]
     public struct PointerLog
     {
@@ -32,6 +61,9 @@ namespace TouchScript.Debugging.Loggers
         public PointerState State;
     }
 
+    /// <summary>
+    /// Pointer state during an event.
+    /// </summary>
     [Serializable]
     public struct PointerState
     {
@@ -43,6 +75,9 @@ namespace TouchScript.Debugging.Loggers
         public string TargetPath;
     }
 
+    /// <summary>
+    /// Static pointer data.
+    /// </summary>
     [Serializable]
     public struct PointerData
     {
@@ -51,10 +86,13 @@ namespace TouchScript.Debugging.Loggers
         public IInputSource InputSource;
     }
 
+    /// <summary>
+    /// Pointer event type.
+    /// </summary>
     public enum PointerEvent
     {
         None,
-        IDAllocated,
+        IdAllocated,
         Added,
         Updated,
         Pressed,

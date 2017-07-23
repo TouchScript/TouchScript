@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -6,38 +6,47 @@ using System.Text;
 using TouchScript.Behaviors.Cursors.UI;
 using TouchScript.Pointers;
 using TouchScript.Utils;
-using UnityEngine;
 
 namespace TouchScript.Behaviors.Cursors
 {
+    /// <summary>
+    /// Cursor for mouse pointers.
+    /// </summary>
     public class MouseCursor : TextPointerCursor<MousePointer>
     {
         #region Public properties
 
+        /// <summary>
+        /// Default cursor sub object.
+        /// </summary>
         public TextureSwitch DefaultCursor;
+
+        /// <summary>
+        /// Pressed cursor sub object.
+        /// </summary>
         public TextureSwitch PressedCursor;
 
+        /// <summary>
+        /// Should the value of <see cref="TouchPointer.Buttons"/> be shown on the cursor.
+        /// </summary>
         public bool ShowButtons = false;
-
-        #endregion
-
-        #region Public methods
 
         #endregion
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override void updateOnce(IPointer pointer)
         {
             switch (state)
             {
-                case ProxyState.Released:
-                case ProxyState.Over:
+                case CursorState.Released:
+                case CursorState.Over:
                     if (DefaultCursor != null) DefaultCursor.Show();
                     if (PressedCursor != null) PressedCursor.Hide();
                     break;
-                case ProxyState.Pressed:
-                case ProxyState.OverPressed:
+                case CursorState.Pressed:
+                case CursorState.OverPressed:
                     if (DefaultCursor != null) DefaultCursor.Hide();
                     if (PressedCursor != null) PressedCursor.Show();
                     break;
@@ -46,6 +55,7 @@ namespace TouchScript.Behaviors.Cursors
             base.updateOnce(pointer);
         }
 
+        /// <inheritdoc />
         protected override void generateText(MousePointer pointer, StringBuilder str)
         {
             base.generateText(pointer, str);
@@ -58,16 +68,18 @@ namespace TouchScript.Behaviors.Cursors
             }
         }
 
-        protected override bool shouldShowText()
+        /// <inheritdoc />
+        protected override bool textIsVisible()
         {
-            return base.shouldShowText() || ShowButtons;
+            return base.textIsVisible() || ShowButtons;
         }
 
+        /// <inheritdoc />
         protected override uint gethash(MousePointer pointer)
         {
             var hash = base.gethash(pointer);
 
-            if (ShowButtons == true) hash += (uint) (pointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed);
+            if (ShowButtons) hash += (uint) (pointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed);
 
             return hash;
         }

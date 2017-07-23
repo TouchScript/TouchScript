@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author DenizPiri / denizpiri@hotmail.com
  * @author Valentin Simonov / http://va.lent.in/
  */

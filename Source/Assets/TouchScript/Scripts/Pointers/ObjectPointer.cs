@@ -13,9 +13,25 @@ namespace TouchScript.Pointers
     {
         #region Public consts
 
+        /// <summary>
+        /// Default object id value when device doesn't provide it.
+        /// </summary>
         public const int DEFAULT_OBJECT_ID = 0;
+
+
+        /// <summary>
+        /// Default width value when device doesn't provide it.
+        /// </summary>
         public const float DEFAULT_WIDTH = 1f;
+
+        /// <summary>
+        /// Default height value when device doesn't provide it.
+        /// </summary>
         public const float DEFAULT_HEIGHT = 1f;
+
+        /// <summary>
+        /// Default angle value when device doesn't provide it.
+        /// </summary>
         public const float DEFAULT_ANGLE = 0f;
 
         #endregion

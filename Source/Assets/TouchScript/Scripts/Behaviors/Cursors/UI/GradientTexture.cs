@@ -9,9 +9,14 @@ using UnityEngine.UI;
 
 namespace TouchScript.Behaviors.Cursors.UI
 {
+    /// <summary>
+    /// Generates a texture with a circle gradient.
+    /// </summary>
     public class GradientTexture : MonoBehaviour
     {
-
+        /// <summary>
+        /// Resolution in pixels.
+        /// </summary>
         public enum Res
         {
             Pix16 = 16,
@@ -22,23 +27,39 @@ namespace TouchScript.Behaviors.Cursors.UI
             Pix512 = 512
         }
 
+        /// <summary>
+        /// The gradient.
+        /// </summary>
         public Gradient Gradient = new Gradient();
+
+        /// <summary>
+        /// Gradient's name. Used to cache textures.
+        /// </summary>
         public string Name = "Gradient";
+
+        /// <summary>
+        /// Texture resolution.
+        /// </summary>
         public Res Resolution = Res.Pix128;
 
         private Texture2D texture;
+        private static Dictionary<int, Texture2D> textureCache = new Dictionary<int, Texture2D>();
 
-        private static Dictionary<int, Texture2D> textureCache = new Dictionary<int, Texture2D>(); 
-
+        /// <summary>
+        /// Generates the gradient texture.
+        /// </summary>
+        /// <returns>Generated texture.</returns>
         public Texture2D Generate()
         {
             var res = (int) Resolution;
-            var tex = new Texture2D(res, 1, TextureFormat.ARGB32, false, true);
-            tex.name = Name;
-            tex.filterMode = FilterMode.Bilinear;
-            tex.wrapMode = TextureWrapMode.Clamp;
+            var tex = new Texture2D(res, 1, TextureFormat.ARGB32, false, true)
+            {
+                name = Name,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
 
-            Color[] colors = new Color[res];
+            var colors = new Color[res];
             float div = res;
             for (var i = 0; i < res; i++)
             {

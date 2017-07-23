@@ -15,7 +15,6 @@ namespace TouchScript.InputSources
     /// </remarks>
     public interface IInputSource : INTERNAL_IInputSource
     {
-
         /// <summary>
         /// Gets or sets current coordinates remapper.
         /// </summary>
@@ -27,6 +26,9 @@ namespace TouchScript.InputSources
         /// </summary>
         bool UpdateInput();
 
+        /// <summary>
+        /// Forces the input to update its state when resolution changes.
+        /// </summary>
         void UpdateResolution();
 
         /// <summary>

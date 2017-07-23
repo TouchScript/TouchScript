@@ -8,6 +8,10 @@ using UnityEngine;
 
 namespace TouchScript.Pointers
 {
+    /// <summary>
+    /// Fake pointer.
+    /// </summary>
+    /// <seealso cref="TouchScript.Pointers.Pointer" />
     public class FakePointer : IPointer
     {
         #region Public properties
@@ -27,19 +31,28 @@ namespace TouchScript.Pointers
         /// <inheritdoc />
         public uint Flags { get; private set; }
 
+        /// <inheritdoc />
         public Pointer.PointerButtonState Buttons { get; private set; }
 
+        /// <inheritdoc />
         public Vector2 PreviousPosition { get; private set; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FakePointer"/> class.
+        /// </summary>
+        /// <param name="position">The position.</param>
         public FakePointer(Vector2 position) : this()
         {
             Position = position;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FakePointer"/> class.
+        /// </summary>
         public FakePointer()
         {
             Id = Pointer.INVALID_POINTER;

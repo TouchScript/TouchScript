@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  * Source code copied from UnityEngine.UI.ObjectPool:
  * https://bitbucket.org/Unity-Technologies/ui/src/ccb946ecc23815d1a7099aee0ed77b0cde7ff278/UnityEngine.UI/UI/Core/Utility/ObjectPool.cs?at=5.1
@@ -7,12 +7,17 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
+
 #if OBJECTPOOL_DEBUG
 using UnityEngine;
 #endif
 
 namespace TouchScript.Utils
 {
+    /// <summary>
+    /// Object pool implementation used in TouchScript.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ObjectPool<T> where T : class
     {
         public delegate T0 UnityFunc<T0>();
@@ -98,7 +103,7 @@ namespace TouchScript.Utils
 
         public void Release(object element)
         {
-            var obj = (T)element;
+            var obj = (T) element;
             if (obj == null) return;
             Release(obj);
         }

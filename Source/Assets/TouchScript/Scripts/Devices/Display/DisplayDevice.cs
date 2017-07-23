@@ -2,7 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
- #if UNITY_EDITOR
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -14,13 +14,12 @@ namespace TouchScript.Devices.Display
     /// </summary>
     public class DisplayDevice : ScriptableObject, IDisplayDevice
     {
-
 #if UNITY_EDITOR
-        [MenuItem("Window/TouchScript/CreateDisplayDevice")]
+        //[MenuItem("Window/TouchScript/CreateDisplayDevice")]
         private static DisplayDevice CreateDisplayDevice()
         {
             var dd = CreateInstance<DisplayDevice>();
-            AssetDatabase.CreateAsset(dd,"Assets/DisplayDevice.asset");
+            AssetDatabase.CreateAsset(dd, "Assets/DisplayDevice.asset");
             return dd;
         }
 #endif
@@ -42,11 +41,13 @@ namespace TouchScript.Devices.Display
             get { return dpi; }
         }
 
+        /// <inheritdoc />
         public virtual float NativeDPI
         {
             get { return nativeDPI; }
         }
 
+        /// <inheritdoc />
         public virtual Vector2 NativeResolution
         {
             get { return nativeResolution; }
@@ -70,6 +71,7 @@ namespace TouchScript.Devices.Display
         [SerializeField]
         protected Vector2 nativeResolution = new Vector2(1920, 1080);
 
+        /// <inheritdoc />
         public virtual void UpdateDPI() {}
 
         /// <summary>

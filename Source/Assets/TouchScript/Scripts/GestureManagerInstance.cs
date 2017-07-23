@@ -18,6 +18,9 @@ namespace TouchScript
     {
         #region Public properties
 
+        /// <summary>
+        /// Gets the instance of GestureManager singleton.
+        /// </summary>
         public static IGestureManager Instance
         {
             get
@@ -41,6 +44,7 @@ namespace TouchScript
             }
         }
 
+        /// <inheritdoc />
         public IGestureDelegate GlobalGestureDelegate { get; set; }
 
         #endregion
@@ -52,7 +56,7 @@ namespace TouchScript
 
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
-        private Dictionary<int, List<Gesture>> pointerToGestures = new Dictionary<int, List<Gesture>>(); 
+        private Dictionary<int, List<Gesture>> pointerToGestures = new Dictionary<int, List<Gesture>>();
 
         #endregion
 

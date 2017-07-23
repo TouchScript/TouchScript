@@ -10,10 +10,11 @@ using UnityEngine;
 
 namespace TouchScript.Utils.Platform
 {
-
+    /// <summary>
+    /// Utility methods on Windows.
+    /// </summary>
     public static class WindowsUtils
     {
-
         // disables press and hold (right-click) gesture
         public const int TABLET_DISABLE_PRESSANDHOLD = 0x00000001;
         // disables UI feedback on pen up (waves)
@@ -24,6 +25,28 @@ namespace TouchScript.Utils.Platform
         public const int TABLET_DISABLE_FLICKS = 0x00010000;
 
         public const int MONITOR_DEFAULTTONEAREST = 2;
+
+        /// <summary>
+        /// Retrieves the native monitor resolution.
+        /// </summary>
+        /// <param name="width">Output width.</param>
+        /// <param name="height">Output height.</param>
+        public static void GetNativeMonitorResolution(out int width, out int height)
+        {
+            var monitor = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
+            MONITORINFO monitorInfo = new MONITORINFO();
+            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
+            if (!GetMonitorInfo(monitor, ref monitorInfo))
+            {
+                width = Screen.width;
+                height = Screen.height;
+            }
+            else
+            {
+                width = monitorInfo.rcMonitor.Width;
+                height = monitorInfo.rcMonitor.Height;
+            }
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
@@ -60,23 +83,6 @@ namespace TouchScript.Utils.Platform
             public uint dwFlags;
         }
 
-        public static void GetNativeMonitorResolution(out int width, out int height)
-        {
-            var monitor = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
-            MONITORINFO monitorInfo = new MONITORINFO();
-            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
-            if (!GetMonitorInfo(monitor, ref monitorInfo))
-            {
-                width = Screen.width;
-                height = Screen.height;
-            }
-            else
-            {
-                width = monitorInfo.rcMonitor.Width;
-                height = monitorInfo.rcMonitor.Height;
-            }
-        }
-
         [DllImport("user32.dll")]
         public static extern IntPtr GetActiveWindow();
 
@@ -100,7 +106,6 @@ namespace TouchScript.Utils.Platform
 
         [DllImport("user32.dll")]
         public static extern IntPtr EnableMouseInPointer(bool value);
-
     }
 }
 

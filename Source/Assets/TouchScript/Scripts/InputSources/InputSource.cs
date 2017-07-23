@@ -41,7 +41,9 @@ namespace TouchScript.InputSources
 
         #region Private variables
 
-        [SerializeField] [HideInInspector] private bool advancedProps; // is used to save whether advanced properties are opened or closed
+        [SerializeField]
+        [HideInInspector]
+        private bool advancedProps; // is used to save whether advanced properties are opened or closed
 
         private ICoordinatesRemapper coordinatesRemapper;
         private TouchManagerInstance manager;
@@ -70,9 +72,7 @@ namespace TouchScript.InputSources
         #region Internal methods
 
         /// <inheritdoc />
-        public virtual void INTERNAL_DiscardPointer(Pointer pointer)
-        {
-        }
+        public virtual void INTERNAL_DiscardPointer(Pointer pointer) {}
 
         #endregion
 
@@ -168,9 +168,7 @@ namespace TouchScript.InputSources
         /// Called from <see cref="CoordinatesRemapper"/> setter to update touch handlers with the new value.
         /// </summary>
         /// <param name="remapper">The new remapper.</param>
-        protected virtual void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
-        {
-        }
+        protected virtual void updateCoordinatesRemapper(ICoordinatesRemapper remapper) {}
 
         /// <summary>
         /// Remaps the coordinates using the <see cref="CoordinatesRemapper"/> if it is set.

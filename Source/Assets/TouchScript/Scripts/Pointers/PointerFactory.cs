@@ -11,7 +11,6 @@ namespace TouchScript.Pointers
     /// </summary>
     public static class PointerFactory
     {
-
         /// <summary>
         /// Creates a pointer of type <see cref="type"/> attached to <see cref="input"/> input source.
         /// </summary>
@@ -33,6 +32,5 @@ namespace TouchScript.Pointers
             }
             return null;
         }
-
     }
 }

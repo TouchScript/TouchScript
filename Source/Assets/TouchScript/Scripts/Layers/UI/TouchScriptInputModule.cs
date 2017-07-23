@@ -10,34 +10,38 @@ using TouchScript.Pointers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Pointer = TouchScript.Pointers.Pointer;
 
 namespace TouchScript.Layers.UI
 {
+    /// <summary>
+    /// An implementation of a Unity UI Input Module which lets TouchScript interact with the UI and EventSystem.
+    /// </summary>
     internal sealed class TouchScriptInputModule : BaseInputModule
     {
-
         #region Public properties
 
+        /// <summary>
+        /// TouchScriptInputModule singleton instance.
+        /// </summary>
         public static TouchScriptInputModule Instance
         {
             get
             {
-				if (shuttingDown) return null;
+                if (shuttingDown) return null;
                 if (instance == null)
                 {
-					var es = EventSystem.current;
+                    var es = EventSystem.current;
                     if (es == null)
-					{
-						es = FindObjectOfType<EventSystem>();
-						if (es == null)
-						{
-							var go = new GameObject("EventSystem");
-							es = go.AddComponent<EventSystem>();
-						}
-					}
+                    {
+                        es = FindObjectOfType<EventSystem>();
+                        if (es == null)
+                        {
+                            var go = new GameObject("EventSystem");
+                            es = go.AddComponent<EventSystem>();
+                        }
+                    }
                     instance = es.GetComponent<TouchScriptInputModule>();
-					if (instance == null) instance = es.gameObject.AddComponent<TouchScriptInputModule>();
+                    if (instance == null) instance = es.gameObject.AddComponent<TouchScriptInputModule>();
                 }
                 return instance;
             }
@@ -54,7 +58,7 @@ namespace TouchScript.Layers.UI
 
         #region Private variables
 
-		private static bool shuttingDown = false;
+        private static bool shuttingDown = false;
         private static TouchScriptInputModule instance;
         private static FieldInfo raycastersProp;
         private static PropertyInfo canvasProp;
@@ -100,20 +104,29 @@ namespace TouchScript.Layers.UI
             base.OnDisable();
         }
 
-		private void OnApplicationQuit()
-		{
-			shuttingDown = true;
-		}
+        private void OnApplicationQuit()
+        {
+            shuttingDown = true;
+        }
 
         #endregion
 
         #region Public methods
 
+        /// <summary>
+        /// Returns all UI raycasters in the scene.
+        /// </summary>
+        /// <returns> Array of raycasters. </returns>
         public List<BaseRaycaster> GetRaycasters()
         {
             return raycastersProp.GetValue(null) as List<BaseRaycaster>;
         }
 
+        /// <summary>
+        /// Returns a Canvas for a raycaster.
+        /// </summary>
+        /// <param name="raycaster">The raycaster.</param>
+        /// <returns> The Canvas this raycaster is on. </returns>
         public Canvas GetCanvasForRaycaster(BaseRaycaster raycaster)
         {
             var id = raycaster.GetInstanceID();
@@ -128,13 +141,13 @@ namespace TouchScript.Layers.UI
 
         public override void Process()
         {
-			if (ui != null) ui.Process();
+            if (ui != null) ui.Process();
         }
 
         public override bool IsPointerOverGameObject(int pointerId)
         {
-			if (ui != null) return ui.IsPointerOverGameObject(pointerId);
-			return false;
+            if (ui != null) return ui.IsPointerOverGameObject(pointerId);
+            return false;
         }
 
         public override bool ShouldActivateModule()
@@ -157,12 +170,19 @@ namespace TouchScript.Layers.UI
 
         #region Internal methods
 
+        /// <summary>
+        /// Marks that this object is used by some other object.
+        /// </summary>
         internal void INTERNAL_Retain()
         {
             refCount++;
             if (refCount == 1) enable();
         }
 
+        /// <summary>
+        /// Releases a lock on this object.
+        /// </summary>
+        /// <returns> The number of objects still using this object. </returns>
         internal int INTERNAL_Release()
         {
             if (--refCount <= 0) disable();
@@ -185,7 +205,7 @@ namespace TouchScript.Layers.UI
 
         private void disable()
         {
-			if (TouchManager.Instance != null && ui != null)
+            if (TouchManager.Instance != null && ui != null)
             {
                 TouchManager.Instance.PointersUpdated -= ui.ProcessUpdated;
                 TouchManager.Instance.PointersPressed -= ui.ProcessPressed;
@@ -204,10 +224,12 @@ namespace TouchScript.Layers.UI
 
         #region Copypasted code from UI
 
-        // last update: df1947cd (5.4f3)
+        /// <summary>
+        /// Basically, copied code from UI Input Module which handles all UI pointer processing logic.
+        /// Last update: df1947cd (5.4f3)
+        /// </summary>
         private class UIStandardInputModule
         {
-
             protected TouchScriptInputModule input;
 
             public UIStandardInputModule(TouchScriptInputModule input)
@@ -223,13 +245,13 @@ namespace TouchScript.Layers.UI
 
             private Dictionary<int, PointerEventData> m_PointerData = new Dictionary<int, PointerEventData>();
 
-			public bool IsPointerOverGameObject(int pointerId)
-			{
-				var lastPointer = GetLastPointerEventData(pointerId);
-				if (lastPointer != null)
-					return lastPointer.pointerEnter != null;
-				return false;
-			}
+            public bool IsPointerOverGameObject(int pointerId)
+            {
+                var lastPointer = GetLastPointerEventData(pointerId);
+                if (lastPointer != null)
+                    return lastPointer.pointerEnter != null;
+                return false;
+            }
 
             protected bool GetPointerData(int id, out PointerEventData data, bool create)
             {
@@ -255,12 +277,12 @@ namespace TouchScript.Layers.UI
                     input.eventSystem.SetSelectedGameObject(null, pointerEvent);
             }
 
-			protected PointerEventData GetLastPointerEventData(int id)
-			{
-				PointerEventData data;
-				GetPointerData(id, out data, false);
-				return data;
-			}
+            protected PointerEventData GetLastPointerEventData(int id)
+            {
+                PointerEventData data;
+                GetPointerData(id, out data, false);
+                return data;
+            }
 
             private static bool ShouldStartDrag(Vector2 pressPos, Vector2 currentPos, float threshold, bool useDragThreshold)
             {
@@ -391,15 +413,15 @@ namespace TouchScript.Layers.UI
                 m_PointerData.Remove(id);
             }
 
-			private void convertRaycast(RaycastHitUI old, ref RaycastResult current)
-			{
-				current.module = old.Raycaster;
-				current.gameObject = old.Target == null ? null : old.Target.gameObject;
-				current.depth = old.Depth;
-				current.index = old.GraphicIndex;
-				current.sortingLayer = old.SortingLayer;
-				current.sortingOrder = old.SortingOrder;
-			}
+            private void convertRaycast(RaycastHitUI old, ref RaycastResult current)
+            {
+                current.module = old.Raycaster;
+                current.gameObject = old.Target == null ? null : old.Target.gameObject;
+                current.depth = old.Depth;
+                current.index = old.GraphicIndex;
+                current.sortingLayer = old.SortingLayer;
+                current.sortingOrder = old.SortingOrder;
+            }
 
             #endregion
 
@@ -428,7 +450,7 @@ namespace TouchScript.Layers.UI
                     convertRaycast(over.RaycastHitUI, ref raycast);
                     raycast.screenPosition = data.position;
                     data.pointerCurrentRaycast = raycast;
-                    
+
                     input.HandlePointerExitAndEnter(data, currentOverGo);
 
                     bool moving = data.IsPointerMoving();
@@ -474,7 +496,7 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
-                    
+
                     var over = pointer.GetOverData();
                     if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
 
@@ -648,10 +670,8 @@ namespace TouchScript.Layers.UI
             }
 
             #endregion
-
         }
 
         #endregion
-
     }
 }

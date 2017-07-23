@@ -20,6 +20,9 @@ namespace TouchScript.Pointers
         /// </summary>
         Pointer.PointerType Type { get; }
 
+        /// <summary>
+        /// Current buttons state of the pointer.
+        /// </summary>
         Pointer.PointerButtonState Buttons { get; }
 
         /// <summary>
@@ -29,10 +32,13 @@ namespace TouchScript.Pointers
         IInputSource InputSource { get; }
 
         /// <summary>
-        /// <para>Current position in screen coordinates.</para>
+        /// Current position in screen coordinates.
         /// </summary>
         Vector2 Position { get; set; }
 
+        /// <summary>
+        /// Previous position in screen coordinates.
+        /// </summary>
         Vector2 PreviousPosition { get; }
 
         /// <summary>

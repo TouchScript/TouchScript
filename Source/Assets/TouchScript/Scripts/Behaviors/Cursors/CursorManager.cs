@@ -14,29 +14,40 @@ namespace TouchScript.Behaviors.Cursors
     /// <para>Pointer visualizer which shows pointer circles with debug text using Unity UI.</para>
     /// <para>The script should be placed on an element with RectTransform or a Canvas. A reference prefab is provided in TouchScript package.</para>
     /// </summary>
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Visualizer_TouchVisualizer.htm")]
     public class CursorManager : MonoBehaviour
     {
         #region Public properties
 
+        /// <summary>
+        /// Prefab to use as mouse cursors template.
+        /// </summary>
         public PointerCursor MouseCursor
         {
             get { return mouseCursor; }
             set { mouseCursor = value; }
         }
 
+        /// <summary>
+        /// Prefab to use as touch cursors template.
+        /// </summary>
         public PointerCursor TouchCursor
         {
             get { return touchCursor; }
             set { touchCursor = value; }
         }
 
+        /// <summary>
+        /// Prefab to use as pen cursors template.
+        /// </summary>
         public PointerCursor PenCursor
         {
             get { return penCursor; }
             set { penCursor = value; }
         }
 
+        /// <summary>
+        /// Prefab to use as object cursors template.
+        /// </summary>
         public PointerCursor ObjectCursor
         {
             get { return objectCursor; }
@@ -71,6 +82,9 @@ namespace TouchScript.Behaviors.Cursors
             }
         }
 
+        /// <summary>
+        /// Cursor size in pixels.
+        /// </summary>
         public uint CursorPixelSize
         {
             get { return cursorPixelSize; }
@@ -198,7 +212,7 @@ namespace TouchScript.Behaviors.Cursors
 
         private void updateCursorSize()
         {
-            if (useDPI) cursorPixelSize = (uint)(cursorSize * TouchManager.Instance.DotsPerCentimeter);
+            if (useDPI) cursorPixelSize = (uint) (cursorSize * TouchManager.Instance.DotsPerCentimeter);
         }
 
         #endregion
@@ -277,7 +291,7 @@ namespace TouchScript.Behaviors.Cursors
                 var pointer = e.Pointers[i];
                 PointerCursor cursor;
                 if (!cursors.TryGetValue(pointer.Id, out cursor)) continue;
-                cursor.SetState(pointer, PointerCursor.ProxyState.Pressed);
+                cursor.SetState(pointer, PointerCursor.CursorState.Pressed);
             }
         }
 
@@ -301,7 +315,7 @@ namespace TouchScript.Behaviors.Cursors
                 var pointer = e.Pointers[i];
                 PointerCursor cursor;
                 if (!cursors.TryGetValue(pointer.Id, out cursor)) continue;
-                cursor.SetState(pointer, PointerCursor.ProxyState.Released);
+                cursor.SetState(pointer, PointerCursor.CursorState.Released);
             }
         }
 

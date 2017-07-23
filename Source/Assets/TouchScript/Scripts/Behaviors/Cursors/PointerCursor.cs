@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -11,23 +11,22 @@ using UnityEngine.UI;
 namespace TouchScript.Behaviors.Cursors
 {
     /// <summary>
-    /// Visual cursor implementation used by TouchScript.
+    /// Abstract class for pointer cursors with text.
     /// </summary>
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Visualizer_TouchProxy.htm")]
+    /// <typeparam name="T">Pointer type.</typeparam>
+    /// <seealso cref="TouchScript.Behaviors.Cursors.PointerCursor" />
     public abstract class TextPointerCursor<T> : PointerCursor where T : IPointer
     {
         #region Public properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether pointer id text should be displayed on screen.
+        /// Should the value of <see cref="Pointer.Id"/> be shown on screen on the cursor.
         /// </summary>
-        /// <value> <c>true</c> if pointer id text should be displayed on screen; otherwise, <c>false</c>. </value>
         public bool ShowPointerId = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether pointer flags text should be displayed on screen.
+        /// Should the value of <see cref="Pointer.Flags"/> be shown on screen on the cursor.
         /// </summary>
-        /// <value> <c>true</c> if pointer flags text should be displayed on screen; otherwise, <c>false</c>. </value>
         public bool ShowFlags = false;
 
         /// <summary>
@@ -43,10 +42,6 @@ namespace TouchScript.Behaviors.Cursors
 
         #endregion
 
-        #region Public methods
-
-        #endregion
-
         #region Protected methods
 
         /// <inheritdoc />
@@ -55,7 +50,7 @@ namespace TouchScript.Behaviors.Cursors
             base.updateOnce(pointer);
 
             if (Text == null) return;
-            if (!shouldShowText())
+            if (!textIsVisible())
             {
                 Text.enabled = false;
                 return;
@@ -68,6 +63,11 @@ namespace TouchScript.Behaviors.Cursors
             Text.text = stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Generates text for pointer.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="str">The string builder to use.</param>
         protected virtual void generateText(T pointer, StringBuilder str)
         {
             if (ShowPointerId)
@@ -83,11 +83,20 @@ namespace TouchScript.Behaviors.Cursors
             }
         }
 
-        protected virtual bool shouldShowText()
+        /// <summary>
+        /// Indicates if text should be visible.
+        /// </summary>
+        /// <returns><c>True</c> if pointer text should be displayed; <c>false</c> otherwise.</returns>
+        protected virtual bool textIsVisible()
         {
             return ShowPointerId || ShowFlags;
         }
 
+        /// <summary>
+        /// Typed version of <see cref="getPointerHash"/>. Returns a hash of a cursor state.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <returns>Integer hash.</returns>
         protected virtual uint gethash(T pointer)
         {
             var hash = (uint) state;
@@ -95,6 +104,7 @@ namespace TouchScript.Behaviors.Cursors
             return hash;
         }
 
+        /// <inheritdoc />
         protected sealed override uint getPointerHash(IPointer pointer)
         {
             return gethash((T) pointer);
@@ -104,13 +114,16 @@ namespace TouchScript.Behaviors.Cursors
     }
 
     /// <summary>
-    /// Base class for <see cref="PointerVisualizer"/> cursors.
+    /// Visual cursor implementation used by TouchScript.
     /// </summary>
     public class PointerCursor : MonoBehaviour
     {
         #region Consts
 
-        public enum ProxyState
+        /// <summary>
+        /// Possible states of a cursor.
+        /// </summary>
+        public enum CursorState
         {
             Released,
             Pressed,
@@ -123,9 +136,8 @@ namespace TouchScript.Behaviors.Cursors
         #region Public properties
 
         /// <summary>
-        /// Gets or sets cursor size.
+        /// Cursor size in pixels.
         /// </summary>
-        /// <value> Cursor size in pixels. </value>
         public float Size
         {
             get { return size; }
@@ -148,7 +160,14 @@ namespace TouchScript.Behaviors.Cursors
 
         #region Private variables
 
-        protected ProxyState state;
+        /// <summary>
+        /// Current cursor state.
+        /// </summary>
+        protected CursorState state;
+
+        /// <summary>
+        /// CUrrent cursor state data.
+        /// </summary>
         protected object stateData;
 
         /// <summary>
@@ -161,8 +180,14 @@ namespace TouchScript.Behaviors.Cursors
         /// </summary>
         protected float size = 0;
 
+        /// <summary>
+        /// Initial cursor size in pixels.
+        /// </summary>
         protected float defaultSize;
 
+        /// <summary>
+        /// Last data hash.
+        /// </summary>
         protected uint hash = uint.MaxValue;
 
         #endregion
@@ -181,7 +206,7 @@ namespace TouchScript.Behaviors.Cursors
             show();
             rect.SetParent(parent);
             rect.SetAsLastSibling();
-            state = ProxyState.Released;
+            state = CursorState.Released;
             UpdatePointer(pointer);
         }
 
@@ -199,7 +224,13 @@ namespace TouchScript.Behaviors.Cursors
             update(pointer);
         }
 
-        public void SetState(IPointer pointer, ProxyState newState, object data = null)
+        /// <summary>
+        /// Sets the state of the cursor.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="newState">The new state.</param>
+        /// <param name="data">State data.</param>
+        public void SetState(IPointer pointer, CursorState newState, object data = null)
         {
             state = newState;
             stateData = data;
@@ -267,6 +298,11 @@ namespace TouchScript.Behaviors.Cursors
         /// <param name="pointer"> The pointer. </param>
         protected virtual void update(IPointer pointer) {}
 
+        /// <summary>
+        /// Returns pointer hash.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <returns>Integer hash value.</returns>
         protected virtual uint getPointerHash(IPointer pointer)
         {
             return (uint) state;

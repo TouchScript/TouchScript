@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 namespace TouchScript
 {
     /// <summary>
-    /// A façade object to configure and hold parameters for an instance of <see cref="ITouchManager"/>. Contains constants used throughout the library.
+    /// A fa�ade object to configure and hold parameters for an instance of <see cref="ITouchManager"/>. Contains constants used throughout the library.
     /// <seealso cref="ITouchManager"/>
     /// </summary>
     /// <remarks>
@@ -33,9 +33,17 @@ namespace TouchScript
         public const int DEBUG_GL_TOUCH = DEBUG_GL_START;
 #endif
 
+        /// <summary>
+        /// Event implementation in Unity EventSystem for pointer events.
+        /// </summary>
+        /// <seealso cref="UnityEngine.Events.UnityEvent{System.Collections.Generic.IList{TouchScript.Pointers.Pointer}}" />
         [Serializable]
         public class PointerEvent : UnityEvent<IList<Pointer>> {}
 
+        /// <summary>
+        /// Event implementation in Unity EventSystem for frame events.
+        /// </summary>
+        /// <seealso cref="UnityEngine.Events.UnityEvent" />
         [Serializable]
         public class FrameEvent : UnityEvent {}
 
@@ -151,60 +159,64 @@ namespace TouchScript
         /// TouchScript version.
         /// </summary>
         public static readonly Version VERSION = new Version(9, 0);
-		public static readonly string VERSION_SUFFIX = "alpha";
+
+        /// <summary>
+        /// TouchScript version suffix.
+        /// </summary>
+        public static readonly string VERSION_SUFFIX = "alpha";
 
         #endregion
 
-		#region Events
+        #region Events
 
-		/// <summary>
-		/// Occurs when a new frame is started before all other events.
-		/// </summary>
-		public FrameEvent OnFrameStart = new FrameEvent();
+        /// <summary>
+        /// Occurs when a new frame is started before all other events.
+        /// </summary>
+        public FrameEvent OnFrameStart = new FrameEvent();
 
-		/// <summary>
-		/// Occurs when a frame is finished. After all other events.
-		/// </summary>
-		[SerializeField]
-		public FrameEvent OnFrameFinish = new FrameEvent();
+        /// <summary>
+        /// Occurs when a frame is finished. After all other events.
+        /// </summary>
+        [SerializeField]
+        public FrameEvent OnFrameFinish = new FrameEvent();
 
-		/// <summary>
-		/// Occurs when new hovering pointers are added.
-		/// </summary>
-		[SerializeField]
-		public PointerEvent OnPointersAdd = new PointerEvent();
+        /// <summary>
+        /// Occurs when new hovering pointers are added.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent OnPointersAdd = new PointerEvent();
 
-		/// <summary>
-		/// Occurs when pointers are updated.
-		/// </summary>
-		[SerializeField]
-		public PointerEvent OnPointersUpdate = new PointerEvent();
+        /// <summary>
+        /// Occurs when pointers are updated.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent OnPointersUpdate = new PointerEvent();
 
-		/// <summary>
-		/// Occurs when pointers touch the surface.
-		/// </summary>
-		[SerializeField]
-		public PointerEvent OnPointersPress = new PointerEvent();
+        /// <summary>
+        /// Occurs when pointers touch the surface.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent OnPointersPress = new PointerEvent();
 
-		/// <summary>
-		/// Occurs when pointers are released.
-		/// </summary>
-		[SerializeField]
-		public PointerEvent OnPointersRelease = new PointerEvent();
+        /// <summary>
+        /// Occurs when pointers are released.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent OnPointersRelease = new PointerEvent();
 
-		/// <summary>
-		/// Occurs when pointers are removed from the system.
-		/// </summary>
-		[SerializeField]
-		public PointerEvent OnPointersRemove = new PointerEvent();
+        /// <summary>
+        /// Occurs when pointers are removed from the system.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent OnPointersRemove = new PointerEvent();
 
-		/// <summary>
-		/// Occurs when pointers are cancelled.
-		/// </summary>
-		[SerializeField]
-		public PointerEvent OnPointersCancel = new PointerEvent();
+        /// <summary>
+        /// Occurs when pointers are cancelled.
+        /// </summary>
+        [SerializeField]
+        public PointerEvent OnPointersCancel = new PointerEvent();
 
-		#endregion
+        #endregion
 
         #region Public properties
 
@@ -326,6 +338,7 @@ namespace TouchScript
 
 #if TOUCHSCRIPT_DEBUG
 
+        /// <inheritdoc />
         public override bool DebugMode
         {
             get { return base.DebugMode; }
@@ -412,7 +425,7 @@ namespace TouchScript
         private void OnEnable()
         {
             updateSendMessageSubscription();
-			updateUnityEventsSubscription();
+            updateUnityEventsSubscription();
         }
 
         private void OnDisable()

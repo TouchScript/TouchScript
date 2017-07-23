@@ -95,7 +95,9 @@ namespace TouchScript
 
         #region Public properties
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the instance of TouchManager singleton.
+        /// </summary>
         public static TouchManagerInstance Instance
         {
             get
@@ -200,6 +202,7 @@ namespace TouchScript
             get { return new List<Pointer>(pressedPointers); }
         }
 
+        /// <inheritdoc />
         public bool IsInsidePointerFrame { get; private set; }
 
         #endregion
@@ -246,6 +249,7 @@ namespace TouchScript
 
         #region Temporary variables
 
+        // Used in layer dispatch fucntions
         private Pointer tmpPointer;
 
         #endregion
@@ -253,7 +257,7 @@ namespace TouchScript
         #region Debug
 
 #if TOUCHSCRIPT_DEBUG
-        private TouchScript.Debugging.Loggers.IPointerLogger pLogger;
+        private IPointerLogger pLogger;
 #endif
 
         private CustomSampler samplerUpdateInputs;
@@ -298,6 +302,7 @@ namespace TouchScript
             CancelPointer(id, false);
         }
 
+        /// <inheritdoc />
         public void UpdateResolution()
         {
             if (DisplayDevice != null)
@@ -329,7 +334,7 @@ namespace TouchScript
                 pointersAdded.Add(pointer);
 
 #if TOUCHSCRIPT_DEBUG
-                pLogger.Log(pointer, PointerEvent.IDAllocated);
+                pLogger.Log(pointer, PointerEvent.IdAllocated);
                 if (DebugMode) Debug.Log("TouchScript > Pointer Added: " + pointer);
 #endif
 

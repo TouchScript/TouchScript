@@ -139,6 +139,12 @@ namespace TouchScript
         /// <value>An unsorted list of all pointers which were pressed but not released yet.</value>
         IList<Pointer> PressedPointers { get; }
 
+        /// <summary>
+        /// Indicates that execution is currently inside a TouchScript Pointer Frame, i.e. before <see cref="FrameFinished"/> and after <see cref="FrameStarted"/> events.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if execution is inside a TouchScript Pointer Frame; otherwise, <c>false</c>.
+        /// </value>
         bool IsInsidePointerFrame { get; }
 
         /// <summary>
@@ -168,6 +174,9 @@ namespace TouchScript
         /// <param name="id">Pointer id to cancel.</param>
         void CancelPointer(int id);
 
+        /// <summary>
+        /// Tells TouchScript to update internal state after a resolution change.
+        /// </summary>
         void UpdateResolution();
     }
 

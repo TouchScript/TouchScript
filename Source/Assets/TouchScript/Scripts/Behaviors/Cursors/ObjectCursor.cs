@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -7,24 +7,33 @@ using TouchScript.Pointers;
 
 namespace TouchScript.Behaviors.Cursors
 {
+    /// <summary>
+    /// Cursor for object pointers.
+    /// </summary>
     public class ObjectCursor : TextPointerCursor<ObjectPointer>
     {
         #region Public properties
 
+        /// <summary>
+        /// Should the value of <see cref="ObjectPointer.ObjectId"/> be shown on the cursor.
+        /// </summary>
         public bool ShowObjectId = false;
 
+        /// <summary>
+        /// Should the values of <see cref="ObjectPointer.Width"/> and <see cref="ObjectPointer.Height"/> be shown on the cursor.
+        /// </summary>
         public bool ShowSize = false;
 
+        /// <summary>
+        /// Should the value of <see cref="ObjectPointer.Angle"/> be shown on the cursor.
+        /// </summary>
         public bool ShowAngle = false;
-
-        #endregion
-
-        #region Public methods
 
         #endregion
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override void generateText(ObjectPointer pointer, StringBuilder str)
         {
             base.generateText(pointer, str);
@@ -51,17 +60,19 @@ namespace TouchScript.Behaviors.Cursors
             }
         }
 
-        protected override bool shouldShowText()
+        /// <inheritdoc />
+        protected override bool textIsVisible()
         {
-            return base.shouldShowText() || ShowObjectId || ShowSize || ShowAngle;
+            return base.textIsVisible() || ShowObjectId || ShowSize || ShowAngle;
         }
 
+        /// <inheritdoc />
         protected override uint gethash(ObjectPointer pointer)
         {
             var hash = base.gethash(pointer);
 
-            if (ShowSize == true) hash += (uint) (pointer.Width * 1024 + pointer.Height * 1024 * 1024) << 8;
-            if (ShowAngle == true) hash += (uint) (pointer.Angle * 1024) << 24;
+            if (ShowSize) hash += (uint) (pointer.Width * 1024 + pointer.Height * 1024 * 1024) << 8;
+            if (ShowAngle) hash += (uint) (pointer.Angle * 1024) << 24;
 
             return hash;
         }

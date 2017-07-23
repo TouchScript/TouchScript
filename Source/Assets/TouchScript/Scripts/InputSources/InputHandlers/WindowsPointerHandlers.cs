@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  * @author Valentin Frolov
  * @author Andrew David Griffiths
@@ -17,12 +17,15 @@ using UnityEngine;
 namespace TouchScript.InputSources.InputHandlers
 {
     /// <summary>
-    /// Windows 8 pointer handling implementation which can be embedded to other (input) classes.
+    /// Windows 8 pointer handling implementation which can be embedded to other (input) classes. Uses WindowsTouch.dll to query native touches with WM_TOUCH or WM_POINTER APIs.
     /// </summary>
     public class Windows8PointerHandler : WindowsPointerHandler
     {
         #region Public properties
 
+        /// <summary>
+        /// Should the primary pointer also dispatch a mouse pointer.
+        /// </summary>
         public bool MouseInPointer
         {
             get { return mouseInPointer; }
@@ -136,8 +139,6 @@ namespace TouchScript.InputSources.InputHandlers
 
     public class Windows7PointerHandler : WindowsPointerHandler
     {
-        private int touchInputSize;
-
         /// <inheritdoc />
         public Windows7PointerHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer) : base(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer)
         {
@@ -156,6 +157,9 @@ namespace TouchScript.InputSources.InputHandlers
         #endregion
     }
 
+    /// <summary>
+    /// Base class for Windows 8 and Windows 7 input handlers.
+    /// </summary>
     public abstract class WindowsPointerHandler : IInputSource, IDisposable
     {
         #region Consts
@@ -165,8 +169,20 @@ namespace TouchScript.InputSources.InputHandlers
         /// </summary>
         public const string PRESS_AND_HOLD_ATOM = "MicrosoftTabletPenServiceProperty";
 
+        /// <summary>
+        /// The method delegate used to pass data from the native DLL.
+        /// </summary>
+        /// <param name="id">Pointer id.</param>
+        /// <param name="evt">Current event.</param>
+        /// <param name="type">Pointer type.</param>
+        /// <param name="position">Pointer position.</param>
+        /// <param name="data">Pointer data.</param>
         protected delegate void NativePointerDelegate(int id, PointerEvent evt, PointerType type, Vector2 position, PointerData data);
 
+        /// <summary>
+        /// The method delegate used to pass log messages from the native DLL.
+        /// </summary>
+        /// <param name="log">The log message.</param>
         protected delegate void NativeLog([MarshalAs(UnmanagedType.BStr)] string log);
 
         #endregion

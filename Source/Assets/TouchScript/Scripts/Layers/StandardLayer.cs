@@ -15,12 +15,18 @@ using TouchScript.Utils.Attributes;
 
 namespace TouchScript.Layers
 {
-
+    /// <summary>
+    /// A layer which combines all types of hit recognition into one: UI (Screen Space and World), 3D and 2D.
+    /// </summary>
+    /// <seealso cref="TouchScript.Layers.TouchLayer" />
     [AddComponentMenu("TouchScript/Layers/Standard Layer")]
     public class StandardLayer : TouchLayer
     {
         #region Public properties
 
+        /// <summary>
+        /// Indicates that the layer should look for 3D objects in the scene. Set this to <c>false</c> to optimize hit processing.
+        /// </summary>
         public bool Hit3DObjects
         {
             get { return hit3DObjects; }
@@ -31,6 +37,9 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <summary>
+        /// Indicates that the layer should look for 2D objects in the scene. Set this to <c>false</c> to optimize hit processing.
+        /// </summary>
         public bool Hit2DObjects
         {
             get { return hit2DObjects; }
@@ -41,6 +50,9 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <summary>
+        /// Indicates that the layer should look for World UI objects in the scene. Set this to <c>false</c> to optimize hit processing.
+        /// </summary>
         public bool HitWorldSpaceUI
         {
             get { return hitWorldSpaceUI; }
@@ -52,6 +64,9 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <summary>
+        /// Indicates that the layer should look for Screen Space UI objects in the scene. Set this to <c>false</c> to optimize hit processing.
+        /// </summary>
         public bool HitScreenSpaceUI
         {
             get { return hitScreenSpaceUI; }
@@ -62,6 +77,9 @@ namespace TouchScript.Layers
             }
         }
 
+        /// <summary>
+        /// Indicates that the layer should query for <see cref="HitTest"/> components on target objects. Set this to <c>false</c> to optimize hit processing.
+        /// </summary>
         public bool UseHitFilters
         {
             get { return useHitFilters; }
@@ -110,8 +128,8 @@ namespace TouchScript.Layers
         [SerializeField]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
 
-		[SerializeField]
-		private bool hitProps;
+        [SerializeField]
+        private bool hitProps;
 
         [SerializeField]
         [ToggleLeft]
@@ -119,11 +137,11 @@ namespace TouchScript.Layers
 
         [SerializeField]
         [ToggleLeft]
-		private bool hit2DObjects = true;
+        private bool hit2DObjects = true;
 
         [SerializeField]
         [ToggleLeft]
-		private bool hitWorldSpaceUI = true;
+        private bool hitWorldSpaceUI = true;
 
         [SerializeField]
         [ToggleLeft]
@@ -148,6 +166,7 @@ namespace TouchScript.Layers
 
         #region Public methods
 
+        /// <inheritdoc />
         public override HitResult Hit(IPointer pointer, out HitData hit)
         {
             if (base.Hit(pointer, out hit) != HitResult.Hit) return HitResult.Miss;
@@ -222,15 +241,15 @@ namespace TouchScript.Layers
         {
             if (!Application.isPlaying) return;
             TouchManager.Instance.FrameStarted += frameStartedHandler;
-			StartCoroutine(lateEnable());
+            StartCoroutine(lateEnable());
         }
 
-		private IEnumerator lateEnable()
-		{
-			// Need to wait while EventSystem initializes
-			yield return new WaitForEndOfFrame();
-		    setupInputModule();
-		}
+        private IEnumerator lateEnable()
+        {
+            // Need to wait while EventSystem initializes
+            yield return new WaitForEndOfFrame();
+            setupInputModule();
+        }
 
         private void OnDisable()
         {
@@ -493,7 +512,7 @@ namespace TouchScript.Layers
 
                     float distance = 0;
 
-                    if ((eventCamera == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay)) { }
+                    if ((eventCamera == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay)) {}
                     else
                     {
                         var transForward = t.forward;
@@ -506,17 +525,17 @@ namespace TouchScript.Layers
                     }
 
                     raycastHitUIList.Add(
-                            new RaycastHitUI()
-                            {
-                                Target = graphic.transform,
-                                Raycaster = raycaster,
-                                Graphic = graphic,
-                                GraphicIndex = raycastHitUIList.Count,
-                                Depth = graphic.depth,
-                                SortingLayer = canvas.sortingLayerID,
-                                SortingOrder = canvas.sortingOrder,
-                                Distance = distance
-                            });
+                        new RaycastHitUI()
+                        {
+                            Target = graphic.transform,
+                            Raycaster = raycaster,
+                            Graphic = graphic,
+                            GraphicIndex = raycastHitUIList.Count,
+                            Depth = graphic.depth,
+                            SortingLayer = canvas.sortingLayerID,
+                            SortingOrder = canvas.sortingOrder,
+                            Distance = distance
+                        });
                 }
             }
         }
@@ -607,6 +626,5 @@ namespace TouchScript.Layers
         }
 
         #endregion
-
     }
 }

@@ -16,21 +16,28 @@ namespace TouchScript.Devices.Display
     public interface IDisplayDevice
     {
         /// <summary>
-        /// Gets or sets the name of display device.
+        /// Name of the display device.
         /// </summary>
-        /// <value> The name of display device. </value>
         string Name { get; }
 
         /// <summary>
-        /// Gets or sets DPI of display device.
+        /// DPI of the game based on <see cref="NativeResolution"/> and <see cref="NativeDPI"/>.
         /// </summary>
-        /// <value> DPI used by display device. </value>
         float DPI { get; }
 
+        /// <summary>
+        /// Native DPI of the display device.
+        /// </summary>
         float NativeDPI { get; }
 
+        /// <summary>
+        /// Native resolution of the display device.
+        /// </summary>
         Vector2 NativeResolution { get; }
 
+        /// <summary>
+        /// Forces to recalculate <see cref="DPI"/>.
+        /// </summary>
         void UpdateDPI();
     }
 }

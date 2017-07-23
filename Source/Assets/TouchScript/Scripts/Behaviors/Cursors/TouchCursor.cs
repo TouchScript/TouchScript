@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -7,22 +7,28 @@ using TouchScript.Pointers;
 
 namespace TouchScript.Behaviors.Cursors
 {
+    /// <summary>
+    /// Cursor for touch pointers.
+    /// </summary>
     public class TouchCursor : TextPointerCursor<TouchPointer>
     {
         #region Public properties
 
+        /// <summary>
+        /// Should the value of <see cref="TouchPointer.Pressure"/> be shown on the cursor.
+        /// </summary>
         public bool ShowPressure = false;
 
+        /// <summary>
+        /// Should the value of <see cref="TouchPointer.Rotation"/> be shown on the cursor.
+        /// </summary>
         public bool ShowRotation = false;
-
-        #endregion
-
-        #region Public methods
 
         #endregion
 
         #region Protected methods
 
+        /// <inheritdoc />
         protected override void generateText(TouchPointer pointer, StringBuilder str)
         {
             base.generateText(pointer, str);
@@ -41,17 +47,19 @@ namespace TouchScript.Behaviors.Cursors
             }
         }
 
-        protected override bool shouldShowText()
+        /// <inheritdoc />
+        protected override bool textIsVisible()
         {
-            return base.shouldShowText() || ShowPressure || ShowRotation;
+            return base.textIsVisible() || ShowPressure || ShowRotation;
         }
 
+        /// <inheritdoc />
         protected override uint gethash(TouchPointer pointer)
         {
             var hash = base.gethash(pointer);
 
-            if (ShowPressure == true) hash += (uint) (pointer.Pressure * 1024) << 8;
-            if (ShowRotation == true) hash += (uint) (pointer.Rotation * 1024) << 16;
+            if (ShowPressure) hash += (uint) (pointer.Pressure * 1024) << 8;
+            if (ShowRotation) hash += (uint) (pointer.Rotation * 1024) << 16;
 
             return hash;
         }

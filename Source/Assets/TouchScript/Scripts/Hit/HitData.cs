@@ -21,8 +21,14 @@ namespace TouchScript.Hit
         [Flags]
         public enum HitType
         {
+            /// <summary>
+            /// An unknown hit.
+            /// </summary>
             Unknown,
 
+            /// <summary>
+            /// Screen space UI hit.
+            /// </summary>
             ScreenSpace,
 
             /// <summary>
@@ -36,7 +42,7 @@ namespace TouchScript.Hit
             World2D,
 
             /// <summary>
-            /// UI hit.
+            /// World space UI hit.
             /// </summary>
             UI
         }
@@ -99,6 +105,9 @@ namespace TouchScript.Hit
             get { return raycastHitUI; }
         }
 
+        /// <summary>
+        /// Indicates if this is a Screen Space hit.
+        /// </summary>
         public bool ScreenSpace
         {
             get { return screenSpace; }
@@ -146,6 +155,9 @@ namespace TouchScript.Hit
             }
         }
 
+        /// <summary>
+        /// Distance to the hit point.
+        /// </summary>
         public float Distance
         {
             get
@@ -163,6 +175,9 @@ namespace TouchScript.Hit
             }
         }
 
+        /// <summary>
+        /// Sorting layer of the hit target.
+        /// </summary>
         public int SortingLayer
         {
             get
@@ -173,7 +188,7 @@ namespace TouchScript.Hit
                         return 0;
                     case HitType.World2D:
                         if (sortingLayer == -1) updateSortingValues();
-                        return sortingLayer; 
+                        return sortingLayer;
                     case HitType.UI:
                         return raycastHitUI.SortingLayer;
                 }
@@ -181,6 +196,9 @@ namespace TouchScript.Hit
             }
         }
 
+        /// <summary>
+        /// Sorting order of the hit target.
+        /// </summary>
         public int SortingOrder
         {
             get

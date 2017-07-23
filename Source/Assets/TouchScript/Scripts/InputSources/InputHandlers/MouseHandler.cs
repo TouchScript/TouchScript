@@ -110,6 +110,9 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Public methods
 
+        /// <summary>
+        /// Cancels the mouse pointer.
+        /// </summary>
         public void CancelMousePointer()
         {
             if (mousePointer != null)

@@ -11,10 +11,16 @@ using UnityEngine;
 
 namespace TouchScript
 {
+    /// <summary>
+    /// Internal implementation of <see cref="ILayerManager"/>.
+    /// </summary>
     internal sealed class LayerManagerInstance : MonoBehaviour, ILayerManager
     {
         #region Public properties
 
+        /// <summary>
+        /// Gets the instance of GestureManager singleton.
+        /// </summary>
         public static ILayerManager Instance
         {
             get
@@ -50,6 +56,7 @@ namespace TouchScript
             get { return layerCount; }
         }
 
+        /// <inheritdoc />
         public bool HasExclusive
         {
             get { return exclusiveCount > 0; }
@@ -184,6 +191,7 @@ namespace TouchScript
             }
         }
 
+        /// <inheritdoc />
         public void SetExclusive(IEnumerable<Transform> targets)
         {
             if (targets == null) return;
@@ -197,13 +205,17 @@ namespace TouchScript
             }
         }
 
+        /// <inheritdoc />
         public bool IsExclusive(Transform target)
         {
             return exclusive.Contains(target.GetHashCode());
         }
 
+        /// <inheritdoc />
         public void ClearExclusive()
         {
+            // It is incorrect to just set exclusiveCount to zero since the exclusive list is actually needed the next frame. Only after the next frame's FrameEnded event the list can be cleared.
+            // If we are inside the Pointer Frame, we need to wait for the second FrameEnded (this frame's event included). Otherwise, we need to wait for the next FrameEnded event.
             clearExclusiveDelay = manager.IsInsidePointerFrame ? 2 : 1;
         }
 
@@ -263,6 +275,5 @@ namespace TouchScript
         }
 
         #endregion
-
     }
 }

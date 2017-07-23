@@ -27,7 +27,6 @@ namespace TouchScript.Layers
     [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
-
         #region Events
 
         /// <summary>
@@ -171,12 +170,12 @@ namespace TouchScript.Layers
         {
             pressPointer(pointer);
             if (pointerPressInvoker != null) pointerPressInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(pointer));
-			return true;
+            return true;
         }
 
         internal void INTERNAL_ReleasePointer(Pointer pointer)
         {
-            endPointer(pointer);
+            releasePointer(pointer);
         }
 
         internal void INTERNAL_RemovePointer(Pointer pointer)
@@ -219,10 +218,15 @@ namespace TouchScript.Layers
             if (string.IsNullOrEmpty(Name)) Name = "Layer";
         }
 
-        protected virtual void addPointer(Pointer pointer) { }
+        /// <summary>
+        /// Called when a pointer is added.
+        /// </summary>
+        /// <param name="pointer">Pointer.</param>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
+        protected virtual void addPointer(Pointer pointer) {}
 
         /// <summary>
-        /// Called when a layer is touched to query the layer if this pointer hits something.
+        /// Called when a layer is pressed over an object detected by this layer.
         /// </summary>
         /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
@@ -236,13 +240,18 @@ namespace TouchScript.Layers
         protected virtual void updatePointer(Pointer pointer) {}
 
         /// <summary>
-        /// Called when a pointer ends.
+        /// Called when a pointer is released.
         /// </summary>
         /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void endPointer(Pointer pointer) {}
+        protected virtual void releasePointer(Pointer pointer) {}
 
-        protected virtual void removePointer(Pointer pointer) { }
+        /// <summary>
+        /// Called when a pointer is removed.
+        /// </summary>
+        /// <param name="pointer">Pointer.</param>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
+        protected virtual void removePointer(Pointer pointer) {}
 
         /// <summary>
         /// Called when a pointer is cancelled.

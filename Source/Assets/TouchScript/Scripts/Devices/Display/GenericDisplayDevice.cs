@@ -19,7 +19,7 @@ namespace TouchScript.Devices.Display
             {
                 if (isLaptop == null)
                 {
-                    var gpuName = SystemInfo.graphicsDeviceName.ToLower(); 
+                    var gpuName = SystemInfo.graphicsDeviceName.ToLower();
                     var regex = new Regex(@"^(.*mobile.*|intel hd graphics.*|.*m\s*(series)?\s*(opengl engine)?)$", RegexOptions.IgnoreCase);
                     if (regex.IsMatch(gpuName)) isLaptop = true;
                     else isLaptop = false;
@@ -29,9 +29,8 @@ namespace TouchScript.Devices.Display
         }
 
         private static bool? isLaptop = null;
-        private int oldWidth, oldHeight;
-        private bool oldFullscreen;
 
+        /// <inheritdoc />
         public override void UpdateDPI()
         {
             if (Screen.fullScreen)
@@ -204,7 +203,8 @@ namespace TouchScript.Devices.Display
                     if (width >= 3840)
                     {
                         nativeDPI = 96;
-                    } else if (width >= 1920)
+                    }
+                    else if (width >= 1920)
                     {
                         nativeDPI = 50;
                     }
@@ -234,6 +234,5 @@ namespace TouchScript.Devices.Display
             resolution = new Vector2(r.width, r.height);
             return true;
         }
-
     }
 }
