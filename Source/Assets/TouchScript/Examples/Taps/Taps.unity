@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Scene Camera
+  basicEditor: 1
   advancedProps: 0
   hitProps: 0
   hit3DObjects: 1
@@ -454,6 +455,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -512,18 +517,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a878a6ff128243dfb1d89ca0273f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -539,6 +544,8 @@ MonoBehaviour:
   numberOfTapsRequired: 2
   timeLimit: Infinity
   distanceLimit: Infinity
+  combinePointers: 0
+  combinePointersInterval: 0.3
 --- !u!114 &584553679
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ namespace TouchScript.Editor.Gestures
     {
 		public static readonly GUIContent TEXT_IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores pointers from children.");
 
+        public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when at least one pointer is pressed over this GameObject. Switch to advanced view to see more options.");
+
         private SerializedProperty ignoreChildren;
 		private SerializedProperty OnPress;
 
@@ -23,6 +25,11 @@ namespace TouchScript.Editor.Gestures
 
 			base.OnEnable();
         }
+
+		protected override GUIContent getHelpText()
+		{
+			return TEXT_HELP;
+		}
 
 		protected override void drawGeneral()
         {

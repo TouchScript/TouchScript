@@ -13,6 +13,7 @@ using TouchScript.Utils;
 using TouchScript.Pointers;
 using UnityEngine;
 using UnityEngine.Profiling;
+using TouchScript.Core;
 #if TOUCHSCRIPT_DEBUG
 using TouchScript.Debugging.GL;
 using TouchScript.Debugging.Loggers;
@@ -21,7 +22,7 @@ using TouchScript.Debugging.Loggers;
 using UnityEngine.SceneManagement;
 #endif
 
-namespace TouchScript
+namespace TouchScript.Core
 {
     /// <summary>
     /// Default implementation of <see cref="ITouchManager"/>.

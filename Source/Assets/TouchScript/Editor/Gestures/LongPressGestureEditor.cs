@@ -14,7 +14,9 @@ namespace TouchScript.Editor.Gestures
 		public static readonly GUIContent TEXT_TIME_TO_PRESS = new GUIContent("Time to Press (sec)", "Limit maximum number of simultaneous pointers.");
 		public static readonly GUIContent TEXT_DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if fingers move more than <Value> cm.");
 
-        private SerializedProperty distanceLimit, timeToPress;
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when this GameObject is being pressed for <TimeToPress> seconds. Switch to advanced view to see more options.");
+
+		private SerializedProperty distanceLimit, timeToPress;
 		private SerializedProperty OnLongPress;
 
         protected override void OnEnable()
@@ -25,6 +27,16 @@ namespace TouchScript.Editor.Gestures
 
 			base.OnEnable();
         }
+
+		protected override void drawBasic()
+		{
+            EditorGUILayout.PropertyField(timeToPress, TEXT_TIME_TO_PRESS);
+		}
+
+		protected override GUIContent getHelpText()
+		{
+			return TEXT_HELP;
+		}
 
 		protected override void drawGeneral ()
 		{

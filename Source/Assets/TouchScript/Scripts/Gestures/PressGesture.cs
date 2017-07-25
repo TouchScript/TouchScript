@@ -71,6 +71,16 @@ namespace TouchScript.Gestures
         [ToggleLeft]
         private bool ignoreChildren = false;
 
+		#endregion
+
+		#region Unity
+
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
+
         #endregion
 
         #region Gesture callbacks

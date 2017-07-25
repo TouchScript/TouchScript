@@ -22,7 +22,10 @@ namespace TouchScript.Editor.Layers
 		public static readonly GUIContent TEXT_LAYER_MASK = new GUIContent("Layer Mask", "Layer mask.");
 		public static readonly GUIContent TEXT_HIT_FILTERS = new GUIContent("Use Hit FIlters", "Layer should test for individual HitTest objects.");
 
-        private SerializedProperty advanced, hit;
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component assigns target GameObjects in the scene for pressed pointers. Switch to advanced view to see more options.");
+
+		private SerializedProperty advancedProps, hitProps;
+        private SerializedProperty basicEditor;
         private SerializedProperty hit3DObjects;
         private SerializedProperty hit2DObjects;
         private SerializedProperty hitWorldSpaceUI;
@@ -34,8 +37,9 @@ namespace TouchScript.Editor.Layers
         {
             hideFlags = HideFlags.HideAndDontSave;
 
-            advanced = serializedObject.FindProperty("advancedProps");
-			hit = serializedObject.FindProperty("hitProps");
+            advancedProps = serializedObject.FindProperty("advancedProps");
+            hitProps = serializedObject.FindProperty("hitProps");
+            basicEditor = serializedObject.FindProperty("basicEditor");
             hit3DObjects = serializedObject.FindProperty("hit3DObjects");
             hit2DObjects = serializedObject.FindProperty("hit2DObjects");
             hitWorldSpaceUI = serializedObject.FindProperty("hitWorldSpaceUI");
@@ -52,27 +56,39 @@ namespace TouchScript.Editor.Layers
 			serializedObject.UpdateIfDirtyOrScript();
 #endif
 
-			GUILayout.Space(5);
-			var display = GUIElements.Header(TEXT_HIT_HEADER, hit);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				drawHit();
-				EditorGUI.indentLevel--;
-			}
+            GUILayout.Space(5);
 
-			display = GUIElements.Header(TEXT_ADVANCED_HEADER, advanced);
-			if (display)
+			if (basicEditor.boolValue)
 			{
-				EditorGUI.indentLevel++;
-				drawAdvanced();
-				EditorGUI.indentLevel--;
+				drawHit();
+
+				if (GUIElements.BasicHelpBox(TEXT_HELP))
+				{
+					basicEditor.boolValue = false;
+					Repaint();
+				}
+			}
+			else
+			{
+                drawHit();
+                drawAdvanced();
 			}
 
             serializedObject.ApplyModifiedProperties();
         }
 
-		protected virtual void drawHit()
+        private void drawHit()
+        {
+			var display = GUIElements.Header(TEXT_HIT_HEADER, hitProps);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				doDrawHit();
+				EditorGUI.indentLevel--;
+			}
+        }
+
+        protected virtual void doDrawHit()
 		{
 			EditorGUILayout.PropertyField(hitScreenSpaceUI, TEXT_SS_UI);
 			EditorGUILayout.PropertyField(hit3DObjects, TEXT_3D_OBJECTS);
@@ -81,7 +97,18 @@ namespace TouchScript.Editor.Layers
 			EditorGUILayout.PropertyField(layerMask, TEXT_LAYER_MASK);
 		}
 
-        protected virtual void drawAdvanced()
+        private void drawAdvanced()
+        {
+			var display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				doDrawAdvanced();
+				EditorGUI.indentLevel--;
+			}
+        }
+
+        protected virtual void doDrawAdvanced()
         {
             EditorGUILayout.PropertyField(useHitFilters, TEXT_HIT_FILTERS);
         }

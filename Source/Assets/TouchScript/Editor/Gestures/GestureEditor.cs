@@ -37,6 +37,7 @@ namespace TouchScript.Editor.Gestures
 
 		private Gesture instance;
 
+        private SerializedProperty basicEditor;
         private SerializedProperty debugMode, friendlyGestures, requireGestureToFail,
         	minPointers, maxPointers, 
         	useSendMessage, sendMessageTarget, sendStateChangeMessages,
@@ -56,6 +57,7 @@ namespace TouchScript.Editor.Gestures
             advancedProps = serializedObject.FindProperty("advancedProps");
 			limitsProps = serializedObject.FindProperty("limitsProps");
 			generalProps = serializedObject.FindProperty("generalProps");
+            basicEditor = serializedObject.FindProperty("basicEditor");
 
             debugMode = serializedObject.FindProperty("debugMode");
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
@@ -93,8 +95,6 @@ namespace TouchScript.Editor.Gestures
                 EditorGUI.LabelField(rect, string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUIElements.BoxLabelStyle);
             };
             friendlyGesturesList.onRemoveCallback += list => { indexToRemove = list.index; };
-
-			if (debugMode != null) shouldDrawAdvanced = true;
         }
 
         public override void OnInspectorGUI()
@@ -108,71 +108,95 @@ namespace TouchScript.Editor.Gestures
 			GUILayout.Space(5);
 			bool display;
 
-			if (shouldDrawGeneral)
+			if (basicEditor.boolValue)
 			{
-				display = GUIElements.Header(TEXT_GENERAL_HEADER, generalProps);
+                drawBasic();
+				if (GUIElements.BasicHelpBox(getHelpText()))
+				{
+					basicEditor.boolValue = false;
+					Repaint();
+				}
+			}
+			else
+			{
+				if (shouldDrawGeneral)
+				{
+					display = GUIElements.Header(TEXT_GENERAL_HEADER, generalProps);
+					if (display)
+					{
+						EditorGUI.indentLevel++;
+						drawGeneral();
+						EditorGUI.indentLevel--;
+					}
+				}
+
+				drawOtherGUI();
+
+				display = GUIElements.Header(TEXT_LIMITS_HEADER, limitsProps);
 				if (display)
 				{
 					EditorGUI.indentLevel++;
-					drawGeneral();
+					drawLimits();
 					EditorGUI.indentLevel--;
 				}
-			}
 
-			drawOtherGUI();
-
-			display = GUIElements.Header(TEXT_LIMITS_HEADER, limitsProps);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				drawLimits();
-				EditorGUI.indentLevel--;
-			}
-
-			display = GUIElements.Header(TEXT_GESTURES_HEADER, friendlyGestures);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				drawFriendlyGestures();
-				drawRequireToFail();
-				GUILayout.Space(5);
-				EditorGUI.indentLevel--;
-			}
-
-			display = GUIElements.Header(TEXT_USE_UNITY_EVENTS_HEADER, useUnityEvents, useUnityEvents, useUnityEvents_prop);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				using (new EditorGUI.DisabledGroupScope(!useUnityEvents.boolValue))
-				{
-					drawUnityEvents();
-				}
-				EditorGUI.indentLevel--;
-			}
-
-			display = GUIElements.Header(TEXT_USE_SEND_MESSAGE_HEADER, useSendMessage, useSendMessage, useSendMessage_prop);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				using (new EditorGUI.DisabledGroupScope(!useSendMessage.boolValue))
-				{
-					drawSendMessage();
-				}
-				EditorGUI.indentLevel--;
-			}
-
-			if (shouldDrawAdvanced)
-			{
-				display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
+				display = GUIElements.Header(TEXT_GESTURES_HEADER, friendlyGestures);
 				if (display)
 				{
 					EditorGUI.indentLevel++;
-					drawAdvanced();
+					drawFriendlyGestures();
+					drawRequireToFail();
+					GUILayout.Space(5);
 					EditorGUI.indentLevel--;
 				}
+
+				display = GUIElements.Header(TEXT_USE_UNITY_EVENTS_HEADER, useUnityEvents, useUnityEvents, useUnityEvents_prop);
+				if (display)
+				{
+					EditorGUI.indentLevel++;
+					using (new EditorGUI.DisabledGroupScope(!useUnityEvents.boolValue))
+					{
+						drawUnityEvents();
+					}
+					EditorGUI.indentLevel--;
+				}
+
+				display = GUIElements.Header(TEXT_USE_SEND_MESSAGE_HEADER, useSendMessage, useSendMessage, useSendMessage_prop);
+				if (display)
+				{
+					EditorGUI.indentLevel++;
+					using (new EditorGUI.DisabledGroupScope(!useSendMessage.boolValue))
+					{
+						drawSendMessage();
+					}
+					EditorGUI.indentLevel--;
+				}
+
+				if (shouldDrawAdvanced)
+				{
+					display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
+					if (display)
+					{
+						EditorGUI.indentLevel++;
+						drawAdvanced();
+						EditorGUI.indentLevel--;
+					}
+				}
+
+                drawDebug();
 			}
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual void drawBasic()
+        {
+            
+        }
+
+        protected virtual GUIContent getHelpText()
+        {
+            return new GUIContent("");
         }
 
 		protected virtual void drawOtherGUI()
@@ -241,7 +265,6 @@ namespace TouchScript.Editor.Gestures
 
         protected virtual void drawAdvanced()
         {
-            drawDebug();
         }
 
 		protected virtual void drawDebug()

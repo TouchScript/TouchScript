@@ -107,11 +107,11 @@ namespace TouchScript.Behaviors
             set { allowChangingFromOutside = value; }
         }
 
-        #endregion
+		#endregion
 
-        #region Private variables
+		#region Private variables
 
-        [SerializeField]
+		[SerializeField]
         [ToggleLeft]
         private bool enableSmoothing = false;
 

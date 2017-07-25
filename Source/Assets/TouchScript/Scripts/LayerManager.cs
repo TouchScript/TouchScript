@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Core;
 using UnityEngine;
 
 namespace TouchScript

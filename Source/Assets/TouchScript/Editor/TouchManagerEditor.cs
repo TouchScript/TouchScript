@@ -18,7 +18,7 @@ namespace TouchScript.Editor
     [CustomEditor(typeof(TouchManager))]
     internal sealed class TouchManagerEditor : UnityEditor.Editor
     {
-		public static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
+        public static readonly GUIContent TEXT_LAYERS_HELP = new GUIContent("Layers at the top get to process pointer input first.");
 		public static readonly GUIContent TEXT_LAYERS_HEADER = new GUIContent("Pointer Layers", "Sorted array of Pointer Layers in the scene.");
 		public static readonly GUIContent TEXT_USE_SEND_MESSAGE_HEADER = new GUIContent("Use SendMessage", "Enables sending events through SendMessage. Warnning: this method is slow!");
 		public static readonly GUIContent TEXT_USE_UNITY_EVENTS_HEADER = new GUIContent("Use Unity Events", "Enables sending events through Unity Events.");
@@ -31,9 +31,11 @@ namespace TouchScript.Editor
 		public static readonly GUIContent TEXT_SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
 		public static readonly GUIContent TEXT_SEND_MESSAGE_EVENTS = new GUIContent("Events", "Which events should be sent as Unity Messages.");
 
+        public static readonly GUIContent TEXT_HELP = new GUIContent("This component holds TouchScript configuration options for a scene. Switch to advanced view to see more options.");
+
         private TouchManager instance;
         private ReorderableList layersList;
-        private SerializedProperty advancedProps;
+        private SerializedProperty basicEditor;
         private SerializedProperty debugMode;
         private SerializedProperty layers, displayDevice, shouldCreateCameraLayer, shouldCreateStandardInput, 
 		useSendMessage, sendMessageTarget, sendMessageEvents;
@@ -45,7 +47,7 @@ namespace TouchScript.Editor
         {
             instance = target as TouchManager;
 
-            advancedProps = serializedObject.FindProperty("advancedProps");
+            basicEditor = serializedObject.FindProperty("basicEditor");
             debugMode = serializedObject.FindProperty("debugMode");
             layers = serializedObject.FindProperty("layers");
             displayDevice = serializedObject.FindProperty("displayDevice");
@@ -92,10 +94,38 @@ namespace TouchScript.Editor
 
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
+#if UNITY_5_6_OR_NEWER
+			serializedObject.UpdateIfRequiredOrScript();
+#else
+            serializedObject.UpdateIfDirtyOrScript();
+#endif
 
 			GUILayout.Space(5);
 
+            if (basicEditor.boolValue)
+            {
+                drawLayers();
+
+                if (GUIElements.BasicHelpBox(TEXT_HELP))
+                {
+                    basicEditor.boolValue = false;
+                    Repaint();
+                }
+            }
+            else
+            {
+                drawDefaults();
+                drawLayers();
+                drawUnityEvents();
+                drawSendMessage();
+                drawDebug();
+            }
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void drawDefaults()
+        {
 			var display = GUIElements.Header(TEXT_DEFAULTS_HEADER, shouldCreateCameraLayer);
 			if (display)
 			{
@@ -105,10 +135,41 @@ namespace TouchScript.Editor
 					EditorGUILayout.PropertyField(shouldCreateCameraLayer, TEXT_CREATE_CAMERA_LAYER);
 					EditorGUILayout.PropertyField(shouldCreateStandardInput, TEXT_CREATE_STANDARD_INPUT);
 				}
+
+				var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
+				var label = EditorGUI.BeginProperty(r, TEXT_DISPLAY_DEVICE, displayDevice);
+				EditorGUI.BeginChangeCheck();
+				r = EditorGUI.PrefixLabel(r, label);
+				var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
+				if (EditorGUI.EndChangeCheck())
+				{
+					instance.DisplayDevice = newDevice;
+					EditorUtility.SetDirty(instance);
+				}
+				EditorGUI.EndProperty();
+
 				EditorGUI.indentLevel--;
 			}
+        }
 
-			display = GUIElements.Header(TEXT_USE_UNITY_EVENTS_HEADER, useUnityEvents, useUnityEvents, useUnityEvents_prop);
+        private void drawLayers()
+        {
+			var display = GUIElements.Header(TEXT_LAYERS_HEADER, layers);
+			if (display)
+			{
+                EditorGUILayout.LabelField(TEXT_LAYERS_HELP, GUIElements.HelpBox);
+			    EditorGUI.indentLevel++;
+			    using (new EditorGUI.DisabledGroupScope(Application.isPlaying))
+			    {
+			        layersList.DoLayoutList();
+			    }
+			    EditorGUI.indentLevel--;
+			}
+		}
+
+        private void drawUnityEvents()
+        {
+			var display = GUIElements.Header(TEXT_USE_UNITY_EVENTS_HEADER, useUnityEvents, useUnityEvents, useUnityEvents_prop);
 			if (display)
 			{
 				EditorGUI.indentLevel++;
@@ -125,8 +186,11 @@ namespace TouchScript.Editor
 				}
 				EditorGUI.indentLevel--;
 			}
+        }
 
-			display = GUIElements.Header(TEXT_USE_SEND_MESSAGE_HEADER, useSendMessage, useSendMessage, useSendMessage_prop);
+        private void drawSendMessage()
+        {
+			var display = GUIElements.Header(TEXT_USE_SEND_MESSAGE_HEADER, useSendMessage, useSendMessage, useSendMessage_prop);
 			if (display)
 			{
 				EditorGUI.indentLevel++;
@@ -148,44 +212,6 @@ namespace TouchScript.Editor
 				}
 				EditorGUI.indentLevel--;
 			}
-
-			display = GUIElements.Header(TEXT_LAYERS_HEADER, layers);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				using (new EditorGUI.DisabledGroupScope(Application.isPlaying))
-				{
-					layersList.DoLayoutList();
-				}
-				EditorGUI.indentLevel--;
-			}
-
-			display = GUIElements.Header(TEXT_ADVANCED_HEADER, advancedProps);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				drawAdvanced();
-				EditorGUI.indentLevel--;
-			}
-
-            serializedObject.ApplyModifiedProperties();
-        }
-
-        private void drawAdvanced()
-        {
-			var r = EditorGUILayout.GetControlRect(true, 16f, EditorStyles.objectField);
-			var label = EditorGUI.BeginProperty(r, TEXT_DISPLAY_DEVICE, displayDevice);
-			EditorGUI.BeginChangeCheck();
-			r = EditorGUI.PrefixLabel(r, label);
-			var newDevice = EditorGUI.ObjectField(r, instance.DisplayDevice as Object, typeof(IDisplayDevice), true) as IDisplayDevice;
-			if (EditorGUI.EndChangeCheck())
-			{
-				instance.DisplayDevice = newDevice;
-				EditorUtility.SetDirty(instance);
-			}
-			EditorGUI.EndProperty();
-
-            drawDebug();
         }
 
         private void drawDebug()

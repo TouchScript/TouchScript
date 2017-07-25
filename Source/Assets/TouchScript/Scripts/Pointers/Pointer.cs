@@ -4,6 +4,7 @@
 
 using System;
 using System.Text;
+using TouchScript.Core;
 using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;

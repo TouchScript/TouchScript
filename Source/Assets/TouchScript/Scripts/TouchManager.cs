@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using TouchScript.Core;
 using TouchScript.Devices.Display;
 using TouchScript.Layers;
 using TouchScript.Pointers;
@@ -15,7 +16,7 @@ using Object = UnityEngine.Object;
 namespace TouchScript
 {
     /// <summary>
-    /// A façade object to configure and hold parameters for an instance of <see cref="ITouchManager"/>. Contains constants used throughout the library.
+    /// A facade object to configure and hold parameters for an instance of <see cref="ITouchManager"/>. Contains constants used throughout the library.
     /// <seealso cref="ITouchManager"/>
     /// </summary>
     /// <remarks>
@@ -369,10 +370,15 @@ namespace TouchScript
 
         #region Private variables
 
-        [SerializeField]
-        private bool advancedProps; // is used to save if advanced properties are opened or closed
+        #pragma warning disable CS0414
 
         [SerializeField]
+        [HideInInspector]
+        private bool basicEditor = true;
+
+        #pragma warning restore CS0414
+
+		[SerializeField]
         private Object displayDevice;
 
         [SerializeField]
@@ -389,7 +395,8 @@ namespace TouchScript
 
         [SerializeField]
         private MessageType sendMessageEvents = MessageType.PointersPressed | MessageType.PointersCancelled |
-                                                MessageType.PointersReleased | MessageType.PointersUpdated;
+                                                MessageType.PointersReleased | MessageType.PointersUpdated |
+                                                MessageType.PointersAdded | MessageType.PointersRemoved;
 
         [SerializeField]
         private GameObject sendMessageTarget;
@@ -433,6 +440,12 @@ namespace TouchScript
             removeSendMessageSubscriptions();
             removeUnityEventsSubscriptions();
         }
+
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+            basicEditor = true;
+		}
 
         #endregion
 

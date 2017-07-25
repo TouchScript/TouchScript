@@ -145,13 +145,23 @@ namespace TouchScript.InputSources
 
         private static StandardInput instance;
 
-        [SerializeField]
+#pragma warning disable CS0414
+
+		[SerializeField]
+        [HideInInspector]
         private bool generalProps; // Used in the custom inspector
 
         [SerializeField]
+        [HideInInspector]
         private bool windowsProps; // Used in the custom inspector
 
-        [SerializeField]
+		[SerializeField]
+		[HideInInspector]
+		private bool webglProps; // Used in the custom inspector
+
+#pragma warning restore CS0414
+
+		[SerializeField]
         private Windows8APIType windows8API = Windows8APIType.Windows8;
 
         [SerializeField]
@@ -350,6 +360,12 @@ namespace TouchScript.InputSources
 
             base.OnDisable();
         }
+
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
 
         #endregion
 

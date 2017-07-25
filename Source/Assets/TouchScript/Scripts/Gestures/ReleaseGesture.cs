@@ -66,12 +66,22 @@ namespace TouchScript.Gestures
         [ToggleLeft]
         private bool ignoreChildren = false;
 
-        #endregion
+		#endregion
 
-        #region Gesture callbacks
+		#region Unity
 
-        /// <inheritdoc />
-        public override bool ShouldReceivePointer(Pointer pointer)
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
+
+		#endregion
+
+		#region Gesture callbacks
+
+		/// <inheritdoc />
+		public override bool ShouldReceivePointer(Pointer pointer)
         {
             if (!IgnoreChildren) return base.ShouldReceivePointer(pointer);
             if (!base.ShouldReceivePointer(pointer)) return false;

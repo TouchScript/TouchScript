@@ -17,6 +17,8 @@ namespace TouchScript.Editor.EditorUI
 		public static GUIStyle HeaderStyle;
 		public static GUIStyle HeaderCheckbox;
 		public static GUIStyle HeaderFoldout;
+        public static GUIStyle SmallText;
+        public static GUIStyle SmallButton;
 
 		public static Texture2D PaneOptionsIcon;
 
@@ -52,6 +54,18 @@ namespace TouchScript.Editor.EditorUI
 
 			HeaderCheckbox = new GUIStyle("ShurikenCheckMark");
 			HeaderFoldout = new GUIStyle("Foldout");
+
+			SmallText = new GUIStyle("miniLabel")
+			{
+				alignment = TextAnchor.UpperLeft,
+			};
+
+			SmallButton = new GUIStyle("Button")
+			{
+				fontSize = SmallText.fontSize,
+				fontStyle = SmallText.fontStyle,
+				font = SmallText.font,
+			};
 
 			if (EditorGUIUtility.isProSkin)
 				PaneOptionsIcon = (Texture2D)EditorGUIUtility.LoadRequired("Builtin Skins/DarkSkin/Images/pane options.png");
@@ -103,5 +117,15 @@ namespace TouchScript.Editor.EditorUI
 
 			return display;
 		}
+
+        public static bool BasicHelpBox(GUIContent text)
+        {
+            EditorGUILayout.LabelField(text, HelpBox);
+            var rect = GUILayoutUtility.GetRect(10, 22, GUILayout.ExpandWidth(true));
+            rect.x = rect.width - 86;
+            rect.width = 100;
+            rect.height = 14;
+            return GUI.Button(rect, "Switch to Advanced", SmallButton);
+        }
     }
 }

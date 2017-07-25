@@ -18,8 +18,8 @@ namespace TouchScript.Editor.Gestures.TransformGestures.Base
 		public static readonly GUIContent TEXT_TYPE_SCALING = new GUIContent(" Scaling", "Scaling with two or more fingers.");
 		public static readonly GUIContent TEXT_MIN_SCREEN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two pointers (clusters) in cm to consider this gesture started. Used to prevent fake pointers spawned near real ones on cheap multitouch hardware to mess everything up.");
 		public static readonly GUIContent TEXT_SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm pointers must move for the gesture to begin.");
-		public static readonly GUIContent TEXT_PROJECTION = new GUIContent("Type", "Method used to project 2d screen positions of pointers into 3d space.");
-		public static readonly GUIContent TEXT_PROJECTION_NORMAL = new GUIContent("Normal", "Normal of the plane in 3d space where pointers' positions are projected.");
+		public static readonly GUIContent TEXT_PROJECTION = new GUIContent("Projection Type", "Method used to project 2d screen positions of pointers into 3d space.");
+		public static readonly GUIContent TEXT_PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where pointers' positions are projected.");
 
 		protected SerializedProperty type, minScreenPointsDistance, screenTransformThreshold;
 		protected SerializedProperty OnTransformStart, OnTransform, OnTransformComplete;

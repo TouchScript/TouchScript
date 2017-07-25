@@ -17,6 +17,8 @@ namespace TouchScript.Editor.Gestures
 		public static readonly GUIContent TEXT_COMBINE_POINTERS = new GUIContent("Combine Pointers", "When several fingers are used to perform a tap, pointers released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
 		public static readonly GUIContent TEXT_COMBINE_TOUCH_POINTERS = new GUIContent("Combine Interval (sec)", TEXT_COMBINE_POINTERS.tooltip);
 
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when this GameObject is tapped. Switch to advanced view to see more options.");
+
 		private SerializedProperty numberOfTapsRequired, distanceLimit, timeLimit, combinePointers, combinePointersInterval;
 		private SerializedProperty OnTap;
 
@@ -31,6 +33,17 @@ namespace TouchScript.Editor.Gestures
 			OnTap = serializedObject.FindProperty("OnTap");
 
 			base.OnEnable();
+        }
+
+        protected override void drawBasic()
+        {
+			EditorGUIUtility.labelWidth = 180;
+			EditorGUILayout.IntPopup(numberOfTapsRequired, new[] { new GUIContent("One"), new GUIContent("Two"), new GUIContent("Three") }, new[] { 1, 2, 3 }, TEXT_NUMBER_OF_TAPS_REQUIRED, GUILayout.ExpandWidth(true));
+		}
+
+        protected override GUIContent getHelpText()
+        {
+            return TEXT_HELP;
         }
 
 		protected override void drawGeneral()

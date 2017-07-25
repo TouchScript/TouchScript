@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Main Camera
+  basicEditor: 1
   advancedProps: 0
   hitProps: 0
   hit3DObjects: 0
@@ -970,18 +971,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1021,18 +1022,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1601,18 +1602,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1654,18 +1655,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1858,18 +1859,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1911,18 +1912,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -1990,6 +1991,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11400000, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
+      propertyPath: layers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 1c4dd8a13f501b04f84fe824120f70bb, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2820,18 +2825,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -2873,18 +2878,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -3365,7 +3370,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.30900002, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.13402176, y: -21.099998}
+  m_AnchoredPosition: {x: -0.13402176, y: -21.09999}
   m_SizeDelta: {x: -0.26796, y: 29.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1027187499
@@ -4358,7 +4363,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 156, y: 48.3}
+  m_AnchoredPosition: {x: 156, y: 48.300003}
   m_SizeDelta: {x: 276, y: 68.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1423800607
@@ -4692,18 +4697,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -4745,18 +4750,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -5497,18 +5502,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6be551879cd14d739b0188844ef2c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}
@@ -5550,18 +5555,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ea9930ecb674732bee27116520fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: TouchScript.Gestures.Gesture+GestureEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  basicEditor: 1
   generalProps: 0
   limitsProps: 0
   advancedProps: 0
   minPointers: 0
   maxPointers: 0
-  combinePointers: 0
-  combinePointersInterval: 0.3
   useSendMessage: 0
   sendStateChangeMessages: 0
   sendMessageTarget: {fileID: 0}

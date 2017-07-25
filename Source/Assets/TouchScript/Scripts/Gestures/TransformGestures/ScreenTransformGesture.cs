@@ -20,7 +20,13 @@ namespace TouchScript.Gestures.TransformGestures
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_ScreenTransformGesture.htm")]
     public class ScreenTransformGesture : TwoPointTransformGestureBase
     {
-        #region Public methods
+		#region Unity
+
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
 
         #endregion
 

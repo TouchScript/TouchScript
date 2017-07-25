@@ -9,7 +9,7 @@ using TouchScript.Utils;
 using TouchScript.Pointers;
 using UnityEngine;
 
-namespace TouchScript
+namespace TouchScript.Core
 {
     /// <summary>
     /// Internal implementation of <see cref="IGestureManager"/>.

@@ -3,6 +3,7 @@
  */
 
 using System;
+using TouchScript.Core;
 using TouchScript.Pointers;
 using UnityEngine;
 
@@ -37,15 +38,19 @@ namespace TouchScript.InputSources
             }
         }
 
-        #endregion
+		#endregion
 
-        #region Private variables
+		#region Private variables
 
-        [SerializeField]
+#pragma warning disable CS0414
+
+		[SerializeField]
         [HideInInspector]
-        private bool advancedProps; // is used to save whether advanced properties are opened or closed
+		protected bool basicEditor = true;
 
-        private ICoordinatesRemapper coordinatesRemapper;
+#pragma warning restore CS0414
+
+		private ICoordinatesRemapper coordinatesRemapper;
         private TouchManagerInstance manager;
 
         #endregion

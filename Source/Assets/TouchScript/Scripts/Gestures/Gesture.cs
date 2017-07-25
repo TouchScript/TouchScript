@@ -11,6 +11,7 @@ using TouchScript.Utils.Attributes;
 using TouchScript.Pointers;
 using UnityEngine;
 using UnityEngine.Events;
+using TouchScript.Core;
 
 namespace TouchScript.Gestures
 {
@@ -436,16 +437,27 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Transform cachedTransform;
 
+#pragma warning disable CS0414
+
 		[SerializeField]
+		[HideInInspector]
+		protected bool basicEditor = true;
+
+		[SerializeField]
+        [HideInInspector]
 		private bool generalProps; // Used in the custom inspector
 
 		[SerializeField]
+        [HideInInspector]
 		private bool limitsProps; // Used in the custom inspector
 
 		[SerializeField]
+        [HideInInspector]
 		private bool advancedProps; // Used in the custom inspector
 
-        [SerializeField]
+#pragma warning restore CS0414
+
+		[SerializeField]
         private int minPointers = 0;
 
         [SerializeField]

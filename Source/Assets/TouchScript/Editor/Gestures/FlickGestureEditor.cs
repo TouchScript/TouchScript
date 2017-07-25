@@ -16,7 +16,9 @@ namespace TouchScript.Editor.Gestures
 		public static readonly GUIContent FLICK_TIME = new GUIContent("Flick Time (sec)", "Time interval in seconds during which pointers must move by <Minimum Distance> for the gesture to be recognized.");
 		public static readonly GUIContent MIN_DISTANCE = new GUIContent("Minimum Distance (cm)", "Minimum distance in cm pointers must move in <Flick Time> seconds for the gesture to be recognized.");
 
-        private SerializedProperty direction;
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component a fast flick gesture started over the GameObject. Switch to advanced view to see more options.");
+
+		private SerializedProperty direction;
         private SerializedProperty flickTime;
         private SerializedProperty minDistance;
         private SerializedProperty movementThreshold;
@@ -31,22 +33,24 @@ namespace TouchScript.Editor.Gestures
             direction = serializedObject.FindProperty("direction");
         }
 
-        public override void OnInspectorGUI()
-        {
-#if UNITY_5_6_OR_NEWER
-			serializedObject.UpdateIfRequiredOrScript();
-#else
-			serializedObject.UpdateIfDirtyOrScript();
-#endif
+		protected override void drawBasic()
+		{
+            EditorGUILayout.PropertyField(direction, DIRECTION);
+		}
 
+        protected override void drawGeneral()
+        {
             EditorGUIUtility.labelWidth = 180;
             EditorGUILayout.PropertyField(direction, DIRECTION);
             EditorGUILayout.PropertyField(movementThreshold, MOVEMENT_THRESHOLD);
             EditorGUILayout.PropertyField(flickTime, FLICK_TIME);
             EditorGUILayout.PropertyField(minDistance, MIN_DISTANCE);
-
-            serializedObject.ApplyModifiedProperties();
-            base.OnInspectorGUI();
         }
+
+		protected override GUIContent getHelpText()
+		{
+			return TEXT_HELP;
+		}
+
     }
 }

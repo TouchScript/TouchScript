@@ -162,6 +162,12 @@ namespace TouchScript.Gestures.TransformGestures
             updateProjectionPlane();
         }
 
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
+
         #endregion
 
         #region Gesture callbacks

@@ -14,18 +14,23 @@ namespace TouchScript.Editor.InputSources
     {
 		public static readonly GUIContent TEXT_GENERAL_HEADER = new GUIContent("General", "General settings.");
 		public static readonly GUIContent TEXT_WINDOWS_HEADER = new GUIContent("Windows", "Windows specific settings.");
+        public static readonly GUIContent TEXT_WEBGL_HEADER = new GUIContent("WebGL", "WebGL specific settings.");
 
-		public static readonly GUIContent TEXT_WINDOWS_API = new GUIContent("Select which touch API to use:\n - Windows 8 — new WM_POINTER API,\n - Windows 7 — old WM_TOUCH API,\n - Unity — Unity's native WM_TOUCH implementation,\n - None — no touch please.");
+        public static readonly GUIContent TEXT_EMULATE_MOUSE = new GUIContent("Emulate Second Mouse Pointer", "If selected, you can press ALT to make a stationary mouse pointer. This is used to simulate multi-touch.");
 
+		public static readonly GUIContent TEXT_WINDOWS_API = new GUIContent("Select which touch API to use:\n - Windows 8 — new WM_POINTER API,\n - Windows 7 — old WM_TOUCH API,\n - Unity — Unity's WM_TOUCH implementation,\n - None — no touch.");
 		public static readonly GUIContent TEXT_WINDOWS8 = new GUIContent("Windows 8+ API");
 		public static readonly GUIContent TEXT_WINDOWS7 = new GUIContent("Windows 7 API");
 		public static readonly GUIContent TEXT_WINDOWS8_MOUSE = new GUIContent("Enable Mouse on Windows 8+");
 		public static readonly GUIContent TEXT_WINDOWS7_MOUSE = new GUIContent("Enable Mouse on Windows 7");
 		public static readonly GUIContent TEXT_UWP_MOUSE = new GUIContent("Enable Mouse on UWP");
 
+        public static readonly GUIContent TEXT_HELP = new GUIContent("This component gathers input data from various devices like touch, mouse and pen on all platforms. Switch to advanced view to see more options.");
+
+        private SerializedProperty basicEditor;
         private SerializedProperty windows8Touch, windows7Touch, webGLTouch, windows8Mouse,
             windows7Mouse, universalWindowsMouse, emulateSecondMousePointer;
-		private SerializedProperty generalProps, windowsProps;
+		private SerializedProperty generalProps, windowsProps, webglProps;
 
         private StandardInput instance;
 
@@ -34,6 +39,7 @@ namespace TouchScript.Editor.InputSources
             base.OnEnable();
 
             instance = target as StandardInput;
+            basicEditor = serializedObject.FindProperty("basicEditor");
             windows8Touch = serializedObject.FindProperty("windows8API");
             windows7Touch = serializedObject.FindProperty("windows7API");
             webGLTouch = serializedObject.FindProperty("webGLTouch");
@@ -44,6 +50,7 @@ namespace TouchScript.Editor.InputSources
 
 			generalProps = serializedObject.FindProperty("generalProps");
 			windowsProps = serializedObject.FindProperty("windowsProps");
+            webglProps = serializedObject.FindProperty("webglProps");
         }
 
         public override void OnInspectorGUI()
@@ -56,21 +63,51 @@ namespace TouchScript.Editor.InputSources
 
 			GUILayout.Space(5);
 
+			if (basicEditor.boolValue)
+			{
+                EditorGUI.BeginChangeCheck();
+				EditorGUILayout.PropertyField(emulateSecondMousePointer, TEXT_EMULATE_MOUSE);
+				if (EditorGUI.EndChangeCheck())
+				{
+					instance.EmulateSecondMousePointer = emulateSecondMousePointer.boolValue;
+				}
+
+				if (GUIElements.BasicHelpBox(TEXT_HELP))
+				{
+					basicEditor.boolValue = false;
+					Repaint();
+				}
+			}
+			else
+			{
+				drawGeneral();
+				drawWindows();
+				drawWebGL();
+			}
+
+            serializedObject.ApplyModifiedProperties();
+            base.OnInspectorGUI();
+        }
+
+        private void drawGeneral()
+        {
 			var display = GUIElements.Header(TEXT_GENERAL_HEADER, generalProps);
 			if (display)
 			{
 				EditorGUI.indentLevel++;
 				EditorGUI.BeginChangeCheck();
-				EditorGUILayout.PropertyField(emulateSecondMousePointer);
+				EditorGUILayout.PropertyField(emulateSecondMousePointer, TEXT_EMULATE_MOUSE);
 				if (EditorGUI.EndChangeCheck())
 				{
 					instance.EmulateSecondMousePointer = emulateSecondMousePointer.boolValue;
 				}
-				EditorGUILayout.PropertyField(webGLTouch);
 				EditorGUI.indentLevel--;
 			}
+        }
 
-			display = GUIElements.Header(TEXT_WINDOWS_HEADER, windowsProps);
+        private void drawWindows()
+        {
+			var display = GUIElements.Header(TEXT_WINDOWS_HEADER, windowsProps);
 			if (display)
 			{
 				EditorGUI.indentLevel++;
@@ -82,9 +119,18 @@ namespace TouchScript.Editor.InputSources
 				EditorGUILayout.PropertyField(universalWindowsMouse, TEXT_UWP_MOUSE);
 				EditorGUI.indentLevel--;
 			}
-            
-            serializedObject.ApplyModifiedProperties();
-            base.OnInspectorGUI();
         }
+
+        private void drawWebGL()
+        {
+			var display = GUIElements.Header(TEXT_WEBGL_HEADER, webglProps);
+			if (display)
+			{
+				EditorGUI.indentLevel++;
+				EditorGUILayout.PropertyField(webGLTouch);
+				EditorGUI.indentLevel--;
+			}
+        }
+
     }
 }

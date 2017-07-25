@@ -85,12 +85,22 @@ namespace TouchScript.Gestures
                                                    pointerReleasedInvoker,
                                                    pointerCancelledInvoker;
 
-        #endregion
+		#endregion
 
-        #region Gesture callbacks
+		#region Unity
 
-        /// <inheritdoc />
-        protected override void pointersPressed(IList<Pointer> pointers)
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
+
+		#endregion
+
+		#region Gesture callbacks
+
+		/// <inheritdoc />
+		protected override void pointersPressed(IList<Pointer> pointers)
         {
             base.pointersPressed(pointers);
 
