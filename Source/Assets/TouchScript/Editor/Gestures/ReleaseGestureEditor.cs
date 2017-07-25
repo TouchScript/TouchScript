@@ -13,7 +13,7 @@ namespace TouchScript.Editor.Gestures
     {
 		public static readonly GUIContent TEXT_IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores pointers from children.");
 
-		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when all pointers are lifted off from this GameObject. Switch to advanced view to see more options.");
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when all pointers are lifted off from this GameObject.");
 
 		private SerializedProperty ignoreChildren;
 		private SerializedProperty OnRelease;

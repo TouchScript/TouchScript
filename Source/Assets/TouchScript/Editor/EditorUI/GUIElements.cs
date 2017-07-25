@@ -10,11 +10,11 @@ namespace TouchScript.Editor.EditorUI
 {
     internal static class GUIElements
     {
-		public static GUIStyle BoxStyle;
-		public static GUIStyle BoxLabelStyle;
+		public static GUIStyle Box;
+		public static GUIStyle BoxLabel;
 
 		public static GUIStyle HelpBox;
-		public static GUIStyle HeaderStyle;
+        public static GUIStyle HeaderBox;
 		public static GUIStyle HeaderCheckbox;
 		public static GUIStyle HeaderFoldout;
         public static GUIStyle SmallText;
@@ -24,16 +24,16 @@ namespace TouchScript.Editor.EditorUI
 
         static GUIElements()
         {
-			BoxStyle = new GUIStyle(GUI.skin.box)
+			Box = new GUIStyle(GUI.skin.box)
 			{
 				margin = new RectOffset(0, 0, 1, 0),
 				padding = new RectOffset(0, 0, 0, 0),
 				contentOffset = new Vector2(0, 0),
 				alignment = TextAnchor.MiddleCenter,
 			};
-			BoxStyle.normal.textColor = GUI.skin.label.normal.textColor;
+			Box.normal.textColor = GUI.skin.label.normal.textColor;
 
-			BoxLabelStyle = new GUIStyle(GUI.skin.label)
+			BoxLabel = new GUIStyle(GUI.skin.label)
 			{
 				fontSize = 9,
 				padding = new RectOffset(0, 0, 5, 0),
@@ -44,7 +44,7 @@ namespace TouchScript.Editor.EditorUI
 				wordWrap = true,
 			};
 
-			HeaderStyle = new GUIStyle("ShurikenModuleTitle")
+			HeaderBox = new GUIStyle("ShurikenModuleTitle")
 			{
 				font = (new GUIStyle("Label")).font,
 				border = new RectOffset(15, 7, 4, 4),
@@ -75,8 +75,8 @@ namespace TouchScript.Editor.EditorUI
 
 		public static bool Header(GUIContent title, SerializedProperty expanded, SerializedProperty enabled = null, PropertyInfo enabledProp = null)
 		{
-			var rect = GUILayoutUtility.GetRect(16f, 22f, HeaderStyle);
-			GUI.Box(rect, title, HeaderStyle);
+			var rect = GUILayoutUtility.GetRect(16f, 22f, HeaderBox);
+			GUI.Box(rect, title, HeaderBox);
 
 			var display = expanded == null || expanded.isExpanded;
 

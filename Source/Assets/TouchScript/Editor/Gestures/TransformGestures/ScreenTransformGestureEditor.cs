@@ -13,7 +13,7 @@ namespace TouchScript.Editor.Gestures.TransformGestures
     internal class ScreenTransformGestureEditor : TwoPointTransformGestureBaseEditor
     {
 
-		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a combination of translation, rotation and scaling gestures on the GameObject in screen space. Switch to advanced view to see more options.");
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a combination of translation, rotation and scaling gestures on the GameObject in screen space.");
 
 		protected override GUIContent getHelpText()
 		{

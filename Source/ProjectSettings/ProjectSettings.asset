@@ -512,7 +512,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: TOUCHSCRIPT_DEBUG
+    1: 
     4: 
   platformArchitecture:
     iOS: 0

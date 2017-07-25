@@ -92,7 +92,7 @@ namespace TouchScript.Editor.Gestures
                     EditorGUI.LabelField(rect, GUIContent.none);
                     return;
                 }
-                EditorGUI.LabelField(rect, string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUIElements.BoxLabelStyle);
+                EditorGUI.LabelField(rect, string.Format("{0} @ {1}", gesture.GetType().Name, gesture.name), GUIElements.BoxLabel);
             };
             friendlyGesturesList.onRemoveCallback += list => { indexToRemove = list.index; };
         }
@@ -290,8 +290,8 @@ namespace TouchScript.Editor.Gestures
 
             GUILayout.Space(9);
 
-			Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUIElements.BoxStyle, GUILayout.ExpandWidth(true));
-            GUI.Box(dropArea, "Drag a Gesture Here", GUIElements.BoxStyle);
+			Rect dropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUIElements.Box, GUILayout.ExpandWidth(true));
+            GUI.Box(dropArea, "Drag a Gesture Here", GUIElements.Box);
             switch (Event.current.type)
             {
                 case EventType.DragUpdated:

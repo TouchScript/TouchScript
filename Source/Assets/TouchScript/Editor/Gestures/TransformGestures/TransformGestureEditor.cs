@@ -14,30 +14,21 @@ namespace TouchScript.Editor.Gestures.TransformGestures
     internal class TransformGestureEditor : TwoPointTransformGestureBaseEditor
     {
 
-		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a combination of translation, rotation and scaling gestures on the GameObject. Switch to advanced view to see more options.");
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a combination of translation, rotation and scaling gestures on the GameObject.");
 
-		public SerializedProperty projection, projectionPlaneNormal;
-		public SerializedProperty projectionProps;
 
         protected override void OnEnable()
         {
-            projection = serializedObject.FindProperty("projection");
-            projectionPlaneNormal = serializedObject.FindProperty("projectionPlaneNormal");
-
-			projectionProps = serializedObject.FindProperty("projectionProps");
-
 			base.OnEnable();
+
+            initCustomProjection();
         }
 
         protected override void drawBasic()
         {
             base.drawBasic();
 
-			EditorGUILayout.PropertyField(projection, TEXT_PROJECTION);
-			if (projection.enumValueIndex != (int)TransformGesture.ProjectionType.Layer)
-			{
-				EditorGUILayout.PropertyField(projectionPlaneNormal, TEXT_PROJECTION_NORMAL);
-			}
+			customProjection = drawProjection(customProjection);
         }
 
 		protected override GUIContent getHelpText()
@@ -51,11 +42,8 @@ namespace TouchScript.Editor.Gestures.TransformGestures
 			if (display)
 			{
 				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(projection, TEXT_PROJECTION);
-				if (projection.enumValueIndex != (int)TransformGesture.ProjectionType.Layer)
-				{
-					EditorGUILayout.PropertyField(projectionPlaneNormal, TEXT_PROJECTION_NORMAL);
-				}
+				customProjection = drawProjection(customProjection);
+                EditorGUILayout.Space();
 				EditorGUI.indentLevel--;
 			}
         }

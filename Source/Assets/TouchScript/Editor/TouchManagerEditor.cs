@@ -31,7 +31,7 @@ namespace TouchScript.Editor
 		public static readonly GUIContent TEXT_SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
 		public static readonly GUIContent TEXT_SEND_MESSAGE_EVENTS = new GUIContent("Events", "Which events should be sent as Unity Messages.");
 
-        public static readonly GUIContent TEXT_HELP = new GUIContent("This component holds TouchScript configuration options for a scene. Switch to advanced view to see more options.");
+        public static readonly GUIContent TEXT_HELP = new GUIContent("This component holds TouchScript configuration options for a scene.");
 
         private TouchManager instance;
         private ReorderableList layersList;

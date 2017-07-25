@@ -25,7 +25,7 @@ namespace TouchScript.Editor.InputSources
 		public static readonly GUIContent TEXT_WINDOWS7_MOUSE = new GUIContent("Enable Mouse on Windows 7");
 		public static readonly GUIContent TEXT_UWP_MOUSE = new GUIContent("Enable Mouse on UWP");
 
-        public static readonly GUIContent TEXT_HELP = new GUIContent("This component gathers input data from various devices like touch, mouse and pen on all platforms. Switch to advanced view to see more options.");
+        public static readonly GUIContent TEXT_HELP = new GUIContent("This component gathers input data from various devices like touch, mouse and pen on all platforms.");
 
         private SerializedProperty basicEditor;
         private SerializedProperty windows8Touch, windows7Touch, webGLTouch, windows8Mouse,

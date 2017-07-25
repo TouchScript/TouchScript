@@ -2323,18 +2323,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OverColor: {r: 1, g: 0, b: 0, a: 1}
---- !u!114 &1841925477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1841925474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f91ca003806bd40f7938a006eee71921, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OverColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1890351926 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 137898, guid: b4fd857376bb94265b47bcf5b50f67fa, type: 2}
@@ -2604,7 +2592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e07bff8743d4ee38bf724a7a2b4cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []

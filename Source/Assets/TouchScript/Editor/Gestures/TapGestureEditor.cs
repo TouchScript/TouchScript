@@ -17,7 +17,7 @@ namespace TouchScript.Editor.Gestures
 		public static readonly GUIContent TEXT_COMBINE_POINTERS = new GUIContent("Combine Pointers", "When several fingers are used to perform a tap, pointers released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
 		public static readonly GUIContent TEXT_COMBINE_TOUCH_POINTERS = new GUIContent("Combine Interval (sec)", TEXT_COMBINE_POINTERS.tooltip);
 
-		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when this GameObject is tapped. Switch to advanced view to see more options.");
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when this GameObject is tapped.");
 
 		private SerializedProperty numberOfTapsRequired, distanceLimit, timeLimit, combinePointers, combinePointersInterval;
 		private SerializedProperty OnTap;

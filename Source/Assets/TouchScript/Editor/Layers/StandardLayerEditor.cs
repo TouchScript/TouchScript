@@ -22,7 +22,7 @@ namespace TouchScript.Editor.Layers
 		public static readonly GUIContent TEXT_LAYER_MASK = new GUIContent("Layer Mask", "Layer mask.");
 		public static readonly GUIContent TEXT_HIT_FILTERS = new GUIContent("Use Hit FIlters", "Layer should test for individual HitTest objects.");
 
-		public static readonly GUIContent TEXT_HELP = new GUIContent("This component assigns target GameObjects in the scene for pressed pointers. Switch to advanced view to see more options.");
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component assigns target GameObjects in the scene for pressed pointers.");
 
 		private SerializedProperty advancedProps, hitProps;
         private SerializedProperty basicEditor;
