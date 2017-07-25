@@ -1,0 +1,656 @@
+<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" backgroundColor="#C2C2C2" currentTimeline="1" xflVersion="2.95" creatorInfo="Adobe Animate CC" platform="Macintosh" versionInfo="Saved by Animate Macintosh 16.5 build 104" majorVersion="16" minorVersion="5" buildNumber="104" snapAlign="false" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false" filetypeGUID="DD0DDBBF-5BEF-45B2-9F24-A3048D2A676F" fileGUID="2E8729FD1B1E4DCDA6EEB00EAE97369A">
+     <media/>
+     <symbols>
+          <Include href="Arrow.xml" loadImmediate="false" itemID="59777159-00000047" lastModified="1501000025"/>
+          <Include href="Line.xml" loadImmediate="false" itemID="59777156-00000046" lastModified="1501000022"/>
+     </symbols>
+     <timelines>
+          <DOMTimeline name="Scene 1">
+               <layers>
+                    <DOMLayer name="Layer 6" color="#808080">
+                         <frames>
+                              <DOMFrame index="0" keyMode="9728">
+                                   <elements>
+                                        <DOMStaticText width="20.15" height="18.75" autoExpand="true">
+                                             <matrix>
+                                                  <Matrix tx="218.2" ty="192.6"/>
+                                             </matrix>
+                                             <textRuns>
+                                                  <DOMTextRun>
+                                                       <characters>X</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#FF0000"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                                  <DOMTextRun>
+                                                       <characters>Z</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#0000FF"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                             </textRuns>
+                                        </DOMStaticText>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="1" keyMode="9728">
+                                   <elements>
+                                        <DOMStaticText width="20.15" height="18.75" autoExpand="true">
+                                             <matrix>
+                                                  <Matrix tx="218.2" ty="192.6"/>
+                                             </matrix>
+                                             <textRuns>
+                                                  <DOMTextRun>
+                                                       <characters>X</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#FF0000"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                                  <DOMTextRun>
+                                                       <characters>Z</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#0000FF"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                             </textRuns>
+                                        </DOMStaticText>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="2" keyMode="9728">
+                                   <elements>
+                                        <DOMStaticText width="19.95" height="18.75" autoExpand="true">
+                                             <matrix>
+                                                  <Matrix tx="218.2" ty="192.6"/>
+                                             </matrix>
+                                             <textRuns>
+                                                  <DOMTextRun>
+                                                       <characters>Y</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#00FF00"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                                  <DOMTextRun>
+                                                       <characters>Z</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#0000FF"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                             </textRuns>
+                                        </DOMStaticText>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="3" keyMode="9728">
+                                   <elements>
+                                        <DOMStaticText width="20.4" height="18.75" autoExpand="true">
+                                             <matrix>
+                                                  <Matrix tx="218.2" ty="192.6"/>
+                                             </matrix>
+                                             <textRuns>
+                                                  <DOMTextRun>
+                                                       <characters>X</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#FF0000"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                                  <DOMTextRun>
+                                                       <characters>Y</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#00FF00"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                                  <DOMTextRun>
+                                                       <characters></characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black" fillColor="#0000FF"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                             </textRuns>
+                                        </DOMStaticText>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="4" keyMode="9728">
+                                   <elements>
+                                        <DOMStaticText width="16.4" height="18.75" autoExpand="true">
+                                             <matrix>
+                                                  <Matrix tx="218.2" ty="192.6"/>
+                                             </matrix>
+                                             <textRuns>
+                                                  <DOMTextRun>
+                                                       <characters>??</characters>
+                                                       <textAttrs>
+                                                            <DOMTextAttrs aliasText="false" lineHeight="18.75" size="16" bitmapSize="320" face="Roboto-Black"/>
+                                                       </textAttrs>
+                                                  </DOMTextRun>
+                                             </textRuns>
+                                        </DOMStaticText>
+                                   </elements>
+                              </DOMFrame>
+                         </frames>
+                    </DOMLayer>
+                    <DOMLayer name="Layer 5" color="#009999">
+                         <frames>
+                              <DOMFrame index="0" keyMode="9728">
+                                   <elements>
+                                        <DOMShape>
+                                             <strokes>
+                                                  <StrokeStyle index="1">
+                                                       <SolidStroke scaleMode="normal" weight="1.35">
+                                                            <fill>
+                                                                 <SolidColor/>
+                                                            </fill>
+                                                       </SolidStroke>
+                                                  </StrokeStyle>
+                                             </strokes>
+                                             <edges>
+                                                  <Edge strokeStyle="1" edges="!4945 3851|5174 3946!5174 3946|5174 4219"/>
+                                                  <Edge cubics="!5174 4219(;5174,4219 5174,3946 5174,3946q5174 4219 5174 3946);"/>
+                                                  <Edge cubics="!4945 3851(;4945,3851 5174,3946 5174,3946q4945 3851 5174 3946);"/>
+                                             </edges>
+                                        </DOMShape>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="1" keyMode="9728">
+                                   <elements/>
+                              </DOMFrame>
+                              <DOMFrame index="2" keyMode="9728">
+                                   <elements/>
+                              </DOMFrame>
+                              <DOMFrame index="3" keyMode="9728">
+                                   <elements>
+                                        <DOMShape>
+                                             <strokes>
+                                                  <StrokeStyle index="1">
+                                                       <SolidStroke scaleMode="normal" weight="1.35">
+                                                            <fill>
+                                                                 <SolidColor color="#0066FF"/>
+                                                            </fill>
+                                                       </SolidStroke>
+                                                  </StrokeStyle>
+                                             </strokes>
+                                             <edges>
+                                                  <Edge strokeStyle="1" edges="!4945 3851|5174 3946!5174 3946|5174 4219"/>
+                                                  <Edge cubics="!5174 4219(;5174,4219 5174,3946 5174,3946q5174 4219 5174 3946);"/>
+                                                  <Edge cubics="!4945 3851(;4945,3851 5174,3946 5174,3946q4945 3851 5174 3946);"/>
+                                             </edges>
+                                        </DOMShape>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="4" keyMode="9728">
+                                   <elements/>
+                              </DOMFrame>
+                         </frames>
+                    </DOMLayer>
+                    <DOMLayer name="Layer 4" color="#FF4FFF">
+                         <frames>
+                              <DOMFrame index="0" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="247.05" centerPoint3DY="177.85">
+                                             <matrix>
+                                                  <Matrix a="0.599990844726562" d="0.599990844726562" tx="247" ty="182.95"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="273.3" centerPoint3DY="217.1">
+                                             <matrix>
+                                                  <Matrix a="-0.23980712890625" b="0.549179077148438" c="-0.549179077148438" d="-0.23980712890625" tx="268.6" ty="215"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05" y="-0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="269.5" centerPoint3DY="188.4">
+                                             <matrix>
+                                                  <Matrix a="0.371719360351562" b="0.469741821289062" c="-0.469741821289062" d="0.371719360351562" tx="265.4" ty="191.55"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="-0.15"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="1" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="247.05" centerPoint3DY="177.85">
+                                             <matrix>
+                                                  <Matrix a="0.599990844726562" d="0.599990844726562" tx="247" ty="182.95"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#999999"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="273.3" centerPoint3DY="217.1">
+                                             <matrix>
+                                                  <Matrix a="-0.23980712890625" b="0.549179077148438" c="-0.549179077148438" d="-0.23980712890625" tx="268.6" ty="215"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05" y="-0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="269.5" centerPoint3DY="188.4">
+                                             <matrix>
+                                                  <Matrix a="0.371719360351562" b="0.469741821289062" c="-0.469741821289062" d="0.371719360351562" tx="265.4" ty="191.55"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="-0.15"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="2" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="273.3" centerPoint3DY="217.1">
+                                             <matrix>
+                                                  <Matrix a="-0.23980712890625" b="0.549179077148438" c="-0.549179077148438" d="-0.23980712890625" tx="268.6" ty="215"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05" y="-0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#999999"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="247.05" centerPoint3DY="177.85">
+                                             <matrix>
+                                                  <Matrix a="0.599990844726562" d="0.599990844726562" tx="247" ty="182.95"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="269.5" centerPoint3DY="188.4">
+                                             <matrix>
+                                                  <Matrix a="0.371719360351562" b="0.469741821289062" c="-0.469741821289062" d="0.371719360351562" tx="265.4" ty="191.55"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="-0.15"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="3" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="269.5" centerPoint3DY="188.4">
+                                             <matrix>
+                                                  <Matrix a="0.371719360351562" b="0.469741821289062" c="-0.469741821289062" d="0.371719360351562" tx="265.4" ty="191.55"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="-0.15"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#999999"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="247.05" centerPoint3DY="177.85">
+                                             <matrix>
+                                                  <Matrix a="0.599990844726562" d="0.599990844726562" tx="247" ty="182.95"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="273.3" centerPoint3DY="217.1">
+                                             <matrix>
+                                                  <Matrix a="-0.23980712890625" b="0.549179077148438" c="-0.549179077148438" d="-0.23980712890625" tx="268.6" ty="215"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05" y="-0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="4" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="269.5" centerPoint3DY="188.4">
+                                             <matrix>
+                                                  <Matrix a="0.371719360351562" b="0.469741821289062" c="-0.469741821289062" d="0.371719360351562" tx="265.4" ty="191.55"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="-0.15"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="247.05" centerPoint3DY="177.85">
+                                             <matrix>
+                                                  <Matrix a="0.599990844726562" d="0.599990844726562" tx="247" ty="182.95"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.1" y="0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Arrow" centerPoint3DX="273.3" centerPoint3DY="217.1">
+                                             <matrix>
+                                                  <Matrix a="-0.23980712890625" b="0.549179077148438" c="-0.549179077148438" d="-0.23980712890625" tx="268.6" ty="215"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05" y="-0.1"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                         </frames>
+                    </DOMLayer>
+                    <DOMLayer name="Layer 2" color="#9933CC">
+                         <frames>
+                              <DOMFrame index="0" keyMode="9728">
+                                   <elements>
+                                        <DOMShape>
+                                             <strokes>
+                                                  <StrokeStyle index="1">
+                                                       <SolidStroke scaleMode="normal" weight="1.35">
+                                                            <fill>
+                                                                 <SolidColor/>
+                                                            </fill>
+                                                       </SolidStroke>
+                                                  </StrokeStyle>
+                                             </strokes>
+                                             <edges>
+                                                  <Edge strokeStyle="1" edges="!4938 3865|5146 3702.5!5146 3702.5|5146 3961"/>
+                                                  <Edge cubics="!4952 3855(;4952,3855 5146,3935 5146,3935q4952 3855 5146 3935);"/>
+                                                  <Edge cubics="!5146 3935(;5146,3935 5146,3703 5146,3703q5146 3935 5146 3703);"/>
+                                                  <Edge cubics="!4939 3849(;4939,3849 4952,3855 4952,3855q4939 3849 4952 3855);"/>
+                                                  <Edge cubics="!4952 3855(;4952,3855 5146,3703 5146,3703q4952 3855 5146 3703);"/>
+                                                  <Edge cubics="!4938 3865(;4938,3865 4952,3855 4952,3855q4938 3865 4952 3855);"/>
+                                                  <Edge cubics="!5146 3961(;5146,3961 5146,3935 5146,3935q5146 3961 5146 3935);"/>
+                                                  <Edge cubics="!5168 4217(;5168,4217 5168,3944 5168,3944q5168 4217 5168 3944);"/>
+                                                  <Edge cubics="!5168 3944(;5168,3944 5168,3747 5168,3747q5168 3944 5168 3747);"/>
+                                                  <Edge cubics="!5146 3935(;5146,3935 5168,3944 5168,3944q5146 3935 5168 3944);"/>
+                                                  <Edge cubics="!5168 3944(;5168,3944 5373,4028 5373,4028q5168 3944 5373 4028);"/>
+                                             </edges>
+                                        </DOMShape>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="247" centerPoint3DY="194.25">
+                                             <matrix>
+                                                  <Matrix tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="256.3" centerPoint3DY="198.75">
+                                             <matrix>
+                                                  <Matrix a="2.19161987304688" b="-0.443572998046875" c="-0.787933349609375" d="0.615753173828125" tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="257.9" centerPoint3DY="210.6">
+                                             <matrix>
+                                                  <Matrix a="1.4664306640625" b="1.68803405761719" c="-0.924179077148438" d="-0.381912231445312" tx="247" ty="206.05"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="1" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="247" centerPoint3DY="194.25">
+                                             <matrix>
+                                                  <Matrix tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#999999"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="256.3" centerPoint3DY="198.75">
+                                             <matrix>
+                                                  <Matrix a="2.19161987304688" b="-0.443572998046875" c="-0.787933349609375" d="0.615753173828125" tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="257.9" centerPoint3DY="210.6">
+                                             <matrix>
+                                                  <Matrix a="1.4664306640625" b="1.68803405761719" c="-0.924179077148438" d="-0.381912231445312" tx="247" ty="206.05"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="2" keyMode="9728">
+                                   <elements>
+                                        <DOMShape>
+                                             <strokes>
+                                                  <StrokeStyle index="1">
+                                                       <SolidStroke scaleMode="normal" weight="1.35">
+                                                            <fill>
+                                                                 <SolidColor color="#FF0000"/>
+                                                            </fill>
+                                                       </SolidStroke>
+                                                  </StrokeStyle>
+                                             </strokes>
+                                             <edges>
+                                                  <Edge strokeStyle="1" edges="!4938 3865|5146 3702.5!5146 3702.5|5146 3961"/>
+                                                  <Edge cubics="!4938 3865(;4938,3865 5146,3703 5146,3703q4938 3865 5146 3703);"/>
+                                                  <Edge cubics="!5146 3961(;5146,3961 5146,3703 5146,3703q5146 3961 5146 3703);"/>
+                                             </edges>
+                                        </DOMShape>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="257.9" centerPoint3DY="210.6">
+                                             <matrix>
+                                                  <Matrix a="1.4664306640625" b="1.68803405761719" c="-0.924179077148438" d="-0.381912231445312" tx="247" ty="206.05"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#999999"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="247" centerPoint3DY="194.25">
+                                             <matrix>
+                                                  <Matrix tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="256.3" centerPoint3DY="198.75">
+                                             <matrix>
+                                                  <Matrix a="2.19161987304688" b="-0.443572998046875" c="-0.787933349609375" d="0.615753173828125" tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="3" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="256.3" centerPoint3DY="198.75">
+                                             <matrix>
+                                                  <Matrix a="2.19161987304688" b="-0.443572998046875" c="-0.787933349609375" d="0.615753173828125" tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#999999"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="247" centerPoint3DY="194.25">
+                                             <matrix>
+                                                  <Matrix tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="257.9" centerPoint3DY="210.6">
+                                             <matrix>
+                                                  <Matrix a="1.4664306640625" b="1.68803405761719" c="-0.924179077148438" d="-0.381912231445312" tx="247" ty="206.05"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="4" keyMode="9728">
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="256.3" centerPoint3DY="198.75">
+                                             <matrix>
+                                                  <Matrix a="2.19161987304688" b="-0.443572998046875" c="-0.787933349609375" d="0.615753173828125" tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#0000FF"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="247" centerPoint3DY="194.25">
+                                             <matrix>
+                                                  <Matrix tx="247" ty="206"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#00FF00"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                        <DOMSymbolInstance libraryItemName="Line" centerPoint3DX="257.9" centerPoint3DY="210.6">
+                                             <matrix>
+                                                  <Matrix a="1.4664306640625" b="1.68803405761719" c="-0.924179077148438" d="-0.381912231445312" tx="247" ty="206.05"/>
+                                             </matrix>
+                                             <transformationPoint>
+                                                  <Point x="0.05"/>
+                                             </transformationPoint>
+                                             <color>
+                                                  <Color tintMultiplier="1" tintColor="#FF0000"/>
+                                             </color>
+                                        </DOMSymbolInstance>
+                                   </elements>
+                              </DOMFrame>
+                         </frames>
+                    </DOMLayer>
+                    <DOMLayer name="Layer 3" color="#FF800A" current="true" isSelected="true">
+                         <frames>
+                              <DOMFrame index="0" keyMode="9728">
+                                   <elements>
+                                        <DOMShape>
+                                             <strokes>
+                                                  <StrokeStyle index="1">
+                                                       <SolidStroke scaleMode="normal" weight="1.35">
+                                                            <fill>
+                                                                 <SolidColor/>
+                                                            </fill>
+                                                       </SolidStroke>
+                                                  </StrokeStyle>
+                                             </strokes>
+                                             <edges>
+                                                  <Edge strokeStyle="1" edges="!5164 4213|5369 4053!5369 4053|5146 3961"/>
+                                                  <Edge cubics="!5146 3961(;5146,3961 5369,4053 5369,4053q5146 3961 5369 4053);"/>
+                                                  <Edge cubics="!5164 4213(;5164,4213 5369,4053 5369,4053q5164 4213 5369 4053);"/>
+                                             </edges>
+                                        </DOMShape>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="1" keyMode="9728">
+                                   <elements>
+                                        <DOMShape>
+                                             <strokes>
+                                                  <StrokeStyle index="1">
+                                                       <SolidStroke scaleMode="normal" weight="1.35">
+                                                            <fill>
+                                                                 <SolidColor color="#00FF00"/>
+                                                            </fill>
+                                                       </SolidStroke>
+                                                  </StrokeStyle>
+                                             </strokes>
+                                             <edges>
+                                                  <Edge strokeStyle="1" edges="!5164 4213|5369 4053!5369 4053|5146 3961"/>
+                                                  <Edge cubics="!5146 3961(;5146,3961 5369,4053 5369,4053q5146 3961 5369 4053);"/>
+                                                  <Edge cubics="!5164 4213(;5164,4213 5369,4053 5369,4053q5164 4213 5369 4053);"/>
+                                             </edges>
+                                        </DOMShape>
+                                   </elements>
+                              </DOMFrame>
+                              <DOMFrame index="2" keyMode="9728">
+                                   <elements/>
+                              </DOMFrame>
+                              <DOMFrame index="3" keyMode="9728">
+                                   <elements/>
+                              </DOMFrame>
+                         </frames>
+                    </DOMLayer>
+               </layers>
+          </DOMTimeline>
+     </timelines>
+     <scripts/>
+     <PrinterSettings platform="macintosh"/>
+     <publishHistory/>
+</DOMDocument>
