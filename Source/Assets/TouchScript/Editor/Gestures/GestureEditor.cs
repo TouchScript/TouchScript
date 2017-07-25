@@ -29,19 +29,16 @@ namespace TouchScript.Editor.Gestures
 		public static readonly GUIContent TEXT_SEND_STATE_CHANGE_MESSAGES = new GUIContent("Send State Change Messages", "If checked, the gesture will send a message for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change messages.");
 		public static readonly GUIContent TEXT_SEND_MESSAGE_TARGET = new GUIContent("Target", "The GameObject target of Unity Messages. If null, host GameObject is used.");
 		public static readonly GUIContent TEXT_SEND_STATE_CHANGE_EVENTS = new GUIContent("Send State Change Events", "If checked, the gesture will send a events for every state change. Gestures usually have their own more specific messages, so you should keep this toggle unchecked unless you really want state change events.");
-		public static readonly GUIContent TEXT_COMBINE_POINTERS = new GUIContent("Combine Pointers", "When several fingers are used to perform a tap, pointers released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
-		public static readonly GUIContent TEXT_COMBINE_TOUCH_POINTERS = new GUIContent("Combine Interval (sec)", TEXT_COMBINE_POINTERS.tooltip);
 		public static readonly GUIContent TEXT_REQUIRE_GESTURE_TO_FAIL = new GUIContent("Require Other Gesture to Fail", "Another gesture must fail for this gesture to start.");
 		public static readonly GUIContent TEXT_LIMIT_POINTERS = new GUIContent(" Limit Pointers", "");
 
-        protected bool shouldDrawCombineTouches = false;
 		protected bool shouldDrawAdvanced = false;
 		protected bool shouldDrawGeneral = true;
 
 		private Gesture instance;
 
         private SerializedProperty debugMode, friendlyGestures, requireGestureToFail,
-        	minPointers, maxPointers, combinePointers, combinePointersInterval,
+        	minPointers, maxPointers, 
         	useSendMessage, sendMessageTarget, sendStateChangeMessages,
 			useUnityEvents, sendStateChangeEvents;
 		private SerializedProperty OnStateChange;
@@ -63,8 +60,6 @@ namespace TouchScript.Editor.Gestures
             debugMode = serializedObject.FindProperty("debugMode");
             friendlyGestures = serializedObject.FindProperty("friendlyGestures");
             requireGestureToFail = serializedObject.FindProperty("requireGestureToFail");
-            combinePointers = serializedObject.FindProperty("combinePointers");
-            combinePointersInterval = serializedObject.FindProperty("combinePointersInterval");
             useSendMessage = serializedObject.FindProperty("useSendMessage");
             sendMessageTarget = serializedObject.FindProperty("sendMessageTarget");
             sendStateChangeMessages = serializedObject.FindProperty("sendStateChangeMessages");
@@ -246,27 +241,8 @@ namespace TouchScript.Editor.Gestures
 
         protected virtual void drawAdvanced()
         {
-            drawCombineTouches();
             drawDebug();
         }
-
-		protected virtual void drawCombineTouches()
-		{
-			if (shouldDrawCombineTouches)
-			{
-				EditorGUILayout.PropertyField(combinePointers, TEXT_COMBINE_POINTERS);
-				if (combinePointers.boolValue)
-				{
-					EditorGUIUtility.labelWidth = 160;
-					EditorGUILayout.BeginHorizontal();
-					GUILayout.Label(GUIContent.none, GUILayout.Width(10));
-					EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-					EditorGUILayout.PropertyField(combinePointersInterval, TEXT_COMBINE_TOUCH_POINTERS);
-					EditorGUILayout.EndVertical();
-					EditorGUILayout.EndHorizontal();
-				}
-			}
-		}
 
 		protected virtual void drawDebug()
 		{

@@ -86,6 +86,29 @@ namespace TouchScript.Gestures
             }
         }
 
+		/// <summary>
+		/// Gets or sets the flag if pointers should be treated as a cluster.
+		/// </summary>
+		/// <value> <c>true</c> if pointers should be treated as a cluster; otherwise, <c>false</c>. </value>
+		/// <remarks>
+		/// At the end of a gesture when pointers are lifted off due to the fact that computers are faster than humans the very last pointer's position will be gesture's <see cref="ScreenPosition"/> after that. This flag is used to combine several pointers which from the point of a user were lifted off simultaneously and set their centroid as gesture's <see cref="ScreenPosition"/>.
+		/// </remarks>
+		public bool CombinePointers
+		{
+			get { return combinePointers; }
+			set { combinePointers = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets time interval before gesture is recognized to combine all lifted pointers into a cluster to use its center as <see cref="ScreenPosition"/>.
+		/// </summary>
+		/// <value> Time in seconds to treat pointers lifted off during this interval as a single gesture. </value>
+		public float CombinePointersInterval
+		{
+			get { return combinePointersInterval; }
+			set { combinePointersInterval = value; }
+		}
+
         #endregion
 
         #region Private variables
@@ -95,13 +118,18 @@ namespace TouchScript.Gestures
 
         [SerializeField]
         [NullToggle(NullFloatValue = float.PositiveInfinity)]
-        private float timeLimit =
-            float.PositiveInfinity;
+        private float timeLimit = float.PositiveInfinity;
 
         [SerializeField]
         [NullToggle(NullFloatValue = float.PositiveInfinity)]
-        private float distanceLimit =
-            float.PositiveInfinity;
+        private float distanceLimit = float.PositiveInfinity;
+
+		[SerializeField]
+		[ToggleLeft]
+		private bool combinePointers = false;
+
+		[SerializeField]
+		private float combinePointersInterval = .3f;
 
         private float distanceLimitInPixelsSquared;
 
@@ -111,6 +139,7 @@ namespace TouchScript.Gestures
         private int tapsDone;
         private Vector2 startPosition;
         private Vector2 totalMovement;
+        private TimedSequence<Pointer> pointerSequence = new TimedSequence<Pointer>();
 
         #endregion
 
@@ -208,27 +237,43 @@ namespace TouchScript.Gestures
         {
             base.pointersReleased(pointers);
 
-            if (NumPointers == 0)
-            {
-                if (!isActive)
-                {
-                    setState(GestureState.Failed);
-                    return;
-                }
+			if (combinePointers)
+			{
+                var count = pointers.Count;
+				for (var i = 0; i < count; i++) pointerSequence.Add(pointers[i]);
 
-                // pointers outside of gesture target are ignored in shouldCachePointerPosition()
-                // if all pointers are outside ScreenPosition will be invalid
-                if (TouchManager.IsInvalidPosition(ScreenPosition))
-                {
-                    setState(GestureState.Failed);
-                }
-                else
-                {
-                    tapsDone++;
-                    isActive = false;
-                    if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
-                }
-            }
+				if (NumPointers == 0)
+				{
+					// Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
+					var cluster = pointerSequence.FindElementsLaterThan(Time.time - combinePointersInterval, shouldCachePointerPosition);
+					cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
+					cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
+				}
+			}
+			else
+			{
+				if (NumPointers == 0)
+				{
+					if (!isActive)
+					{
+						setState(GestureState.Failed);
+						return;
+					}
+
+					// pointers outside of gesture target are ignored in shouldCachePointerPosition()
+					// if all pointers are outside ScreenPosition will be invalid
+					if (TouchManager.IsInvalidPosition(ScreenPosition))
+					{
+						setState(GestureState.Failed);
+					}
+					else
+					{
+						tapsDone++;
+						isActive = false;
+						if (tapsDone >= numberOfTapsRequired) setState(GestureState.Recognized);
+					}
+				}
+			}
         }
 
         /// <inheritdoc />

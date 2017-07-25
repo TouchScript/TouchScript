@@ -14,8 +14,10 @@ namespace TouchScript.Editor.Gestures
 		public static readonly GUIContent TEXT_TIME_LIMIT = new GUIContent("Limit Time (sec)", "Gesture fails if in <value> seconds user didn't do the required number of taps.");
 		public static readonly GUIContent TEXT_DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if taps are made more than <value> cm away from the first pointer position.");
 		public static readonly GUIContent TEXT_NUMBER_OF_TAPS_REQUIRED = new GUIContent("Number of Taps Required", "Number of taps required for this gesture to be recognized.");
+		public static readonly GUIContent TEXT_COMBINE_POINTERS = new GUIContent("Combine Pointers", "When several fingers are used to perform a tap, pointers released not earlier than <CombineInterval> seconds ago are used to calculate gesture's final screen position.");
+		public static readonly GUIContent TEXT_COMBINE_TOUCH_POINTERS = new GUIContent("Combine Interval (sec)", TEXT_COMBINE_POINTERS.tooltip);
 
-        private SerializedProperty numberOfTapsRequired, distanceLimit, timeLimit;
+		private SerializedProperty numberOfTapsRequired, distanceLimit, timeLimit, combinePointers, combinePointersInterval;
 		private SerializedProperty OnTap;
 
         protected override void OnEnable()
@@ -23,10 +25,10 @@ namespace TouchScript.Editor.Gestures
             numberOfTapsRequired = serializedObject.FindProperty("numberOfTapsRequired");
             timeLimit = serializedObject.FindProperty("timeLimit");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
+			combinePointers = serializedObject.FindProperty("combinePointers");
+			combinePointersInterval = serializedObject.FindProperty("combinePointersInterval");
 
 			OnTap = serializedObject.FindProperty("OnTap");
-
-            shouldDrawCombineTouches = true;
 
 			base.OnEnable();
         }
@@ -35,7 +37,17 @@ namespace TouchScript.Editor.Gestures
 		{
 			EditorGUIUtility.labelWidth = 180;
 			EditorGUILayout.IntPopup(numberOfTapsRequired, new[] {new GUIContent("One"), new GUIContent("Two"), new GUIContent("Three")}, new[] {1, 2, 3}, TEXT_NUMBER_OF_TAPS_REQUIRED, GUILayout.ExpandWidth(true));
-
+			EditorGUILayout.PropertyField(combinePointers, TEXT_COMBINE_POINTERS);
+			if (combinePointers.boolValue)
+			{
+				EditorGUIUtility.labelWidth = 160;
+				EditorGUILayout.BeginHorizontal();
+				GUILayout.Label(GUIContent.none, GUILayout.Width(10));
+				EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
+				EditorGUILayout.PropertyField(combinePointersInterval, TEXT_COMBINE_TOUCH_POINTERS);
+				EditorGUILayout.EndVertical();
+				EditorGUILayout.EndHorizontal();
+			}
 			base.drawGeneral ();
 		}
 
@@ -47,11 +59,12 @@ namespace TouchScript.Editor.Gestures
 			base.drawLimits();
         }
 
-		protected override void drawUnityEvents ()
+		protected override void drawUnityEvents()
 		{
 			EditorGUILayout.PropertyField(OnTap);
 
 			base.drawUnityEvents();
 		}
+
     }
 }

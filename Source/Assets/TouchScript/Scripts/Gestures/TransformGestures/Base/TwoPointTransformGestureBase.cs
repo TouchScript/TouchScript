@@ -41,28 +41,6 @@ namespace TouchScript.Gestures.TransformGestures.Base
             }
         }
 
-        /// <inheritdoc />
-        public override Vector2 ScreenPosition
-        {
-            get
-            {
-                if (NumPointers == 0) return TouchManager.INVALID_POSITION;
-                if (NumPointers == 1) return activePointers[0].Position;
-                return (getPointScreenPosition(0) + getPointScreenPosition(1)) * .5f;
-            }
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PreviousScreenPosition
-        {
-            get
-            {
-                if (NumPointers == 0) return TouchManager.INVALID_POSITION;
-                if (NumPointers == 1) return activePointers[0].PreviousPosition;
-                return (getPointPreviousScreenPosition(0) + getPointPreviousScreenPosition(1)) * .5f;
-            }
-        }
-
         #endregion
 
         #region Private variables
