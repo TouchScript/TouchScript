@@ -3,7 +3,9 @@
  */
 
 using System.Text.RegularExpressions;
+#if UNITY_STANDALONE_WIN
 using TouchScript.Utils.Platform;
+#endif
 using UnityEngine;
 
 namespace TouchScript.Devices.Display

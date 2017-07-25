@@ -2,14 +2,14 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+#if TOUCHSCRIPT_DEBUG
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using TouchScript.Debugging.Filters;
 using TouchScript.Pointers;
 using UnityEngine;
-
-#if TOUCHSCRIPT_DEBUG
 
 namespace TouchScript.Debugging.Loggers
 {
@@ -67,7 +67,6 @@ namespace TouchScript.Debugging.Loggers
                     list.Add(log);
                 }
             }
-            catch (Exception e) {}
             finally
             {
                 reader.Close();
