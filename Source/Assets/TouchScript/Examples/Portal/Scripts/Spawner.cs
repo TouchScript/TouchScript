@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace TouchScript.Examples.Portal
 {
+    /// <exclude />
     public class Spawner : MonoBehaviour
     {
 

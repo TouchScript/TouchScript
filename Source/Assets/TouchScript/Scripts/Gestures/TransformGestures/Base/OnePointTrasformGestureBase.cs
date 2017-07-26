@@ -273,6 +273,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
             return activePointers[0].PreviousPosition;
         }
 
+        /// <inheritdoc />
         protected override void updateType()
         {
             type = type & ~TransformGesture.TransformType.Translation;

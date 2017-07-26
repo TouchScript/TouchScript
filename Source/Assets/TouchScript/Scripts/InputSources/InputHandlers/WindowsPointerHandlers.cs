@@ -290,7 +290,9 @@ namespace TouchScript.InputSources.InputHandlers
             return false;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Releases resources.
+        /// </summary>
         public virtual void Dispose()
         {
             foreach (var i in winTouchToInternalId) cancelPointer(i.Value);

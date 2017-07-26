@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace TouchScript.Examples.Portal
 {
+    /// <exclude />
     public class Rotator : MonoBehaviour
     {
         public float RotationSpeed = 1f;

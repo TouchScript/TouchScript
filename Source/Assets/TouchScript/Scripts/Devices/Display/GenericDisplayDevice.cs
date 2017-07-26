@@ -13,6 +13,7 @@ namespace TouchScript.Devices.Display
     /// <summary>
     /// Display device which tries to guess current DPI if it's not set by platform.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Devices_Display_GenericDisplayDevice.htm")]
     public class GenericDisplayDevice : DisplayDevice
     {
         private static bool IsLaptop

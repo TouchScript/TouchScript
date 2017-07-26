@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+/// <exclude />
 public class ExamplesList : MonoBehaviour 
 {
 

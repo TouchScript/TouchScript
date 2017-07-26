@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author Valentin Simonov / http://va.lent.in/
  */
 
@@ -19,7 +19,7 @@ namespace TouchScript.Gestures.TransformGestures
     /// Recognizes a transform gesture, i.e. translation, rotation, scaling or a combination of these.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Transform Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGestures_TransformGesture.htm")]
     public class TransformGesture : TwoPointTransformGestureBase
     {
         #region Constants
@@ -200,6 +200,14 @@ namespace TouchScript.Gestures.TransformGestures
 
         #region Protected methods
 
+        /// <summary>
+        /// Projects the point which was scaled and rotated.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="dR">Delta rotation.</param>
+        /// <param name="dS">Delta scale.</param>
+        /// <param name="projectionParams">The projection parameters.</param>
+        /// <returns></returns>
         protected Vector3 projectScaledRotated(Vector2 point, float dR, float dS, ProjectionParams projectionParams)
         {
             var center = targetPositionOverridden ? targetPosition : cachedTransform.position;

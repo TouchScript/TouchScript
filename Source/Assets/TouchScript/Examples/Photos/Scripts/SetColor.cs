@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 namespace TouchScript.Examples.UI
 {
+    /// <exclude />
     public class SetColor : MonoBehaviour
     {
         public List<Color> Colors;

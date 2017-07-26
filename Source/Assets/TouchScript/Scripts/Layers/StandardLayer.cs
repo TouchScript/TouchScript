@@ -20,6 +20,7 @@ namespace TouchScript.Layers
     /// </summary>
     /// <seealso cref="TouchScript.Layers.TouchLayer" />
     [AddComponentMenu("TouchScript/Layers/Standard Layer")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_StandardLayer.htm")]
     public class StandardLayer : TouchLayer
     {
         #region Public properties

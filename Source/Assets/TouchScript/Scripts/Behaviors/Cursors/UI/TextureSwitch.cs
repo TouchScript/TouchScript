@@ -9,6 +9,7 @@ namespace TouchScript.Behaviors.Cursors.UI
     /// <summary>
     /// A helper class to turn on and off <see cref="CanvasRenderer"/> without causing allocations.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Cursors_UI_TextureSwitch.htm")]
     public class TextureSwitch : MonoBehaviour
     {
 

@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace TouchScript.Examples.Multiuser
 {
+    /// <exclude />
     public class Logo : MonoBehaviour
     {
         private static Color[] COLORS = new[]

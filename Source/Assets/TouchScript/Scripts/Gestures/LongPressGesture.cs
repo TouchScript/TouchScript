@@ -42,6 +42,9 @@ namespace TouchScript.Gestures
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> longPressedInvoker;
 
+        /// <summary>
+        /// Unity event, occurs when gesture is recognized.
+        /// </summary>
         public GestureEvent OnLongPress = new GestureEvent();
 
         #endregion

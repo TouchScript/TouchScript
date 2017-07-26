@@ -6,12 +6,14 @@ using System.Text;
 using TouchScript.Behaviors.Cursors.UI;
 using TouchScript.Pointers;
 using TouchScript.Utils;
+using UnityEngine;
 
 namespace TouchScript.Behaviors.Cursors
 {
     /// <summary>
     /// Cursor for pen pointers.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Cursors_PenCursor.htm")]
     public class PenCursor : TextPointerCursor<PenPointer>
     {
         #region Public properties
@@ -27,7 +29,7 @@ namespace TouchScript.Behaviors.Cursors
         public TextureSwitch PressedCursor;
 
         /// <summary>
-        /// Should the value of <see cref="TouchPointer.Buttons"/> be shown on the cursor.
+        /// Should the value of <see cref="Pointer.Buttons"/> be shown on the cursor.
         /// </summary>
         public bool ShowButtons = false;
 

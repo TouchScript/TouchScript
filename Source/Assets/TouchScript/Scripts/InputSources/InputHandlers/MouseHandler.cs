@@ -263,7 +263,9 @@ namespace TouchScript.InputSources.InputHandlers
             return false;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Releases resources.
+        /// </summary>
         public void Dispose()
         {
             if (mousePointer != null)

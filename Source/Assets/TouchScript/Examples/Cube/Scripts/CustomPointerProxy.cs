@@ -7,6 +7,7 @@ using TouchScript.Pointers;
 
 namespace TouchScript.Examples.Cube 
 {
+    /// <exclude />
     public class CustomPointerProxy : PointerCursor
     {
         protected override void updateOnce(IPointer pointer) {

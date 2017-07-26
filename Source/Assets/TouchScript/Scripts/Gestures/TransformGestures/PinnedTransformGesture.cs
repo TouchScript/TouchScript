@@ -18,7 +18,7 @@ namespace TouchScript.Gestures.TransformGestures
     /// Recognizes a transform gesture around center of the object, i.e. one finger rotation, scaling or a combination of these.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Pinned Transform Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_PinnedTransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGestures_PinnedTransformGesture.htm")]
     public class PinnedTransformGesture : OnePointTrasformGestureBase
     {
         #region Constants

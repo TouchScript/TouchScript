@@ -8,6 +8,7 @@ using TouchScript.Gestures.TransformGestures;
 
 namespace TouchScript.Examples.Portal
 {
+    /// <exclude />
     public class Planet : MonoBehaviour
     {
         private enum PlanetStatus

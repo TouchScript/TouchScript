@@ -40,6 +40,7 @@ namespace TouchScript.Hit
         /// <summary>
         /// Determines whether a pointer hit the object.
         /// </summary>
+        /// <param name="pointer"> Pointer to raycast. </param>
         /// <param name="hit"> Data from a raycast. </param>
         /// <returns> <see cref="HitResult.Hit"/> if pointer hits the object, <see cref="HitResult.Miss"/> if it doesn't, <see cref="HitResult.Discard"/> if it doesn't and this pointer must be ignored, Error otherwise. </returns>
         public virtual HitResult IsHit(IPointer pointer, HitData hit)

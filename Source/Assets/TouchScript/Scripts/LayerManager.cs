@@ -10,6 +10,7 @@ namespace TouchScript
     /// <summary>
     /// Facade for current instance of <see cref="ILayerManager"/>.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_LayerManager.htm")]
     public sealed class LayerManager : MonoBehaviour
     {
         /// <summary>

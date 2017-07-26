@@ -22,7 +22,10 @@ namespace TouchScript.Gestures
     {
         #region Constants
 
-		[Serializable]
+        /// <summary>
+        /// Unity event for gesture state changes.
+        /// </summary>
+        [Serializable]
 		public class GestureEvent : UnityEvent<Gesture> {}
 
         /// <summary>
@@ -437,9 +440,8 @@ namespace TouchScript.Gestures
         /// </summary>
         protected Transform cachedTransform;
 
-#pragma warning disable CS0414
-
-		[SerializeField]
+        /// <exclude />
+        [SerializeField]
 		[HideInInspector]
 		protected bool basicEditor = true;
 
@@ -454,8 +456,6 @@ namespace TouchScript.Gestures
 		[SerializeField]
         [HideInInspector]
 		private bool advancedProps; // Used in the custom inspector
-
-#pragma warning restore CS0414
 
 		[SerializeField]
         private int minPointers = 0;

@@ -4,12 +4,14 @@
 
 using System.Text;
 using TouchScript.Pointers;
+using UnityEngine;
 
 namespace TouchScript.Behaviors.Cursors
 {
     /// <summary>
     /// Cursor for object pointers.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Cursors_ObjectCursor.htm")]
     public class ObjectCursor : TextPointerCursor<ObjectPointer>
     {
         #region Public properties

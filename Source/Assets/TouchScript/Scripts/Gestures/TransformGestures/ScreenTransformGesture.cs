@@ -17,7 +17,7 @@ namespace TouchScript.Gestures.TransformGestures
     /// Recognizes a transform gesture in screen space, i.e. translation, rotation, scaling or a combination of these.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Screen Transform Gesture")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_ScreenTransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGestures_ScreenTransformGesture.htm")]
     public class ScreenTransformGesture : TwoPointTransformGestureBase
     {
 		#region Unity

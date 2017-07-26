@@ -7,6 +7,7 @@ using TouchScript.Layers;
 
 namespace TouchScript.Examples.Cube 
 {
+    /// <exclude />
     public class Init : MonoBehaviour 
     {
         void Start () {

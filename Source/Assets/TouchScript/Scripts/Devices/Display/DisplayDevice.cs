@@ -12,6 +12,7 @@ namespace TouchScript.Devices.Display
     /// <summary>
     /// A simple display device which inherits from <see cref="ScriptableObject"/> and can be saved in Unity assets.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Devices_Display_DisplayDevice.htm")]
     public class DisplayDevice : ScriptableObject, IDisplayDevice
     {
 #if UNITY_EDITOR
@@ -65,9 +66,15 @@ namespace TouchScript.Devices.Display
         [SerializeField]
         protected float dpi = 96;
 
+        /// <summary>
+        /// Native device dpi.
+        /// </summary>
         [SerializeField]
         protected float nativeDPI = 96;
 
+        /// <summary>
+        /// Native device resolution.
+        /// </summary>
         [SerializeField]
         protected Vector2 nativeResolution = new Vector2(1920, 1080);
 

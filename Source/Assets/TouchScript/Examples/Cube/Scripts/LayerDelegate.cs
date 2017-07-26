@@ -9,6 +9,7 @@ using TouchScript.InputSources;
 
 namespace TouchScript.Examples.Cube
 {
+    /// <exclude />
     public class LayerDelegate : MonoBehaviour, ILayerDelegate
     {
 

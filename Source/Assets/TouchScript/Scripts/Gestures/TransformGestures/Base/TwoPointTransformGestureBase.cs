@@ -15,6 +15,9 @@ using TouchScript.Debugging.GL;
 
 namespace TouchScript.Gestures.TransformGestures.Base
 {
+    /// <summary>
+    /// Abstract base classfor two-point transform gestures.
+    /// </summary>
     public abstract class TwoPointTransformGestureBase : TransformGestureBase
     {
         #region Constants

@@ -14,10 +14,7 @@ using UnityEngine;
 
 namespace TouchScript.Utils
 {
-    /// <summary>
-    /// Object pool implementation used in TouchScript.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <exclude />
     public class ObjectPool<T> where T : class
     {
         public delegate T0 UnityFunc<T0>();

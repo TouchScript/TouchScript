@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace TouchScript.Examples.Checkers
 {
+    /// <exclude />
     public class Exclusive : MonoBehaviour, IGestureDelegate
     {
         public TransformGesture Target;

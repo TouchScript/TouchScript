@@ -8,9 +8,7 @@ using UnityEngine.UI;
 
 namespace TouchScript.Hit
 {
-    /// <summary>
-    /// A structure to hold data while raycasting into UI elements.
-    /// </summary>
+    /// <exclude />
     public struct RaycastHitUI
     {
         public Transform Target;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <exclude />
 public class ShowMe : MonoBehaviour 
 {
 	IEnumerator Start () 

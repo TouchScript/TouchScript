@@ -5,6 +5,7 @@
 using UnityEngine;
 using TouchScript.Behaviors.UI;
 
+/// <exclude />
 public class Highlight : MonoBehaviour 
 {
 

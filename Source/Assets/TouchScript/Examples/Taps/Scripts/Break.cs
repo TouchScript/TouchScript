@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace TouchScript.Examples.Tap
 {
+    /// <exclude />
     public class Break : MonoBehaviour
     {
         public float Power = 10.0f;

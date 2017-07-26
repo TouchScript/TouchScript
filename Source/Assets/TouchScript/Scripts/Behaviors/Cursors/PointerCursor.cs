@@ -116,6 +116,7 @@ namespace TouchScript.Behaviors.Cursors
     /// <summary>
     /// Visual cursor implementation used by TouchScript.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Cursors_PointerCursor.htm")]
     public class PointerCursor : MonoBehaviour
     {
         #region Consts
@@ -125,9 +126,24 @@ namespace TouchScript.Behaviors.Cursors
         /// </summary>
         public enum CursorState
         {
+            /// <summary>
+            /// Not pressed.
+            /// </summary>
             Released,
+
+            /// <summary>
+            /// Pressed.
+            /// </summary>
             Pressed,
+
+            /// <summary>
+            /// Over something.
+            /// </summary>
             Over,
+
+            /// <summary>
+            /// Over and pressed.
+            /// </summary>
             OverPressed
         }
 

@@ -23,8 +23,9 @@
     <RootNamespaceTitle>TouchScript</RootNamespaceTitle>
     <SandcastlePath>..\..\..\..\Program Files (x86)\Sandcastle\</SandcastlePath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\Source\Assembly-CSharp.XML" />
-<DocumentationSource sourceFile="..\Source\obj\Debug\Assembly-CSharp.dll" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\Source\Temp\UnityVS_bin\Debug\Assembly-CSharp.XML" />
+      <DocumentationSource sourceFile="..\Source\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll" />
+    </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>C#</SyntaxFilters>
     <HeaderText>
@@ -48,9 +49,9 @@
     <Preliminary>False</Preliminary>
     <HelpTitle>TouchScript — multitouch library for Unity</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
-    <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, Protected</VisibleItems>
+    <VisibleItems>ExplicitInterfaceImplementations, InheritedMembers, Protected</VisibleItems>
     <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
-    <ProjectSummary>TouchScript is a multitouch library for Unity. Inspired by iOS, TouchScript makes handling complex gesture interactions on any touch surface much easier. Please refer to: https://github.com/TouchScript/TouchScript</ProjectSummary>
+    <ProjectSummary>TouchScript is a multitouch library for Unity. Inspired by iOS, TouchScript makes handling complex gesture interactions on any touch surface much easier. Please refer to: &amp;lt%3ba href=&amp;quot%3bhttps://github.com/TouchScript/TouchScript&amp;quot%3b&amp;gt%3bhttps://github.com/TouchScript/TouchScript&amp;lt%3b/a&amp;gt%3b.</ProjectSummary>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" />
       <NamespaceSummaryItem name="TouchScript" isDocumented="True">TouchScript.</NamespaceSummaryItem>
@@ -69,25 +70,20 @@
       <NamespaceSummaryItem name="TouchScript.Examples.Tap" isDocumented="False" />
       <NamespaceSummaryItem name="TouchScript.Examples.UI" isDocumented="False" />
       <NamespaceSummaryItem name="TouchScript.Gestures" isDocumented="True">TouchScript.Gestures.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="TouchScript.Gestures.Base" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Gestures.Base" isDocumented="True" />
       <NamespaceSummaryItem name="TouchScript.Gestures.Clustered" isDocumented="True">TouchScript.Gestures.Clustered.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="TouchScript.Gestures.UI" isDocumented="True">TouchScript.Gestures.UI.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="TouchScript.Hit" isDocumented="True">TouchScript.Hit.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="TouchScript.InputSources" isDocumented="True">TouchScript.InputSources.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="TouchScript.InputSources.InputHandlers" isDocumented="True">TouchScript.InputSources.InputHandlers</NamespaceSummaryItem>
       <NamespaceSummaryItem name="TouchScript.Layers" isDocumented="True">TouchScript.Layers.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="TouchScript.Utils" isDocumented="False">TouchScript.Utils.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="TouchScript.Utils.Attributes" isDocumented="False" />
-      <NamespaceSummaryItem name="TouchScript.Utils.Geom" isDocumented="False" />
+      <NamespaceSummaryItem name="TouchScript.Utils" isDocumented="True">TouchScript.Utils.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TouchScript.Utils.Attributes" isDocumented="True" />
+      <NamespaceSummaryItem name="TouchScript.Utils.Geom" isDocumented="True" />
     </NamespaceSummaries>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <ApiFilter>
-      <Filter entryType="Namespace" fullName="TouchScript" isExposed="True">
-  <Filter entryType="Class" fullName="TouchScript.Tags" filterName="Tags" isExposed="True">
-    <Filter entryType="Method" fullName="TouchScript.Tags.OnAfterDeserialize" filterName="OnAfterDeserialize" isExposed="False" />
-    <Filter entryType="Method" fullName="TouchScript.Tags.OnBeforeSerialize" filterName="OnBeforeSerialize" isExposed="False" />
-  </Filter>
-</Filter>
+      <Filter entryType="Namespace" fullName="" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples.CameraControl" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples.Checkers" isExposed="False" />
@@ -99,15 +95,19 @@
 <Filter entryType="Namespace" fullName="TouchScript.Examples.RawInput" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples.Tap" isExposed="False" />
 <Filter entryType="Namespace" fullName="TouchScript.Examples.UI" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Gestures.Base" isExposed="False">
-  <Filter entryType="Class" fullName="TouchScript.Gestures.Base.PinnedTrasformGestureBase" filterName="PinnedTrasformGestureBase" isExposed="True" />
-  <Filter entryType="Enumeration" fullName="TouchScript.Gestures.Base.PinnedTrasformGestureBase.TransformType" filterName="PinnedTrasformGestureBase.TransformType" isExposed="True" />
-  <Filter entryType="Class" fullName="TouchScript.Gestures.Base.TransformGestureBase" filterName="TransformGestureBase" isExposed="True" />
-  <Filter entryType="Enumeration" fullName="TouchScript.Gestures.Base.TransformGestureBase.TransformType" filterName="TransformGestureBase.TransformType" isExposed="True" />
+<Filter entryType="Namespace" fullName="UnityEngine" isExposed="True">
+  <Filter entryType="Class" fullName="UnityEngine.Behaviour" filterName="Behaviour" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.Component" filterName="Component" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.MonoBehaviour" filterName="MonoBehaviour" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.Object" filterName="Object" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.PropertyAttribute" filterName="PropertyAttribute" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.ScriptableObject" filterName="ScriptableObject" isExposed="False" />
 </Filter>
-<Filter entryType="Namespace" fullName="TouchScript.Utils" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Utils.Attributes" isExposed="False" />
-<Filter entryType="Namespace" fullName="TouchScript.Utils.Geom" isExposed="False" /></ApiFilter>
+<Filter entryType="Namespace" fullName="UnityEngine.Events" isExposed="True">
+  <Filter entryType="Class" fullName="UnityEngine.Events.UnityEvent" filterName="UnityEvent" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.Events.UnityEvent`1" filterName="UnityEvent`1" isExposed="False" />
+  <Filter entryType="Class" fullName="UnityEngine.Events.UnityEventBase" filterName="UnityEventBase" isExposed="False" />
+</Filter></ApiFilter>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
@@ -136,10 +136,10 @@
       <HintPath>..\Source\Assets\TouchScript\Modules\TUIO\Libraries\TUIOsharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\Source\Temp\UnityVS_bin\Debug\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\Source\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- Import the SHFB build targets -->

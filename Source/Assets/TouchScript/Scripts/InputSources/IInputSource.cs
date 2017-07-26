@@ -2,6 +2,7 @@
  * @author Valentin Simonov / http://va.lent.in/
  */
 
+using TouchScript.Core;
 using TouchScript.Pointers;
 
 namespace TouchScript.InputSources
@@ -22,7 +23,7 @@ namespace TouchScript.InputSources
         ICoordinatesRemapper CoordinatesRemapper { get; set; }
 
         /// <summary>
-        /// This method is called by <see cref="TouchManagerInstance"/> to synchronously update the input.
+        /// This method is called by <see cref="ITouchManager"/> to synchronously update the input.
         /// </summary>
         bool UpdateInput();
 
@@ -40,6 +41,9 @@ namespace TouchScript.InputSources
         bool CancelPointer(Pointer pointer, bool shouldReturn);
     }
 
+    /// <summary>
+    /// Internal methods for <see cref="IInputSource"/>. DO NOT USE ANY OF THEM!
+    /// </summary>
     public interface INTERNAL_IInputSource
     {
         /// <summary>

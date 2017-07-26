@@ -7,6 +7,7 @@ using TouchScript.Gestures;
 
 namespace TouchScript.Examples.Tap
 {
+    /// <exclude />
     public class Kick : MonoBehaviour
     {
         public float Force = 3f;

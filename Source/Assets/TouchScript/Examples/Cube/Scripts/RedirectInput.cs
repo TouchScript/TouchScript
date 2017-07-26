@@ -12,6 +12,7 @@ using TouchScript.Utils;
 
 namespace TouchScript.Examples.Cube
 {
+    /// <exclude />
     public class RedirectInput : InputSource
     {
 

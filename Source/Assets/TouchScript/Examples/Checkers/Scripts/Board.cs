@@ -7,6 +7,7 @@ using TouchScript.Gestures.TransformGestures;
 
 namespace TouchScript.Examples.Checkers
 {
+    /// <exclude />
     public class Board : MonoBehaviour
     {
         private PinnedTransformGesture gesture;

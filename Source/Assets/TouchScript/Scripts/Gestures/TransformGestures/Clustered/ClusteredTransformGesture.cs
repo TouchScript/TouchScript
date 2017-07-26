@@ -14,7 +14,7 @@ namespace TouchScript.Gestures.TransformGestures.Clustered
     /// Should be used for large touch surfaces.
     /// </summary>
     [AddComponentMenu("TouchScript/Gestures/Clustered/Transform Gesture (Clustered)")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_Clustered_ClusteredTransformGesture.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGestures_Clustered_ClusteredTransformGesture.htm")]
     public class ClusteredTransformGesture : TransformGesture
     {
         #region Private variables

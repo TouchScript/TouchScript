@@ -73,9 +73,15 @@ namespace TouchScript.Pointers
             Object
         }
 
+        /// <summary>
+        /// The state of buttons for a pointer. Combines 3 types of button events: Pressed (holding a button), Down (just pressed this frame) and Up (released this frame).
+        /// </summary>
         [Flags]
         public enum PointerButtonState
         {
+            /// <summary>
+            /// No button is pressed.
+            /// </summary>
             Nothing = 0,
 
             /// <summary>
@@ -258,7 +264,7 @@ namespace TouchScript.Pointers
         }
 
         /// <summary>
-        /// Copies values from <see cref="target"/>.
+        /// Copies values from the target.
         /// </summary>
         /// <param name="target">The target pointer to copy values from.</param>
         public virtual void CopyFrom(Pointer target)

@@ -16,9 +16,7 @@ using UnityEngine.SceneManagement;
 
 namespace TouchScript.Examples
 {
-    /// <summary>
-    /// This component loads demo scenes in a loop.
-    /// </summary>
+    /// <exclude />
     public class Runner : MonoBehaviour
     {
         private static Runner instance;

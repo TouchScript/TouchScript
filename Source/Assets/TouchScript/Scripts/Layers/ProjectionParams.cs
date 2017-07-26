@@ -87,7 +87,7 @@ namespace TouchScript.Layers
         protected Camera camera;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CanvasProjectionParams"/> class.
+        /// Initializes a new instance of the <see cref="WorldSpaceCanvasProjectionParams"/> class.
         /// </summary>
         /// <param name="canvas"> The canvas. </param>
         public WorldSpaceCanvasProjectionParams(Canvas canvas)

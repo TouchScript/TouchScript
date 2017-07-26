@@ -12,6 +12,7 @@ namespace TouchScript.Behaviors.Cursors.UI
     /// <summary>
     /// Generates a texture with a circle gradient.
     /// </summary>
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Cursors_UI_GradientTexture.htm")]
     public class GradientTexture : MonoBehaviour
     {
         /// <summary>
@@ -19,11 +20,34 @@ namespace TouchScript.Behaviors.Cursors.UI
         /// </summary>
         public enum Res
         {
+            /// <summary>
+            /// 16x16
+            /// </summary>
             Pix16 = 16,
+
+            /// <summary>
+            /// 32x32
+            /// </summary>
             Pix32 = 32,
+
+            /// <summary>
+            /// 64x64
+            /// </summary>
             Pix64 = 64,
+
+            /// <summary>
+            /// 128x128
+            /// </summary>
             Pix128 = 128,
+
+            /// <summary>
+            /// 256x256
+            /// </summary>
             Pix256 = 256,
+
+            /// <summary>
+            /// 512x512
+            /// </summary>
             Pix512 = 512
         }
 

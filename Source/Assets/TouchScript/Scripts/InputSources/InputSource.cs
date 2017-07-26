@@ -38,17 +38,14 @@ namespace TouchScript.InputSources
             }
         }
 
-		#endregion
+        #endregion
 
-		#region Private variables
+        #region Private variables
 
-#pragma warning disable CS0414
-
-		[SerializeField]
+        /// <exclude/>
+        [SerializeField]
         [HideInInspector]
 		protected bool basicEditor = true;
-
-#pragma warning restore CS0414
 
 		private ICoordinatesRemapper coordinatesRemapper;
         private TouchManagerInstance manager;
@@ -179,7 +176,7 @@ namespace TouchScript.InputSources
         /// Remaps the coordinates using the <see cref="CoordinatesRemapper"/> if it is set.
         /// </summary>
         /// <param name="position">The position.</param>
-        /// <returns>Remapped position if <see cref="CoordinatesRemapper"/> is set; <see cref="position"/> otherwise.</returns>
+        /// <returns>Remapped position if <see cref="CoordinatesRemapper"/> is set; the value of position argument otherwise.</returns>
         protected virtual Vector2 remapCoordinates(Vector2 position)
         {
             if (coordinatesRemapper != null) return coordinatesRemapper.Remap(position);

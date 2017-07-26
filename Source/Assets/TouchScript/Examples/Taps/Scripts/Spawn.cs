@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace TouchScript.Examples.Tap
 {
+    /// <exclude />
     public class Spawn : MonoBehaviour
     {
         public Transform CubePrefab;

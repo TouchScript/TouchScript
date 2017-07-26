@@ -42,6 +42,9 @@ namespace TouchScript.Gestures
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> tappedInvoker;
 
+        /// <summary>
+        /// Unity event, occurs when gesture is recognized.
+        /// </summary>
 		public GestureEvent OnTap = new GestureEvent();
 
         #endregion
@@ -86,24 +89,24 @@ namespace TouchScript.Gestures
             }
         }
 
-		/// <summary>
-		/// Gets or sets the flag if pointers should be treated as a cluster.
-		/// </summary>
-		/// <value> <c>true</c> if pointers should be treated as a cluster; otherwise, <c>false</c>. </value>
-		/// <remarks>
-		/// At the end of a gesture when pointers are lifted off due to the fact that computers are faster than humans the very last pointer's position will be gesture's <see cref="ScreenPosition"/> after that. This flag is used to combine several pointers which from the point of a user were lifted off simultaneously and set their centroid as gesture's <see cref="ScreenPosition"/>.
-		/// </remarks>
-		public bool CombinePointers
+        /// <summary>
+        /// Gets or sets the flag if pointers should be treated as a cluster.
+        /// </summary>
+        /// <value> <c>true</c> if pointers should be treated as a cluster; otherwise, <c>false</c>. </value>
+        /// <remarks>
+        /// At the end of a gesture when pointers are lifted off due to the fact that computers are faster than humans the very last pointer's position will be gesture's <see cref="Gesture.ScreenPosition"/> after that. This flag is used to combine several pointers which from the point of a user were lifted off simultaneously and set their centroid as gesture's <see cref="Gesture.ScreenPosition"/>.
+        /// </remarks>
+        public bool CombinePointers
 		{
 			get { return combinePointers; }
 			set { combinePointers = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets time interval before gesture is recognized to combine all lifted pointers into a cluster to use its center as <see cref="ScreenPosition"/>.
-		/// </summary>
-		/// <value> Time in seconds to treat pointers lifted off during this interval as a single gesture. </value>
-		public float CombinePointersInterval
+        /// <summary>
+        /// Gets or sets time interval before gesture is recognized to combine all lifted pointers into a cluster to use its center as <see cref="Gesture.ScreenPosition"/>.
+        /// </summary>
+        /// <value> Time in seconds to treat pointers lifted off during this interval as a single gesture. </value>
+        public float CombinePointersInterval
 		{
 			get { return combinePointersInterval; }
 			set { combinePointersInterval = value; }

@@ -1,0 +1,28 @@
+## How to build Documentation.
+
+The docs are built using Sandcastle Help File Builder
+https://github.com/EWSoftware/SHFB/releases
+
+First, you need to generate the docs XML file and build the DLL from Visual Studio.
+
+Right now it is only possible to do on Windows:
+1. Open Source.sln in Visual Studio.
+2. Open Source.CSharp Properties.
+   If unable, need to configure VS Tools for Unity so it would allow chaning project properties.
+   You need to enable the "Access to project properties" option in the "Tools > Options > Tools for Unity > General" section and restart Visual Studio.
+3. Enable "XML Documentation File" option in "Build" tab.
+4. Save the project and build it from Visual Studio.
+
+This will generate two files needed by the docs build process:
+1. Source/Temp/UnityVS_bin/Debug/Assembly-CSharp.DLL
+2. Source/Temp/UnityVS_bin/Debug/Assembly-CSharp.XML
+
+To build the docs you need to:
+1. Download the latest release of SHFB.
+2. Run SandcastleBuilderGUI.exe from the folder where you installed SHFB.
+3. Delete Docs/Help folder if it exists.
+4. Open docs.shfbproj file.
+5. Go to Project "Properties > Visibility > Edit API Filter" and uncheck all Examples namespaces and non-TouchScript namespaces which might have gotten there if you have any other code in the Unity project.
+6. Save and press "Build the Help File" button.
+
+Documentation will be saved to Docs/Help folder.

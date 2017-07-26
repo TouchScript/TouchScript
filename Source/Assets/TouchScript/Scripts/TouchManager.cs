@@ -37,7 +37,6 @@ namespace TouchScript
         /// <summary>
         /// Event implementation in Unity EventSystem for pointer events.
         /// </summary>
-        /// <seealso cref="UnityEngine.Events.UnityEvent{System.Collections.Generic.IList{TouchScript.Pointers.Pointer}}" />
         [Serializable]
         public class PointerEvent : UnityEvent<IList<Pointer>> {}
 

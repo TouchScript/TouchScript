@@ -15,7 +15,7 @@ namespace TouchScript.Behaviors.UI
     /// This component listens for pointer events and dispatches <see cref="Over"/> event when the first touch enters the area of the GameObject it is attached to and <see cref="Out"/> event when the last touch leaves it.
     /// </summary>
     [AddComponentMenu("TouchScript/Behaviors/OverHelper")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_OverHelper.htm")]
+    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_UI_OverHelper.htm")]
     public class OverHelper : MonoBehaviour
     {
 

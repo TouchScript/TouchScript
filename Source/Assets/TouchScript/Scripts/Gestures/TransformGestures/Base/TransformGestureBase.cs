@@ -67,8 +67,19 @@ namespace TouchScript.Gestures.TransformGestures.Base
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> transformStartedInvoker, transformedInvoker, transformCompletedInvoker;
 
+        /// <summary>
+        /// Unity event, occurs when the gesture starts.
+        /// </summary>
 		public GestureEvent OnTransformStart = new GestureEvent();
+
+        /// <summary>
+        /// Unity event, occurs when the gesture is updated.
+        /// </summary>
 		public GestureEvent OnTransform = new GestureEvent();
+
+        /// <summary>
+        /// Unity event, occurs when the gesture ends.
+        /// </summary>
 		public GestureEvent OnTransformComplete = new GestureEvent();
 
         #endregion
@@ -147,6 +158,9 @@ namespace TouchScript.Gestures.TransformGestures.Base
         /// </summary>
         protected float screenTransformPixelThresholdSquared;
 
+        /// <summary>
+        /// The bit mask of what transform operations happened this frame.
+        /// </summary>
         protected TransformGesture.TransformType transformMask;
 
         /// <summary>
@@ -185,6 +199,9 @@ namespace TouchScript.Gestures.TransformGestures.Base
         /// </summary>
         protected Vector3 targetPosition;
 
+        /// <summary>
+        /// The type of the transforms this gesture can dispatch.
+        /// </summary>
         [SerializeField]
         protected TransformGesture.TransformType type = TransformGesture.TransformType.Translation | TransformGesture.TransformType.Scaling |
                                                         TransformGesture.TransformType.Rotation;
@@ -322,9 +339,15 @@ namespace TouchScript.Gestures.TransformGestures.Base
 
         #region Protected methods
 
+        /// <summary>
+        /// Updates the type of the gesture.
+        /// </summary>
         protected virtual void updateType() {}
 
-		protected void resetValues()
+        /// <summary>
+        /// Resets the frame delta values.
+        /// </summary>
+        protected void resetValues()
 		{
 			deltaPosition = Vector3.zero;
 			deltaRotation = 0f;

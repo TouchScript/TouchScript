@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
 using TouchScript.InputSources;
+using TouchScript.Layers;
 using TouchScript.Pointers;
 
 namespace TouchScript
@@ -93,7 +94,7 @@ namespace TouchScript
         float DPI { get; }
 
         /// <summary>
-        /// Indicates if TouchScript should create a <see cref="CameraLayer"/> for you if no layers present in a scene.
+        /// Indicates if TouchScript should create a <see cref="StandardLayer"/> for you if no layers present in a scene.
         /// </summary>
         /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
         /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get pointer input from some device.</remarks>
@@ -165,7 +166,7 @@ namespace TouchScript
         /// Cancels a pointer and returns it to the system of need.
         /// </summary>
         /// <param name="id">Pointer id to cancel.</param>
-        /// <param name="return">Should the pointer be returned to the system.</param>
+        /// <param name="shouldReturn">If the pointer should be redispatched to the system.</param>
         void CancelPointer(int id, bool shouldReturn);
 
         /// <summary>

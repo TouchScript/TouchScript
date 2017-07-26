@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace TouchScript.Examples.RawInput
 {
+    /// <exclude />
     public class Spawner : MonoBehaviour
     {
         public GameObject Prefab;

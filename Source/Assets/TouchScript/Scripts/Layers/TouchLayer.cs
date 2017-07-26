@@ -20,7 +20,7 @@ namespace TouchScript.Layers
     /// </summary>
     /// <remarks>
     /// <para>In <b>TouchScript</b> it's a layer's job to determine if a pointer on the screen hits anything in Unity's 3d/2d world.</para>
-    /// <para><see cref="ITouchManager"/> keeps a sorted list of all layers in <see cref="ITouchManager.Layers"/> which it queries when a new pointer appears. It's a layer's job to return <see cref="LayerHitResult.Hit"/> if this pointer hits an object. Layers can even be used to "hit" objects outside of Unity's 3d world, for example <b>Scaleform</b> integration is implemented this way.</para>
+    /// <para><see cref="ILayerManager"/> keeps a sorted list of all layers in <see cref="ILayerManager.Layers"/> which it queries when a new pointer appears. It's a layer's job to return <see cref="HitResult.Hit"/> if this pointer hits an object. Layers can even be used to "hit" objects outside of Unity's 3d world, for example <b>Scaleform</b> integration is implemented this way.</para>
     /// <para>Layers can be configured in a scene using <see cref="TouchManager"/> or from code using <see cref="ITouchManager"/> API.</para>
     /// <para>If you want to route pointers and manually control which objects they should "pointer" it's better to create a new layer extending <see cref="TouchLayer"/>.</para>
     /// </remarks>
@@ -73,6 +73,9 @@ namespace TouchScript.Layers
         /// </summary>
         protected ProjectionParams layerProjectionParams;
 
+        /// <summary>
+        /// Layer manager.
+        /// </summary>
         protected ILayerManager manager;
 
         #endregion
@@ -100,7 +103,7 @@ namespace TouchScript.Layers
         /// </summary>
         /// <param name="pointer">Pointer.</param>
         /// <param name="hit">Hit result.</param>
-        /// <returns><c>true</c>, if an object is hit, <see cref="LayerHitResult.Miss"/>; <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c>, if an object is hit, <see cref="HitResult.Miss"/>; <c>false</c> otherwise.</returns>
         public virtual HitResult Hit(IPointer pointer, out HitData hit)
         {
             hit = default(HitData);
@@ -192,6 +195,12 @@ namespace TouchScript.Layers
 
         #region Protected functions
 
+        /// <summary>
+        /// Checks the hit filters.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="hit">HitData for the pointer.</param>
+        /// <returns></returns>
         protected HitResult checkHitFilters(IPointer pointer, HitData hit)
         {
             hit.Target.GetComponents(tmpHitTestList);

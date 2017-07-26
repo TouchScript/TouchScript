@@ -240,6 +240,8 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct.
         /// </summary>
         /// <param name="target"> Target Target. </param>
+        /// <param name="layer"> Touch layer this hit came from. </param>
+        /// <param name="screenSpace"> If the hit is screenspace UI. </param>
         public HitData(Transform target, TouchLayer layer, bool screenSpace = false)
         {
             this.target = target;
@@ -258,6 +260,8 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a 3D raycast.
         /// </summary>
         /// <param name="value"> 3D raycast value. </param>
+        /// <param name="layer"> Touch layer this hit came from. </param>
+        /// <param name="screenSpace"> If the hit is screenspace UI. </param>
         public HitData(RaycastHit value, TouchLayer layer, bool screenSpace = false) : this(value.collider.transform, layer, screenSpace)
         {
             raycastHit = value;
@@ -268,6 +272,8 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a 2D raycast.
         /// </summary>
         /// <param name="value"> 2D raycast value. </param>
+        /// <param name="layer"> Touch layer this hit came from. </param>
+        /// <param name="screenSpace"> If the hit is screenspace UI. </param>
         public HitData(RaycastHit2D value, TouchLayer layer, bool screenSpace = false) :
             this(value.collider.transform, layer, screenSpace)
         {
@@ -279,6 +285,8 @@ namespace TouchScript.Hit
         /// Initializes a new instance of the <see cref="HitData"/> struct from a UI raycast.
         /// </summary>
         /// <param name="value"> UI raycast value. </param>
+        /// <param name="layer"> Touch layer this hit came from. </param>
+        /// <param name="screenSpace"> If the hit is screenspace UI. </param>
         public HitData(RaycastHitUI value, TouchLayer layer, bool screenSpace = false) :
             this(value.Target, layer, screenSpace)
         {

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace TouchScript.Examples.RawInput
 {
+    /// <exclude />
     public class Ball : MonoBehaviour
     {
         public float Speed = 1f;
