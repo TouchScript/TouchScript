@@ -76,8 +76,8 @@ namespace TouchScript.Layers.UI
             if (raycastersProp == null)
             {
                 raycastersProp = Type.GetType(Assembly.CreateQualifiedName("UnityEngine.UI", "UnityEngine.EventSystems.RaycasterManager")).
-                                      GetField("s_Raycasters", BindingFlags.NonPublic | BindingFlags.Static);
-                canvasProp = typeof (GraphicRaycaster).GetProperty("canvas", BindingFlags.NonPublic | BindingFlags.Instance);
+                                     GetField("s_Raycasters", BindingFlags.NonPublic | BindingFlags.Static);
+                canvasProp = typeof(GraphicRaycaster).GetProperty("canvas", BindingFlags.NonPublic | BindingFlags.Instance);
             }
         }
 
@@ -569,9 +569,7 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
-
                     var over = pointer.GetOverData();
-                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
 
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
@@ -622,9 +620,7 @@ namespace TouchScript.Layers.UI
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
-
                     var over = pointer.GetOverData();
-                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
 
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
