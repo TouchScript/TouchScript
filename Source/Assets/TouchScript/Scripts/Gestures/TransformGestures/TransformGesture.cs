@@ -31,6 +31,11 @@ namespace TouchScript.Gestures.TransformGestures
         public enum TransformType
         {
             /// <summary>
+            /// No transform.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
             /// Translation.
             /// </summary>
             Translation = 0x1,
@@ -128,8 +133,8 @@ namespace TouchScript.Gestures.TransformGestures
 
         #region Private variables
 
-		[SerializeField]
-		private bool projectionProps; // Used in the custom inspector
+        [SerializeField]
+        private bool projectionProps; // Used in the custom inspector
 
         [SerializeField]
         private ProjectionType projection = ProjectionType.Layer;
@@ -162,11 +167,11 @@ namespace TouchScript.Gestures.TransformGestures
             updateProjectionPlane();
         }
 
-		[ContextMenu("Basic Editor")]
-		private void switchToBasicEditor()
-		{
-			basicEditor = true;
-		}
+        [ContextMenu("Basic Editor")]
+        private void switchToBasicEditor()
+        {
+            basicEditor = true;
+        }
 
         #endregion
 

@@ -18,13 +18,34 @@ namespace TouchScript.Behaviors
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Behaviors_Transformer.htm")]
     public class Transformer : MonoBehaviour
     {
+        // Here's how it works.
+        //
+        // If smoothing is not enabled, the component just gets gesture events in stateChangedHandler(), passes Changed event to manualUpdate() which calls applyValues() to sett updated values.
+        // The value of transformMask is used to only set values which were changed not to interfere with scripts changing this values.
+        //
+        // If smoothing is enabled — targetPosition, targetScale, targetRotation are cached and a lerp from current position to these target positions is applied every frame in update() method. It also checks transformMask to change only needed values.
+        // If none of the delta values pass the threshold, the component transitions to idle state.
 
         #region Consts
 
+        /// <summary>
+        /// State for internal Transformer state machine.
+        /// </summary>
         private enum TransformerState
         {
+            /// <summary>
+            /// Nothing is happening.
+            /// </summary>
             Idle,
+
+            /// <summary>
+            /// The object is under manual control, i.e. user is transforming it.
+            /// </summary>
             Manual,
+
+            /// <summary>
+            /// The object is under automatic control, i.e. it's being smoothly moved into target position when user lifted all fingers off.
+            /// </summary>
             Automatic
         }
 
@@ -53,10 +74,7 @@ namespace TouchScript.Behaviors
         public float SmoothingFactor
         {
             get { return smoothingFactor * 100000f; }
-            set
-            {
-                smoothingFactor = Mathf.Clamp(value / 100000f, 0, 1);
-            }
+            set { smoothingFactor = Mathf.Clamp(value / 100000f, 0, 1); }
         }
 
         /// <summary>
@@ -107,25 +125,25 @@ namespace TouchScript.Behaviors
             set { allowChangingFromOutside = value; }
         }
 
-		#endregion
+        #endregion
 
-		#region Private variables
+        #region Private variables
 
-		[SerializeField]
+        [SerializeField]
         [ToggleLeft]
         private bool enableSmoothing = false;
 
         [SerializeField]
-        private float smoothingFactor = 1f/100000f;
+        private float smoothingFactor = 1f / 100000f;
 
         [SerializeField]
-        private float positionThreshold = 0.0001f; 
+        private float positionThreshold = 0.01f;
 
         [SerializeField]
-        private float rotationThreshold = 0.01f;
+        private float rotationThreshold = 0.1f;
 
         [SerializeField]
-        private float scaleThreshold = 0.0001f;
+        private float scaleThreshold = 0.01f;
 
         [SerializeField]
         [ToggleLeft]
@@ -136,6 +154,7 @@ namespace TouchScript.Behaviors
         private TransformGestureBase gesture;
         private Transform cachedTransform;
 
+        private TransformGesture.TransformType transformMask;
         private Vector3 targetPosition, targetScale;
         private Quaternion targetRotation;
 
@@ -187,6 +206,8 @@ namespace TouchScript.Behaviors
                 if (newLocalScale != transform.localScale) transform.localScale = newLocalScale;
                 transform.rotation = lastRotation = targetRotation;
             }
+
+            transformMask = TransformGesture.TransformType.None;
         }
 
         private void stateManual()
@@ -196,13 +217,14 @@ namespace TouchScript.Behaviors
             targetPosition = lastPosition = cachedTransform.position;
             targetRotation = lastRotation = cachedTransform.rotation;
             targetScale = lastScale = cachedTransform.localScale;
+            transformMask = TransformGesture.TransformType.None;
         }
 
         private void stateAutomatic()
         {
             setState(TransformerState.Automatic);
 
-            if (!enableSmoothing) stateIdle();
+            if (!enableSmoothing || transformMask == TransformGesture.TransformType.None) stateIdle();
         }
 
         private void setState(TransformerState newState)
@@ -221,71 +243,82 @@ namespace TouchScript.Behaviors
             if (!enableSmoothing) return;
 
             var fraction = 1 - Mathf.Pow(smoothingFactor, Time.unscaledDeltaTime);
+            var changed = false;
 
-            var scale = transform.localScale;
-            if (allowChangingFromOutside)
+            if ((transformMask & TransformGesture.TransformType.Scaling) != 0)
             {
-                // Changed by someone else.
-                // Need to make sure to check per component here.
-                if (!Mathf.Approximately(scale.x, lastScale.x))
-                    targetScale.x = scale.x;
-                if (!Mathf.Approximately(scale.y, lastScale.y))
-                    targetScale.y = scale.y;
-                if (!Mathf.Approximately(scale.z, lastScale.z))
-                    targetScale.z = scale.z;
-            }
-            var newLocalScale = Vector3.Lerp(scale, targetScale, fraction);
-            // Prevent recalculating colliders when no scale occurs.
-            if (newLocalScale != scale)
-            {
-                transform.localScale = newLocalScale;
-                // Something might have adjusted our scale.
-                lastScale = transform.localScale;
+                var scale = transform.localScale;
+                if (allowChangingFromOutside)
+                {
+                    // Changed by someone else.
+                    // Need to make sure to check per component here.
+                    if (!Mathf.Approximately(scale.x, lastScale.x))
+                        targetScale.x = scale.x;
+                    if (!Mathf.Approximately(scale.y, lastScale.y))
+                        targetScale.y = scale.y;
+                    if (!Mathf.Approximately(scale.z, lastScale.z))
+                        targetScale.z = scale.z;
+                }
+                var newLocalScale = Vector3.Lerp(scale, targetScale, fraction);
+                // Prevent recalculating colliders when no scale occurs.
+                if (newLocalScale != scale)
+                {
+                    transform.localScale = newLocalScale;
+                    // Something might have adjusted our scale.
+                    lastScale = transform.localScale;
+                }
+
+                if (state == TransformerState.Automatic && !changed && (targetScale - lastScale).sqrMagnitude > scaleThreshold) changed = true;
             }
 
-            if (allowChangingFromOutside)
+            if ((transformMask & TransformGesture.TransformType.Rotation) != 0)
             {
-                // Changed by someone else.
-                if (transform.rotation != lastRotation) targetRotation = transform.rotation;
-            }
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, fraction);
-            // Something might have adjusted our rotation.
-            lastRotation = transform.rotation;
+                if (allowChangingFromOutside)
+                {
+                    // Changed by someone else.
+                    if (transform.rotation != lastRotation) targetRotation = transform.rotation;
+                }
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, fraction);
+                // Something might have adjusted our rotation.
+                lastRotation = transform.rotation;
 
-            var pos = transform.position;
-            if (allowChangingFromOutside)
-            {
-                // Changed by someone else.
-                // Need to make sure to check per component here.
-                if (!Mathf.Approximately(pos.x, lastPosition.x))
-                    targetPosition.x = pos.x;
-                if (!Mathf.Approximately(pos.y, lastPosition.y))
-                    targetPosition.y = pos.y;
-                if (!Mathf.Approximately(pos.z, lastPosition.z))
-                    targetPosition.z = pos.z;
+                if (state == TransformerState.Automatic && !changed && Quaternion.Angle(targetRotation, lastRotation) > rotationThreshold) changed = true;
             }
-            transform.position = Vector3.Lerp(pos, targetPosition, fraction);
-            // Something might have adjusted our position (most likely Unity UI).
-            lastPosition = transform.position;
 
-            if (state == TransformerState.Automatic)
+            if ((transformMask & TransformGesture.TransformType.Translation) != 0)
             {
-                var dP = (targetPosition - lastPosition).sqrMagnitude;
-                var dS = (targetScale - lastScale).sqrMagnitude;
-                var dR = Quaternion.Angle(targetRotation, lastRotation);
-                if (dP < positionThreshold && dR < rotationThreshold && dS < scaleThreshold) stateIdle();
+                var pos = transform.position;
+                if (allowChangingFromOutside)
+                {
+                    // Changed by someone else.
+                    // Need to make sure to check per component here.
+                    if (!Mathf.Approximately(pos.x, lastPosition.x))
+                        targetPosition.x = pos.x;
+                    if (!Mathf.Approximately(pos.y, lastPosition.y))
+                        targetPosition.y = pos.y;
+                    if (!Mathf.Approximately(pos.z, lastPosition.z))
+                        targetPosition.z = pos.z;
+                }
+                transform.position = Vector3.Lerp(pos, targetPosition, fraction);
+                // Something might have adjusted our position (most likely Unity UI).
+                lastPosition = transform.position;
+
+                if (state == TransformerState.Automatic && !changed && (targetPosition - lastPosition).sqrMagnitude > positionThreshold) changed = true;
             }
+
+            if (state == TransformerState.Automatic && !changed) stateIdle();
         }
 
         private void manualUpdate()
         {
-			if (state != TransformerState.Manual) stateManual();
+            if (state != TransformerState.Manual) stateManual();
 
             var mask = gesture.TransformMask;
             if ((mask & TransformGesture.TransformType.Scaling) != 0) targetScale *= gesture.DeltaScale;
             if ((mask & TransformGesture.TransformType.Rotation) != 0)
                 targetRotation = Quaternion.AngleAxis(gesture.DeltaRotation, gesture.RotationAxis) * targetRotation;
             if ((mask & TransformGesture.TransformType.Translation) != 0) targetPosition += gesture.DeltaPosition;
+            transformMask |= mask;
 
             gesture.OverrideTargetPosition(targetPosition);
 
@@ -294,9 +327,10 @@ namespace TouchScript.Behaviors
 
         private void applyValues()
         {
-            cachedTransform.localScale = targetScale;
-            cachedTransform.rotation = targetRotation;
-            cachedTransform.position = targetPosition;
+            if ((transformMask & TransformGesture.TransformType.Scaling) != 0) cachedTransform.localScale = targetScale;
+            if ((transformMask & TransformGesture.TransformType.Rotation) != 0) cachedTransform.rotation = targetRotation;
+            if ((transformMask & TransformGesture.TransformType.Translation) != 0) cachedTransform.position = targetPosition;
+            transformMask = TransformGesture.TransformType.None;
         }
 
         #endregion
@@ -318,8 +352,8 @@ namespace TouchScript.Behaviors
                     stateAutomatic();
                     break;
                 case Gesture.GestureState.Failed:
-                    if (gestureStateChangeEventArgs.PreviousState == Gesture.GestureState.Possible)
-                        stateAutomatic();
+                case Gesture.GestureState.Idle:
+                    if (gestureStateChangeEventArgs.PreviousState == Gesture.GestureState.Possible) stateAutomatic();
                     break;
             }
         }
