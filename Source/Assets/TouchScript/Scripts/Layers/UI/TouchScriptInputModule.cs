@@ -10,6 +10,8 @@ using TouchScript.Pointers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Pointer = TouchScript.Pointers.Pointer;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Layers.UI
 {
@@ -62,7 +64,7 @@ namespace TouchScript.Layers.UI
         private static TouchScriptInputModule instance;
         private static FieldInfo raycastersProp;
         private static PropertyInfo canvasProp;
-        private static Dictionary<int, Canvas> raycasterCanvasCache = new Dictionary<int, Canvas>();
+        private static Dictionary<int, Canvas> raycasterCanvasCache = new Dictionary<int, Canvas>(10);
 
         private int refCount = 0;
         private UIStandardInputModule ui;
@@ -218,11 +220,7 @@ namespace TouchScript.Layers.UI
 
         #endregion
 
-        #region Event handlers
-
-        #endregion
-
-        #region Copypasted code from UI
+        #region Copy-pasted code from UI
 
         /// <summary>
         /// Basically, copied code from UI Input Module which handles all UI pointer processing logic.
@@ -232,9 +230,13 @@ namespace TouchScript.Layers.UI
         {
             protected TouchScriptInputModule input;
 
+			private CustomSampler uiSampler;
+
             public UIStandardInputModule(TouchScriptInputModule input)
             {
                 this.input = input;
+
+				uiSampler = CustomSampler.Create("[TouchScript] Update UI");
             }
 
             #region Unchanged from PointerInputModule
@@ -243,7 +245,7 @@ namespace TouchScript.Layers.UI
             private Vector2 m_LastMoveVector;
             private float m_PrevActionTime;
 
-            private Dictionary<int, PointerEventData> m_PointerData = new Dictionary<int, PointerEventData>();
+            private Dictionary<int, PointerEventData> m_PointerData = new Dictionary<int, PointerEventData>(10);
 
             public bool IsPointerOverGameObject(int pointerId)
             {
@@ -429,15 +431,24 @@ namespace TouchScript.Layers.UI
 
             public virtual void ProcessUpdated(object sender, PointerEventArgs pointerEventArgs)
             {
+				uiSampler.Begin();
+
                 var pointers = pointerEventArgs.Pointers;
                 var raycast = new RaycastResult();
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+					// Don't update the pointer if it is pressed not over an UI element
+					if ((pointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed) > 0) 
+					{
+						var press = pointer.GetPressData();
+						if (press.Type != HitData.HitType.UI) continue;
+					}
 
                     var over = pointer.GetOverData();
-                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
+					// Don't update the pointer if it is not over an UI element
+                    if (over.Type != HitData.HitType.UI) continue;
 
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
@@ -487,10 +498,14 @@ namespace TouchScript.Layers.UI
                         ExecuteEvents.ExecuteHierarchy(scrollHandler, data, ExecuteEvents.scrollHandler);
                     }
                 }
+
+				uiSampler.End();
             }
 
             public virtual void ProcessPressed(object sender, PointerEventArgs pointerEventArgs)
             {
+				uiSampler.Begin();
+
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
@@ -498,7 +513,8 @@ namespace TouchScript.Layers.UI
                     var pointer = pointers[i];
 
                     var over = pointer.GetOverData();
-                    if (over.Type != HitData.HitType.UI && over.Type != HitData.HitType.ScreenSpace) continue;
+					// Don't update the pointer if it is not over an UI element
+                    if (over.Type != HitData.HitType.UI) continue;
 
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
@@ -560,15 +576,23 @@ namespace TouchScript.Layers.UI
                     if (data.pointerDrag != null)
                         ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.initializePotentialDrag);
                 }
+
+				uiSampler.End();
             }
 
             public virtual void ProcessReleased(object sender, PointerEventArgs pointerEventArgs)
             {
+				uiSampler.Begin();
+
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+					var press = pointer.GetPressData();
+					// Don't update the pointer if it is was not pressed over an UI element
+					if (press.Type != HitData.HitType.UI) continue;
+
                     var over = pointer.GetOverData();
 
                     PointerEventData data;
@@ -611,15 +635,20 @@ namespace TouchScript.Layers.UI
                         input.HandlePointerExitAndEnter(data, currentOverGo);
                     }
                 }
+
+				uiSampler.End();
             }
 
             public virtual void ProcessCancelled(object sender, PointerEventArgs pointerEventArgs)
             {
+				uiSampler.Begin();
+
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+
                     var over = pointer.GetOverData();
 
                     PointerEventData data;
@@ -648,21 +677,32 @@ namespace TouchScript.Layers.UI
                     ExecuteEvents.ExecuteHierarchy(data.pointerEnter, data, ExecuteEvents.pointerExitHandler);
                     data.pointerEnter = null;
                 }
+
+				uiSampler.End();
             }
 
             public virtual void ProcessRemoved(object sender, PointerEventArgs pointerEventArgs)
             {
+				uiSampler.Begin();
+
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
                 for (var i = 0; i < count; i++)
                 {
                     var pointer = pointers[i];
+
+					var over = pointer.GetOverData();
+					// Don't update the pointer if it is not over an UI element
+					if (over.Type != HitData.HitType.UI) continue;
+
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
 
                     if (data.pointerEnter) ExecuteEvents.ExecuteHierarchy(data.pointerEnter, data, ExecuteEvents.pointerExitHandler);
                     RemovePointerData(pointer.Id);
                 }
+
+				uiSampler.End();
             }
 
             #endregion
