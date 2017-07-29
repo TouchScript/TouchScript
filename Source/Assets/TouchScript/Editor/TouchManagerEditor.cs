@@ -121,6 +121,8 @@ namespace TouchScript.Editor
                 drawDebug();
             }
 
+			GUILayout.Label("v. " + TouchManager.VERSION + (string.IsNullOrEmpty(TouchManager.VERSION_SUFFIX) ? "" : " " + TouchManager.VERSION_SUFFIX), GUIElements.SmallTextRight);
+
             serializedObject.ApplyModifiedProperties();
         }
 

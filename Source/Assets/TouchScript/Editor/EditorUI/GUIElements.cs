@@ -18,6 +18,7 @@ namespace TouchScript.Editor.EditorUI
 		public static GUIStyle HeaderCheckbox;
 		public static GUIStyle HeaderFoldout;
         public static GUIStyle SmallText;
+		public static GUIStyle SmallTextRight;
         public static GUIStyle SmallButton;
 
 		public static Texture2D PaneOptionsIcon;
@@ -58,6 +59,11 @@ namespace TouchScript.Editor.EditorUI
 			SmallText = new GUIStyle("miniLabel")
 			{
 				alignment = TextAnchor.UpperLeft,
+			};
+
+			SmallTextRight = new GUIStyle("miniLabel")
+			{
+				alignment = TextAnchor.UpperRight,
 			};
 
 			SmallButton = new GUIStyle("Button")
