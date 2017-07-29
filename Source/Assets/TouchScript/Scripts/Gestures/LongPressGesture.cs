@@ -9,6 +9,7 @@ using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Gestures
 {
@@ -90,9 +91,19 @@ namespace TouchScript.Gestures
 
         private Vector2 totalMovement;
 
+		private CustomSampler gestureSampler;
+
         #endregion
 
         #region Unity methods
+
+		/// <inheritdoc />
+		protected override void Awake()
+		{
+			base.Awake();
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Long Press Gesture");
+		}
 
         /// <inheritdoc />
         protected override void OnEnable()
@@ -115,6 +126,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersPressed(pointers);
 
             if (pointersNumState == PointersNumState.PassedMaxThreshold ||
@@ -127,11 +140,15 @@ namespace TouchScript.Gestures
                 setState(GestureState.Possible);
                 StartCoroutine("wait");
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersUpdated(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersUpdated(pointers);
 
             if (distanceLimit < float.PositiveInfinity)
@@ -139,17 +156,23 @@ namespace TouchScript.Gestures
                 totalMovement += ScreenPosition - PreviousScreenPosition;
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersReleased(pointers);
 
             if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 setState(GestureState.Failed);
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />

@@ -9,6 +9,7 @@ using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Gestures
 {
@@ -144,6 +145,8 @@ namespace TouchScript.Gestures
         private Vector2 totalMovement;
         private TimedSequence<Pointer> pointerSequence = new TimedSequence<Pointer>();
 
+		private CustomSampler gestureSampler;
+
         #endregion
 
         #region Public methods
@@ -160,6 +163,14 @@ namespace TouchScript.Gestures
         #endregion
 
         #region Unity methods
+
+		/// <inheritdoc />
+		protected override void Awake()
+		{
+			base.Awake();
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Tap Gesture");
+		}
 
         /// <inheritdoc />
         protected override void OnEnable()
@@ -182,12 +193,15 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersPressed(pointers);
 
             if (pointersNumState == PointersNumState.PassedMaxThreshold ||
                 pointersNumState == PointersNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
+				gestureSampler.End();
                 return;
             }
 
@@ -212,6 +226,7 @@ namespace TouchScript.Gestures
                         if ((pointers[0].Position - startPosition).sqrMagnitude > distanceLimitInPixelsSquared)
                         {
                             setState(GestureState.Failed);
+							gestureSampler.End();
                             return;
                         }
                     }
@@ -227,11 +242,15 @@ namespace TouchScript.Gestures
                     isActive = true;
                 }
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersUpdated(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersUpdated(pointers);
 
             if (distanceLimit < float.PositiveInfinity)
@@ -239,11 +258,15 @@ namespace TouchScript.Gestures
                 totalMovement += pointers[0].Position - pointers[0].PreviousPosition;
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersReleased(pointers);
 
             if (combinePointers)
@@ -266,6 +289,7 @@ namespace TouchScript.Gestures
                     if (!isActive)
                     {
                         setState(GestureState.Failed);
+						gestureSampler.End();
                         return;
                     }
 
@@ -283,6 +307,8 @@ namespace TouchScript.Gestures
                     }
                 }
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />

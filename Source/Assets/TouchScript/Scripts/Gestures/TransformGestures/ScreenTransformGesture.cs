@@ -6,10 +6,9 @@ using TouchScript.Gestures.TransformGestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 using UnityEngine;
-#if TOUCHSCRIPT_DEBUG
+using UnityEngine.Profiling;
 using System.Collections.Generic;
 using TouchScript.Pointers;
-#endif
 
 namespace TouchScript.Gestures.TransformGestures
 {
@@ -20,7 +19,22 @@ namespace TouchScript.Gestures.TransformGestures
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Gestures_TransformGestures_ScreenTransformGesture.htm")]
     public class ScreenTransformGesture : TwoPointTransformGestureBase
     {
+
+		#region Private variables
+
+		private CustomSampler gestureSampler;
+
+		#endregion
+
 		#region Unity
+
+		/// <inheritdoc />
+		protected override void Awake()
+		{
+			base.Awake();
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Screen Transform Gesture");
+		}
 
 		[ContextMenu("Basic Editor")]
 		private void switchToBasicEditor()
@@ -32,17 +46,36 @@ namespace TouchScript.Gestures.TransformGestures
 
         #region Gesture callbacks
 
-#if TOUCHSCRIPT_DEBUG
+		/// <inheritdoc />
+		protected override void pointersPressed(IList<Pointer> pointers)
+		{
+			gestureSampler.Begin();
+
+			base.pointersPressed(pointers);
+
+			gestureSampler.End();
+		}
+
+		/// <inheritdoc />
+		protected override void pointersUpdated(IList<Pointer> pointers)
+		{
+			gestureSampler.Begin();
+
+			base.pointersUpdated(pointers);
+
+			gestureSampler.End();
+		}
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
             base.pointersReleased(pointers);
 
+#if TOUCHSCRIPT_DEBUG
             if (getNumPoints() == 0) clearDebug();
             else drawDebugDelayed(getNumPoints());
-        }
 #endif
+        }
 
         #endregion
 

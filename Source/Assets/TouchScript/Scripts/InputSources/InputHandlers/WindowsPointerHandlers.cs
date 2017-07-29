@@ -208,7 +208,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         protected IntPtr hMainWindow;
         protected ushort pressAndHoldAtomID;
-        protected Dictionary<int, TouchPointer> winTouchToInternalId = new Dictionary<int, TouchPointer>();
+        protected Dictionary<int, TouchPointer> winTouchToInternalId = new Dictionary<int, TouchPointer>(10);
 
         protected ObjectPool<TouchPointer> touchPool;
         protected ObjectPool<MousePointer> mousePool;

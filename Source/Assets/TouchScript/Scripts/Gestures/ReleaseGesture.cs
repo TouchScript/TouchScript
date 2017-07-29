@@ -8,6 +8,7 @@ using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
 using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Gestures
 {
@@ -69,9 +70,19 @@ namespace TouchScript.Gestures
         [ToggleLeft]
         private bool ignoreChildren = false;
 
+		private CustomSampler gestureSampler;
+
 		#endregion
 
 		#region Unity
+
+		/// <inheritdoc />
+		protected override void Awake()
+		{
+			base.Awake();
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Release Gesture");
+		}
 
 		[ContextMenu("Basic Editor")]
 		private void switchToBasicEditor()
@@ -110,26 +121,36 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersPressed(pointers);
 
             if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 if (State == GestureState.Idle) setState(GestureState.Possible);
+				gestureSampler.End();
                 return;
             }
             if (pointersNumState == PointersNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
+				gestureSampler.End();
                 return;
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersReleased(pointers);
 
             if (pointersNumState == PointersNumState.PassedMinThreshold) setState(GestureState.Recognized);
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />

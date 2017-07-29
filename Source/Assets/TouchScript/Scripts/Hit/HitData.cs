@@ -27,9 +27,9 @@ namespace TouchScript.Hit
             Unknown,
 
             /// <summary>
-            /// Screen space UI hit.
+            /// Nothing hit, but some object grabbed the pointer.
             /// </summary>
-            ScreenSpace,
+            Screen,
 
             /// <summary>
             /// 3D hit.
@@ -42,7 +42,7 @@ namespace TouchScript.Hit
             World2D,
 
             /// <summary>
-            /// World space UI hit.
+            /// UI hit.
             /// </summary>
             UI
         }
@@ -253,7 +253,7 @@ namespace TouchScript.Hit
             raycastHit = default(RaycastHit);
             raycastHit2D = default(RaycastHit2D);
             raycastHitUI = default(RaycastHitUI);
-            type = HitType.ScreenSpace;
+            type = HitType.Screen;
         }
 
         /// <summary>

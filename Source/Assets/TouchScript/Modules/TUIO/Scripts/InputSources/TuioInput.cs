@@ -93,7 +93,7 @@ namespace TouchScript.InputSources
         private ObjectProcessor objectProcessor;
         private BlobProcessor blobProcessor;
 
-        private Dictionary<TuioCursor, TouchPointer> cursorToInternalId = new Dictionary<TuioCursor, TouchPointer>();
+        private Dictionary<TuioCursor, TouchPointer> cursorToInternalId = new Dictionary<TuioCursor, TouchPointer>(10);
         private Dictionary<TuioBlob, ObjectPointer> blobToInternalId = new Dictionary<TuioBlob, ObjectPointer>();
         private Dictionary<TuioObject, ObjectPointer> objectToInternalId = new Dictionary<TuioObject, ObjectPointer>();
         private int screenWidth;

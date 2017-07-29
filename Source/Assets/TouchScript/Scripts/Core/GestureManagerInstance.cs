@@ -8,6 +8,7 @@ using TouchScript.Gestures;
 using TouchScript.Utils;
 using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Core
 {
@@ -56,7 +57,9 @@ namespace TouchScript.Core
 
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
-        private Dictionary<int, List<Gesture>> pointerToGestures = new Dictionary<int, List<Gesture>>();
+        private Dictionary<int, List<Gesture>> pointerToGestures = new Dictionary<int, List<Gesture>>(10);
+
+		private CustomSampler gestureSampler;
 
         #endregion
 
@@ -69,8 +72,8 @@ namespace TouchScript.Core
         private Dictionary<Gesture, List<Pointer>> pointersToDispatchForGesture = new Dictionary<Gesture, List<Pointer>>(10);
         private List<Gesture> activeGesturesThisUpdate = new List<Gesture>(20);
 
-        private Dictionary<Transform, List<Gesture>> hierarchyEndingWithCache = new Dictionary<Transform, List<Gesture>>();
-        private Dictionary<Transform, List<Gesture>> hierarchyBeginningWithCache = new Dictionary<Transform, List<Gesture>>();
+        private Dictionary<Transform, List<Gesture>> hierarchyEndingWithCache = new Dictionary<Transform, List<Gesture>>(4);
+        private Dictionary<Transform, List<Gesture>> hierarchyBeginningWithCache = new Dictionary<Transform, List<Gesture>>(4);
 
         #endregion
 
@@ -107,6 +110,8 @@ namespace TouchScript.Core
             gestureListPool.WarmUp(20);
             pointerListPool.WarmUp(20);
             transformListPool.WarmUp(1);
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Update Gestures");
         }
 
         private void OnEnable()
@@ -219,6 +224,8 @@ namespace TouchScript.Core
 
         private void updatePressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             var activeTargets = transformListPool.Get();
             var gesturesInHierarchy = gestureListPool.Get();
             var startedGestures = gestureListPool.Get();
@@ -368,10 +375,14 @@ namespace TouchScript.Core
             pointersOnTarget.Clear();
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
+
+			gestureSampler.End();
         }
 
         private void updateUpdated(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             sortPointersForActiveGestures(pointers);
 
             var count = activeGesturesThisUpdate.Count;
@@ -388,10 +399,14 @@ namespace TouchScript.Core
 
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
+
+			gestureSampler.End();
         }
 
         private void updateReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             sortPointersForActiveGestures(pointers);
 
             var count = activeGesturesThisUpdate.Count;
@@ -409,10 +424,14 @@ namespace TouchScript.Core
             removePointers(pointers);
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
+
+			gestureSampler.End();
         }
 
         private void updateCancelled(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             sortPointersForActiveGestures(pointers);
 
             var count = activeGesturesThisUpdate.Count;
@@ -430,6 +449,8 @@ namespace TouchScript.Core
             removePointers(pointers);
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
+
+			gestureSampler.End();
         }
 
         private void sortPointersForActiveGestures(IList<Pointer> pointers)
@@ -499,8 +520,8 @@ namespace TouchScript.Core
 
         private void clearFrameCaches()
         {
-            foreach (var list in hierarchyEndingWithCache.Values) gestureListPool.Release(list);
-            foreach (var list in hierarchyBeginningWithCache.Values) gestureListPool.Release(list);
+			foreach (var kv in hierarchyEndingWithCache) gestureListPool.Release(kv.Value);
+			foreach (var kv in hierarchyBeginningWithCache) gestureListPool.Release(kv.Value);
             hierarchyEndingWithCache.Clear();
             hierarchyBeginningWithCache.Clear();
         }

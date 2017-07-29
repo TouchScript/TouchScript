@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Gestures
 {
@@ -137,9 +138,19 @@ namespace TouchScript.Gestures
         private bool isActive = false;
         private TimedSequence<Vector2> deltaSequence = new TimedSequence<Vector2>();
 
+		private CustomSampler gestureSampler;
+
         #endregion
 
         #region Unity methods
+
+		/// <inheritdoc />
+		protected override void Awake()
+		{
+			base.Awake();
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Flick Gesture");
+		}
 
         /// <inheritdoc />
         protected void LateUpdate()
@@ -162,6 +173,8 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersPressed(pointers);
 
             if (pointersNumState == PointersNumState.PassedMaxThreshold ||
@@ -175,11 +188,15 @@ namespace TouchScript.Gestures
                 if (isActive) setState(GestureState.Failed);
                 else isActive = true;
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersUpdated(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersUpdated(pointers);
 
             if (isActive || !moving)
@@ -191,11 +208,15 @@ namespace TouchScript.Gestures
                     moving = true;
                 }
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersReleased(pointers);
 
             if (NumPointers == 0)
@@ -203,6 +224,7 @@ namespace TouchScript.Gestures
                 if (!isActive || !moving)
                 {
                     setState(GestureState.Failed);
+					gestureSampler.End();
                     return;
                 }
 
@@ -235,6 +257,8 @@ namespace TouchScript.Gestures
                     setState(GestureState.Recognized);
                 }
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />

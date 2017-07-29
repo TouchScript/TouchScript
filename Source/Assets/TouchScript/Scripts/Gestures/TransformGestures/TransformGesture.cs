@@ -8,6 +8,8 @@ using TouchScript.Gestures.TransformGestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Pointers;
+using UnityEngine.Profiling;
+
 #if TOUCHSCRIPT_DEBUG
 using TouchScript.Debugging.GL;
 #endif
@@ -145,6 +147,8 @@ namespace TouchScript.Gestures.TransformGestures
         private TouchLayer projectionLayer;
         private Plane transformPlane;
 
+		private CustomSampler gestureSampler;
+
         #endregion
 
         #region Public methods
@@ -157,13 +161,16 @@ namespace TouchScript.Gestures.TransformGestures
         protected override void Awake()
         {
             base.Awake();
+
             transformPlane = new Plane();
+			gestureSampler = CustomSampler.Create("[TouchScript] Transform Gesture");
         }
 
         /// <inheritdoc />
         protected override void OnEnable()
         {
             base.OnEnable();
+
             updateProjectionPlane();
         }
 
@@ -180,6 +187,8 @@ namespace TouchScript.Gestures.TransformGestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersPressed(pointers);
 
             if (NumPointers == pointers.Count)
@@ -187,19 +196,35 @@ namespace TouchScript.Gestures.TransformGestures
                 projectionLayer = activePointers[0].GetPressData().Layer;
                 updateProjectionPlane();
             }
+
+			gestureSampler.End();
         }
 
-#if TOUCHSCRIPT_DEBUG
+		/// <inheritdoc />
+		protected override void pointersUpdated(IList<Pointer> pointers)
+		{
+			gestureSampler.Begin();
+
+			base.pointersUpdated(pointers);
+
+			gestureSampler.End();
+		}
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersReleased(pointers);
 
+#if TOUCHSCRIPT_DEBUG
             if (getNumPoints() == 0) clearDebug();
             else drawDebugDelayed(getNumPoints());
-        }
 #endif
+
+			gestureSampler.End();
+        }
+
 
         #endregion
 

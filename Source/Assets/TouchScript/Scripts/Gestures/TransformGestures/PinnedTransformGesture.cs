@@ -7,6 +7,8 @@ using TouchScript.Gestures.TransformGestures.Base;
 using TouchScript.Layers;
 using TouchScript.Utils.Geom;
 using TouchScript.Pointers;
+using UnityEngine.Profiling;
+
 #if TOUCHSCRIPT_DEBUG
 using TouchScript.Debugging.GL;
 #endif
@@ -87,6 +89,8 @@ namespace TouchScript.Gestures.TransformGestures
         private TouchLayer projectionLayer;
         private Plane transformPlane;
 
+		private CustomSampler gestureSampler;
+
         #endregion
 
         #region Public methods
@@ -99,7 +103,9 @@ namespace TouchScript.Gestures.TransformGestures
         protected override void Awake()
         {
             base.Awake();
+
             transformPlane = new Plane();
+			gestureSampler = CustomSampler.Create("[TouchScript] Pinned Transform Gesture");
         }
 
         /// <inheritdoc />
@@ -123,6 +129,8 @@ namespace TouchScript.Gestures.TransformGestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersPressed(pointers);
 
             if (NumPointers == pointers.Count)
@@ -134,18 +142,34 @@ namespace TouchScript.Gestures.TransformGestures
                 drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
 #endif
             }
+
+			gestureSampler.End();
         }
 
-#if TOUCHSCRIPT_DEBUG
+		/// <inheritdoc />
+		protected override void pointersUpdated(IList<Pointer> pointers)
+		{
+			gestureSampler.Begin();
+
+			base.pointersUpdated(pointers);
+
+			gestureSampler.End();
+		}
+
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+			gestureSampler.Begin();
+
             base.pointersReleased(pointers);
 
+#if TOUCHSCRIPT_DEBUG
             if (NumPointers == 0) clearDebug();
             else drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
-        }
 #endif
+
+			gestureSampler.End();
+        }
 
         #endregion
 

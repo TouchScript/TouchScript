@@ -246,6 +246,9 @@ namespace TouchScript.Core
         private int nextPointerId = 0;
         private object pointerLock = new object();
 
+		// Cache delegates
+		private Func<TouchLayer, bool> _layerAddPointer, _layerUpdatePointer, _layerRemovePointer, _layerCancelPointer;
+
         #endregion
 
         #region Temporary variables
@@ -261,8 +264,7 @@ namespace TouchScript.Core
         private IPointerLogger pLogger;
 #endif
 
-        private CustomSampler samplerUpdateInputs;
-        private CustomSampler samplerUpdatePointers;
+		private CustomSampler samplerUpdateInputs, samplerUpdateAdded, samplerUpdatePressed, samplerUpdateUpdated, samplerUpdateReleased, samplerUpdateRemoved, samplerUpdateCancelled;
 
         #endregion
 
@@ -350,10 +352,9 @@ namespace TouchScript.Core
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
                     // This pointer was added this frame
-                    pointer = pointersAdded.Find((t) => t.Id == id);
-                    // No pointer with such id
-                    if (pointer == null)
+					if (!wasPointerAddedThisFrame(id, out pointer))
                     {
+						// No pointer with such id
 #if TOUCHSCRIPT_DEBUG
                         if (DebugMode) Debug.LogWarning("TouchScript > Pointer with id [" + id + "] is requested to MOVE to but no pointer with such id found.");
 #endif
@@ -373,10 +374,9 @@ namespace TouchScript.Core
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
                     // This pointer was added this frame
-                    pointer = pointersAdded.Find((t) => t.Id == id);
-                    // No pointer with such id
-                    if (pointer == null)
-                    {
+					if (!wasPointerAddedThisFrame(id, out pointer))
+					{
+						// No pointer with such id
 #if TOUCHSCRIPT_DEBUG
                         if (DebugMode)
                             Debug.LogWarning("TouchScript > Pointer with id [" + id +
@@ -405,11 +405,10 @@ namespace TouchScript.Core
                 Pointer pointer;
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
-                    // This pointer was added this frame
-                    pointer = pointersAdded.Find((t) => t.Id == id);
-                    // No pointer with such id
-                    if (pointer == null)
-                    {
+					// This pointer was added this frame
+					if (!wasPointerAddedThisFrame(id, out pointer))
+					{
+						// No pointer with such id
 #if TOUCHSCRIPT_DEBUG
                         if (DebugMode)
                             Debug.LogWarning("TouchScript > Pointer with id [" + id +
@@ -438,11 +437,10 @@ namespace TouchScript.Core
                 Pointer pointer;
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
-                    // This pointer was added this frame
-                    pointer = pointersAdded.Find((t) => t.Id == id);
-                    // No pointer with such id
-                    if (pointer == null)
-                    {
+					// This pointer was added this frame
+					if (!wasPointerAddedThisFrame(id, out pointer))
+					{
+						// No pointer with such id
 #if TOUCHSCRIPT_DEBUG
                         if (DebugMode)
                             Debug.LogWarning("TouchScript > Pointer with id [" + id +
@@ -471,11 +469,10 @@ namespace TouchScript.Core
                 Pointer pointer;
                 if (!idToPointer.TryGetValue(id, out pointer))
                 {
-                    // This pointer was added this frame
-                    pointer = pointersAdded.Find((t) => t.Id == id);
-                    // No pointer with such id
-                    if (pointer == null)
-                    {
+					// This pointer was added this frame
+					if (!wasPointerAddedThisFrame(id, out pointer))
+					{
+						// No pointer with such id
 #if TOUCHSCRIPT_DEBUG
                         if (DebugMode)
                             Debug.LogWarning("TouchScript > Pointer with id [" + id +
@@ -533,8 +530,18 @@ namespace TouchScript.Core
             pointerListPool.WarmUp(2);
             intListPool.WarmUp(3);
 
-            samplerUpdateInputs = CustomSampler.Create("TouchScript.UpdateInputs");
-            samplerUpdatePointers = CustomSampler.Create("TouchScript.UpdatePointers");
+			_layerAddPointer = layerAddPointer;
+			_layerUpdatePointer = layerUpdatePointer;
+			_layerRemovePointer = layerRemovePointer;
+			_layerCancelPointer = layerCancelPointer;
+
+            samplerUpdateInputs = CustomSampler.Create("[TouchScript] Update Inputs");
+			samplerUpdateAdded = CustomSampler.Create("[TouchScript] Added Pointers");
+			samplerUpdatePressed = CustomSampler.Create("[TouchScript] Press Pointers");
+			samplerUpdateUpdated = CustomSampler.Create("[TouchScript] Update Pointers");
+			samplerUpdateReleased = CustomSampler.Create("[TouchScript] Release Pointers");
+			samplerUpdateRemoved = CustomSampler.Create("[TouchScript] Remove Pointers");
+			samplerUpdateCancelled = CustomSampler.Create("[TouchScript] Cancel Pointers");
         }
 
 #if UNITY_5_4_OR_NEWER
@@ -625,6 +632,8 @@ namespace TouchScript.Core
 
         private void updateAdded(List<Pointer> pointers)
         {
+			samplerUpdateAdded.Begin();
+
             var addedCount = pointers.Count;
             var list = pointerListPool.Get();
             for (var i = 0; i < addedCount; i++)
@@ -639,7 +648,7 @@ namespace TouchScript.Core
 #endif
 
                 tmpPointer = pointer;
-                layerManager.ForEach(layerAddPointer);
+                layerManager.ForEach(_layerAddPointer);
                 tmpPointer = null;
 
 #if TOUCHSCRIPT_DEBUG
@@ -650,6 +659,8 @@ namespace TouchScript.Core
             if (pointersAddedInvoker != null)
                 pointersAddedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
+
+			samplerUpdateAdded.End();
         }
 
         private bool layerAddPointer(TouchLayer layer)
@@ -660,6 +671,8 @@ namespace TouchScript.Core
 
         private void updateUpdated(List<int> pointers)
         {
+			samplerUpdateUpdated.Begin();
+
             var updatedCount = pointers.Count;
             var list = pointerListPool.Get();
             for (var i = 0; i < updatedCount; i++)
@@ -686,7 +699,7 @@ namespace TouchScript.Core
                 else
                 {
                     tmpPointer = pointer;
-                    layerManager.ForEach(layerUpdatePointer);
+					layerManager.ForEach(_layerUpdatePointer);
                     tmpPointer = null;
                 }
 
@@ -698,6 +711,8 @@ namespace TouchScript.Core
             if (pointersUpdatedInvoker != null)
                 pointersUpdatedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
+
+			samplerUpdateUpdated.End();
         }
 
         private bool layerUpdatePointer(TouchLayer layer)
@@ -708,6 +723,8 @@ namespace TouchScript.Core
 
         private void updatePressed(List<int> pointers)
         {
+			samplerUpdatePressed.Begin();
+
             var pressedCount = pointers.Count;
             var list = pointerListPool.Get();
             for (var i = 0; i < pressedCount; i++)
@@ -745,10 +762,14 @@ namespace TouchScript.Core
             if (pointersPressedInvoker != null)
                 pointersPressedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
+
+			samplerUpdatePressed.End();
         }
 
         private void updateReleased(List<int> pointers)
         {
+			samplerUpdateReleased.Begin();
+
             var releasedCount = pointers.Count;
             var list = pointerListPool.Get();
             for (var i = 0; i < releasedCount; i++)
@@ -787,10 +808,14 @@ namespace TouchScript.Core
                 pointer.INTERNAL_ClearPressData();
             }
             pointerListPool.Release(list);
+
+			samplerUpdateReleased.End();
         }
 
         private void updateRemoved(List<int> pointers)
         {
+			samplerUpdateRemoved.Begin();
+
             var removedCount = pointers.Count;
             var list = pointerListPool.Get();
             for (var i = 0; i < removedCount; i++)
@@ -814,7 +839,7 @@ namespace TouchScript.Core
 #endif
 
                 tmpPointer = pointer;
-                layerManager.ForEach(layerRemovePointer);
+                layerManager.ForEach(_layerRemovePointer);
                 tmpPointer = null;
 
 #if TOUCHSCRIPT_DEBUG
@@ -832,6 +857,8 @@ namespace TouchScript.Core
                 pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
+
+			samplerUpdateRemoved.End();
         }
 
         private bool layerRemovePointer(TouchLayer layer)
@@ -842,6 +869,8 @@ namespace TouchScript.Core
 
         private void updateCancelled(List<int> pointers)
         {
+			samplerUpdateCancelled.Begin();
+
             var cancelledCount = pointers.Count;
             var list = pointerListPool.Get();
             for (var i = 0; i < cancelledCount; i++)
@@ -867,7 +896,7 @@ namespace TouchScript.Core
 #endif
 
                 tmpPointer = pointer;
-                layerManager.ForEach(layerCancelPointer);
+                layerManager.ForEach(_layerCancelPointer);
                 tmpPointer = null;
 
 #if TOUCHSCRIPT_DEBUG
@@ -884,6 +913,8 @@ namespace TouchScript.Core
                 pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
+
+			samplerUpdateCancelled.End();
         }
 
         private bool layerCancelPointer(TouchLayer layer)
@@ -903,8 +934,6 @@ namespace TouchScript.Core
 
         private void updatePointers()
         {
-            samplerUpdatePointers.Begin();
-
             IsInsidePointerFrame = true;
             if (frameStartedInvoker != null) frameStartedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
 
@@ -995,9 +1024,21 @@ namespace TouchScript.Core
 
             if (frameFinishedInvoker != null) frameFinishedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             IsInsidePointerFrame = false;
-
-            samplerUpdatePointers.End();
         }
+
+		private bool wasPointerAddedThisFrame(int id, out Pointer pointer)
+		{
+			pointer = null;
+			foreach (var p in pointersAdded)
+			{
+				if (p.Id == id)
+				{
+					pointer = p;
+					return true;
+				}
+			}
+			return false;
+		}
 
 #if TOUCHSCRIPT_DEBUG
         private Vector2 debugPointerSize;
