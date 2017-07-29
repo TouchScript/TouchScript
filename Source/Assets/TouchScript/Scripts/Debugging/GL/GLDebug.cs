@@ -3,8 +3,7 @@
  * Based on http://pastebin.com/69QP1s45
  */
 
-
-#if TOUCHSCRIPT_DEBUG
+ #if TOUCHSCRIPT_DEBUG
 
 using System.Collections;
 using System.Collections.Generic;
@@ -603,7 +602,7 @@ namespace TouchScript.Debugging.GL
                 {
                     Lines[i].Draw();
                 }
-                return Duration - Time.deltaTime;
+                return Duration - Time.unscaledDeltaTime;
             }
         }
 

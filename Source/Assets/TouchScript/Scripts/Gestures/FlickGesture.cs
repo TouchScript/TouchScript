@@ -149,11 +149,11 @@ namespace TouchScript.Gestures
             deltaSequence.Add(ScreenPosition - PreviousScreenPosition);
         }
 
-		[ContextMenu("Basic Editor")]
-		private void switchToBasicEditor()
-		{
-			basicEditor = true;
-		}
+        [ContextMenu("Basic Editor")]
+        private void switchToBasicEditor()
+        {
+            basicEditor = true;
+        }
 
         #endregion
 
@@ -209,7 +209,7 @@ namespace TouchScript.Gestures
                 deltaSequence.Add(ScreenPosition - PreviousScreenPosition);
 
                 float lastTime;
-                var deltas = deltaSequence.FindElementsLaterThan(Time.time - FlickTime, out lastTime);
+                var deltas = deltaSequence.FindElementsLaterThan(Time.unscaledTime - FlickTime, out lastTime);
                 var totalMovement = Vector2.zero;
                 var count = deltas.Count;
                 for (var i = 0; i < count; i++) totalMovement += deltas[i];
@@ -231,7 +231,7 @@ namespace TouchScript.Gestures
                 else
                 {
                     ScreenFlickVector = totalMovement;
-                    ScreenFlickTime = Time.time - lastTime;
+                    ScreenFlickTime = Time.unscaledTime - lastTime;
                     setState(GestureState.Recognized);
                 }
             }
