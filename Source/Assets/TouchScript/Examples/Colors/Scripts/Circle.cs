@@ -4,9 +4,11 @@
 
 using UnityEngine;
 using TouchScript.Gestures;
+using TouchScript.Gestures.TransformGestures;
 
 namespace TouchScript.Examples.Colors
 {
+    /// <exclude />
     public class Circle : MonoBehaviour
     {
         private bool isDestroyed = false;

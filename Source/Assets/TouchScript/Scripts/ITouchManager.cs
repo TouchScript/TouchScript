@@ -5,37 +5,38 @@
 using System;
 using System.Collections.Generic;
 using TouchScript.Devices.Display;
-using TouchScript.Hit;
 using TouchScript.InputSources;
 using TouchScript.Layers;
-using UnityEngine;
+using TouchScript.Pointers;
 
 namespace TouchScript
 {
     /// <summary>
-    /// <para>Core manager of all touch input in <b>TouchScript</b>. It is responsible for assigning unique touch ids and keeping the list of active touches. Controls touch frames and dispatches touch events.</para>
+    /// <para>Core manager of all pointer input in <b>TouchScript</b>. It is responsible for assigning unique pointer ids and keeping the list of active pointers. Controls pointer frames and dispatches pointer events.</para>
     /// </summary>
     /// <remarks>
-    /// <para>Every frame touch events are dispatched in this order:</para>
+    /// <para>Every frame pointer events are dispatched in this order:</para>
     /// <list type="number">
     /// <item><description>FrameStarted</description></item>
-    /// <item><description>TouchesBegan</description></item>
-    /// <item><description>TouchesMoved</description></item>
-    /// <item><description>TouchesEnded</description></item>
-    /// <item><description>TouchesCancelled</description></item>
+    /// <item><description>PointersAdded</description></item>
+    /// <item><description>PointersUpdated</description></item>
+    /// <item><description>PointersPressed</description></item>
+    /// <item><description>PointersReleased</description></item>
+    /// <item><description>PointersRemoved</description></item>
+    /// <item><description>PointersCancelled</description></item>
     /// <item><description>FrameFinished</description></item>
     /// </list>
-    /// <para>FrameStarted and FrameFinished events mark the start and the end of current touch frame and allow to implement specific logic at these moments.</para>
+    /// <para>FrameStarted and FrameFinished events mark the start and the end of current pointer frame and allow to implement specific logic at these moments.</para>
     /// <para>Current instance of an active object implementing <see cref="ITouchManager"/> can be obtained via <see cref="TouchManager.Instance"/>.</para>
     /// </remarks>
-    /// <seealso cref="TouchEventArgs"/>
+    /// <seealso cref="PointerEventArgs"/>
     /// <example>
-    /// This sample shows how to get Touch Manager instance and subscribe to events.
+    /// This sample shows how to get TouchManager instance and subscribe to events.
     /// <code>
-    /// TouchManager.Instance.TouchesBegan += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Began: " + touch.Id); }; 
-    /// TouchManager.Instance.TouchesEnded += 
-    ///     (sender, args) => { foreach (var touch in args.Touches) Debug.Log("Ended: " + touch.Id); }; 
+    /// TouchManager.Instance.PointersPressed += 
+    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Pressed: " + pointer.Id); }; 
+    /// TouchManager.Instance.PointersReleased += 
+    ///     (sender, args) => { foreach (var pointer in args.Pointers) Debug.Log("Released: " + pointer.Id); }; 
     /// </code>
     /// </example>
     public interface ITouchManager
@@ -51,24 +52,34 @@ namespace TouchScript
         event EventHandler FrameFinished;
 
         /// <summary>
-        /// Occurs when new touch points are added.
+        /// Occurs when new hovering pointers are added.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesBegan;
+        event EventHandler<PointerEventArgs> PointersAdded;
 
         /// <summary>
-        /// Occurs when touch points are updated.
+        /// Occurs when pointers are updated.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesMoved;
+        event EventHandler<PointerEventArgs> PointersUpdated;
 
         /// <summary>
-        /// Occurs when touch points are removed.
+        /// Occurs when pointers touch the surface.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesEnded;
+        event EventHandler<PointerEventArgs> PointersPressed;
 
         /// <summary>
-        /// Occurs when touch points are cancelled.
+        /// Occurs when pointers are released.
         /// </summary>
-        event EventHandler<TouchEventArgs> TouchesCancelled;
+        event EventHandler<PointerEventArgs> PointersReleased;
+
+        /// <summary>
+        /// Occurs when pointers are removed from the system.
+        /// </summary>
+        event EventHandler<PointerEventArgs> PointersRemoved;
+
+        /// <summary>
+        /// Occurs when pointers are cancelled.
+        /// </summary>
+        event EventHandler<PointerEventArgs> PointersCancelled;
 
         /// <summary>
         /// Gets or sets current display device.
@@ -83,10 +94,10 @@ namespace TouchScript
         float DPI { get; }
 
         /// <summary>
-        /// Indicates if TouchScript should create a <see cref="CameraLayer"/> for you if no layers present in a scene.
+        /// Indicates if TouchScript should create a <see cref="StandardLayer"/> for you if no layers present in a scene.
         /// </summary>
         /// <value><c>true</c> if a CameraLayer should be created on startup; otherwise, <c>false</c>.</value>
-        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get touch input from some device.</remarks>
+        /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off if you are using TouchScript only to get pointer input from some device.</remarks>
         bool ShouldCreateCameraLayer { get; set; }
 
         /// <summary>
@@ -95,12 +106,6 @@ namespace TouchScript
         /// <value> <c>true</c> if StandardInput should be created; otherwise, <c>false</c>. </value>
         /// <remarks>This is usually a desired behavior but sometimes you would want to turn this off.</remarks>
         bool ShouldCreateStandardInput { get; set; }
-
-        /// <summary>
-        /// Gets the list of <see cref="TouchLayer"/>.
-        /// </summary>
-        /// <value>A sorted list of currently active touch layers.</value>
-        IList<TouchLayer> Layers { get; }
 
         /// <summary>
         /// Gets the list of <see cref="IInputSource"/>
@@ -114,40 +119,34 @@ namespace TouchScript
         float DotsPerCentimeter { get; }
 
         /// <summary>
-        /// Gets number of active touches.
+        /// Gets number of pointers in the system.
         /// </summary>
-        int NumberOfTouches { get; }
+        int PointersCount { get; }
 
         /// <summary>
-        /// Gets the list of active touches.
+        /// Gets the number of pressed pointer in the system.
         /// </summary>
-        /// <value>An unsorted list of all touches which began but have not ended yet.</value>
-        IList<TouchPoint> ActiveTouches { get; }
+        int PressedPointersCount { get; }
 
         /// <summary>
-        /// Adds a touch layer in a specific position.
+        /// Gets the list of pointers.
         /// </summary>
-        /// <param name="layer">The layer to add.</param>
-        /// <param name="index">Layer index to add the layer to or <c>-1</c> to add to the end of the list.</param>
-        /// <param name="addIfExists">if set to <c>true</c> move the layer to another index if it is already added; don't move otherwise.</param>
-        /// <returns>
-        /// True if the layer was added.
-        /// </returns>
-        bool AddLayer(TouchLayer layer, int index = -1, bool addIfExists = true);
+        /// <value>An unsorted list of all pointers.</value>
+        IList<Pointer> Pointers { get; }
 
         /// <summary>
-        /// Removes a touch layer.
+        /// Gets the list of pressed pointers.
         /// </summary>
-        /// <param name="layer">The layer to remove.</param>
-        /// <returns>True if the layer was removed.</returns>
-        bool RemoveLayer(TouchLayer layer);
+        /// <value>An unsorted list of all pointers which were pressed but not released yet.</value>
+        IList<Pointer> PressedPointers { get; }
 
         /// <summary>
-        /// Swaps layers.
+        /// Indicates that execution is currently inside a TouchScript Pointer Frame, i.e. before <see cref="FrameFinished"/> and after <see cref="FrameStarted"/> events.
         /// </summary>
-        /// <param name="at">Layer index 1.</param>
-        /// <param name="to">Layer index 2.</param>
-        void ChangeLayerIndex(int at, int to);
+        /// <value>
+        ///   <c>true</c> if execution is inside a TouchScript Pointer Frame; otherwise, <c>false</c>.
+        /// </value>
+        bool IsInsidePointerFrame { get; }
 
         /// <summary>
         /// Adds an input source.
@@ -164,74 +163,52 @@ namespace TouchScript
         bool RemoveInput(IInputSource input);
 
         /// <summary>
-        /// Checks if a touch hits anything.
+        /// Cancels a pointer and returns it to the system of need.
         /// </summary>
-        /// <param name="position">Screen position of the touch.</param>
-        /// <returns>Transform which has been hit or null otherwise.</returns>
-        Transform GetHitTarget(Vector2 position);
+        /// <param name="id">Pointer id to cancel.</param>
+        /// <param name="shouldReturn">If the pointer should be redispatched to the system.</param>
+        void CancelPointer(int id, bool shouldReturn);
 
         /// <summary>
-        /// Checks if a touch hits anything.
-        /// <seealso cref="TouchHit"/>
+        /// Cancels a pointer.
         /// </summary>
-        /// <param name="position">Screen position of the touch.</param>
-        /// <param name="hit">An object which represents hit information.</param>
-        /// <returns>True if the touch hits any Transform.</returns>
-        bool GetHitTarget(Vector2 position, out TouchHit hit);
+        /// <param name="id">Pointer id to cancel.</param>
+        void CancelPointer(int id);
 
         /// <summary>
-        /// Checks if a touch hits anything.
-        /// <seealso cref="TouchHit"/>
-        /// <seealso cref="TouchLayer"/>
+        /// Tells TouchScript to update internal state after a resolution change.
         /// </summary>
-        /// <param name="position">Screen position of the touch.</param>
-        /// <param name="hit">An object which represents hit information.</param>
-        /// <param name="layer">A layer which was hit.</param>
-        /// <returns>True if the touch hits any Transform.</returns>
-        bool GetHitTarget(Vector2 position, out TouchHit hit, out TouchLayer layer);
-
-        /// <summary>
-        /// Cancels a touch and returns it to the system of need.
-        /// </summary>
-        /// <param name="id">Touch id to cancel.</param>
-        /// <param name="return">Should the touch be returned to the system.</param>
-        void CancelTouch(int id, bool @return);
-
-        /// <summary>
-        /// Cancels a touch.
-        /// </summary>
-        /// <param name="id">Touch id to cancel.</param>
-        void CancelTouch(int id);
+        void UpdateResolution();
     }
 
     /// <summary>
-    /// Arguments dispatched with Touch Manager events.
+    /// Arguments dispatched with TouchManager events.
     /// </summary>
-    public class TouchEventArgs : EventArgs
+    public class PointerEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets list of touches participating in the event.
+        /// Gets list of pointers participating in the event.
         /// </summary>
-        /// <value>List of touches added, changed or removed this frame.</value>
-        public IList<TouchPoint> Touches { get; private set; }
+        /// <value>List of pointers added, changed or removed this frame.</value>
+        public IList<Pointer> Pointers { get; private set; }
 
-        private static TouchEventArgs instance;
+        private static PointerEventArgs instance;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TouchEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="PointerEventArgs"/> class.
         /// </summary>
-        private TouchEventArgs() {}
+        private PointerEventArgs() {}
 
         /// <summary>
         /// Returns cached instance of EventArgs.
         /// This cached EventArgs is reused throughout the library not to alocate new ones on every call.
         /// </summary>
-        /// <param name="touches">A list of touches for event.</param>
+        /// <param name="pointers">A list of pointers for event.</param>
         /// <returns>Cached EventArgs object.</returns>
-        public static TouchEventArgs GetCachedEventArgs(IList<TouchPoint> touches)
+        public static PointerEventArgs GetCachedEventArgs(IList<Pointer> pointers)
         {
-            if (instance == null) instance = new TouchEventArgs();
-            instance.Touches = touches;
+            if (instance == null) instance = new PointerEventArgs();
+            instance.Pointers = pointers;
             return instance;
         }
     }

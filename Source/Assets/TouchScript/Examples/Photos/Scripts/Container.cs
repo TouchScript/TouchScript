@@ -7,6 +7,7 @@ using TouchScript.Gestures;
 
 namespace TouchScript.Examples.Photos
 {
+    /// <exclude />
     public class Container : MonoBehaviour
     {
         public int Width = 500;

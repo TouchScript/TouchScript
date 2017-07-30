@@ -50,7 +50,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-  spritePackingTag: GestureIcons
+  spritePackingTag: ui
   userData: 
   assetBundleName: 
   assetBundleVariant: 

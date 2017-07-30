@@ -1,9 +1,10 @@
-﻿/*
+/*
  * @author DenizPiri / denizpiri@hotmail.com
  * @author Valentin Simonov / http://va.lent.in/
  */
 
 using System;
+using UnityEngine;
 
 namespace TouchScript.Utils
 {
@@ -29,7 +30,7 @@ namespace TouchScript.Utils
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogException(ex);
+                Debug.LogException(ex);
                 return ex;
             }
             return null;
@@ -50,7 +51,7 @@ namespace TouchScript.Utils
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogException(ex);
+                Debug.LogException(ex);
                 return ex;
             }
             return null;

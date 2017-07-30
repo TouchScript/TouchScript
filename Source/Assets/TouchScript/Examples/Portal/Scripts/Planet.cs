@@ -4,9 +4,11 @@
 
 using UnityEngine;
 using TouchScript.Gestures;
+using TouchScript.Gestures.TransformGestures;
 
 namespace TouchScript.Examples.Portal
 {
+    /// <exclude />
     public class Planet : MonoBehaviour
     {
         private enum PlanetStatus
@@ -47,7 +49,7 @@ namespace TouchScript.Examples.Portal
             {
                 case PlanetStatus.Free:
                     transform.RotateAround(transform.parent.position, Vector3.up,
-                        Speed*Time.deltaTime/transform.localPosition.sqrMagnitude);
+                        Speed * Time.unscaledDeltaTime / transform.localPosition.sqrMagnitude);
                     break;
                 case PlanetStatus.Manual:
                     break;
@@ -58,7 +60,7 @@ namespace TouchScript.Examples.Portal
                     break;
             }
 
-            transform.Rotate(0, 0, Time.deltaTime*RotationSpeed);
+            transform.Rotate(0, 0, Time.unscaledDeltaTime * RotationSpeed);
         }
 
         void pressedhandler(object sender, System.EventArgs e)

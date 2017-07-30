@@ -3,10 +3,13 @@
  */
 
 using TouchScript.Gestures;
+using TouchScript.Gestures.TransformGestures;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Examples.Checkers
 {
+    /// <exclude />
     public class Exclusive : MonoBehaviour, IGestureDelegate
     {
         public TransformGesture Target;
@@ -25,7 +28,7 @@ namespace TouchScript.Examples.Checkers
 
         private void Update()
         {
-            if (UnityEngine.Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 exclusive = true;
                 cachedRenderer.material.SetColor("_SpecColor", Color);
@@ -45,7 +48,7 @@ namespace TouchScript.Examples.Checkers
             return true;
         }
 
-        public bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch)
+        public bool ShouldReceivePointer(Gesture gesture, Pointer pointer)
         {
             if (exclusive) return gesture == Target;
             return true;

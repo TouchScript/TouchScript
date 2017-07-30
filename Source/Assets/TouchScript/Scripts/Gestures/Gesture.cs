@@ -6,10 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TouchScript.Hit;
-using TouchScript.Layers;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
+using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Events;
+using TouchScript.Core;
 
 namespace TouchScript.Gestures
 {
@@ -19,6 +21,12 @@ namespace TouchScript.Gestures
     public abstract class Gesture : DebuggableMonoBehaviour
     {
         #region Constants
+
+        /// <summary>
+        /// Unity event for gesture state changes.
+        /// </summary>
+        [Serializable]
+		public class GestureEvent : UnityEvent<Gesture> {}
 
         /// <summary>
         /// Message sent when gesture changes state if SendMessage is used.
@@ -36,7 +44,12 @@ namespace TouchScript.Gestures
         public enum GestureState
         {
             /// <summary>
-            /// Gesture is possible.
+            /// Gesture is idle.
+            /// </summary>
+            Idle,
+
+            /// <summary>
+            /// Gesture started looking for the patern.
             /// </summary>
             Possible,
 
@@ -72,37 +85,37 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Current state of the number of touch points.
+        /// Current state of the number of pointers.
         /// </summary>
-        protected enum TouchesNumState
+        protected enum PointersNumState
         {
             /// <summary>
-            /// The number of touch points is between min and max thresholds.
+            /// The number of pointers is between min and max thresholds.
             /// </summary>
             InRange,
 
             /// <summary>
-            /// The number of touch points is less than min threshold.
+            /// The number of pointers is less than min threshold.
             /// </summary>
             TooFew,
 
             /// <summary>
-            /// The number of touch points is greater than max threshold.
+            /// The number of pointers is greater than max threshold.
             /// </summary>
             TooMany,
 
             /// <summary>
-            /// The number of touch points passed min threshold this frame and is now in range.
+            /// The number of pointers passed min threshold this frame and is now in range.
             /// </summary>
             PassedMinThreshold,
 
             /// <summary>
-            /// The number of touch points passed max threshold this frame and is now in range.
+            /// The number of pointers passed max threshold this frame and is now in range.
             /// </summary>
             PassedMaxThreshold,
 
             /// <summary>
-            /// The number of touch points passed both min and max thresholds.
+            /// The number of pointers passed both min and max thresholds.
             /// </summary>
             PassedMinMaxThreshold
         }
@@ -133,37 +146,42 @@ namespace TouchScript.Gestures
         private EventHandler<GestureStateChangeEventArgs> stateChangedInvoker;
         private EventHandler<EventArgs> cancelledInvoker;
 
+		/// <summary>
+		/// Occurs when gesture changes state.
+		/// </summary>
+		public GestureEvent OnStateChange = new GestureEvent();
+
         #endregion
 
         #region Public properties
 
         /// <summary>
-        /// Gets or sets minimum number of touches this gesture reacts to.
-        /// The gesture will not be recognized if it has less than <see cref="MinTouches"/> touches.
+        /// Gets or sets minimum number of pointers this gesture reacts to.
+        /// The gesture will not be recognized if it has less than <see cref="MinPointers"/> pointers.
         /// </summary>
-        /// <value> Minimum number of touches. </value>
-        public int MinTouches
+        /// <value> Minimum number of pointers. </value>
+        public int MinPointers
         {
-            get { return minTouches; }
+            get { return minPointers; }
             set
             {
                 if (value < 0) return;
-                minTouches = value;
+                minPointers = value;
             }
         }
 
         /// <summary>
-        /// Gets or sets maximum number of touches this gesture reacts to.
-        /// The gesture will not be recognized if it has more than <see cref="MaxTouches"/> touches.
+        /// Gets or sets maximum number of pointers this gesture reacts to.
+        /// The gesture will not be recognized if it has more than <see cref="MaxPointers"/> pointers.
         /// </summary>
-        /// <value> Maximum number of touches. </value>
-        public int MaxTouches
+        /// <value> Maximum number of pointers. </value>
+        public int MaxPointers
         {
-            get { return maxTouches; }
+            get { return maxPointers; }
             set
             {
                 if (value < 0) return;
-                maxTouches = value;
+                maxPointers = value;
             }
         }
 
@@ -176,35 +194,14 @@ namespace TouchScript.Gestures
             get { return requireGestureToFail; }
             set
             {
+				if (!Application.isPlaying) return;
+
                 if (requireGestureToFail != null)
                     requireGestureToFail.StateChanged -= requiredToFailGestureStateChangedHandler;
                 requireGestureToFail = value;
                 if (requireGestureToFail != null)
                     requireGestureToFail.StateChanged += requiredToFailGestureStateChangedHandler;
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the flag if touches should be treated as a cluster.
-        /// </summary>
-        /// <value> <c>true</c> if touches should be treated as a cluster; otherwise, <c>false</c>. </value>
-        /// <remarks>
-        /// At the end of a gesture when touches are lifted off due to the fact that computers are faster than humans the very last touch's position will be gesture's <see cref="ScreenPosition"/> after that. This flag is used to combine several touch which from the point of a user were lifted off simultaneously and set their centroid as gesture's <see cref="ScreenPosition"/>.
-        /// </remarks>
-        public bool CombineTouches
-        {
-            get { return combineTouches; }
-            set { combineTouches = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets time interval before gesture is recognized to combine all lifted touch points into a cluster to use its center as <see cref="ScreenPosition"/>.
-        /// </summary>
-        /// <value> Time in seconds to treat touches lifted off during this interval as a single gesture. </value>
-        public float CombineTouchesInterval
-        {
-            get { return combineTouchesInterval; }
-            set { combineTouchesInterval = value; }
         }
 
         /// <summary>
@@ -218,7 +215,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseSendMessage"/> is true..
+        /// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseSendMessage"/> is true.
         /// </summary>
         /// <value> <c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>. </value>
         public bool SendStateChangeMessages
@@ -241,6 +238,26 @@ namespace TouchScript.Gestures
             }
         }
 
+		/// <summary>
+		/// Gets or sets whether gesture should use Unity Events in addition to C# events.
+		/// </summary>
+		/// <value> <c>true</c> if gesture uses Unity Events; otherwise, <c>false</c>. </value>
+		public bool UseUnityEvents
+		{
+			get { return useUnityEvents; }
+			set { useUnityEvents = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether state change events are broadcasted if <see cref="UseUnityEvents"/> is true.
+		/// </summary>
+		/// <value> <c>true</c> if state change events should be broadcaster; otherwise, <c>false</c>. </value>
+		public bool SendStateChangeEvents
+		{
+			get { return sendStateChangeEvents; }
+			set { sendStateChangeEvents = value; }
+		}
+
         /// <summary>
         /// Gets current gesture state.
         /// </summary>
@@ -255,20 +272,23 @@ namespace TouchScript.Gestures
 
                 switch (value)
                 {
+                    case GestureState.Idle:
+                        onIdle();
+                        break;
                     case GestureState.Possible:
                         onPossible();
                         break;
                     case GestureState.Began:
-                        retainTouches();
+                        retainPointers();
                         onBegan();
                         break;
                     case GestureState.Changed:
                         onChanged();
                         break;
                     case GestureState.Recognized:
-                        // Only retain/release touches for continuos gestures
+                        // Only retain/release pointers for continuos gestures
                         if (PreviousState == GestureState.Changed || PreviousState == GestureState.Began)
-                            releaseTouches(true);
+                            releasePointers(true);
                         onRecognized();
                         break;
                     case GestureState.Failed:
@@ -276,16 +296,16 @@ namespace TouchScript.Gestures
                         break;
                     case GestureState.Cancelled:
                         if (PreviousState == GestureState.Changed || PreviousState == GestureState.Began)
-                            releaseTouches(false);
+                            releasePointers(false);
                         onCancelled();
                         break;
                 }
 
                 if (stateChangedInvoker != null)
-                    stateChangedInvoker.InvokeHandleExceptions(this,
-                        new GestureStateChangeEventArgs(state, PreviousState));
+                    stateChangedInvoker.InvokeHandleExceptions(this, GestureStateChangeEventArgs.GetCachedEventArgs(state, PreviousState));
                 if (useSendMessage && sendStateChangeMessages && SendMessageTarget != null)
                     sendMessageTarget.SendMessage(STATE_CHANGE_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+				if (useUnityEvents && sendStateChangeEvents) OnStateChange.Invoke(this);
             }
         }
 
@@ -303,12 +323,12 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (NumTouches == 0)
+                if (NumPointers == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedScreenPosition)) return cachedScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return ClusterUtils.Get2DCenterPosition(activeTouches);
+                return activePointers[0].Position;
             }
         }
 
@@ -320,13 +340,13 @@ namespace TouchScript.Gestures
         {
             get
             {
-                if (NumTouches == 0)
+                if (NumPointers == 0)
                 {
                     if (!TouchManager.IsInvalidPosition(cachedPreviousScreenPosition))
                         return cachedPreviousScreenPosition;
                     return TouchManager.INVALID_POSITION;
                 }
-                return ClusterUtils.GetPrevious2DCenterPosition(activeTouches);
+                return activePointers[0].PreviousPosition;
             }
         }
 
@@ -359,26 +379,26 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets list of gesture's active touch points.
+        /// Gets list of gesture's active pointers.
         /// </summary>
-        /// <value> The list of touches owned by this gesture. </value>
-        public IList<TouchPoint> ActiveTouches
+        /// <value> The list of pointers owned by this gesture. </value>
+        public IList<Pointer> ActivePointers
         {
             get
             {
-                if (readonlyActiveTouches == null)
-                    readonlyActiveTouches = new ReadOnlyCollection<TouchPoint>(activeTouches);
-                return readonlyActiveTouches;
+                if (readonlyActivePointers == null)
+                    readonlyActivePointers = new ReadOnlyCollection<Pointer>(activePointers);
+                return readonlyActivePointers;
             }
         }
 
         /// <summary>
-        /// Gets the number of active touch points.
+        /// Gets the number of active pointerss.
         /// </summary>
-        /// <value> The number of touches owned by this gesture. </value>
-        public int NumTouches
+        /// <value> The number of pointers owned by this gesture. </value>
+        public int NumPointers
         {
-            get { return numTouches; }
+            get { return numPointers; }
         }
 
         /// <summary>
@@ -403,38 +423,45 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Reference to global TouchManager.
         /// </summary>
-        protected ITouchManager touchManager { get; private set; }
+        protected TouchManagerInstance touchManager { get; private set; }
 
         /// <summary>
-        /// The state of min/max number of touches.
+        /// The state of min/max number of pointers.
         /// </summary>
-        protected TouchesNumState touchesNumState { get; private set; }
+        protected PointersNumState pointersNumState { get; private set; }
 
         /// <summary>
-        /// Touch points the gesture currently owns and works with.
+        /// Pointers the gesture currently owns and works with.
         /// </summary>
-        protected List<TouchPoint> activeTouches = new List<TouchPoint>(10);
+        protected List<Pointer> activePointers = new List<Pointer>(10);
 
         /// <summary>
         /// Cached transform of the parent object.
         /// </summary>
         protected Transform cachedTransform;
 
+        /// <exclude />
         [SerializeField]
-        private bool advancedProps; // is used to save if advanced properties are opened or closed
+		[HideInInspector]
+		protected bool basicEditor = true;
+
+		[SerializeField]
+        [HideInInspector]
+		private bool generalProps; // Used in the custom inspector
+
+		[SerializeField]
+        [HideInInspector]
+		private bool limitsProps; // Used in the custom inspector
+
+		[SerializeField]
+        [HideInInspector]
+		private bool advancedProps; // Used in the custom inspector
+
+		[SerializeField]
+        private int minPointers = 0;
 
         [SerializeField]
-        private int minTouches = 0;
-
-        [SerializeField]
-        private int maxTouches = 0;
-
-        [SerializeField]
-        [ToggleLeft]
-        private bool combineTouches = false;
-
-        [SerializeField]
-        private float combineTouchesInterval = .3f;
+        private int maxPointers = 0;
 
         [SerializeField]
         [ToggleLeft]
@@ -447,34 +474,40 @@ namespace TouchScript.Gestures
         [SerializeField]
         private GameObject sendMessageTarget;
 
+		[SerializeField]
+		private bool useUnityEvents = false;
+
+		[SerializeField]
+		[ToggleLeft]
+		private bool sendStateChangeEvents = false;
+
         [SerializeField]
-        [NullToggle]
+		[NullToggle]
         private Gesture requireGestureToFail;
 
         [SerializeField]
         // Serialized list of gestures for Unity IDE.
         private List<Gesture> friendlyGestures = new List<Gesture>();
 
-        private int numTouches;
-        private TouchLayer layer;
-        private ReadOnlyCollection<TouchPoint> readonlyActiveTouches;
-        private TimedSequence<TouchPoint> touchSequence = new TimedSequence<TouchPoint>();
+        private int numPointers;
+        private ReadOnlyCollection<Pointer> readonlyActivePointers;
         private GestureManagerInstance gestureManagerInstance;
-        private GestureState delayedStateChange = GestureState.Possible;
+        private GestureState delayedStateChange = GestureState.Idle;
         private bool requiredGestureFailed = false;
-        private GestureState state = GestureState.Possible;
+        private FakePointer fakePointer = new FakePointer();
+        private GestureState state = GestureState.Idle;
 
         /// <summary>
         /// Cached screen position. 
-        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// Used to keep tap's position which can't be calculated from pointers when the gesture is recognized since all pointers are gone.
         /// </summary>
-        private Vector2 cachedScreenPosition;
+        protected Vector2 cachedScreenPosition;
 
         /// <summary>
         /// Cached previous screen position.
-        /// Used to keep tap's position which can't be calculated from touch points when the gesture is recognized since all touch points are gone.
+        /// Used to keep tap's position which can't be calculated from pointers when the gesture is recognized since all pointers are gone.
         /// </summary>
-        private Vector2 cachedPreviousScreenPosition;
+        protected Vector2 cachedPreviousScreenPosition;
 
         #endregion
 
@@ -503,66 +536,13 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets result of casting a ray from gesture touch points' centroid screen position.
+        /// Determines whether gesture controls a pointer.
         /// </summary>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public bool GetTargetHitResult()
+        /// <param name="pointer"> The pointer. </param>
+        /// <returns> <c>true</c> if gesture controls the pointer point; <c>false</c> otherwise. </returns>
+        public bool HasPointer(Pointer pointer)
         {
-            TouchHit hit;
-            return GetTargetHitResult(ScreenPosition, out hit);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from gesture touch points centroid screen position.
-        /// </summary>
-        /// <param name="hit"> Raycast result </param>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public virtual bool GetTargetHitResult(out TouchHit hit)
-        {
-            return GetTargetHitResult(ScreenPosition, out hit);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from specific screen position.
-        /// </summary>
-        /// <param name="position"> The position. </param>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public bool GetTargetHitResult(Vector2 position)
-        {
-            TouchHit hit;
-            return GetTargetHitResult(position, out hit);
-        }
-
-        /// <summary>
-        /// Gets result of casting a ray from specific screen position.
-        /// </summary>
-        /// <param name="position"> The position. </param>
-        /// <param name="hit"> Raycast result. </param>
-        /// <returns> <c>true</c> if ray hits gesture's target; <c>false</c> otherwise. </returns>
-        public virtual bool GetTargetHitResult(Vector2 position, out TouchHit hit)
-        {
-            if (layer != null)
-            {
-                if (layer.Hit(position, out hit) != TouchLayer.LayerHitResult.Hit) return false;
-            }
-            else
-            {
-                TouchLayer l = null;
-                if (!touchManager.GetHitTarget(position, out hit, out l)) return false;
-            }
-
-            if (cachedTransform == hit.Transform || hit.Transform.IsChildOf(cachedTransform)) return true;
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether gesture controls a touch point.
-        /// </summary>
-        /// <param name="touch"> The touch. </param>
-        /// <returns> <c>true</c> if gesture controls the touch point; <c>false</c> otherwise. </returns>
-        public bool HasTouch(TouchPoint touch)
-        {
-            return activeTouches.Contains(touch);
+            return activePointers.Contains(pointer);
         }
 
         /// <summary>
@@ -592,14 +572,14 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Specifies if gesture can receive this specific touch point.
+        /// Specifies if gesture can receive this specific pointer point.
         /// </summary>
-        /// <param name="touch"> The touch. </param>
-        /// <returns> <c>true</c> if this touch should be received by the gesture; <c>false</c> otherwise. </returns>
-        public virtual bool ShouldReceiveTouch(TouchPoint touch)
+        /// <param name="pointer"> The pointer. </param>
+        /// <returns> <c>true</c> if this pointer should be received by the gesture; <c>false</c> otherwise. </returns>
+        public virtual bool ShouldReceivePointer(Pointer pointer)
         {
             if (Delegate == null) return true;
-            return Delegate.ShouldReceiveTouch(this, touch);
+            return Delegate.ShouldReceivePointer(this, pointer);
         }
 
         /// <summary>
@@ -615,22 +595,21 @@ namespace TouchScript.Gestures
         /// <summary>
         /// Cancels this gesture.
         /// </summary>
-        /// <param name="cancelTouches"> if set to <c>true</c> also implicitly cancels all touches owned by the gesture. </param>
-        /// <param name="returnTouches"> if set to <c>true</c> redispatched all canceled touches. </param>
-        public void Cancel(bool cancelTouches, bool returnTouches)
+        /// <param name="cancelPointers"> if set to <c>true</c> also implicitly cancels all pointers owned by the gesture. </param>
+        /// <param name="returnPointers"> if set to <c>true</c> redispatched all canceled pointers. </param>
+        public void Cancel(bool cancelPointers, bool returnPointers)
         {
             switch (state)
             {
                 case GestureState.Cancelled:
-                case GestureState.Ended:
                 case GestureState.Failed:
                     return;
             }
 
             setState(GestureState.Cancelled);
 
-            if (!cancelTouches) return;
-            for (var i = 0; i < numTouches; i++) touchManager.CancelTouch(activeTouches[i].Id, returnTouches);
+            if (!cancelPointers) return;
+            for (var i = 0; i < numPointers; i++) touchManager.CancelPointer(activePointers[i].Id, returnPointers);
         }
 
         /// <summary>
@@ -639,6 +618,17 @@ namespace TouchScript.Gestures
         public void Cancel()
         {
             Cancel(false, false);
+        }
+
+        /// <summary>
+        /// Returns <see cref="HitData"/> for gesture's <see cref="ScreenPosition"/>, i.e. what is right beneath it.
+        /// </summary>
+        public virtual HitData GetScreenPositionHitData()
+        {
+            HitData hit;
+            fakePointer.Position = ScreenPosition;
+            LayerManager.Instance.GetHitTarget(fakePointer, out hit);
+            return hit;
         }
 
         #endregion
@@ -659,12 +649,12 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Unity3d Start handler.
+        /// Unity Start handler.
         /// </summary>
         protected virtual void OnEnable()
         {
             // TouchManager might be different in another scene
-            touchManager = TouchManager.Instance;
+            touchManager = TouchManager.Instance as TouchManagerInstance;
             gestureManagerInstance = GestureManager.Instance as GestureManagerInstance;
 
             if (touchManager == null)
@@ -677,7 +667,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Unity3d OnDisable handler.
+        /// Unity OnDisable handler.
         /// </summary>
         protected virtual void OnDisable()
         {
@@ -685,7 +675,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Unity3d OnDestroy handler.
+        /// Unity OnDestroy handler.
         /// </summary>
         protected virtual void OnDestroy()
         {
@@ -709,187 +699,169 @@ namespace TouchScript.Gestures
 
         internal void INTERNAL_Reset()
         {
-            activeTouches.Clear();
-            numTouches = 0;
-            delayedStateChange = GestureState.Possible;
-            touchesNumState = TouchesNumState.TooFew;
+            activePointers.Clear();
+            numPointers = 0;
+            delayedStateChange = GestureState.Idle;
+            pointersNumState = PointersNumState.TooFew;
             requiredGestureFailed = false;
             reset();
         }
 
-        internal void INTERNAL_TouchesBegan(IList<TouchPoint> touches)
+        internal void INTERNAL_PointersPressed(IList<Pointer> pointers)
         {
-            if (numTouches == 0) layer = touches[0].Layer;
+            var count = pointers.Count;
+            var total = numPointers + count;
+            pointersNumState = PointersNumState.InRange;
 
-            var count = touches.Count;
-            var total = numTouches + count;
-            touchesNumState = TouchesNumState.InRange;
-
-            if (minTouches <= 0)
+            if (minPointers <= 0)
             {
-                // minTouches is not set and we got our first touches
-                if (numTouches == 0) touchesNumState = TouchesNumState.PassedMinThreshold;
+                // MinPointers is not set and we got our first pointers
+                if (numPointers == 0) pointersNumState = PointersNumState.PassedMinThreshold;
             }
             else
             {
-                if (numTouches < minTouches)
+                if (numPointers < minPointers)
                 {
-                    // had < minTouches, got >= minTouches
-                    if (total >= minTouches) touchesNumState = TouchesNumState.PassedMinThreshold;
-                    else touchesNumState = TouchesNumState.TooFew;
+                    // had < MinPointers, got >= MinPointers
+                    if (total >= minPointers) pointersNumState = PointersNumState.PassedMinThreshold;
+                    else pointersNumState = PointersNumState.TooFew;
                 }
             }
 
-            if (maxTouches > 0)
+            if (maxPointers > 0)
             {
-                if (numTouches <= maxTouches)
+                if (numPointers <= maxPointers)
                 {
-                    if (total > maxTouches)
+                    if (total > maxPointers)
                     {
-                        // this event we crossed both minTouches and maxTouches
-                        if (touchesNumState == TouchesNumState.PassedMinThreshold) touchesNumState = TouchesNumState.PassedMinMaxThreshold;
-                        // this event we crossed maxTouches
-                        else touchesNumState = TouchesNumState.PassedMaxThreshold;
+                        // this event we crossed both MinPointers and MaxPointers
+                        if (pointersNumState == PointersNumState.PassedMinThreshold) pointersNumState = PointersNumState.PassedMinMaxThreshold;
+                        // this event we crossed MaxPointers
+                        else pointersNumState = PointersNumState.PassedMaxThreshold;
                     }
                 }
-                // last event we already were over maxTouches
-                else touchesNumState = TouchesNumState.TooMany;
+                // last event we already were over MaxPointers
+                else pointersNumState = PointersNumState.TooMany;
             }
 
             if (state == GestureState.Began || state == GestureState.Changed)
             {
-                for (var i = 0; i < count; i++) touches[i].INTERNAL_Retain();
+                for (var i = 0; i < count; i++) pointers[i].INTERNAL_Retain();
             }
 
-            activeTouches.AddRange(touches);
-            numTouches = total;
-            touchesBegan(touches);
+            activePointers.AddRange(pointers);
+            numPointers = total;
+            pointersPressed(pointers);
         }
 
-        internal void INTERNAL_TouchesMoved(IList<TouchPoint> touches)
+        internal void INTERNAL_PointersUpdated(IList<Pointer> pointers)
         {
-            touchesNumState = TouchesNumState.InRange;
-            if (minTouches > 0 && numTouches < minTouches) touchesNumState = TouchesNumState.TooFew;
-            if (maxTouches > 0 && touchesNumState == TouchesNumState.InRange && numTouches > maxTouches) touchesNumState = TouchesNumState.TooMany;
-            touchesMoved(touches);
+            pointersNumState = PointersNumState.InRange;
+            if (minPointers > 0 && numPointers < minPointers) pointersNumState = PointersNumState.TooFew;
+            if (maxPointers > 0 && pointersNumState == PointersNumState.InRange && numPointers > maxPointers) pointersNumState = PointersNumState.TooMany;
+            pointersUpdated(pointers);
         }
 
-        internal void INTERNAL_TouchesEnded(IList<TouchPoint> touches)
+        internal void INTERNAL_PointersReleased(IList<Pointer> pointers)
         {
-            var count = touches.Count;
-            var total = numTouches - count;
-            touchesNumState = TouchesNumState.InRange;
+            var count = pointers.Count;
+            var total = numPointers - count;
+            pointersNumState = PointersNumState.InRange;
 
-            if (minTouches <= 0)
+            if (minPointers <= 0)
             {
-                // have no touches
-                if (total == 0) touchesNumState = TouchesNumState.PassedMinThreshold;
+                // have no pointers
+                if (total == 0) pointersNumState = PointersNumState.PassedMinThreshold;
             }
             else
             {
-                if (numTouches >= minTouches)
+                if (numPointers >= minPointers)
                 {
-                    // had >= minTouches, got < minTouches
-                    if (total < minTouches) touchesNumState = TouchesNumState.PassedMinThreshold;
+                    // had >= MinPointers, got < MinPointers
+                    if (total < minPointers) pointersNumState = PointersNumState.PassedMinThreshold;
                 }
-                // last event we already were under minTouches
-                else touchesNumState = TouchesNumState.TooFew;
+                // last event we already were under MinPointers
+                else pointersNumState = PointersNumState.TooFew;
             }
 
-            if (maxTouches > 0)
+            if (maxPointers > 0)
             {
-                if (numTouches > maxTouches)
+                if (numPointers > maxPointers)
                 {
-                    if (total <= maxTouches)
+                    if (total <= maxPointers)
                     {
-                        // this event we crossed both minTouches and maxTouches
-                        if (touchesNumState == TouchesNumState.PassedMinThreshold) touchesNumState = TouchesNumState.PassedMinMaxThreshold;
-                        // this event we crossed maxTouches
-                        else touchesNumState = TouchesNumState.PassedMaxThreshold;
+                        // this event we crossed both MinPointers and MaxPointers
+                        if (pointersNumState == PointersNumState.PassedMinThreshold) pointersNumState = PointersNumState.PassedMinMaxThreshold;
+                        // this event we crossed MaxPointers
+                        else pointersNumState = PointersNumState.PassedMaxThreshold;
                     }
-                    // last event we already were over maxTouches
-                    else touchesNumState = TouchesNumState.TooMany;
+                    // last event we already were over MaxPointers
+                    else pointersNumState = PointersNumState.TooMany;
                 }
             }
 
-            for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-            numTouches = total;
+            for (var i = 0; i < count; i++) activePointers.Remove(pointers[i]);
+            numPointers = total;
 
-            if (combineTouches)
-            {
-                for (var i = 0; i < count; i++) touchSequence.Add(touches[i]);
+			if (NumPointers == 0)
+			{
+				var lastPoint = pointers[count - 1];
+				if (shouldCachePointerPosition(lastPoint))
+				{
+					cachedScreenPosition = lastPoint.Position;
+					cachedPreviousScreenPosition = lastPoint.PreviousPosition;
+				}
+				else
+				{
+					cachedScreenPosition = TouchManager.INVALID_POSITION;
+					cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
+				}
+			}
 
-                if (NumTouches == 0)
-                {
-                    // Checking which points were removed in clusterExistenceTime seconds to set their centroid as cached screen position
-                    var cluster = touchSequence.FindElementsLaterThan(Time.time - combineTouchesInterval,
-                        shouldCacheTouchPosition);
-                    cachedScreenPosition = ClusterUtils.Get2DCenterPosition(cluster);
-                    cachedPreviousScreenPosition = ClusterUtils.GetPrevious2DCenterPosition(cluster);
-                }
-            }
-            else
-            {
-                if (NumTouches == 0)
-                {
-                    var lastPoint = touches[count - 1];
-                    if (shouldCacheTouchPosition(lastPoint))
-                    {
-                        cachedScreenPosition = lastPoint.Position;
-                        cachedPreviousScreenPosition = lastPoint.PreviousPosition;
-                    }
-                    else
-                    {
-                        cachedScreenPosition = TouchManager.INVALID_POSITION;
-                        cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
-                    }
-                }
-            }
-
-            touchesEnded(touches);
+            pointersReleased(pointers);
         }
 
-        internal void INTERNAL_TouchesCancelled(IList<TouchPoint> touches)
+        internal void INTERNAL_PointersCancelled(IList<Pointer> pointers)
         {
-            var count = touches.Count;
-            var total = numTouches - count;
-            touchesNumState = TouchesNumState.InRange;
+            var count = pointers.Count;
+            var total = numPointers - count;
+            pointersNumState = PointersNumState.InRange;
 
-            if (minTouches <= 0)
+            if (minPointers <= 0)
             {
-                // have no touches
-                if (total == 0) touchesNumState = TouchesNumState.PassedMinThreshold;
+                // have no pointers
+                if (total == 0) pointersNumState = PointersNumState.PassedMinThreshold;
             }
             else
             {
-                if (numTouches >= minTouches)
+                if (numPointers >= minPointers)
                 {
-                    // had >= minTouches, got < minTouches
-                    if (total < minTouches) touchesNumState = TouchesNumState.PassedMinThreshold;
+                    // had >= MinPointers, got < MinPointers
+                    if (total < minPointers) pointersNumState = PointersNumState.PassedMinThreshold;
                 }
-                // last event we already were under minTouches
-                else touchesNumState = TouchesNumState.TooFew;
+                // last event we already were under MinPointers
+                else pointersNumState = PointersNumState.TooFew;
             }
 
-            if (maxTouches > 0)
+            if (maxPointers > 0)
             {
-                if (numTouches > maxTouches)
+                if (numPointers > maxPointers)
                 {
-                    if (total <= maxTouches)
+                    if (total <= maxPointers)
                     {
-                        // this event we crossed both minTouches and maxTouches
-                        if (touchesNumState == TouchesNumState.PassedMinThreshold) touchesNumState = TouchesNumState.PassedMinMaxThreshold;
-                        // this event we crossed maxTouches
-                        else touchesNumState = TouchesNumState.PassedMaxThreshold;
+                        // this event we crossed both MinPointers and MaxPointers
+                        if (pointersNumState == PointersNumState.PassedMinThreshold) pointersNumState = PointersNumState.PassedMinMaxThreshold;
+                        // this event we crossed MaxPointers
+                        else pointersNumState = PointersNumState.PassedMaxThreshold;
                     }
-                    // last event we already were over maxTouches
-                    else touchesNumState = TouchesNumState.TooMany;
+                    // last event we already were over MaxPointers
+                    else pointersNumState = PointersNumState.TooMany;
                 }
             }
 
-            for (var i = 0; i < count; i++) activeTouches.Remove(touches[i]);
-            numTouches = total;
-            touchesCancelled(touches);
+            for (var i = 0; i < count; i++) activePointers.Remove(pointers[i]);
+            numPointers = total;
+            pointersCancelled(pointers);
         }
 
         internal virtual void INTERNAL_RemoveFriendlyGesture(Gesture gesture)
@@ -905,11 +877,11 @@ namespace TouchScript.Gestures
         #region Protected methods
 
         /// <summary>
-        /// Should the gesture cache this touches to use it later in calculation of <see cref="ScreenPosition"/>.
+        /// Should the gesture cache this pointers to use it later in calculation of <see cref="ScreenPosition"/>.
         /// </summary>
-        /// <param name="value"> Touch to cache. </param>
-        /// <returns> <c>true</c> if touches should be cached; <c>false</c> otherwise. </returns>
-        protected virtual bool shouldCacheTouchPosition(TouchPoint value)
+        /// <param name="value"> Pointer to cache. </param>
+        /// <returns> <c>true</c> if pointers should be cached; <c>false</c> otherwise. </returns>
+        protected virtual bool shouldCachePointerPosition(Pointer value)
         {
             return true;
         }
@@ -934,10 +906,11 @@ namespace TouchScript.Gestures
                             return false;
                         }
                         break;
+                    case GestureState.Idle:
                     case GestureState.Possible:
                     case GestureState.Failed:
                     case GestureState.Cancelled:
-                        delayedStateChange = GestureState.Possible;
+                        delayedStateChange = GestureState.Idle;
                         break;
                 }
             }
@@ -953,30 +926,30 @@ namespace TouchScript.Gestures
         #region Callbacks
 
         /// <summary>
-        /// Called when new touches appear.
+        /// Called when new pointers appear.
         /// </summary>
-        /// <param name="touches"> The touches. </param>
-        protected virtual void touchesBegan(IList<TouchPoint> touches) {}
+        /// <param name="pointers"> The pointers. </param>
+        protected virtual void pointersPressed(IList<Pointer> pointers) {}
 
         /// <summary>
-        /// Called for moved touches.
+        /// Called for moved pointers.
         /// </summary>
-        /// <param name="touches"> The touches. </param>
-        protected virtual void touchesMoved(IList<TouchPoint> touches) {}
+        /// <param name="pointers"> The pointers. </param>
+        protected virtual void pointersUpdated(IList<Pointer> pointers) {}
 
         /// <summary>
-        /// Called if touches are removed.
+        /// Called if pointers are removed.
         /// </summary>
-        /// <param name="touches"> The touches. </param>
-        protected virtual void touchesEnded(IList<TouchPoint> touches) {}
+        /// <param name="pointers"> The pointers. </param>
+        protected virtual void pointersReleased(IList<Pointer> pointers) {}
 
         /// <summary>
-        /// Called when touches are cancelled.
+        /// Called when pointers are cancelled.
         /// </summary>
-        /// <param name="touches"> The touches. </param>
-        protected virtual void touchesCancelled(IList<TouchPoint> touches)
+        /// <param name="pointers"> The pointers. </param>
+        protected virtual void pointersCancelled(IList<Pointer> pointers)
         {
-            if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 // moved below the threshold
                 switch (state)
@@ -995,10 +968,14 @@ namespace TouchScript.Gestures
         /// </summary>
         protected virtual void reset()
         {
-            layer = null;
             cachedScreenPosition = TouchManager.INVALID_POSITION;
             cachedPreviousScreenPosition = TouchManager.INVALID_POSITION;
         }
+
+        /// <summary>
+        /// Called when state is changed to Idle.
+        /// </summary>
+        protected virtual void onIdle() {}
 
         /// <summary>
         /// Called when state is changed to Possible.
@@ -1039,19 +1016,19 @@ namespace TouchScript.Gestures
 
         #region Private functions
 
-        private void retainTouches()
+        private void retainPointers()
         {
-            var total = NumTouches;
-            for (var i = 0; i < total; i++) activeTouches[i].INTERNAL_Retain();
+            var total = NumPointers;
+            for (var i = 0; i < total; i++) activePointers[i].INTERNAL_Retain();
         }
 
-        private void releaseTouches(bool cancel)
+        private void releasePointers(bool cancel)
         {
-            var total = NumTouches;
+            var total = NumPointers;
             for (var i = 0; i < total; i++)
             {
-                var touch = activeTouches[i];
-                if (touch.INTERNAL_Release() == 0 && cancel) touchManager.CancelTouch(touch.Id, true);
+                var pointer = activePointers[i];
+                if (pointer.INTERNAL_Release() == 0 && cancel) touchManager.CancelPointer(pointer.Id, true);
             }
         }
 
@@ -1080,7 +1057,7 @@ namespace TouchScript.Gestures
             {
                 case GestureState.Failed:
                     requiredGestureFailed = true;
-                    if (delayedStateChange != GestureState.Possible)
+                    if (delayedStateChange != GestureState.Idle)
                     {
                         setState(delayedStateChange);
                     }
@@ -1097,7 +1074,7 @@ namespace TouchScript.Gestures
     }
 
     /// <summary>
-    /// Event arguments for Gesture events
+    /// Event arguments for Gesture state change events.
     /// </summary>
     public class GestureStateChangeEventArgs : EventArgs
     {
@@ -1111,15 +1088,26 @@ namespace TouchScript.Gestures
         /// </summary>
         public Gesture.GestureState State { get; private set; }
 
+        private static GestureStateChangeEventArgs instance;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GestureStateChangeEventArgs"/> class.
         /// </summary>
+        public GestureStateChangeEventArgs() {}
+
+        /// <summary>
+        /// Returns cached instance of EventArgs.
+        /// This cached EventArgs is reused throughout the library not to alocate new ones on every call.
+        /// </summary>
         /// <param name="state"> Current gesture state. </param>
         /// <param name="previousState"> Previous gesture state. </param>
-        public GestureStateChangeEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
+        /// <returns>Cached EventArgs object.</returns>
+        public static GestureStateChangeEventArgs GetCachedEventArgs(Gesture.GestureState state, Gesture.GestureState previousState)
         {
-            State = state;
-            PreviousState = previousState;
+            if (instance == null) instance = new GestureStateChangeEventArgs();
+            instance.State = state;
+            instance.PreviousState = previousState;
+            return instance;
         }
     }
 }

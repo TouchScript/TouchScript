@@ -7,69 +7,46 @@ using TouchScript.Hit;
 using TouchScript.Utils;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using TouchScript.Pointers;
 
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// Base class for all touch layers. Used to check if some object is hit by a touch point.
+    /// Base class for all pointer layers. Used to check if some object is hit by a pointer.
     /// <seealso cref="ITouchManager"/>
-    /// <seealso cref="TouchHit"/>
-    /// <seealso cref="TouchPoint"/>
+    /// <seealso cref="HitData"/>
+    /// <seealso cref="Pointer"/>
     /// </summary>
     /// <remarks>
-    /// <para>In <b>TouchScript</b> it's a layer's job to determine if a touch on the screen hits anything in Unity's 3d/2d world.</para>
-    /// <para><see cref="ITouchManager"/> keeps a sorted list of all layers in <see cref="ITouchManager.Layers"/> which it queries when a new touch appears. It's a layer's job to return <see cref="LayerHitResult.Hit"/> if this touch hits an object. Layers can even be used to "hit" objects outside of Unity's 3d world, for example <b>Scaleform</b> integration is implemented this way.</para>
+    /// <para>In <b>TouchScript</b> it's a layer's job to determine if a pointer on the screen hits anything in Unity's 3d/2d world.</para>
+    /// <para><see cref="ILayerManager"/> keeps a sorted list of all layers in <see cref="ILayerManager.Layers"/> which it queries when a new pointer appears. It's a layer's job to return <see cref="HitResult.Hit"/> if this pointer hits an object. Layers can even be used to "hit" objects outside of Unity's 3d world, for example <b>Scaleform</b> integration is implemented this way.</para>
     /// <para>Layers can be configured in a scene using <see cref="TouchManager"/> or from code using <see cref="ITouchManager"/> API.</para>
-    /// <para>If you want to route touches and manually control which objects they should "touch" it's better to create a new layer extending <see cref="TouchLayer"/>.</para>
+    /// <para>If you want to route pointers and manually control which objects they should "pointer" it's better to create a new layer extending <see cref="TouchLayer"/>.</para>
     /// </remarks>
     [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
-        #region Constants
-
-        /// <summary>
-        /// Result of a touch's hit test with a layer.
-        /// </summary>
-        public enum LayerHitResult
-        {
-            /// <summary>
-            /// Something wrong happened.
-            /// </summary>
-            Error = 0,
-
-            /// <summary>
-            /// Touch hit an object.
-            /// </summary>
-            Hit = 1,
-
-            /// <summary>
-            /// Touch didn't hit any object.
-            /// </summary>
-            Miss = 2
-        }
-
-        #endregion
-
         #region Events
 
         /// <summary>
-        /// Occurs when layer determines that a touch has hit something.
+        /// Occurs when layer determines that a pointer has hit something.
         /// </summary>
-        public event EventHandler<TouchLayerEventArgs> TouchBegan
+        public event EventHandler<TouchLayerEventArgs> PointerBegan
         {
-            add { touchBeganInvoker += value; }
-            remove { touchBeganInvoker -= value; }
+            add { pointerPressInvoker += value; }
+            remove { pointerPressInvoker -= value; }
         }
 
         // Needed to overcome iOS AOT limitations
-        private EventHandler<TouchLayerEventArgs> touchBeganInvoker;
+        private EventHandler<TouchLayerEventArgs> pointerPressInvoker;
 
         #endregion
 
         #region Public properties
 
         /// <summary>
-        /// Touch layer's name.
+        /// Pointer layer's name.
         /// </summary>
         public string Name;
 
@@ -89,14 +66,34 @@ namespace TouchScript.Layers
 
         #endregion
 
+        #region Private variables
+
+        /// <summary>
+        /// The layer projection parameters.
+        /// </summary>
+        protected ProjectionParams layerProjectionParams;
+
+        /// <summary>
+        /// Layer manager.
+        /// </summary>
+        protected ILayerManager manager;
+
+        #endregion
+
+        #region Temporary variables
+
+        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
+
+        #endregion
+
         #region Public methods
 
         /// <summary>
-        /// Gets the projection parameters of this layer which might depend on a specific touch data.
+        /// Gets the projection parameters of this layer which might depend on a specific pointer data.
         /// </summary>
-        /// <param name="touch"> Touch to retrieve projection parameters for. </param>
+        /// <param name="pointer"> Pointer to retrieve projection parameters for. </param>
         /// <returns></returns>
-        public virtual ProjectionParams GetProjectionParams(TouchPoint touch)
+        public virtual ProjectionParams GetProjectionParams(Pointer pointer)
         {
             return layerProjectionParams;
         }
@@ -104,24 +101,20 @@ namespace TouchScript.Layers
         /// <summary>
         /// Checks if a point in screen coordinates hits something in this layer.
         /// </summary>
-        /// <param name="position">Position in screen coordinates.</param>
+        /// <param name="pointer">Pointer.</param>
         /// <param name="hit">Hit result.</param>
-        /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
-        public virtual LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        /// <returns><c>true</c>, if an object is hit, <see cref="HitResult.Miss"/>; <c>false</c> otherwise.</returns>
+        public virtual HitResult Hit(IPointer pointer, out HitData hit)
         {
-            hit = default(TouchHit);
-            if (enabled == false || gameObject.activeInHierarchy == false) return LayerHitResult.Miss;
-            return LayerHitResult.Error;
+            hit = default(HitData);
+            if (enabled == false || gameObject.activeInHierarchy == false) return HitResult.Miss;
+            if (Delegate != null)
+            {
+                if (Delegate.ShouldReceivePointer(this, pointer)) return HitResult.Hit;
+                return HitResult.Miss;
+            }
+            return HitResult.Hit;
         }
-
-        #endregion
-
-        #region Private variables
-
-        /// <summary>
-        /// The layer projection parameters.
-        /// </summary>
-        protected ProjectionParams layerProjectionParams;
 
         #endregion
 
@@ -135,6 +128,7 @@ namespace TouchScript.Layers
             setName();
             if (!Application.isPlaying) return;
 
+            manager = LayerManager.Instance;
             layerProjectionParams = createProjectionParams();
             StartCoroutine(lateAwake());
         }
@@ -144,7 +138,7 @@ namespace TouchScript.Layers
             yield return null;
 
             // Add ourselves after TouchManager finished adding layers in order
-            TouchManager.Instance.AddLayer(this, -1, false);
+            manager.AddLayer(this, -1, false);
         }
 
         // To be able to turn layers off
@@ -158,43 +152,43 @@ namespace TouchScript.Layers
             if (!Application.isPlaying || TouchManager.Instance == null) return;
 
             StopAllCoroutines();
-            TouchManager.Instance.RemoveLayer(this);
+            manager.RemoveLayer(this);
         }
 
         #endregion
 
         #region Internal methods
 
-        internal bool INTERNAL_BeginTouch(TouchPoint touch)
+        internal void INTERNAL_AddPointer(Pointer pointer)
         {
-            TouchHit hit;
-            if (Delegate != null && Delegate.ShouldReceiveTouch(this, touch) == false) return false;
-            var result = beginTouch(touch, out hit);
-            if (result == LayerHitResult.Hit)
-            {
-                touch.Layer = this;
-                touch.Hit = hit;
-                if (hit.Transform != null) touch.Target = hit.Transform;
-                if (touchBeganInvoker != null)
-                    touchBeganInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(touch));
-                return true;
-            }
-            return false;
+            addPointer(pointer);
         }
 
-        internal void INTERNAL_UpdateTouch(TouchPoint touch)
+        internal void INTERNAL_UpdatePointer(Pointer pointer)
         {
-            updateTouch(touch);
+            updatePointer(pointer);
         }
 
-        internal void INTERNAL_EndTouch(TouchPoint touch)
+        internal bool INTERNAL_PressPointer(Pointer pointer)
         {
-            endTouch(touch);
+            pressPointer(pointer);
+            if (pointerPressInvoker != null) pointerPressInvoker.InvokeHandleExceptions(this, new TouchLayerEventArgs(pointer));
+            return true;
         }
 
-        internal void INTERNAL_CancelTouch(TouchPoint touch)
+        internal void INTERNAL_ReleasePointer(Pointer pointer)
         {
-            cancelTouch(touch);
+            releasePointer(pointer);
+        }
+
+        internal void INTERNAL_RemovePointer(Pointer pointer)
+        {
+            removePointer(pointer);
+        }
+
+        internal void INTERNAL_CancelPointer(Pointer pointer)
+        {
+            cancelPointer(pointer);
         }
 
         #endregion
@@ -202,7 +196,31 @@ namespace TouchScript.Layers
         #region Protected functions
 
         /// <summary>
-        /// Updates touch layers's name.
+        /// Checks the hit filters.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="hit">HitData for the pointer.</param>
+        /// <returns></returns>
+        protected HitResult checkHitFilters(IPointer pointer, HitData hit)
+        {
+            hit.Target.GetComponents(tmpHitTestList);
+            var count = tmpHitTestList.Count;
+            if (count == 0) return HitResult.Hit;
+
+            var hitResult = HitResult.Hit;
+            for (var i = 0; i < count; i++)
+            {
+                var test = tmpHitTestList[i];
+                if (!test.enabled) continue;
+                hitResult = test.IsHit(pointer, hit);
+                if (hitResult != HitResult.Hit) break;
+            }
+
+            return hitResult;
+        }
+
+        /// <summary>
+        /// Updates pointer layers's name.
         /// </summary>
         protected virtual void setName()
         {
@@ -210,38 +228,46 @@ namespace TouchScript.Layers
         }
 
         /// <summary>
-        /// Called when a layer is touched to query the layer if this touch hits something.
+        /// Called when a pointer is added.
         /// </summary>
-        /// <param name="touch">Touch.</param>
-        /// <param name="hit">Hit result.</param>
-        /// <returns><see cref="LayerHitResult.Hit"/>, if an object is hit, <see cref="LayerHitResult.Miss"/> or <see cref="LayerHitResult.Error"/> otherwise.</returns>
+        /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual LayerHitResult beginTouch(TouchPoint touch, out TouchHit hit)
-        {
-            var result = Hit(touch.Position, out hit);
-            return result;
-        }
+        protected virtual void addPointer(Pointer pointer) {}
 
         /// <summary>
-        /// Called when a touch is moved.
+        /// Called when a layer is pressed over an object detected by this layer.
         /// </summary>
-        /// <param name="touch">Touch.</param>
+        /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void updateTouch(TouchPoint touch) {}
+        protected virtual void pressPointer(Pointer pointer) {}
 
         /// <summary>
-        /// Called when a touch ends.
+        /// Called when a pointer is moved.
         /// </summary>
-        /// <param name="touch">Touch.</param>
+        /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void endTouch(TouchPoint touch) {}
+        protected virtual void updatePointer(Pointer pointer) {}
 
         /// <summary>
-        /// Called when a touch is cancelled.
+        /// Called when a pointer is released.
         /// </summary>
-        /// <param name="touch">Touch.</param>
+        /// <param name="pointer">Pointer.</param>
         /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
-        protected virtual void cancelTouch(TouchPoint touch) {}
+        protected virtual void releasePointer(Pointer pointer) {}
+
+        /// <summary>
+        /// Called when a pointer is removed.
+        /// </summary>
+        /// <param name="pointer">Pointer.</param>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
+        protected virtual void removePointer(Pointer pointer) {}
+
+        /// <summary>
+        /// Called when a pointer is cancelled.
+        /// </summary>
+        /// <param name="pointer">Pointer.</param>
+        /// <remarks>This method may also be used to update some internal state or resend this event somewhere.</remarks>
+        protected virtual void cancelPointer(Pointer pointer) {}
 
         /// <summary>
         /// Creates projection parameters.
@@ -261,18 +287,18 @@ namespace TouchScript.Layers
     public class TouchLayerEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets the touch associated with the event.
+        /// Gets the pointer associated with the event.
         /// </summary>
-        public TouchPoint Touch { get; private set; }
+        public Pointer Pointer { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchLayerEventArgs"/> class.
         /// </summary>
-        /// <param name="touch">The touch associated with the event.</param>
-        public TouchLayerEventArgs(TouchPoint touch)
+        /// <param name="pointer">The pointer associated with the event.</param>
+        public TouchLayerEventArgs(Pointer pointer)
             : base()
         {
-            Touch = touch;
+            Pointer = pointer;
         }
     }
 }

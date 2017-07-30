@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace TouchScript.Examples.Colors
 {
+    /// <exclude />
     public class Colors : MonoBehaviour
     {
         public Transform Prefab;

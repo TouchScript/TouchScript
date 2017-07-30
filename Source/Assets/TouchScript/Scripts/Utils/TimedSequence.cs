@@ -15,7 +15,7 @@ namespace TouchScript.Utils
 
         public void Add(T element)
         {
-            Add(element, Time.time);
+            Add(element, Time.unscaledTime);
         }
 
         public void Add(T element, float time)

@@ -3,6 +3,7 @@
  */
 
 using TouchScript.Gestures;
+using TouchScript.Pointers;
 
 namespace TouchScript
 {
@@ -14,13 +15,13 @@ namespace TouchScript
     public interface IGestureDelegate
     {
         /// <summary>
-        /// Returns whether a gesture should receive a touch.
+        /// Returns whether a gesture should receive a pointer.
         /// </summary>
         /// <param name="gesture"> The gesture. </param>
-        /// <param name="touch"> The touch. </param>
+        /// <param name="pointer"> The pointer. </param>
         /// <returns> <c>true</c> if it should; <c>false</c> otherwise. </returns>
-        /// <remarks> Can be used to restrict what touches a gesture can receive and ignore the ones it shouldn't. </remarks>
-        bool ShouldReceiveTouch(Gesture gesture, TouchPoint touch);
+        /// <remarks> Can be used to restrict what pointers a gesture can receive and ignore the ones it shouldn't. </remarks>
+        bool ShouldReceivePointer(Gesture gesture, Pointer pointer);
 
         /// <summary>
         /// Returns whether a gesture can now begin.

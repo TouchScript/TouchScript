@@ -7,6 +7,7 @@ using System.Collections;
 
 namespace TouchScript.Examples
 {
+    /// <exclude />
     public class KillMe : MonoBehaviour
     {
         public float Delay = 1f;

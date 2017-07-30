@@ -7,7 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TouchScript.Utils;
 using TouchScript.Utils.Attributes;
+using TouchScript.Pointers;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace TouchScript.Gestures
 {
@@ -41,12 +43,17 @@ namespace TouchScript.Gestures
         // Needed to overcome iOS AOT limitations
         private EventHandler<EventArgs> longPressedInvoker;
 
+        /// <summary>
+        /// Unity event, occurs when gesture is recognized.
+        /// </summary>
+        public GestureEvent OnLongPress = new GestureEvent();
+
         #endregion
 
         #region Public properties
 
         /// <summary>
-        /// Gets or sets total time in seconds required to hold touches still.
+        /// Gets or sets total time in seconds required to hold pointers still.
         /// </summary>
         /// <value> Time in seconds. </value>
         public float TimeToPress
@@ -56,7 +63,7 @@ namespace TouchScript.Gestures
         }
 
         /// <summary>
-        /// Gets or sets maximum distance in cm touch points can move before gesture fails.
+        /// Gets or sets maximum distance in cm pointers can move before gesture fails.
         /// </summary>
         /// <value> Distance in cm. </value>
         public float DistanceLimit
@@ -84,9 +91,19 @@ namespace TouchScript.Gestures
 
         private Vector2 totalMovement;
 
+		private CustomSampler gestureSampler;
+
         #endregion
 
         #region Unity methods
+
+		/// <inheritdoc />
+		protected override void Awake()
+		{
+			base.Awake();
+
+			gestureSampler = CustomSampler.Create("[TouchScript] Long Press Gesture");
+		}
 
         /// <inheritdoc />
         protected override void OnEnable()
@@ -96,47 +113,66 @@ namespace TouchScript.Gestures
             distanceLimitInPixelsSquared = Mathf.Pow(distanceLimit * touchManager.DotsPerCentimeter, 2);
         }
 
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
+
         #endregion
 
         #region Gesture callbacks
 
         /// <inheritdoc />
-        protected override void touchesBegan(IList<TouchPoint> touches)
+        protected override void pointersPressed(IList<Pointer> pointers)
         {
-            base.touchesBegan(touches);
+			gestureSampler.Begin();
 
-            if (touchesNumState == TouchesNumState.PassedMaxThreshold ||
-                touchesNumState == TouchesNumState.PassedMinMaxThreshold)
+            base.pointersPressed(pointers);
+
+            if (pointersNumState == PointersNumState.PassedMaxThreshold ||
+                pointersNumState == PointersNumState.PassedMinMaxThreshold)
             {
                 setState(GestureState.Failed);
             }
-            else if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            else if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
+                setState(GestureState.Possible);
                 StartCoroutine("wait");
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
-        protected override void touchesMoved(IList<TouchPoint> touches)
+        protected override void pointersUpdated(IList<Pointer> pointers)
         {
-            base.touchesMoved(touches);
+			gestureSampler.Begin();
+
+            base.pointersUpdated(pointers);
 
             if (distanceLimit < float.PositiveInfinity)
             {
                 totalMovement += ScreenPosition - PreviousScreenPosition;
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
-        protected override void touchesEnded(IList<TouchPoint> touches)
+        protected override void pointersReleased(IList<Pointer> pointers)
         {
-            base.touchesEnded(touches);
+			gestureSampler.Begin();
 
-            if (touchesNumState == TouchesNumState.PassedMinThreshold)
+            base.pointersReleased(pointers);
+
+            if (pointersNumState == PointersNumState.PassedMinThreshold)
             {
                 setState(GestureState.Failed);
             }
+
+			gestureSampler.End();
         }
 
         /// <inheritdoc />
@@ -145,6 +181,7 @@ namespace TouchScript.Gestures
             base.onRecognized();
             if (longPressedInvoker != null) longPressedInvoker.InvokeHandleExceptions(this, EventArgs.Empty);
             if (UseSendMessage && SendMessageTarget != null) SendMessageTarget.SendMessage(LONG_PRESS_MESSAGE, this, SendMessageOptions.DontRequireReceiver);
+            if (UseUnityEvents) OnLongPress.Invoke(this);
         }
 
         /// <inheritdoc />
@@ -168,14 +205,11 @@ namespace TouchScript.Gestures
 
             if (State == GestureState.Possible)
             {
-                if (base.GetTargetHitResult())
-                {
-                    setState(GestureState.Recognized);
-                }
-                else
-                {
+                var data = GetScreenPositionHitData();
+                if (data.Target == null || !data.Target.IsChildOf(cachedTransform))
                     setState(GestureState.Failed);
-                }
+                else
+                    setState(GestureState.Recognized);
             }
         }
 

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TouchScript.Utils.Geom
 {
     /// <summary>
-    /// A class with 2D herlper functions.
+    /// A class with 2D helper functions.
     /// </summary>
     public static class TwoD
     {

@@ -4,12 +4,13 @@
 
 using System.Collections.Generic;
 using TouchScript.Hit;
+using TouchScript.Pointers;
 using UnityEngine;
 
 namespace TouchScript.Layers
 {
     /// <summary>
-    /// Layer which gets all input from a camera. Should be used instead of a background object getting all the touches which come through.
+    /// Layer which gets all input from a camera. Should be used instead of a background object getting all the pointers which come through.
     /// </summary>
     [AddComponentMenu("TouchScript/Layers/Fullscreen Layer")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Layers_FullscreenLayer.htm")]
@@ -23,17 +24,17 @@ namespace TouchScript.Layers
         public enum LayerType
         {
             /// <summary>
-            /// Get touches from main camera.
+            /// Get pointers from main camera.
             /// </summary>
             MainCamera,
 
             /// <summary>
-            /// Get touches from specific camera.
+            /// Get pointers from specific camera.
             /// </summary>
             Camera,
 
             /// <summary>
-            /// Get all touches on Z=0 plane without a camera.
+            /// Get all pointers on Z=0 plane without a camera.
             /// </summary>
             Global
         }
@@ -94,37 +95,29 @@ namespace TouchScript.Layers
         private Camera _camera;
 
         private Transform cameraTransform;
-        private List<HitTest> tmpHitTestList = new List<HitTest>(10);
 
         #endregion
 
         #region Public methods
 
         /// <inheritdoc />
-        public override LayerHitResult Hit(Vector2 position, out TouchHit hit)
+        public override HitResult Hit(IPointer pointer, out HitData hit)
         {
-            if (base.Hit(position, out hit) == LayerHitResult.Miss) return LayerHitResult.Miss;
+            if (base.Hit(pointer, out hit) != HitResult.Hit) return HitResult.Miss;
 
             if (_camera != null)
             {
-                if (!_camera.pixelRect.Contains(position)) return LayerHitResult.Miss;
+                if (!_camera.pixelRect.Contains(pointer.Position)) return HitResult.Miss;
             }
 
-            hit = new TouchHit(transform);
-            transform.GetComponents(tmpHitTestList);
-            var count = tmpHitTestList.Count;
-            if (count == 0) return LayerHitResult.Hit;
-
-            for (var i = 0; i < count; i++)
+            hit = new HitData(transform, this);
+            var result = checkHitFilters(pointer, hit);
+            if (result != HitResult.Hit)
             {
-                var test = tmpHitTestList[i];
-                if (!test.enabled) continue;
-                var hitResult = test.IsHit(hit);
-                if (hitResult == HitTest.ObjectHitResult.Miss || hitResult == HitTest.ObjectHitResult.Discard)
-                    return LayerHitResult.Miss;
+                hit = default(HitData);
+                return result;
             }
-
-            return LayerHitResult.Hit;
+            return HitResult.Hit;
         }
 
         #endregion

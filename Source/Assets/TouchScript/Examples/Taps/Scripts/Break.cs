@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace TouchScript.Examples.Tap
 {
+    /// <exclude />
     public class Break : MonoBehaviour
     {
         public float Power = 10.0f;
@@ -51,7 +52,7 @@ namespace TouchScript.Examples.Tap
         {
             if (growing)
             {
-                growingTime += Time.deltaTime;
+                growingTime += Time.unscaledDeltaTime;
                 rnd.material.color = Color.Lerp(Color.white, Color.red, growingTime);
             }
         }

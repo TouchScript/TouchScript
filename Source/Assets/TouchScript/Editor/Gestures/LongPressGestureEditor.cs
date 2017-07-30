@@ -11,39 +11,52 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(LongPressGesture), true)]
     internal sealed class LongPressGestureEditor : GestureEditor
     {
-        private static readonly GUIContent TIME_TO_PRESS = new GUIContent("Time to Press (sec)", "Limit maximum number of simultaneous touch points.");
-        private static readonly GUIContent DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if fingers move more than <Value> cm.");
+		public static readonly GUIContent TEXT_TIME_TO_PRESS = new GUIContent("Time to Press (sec)", "Limit maximum number of simultaneous pointers.");
+		public static readonly GUIContent TEXT_DISTANCE_LIMIT = new GUIContent("Limit Movement (cm)", "Gesture fails if fingers move more than <Value> cm.");
 
-        private SerializedProperty distanceLimit;
-        private SerializedProperty timeToPress;
+		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when this GameObject is being pressed for <TimeToPress> seconds.");
+
+		private SerializedProperty distanceLimit, timeToPress;
+		private SerializedProperty OnLongPress;
 
         protected override void OnEnable()
         {
-            base.OnEnable();
-
             timeToPress = serializedObject.FindProperty("timeToPress");
             distanceLimit = serializedObject.FindProperty("distanceLimit");
+			OnLongPress = serializedObject.FindProperty("OnLongPress");
+
+			base.OnEnable();
         }
 
-        public override void OnInspectorGUI()
-        {
-#if UNITY_5_6_OR_NEWER
-			serializedObject.UpdateIfRequiredOrScript();
-#else
-			serializedObject.UpdateIfDirtyOrScript();
-#endif
+		protected override void drawBasic()
+		{
+            EditorGUILayout.PropertyField(timeToPress, TEXT_TIME_TO_PRESS);
+		}
 
-            EditorGUILayout.PropertyField(timeToPress, TIME_TO_PRESS);
+		protected override GUIContent getHelpText()
+		{
+			return TEXT_HELP;
+		}
 
-            serializedObject.ApplyModifiedProperties();
-            base.OnInspectorGUI();
+		protected override void drawGeneral ()
+		{
+			EditorGUILayout.PropertyField(timeToPress, TEXT_TIME_TO_PRESS);
+
+			base.drawGeneral();
+		}
+
+        protected override void drawLimits ()
+		{
+            EditorGUILayout.PropertyField(distanceLimit, TEXT_DISTANCE_LIMIT);
+
+			base.drawLimits();
         }
 
-        protected override void drawAdvanced()
-        {
-            EditorGUILayout.PropertyField(distanceLimit, DISTANCE_LIMIT);
+		protected override void drawUnityEvents ()
+		{
+			EditorGUILayout.PropertyField(OnLongPress);
 
-            base.drawAdvanced();
-        }
+			base.drawUnityEvents ();
+		}
     }
 }
