@@ -1,37 +1,60 @@
 ![](https://raw.github.com/wiki/TouchScript/TouchScript/images/dvfu.jpg)
 
-## TouchScript — multitouch library for Unity
+## TouchScript — multi-touch library for Unity
 
-**TouchScript** is a multitouch library for Unity. Inspired by iOS, **TouchScript** makes handling complex gesture interactions on any touch surface much easier. 
+When working on a project for mobile devices or PCs with touch input you will soon require basic gestures like tap, pan, pinch and zoom — they are not hard to implement manually using Unity API or using a package from Asset Store. The hard part is to make these gestures work together, e.g. to have a button with a tap gesture placed on a zoomable window. This is where you will need **TouchScript** — it makes handling complex gesture interactions on any touch surface an effortless job. 
 
-> Warning! [Please read before upgrading](https://github.com/TouchScript/TouchScript/wiki/Upgrading).  
-> Please ask all questions on [the Forum](http://touchprefab.com/index.php).
+## Why TouchScript?
+- TouchScript abstracts touch and gesture logic from input methods and platforms. Your touch-related code will be the same everywhere.
+- TouchScript supports many touch input methods starting from smartphones to giant touch surfaces: mouse, Windows 7/8 touch, mobile (iOS, Android, Windows Store/Windows Phone), TUIO.
+- TouchScript includes common gesture implementations: press, release, tap, long press, flick, pinch/scale/rotate.
+- TouchScript allows you to write your own gestures and custom pointer input logic.
+- TouchScript manages gestures in transform hierarchy and makes sure that the most relevant gesture will receive touch input.
+- TouchScript comes with many examples and is extensively documented.
+- TouchScript makes it easy to test multi-touch gestures without an actual multi-touch device using built-in second touch simulator (activated with Alt + click), [TUIOPad on iOS](https://itunes.apple.com/us/app/tuiopad/id412446962) or [TUIODroid on Android](https://play.google.com/store/apps/details?id=tuioDroid.impl&hl=en"). [Read more](Testing-multitouch-on-a-PC).
+- It's free and open-source. Licensed under MIT license.
 
-## Features
-- **Supports many touch input methods starting from smartphones to giant touch surfaces: Windows 7/8 touch, mobile (iOS, Android, Windows Store/Windows Phone), TUIO, mouse.**
-- **Abstracts touch and gesture logic from input methods and platforms. Your touch-related code will be the same everywhere.**
-- **Manages simultaneous gesture recognition within scene hierarchy.**
-- **Is infinitely extensible. You can add custom input methods, gestures and hit test logic in a matter of minutes.** 
-- Comes with many commonly used gestures.
-- Supports all available platforms.
-- Doesn't require Unity Pro.
-- Highly efficient and optimized.
-- Has very easy and intuitive API.
-- Uses events in C# and SendMessage in UnityScript.
-- Has PlayMaker actions.
-- Takes into account DPI differences between a large touch surface and an iPad.
-- Comes with many examples, is heavily documented with step-by-step tutorials.
-- Groups touch points into clusters on big touch surfaces.
-- Easy to test multitouch gestures without actual multitouch device using built-in second touch simulator (activated with ALT+CLICK), [TUIOPad on iOS](https://itunes.apple.com/us/app/tuiopad/id412446962) or [TUIODroid on Android](https://play.google.com/store/apps/details?id=tuioDroid.impl&hl=en"). [Read more](Testing-multitouch-on-a-PC).
-- **It's free and open-source. Licensed under MIT license.**
+Developed by Valentin Simonov.
 
-Developed by Valentin Simonov at [Interactive Lab](http://interactivelab.ru).
+## Getting started
+### Downloading the package
+To use **TouchScript** in your project you either need to 
+* download the [latest release from Github](https://github.com/TouchScript/TouchScript/releases),
+* or get it from [Asset Store](https://www.assetstore.unity3d.com/en/#!/content/7394),
+* or clone the [repository](https://github.com/TouchScript/TouchScript) and use the source ([more info on how to do it](https://github.com/TouchScript/TouchScript/wiki/How-to-Contribute)).
 
-## Documentation
-Please refer to [Wiki](https://github.com/TouchScript/TouchScript/wiki) for up-to-date documentation and tutorials.  
-If you have questions please read the [FAQ](https://github.com/TouchScript/TouchScript/wiki/FAQ) first. After that search [the Forum](http://touchprefab.com/index.php).  
-If you are sure that you found a bug post an [issue](https://github.com/TouchScript/TouchScript/issues).  
-API documentation is available [here](http://touchscript.github.io/docs/index.html).
+### Your first TouchScript project
+To test how TouchScript works, create an empty scene and drag two prefabs from `TouchScript/Prefabs` folder to the scene: `TouchManager` and `Cursors`. Press Play and click or touch (if your PC supports touch input) the Game View — you will see colored circles, pointer cursors.
+
+> Note: to simulate a second pointer you can hold Alt and click anywhere within the Game View.
+
+You can make any GameObject react to touch input — just attach one of the scripts called Gestures to it. TouchScript ships with a few built-in Gestures which you can find in `Component/TouchScript/Gestures` menu. It is also possible to write your own gestures.
+
+To test how built-in Gestures work, create an empty cube in the scene and attach a `TransformGesture` to it either from `Component` menu or `Add Component` button. Make the cube large enough to be able to touch it with two fingers. Attach another component called `Transformer` to the cube — this component listens to events from `TransformGesture` and applies translation, rotation and scaling to the GameObject.
+
+Press Play. Note how you can drag the object with one touch and scale or rotate it with two touches. Don't forget that you can use Alt + click to simulate a second pointer ([read more more about testing multi-touch gestures](https://github.com/TouchScript/TouchScript/wiki/Testing-multitouch-on-a-PC)).
+
+### Examples
+TouchScript comes with many examples in `TouchScript/Examples` folder. Open `Examples.unity` scene and read description for every example to find out what it is about. Some of the features demonstrated in the example scenes are also described [here](https://github.com/TouchScript/TouchScript/wiki/Examples).
+
+### What to read next
+- [What is a Gesture and how to work with it.](https://github.com/TouchScript/TouchScript/wiki/Gestures)
+- [What is an Input Source and why it is needed.](https://github.com/TouchScript/TouchScript/wiki/Input-Sources)
+- [What is a Layer and why it is needed.](https://github.com/TouchScript/TouchScript/wiki/Layers)
+- [Some info on how TouchScript works internally.](https://github.com/TouchScript/TouchScript/wiki/Main-Ideas-Behind-TouchScript)
+- [How you can help.](https://github.com/TouchScript/TouchScript/wiki/How-to-Contribute)
+
+## Need help?
+> If you have a problem using TouchScript or running examples please check the [FAQ](FAQ) before submitting issues.
+
+ - [FAQ](FAQ)  
+_Some of the questions have been already asked multiple times. Check if yours is in the list._
+ - [Documentation](http://touchscript.github.io/docs/)  
+_Complete up-to-date generated docs with all public API annotated._
+ - [Official Forum](http://touchprefab.com/index.php)  
+_Want to ask a question about TouchScript? Use the official Forum._
+ - [Issues](https://github.com/TouchScript/TouchScript/issues)  
+_Found a bug? Got a feature request? Feel free to post it in Issues._  
 
 ## Consulting and contract work
 If you require custom functionality for your project or consulting services please contact me at **v@lent.in**.
