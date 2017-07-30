@@ -163,7 +163,7 @@ namespace TouchScript
         /// <summary>
         /// TouchScript version suffix.
         /// </summary>
-        public static readonly string VERSION_SUFFIX = "alpha";
+        public static readonly string VERSION_SUFFIX = "";
 
         #endregion
 
