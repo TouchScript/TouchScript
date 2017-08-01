@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 22480400}
   - component: {fileID: 11486812}
   - component: {fileID: 223912096970254378}
+  - component: {fileID: 225894359780410702}
   m_Layer: 0
   m_Name: Pen Cursor
   m_TagString: Untagged
@@ -421,3 +422,14 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!225 &225894359780410702
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 118164}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

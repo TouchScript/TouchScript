@@ -206,6 +206,8 @@ namespace TouchScript.Behaviors.Cursors
         /// </summary>
         protected uint hash = uint.MaxValue;
 
+        private CanvasGroup group;
+
         #endregion
 
         #region Public methods
@@ -218,11 +220,13 @@ namespace TouchScript.Behaviors.Cursors
         public void Init(RectTransform parent, IPointer pointer)
         {
             hash = uint.MaxValue;
+            group = GetComponent<CanvasGroup>();
 
             show();
             rect.SetParent(parent);
             rect.SetAsLastSibling();
             state = CursorState.Released;
+
             UpdatePointer(pointer);
         }
 
@@ -290,8 +294,10 @@ namespace TouchScript.Behaviors.Cursors
         /// </summary>
         protected virtual void hide()
         {
-            gameObject.SetActive(false);
-            gameObject.name = "inactive pointer";
+            group.alpha = 0;
+#if UNITY_EDITOR
+            gameObject.name = "Inactive Pointer";
+#endif
         }
 
         /// <summary>
@@ -299,7 +305,10 @@ namespace TouchScript.Behaviors.Cursors
         /// </summary>
         protected virtual void show()
         {
-            gameObject.SetActive(true);
+            group.alpha = 1;
+#if UNITY_EDITOR
+            gameObject.name = "Pointer";
+#endif
         }
 
         /// <summary>

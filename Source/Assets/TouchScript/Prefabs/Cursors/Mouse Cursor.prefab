@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 22499528}
   - component: {fileID: 11416202}
   - component: {fileID: 223878911915740246}
+  - component: {fileID: 225715774982127120}
   m_Layer: 0
   m_Name: Mouse Cursor
   m_TagString: Untagged
@@ -419,3 +420,14 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!225 &225715774982127120
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 185820}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

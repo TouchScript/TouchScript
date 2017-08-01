@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 22471328}
   - component: {fileID: 11468960}
   - component: {fileID: 223813922742015622}
+  - component: {fileID: 225429637618999960}
   m_Layer: 0
   m_Name: Pointer
   m_TagString: Untagged
@@ -188,3 +189,14 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!225 &225429637618999960
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183852}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
