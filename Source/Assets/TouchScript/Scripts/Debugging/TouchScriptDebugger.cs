@@ -48,7 +48,7 @@ namespace TouchScript.Debugging
             {
                 if (value == null) return;
                 if (pointerLogger == value) return;
-                pointerLogger.Dispose();
+                if (pointerLogger != null) pointerLogger.Dispose();
                 pointerLogger = value;
             }
         }
