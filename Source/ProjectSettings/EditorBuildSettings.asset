@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/TouchScript/Examples/Examples.unity
     guid: 7cba6bf72365a4167930fec2f6f39b74
   - enabled: 1
+    path: Assets/TouchScript/Examples/RawInput/RawInput.unity
+    guid: 9ee061879a6b743808a9f9056a52d885
+  - enabled: 1
     path: Assets/TouchScript/Examples/Taps/Taps.unity
     guid: 5013fa58cea314376b273bd8905581f4
   - enabled: 1
@@ -24,9 +27,6 @@ EditorBuildSettings:
     path: Assets/TouchScript/Examples/Portal/Portal.unity
     guid: 20ddca9320eeb4eb28b7ce5fcb289923
   - enabled: 1
-    path: Assets/TouchScript/Examples/RawInput/RawInput.unity
-    guid: 9ee061879a6b743808a9f9056a52d885
-  - enabled: 1
     path: Assets/TouchScript/Examples/Colors/Colors.unity
     guid: c56b29ea5ec5a4713b65552d4a8bd9ac
   - enabled: 1
@@ -35,3 +35,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouchScript/Examples/Multiuser/Multiuser.unity
     guid: 3b34d0a4b336446dd98f5f9951fe6480
+  - enabled: 1
+    path: Assets/TouchScript/Examples/Pull/Pull.unity
+    guid: 6696ec8da4feb4725bf860ab58fa830f
