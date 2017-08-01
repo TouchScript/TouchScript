@@ -9,19 +9,17 @@ using TouchScript.Editor.EditorUI;
 
 namespace TouchScript.Editor.Behaviors.Visualizer
 {
-
     [CustomEditor(typeof(CursorManager))]
-	internal sealed class CursorManagerEditor : UnityEditor.Editor
+    internal sealed class CursorManagerEditor : UnityEditor.Editor
     {
-
-		public static readonly GUIContent TEXT_DPI_HEADER = new GUIContent("Use DPI", "Scale touch pointer based on DPI.");
-		public static readonly GUIContent TEXT_CURSORS_HEADER = new GUIContent("Cursors", "Cursor prefabs used for different pointer types.");
-		public static readonly GUIContent TEXT_POINTER_SIZE = new GUIContent("Pointer size (cm)", "Pointer size in cm based on current DPI.");
+        public static readonly GUIContent TEXT_DPI_HEADER = new GUIContent("Use DPI", "Scale touch pointer based on DPI.");
+        public static readonly GUIContent TEXT_CURSORS_HEADER = new GUIContent("Cursors", "Cursor prefabs used for different pointer types.");
+        public static readonly GUIContent TEXT_POINTER_SIZE = new GUIContent("Pointer size (cm)", "Pointer size in cm based on current DPI.");
         public static readonly GUIContent TEXT_POINTER_PIXEL_SIZE = new GUIContent("Pointer size (px)", "Pointer size in pixels.");
 
         private SerializedProperty mousePointerProxy, touchPointerProxy, penPointerProxy, objectPointerProxy;
         private SerializedProperty useDPI, cursorSize, cursorPixelSize;
-		private SerializedProperty cursorsProps;
+        private SerializedProperty cursorsProps;
 
         private void OnEnable()
         {
@@ -41,7 +39,7 @@ namespace TouchScript.Editor.Behaviors.Visualizer
         {
             serializedObject.Update();
 
-			GUILayout.Space(5);
+            GUILayout.Space(5);
 
             EditorGUILayout.PropertyField(useDPI, TEXT_DPI_HEADER);
             if (useDPI.boolValue)
@@ -54,15 +52,15 @@ namespace TouchScript.Editor.Behaviors.Visualizer
             }
 
             var display = GUIElements.Header(TEXT_CURSORS_HEADER, cursorsProps);
-			if (display)
-			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(mousePointerProxy, new GUIContent("Mouse Pointer Proxy"));
+            if (display)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(mousePointerProxy, new GUIContent("Mouse Pointer Proxy"));
                 EditorGUILayout.PropertyField(touchPointerProxy, new GUIContent("Touch Pointer Proxy"));
                 EditorGUILayout.PropertyField(penPointerProxy, new GUIContent("Pen Pointer Proxy"));
                 EditorGUILayout.PropertyField(objectPointerProxy, new GUIContent("Object Pointer Proxy"));
                 EditorGUI.indentLevel--;
-			}
+            }
 
             serializedObject.ApplyModifiedProperties();
         }

@@ -1,20 +1,22 @@
-﻿using UnityEngine;
+﻿/*
+ * @author Valentin Simonov / http://va.lent.in/
+ */
+
+using UnityEngine;
 
 /// <exclude />
-public class ExamplesList : MonoBehaviour 
+public class ExamplesList : MonoBehaviour
 {
+    public RectTransform Content;
 
-	public RectTransform Content;
+    void Start()
+    {
+        gameObject.SetActive(false);
+    }
 
-	void Start () 
-	{
-		gameObject.SetActive(false);
-	}
-
-	public void ShowHide()
-	{
-		gameObject.SetActive(!gameObject.activeSelf);
-		Content.localPosition = Vector3.zero;
-	}
-
+    public void ShowHide()
+    {
+        gameObject.SetActive(!gameObject.activeSelf);
+        Content.localPosition = Vector3.zero;
+    }
 }

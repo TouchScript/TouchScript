@@ -11,7 +11,6 @@ namespace TouchScript.Examples.Portal
     /// <exclude />
     public class Spawner : MonoBehaviour
     {
-
         public Transform Prefab;
         public Transform Position;
 

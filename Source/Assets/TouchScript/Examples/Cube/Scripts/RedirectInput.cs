@@ -15,7 +15,6 @@ namespace TouchScript.Examples.Cube
     /// <exclude />
     public class RedirectInput : InputSource
     {
-
         public int Width = 512;
         public int Height = 512;
 
@@ -40,7 +39,7 @@ namespace TouchScript.Examples.Cube
                     map.Add(pointer.Id, newPointer);
                 }
             }
-			return true;
+            return true;
         }
 
         protected override void OnEnable()
@@ -77,7 +76,7 @@ namespace TouchScript.Examples.Cube
         private void pointerPressedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
-			if (pointer.InputSource == (IInputSource)this) return;
+            if (pointer.InputSource == (IInputSource) this) return;
 
             var newPointer = PointerFactory.Create(pointer.Type, this);
             newPointer.CopyFrom(pointer);
@@ -90,9 +89,9 @@ namespace TouchScript.Examples.Cube
 
         private void pointerUpdatedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
-			var pointer = metaGestureEventArgs.Pointer;
+            var pointer = metaGestureEventArgs.Pointer;
 
-			if (pointer.InputSource == (IInputSource)this) return;
+            if (pointer.InputSource == (IInputSource) this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
@@ -106,7 +105,7 @@ namespace TouchScript.Examples.Cube
         private void pointerReleasedHandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
-			if (pointer.InputSource == (IInputSource)this) return;
+            if (pointer.InputSource == (IInputSource) this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
@@ -118,14 +117,12 @@ namespace TouchScript.Examples.Cube
         private void pointerCancelledhandler(object sender, MetaGestureEventArgs metaGestureEventArgs)
         {
             var pointer = metaGestureEventArgs.Pointer;
-			if (pointer.InputSource == (IInputSource)this) return;
+            if (pointer.InputSource == (IInputSource) this) return;
 
             Pointer newPointer;
             if (!map.TryGetValue(pointer.Id, out newPointer)) return;
             map.Remove(pointer.Id);
             cancelPointer(newPointer);
         }
-
     }
-
 }

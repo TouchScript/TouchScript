@@ -32,13 +32,13 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                 switch (property.propertyType)
                 {
                     case SerializedPropertyType.ObjectReference:
-                        property.objectReferenceValue = (Object)getNullValue(property);
+                        property.objectReferenceValue = (Object) getNullValue(property);
                         break;
                     case SerializedPropertyType.Integer:
-                        property.intValue = (int)getNullValue(property);
+                        property.intValue = (int) getNullValue(property);
                         break;
                     case SerializedPropertyType.Float:
-                        property.floatValue = (float)getNullValue(property);
+                        property.floatValue = (float) getNullValue(property);
                         break;
                 }
             }
@@ -46,7 +46,7 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             {
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.LabelField(new Rect(position.x + 14, position.y + 18, 50, 16), new GUIContent("Value", label.tooltip));
-				position = new Rect(position.x + 54, position.y + 18, Mathf.Min(position.width - 54, 100), 16);
+                position = new Rect(position.x + 54, position.y + 18, Mathf.Min(position.width - 54, 100), 16);
                 switch (property.propertyType)
                 {
                     case SerializedPropertyType.ObjectReference:
@@ -139,7 +139,7 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             label = EditorGUI.BeginProperty(position, label, property);
             label.text = " " + label.text;
             position.height = 16;
-			EditorGUIUtility.labelWidth = 180;
+            EditorGUIUtility.labelWidth = 180;
             expanded = EditorGUI.ToggleLeft(position, label, expanded == true);
         }
 
@@ -161,9 +161,9 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                 case SerializedPropertyType.ObjectReference:
                     return ReferenceEquals(property.objectReferenceValue, getNullValue(property));
                 case SerializedPropertyType.Integer:
-                    return property.intValue == (int)getNullValue(property);
+                    return property.intValue == (int) getNullValue(property);
                 case SerializedPropertyType.Float:
-                    return property.floatValue == (float)getNullValue(property);
+                    return property.floatValue == (float) getNullValue(property);
             }
             return false;
         }

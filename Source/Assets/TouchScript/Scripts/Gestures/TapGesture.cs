@@ -146,7 +146,7 @@ namespace TouchScript.Gestures
         private TimedSequence<Pointer> pointerSequence = new TimedSequence<Pointer>();
 
 #if UNITY_5_6_OR_NEWER
-		private CustomSampler gestureSampler;
+        private CustomSampler gestureSampler;
 #endif
 
         #endregion
@@ -166,15 +166,15 @@ namespace TouchScript.Gestures
 
         #region Unity methods
 
-		/// <inheritdoc />
-		protected override void Awake()
-		{
-			base.Awake();
+        /// <inheritdoc />
+        protected override void Awake()
+        {
+            base.Awake();
 
 #if UNITY_5_6_OR_NEWER
-			gestureSampler = CustomSampler.Create("[TouchScript] Tap Gesture");
+            gestureSampler = CustomSampler.Create("[TouchScript] Tap Gesture");
 #endif
-		}
+        }
 
         /// <inheritdoc />
         protected override void OnEnable()
@@ -198,7 +198,7 @@ namespace TouchScript.Gestures
         protected override void pointersPressed(IList<Pointer> pointers)
         {
 #if UNITY_5_6_OR_NEWER
-			gestureSampler.Begin();
+            gestureSampler.Begin();
 #endif
 
             base.pointersPressed(pointers);
@@ -208,7 +208,7 @@ namespace TouchScript.Gestures
             {
                 setState(GestureState.Failed);
 #if UNITY_5_6_OR_NEWER
-				gestureSampler.End();
+                gestureSampler.End();
 #endif
                 return;
             }
@@ -235,7 +235,7 @@ namespace TouchScript.Gestures
                         {
                             setState(GestureState.Failed);
 #if UNITY_5_6_OR_NEWER
-							gestureSampler.End();
+                            gestureSampler.End();
 #endif
                             return;
                         }
@@ -254,7 +254,7 @@ namespace TouchScript.Gestures
             }
 
 #if UNITY_5_6_OR_NEWER
-			gestureSampler.End();
+            gestureSampler.End();
 #endif
         }
 
@@ -262,7 +262,7 @@ namespace TouchScript.Gestures
         protected override void pointersUpdated(IList<Pointer> pointers)
         {
 #if UNITY_5_6_OR_NEWER
-			gestureSampler.Begin();
+            gestureSampler.Begin();
 #endif
 
             base.pointersUpdated(pointers);
@@ -274,7 +274,7 @@ namespace TouchScript.Gestures
             }
 
 #if UNITY_5_6_OR_NEWER
-			gestureSampler.End();
+            gestureSampler.End();
 #endif
         }
 
@@ -282,7 +282,7 @@ namespace TouchScript.Gestures
         protected override void pointersReleased(IList<Pointer> pointers)
         {
 #if UNITY_5_6_OR_NEWER
-			gestureSampler.Begin();
+            gestureSampler.Begin();
 #endif
 
             base.pointersReleased(pointers);
@@ -308,7 +308,7 @@ namespace TouchScript.Gestures
                     {
                         setState(GestureState.Failed);
 #if UNITY_5_6_OR_NEWER
-						gestureSampler.End();
+                        gestureSampler.End();
 #endif
                         return;
                     }
@@ -329,7 +329,7 @@ namespace TouchScript.Gestures
             }
 
 #if UNITY_5_6_OR_NEWER
-			gestureSampler.End();
+            gestureSampler.End();
 #endif
         }
 

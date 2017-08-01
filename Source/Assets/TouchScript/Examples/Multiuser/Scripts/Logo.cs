@@ -12,8 +12,7 @@ namespace TouchScript.Examples.Multiuser
     /// <exclude />
     public class Logo : MonoBehaviour
     {
-        private static Color[] COLORS = new[]
-        {Color.yellow, Color.red, Color.magenta, Color.green, Color.cyan, Color.blue};
+        private static Color[] COLORS = new[] {Color.yellow, Color.red, Color.magenta, Color.green, Color.cyan, Color.blue};
 
         private void OnEnable()
         {

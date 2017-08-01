@@ -10,13 +10,9 @@ namespace TouchScript.Editor.InputSources
 {
     public class InputSourceEditor : UnityEditor.Editor
     {
-        protected virtual void OnEnable()
-        {
-        }
+        protected virtual void OnEnable() {}
 
-        public override void OnInspectorGUI()
-        {
-        }
+        public override void OnInspectorGUI() {}
 
         protected virtual void drawAdvanced() {}
     }

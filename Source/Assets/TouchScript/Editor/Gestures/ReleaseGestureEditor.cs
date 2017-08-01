@@ -11,38 +11,38 @@ namespace TouchScript.Editor.Gestures
     [CustomEditor(typeof(ReleaseGesture), true)]
     internal sealed class ReleaseGestureEditor : GestureEditor
     {
-		public static readonly GUIContent TEXT_IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores pointers from children.");
+        public static readonly GUIContent TEXT_IGNORE_CHILDREN = new GUIContent("Ignore Children", "If selected this gesture ignores pointers from children.");
 
-		public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when all pointers are lifted off from this GameObject.");
+        public static readonly GUIContent TEXT_HELP = new GUIContent("This component recognizes a gesture when all pointers are lifted off from this GameObject.");
 
-		private SerializedProperty ignoreChildren;
-		private SerializedProperty OnRelease;
+        private SerializedProperty ignoreChildren;
+        private SerializedProperty OnRelease;
 
         protected override void OnEnable()
         {
             ignoreChildren = serializedObject.FindProperty("ignoreChildren");
-			OnRelease = serializedObject.FindProperty("OnRelease");
+            OnRelease = serializedObject.FindProperty("OnRelease");
 
-			base.OnEnable();
+            base.OnEnable();
         }
 
-		protected override GUIContent getHelpText()
-		{
-			return TEXT_HELP;
-		}
+        protected override GUIContent getHelpText()
+        {
+            return TEXT_HELP;
+        }
 
-		protected override void drawGeneral()
+        protected override void drawGeneral()
         {
             EditorGUILayout.PropertyField(ignoreChildren, TEXT_IGNORE_CHILDREN);
 
-			base.drawGeneral();
+            base.drawGeneral();
         }
 
-		protected override void drawUnityEvents ()
-		{
-			EditorGUILayout.PropertyField(OnRelease);
+        protected override void drawUnityEvents()
+        {
+            EditorGUILayout.PropertyField(OnRelease);
 
-			base.drawUnityEvents();
-		}
+            base.drawUnityEvents();
+        }
     }
 }

@@ -34,8 +34,8 @@ namespace TouchScript.Examples.Tap
             var cube = Instantiate(CubePrefab) as Transform;
             cube.parent = Container;
             cube.name = "Cube";
-            cube.localScale = Vector3.one*Scale*cube.localScale.x;
-            cube.position = hit.Point + hit.Normal*.5f;
+            cube.localScale = Vector3.one * Scale * cube.localScale.x;
+            cube.position = hit.Point + hit.Normal * .5f;
         }
     }
 }

@@ -36,8 +36,8 @@ namespace TouchScript.Examples.Colors
 
             var otherColor = otherCircle.Kill();
             var scale =
-                Mathf.Sqrt(otherCircle.transform.localScale.x*otherCircle.transform.localScale.x +
-                           transform.localScale.x*transform.localScale.x);
+                Mathf.Sqrt(otherCircle.transform.localScale.x * otherCircle.transform.localScale.x +
+                           transform.localScale.x * transform.localScale.x);
             var color = Color.Lerp(GetComponent<Renderer>().sharedMaterial.color, otherColor, .5f);
 
             var obj = Instantiate(gameObject) as GameObject;

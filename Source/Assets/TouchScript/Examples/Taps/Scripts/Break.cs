@@ -88,9 +88,9 @@ namespace TouchScript.Examples.Tap
                         var cube = obj.transform;
                         cube.parent = transform.parent;
                         cube.name = "Cube";
-                        cube.localScale = 0.5f*transform.localScale;
-                        cube.position = transform.TransformPoint(directions[i]/4);
-                        cube.GetComponent<Rigidbody>().AddForce(Power*Random.insideUnitSphere, ForceMode.Impulse);
+                        cube.localScale = 0.5f * transform.localScale;
+                        cube.position = transform.TransformPoint(directions[i] / 4);
+                        cube.GetComponent<Rigidbody>().AddForce(Power * Random.insideUnitSphere, ForceMode.Impulse);
                         cube.GetComponent<Renderer>().material.color = Color.white;
                     }
                     Destroy(gameObject);

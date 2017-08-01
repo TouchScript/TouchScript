@@ -20,8 +20,8 @@ namespace TouchScript.Examples.Photos
             clone.transform.SetParent(transform);
             clone.transform.localScale = Vector3.one;
             clone.transform.localRotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
-            clone.transform.localPosition = new Vector3(Random.Range(-Width/2, Width/2),
-                Random.Range(-Height/2, Height/2), toClone.localPosition.z);
+            clone.transform.localPosition = new Vector3(Random.Range(-Width / 2, Width / 2),
+                Random.Range(-Height / 2, Height / 2), toClone.localPosition.z);
             initChild(clone.transform);
         }
 
