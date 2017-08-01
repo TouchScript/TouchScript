@@ -47,7 +47,9 @@ namespace TouchScript.InputSources.InputHandlers
         private Dictionary<int, TouchState> systemToInternalId = new Dictionary<int, TouchState>(10);
         private int pointersNum;
 
+#if UNITY_5_6_OR_NEWER
 		private CustomSampler updateSampler;
+#endif
 
         #endregion
 
@@ -72,7 +74,9 @@ namespace TouchScript.InputSources.InputHandlers
             touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, resetPointer);
             touchPool.Name = "Touch";
 
+#if UNITY_5_6_OR_NEWER
 			updateSampler = CustomSampler.Create("[TouchScript] Update touch");
+#endif
         }
 
         #region Public methods
@@ -80,7 +84,9 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public bool UpdateInput()
         {
+#if UNITY_5_6_OR_NEWER
 			updateSampler.Begin();
+#endif
 
             for (var i = 0; i < Input.touchCount; ++i)
             {
@@ -155,7 +161,9 @@ namespace TouchScript.InputSources.InputHandlers
                 }
             }
 
+#if UNITY_5_6_OR_NEWER
 			updateSampler.End();
+#endif
 
             return Input.touchCount > 0;
         }

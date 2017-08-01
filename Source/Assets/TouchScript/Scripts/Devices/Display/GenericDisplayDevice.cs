@@ -103,7 +103,9 @@ namespace TouchScript.Devices.Display
                     break;
                 // Probably TVs
                 case RuntimePlatform.SamsungTVPlayer:
+#if UNITY_5_6_OR_NEWER
                 case RuntimePlatform.Switch:
+#endif
                 case RuntimePlatform.WiiU:
                 case RuntimePlatform.XboxOne:
                 case RuntimePlatform.tvOS:
@@ -198,7 +200,9 @@ namespace TouchScript.Devices.Display
                     break;
                 // Probably TVs
                 case RuntimePlatform.SamsungTVPlayer:
+#if UNITY_5_6_OR_NEWER
                 case RuntimePlatform.Switch:
+#endif
                 case RuntimePlatform.WiiU:
                 case RuntimePlatform.XboxOne:
                 case RuntimePlatform.tvOS:

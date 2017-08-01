@@ -90,7 +90,9 @@ namespace TouchScript.Gestures
 
 		#region Private variables
 
+#if UNITY_5_6_OR_NEWER
 		private CustomSampler gestureSampler;
+#endif
 
 		#endregion
 
@@ -101,7 +103,9 @@ namespace TouchScript.Gestures
 		{
 			base.Awake();
 
+#if UNITY_5_6_OR_NEWER
 			gestureSampler = CustomSampler.Create("[TouchScript] Meta Gesture");
+#endif
 		}
 
 		[ContextMenu("Basic Editor")]
@@ -117,7 +121,9 @@ namespace TouchScript.Gestures
 		/// <inheritdoc />
 		protected override void pointersPressed(IList<Pointer> pointers)
         {
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
+#endif
 
             base.pointersPressed(pointers);
 
@@ -134,13 +140,17 @@ namespace TouchScript.Gestures
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_PRESSED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
 
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
+#endif
         }
 
         /// <inheritdoc />
         protected override void pointersUpdated(IList<Pointer> pointers)
         {
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
+#endif
 
             base.pointersUpdated(pointers);
 
@@ -157,13 +167,17 @@ namespace TouchScript.Gestures
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_MOVED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
 
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
+#endif
         }
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
+#endif
 
             base.pointersReleased(pointers);
 
@@ -180,13 +194,17 @@ namespace TouchScript.Gestures
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_RELEASED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
 
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
+#endif
         }
 
         /// <inheritdoc />
         protected override void pointersCancelled(IList<Pointer> pointers)
         {
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
+#endif
 
             base.pointersCancelled(pointers);
 
@@ -201,7 +219,9 @@ namespace TouchScript.Gestures
                 for (var i = 0; i < length; i++) SendMessageTarget.SendMessage(POINTER_CANCELLED_MESSAGE, pointers[i], SendMessageOptions.DontRequireReceiver);
             }
 
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
+#endif
         }
 
         #endregion

@@ -89,7 +89,9 @@ namespace TouchScript.Gestures.TransformGestures
         private TouchLayer projectionLayer;
         private Plane transformPlane;
 
+#if UNITY_5_6_OR_NEWER
 		private CustomSampler gestureSampler;
+#endif
 
         #endregion
 
@@ -105,7 +107,9 @@ namespace TouchScript.Gestures.TransformGestures
             base.Awake();
 
             transformPlane = new Plane();
+#if UNITY_5_6_OR_NEWER
 			gestureSampler = CustomSampler.Create("[TouchScript] Pinned Transform Gesture");
+#endif
         }
 
         /// <inheritdoc />
@@ -129,7 +133,9 @@ namespace TouchScript.Gestures.TransformGestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
+#endif
 
             base.pointersPressed(pointers);
 
@@ -143,9 +149,12 @@ namespace TouchScript.Gestures.TransformGestures
 #endif
             }
 
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
+#endif
         }
 
+#if UNITY_5_6_OR_NEWER
 		/// <inheritdoc />
 		protected override void pointersUpdated(IList<Pointer> pointers)
 		{
@@ -155,11 +164,14 @@ namespace TouchScript.Gestures.TransformGestures
 
 			gestureSampler.End();
 		}
+#endif
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
+#endif
 
             base.pointersReleased(pointers);
 
@@ -167,8 +179,9 @@ namespace TouchScript.Gestures.TransformGestures
             if (NumPointers == 0) clearDebug();
             else drawDebug(activePointers[0].ProjectionParams.ProjectFrom(cachedTransform.position), activePointers[0].Position);
 #endif
-
+#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
+#endif
         }
 
         #endregion
