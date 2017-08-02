@@ -35,13 +35,19 @@ To test how built-in Gestures work, create an empty cube in the scene and attach
 Press Play. Note how you can drag the object with one touch and scale or rotate it with two touches. Don't forget that you can use Alt + click to simulate a second pointer ([read more more about testing multi-touch gestures](https://github.com/TouchScript/TouchScript/wiki/Testing-multitouch-on-a-PC)).
 
 ### Examples
-TouchScript comes with many examples in `TouchScript/Examples` folder. Open `Examples.unity` scene and read description for every example to find out what it is about. Some of the features demonstrated in the example scenes are also described [here](https://github.com/TouchScript/TouchScript/wiki/Examples).
+TouchScript comes with many examples in `TouchScript/Examples` folder. Open `Examples.unity` scene and read description for every example to find out what it is about.  
+
+[All examples are explaned here.](https://github.com/TouchScript/TouchScript/wiki/Examples)
 
 ### What to read next
+- [How to receive a pointer.](https://github.com/TouchScript/TouchScript/wiki/Pointer-Input)
 - [What is a Gesture and how to work with it.](https://github.com/TouchScript/TouchScript/wiki/Gestures)
 - [What is an Input Source and why it is needed.](https://github.com/TouchScript/TouchScript/wiki/Input-Sources)
 - [What is a Layer and why it is needed.](https://github.com/TouchScript/TouchScript/wiki/Layers)
 - [Some info on how TouchScript works internally.](https://github.com/TouchScript/TouchScript/wiki/Main-Ideas-Behind-TouchScript)
+- [How to affect which objects can be touched.](https://github.com/TouchScript/TouchScript/wiki/Modifying-Hits)
+- [How to change touch coordinates from an input device.](https://github.com/TouchScript/TouchScript/wiki/Remapping-Coordinates-From-an-Input-Source)
+- [How to write a custom Gesture.](https://github.com/TouchScript/TouchScript/wiki/Tutorial.-Writing-a-Custom-Gesture.)
 - [How you can help.](https://github.com/TouchScript/TouchScript/wiki/How-to-Contribute)
 
 ## Need help?
@@ -55,6 +61,3 @@ _Complete up-to-date generated docs with all public API annotated._
 _Want to ask a question about TouchScript? Use the official Forum._
  - [Issues](https://github.com/TouchScript/TouchScript/issues)  
 _Found a bug? Got a feature request? Feel free to post it in Issues._  
-
-## Consulting and contract work
-If you require custom functionality for your project or consulting services please contact me at **v@lent.in**.
