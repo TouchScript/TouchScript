@@ -77,7 +77,7 @@ namespace TouchScript.Layers.UI
         {
             if (raycastersProp == null)
             {
-                raycastersProp = Type.GetType(Assembly.CreateQualifiedName("UnityEngine.UI", "UnityEngine.EventSystems.RaycasterManager")).
+                raycastersProp = Type.GetType("UnityEngine.EventSystems.RaycasterManager, UnityEngine.UI").
                                      GetField("s_Raycasters", BindingFlags.NonPublic | BindingFlags.Static);
                 canvasProp = typeof(GraphicRaycaster).GetProperty("canvas", BindingFlags.NonPublic | BindingFlags.Instance);
             }
