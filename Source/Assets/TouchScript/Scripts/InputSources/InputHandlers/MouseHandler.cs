@@ -217,7 +217,15 @@ namespace TouchScript.InputSources.InputHandlers
                         break;
                     case State.StationaryFake:
                         if (buttons != newButtons) updateButtons(buttons, newButtons);
-                        if (fakeTouchReleased())
+						if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
+						{
+							if (Input.GetKey(KeyCode.LeftControl) && mousePointPos != pos)
+							{
+								fakeMousePointer.Position += (remappedPos - mousePointer.Position);
+								updatePointer(fakeMousePointer);
+							}
+						}
+						if (fakeTouchReleased())
                         {
                             stateMouse();
                         }
