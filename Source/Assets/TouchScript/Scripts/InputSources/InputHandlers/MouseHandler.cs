@@ -219,10 +219,18 @@ namespace TouchScript.InputSources.InputHandlers
                         if (buttons != newButtons) updateButtons(buttons, newButtons);
                         if ((newButtons & Pointer.PointerButtonState.AnyButtonPressed) != 0)
                         {
-                            if (Input.GetKey(KeyCode.LeftControl) && mousePointPos != pos)
+                            if (mousePointPos != pos)
                             {
-                                fakeMousePointer.Position += (remappedPos - mousePointer.Position);
-                                updatePointer(fakeMousePointer);
+                                if (Input.GetKey(KeyCode.LeftControl))
+                                {
+                                    fakeMousePointer.Position += (remappedPos - mousePointer.Position);
+                                    updatePointer(fakeMousePointer);
+                                }
+                                else if (Input.GetKey(KeyCode.LeftShift))
+                                {
+                                    fakeMousePointer.Position -= (remappedPos - mousePointer.Position);
+                                    updatePointer(fakeMousePointer);
+                                }
                             }
                         }
                         if (fakeTouchReleased())
