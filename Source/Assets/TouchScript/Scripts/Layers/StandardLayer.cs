@@ -265,7 +265,11 @@ namespace TouchScript.Layers
         private void OnDisable()
         {
             if (!Application.isPlaying) return;
-            if (inputModule != null) inputModule.INTERNAL_Release();
+            if (inputModule != null) 
+            {
+                inputModule.INTERNAL_Release();
+                inputModule = null;
+            }
             if (TouchManager.Instance != null) TouchManager.Instance.FrameStarted -= frameStartedHandler;
         }
 

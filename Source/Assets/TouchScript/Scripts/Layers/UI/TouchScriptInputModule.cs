@@ -492,14 +492,17 @@ namespace TouchScript.Layers.UI
 						var press = pointer.GetPressData();
 						if (press.Type != HitData.HitType.UI) continue;
 					}
-                    else
-                    {
-    					// Don't update the pointer if it is not over an UI element
-                        if (over.Type != HitData.HitType.UI) continue;
-                    }
 
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
+
+                    // If not over an UI element this and previous frame, don't process further.
+                    // Need to check the previous hover state to properly process leaving a UI element.
+                    if (over.Type != HitData.HitType.UI) 
+                    {
+                        if (data.hovered.Count == 0) continue;
+                    }
+
                     data.Reset();
                     var target = over.Target;
                     var currentOverGo = target == null ? null : target.gameObject;
