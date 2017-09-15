@@ -362,7 +362,7 @@ namespace TouchScript
         /// <returns><c>true</c> if position is invalid; otherwise, <c>false</c>.</returns>
         public static bool IsInvalidPosition(Vector2 position)
         {
-			return position.x == INVALID_POSITION.x && position.y == INVALID_POSITION.y;
+            return float.IsNaN(position.x) && float.IsNaN(position.y);
         }
 
         #endregion
