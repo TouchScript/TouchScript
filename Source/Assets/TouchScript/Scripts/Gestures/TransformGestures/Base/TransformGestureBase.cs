@@ -101,6 +101,15 @@ namespace TouchScript.Gestures.TransformGestures.Base
         }
 
         /// <summary>
+        /// Gets or sets whether multiple types of transformations can occur each time this gesture is used.
+        /// </summary>
+        public bool SimultaneousTransforms
+        {
+            get { return simultaneousTransforms; }
+            set { simultaneousTransforms = value; }
+        }
+
+        /// <summary>
         /// Gets or sets minimum distance in cm for pointers to move for gesture to begin. 
         /// </summary>
         /// <value> Minimum value in cm user must move their fingers to start this gesture. </value>
@@ -164,6 +173,11 @@ namespace TouchScript.Gestures.TransformGestures.Base
         protected TransformGesture.TransformType transformMask;
 
         /// <summary>
+        /// The single transform type this gesture is restricted to. <see cref="SimultaneousTransforms"/>
+        /// </summary>
+        protected Lock<TransformGesture.TransformType> transformLock = new Lock<TransformGesture.TransformType>();
+
+        /// <summary>
         /// Calculated delta position.
         /// </summary>
         protected Vector3 deltaPosition;
@@ -205,6 +219,12 @@ namespace TouchScript.Gestures.TransformGestures.Base
         [SerializeField]
         protected TransformGesture.TransformType type = TransformGesture.TransformType.Translation | TransformGesture.TransformType.Scaling |
                                                         TransformGesture.TransformType.Rotation;
+
+        /// <summary>
+        /// Whether multiple types of transformations can occur each time this gesture is used.
+        /// </summary>
+        [SerializeField]
+        protected bool simultaneousTransforms = true;
 
         [SerializeField]
         private float screenTransformThreshold = 0.1f;
@@ -262,6 +282,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 {
                     case GestureState.Began:
                     case GestureState.Changed:
+                        transformLock.Unlock();
                         setState(GestureState.Ended);
                         break;
                 }
@@ -282,6 +303,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 {
                     case GestureState.Began:
                     case GestureState.Changed:
+                        transformLock.Unlock();
                         setState(GestureState.Ended);
                         break;
                     case GestureState.Possible:

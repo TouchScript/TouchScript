@@ -17,6 +17,7 @@ namespace TouchScript.Editor.Gestures.TransformGestures.Base
         public static readonly GUIContent TEXT_TYPE_TRANSLATION = new GUIContent("Translation", "Dragging with one ore more fingers.");
         public static readonly GUIContent TEXT_TYPE_ROTATION = new GUIContent("Rotation", "Rotating with two or more fingers.");
         public static readonly GUIContent TEXT_TYPE_SCALING = new GUIContent("Scaling", "Scaling with two or more fingers.");
+        public static readonly GUIContent TEXT_SIMULTANEOUS_TRANSFORM = new GUIContent("Simultaneous Transformations", "Whether multiple types of transformations can occur each time this gesture is used.");
         public static readonly GUIContent TEXT_MIN_SCREEN_POINTS_DISTANCE = new GUIContent("Min Points Distance (cm)", "Minimum distance between two pointers (clusters) in cm to consider this gesture started. Used to prevent fake pointers spawned near real ones on cheap multitouch hardware to mess everything up.");
         public static readonly GUIContent TEXT_SCREEN_TRANSFORM_THRESHOLD = new GUIContent("Movement Threshold (cm)", "Minimum distance in cm pointers must move for the gesture to begin.");
 
@@ -27,7 +28,7 @@ namespace TouchScript.Editor.Gestures.TransformGestures.Base
         public static readonly GUIContent TEXT_PROJECTION_NORMAL = new GUIContent("Projection Normal", "Normal of the plane in 3d space where pointers' positions are projected.");
 
 
-        protected SerializedProperty type, minScreenPointsDistance, screenTransformThreshold;
+        protected SerializedProperty type, simultaneousTransform, minScreenPointsDistance, screenTransformThreshold;
         protected SerializedProperty OnTransformStart, OnTransform, OnTransformComplete;
 
         public SerializedProperty projection, projectionPlaneNormal;
@@ -41,6 +42,7 @@ namespace TouchScript.Editor.Gestures.TransformGestures.Base
         protected override void OnEnable()
         {
             type = serializedObject.FindProperty("type");
+            simultaneousTransform = serializedObject.FindProperty("simultaneousTransforms");
             minScreenPointsDistance = serializedObject.FindProperty("minScreenPointsDistance");
             screenTransformThreshold = serializedObject.FindProperty("screenTransformThreshold");
             OnTransformStart = serializedObject.FindProperty("OnTransformStart");

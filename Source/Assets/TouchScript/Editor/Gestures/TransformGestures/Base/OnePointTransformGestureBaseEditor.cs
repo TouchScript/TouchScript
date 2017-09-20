@@ -49,7 +49,8 @@ namespace TouchScript.Editor.Gestures.TransformGestures.Base
             type.intValue = newType;
             EditorGUI.indentLevel++;
 
-            EditorGUIUtility.labelWidth = 160;
+            EditorGUIUtility.labelWidth = 200;
+            EditorGUILayout.PropertyField(simultaneousTransform, TEXT_SIMULTANEOUS_TRANSFORM);
             EditorGUILayout.PropertyField(screenTransformThreshold, TEXT_SCREEN_TRANSFORM_THRESHOLD);
 
             base.drawGeneral();

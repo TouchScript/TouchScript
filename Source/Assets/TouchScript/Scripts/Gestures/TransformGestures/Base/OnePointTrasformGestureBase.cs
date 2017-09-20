@@ -174,6 +174,22 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 }
             }
 
+            if (!simultaneousTransforms)
+            {
+                if (isTransforming)
+                {
+                    var fixedType = getIndicatedType(screenCenter, oldScreenPos, newScreenPos, projectionParams);
+                    transformLock.TrySetValue(fixedType);
+                }
+
+                if (transformLock.Locked)
+                {
+                    var singleType = transformLock.Value;
+                    if (singleType != TransformGesture.TransformType.Rotation) dR = 0;
+                    if (singleType != TransformGesture.TransformType.Scaling) dS = 1;
+                }
+            }
+
             if (dR != 0) transformMask |= TransformGesture.TransformType.Rotation;
             if (dS != 1) transformMask |= TransformGesture.TransformType.Scaling;
 
@@ -239,6 +255,25 @@ namespace TouchScript.Gestures.TransformGestures.Base
                                 ProjectionParams projectionParams)
         {
             return 1;
+        }
+
+        /// <summary>
+        /// Return the <see cref="TransformGesture.TransformType"/> indicated by the finger's movement.
+        /// </summary>
+        /// <param name="center"> Center screen position. </param>
+        /// <param name="oldScreenPos"> Pointer old screen position. </param>
+        /// <param name="newScreenPos"> Pointer new screen position. </param>
+        /// <param name="projectionParams"> Layer projection parameters. </param>
+        /// <returns> TransformType indicated by the movement of the pointer. </returns>
+        protected virtual TransformGesture.TransformType getIndicatedType(Vector2 screenCenter, Vector2 oldScreenPos, Vector2 newScreenPos, ProjectionParams projectionParams)
+        {
+            var centerLine = oldScreenPos - screenCenter;
+            var pointerDelta = newScreenPos - oldScreenPos;
+
+            if (TwoD.IsPerpendicular(centerLine, pointerDelta))
+                return TransformGesture.TransformType.Rotation;
+            else
+                return TransformGesture.TransformType.Scaling;
         }
 
         /// <summary>

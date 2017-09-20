@@ -141,6 +141,11 @@ namespace TouchScript.Gestures.TransformGestures.Base
 
                 // translate using one point
                 dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0), projectionParams);
+
+                if (!simultaneousTransforms && isTransforming)
+                {
+                    transformLock.TrySetValue(TransformGesture.TransformType.Translation);
+                }
             }
             else
             {
@@ -211,12 +216,31 @@ namespace TouchScript.Gestures.TransformGestures.Base
                         else
                             dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR, dS, projectionParams);
                     }
+
+                    if (!simultaneousTransforms && isTransforming)
+                    {
+                        var fixedType = getIndicatedType(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
+                        transformLock.TrySetValue(fixedType);
+                    }
                 }
                 else if (translationEnabled)
                 {
                     // points are too close, translate using one point
                     dP = doOnePointTranslation(oldScreenPos1, newScreenPos1, projectionParams);
+
+                    if (!simultaneousTransforms && isTransforming)
+                    {
+                        transformLock.TrySetValue(TransformGesture.TransformType.Translation);
+                    }
                 }
+            }
+
+            if (!simultaneousTransforms && transformLock.Locked)
+            {
+                var singleType = transformLock.Value;
+                if (singleType != TransformGesture.TransformType.Translation) dP = Vector3.zero;
+                if (singleType != TransformGesture.TransformType.Rotation) dR = 0;
+                if (singleType != TransformGesture.TransformType.Scaling) dS = 1;
             }
 
             if (dP != Vector3.zero) transformMask |= TransformGesture.TransformType.Translation;
@@ -318,6 +342,39 @@ namespace TouchScript.Gestures.TransformGestures.Base
                                                         Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             return Vector3.zero;
+        }
+
+        /// <summary>
+        /// Return the <see cref="TransformGesture.TransformType"/> indicated by the both fingers' movement.
+        /// </summary>
+        /// <param name="oldScreenPos1"> Finger one old screen position. </param>
+        /// <param name="oldScreenPos2"> Finger two old screen position. </param>
+        /// <param name="newScreenPos1"> Finger one new screen position. </param>
+        /// <param name="newScreenPos2"> Finger two new screen position. </param>
+        /// <param name="projectionParams"> Layer projection parameters. </param>
+        /// <returns> TransformType indicated by the movement of both fingers. </returns>
+        protected virtual TransformGesture.TransformType getIndicatedType(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
+                                                                          Vector2 newScreenPos1, Vector2 newScreenPos2,
+                                                                          ProjectionParams projectionParams)
+        {
+            var pointerDelta1 = newScreenPos1 - oldScreenPos1;
+            var pointerDelta2 = newScreenPos2 - oldScreenPos2;
+            var deg = Vector2.Angle(pointerDelta1, pointerDelta2);
+
+            if (deg < 90)
+            {
+                // pointers moved in same direction
+                return TransformGesture.TransformType.Translation;
+            }
+            else
+            {
+                // pointers moved in opposite directions
+                var oldScreenDelta = oldScreenPos2 - oldScreenPos1;
+                if (TwoD.IsPerpendicular(pointerDelta1, oldScreenDelta) && TwoD.IsPerpendicular(pointerDelta2, oldScreenDelta))
+                    return TransformGesture.TransformType.Rotation;
+                else
+                    return TransformGesture.TransformType.Scaling;
+            }
         }
 
         /// <summary>

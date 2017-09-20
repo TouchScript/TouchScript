@@ -58,5 +58,17 @@ namespace TouchScript.Utils.Geom
             var sin = Mathf.Sin(rad);
             return new Vector2(point.x * cos - point.y * sin, point.x * sin + point.y * cos);
         }
+
+        /// <summary>
+        /// Determines if two lines are approximately perpendicular.
+        /// </summary>
+        /// <param name="line1">Line to check.</param>
+        /// <param name="line2">Line to check.</param>
+        /// <returns> <c>true</c> if both lines are approximately perpendicular; <c>false</c> otherwise.</returns>
+        public static bool IsPerpendicular(Vector2 line1, Vector2 line2)
+        {
+            var deg = Vector2.Angle(line1, line2);
+            return (45 < deg) && (deg < 135);
+        }
     }
 }
