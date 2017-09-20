@@ -297,7 +297,7 @@ namespace TouchScript.Core
             Pointer pointer;
             if (idToPointer.TryGetValue(id, out pointer))
             {
-                pointer.InputSource.CancelPointer(pointer, shouldReturn);
+                if (pointer.InputSource != null) pointer.InputSource.CancelPointer(pointer, shouldReturn);
             }
         }
 
@@ -877,7 +877,7 @@ namespace TouchScript.Core
             for (var i = 0; i < removedCount; i++)
             {
                 var pointer = list[i];
-                pointer.InputSource.INTERNAL_DiscardPointer(pointer);
+                if (pointer.InputSource != null) pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
 
@@ -937,7 +937,7 @@ namespace TouchScript.Core
             for (var i = 0; i < cancelledCount; i++)
             {
                 var pointer = list[i];
-                pointer.InputSource.INTERNAL_DiscardPointer(pointer);
+                if (pointer.InputSource != null) pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
 

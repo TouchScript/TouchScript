@@ -75,7 +75,7 @@ namespace TouchScript.InputSources.InputHandlers
             touchPool.Name = "Touch";
 
 #if UNITY_5_6_OR_NEWER
-			updateSampler = CustomSampler.Create("[TouchScript] Update touch");
+			updateSampler = CustomSampler.Create("[TouchScript] Update Touch");
 #endif
         }
 
