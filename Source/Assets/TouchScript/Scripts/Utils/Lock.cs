@@ -10,18 +10,22 @@
         public bool Locked { get; private set; }
 
         /// <summary>
-        /// If unlocked, set the value and lock it.
+        /// If unlocked, set the value.
         /// </summary>
         public void TrySetValue(T value)
         {
             if (!Locked)
             {
-                Locked = true;
                 Value = value;
             }
         }
 
-        public void Unlock()
+        public void SetLock()
+        {
+            Locked = true;
+        }
+
+        public void ClearLock()
         {
             Locked = false;
         }

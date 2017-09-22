@@ -180,13 +180,11 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 {
                     var fixedType = getIndicatedType(screenCenter, oldScreenPos, newScreenPos, projectionParams);
                     transformLock.TrySetValue(fixedType);
-                }
 
-                if (transformLock.Locked)
-                {
                     var singleType = transformLock.Value;
                     if (singleType != TransformGesture.TransformType.Rotation) dR = 0;
                     if (singleType != TransformGesture.TransformType.Scaling) dS = 1;
+                    if (singleType != 0 && type.HasFlag(singleType)) transformLock.SetLock();
                 }
             }
 

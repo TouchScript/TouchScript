@@ -282,7 +282,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 {
                     case GestureState.Began:
                     case GestureState.Changed:
-                        transformLock.Unlock();
+                        transformLock.ClearLock();
                         setState(GestureState.Ended);
                         break;
                 }
@@ -303,7 +303,7 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 {
                     case GestureState.Began:
                     case GestureState.Changed:
-                        transformLock.Unlock();
+                        transformLock.ClearLock();
                         setState(GestureState.Ended);
                         break;
                     case GestureState.Possible:

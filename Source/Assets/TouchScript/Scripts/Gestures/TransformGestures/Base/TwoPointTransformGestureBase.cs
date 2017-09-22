@@ -235,12 +235,13 @@ namespace TouchScript.Gestures.TransformGestures.Base
                 }
             }
 
-            if (!simultaneousTransforms && transformLock.Locked)
+            if (!simultaneousTransforms && isTransforming)
             {
                 var singleType = transformLock.Value;
                 if (singleType != TransformGesture.TransformType.Translation) dP = Vector3.zero;
                 if (singleType != TransformGesture.TransformType.Rotation) dR = 0;
                 if (singleType != TransformGesture.TransformType.Scaling) dS = 1;
+                if (singleType != 0 && type.HasFlag(singleType)) transformLock.SetLock();
             }
 
             if (dP != Vector3.zero) transformMask |= TransformGesture.TransformType.Translation;
