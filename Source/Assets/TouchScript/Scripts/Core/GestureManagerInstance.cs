@@ -26,9 +26,11 @@ namespace TouchScript.Core
         {
             get
             {
-                if (shuttingDown) return null;
-                if (instance == null)
+                if (object.Equals(instance, null))
                 {
+                    // Create an instance if it hasn't been created yet.
+                    // Don't recreate it if the instance was destroyed. 
+                    // Should happen only when the app is closing or editor is exiting Play Mode.
                     if (!Application.isPlaying) return null;
                     var objects = FindObjectsOfType<GestureManagerInstance>();
                     if (objects.Length == 0)
@@ -53,7 +55,6 @@ namespace TouchScript.Core
         #region Private variables
 
         private static GestureManagerInstance instance;
-        private static bool shuttingDown = false;
 
         // Upcoming changes
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
@@ -121,34 +122,27 @@ namespace TouchScript.Core
         private void OnEnable()
         {
             var touchManager = TouchManager.Instance;
-            if (touchManager != null)
-            {
-                touchManager.FrameStarted += frameStartedHandler;
-                touchManager.FrameFinished += frameFinishedHandler;
-                touchManager.PointersUpdated += pointersUpdatedHandler;
-                touchManager.PointersPressed += pointersPressedHandler;
-                touchManager.PointersReleased += pointersReleasedHandler;
-                touchManager.PointersCancelled += pointersCancelledHandler;
-            }
+            if (touchManager == null) return;
+
+            touchManager.FrameStarted += frameStartedHandler;
+            touchManager.FrameFinished += frameFinishedHandler;
+            touchManager.PointersUpdated += pointersUpdatedHandler;
+            touchManager.PointersPressed += pointersPressedHandler;
+            touchManager.PointersReleased += pointersReleasedHandler;
+            touchManager.PointersCancelled += pointersCancelledHandler;
         }
 
         private void OnDisable()
         {
             var touchManager = TouchManager.Instance;
-            if (touchManager != null)
-            {
-                touchManager.FrameStarted -= frameStartedHandler;
-                touchManager.FrameFinished -= frameFinishedHandler;
-                touchManager.PointersUpdated -= pointersUpdatedHandler;
-                touchManager.PointersPressed -= pointersPressedHandler;
-                touchManager.PointersReleased -= pointersReleasedHandler;
-                touchManager.PointersCancelled -= pointersCancelledHandler;
-            }
-        }
+            if (touchManager == null) return;
 
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
+            touchManager.FrameStarted -= frameStartedHandler;
+            touchManager.FrameFinished -= frameFinishedHandler;
+            touchManager.PointersUpdated -= pointersUpdatedHandler;
+            touchManager.PointersPressed -= pointersPressedHandler;
+            touchManager.PointersReleased -= pointersReleasedHandler;
+            touchManager.PointersCancelled -= pointersCancelledHandler;
         }
 
         #endregion

@@ -76,7 +76,7 @@ namespace TouchScript.Layers
         /// <summary>
         /// Layer manager.
         /// </summary>
-        protected ILayerManager manager;
+        protected ILayerManager layerManager;
 
         #endregion
 
@@ -128,7 +128,7 @@ namespace TouchScript.Layers
             setName();
             if (!Application.isPlaying) return;
 
-            manager = LayerManager.Instance;
+            layerManager = LayerManager.Instance;
             layerProjectionParams = createProjectionParams();
             StartCoroutine(lateAwake());
         }
@@ -138,7 +138,7 @@ namespace TouchScript.Layers
             yield return null;
 
             // Add ourselves after TouchManager finished adding layers in order
-            manager.AddLayer(this, -1, false);
+            if (layerManager != null) layerManager.AddLayer(this, -1, false);
         }
 
         // To be able to turn layers off
@@ -149,10 +149,10 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void OnDestroy()
         {
-            if (!Application.isPlaying || TouchManager.Instance == null) return;
+            if (!Application.isPlaying) return;
 
             StopAllCoroutines();
-            manager.RemoveLayer(this);
+            if (layerManager != null) layerManager.RemoveLayer(this);
         }
 
         #endregion

@@ -103,9 +103,11 @@ namespace TouchScript.Core
         {
             get
             {
-                if (shuttingDown) return null;
-                if (instance == null)
+                if (object.Equals(instance, null))
                 {
+                    // Create an instance if it hasn't been created yet.
+                    // Don't recreate it if the instance was destroyed. 
+                    // Should happen only when the app is closing or editor is exiting Play Mode.
                     if (!Application.isPlaying) return null;
                     var objects = FindObjectsOfType<TouchManagerInstance>();
                     if (objects.Length == 0)
@@ -210,7 +212,6 @@ namespace TouchScript.Core
 
         #region Private variables
 
-        private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
 
         private bool shouldCreateCameraLayer = true;
@@ -582,18 +583,13 @@ namespace TouchScript.Core
             updatePointers();
         }
 
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
-        }
-
         #endregion
 
         #region Private functions
 
         private void createCameraLayer()
         {
-            if (layerManager.LayerCount == 0 && shouldCreateCameraLayer)
+            if (layerManager != null && layerManager.LayerCount == 0 && shouldCreateCameraLayer)
             {
                 if (Camera.main != null)
                 {

@@ -126,7 +126,7 @@ namespace TouchScript.Layers
 #endif
         private static RaycastHit2D[] raycastHits2D = new RaycastHit2D[20];
 
-#pragma warning disable CS0414
+#pragma warning disable 0414
 
 		[SerializeField]
 		[HideInInspector]
@@ -136,7 +136,7 @@ namespace TouchScript.Layers
         [HideInInspector]
         private bool advancedProps; // is used to save if advanced properties are opened or closed
 
-#pragma warning restore CS0414
+#pragma warning restore 0414
 
 		[SerializeField]
         [HideInInspector]
@@ -251,7 +251,10 @@ namespace TouchScript.Layers
         private void OnEnable()
         {
             if (!Application.isPlaying) return;
-            TouchManager.Instance.FrameStarted += frameStartedHandler;
+
+            var touchManager = TouchManager.Instance;
+            if (touchManager != null) touchManager.FrameStarted += frameStartedHandler;
+
             StartCoroutine(lateEnable());
         }
 
@@ -270,7 +273,9 @@ namespace TouchScript.Layers
                 inputModule.INTERNAL_Release();
                 inputModule = null;
             }
-            if (TouchManager.Instance != null) TouchManager.Instance.FrameStarted -= frameStartedHandler;
+
+            var touchManager = TouchManager.Instance;
+            if (touchManager != null) touchManager.FrameStarted -= frameStartedHandler;
         }
 
 		[ContextMenu("Basic Editor")]
@@ -338,7 +343,7 @@ namespace TouchScript.Layers
             var ray = _camera.ScreenPointToRay(position);
 
             int count;
-            bool exclusiveSet = manager.HasExclusive;
+            bool exclusiveSet = layerManager.HasExclusive;
 
             if (hit3DObjects)
             {
@@ -361,7 +366,7 @@ namespace TouchScript.Layers
                         for (var i = 0; i < count; i++)
                         {
                             raycast = raycastHits[i];
-                            if (exclusiveSet && !manager.IsExclusive(raycast.transform)) continue;
+                            if (exclusiveSet && !layerManager.IsExclusive(raycast.transform)) continue;
                             raycastHitList.Add(raycast);
                         }
                         if (raycastHitList.Count == 0) return HitResult.Miss;
@@ -381,7 +386,7 @@ namespace TouchScript.Layers
                     }
 
                     raycast = raycastHits[0];
-                    if (exclusiveSet && !manager.IsExclusive(raycast.transform)) return HitResult.Miss;
+                    if (exclusiveSet && !layerManager.IsExclusive(raycast.transform)) return HitResult.Miss;
                     if (useHitFilters) return doHit(pointer, raycast, out hit);
                     hit = new HitData(raycast, this);
                     return HitResult.Hit;
@@ -389,7 +394,7 @@ namespace TouchScript.Layers
                 for (var i = 0; i < count; i++)
                 {
                     var raycast = raycastHits[i];
-                    if (exclusiveSet && !manager.IsExclusive(raycast.transform)) continue;
+                    if (exclusiveSet && !layerManager.IsExclusive(raycast.transform)) continue;
                     hitList.Add(new HitData(raycastHits[i], this));
                 }
             }
@@ -400,7 +405,7 @@ namespace TouchScript.Layers
                 for (var i = 0; i < count; i++)
                 {
                     var raycast = raycastHits2D[i];
-                    if (exclusiveSet && !manager.IsExclusive(raycast.transform)) continue;
+                    if (exclusiveSet && !layerManager.IsExclusive(raycast.transform)) continue;
                     hitList.Add(new HitData(raycast, this));
                 }
             }
@@ -496,14 +501,14 @@ namespace TouchScript.Layers
             var position = pointer.Position;
             var foundGraphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
             var count = foundGraphics.Count;
-            var exclusiveSet = manager.HasExclusive;
+            var exclusiveSet = layerManager.HasExclusive;
 
             for (var i = 0; i < count; i++)
             {
                 var graphic = foundGraphics[i];
                 var t = graphic.transform;
 
-                if (exclusiveSet && !manager.IsExclusive(t)) continue;
+                if (exclusiveSet && !layerManager.IsExclusive(t)) continue;
 
                 if ((layerMask.value != -1) && ((layerMask.value & (1 << graphic.gameObject.layer)) == 0)) continue;
 

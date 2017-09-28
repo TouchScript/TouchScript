@@ -256,7 +256,8 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public void UpdateResolution()
         {
-            TouchManager.Instance.CancelPointer(mousePointer.Id);
+            var touchManager = TouchManager.Instance;
+            if (touchManager != null) touchManager.CancelPointer(mousePointer.Id);
         }
 
         /// <inheritdoc />
