@@ -369,13 +369,13 @@ namespace TouchScript
 
         #region Private variables
 
-        #pragma warning disable CS0414
+#pragma warning disable 0414
 
         [SerializeField]
         [HideInInspector]
         private bool basicEditor = true;
 
-        #pragma warning restore CS0414
+#pragma warning restore 0414
 
 		[SerializeField]
         private Object displayDevice;
