@@ -98,6 +98,20 @@ namespace TouchScript.Layers
         }
 
         /// <inheritdoc />
+        public override string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(layerName))
+                {
+                    if (_camera == null) return base.Name;
+                    return _camera.name;
+                }
+                return layerName;
+            }
+        }
+
+        /// <inheritdoc />
         public override Vector3 WorldProjectionNormal
         {
             get
@@ -300,14 +314,6 @@ namespace TouchScript.Layers
         protected override ProjectionParams createProjectionParams()
         {
             return new CameraProjectionParams(_camera);
-        }
-
-        /// <inheritdoc />
-        protected override void setName()
-        {
-            if (string.IsNullOrEmpty(Name))
-                if (_camera != null) Name = _camera.name;
-                else Name = "Layer";
         }
 
         #endregion
