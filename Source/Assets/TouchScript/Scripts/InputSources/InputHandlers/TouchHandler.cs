@@ -15,7 +15,7 @@ namespace TouchScript.InputSources.InputHandlers
     /// <summary>
     /// Unity touch handling implementation which can be embedded and controlled from other (input) classes.
     /// </summary>
-    public class TouchHandler : IInputSource, IDisposable
+    public class TouchHandler : IInputHandler, IDisposable
     {
         #region Public properties
 
@@ -35,6 +35,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         #region Private variables
 
+        private IInputSource input;
         private PointerDelegate addPointer;
         private PointerDelegate updatePointer;
         private PointerDelegate pressPointer;
@@ -56,14 +57,16 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchHandler" /> class.
         /// </summary>
+        /// <param name="input">An input source to init new pointers with.</param>
         /// <param name="addPointer">A function called when a new pointer is detected.</param>
         /// <param name="updatePointer">A function called when a pointer is moved or its parameter is updated.</param>
         /// <param name="pressPointer">A function called when a pointer touches the surface.</param>
         /// <param name="releasePointer">A function called when a pointer is lifted off.</param>
         /// <param name="removePointer">A function called when a pointer is removed.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled.</param>
-        public TouchHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
+        public TouchHandler(IInputSource input, PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
         {
+            this.input = input;
             this.addPointer = addPointer;
             this.updatePointer = updatePointer;
             this.pressPointer = pressPointer;
@@ -71,7 +74,7 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(this), null, resetPointer);
+            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(input), null, resetPointer, "TouchHandler/Touch");
             touchPool.Name = "Touch";
 
 #if UNITY_5_6_OR_NEWER
@@ -169,7 +172,7 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
-        public void UpdateResolution() {}
+        public void UpdateResolution(int width, int height) {}
 
         /// <inheritdoc />
         public bool CancelPointer(Pointer pointer, bool shouldReturn)
@@ -196,6 +199,16 @@ namespace TouchScript.InputSources.InputHandlers
             return false;
         }
 
+        /// <inheritdoc />
+        public bool DiscardPointer(Pointer pointer)
+        {
+            var p = pointer as TouchPointer;
+            if (p == null) return false;
+
+            touchPool.Release(p);
+            return true;
+        }
+
         /// <summary>
         /// Releases resources.
         /// </summary>
@@ -206,19 +219,6 @@ namespace TouchScript.InputSources.InputHandlers
                 if (touchState.Value.Phase != TouchPhase.Canceled) internalCancelPointer(touchState.Value.Pointer);
             }
             systemToInternalId.Clear();
-        }
-
-        #endregion
-
-        #region Internal methods
-
-        /// <inheritdoc />
-        public void INTERNAL_DiscardPointer(Pointer pointer)
-        {
-            var p = pointer as TouchPointer;
-            if (p == null) return;
-
-            touchPool.Release(p);
         }
 
         #endregion

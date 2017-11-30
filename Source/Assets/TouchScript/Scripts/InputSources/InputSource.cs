@@ -50,6 +50,9 @@ namespace TouchScript.InputSources
 		private ICoordinatesRemapper coordinatesRemapper;
         private TouchManagerInstance touchManager;
 
+        protected int screenWidth;
+        protected int screenHeight;
+
         #endregion
 
         #region Public methods
@@ -59,9 +62,6 @@ namespace TouchScript.InputSources
         {
             return false;
         }
-
-        /// <inheritdoc />
-        public virtual void UpdateResolution() {}
 
         /// <inheritdoc />
         public virtual bool CancelPointer(Pointer pointer, bool shouldReturn)
@@ -76,6 +76,13 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public virtual void INTERNAL_DiscardPointer(Pointer pointer) {}
 
+        /// <inheritdoc />
+        public virtual void INTERNAL_UpdateResolution()
+        {
+            screenWidth = Screen.width;
+            screenHeight = Screen.height;
+        }
+
         #endregion
 
         #region Unity methods
@@ -83,11 +90,15 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Unity OnEnable callback.
         /// </summary>
-        protected virtual void OnEnable()
+        private void OnEnable()
         {
             touchManager = TouchManagerInstance.Instance;
             if (touchManager == null) throw new InvalidOperationException("TouchManager instance is required!");
             touchManager.AddInput(this);
+
+            init();
+
+            INTERNAL_UpdateResolution();
         }
 
         /// <summary>
@@ -105,6 +116,11 @@ namespace TouchScript.InputSources
         #endregion
 
         #region Protected methods
+
+        /// <summary>
+        /// Initializes the input source.
+        /// </summary>
+        protected virtual void init() {}
 
         /// <summary>
         /// Adds the pointer to the system.

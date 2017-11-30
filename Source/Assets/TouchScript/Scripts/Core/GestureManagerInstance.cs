@@ -83,13 +83,13 @@ namespace TouchScript.Core
         #region Pools
 
         private static ObjectPool<List<Gesture>> gestureListPool = new ObjectPool<List<Gesture>>(10,
-            () => new List<Gesture>(10), null, (l) => l.Clear(), "GestureManager/Gesture");
+            () => new List<Gesture>(10), null, (l) => l.Clear());
 
         private static ObjectPool<List<Pointer>> pointerListPool = new ObjectPool<List<Pointer>>(20,
-            () => new List<Pointer>(10), null, (l) => l.Clear(), "GestureManager/Pointer");
+            () => new List<Pointer>(10), null, (l) => l.Clear());
 
         private static ObjectPool<List<Transform>> transformListPool = new ObjectPool<List<Transform>>(10,
-            () => new List<Transform>(10), null, (l) => l.Clear(), "GestureManager/Transform");
+            () => new List<Transform>(10), null, (l) => l.Clear());
 
         #endregion
 

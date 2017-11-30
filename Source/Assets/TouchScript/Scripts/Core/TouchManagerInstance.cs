@@ -145,7 +145,7 @@ namespace TouchScript.Core
                 {
                     displayDevice = value;
                 }
-                UpdateResolution();
+                updateDPI();
             }
         }
 
@@ -308,8 +308,7 @@ namespace TouchScript.Core
             CancelPointer(id, false);
         }
 
-        /// <inheritdoc />
-        public void UpdateResolution()
+        private void updateDPI()
         {
             if (DisplayDevice != null)
             {
@@ -324,8 +323,12 @@ namespace TouchScript.Core
 #if TOUCHSCRIPT_DEBUG
             debugPointerSize = Vector2.one * dotsPerCentimeter;
 #endif
-            
-            foreach (var input in inputs) input.UpdateResolution();
+        }
+
+        /// <inheritdoc />
+        public void UpdateResolution()
+        {
+            foreach (var input in inputs) input.INTERNAL_UpdateResolution();
         }
 
         #endregion
@@ -524,8 +527,7 @@ namespace TouchScript.Core
             DontDestroyOnLoad(gameObject);
 
             layerManager = LayerManager.Instance;
-
-            UpdateResolution();
+            updateDPI();
 
             StopAllCoroutines();
             StartCoroutine(lateAwake());

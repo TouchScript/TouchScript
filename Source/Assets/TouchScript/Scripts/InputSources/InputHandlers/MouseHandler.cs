@@ -12,7 +12,7 @@ namespace TouchScript.InputSources.InputHandlers
     /// <summary>
     /// Unity mouse handling implementation which can be embedded and controlled from other (input) classes.
     /// </summary>
-    public class MouseHandler : IInputSource, IDisposable
+    public class MouseHandler : IInputHandler, IDisposable
     {
         #region Consts
 
@@ -68,6 +68,7 @@ namespace TouchScript.InputSources.InputHandlers
 
         private bool emulateSecondMousePointer = true;
 
+        private IInputSource input;
         private PointerDelegate addPointer;
         private PointerDelegate updatePointer;
         private PointerDelegate pressPointer;
@@ -85,14 +86,16 @@ namespace TouchScript.InputSources.InputHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseHandler" /> class.
         /// </summary>
+        /// <param name="input">An input source to init new pointers with.</param>
         /// <param name="addPointer">A function called when a new pointer is detected.</param>
         /// <param name="updatePointer">A function called when a pointer is moved or its parameter is updated.</param>
         /// <param name="pressPointer">A function called when a pointer touches the surface.</param>
         /// <param name="releasePointer">A function called when a pointer is lifted off.</param>
         /// <param name="removePointer">A function called when a pointer is removed.</param>
         /// <param name="cancelPointer">A function called when a pointer is cancelled.</param>
-        public MouseHandler(PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
+        public MouseHandler(IInputSource input, PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer)
         {
+            this.input = input;
             this.addPointer = addPointer;
             this.updatePointer = updatePointer;
             this.pressPointer = pressPointer;
@@ -100,7 +103,7 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(this), null, resetPointer);
+            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(input), null, resetPointer);
 
             mousePointPos = Input.mousePosition;
             mousePointer = internalAddPointer(remapCoordinates(mousePointPos));
@@ -254,11 +257,7 @@ namespace TouchScript.InputSources.InputHandlers
         }
 
         /// <inheritdoc />
-        public void UpdateResolution()
-        {
-            var touchManager = TouchManager.Instance;
-            if (touchManager != null) touchManager.CancelPointer(mousePointer.Id);
-        }
+        public void UpdateResolution(int width, int height) {}
 
         /// <inheritdoc />
         public bool CancelPointer(Pointer pointer, bool shouldReturn)
@@ -280,6 +279,16 @@ namespace TouchScript.InputSources.InputHandlers
             return false;
         }
 
+        /// <inheritdoc />
+        public bool DiscardPointer(Pointer pointer)
+        {
+            var p = pointer as MousePointer;
+            if (p == null) return false;
+
+            mousePool.Release(p);
+            return true;
+        }
+
         /// <summary>
         /// Releases resources.
         /// </summary>
@@ -295,19 +304,6 @@ namespace TouchScript.InputSources.InputHandlers
                 cancelPointer(fakeMousePointer);
                 fakeMousePointer = null;
             }
-        }
-
-        #endregion
-
-        #region Internal methods
-
-        /// <inheritdoc />
-        public void INTERNAL_DiscardPointer(Pointer pointer)
-        {
-            var p = pointer as MousePointer;
-            if (p == null) return;
-
-            mousePool.Release(p);
         }
 
         #endregion
