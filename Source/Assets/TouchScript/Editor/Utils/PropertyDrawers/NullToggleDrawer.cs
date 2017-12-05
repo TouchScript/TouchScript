@@ -26,20 +26,23 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             updateExpanded(property);
 
             EditorGUIUtility.labelWidth = 60;
-            Begin(position, property, label);
+            bool expandedChanged = Begin(position, property, label);
             if (expanded == false)
             {
-                switch (property.propertyType)
+                if (expandedChanged)
                 {
-                    case SerializedPropertyType.ObjectReference:
-                        property.objectReferenceValue = (Object) getNullValue(property);
-                        break;
-                    case SerializedPropertyType.Integer:
-                        property.intValue = (int) getNullValue(property);
-                        break;
-                    case SerializedPropertyType.Float:
-                        property.floatValue = (float) getNullValue(property);
-                        break;
+                    switch (property.propertyType)
+                    {
+                        case SerializedPropertyType.ObjectReference:
+                            property.objectReferenceValue = (Object) getNullValue(property);
+                            break;
+                        case SerializedPropertyType.Integer:
+                            property.intValue = (int) getNullValue(property);
+                            break;
+                        case SerializedPropertyType.Float:
+                            property.floatValue = (float) getNullValue(property);
+                            break;
+                    }
                 }
             }
             else
@@ -134,13 +137,15 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             //        }
         }
 
-        private void Begin(Rect position, SerializedProperty property, GUIContent label)
+        private bool Begin(Rect position, SerializedProperty property, GUIContent label)
         {
             label = EditorGUI.BeginProperty(position, label, property);
             label.text = " " + label.text;
             position.height = 16;
             EditorGUIUtility.labelWidth = 180;
+            EditorGUI.BeginChangeCheck();
             expanded = EditorGUI.ToggleLeft(position, label, expanded == true);
+            return EditorGUI.EndChangeCheck();
         }
 
         private void End()
