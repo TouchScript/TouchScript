@@ -11,23 +11,28 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
     [CustomPropertyDrawer(typeof(NullToggleAttribute))]
     internal sealed class NullToggleDrawer : PropertyDrawer
     {
-        private bool? expanded = null;
+        class SPUD
+        {
+            internal bool expanded = false;
+        }
+
+        private SPUD expanded = null;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            updateExpanded(property);
-            if (expanded == false) return 16;
+            var spud = updateExpanded(property);
+            if (spud.expanded == false) return 16;
             if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null) return 16 * 3 + 2 * 2;
             return 16 * 2 + 2;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            updateExpanded(property);
+            var spud = updateExpanded(property);
 
             EditorGUIUtility.labelWidth = 60;
-            bool expandedChanged = Begin(position, property, label);
-            if (expanded == false)
+            bool expandedChanged = Begin(spud, position, property, label);
+            if (spud.expanded == false)
             {
                 if (expandedChanged)
                 {
@@ -137,14 +142,14 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             //        }
         }
 
-        private bool Begin(Rect position, SerializedProperty property, GUIContent label)
+        private bool Begin(SPUD spud, Rect position, SerializedProperty property, GUIContent label)
         {
             label = EditorGUI.BeginProperty(position, label, property);
             label.text = " " + label.text;
             position.height = 16;
             EditorGUIUtility.labelWidth = 180;
             EditorGUI.BeginChangeCheck();
-            expanded = EditorGUI.ToggleLeft(position, label, expanded == true);
+            spud.expanded = EditorGUI.ToggleLeft(position, label, spud.expanded == true);
             return EditorGUI.EndChangeCheck();
         }
 
@@ -153,10 +158,22 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             EditorGUI.EndProperty();
         }
 
-        private void updateExpanded(SerializedProperty property)
+        private SPUD updateExpanded(SerializedProperty property)
         {
-            if (expanded != null) return;
-            expanded = !isNull(property);
+            var storage = SerializedPropertyUserData<SPUD>.Instance;
+            try
+            {
+                var spud = storage[property];
+                if (spud == null)
+                    storage[property] = spud = new SPUD() { expanded = !isNull(property) };
+                return spud;
+            }
+            catch (System.ArgumentException)
+            {
+                if (expanded == null)
+                    expanded = new SPUD() { expanded = !isNull(property) };
+                return expanded;
+            }
         }
 
         private bool isNull(SerializedProperty property)
