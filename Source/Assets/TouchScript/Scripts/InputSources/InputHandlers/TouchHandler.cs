@@ -74,7 +74,7 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(input), null, resetPointer, "TouchHandler/Touch");
+            touchPool = new ObjectPool<TouchPointer>(10, newPointer, null, resetPointer, "TouchHandler/Touch");
             touchPool.Name = "Touch";
 
 #if UNITY_5_6_OR_NEWER
@@ -272,6 +272,11 @@ namespace TouchScript.InputSources.InputHandlers
         private void resetPointer(Pointer p)
         {
             p.INTERNAL_Reset();
+        }
+
+        private TouchPointer newPointer()
+        {
+            return new TouchPointer(input);
         }
 
         #endregion

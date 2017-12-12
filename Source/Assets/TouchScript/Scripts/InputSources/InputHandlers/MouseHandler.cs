@@ -103,7 +103,7 @@ namespace TouchScript.InputSources.InputHandlers
             this.removePointer = removePointer;
             this.cancelPointer = cancelPointer;
 
-            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(input), null, resetPointer);
+            mousePool = new ObjectPool<MousePointer>(4, newPointer, null, resetPointer);
 
             mousePointPos = Input.mousePosition;
             mousePointer = internalAddPointer(remapCoordinates(mousePointPos));
@@ -422,6 +422,11 @@ namespace TouchScript.InputSources.InputHandlers
         private void resetPointer(Pointer p)
         {
             p.INTERNAL_Reset();
+        }
+
+        private MousePointer newPointer()
+        {
+            return new MousePointer(input);
         }
 
         #endregion

@@ -65,8 +65,8 @@ namespace TouchScript.InputSources.InputHandlers
         /// <inheritdoc />
         public Windows8PointerHandler(IInputSource input, PointerDelegate addPointer, PointerDelegate updatePointer, PointerDelegate pressPointer, PointerDelegate releasePointer, PointerDelegate removePointer, PointerDelegate cancelPointer) : base(input, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer)
         {
-            mousePool = new ObjectPool<MousePointer>(4, () => new MousePointer(input), null, resetPointer);
-            penPool = new ObjectPool<PenPointer>(2, () => new PenPointer(input), null, resetPointer);
+            mousePool = new ObjectPool<MousePointer>(4, newMousePointer, null, resetPointer);
+            penPool = new ObjectPool<PenPointer>(2, newPenPointer, null, resetPointer);
 
             mousePointer = internalAddMousePointer(Vector3.zero);
 
@@ -130,6 +130,20 @@ namespace TouchScript.InputSources.InputHandlers
             WindowsUtils.EnableMouseInPointer(false);
 
             base.Dispose();
+        }
+
+        #endregion
+
+        #region Private functions
+
+        private MousePointer newMousePointer()
+        {
+            return new MousePointer(input);
+        }
+
+        private PenPointer newPenPointer()
+        {
+            return new PenPointer(input);
         }
 
         #endregion
@@ -242,7 +256,7 @@ namespace TouchScript.InputSources.InputHandlers
             nativeLogDelegate = nativeLog;
             nativePointerDelegate = nativePointer;
 
-            touchPool = new ObjectPool<TouchPointer>(10, () => new TouchPointer(input), null, resetPointer);
+            touchPool = new ObjectPool<TouchPointer>(10, newTouchPointer, null, resetPointer);
 
             hMainWindow = WindowsUtils.GetActiveWindow();
             disablePressAndHold();
@@ -451,6 +465,11 @@ namespace TouchScript.InputSources.InputHandlers
             WindowsUtils.GetNativeMonitorResolution(out width, out height);
             float scale = Mathf.Max(screenWidth / ((float) width), screenHeight / ((float) height));
             SetScreenParams(screenWidth, screenHeight, (width - screenWidth / scale) * .5f, (height - screenHeight / scale) * .5f, scale, scale);
+        }
+
+        private TouchPointer newTouchPointer()
+        {
+            return new TouchPointer(input);
         }
 
         #endregion
