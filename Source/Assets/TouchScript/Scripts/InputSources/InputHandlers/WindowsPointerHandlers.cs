@@ -490,7 +490,7 @@ namespace TouchScript.InputSources.InputHandlers
                             releasePointer(mousePointer);
                             break;
                         case PointerEvent.Update:
-                            mousePointer.Position = position;
+                            mousePointer.Position = remapCoordinates(position);
                             mousePointer.Buttons = updateButtons(mousePointer.Buttons, data.PointerFlags, data.ChangedButtons);
                             updatePointer(mousePointer);
                             break;
@@ -526,7 +526,7 @@ namespace TouchScript.InputSources.InputHandlers
                             break;
                         case PointerEvent.Update:
                             if (!winTouchToInternalId.TryGetValue(id, out touchPointer)) return;
-                            touchPointer.Position = position;
+                            touchPointer.Position = remapCoordinates( position );
                             touchPointer.Rotation = getTouchRotation(ref data);
                             touchPointer.Pressure = getTouchPressure(ref data);
                             updatePointer(touchPointer);
@@ -566,7 +566,7 @@ namespace TouchScript.InputSources.InputHandlers
                             break;
                         case PointerEvent.Update:
                             if (penPointer == null) break;
-                            penPointer.Position = position;
+                            penPointer.Position = remapCoordinates(position);
                             penPointer.Pressure = getPenPressure(ref data);
                             penPointer.Rotation = getPenRotation(ref data);
                             penPointer.Buttons = updateButtons(penPointer.Buttons, data.PointerFlags, data.ChangedButtons);
