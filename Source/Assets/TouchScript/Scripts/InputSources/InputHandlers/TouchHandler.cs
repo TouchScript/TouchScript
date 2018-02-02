@@ -115,7 +115,7 @@ namespace TouchScript.InputSources.InputHandlers
                         {
                             if (touchState.Phase != TouchPhase.Canceled)
                             {
-                                touchState.Pointer.Position = t.position;
+                                touchState.Pointer.Position = remapCoordinates(t.position);
                                 updatePointer(touchState.Pointer);
                             }
                         }
