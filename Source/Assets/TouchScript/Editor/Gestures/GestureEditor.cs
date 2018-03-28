@@ -223,6 +223,8 @@ namespace TouchScript.Editor.Gestures
                 EditorGUILayout.LabelField("Min: " + (int) minPointersFloat + ", Max: " + (int) maxPointersFloat);
                 EditorGUILayout.MinMaxSlider(ref minPointersFloat, ref maxPointersFloat, 0, 10, GUILayout.MaxWidth(150));
                 EditorGUI.indentLevel--;
+                minPointers.intValue = (int) minPointersFloat;
+                maxPointers.intValue = (int) maxPointersFloat;
             }
             else
             {
@@ -230,11 +232,10 @@ namespace TouchScript.Editor.Gestures
                 {
                     minPointersFloat = 0;
                     maxPointersFloat = 0;
+                    minPointers.intValue = (int) minPointersFloat;
+                    maxPointers.intValue = (int) maxPointersFloat;
                 }
             }
-
-            minPointers.intValue = (int) minPointersFloat;
-            maxPointers.intValue = (int) maxPointersFloat;
         }
 
         protected virtual void drawFriendlyGestures()
