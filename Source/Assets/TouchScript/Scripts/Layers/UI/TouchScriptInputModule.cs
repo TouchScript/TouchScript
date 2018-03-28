@@ -689,7 +689,7 @@ namespace TouchScript.Layers.UI
                     // so that if we moused over somethign that ignored it before
                     // due to having pressed on something else
                     // it now gets it.
-                    if (currentOverGo != data.pointerEnter)
+                    if (pointer is MousePointer && currentOverGo != data.pointerEnter)
                     {
                         input.HandlePointerExitAndEnter(data, null);
                         input.HandlePointerExitAndEnter(data, currentOverGo);
