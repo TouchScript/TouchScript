@@ -306,7 +306,7 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void init()
         {
-            if (instance != null) Destroy(instance);
+            if (instance != null && instance != this) Destroy(instance);
             instance = this;
 
             Input.simulateMouseWithTouches = false;
