@@ -267,7 +267,7 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void OnEnable()
         {
-            if (instance != null) Destroy(instance);
+            if (instance != null && instance != this) Destroy(instance);
             instance = this;
 
             base.OnEnable();
