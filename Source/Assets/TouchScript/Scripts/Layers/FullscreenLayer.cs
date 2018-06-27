@@ -70,6 +70,7 @@ namespace TouchScript.Layers
                 _camera = value;
                 if (_camera == null) Type = LayerType.Global;
                 else Type = LayerType.Camera;
+                cacheCameraTransform();
                 setName();
             }
         }
@@ -173,6 +174,7 @@ namespace TouchScript.Layers
 
         private void cacheCameraTransform()
         {
+            layerProjectionParams = createProjectionParams(); // update projection params in case camera viewport rect changes
             if (_camera == null) cameraTransform = null;
             else cameraTransform = _camera.transform;
         }
