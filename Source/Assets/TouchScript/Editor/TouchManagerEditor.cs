@@ -207,7 +207,11 @@ namespace TouchScript.Editor
                     var label = EditorGUI.BeginProperty(r, TEXT_SEND_MESSAGE_EVENTS, sendMessageEvents);
                     EditorGUI.BeginChangeCheck();
                     r = EditorGUI.PrefixLabel(r, label);
-                    var sMask = (TouchManager.MessageType) EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
+#if UNITY_2017_3_OR_NEWER
+                    var sMask = (TouchManager.MessageType)EditorGUI.EnumFlagsField(r, instance.SendMessageEvents);
+#else
+                    var sMask = (TouchManager.MessageType)EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
+#endif
                     if (EditorGUI.EndChangeCheck())
                     {
                         instance.SendMessageEvents = sMask;
