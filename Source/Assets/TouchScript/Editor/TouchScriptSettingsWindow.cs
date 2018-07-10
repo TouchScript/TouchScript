@@ -139,7 +139,7 @@ namespace TouchScript.Editor
             {
                 var rect = GUILayoutUtility.GetLastRect();
                 EditorGUIUtility.AddCursorRect(rect, MouseCursor.Link);
-                if (Event.current.type == EventType.mouseDown && rect.Contains(Event.current.mousePosition))
+                if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
                     Application.OpenURL(url);
             }
         }
