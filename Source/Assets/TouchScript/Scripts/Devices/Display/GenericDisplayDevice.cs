@@ -102,11 +102,15 @@ namespace TouchScript.Devices.Display
                     nativeResolution = new Vector2(res.width, res.height);
                     break;
                 // Probably TVs
+#if !UNITY_2017_3_OR_NEWER
                 case RuntimePlatform.SamsungTVPlayer:
+#endif
 #if UNITY_5_6_OR_NEWER
                 case RuntimePlatform.Switch:
 #endif
+#if !UNITY_2018_1_OR_NEWER
                 case RuntimePlatform.WiiU:
+#endif
                 case RuntimePlatform.XboxOne:
                 case RuntimePlatform.tvOS:
                     // This has not been tested and is probably wrong.
@@ -199,11 +203,15 @@ namespace TouchScript.Devices.Display
                     // We just hope that mobiles report their DPI correctly
                     break;
                 // Probably TVs
+#if !UNITY_2017_3_OR_NEWER
                 case RuntimePlatform.SamsungTVPlayer:
+#endif
 #if UNITY_5_6_OR_NEWER
                 case RuntimePlatform.Switch:
 #endif
+#if !UNITY_2018_1_OR_NEWER
                 case RuntimePlatform.WiiU:
+#endif
                 case RuntimePlatform.XboxOne:
                 case RuntimePlatform.tvOS:
                     // This has not been tested and is probably wrong.
