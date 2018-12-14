@@ -120,9 +120,11 @@ namespace TouchScript.Devices.Display
                     res = Screen.currentResolution;
                     nativeResolution = new Vector2(res.width, res.height);
                     break;
+#if !UNITY_2018_3_OR_NEWER
                 case RuntimePlatform.PSP2:
                     nativeResolution = new Vector2(960, 544);
                     break;
+#endif
                 default:
                     // This has not been tested and is probably wrong.
                     if (getHighestResolution(out nativeResolution)) break;
@@ -232,9 +234,11 @@ namespace TouchScript.Devices.Display
                         nativeDPI = 40;
                     }
                     break;
+#if !UNITY_2018_3_OR_NEWER
                 case RuntimePlatform.PSP2:
                     nativeDPI = 220.68f;
                     break;
+#endif
                 default:
                     // This has not been tested and is probably wrong.
                     nativeDPI = 160;
