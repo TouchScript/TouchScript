@@ -25,31 +25,7 @@ namespace TouchScript.Layers.UI
         /// <summary>
         /// TouchScriptInputModule singleton instance.
         /// </summary>
-        public static TouchScriptInputModule Instance
-        {
-            get
-            {
-                if (object.Equals(instance, null))
-                {
-                    // Create an instance if it hasn't been created yet.
-                    // Don't recreate it if the instance was destroyed. 
-                    // Should happen only when the app is closing or editor is exiting Play Mode.
-                    var es = EventSystem.current;
-                    if (es == null)
-                    {
-                        es = FindObjectOfType<EventSystem>();
-                        if (es == null)
-                        {
-                            var go = new GameObject("EventSystem");
-                            es = go.AddComponent<EventSystem>();
-                        }
-                    }
-                    instance = es.GetComponent<TouchScriptInputModule>();
-                    if (instance == null) instance = es.gameObject.AddComponent<TouchScriptInputModule>();
-                }
-                return instance;
-            }
-        }
+        public static TouchScriptInputModule Instance => SessionStateManager.TouchScriptInputModule;
 
         public string HorizontalAxis = "Horizontal";
         public string VerticalAxis = "Vertical";

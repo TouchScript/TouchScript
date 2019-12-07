@@ -24,7 +24,6 @@ namespace TouchScript.Layers
     /// <para>Layers can be configured in a scene using <see cref="TouchManager"/> or from code using <see cref="ITouchManager"/> API.</para>
     /// <para>If you want to route pointers and manually control which objects they should "pointer" it's better to create a new layer extending <see cref="TouchLayer"/>.</para>
     /// </remarks>
-    [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
         #region Events

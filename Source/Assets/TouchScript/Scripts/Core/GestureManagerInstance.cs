@@ -22,30 +22,7 @@ namespace TouchScript.Core
         /// <summary>
         /// Gets the instance of GestureManager singleton.
         /// </summary>
-        public static IGestureManager Instance
-        {
-            get
-            {
-                if (object.Equals(instance, null))
-                {
-                    // Create an instance if it hasn't been created yet.
-                    // Don't recreate it if the instance was destroyed. 
-                    // Should happen only when the app is closing or editor is exiting Play Mode.
-                    if (!Application.isPlaying) return null;
-                    var objects = FindObjectsOfType<GestureManagerInstance>();
-                    if (objects.Length == 0)
-                    {
-                        var go = new GameObject("GestureManager Instance");
-                        instance = go.AddComponent<GestureManagerInstance>();
-                    }
-                    else if (objects.Length >= 1)
-                    {
-                        instance = objects[0];
-                    }
-                }
-                return instance;
-            }
-        }
+        public static IGestureManager Instance => SessionStateManager.GestureManager;
 
         /// <inheritdoc />
         public IGestureDelegate GlobalGestureDelegate { get; set; }
@@ -107,8 +84,8 @@ namespace TouchScript.Core
                 return;
             }
 
-            gameObject.hideFlags = HideFlags.HideInHierarchy;
-            DontDestroyOnLoad(gameObject);
+            // gameObject.hideFlags = HideFlags.HideInHierarchy;
+            // DontDestroyOnLoad(gameObject);
 
             gestureListPool.WarmUp(20);
             pointerListPool.WarmUp(20);

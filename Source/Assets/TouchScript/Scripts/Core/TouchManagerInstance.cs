@@ -99,30 +99,7 @@ namespace TouchScript.Core
         /// <summary>
         /// Gets the instance of TouchManager singleton.
         /// </summary>
-        public static TouchManagerInstance Instance
-        {
-            get
-            {
-                if (object.Equals(instance, null))
-                {
-                    // Create an instance if it hasn't been created yet.
-                    // Don't recreate it if the instance was destroyed. 
-                    // Should happen only when the app is closing or editor is exiting Play Mode.
-                    if (!Application.isPlaying) return null;
-                    var objects = FindObjectsOfType<TouchManagerInstance>();
-                    if (objects.Length == 0)
-                    {
-                        var go = new GameObject("TouchManager Instance");
-                        instance = go.AddComponent<TouchManagerInstance>();
-                    }
-                    else if (objects.Length >= 1)
-                    {
-                        instance = objects[0];
-                    }
-                }
-                return instance;
-            }
-        }
+        public static TouchManagerInstance Instance => SessionStateManager.TouchManagerInstance;
 
         /// <inheritdoc />
         public IDisplayDevice DisplayDevice
@@ -523,8 +500,8 @@ namespace TouchScript.Core
             SceneManager.sceneLoaded += sceneLoadedHandler;
 #endif
 
-            gameObject.hideFlags = HideFlags.HideInHierarchy;
-            DontDestroyOnLoad(gameObject);
+            // gameObject.hideFlags = HideFlags.HideInHierarchy;
+            // DontDestroyOnLoad(gameObject);
 
             layerManager = LayerManager.Instance;
             updateDPI();
@@ -548,6 +525,16 @@ namespace TouchScript.Core
 			samplerUpdateReleased = CustomSampler.Create("[TouchScript] Release Pointers");
 			samplerUpdateRemoved = CustomSampler.Create("[TouchScript] Remove Pointers");
 			samplerUpdateCancelled = CustomSampler.Create("[TouchScript] Cancel Pointers");
+#endif
+        }
+
+        void OnDestroy()
+        {
+            if (ReferenceEquals(this, instance))
+                instance = null;
+
+#if UNITY_5_4_OR_NEWER
+            SceneManager.sceneLoaded -= sceneLoadedHandler;
 #endif
         }
 

@@ -21,30 +21,7 @@ namespace TouchScript.Core
         /// <summary>
         /// Gets the instance of GestureManager singleton.
         /// </summary>
-        public static ILayerManager Instance
-        {
-            get
-            {
-                if (object.Equals(instance, null))
-                {
-                    // Create an instance if it hasn't been created yet.
-                    // Don't recreate it if the instance was destroyed. 
-                    // Should happen only when the app is closing or editor is exiting Play Mode.
-                    if (!Application.isPlaying) return null;
-                    var objects = FindObjectsOfType<LayerManagerInstance>();
-                    if (objects.Length == 0)
-                    {
-                        var go = new GameObject("LayerManager Instance");
-                        instance = go.AddComponent<LayerManagerInstance>();
-                    }
-                    else if (objects.Length >= 1)
-                    {
-                        instance = objects[0];
-                    }
-                }
-                return instance;
-            }
-        }
+        public static ILayerManager Instance => SessionStateManager.LayerManager;
 
         /// <inheritdoc />
         public IList<TouchLayer> Layers
@@ -70,7 +47,7 @@ namespace TouchScript.Core
 
         private static LayerManagerInstance instance;
 
-        private ITouchManager touchManager;
+        private ITouchManager touchManager => SessionStateManager.TouchManagerInstance;
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private int layerCount = 0;
 
@@ -235,11 +212,6 @@ namespace TouchScript.Core
                 Destroy(this);
                 return;
             }
-
-            touchManager = TouchManager.Instance;
-
-            gameObject.hideFlags = HideFlags.HideInHierarchy;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void OnEnable()
