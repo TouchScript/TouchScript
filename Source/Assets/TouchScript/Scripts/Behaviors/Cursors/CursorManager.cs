@@ -169,28 +169,28 @@ namespace TouchScript.Behaviors.Cursors
 
         private void OnEnable()
         {
-            if (TouchManager.Instance != null)
-            {
-                TouchManager.Instance.PointersAdded += pointersAddedHandler;
-                TouchManager.Instance.PointersRemoved += pointersRemovedHandler;
-                TouchManager.Instance.PointersPressed += pointersPressedHandler;
-                TouchManager.Instance.PointersReleased += pointersReleasedHandler;
-                TouchManager.Instance.PointersUpdated += PointersUpdatedHandler;
-                TouchManager.Instance.PointersCancelled += pointersCancelledHandler;
-            }
+            var touchManager = TouchManager.Instance;
+            if (touchManager == null) return;
+
+            touchManager.PointersAdded += pointersAddedHandler;
+            touchManager.PointersRemoved += pointersRemovedHandler;
+            touchManager.PointersPressed += pointersPressedHandler;
+            touchManager.PointersReleased += pointersReleasedHandler;
+            touchManager.PointersUpdated += PointersUpdatedHandler;
+            touchManager.PointersCancelled += pointersCancelledHandler;
         }
 
         private void OnDisable()
         {
-            if (TouchManager.Instance != null)
-            {
-                TouchManager.Instance.PointersAdded -= pointersAddedHandler;
-                TouchManager.Instance.PointersRemoved -= pointersRemovedHandler;
-                TouchManager.Instance.PointersPressed -= pointersPressedHandler;
-                TouchManager.Instance.PointersReleased -= pointersReleasedHandler;
-                TouchManager.Instance.PointersUpdated -= PointersUpdatedHandler;
-                TouchManager.Instance.PointersCancelled -= pointersCancelledHandler;
-            }
+            var touchManager = TouchManager.Instance;
+            if (touchManager == null) return;
+
+            touchManager.PointersAdded -= pointersAddedHandler;
+            touchManager.PointersRemoved -= pointersRemovedHandler;
+            touchManager.PointersPressed -= pointersPressedHandler;
+            touchManager.PointersReleased -= pointersReleasedHandler;
+            touchManager.PointersUpdated -= PointersUpdatedHandler;
+            touchManager.PointersCancelled -= pointersCancelledHandler;
         }
 
         #endregion

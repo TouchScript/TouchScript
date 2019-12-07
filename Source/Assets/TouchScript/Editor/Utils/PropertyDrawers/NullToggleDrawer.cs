@@ -11,35 +11,41 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
     [CustomPropertyDrawer(typeof(NullToggleAttribute))]
     internal sealed class NullToggleDrawer : PropertyDrawer
     {
-        private bool? expanded = null;
+        private class SharedData
+        {
+            internal bool expanded = false;
+        }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            updateExpanded(property);
-            if (expanded == false) return 16;
+            var data = updateExpanded(property);
+            if (data.expanded == false) return 16;
             if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null) return 16 * 3 + 2 * 2;
             return 16 * 2 + 2;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            updateExpanded(property);
+            var data = updateExpanded(property);
 
             EditorGUIUtility.labelWidth = 60;
-            Begin(position, property, label);
-            if (expanded == false)
+            bool expandedChanged = Begin(data, position, property, label);
+            if (data.expanded == false)
             {
-                switch (property.propertyType)
+                if (expandedChanged)
                 {
-                    case SerializedPropertyType.ObjectReference:
-                        property.objectReferenceValue = (Object) getNullValue(property);
-                        break;
-                    case SerializedPropertyType.Integer:
-                        property.intValue = (int) getNullValue(property);
-                        break;
-                    case SerializedPropertyType.Float:
-                        property.floatValue = (float) getNullValue(property);
-                        break;
+                    switch (property.propertyType)
+                    {
+                        case SerializedPropertyType.ObjectReference:
+                            property.objectReferenceValue = (Object) getNullValue(property);
+                            break;
+                        case SerializedPropertyType.Integer:
+                            property.intValue = (int) getNullValue(property);
+                            break;
+                        case SerializedPropertyType.Float:
+                            property.floatValue = (float) getNullValue(property);
+                            break;
+                    }
                 }
             }
             else
@@ -70,77 +76,17 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
                 }
             }
             End();
-
-
-            //    case SerializedPropertyType.Float:
-            //        {
-            //            EditorGUI.BeginChangeCheck();
-            //            float floatValue = EditorGUI.FloatField(position, label, property.floatValue);
-            //            if (EditorGUI.EndChangeCheck())
-            //            {
-            //                property.floatValue = floatValue;
-            //            }
-            //            break;
-            //        }
-            //    case SerializedPropertyType.String:
-            //        {
-            //            EditorGUI.BeginChangeCheck();
-            //            string stringValue = EditorGUI.TextField(position, label, property.stringValue);
-            //            if (EditorGUI.EndChangeCheck())
-            //            {
-            //                property.stringValue = stringValue;
-            //            }
-            //            break;
-            //        }
-            //    case SerializedPropertyType.Color:
-            //        {
-            //            EditorGUI.BeginChangeCheck();
-            //            Color colorValue = EditorGUI.ColorField(position, label, property.colorValue);
-            //            if (EditorGUI.EndChangeCheck())
-            //            {
-            //                property.colorValue = colorValue;
-            //            }
-            //            break;
-            //        }
-            //    case SerializedPropertyType.LayerMask:
-            //        EditorGUI.LayerMaskField(position, property, label);
-            //        break;
-            //    case SerializedPropertyType.Enum:
-            //        EditorGUI.Popup(position, property, label);
-            //        break;
-            //    case SerializedPropertyType.Vector2:
-            //        EditorGUI.Vector2Field(position, property, label);
-            //        break;
-            //    case SerializedPropertyType.Vector3:
-            //        EditorGUI.Vector3Field(position, property, label);
-            //        break;
-            //    case SerializedPropertyType.Rect:
-            //        EditorGUI.RectField(position, property, label);
-            //        break;
-            //    case SerializedPropertyType.AnimationCurve:
-            //        {
-            //            int controlID = GUIUtility.GetControlID(EditorGUI.s_CurveHash, EditorGUIUtility.native, position);
-            //            EditorGUI.DoCurveField(EditorGUI.PrefixLabel(position, controlID, label), controlID, null, EditorGUI.kCurveColor, default(Rect), property);
-            //            break;
-            //        }
-            //    case SerializedPropertyType.Bounds:
-            //        EditorGUI.BoundsField(position, property, label);
-            //        break;
-            //    case SerializedPropertyType.Gradient:
-            //        {
-            //            int controlID2 = GUIUtility.GetControlID(EditorGUI.s_CurveHash, EditorGUIUtility.native, position);
-            //            EditorGUI.DoGradientField(EditorGUI.PrefixLabel(position, controlID2, label), controlID2, null, property);
-            //            break;
-            //        }
         }
 
-        private void Begin(Rect position, SerializedProperty property, GUIContent label)
+        private bool Begin(SharedData data, Rect position, SerializedProperty property, GUIContent label)
         {
             label = EditorGUI.BeginProperty(position, label, property);
             label.text = " " + label.text;
             position.height = 16;
             EditorGUIUtility.labelWidth = 180;
-            expanded = EditorGUI.ToggleLeft(position, label, expanded == true);
+            EditorGUI.BeginChangeCheck();
+            data.expanded = EditorGUI.ToggleLeft(position, label, data.expanded == true);
+            return EditorGUI.EndChangeCheck();
         }
 
         private void End()
@@ -148,10 +94,12 @@ namespace TouchScript.Editor.Utils.PropertyDrawers
             EditorGUI.EndProperty();
         }
 
-        private void updateExpanded(SerializedProperty property)
+        private SharedData updateExpanded(SerializedProperty property)
         {
-            if (expanded != null) return;
-            expanded = !isNull(property);
+            var storage = SerializedPropertyUserData<SharedData>.Instance;
+            var data = storage[property];
+            if (data == null) storage[property] = data = new SharedData() { expanded = !isNull(property) };
+            return data;
         }
 
         private bool isNull(SerializedProperty property)

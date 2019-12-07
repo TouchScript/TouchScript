@@ -236,12 +236,16 @@ namespace TouchScript.Editor
             if (Application.isPlaying)
             {
                 layers.arraySize = 0;
-                LayerManager.Instance.ForEach((l) =>
-                            {
-                                layers.arraySize++;
-                                layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = l;
-                                return true;
-                            });
+                var layerManager = LayerManager.Instance;
+                if (layerManager != null) 
+                {
+                    LayerManager.Instance.ForEach((l) =>
+                                {
+                                    layers.arraySize++;
+                                    layers.GetArrayElementAtIndex(layers.arraySize - 1).objectReferenceValue = l;
+                                    return true;
+                                });
+                }
             }
             else
             {

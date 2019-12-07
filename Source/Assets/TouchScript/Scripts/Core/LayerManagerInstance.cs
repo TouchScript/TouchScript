@@ -25,14 +25,16 @@ namespace TouchScript.Core
         {
             get
             {
-                if (shuttingDown) return null;
-                if (instance == null)
+                if (object.Equals(instance, null))
                 {
+                    // Create an instance if it hasn't been created yet.
+                    // Don't recreate it if the instance was destroyed. 
+                    // Should happen only when the app is closing or editor is exiting Play Mode.
                     if (!Application.isPlaying) return null;
                     var objects = FindObjectsOfType<LayerManagerInstance>();
                     if (objects.Length == 0)
                     {
-                        var go = new GameObject("GestureManager Instance");
+                        var go = new GameObject("LayerManager Instance");
                         instance = go.AddComponent<LayerManagerInstance>();
                     }
                     else if (objects.Length >= 1)
@@ -67,9 +69,8 @@ namespace TouchScript.Core
         #region Private variables
 
         private static LayerManagerInstance instance;
-        private static bool shuttingDown = false;
 
-        private ITouchManager manager;
+        private ITouchManager touchManager;
         private List<TouchLayer> layers = new List<TouchLayer>(10);
         private int layerCount = 0;
 
@@ -216,7 +217,7 @@ namespace TouchScript.Core
         {
             // It is incorrect to just set exclusiveCount to zero since the exclusive list is actually needed the next frame. Only after the next frame's FrameEnded event the list can be cleared.
             // If we are inside the Pointer Frame, we need to wait for the second FrameEnded (this frame's event included). Otherwise, we need to wait for the next FrameEnded event.
-            clearExclusiveDelay = manager.IsInsidePointerFrame ? 2 : 1;
+            clearExclusiveDelay = (touchManager != null && touchManager.IsInsidePointerFrame) ? 2 : 1;
         }
 
         #endregion
@@ -235,7 +236,7 @@ namespace TouchScript.Core
                 return;
             }
 
-            manager = TouchManager.Instance;
+            touchManager = TouchManager.Instance;
 
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
@@ -243,17 +244,12 @@ namespace TouchScript.Core
 
         private void OnEnable()
         {
-            manager.FrameFinished += frameFinishedHandler;
+            if (touchManager != null) touchManager.FrameFinished += frameFinishedHandler;
         }
 
         private void OnDisable()
         {
-            manager.FrameFinished -= frameFinishedHandler;
-        }
-
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
+            if (touchManager != null) touchManager.FrameFinished -= frameFinishedHandler;
         }
 
         #endregion
