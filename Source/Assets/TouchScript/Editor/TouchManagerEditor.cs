@@ -91,7 +91,7 @@ namespace TouchScript.Editor
                     EditorGUI.LabelField(rect, "null");
                     return;
                 }
-                EditorGUI.LabelField(rect, layer.Name);
+                EditorGUI.LabelField(rect, layer.Name + " (" + layer.gameObject.name + ")");
             };
         }
 
