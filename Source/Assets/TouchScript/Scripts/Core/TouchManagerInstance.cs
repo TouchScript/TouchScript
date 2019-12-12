@@ -99,28 +99,7 @@ namespace TouchScript.Core
         /// <summary>
         /// Gets the instance of TouchManager singleton.
         /// </summary>
-        public static TouchManagerInstance Instance
-        {
-            get
-            {
-                if (shuttingDown) return null;
-                if (instance == null)
-                {
-                    if (!Application.isPlaying) return null;
-                    var objects = FindObjectsOfType<TouchManagerInstance>();
-                    if (objects.Length == 0)
-                    {
-                        var go = new GameObject("TouchManager Instance");
-                        instance = go.AddComponent<TouchManagerInstance>();
-                    }
-                    else if (objects.Length >= 1)
-                    {
-                        instance = objects[0];
-                    }
-                }
-                return instance;
-            }
-        }
+        public static TouchManagerInstance Instance => SessionStateManager.TouchManagerInstance;
 
         /// <inheritdoc />
         public IDisplayDevice DisplayDevice
@@ -143,7 +122,7 @@ namespace TouchScript.Core
                 {
                     displayDevice = value;
                 }
-                UpdateResolution();
+                updateDPI();
             }
         }
 
@@ -210,7 +189,6 @@ namespace TouchScript.Core
 
         #region Private variables
 
-        private static bool shuttingDown = false;
         private static TouchManagerInstance instance;
 
         private bool shouldCreateCameraLayer = true;
@@ -297,7 +275,7 @@ namespace TouchScript.Core
             Pointer pointer;
             if (idToPointer.TryGetValue(id, out pointer))
             {
-                pointer.InputSource.CancelPointer(pointer, shouldReturn);
+                if (pointer.InputSource != null) pointer.InputSource.CancelPointer(pointer, shouldReturn);
             }
         }
 
@@ -307,8 +285,7 @@ namespace TouchScript.Core
             CancelPointer(id, false);
         }
 
-        /// <inheritdoc />
-        public void UpdateResolution()
+        private void updateDPI()
         {
             if (DisplayDevice != null)
             {
@@ -323,8 +300,12 @@ namespace TouchScript.Core
 #if TOUCHSCRIPT_DEBUG
             debugPointerSize = Vector2.one * dotsPerCentimeter;
 #endif
-            
-            foreach (var input in inputs) input.UpdateResolution();
+        }
+
+        /// <inheritdoc />
+        public void UpdateResolution()
+        {
+            foreach (var input in inputs) input.INTERNAL_UpdateResolution();
         }
 
         #endregion
@@ -519,12 +500,11 @@ namespace TouchScript.Core
             SceneManager.sceneLoaded += sceneLoadedHandler;
 #endif
 
-            gameObject.hideFlags = HideFlags.HideInHierarchy;
-            DontDestroyOnLoad(gameObject);
+            // gameObject.hideFlags = HideFlags.HideInHierarchy;
+            // DontDestroyOnLoad(gameObject);
 
             layerManager = LayerManager.Instance;
-
-            UpdateResolution();
+            updateDPI();
 
             StopAllCoroutines();
             StartCoroutine(lateAwake());
@@ -545,6 +525,16 @@ namespace TouchScript.Core
 			samplerUpdateReleased = CustomSampler.Create("[TouchScript] Release Pointers");
 			samplerUpdateRemoved = CustomSampler.Create("[TouchScript] Remove Pointers");
 			samplerUpdateCancelled = CustomSampler.Create("[TouchScript] Cancel Pointers");
+#endif
+        }
+
+        void OnDestroy()
+        {
+            if (ReferenceEquals(this, instance))
+                instance = null;
+
+#if UNITY_5_4_OR_NEWER
+            SceneManager.sceneLoaded -= sceneLoadedHandler;
 #endif
         }
 
@@ -582,18 +572,13 @@ namespace TouchScript.Core
             updatePointers();
         }
 
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
-        }
-
         #endregion
 
         #region Private functions
 
         private void createCameraLayer()
         {
-            if (layerManager.LayerCount == 0 && shouldCreateCameraLayer)
+            if (layerManager != null && layerManager.LayerCount == 0 && shouldCreateCameraLayer)
             {
                 if (Camera.main != null)
                 {
@@ -877,7 +862,7 @@ namespace TouchScript.Core
             for (var i = 0; i < removedCount; i++)
             {
                 var pointer = list[i];
-                pointer.InputSource.INTERNAL_DiscardPointer(pointer);
+                if (pointer.InputSource != null) pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
 
@@ -937,7 +922,7 @@ namespace TouchScript.Core
             for (var i = 0; i < cancelledCount; i++)
             {
                 var pointer = list[i];
-                pointer.InputSource.INTERNAL_DiscardPointer(pointer);
+                if (pointer.InputSource != null) pointer.InputSource.INTERNAL_DiscardPointer(pointer);
             }
             pointerListPool.Release(list);
 

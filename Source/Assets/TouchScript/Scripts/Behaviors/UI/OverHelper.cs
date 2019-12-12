@@ -43,21 +43,26 @@ namespace TouchScript.Behaviors.UI
 
         private void OnEnable()
         {
-            TouchManager.Instance.PointersAdded += pointersAddedHandler;
-            TouchManager.Instance.PointersUpdated += pointersUpdatedHandler;
-            TouchManager.Instance.PointersReleased += pointersReleasedHandler;
-            TouchManager.Instance.PointersRemoved += pointersRemovedHandler;
-            TouchManager.Instance.PointersCancelled += pointersRemovedHandler;
+            var touchManager = TouchManager.Instance;
+            if (touchManager == null) return;
+
+            touchManager.PointersAdded += pointersAddedHandler;
+            touchManager.PointersUpdated += pointersUpdatedHandler;
+            touchManager.PointersReleased += pointersReleasedHandler;
+            touchManager.PointersRemoved += pointersRemovedHandler;
+            touchManager.PointersCancelled += pointersRemovedHandler;
         }
 
         private void OnDisable()
         {
-			if (TouchManager.Instance == null) return;
-            TouchManager.Instance.PointersAdded -= pointersAddedHandler;
-            TouchManager.Instance.PointersUpdated -= pointersUpdatedHandler;
-            TouchManager.Instance.PointersReleased -= pointersReleasedHandler;
-            TouchManager.Instance.PointersRemoved -= pointersRemovedHandler;
-            TouchManager.Instance.PointersCancelled -= pointersRemovedHandler;
+            var touchManager = TouchManager.Instance;
+            if (touchManager == null) return;
+
+            touchManager.PointersAdded -= pointersAddedHandler;
+            touchManager.PointersUpdated -= pointersUpdatedHandler;
+            touchManager.PointersReleased -= pointersReleasedHandler;
+            touchManager.PointersRemoved -= pointersRemovedHandler;
+            touchManager.PointersCancelled -= pointersRemovedHandler;
         }
 
         #endregion

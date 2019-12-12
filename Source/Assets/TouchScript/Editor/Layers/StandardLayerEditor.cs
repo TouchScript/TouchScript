@@ -15,6 +15,7 @@ namespace TouchScript.Editor.Layers
         public static readonly GUIContent TEXT_ADVANCED_HEADER = new GUIContent("Advanced", "Advanced properties.");
         public static readonly GUIContent TEXT_HIT_HEADER = new GUIContent("Hit test options", "Options which control what types of objects this layer should search under pointers.");
 
+        public static readonly GUIContent TEXT_NAME = new GUIContent("Name", "Layer name.");
         public static readonly GUIContent TEXT_3D_OBJECTS = new GUIContent("Hit 3D Objects", "Layer should raycast 3D objects.");
         public static readonly GUIContent TEXT_2D_OBJECTS = new GUIContent("Hit 2D Objects", "Layer should raycast 2D objects.");
         public static readonly GUIContent TEXT_WORLD_UI = new GUIContent("Hit World UI", "Layer should raycast World Space UI.");
@@ -25,6 +26,7 @@ namespace TouchScript.Editor.Layers
         public static readonly GUIContent TEXT_HELP = new GUIContent("This component assigns target GameObjects in the scene for pressed pointers.");
 
         private SerializedProperty advancedProps, hitProps;
+        private SerializedProperty layerName;
         private SerializedProperty basicEditor;
         private SerializedProperty hit3DObjects;
         private SerializedProperty hit2DObjects;
@@ -39,6 +41,7 @@ namespace TouchScript.Editor.Layers
 
             advancedProps = serializedObject.FindProperty("advancedProps");
             hitProps = serializedObject.FindProperty("hitProps");
+            layerName = serializedObject.FindProperty("layerName");
             basicEditor = serializedObject.FindProperty("basicEditor");
             hit3DObjects = serializedObject.FindProperty("hit3DObjects");
             hit2DObjects = serializedObject.FindProperty("hit2DObjects");
@@ -70,6 +73,7 @@ namespace TouchScript.Editor.Layers
             }
             else
             {
+                drawName();
                 drawHit();
                 drawAdvanced();
             }
@@ -86,6 +90,11 @@ namespace TouchScript.Editor.Layers
                 doDrawHit();
                 EditorGUI.indentLevel--;
             }
+        }
+
+        protected virtual void drawName()
+        {
+            EditorGUILayout.PropertyField(layerName, TEXT_NAME);
         }
 
         protected virtual void doDrawHit()

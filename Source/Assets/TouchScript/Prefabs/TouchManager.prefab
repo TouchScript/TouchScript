@@ -41,7 +41,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dd4c394fe06f4ea49e03aaa5e7a8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
   OnFrameStart:
     m_PersistentCalls:
       m_Calls: []
@@ -82,12 +81,12 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: TouchScript.TouchManager+PointerEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  advancedProps: 0
+  basicEditor: 1
   displayDevice: {fileID: 0}
   shouldCreateCameraLayer: 1
   shouldCreateStandardInput: 1
   useSendMessage: 0
-  sendMessageEvents: 60
+  sendMessageEvents: 252
   sendMessageTarget: {fileID: 0}
   useUnityEvents: 0
   layers: []
@@ -102,9 +101,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e276ccba4f7314d9988af19f9b3a611b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedProps: 0
+  basicEditor: 1
   generalProps: 0
   windowsProps: 0
+  webglProps: 0
   windows8API: 0
   windows7API: 0
   webGLTouch: 1

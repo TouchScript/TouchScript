@@ -24,7 +24,6 @@ namespace TouchScript.Layers
     /// <para>Layers can be configured in a scene using <see cref="TouchManager"/> or from code using <see cref="ITouchManager"/> API.</para>
     /// <para>If you want to route pointers and manually control which objects they should "pointer" it's better to create a new layer extending <see cref="TouchLayer"/>.</para>
     /// </remarks>
-    [ExecuteInEditMode]
     public abstract class TouchLayer : MonoBehaviour
     {
         #region Events
@@ -48,7 +47,18 @@ namespace TouchScript.Layers
         /// <summary>
         /// Pointer layer's name.
         /// </summary>
-        public string Name;
+        public virtual string Name
+        {
+            get 
+            {
+                if (string.IsNullOrEmpty(layerName)) return "Layer";
+                return layerName;
+            }
+            set
+            {
+                layerName = value;
+            }
+        }
 
         /// <summary>
         /// Layers screen to world projection normal.
@@ -76,7 +86,10 @@ namespace TouchScript.Layers
         /// <summary>
         /// Layer manager.
         /// </summary>
-        protected ILayerManager manager;
+        protected ILayerManager layerManager;
+
+        [SerializeField]
+        protected string layerName;
 
         #endregion
 
@@ -125,10 +138,9 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void Awake()
         {
-            setName();
             if (!Application.isPlaying) return;
 
-            manager = LayerManager.Instance;
+            layerManager = LayerManager.Instance;
             layerProjectionParams = createProjectionParams();
             StartCoroutine(lateAwake());
         }
@@ -138,7 +150,7 @@ namespace TouchScript.Layers
             yield return null;
 
             // Add ourselves after TouchManager finished adding layers in order
-            manager.AddLayer(this, -1, false);
+            if (layerManager != null) layerManager.AddLayer(this, -1, false);
         }
 
         // To be able to turn layers off
@@ -149,10 +161,10 @@ namespace TouchScript.Layers
         /// </summary>
         protected virtual void OnDestroy()
         {
-            if (!Application.isPlaying || TouchManager.Instance == null) return;
+            if (!Application.isPlaying) return;
 
             StopAllCoroutines();
-            manager.RemoveLayer(this);
+            if (layerManager != null) layerManager.RemoveLayer(this);
         }
 
         #endregion
@@ -217,14 +229,6 @@ namespace TouchScript.Layers
             }
 
             return hitResult;
-        }
-
-        /// <summary>
-        /// Updates pointer layers's name.
-        /// </summary>
-        protected virtual void setName()
-        {
-            if (string.IsNullOrEmpty(Name)) Name = "Layer";
         }
 
         /// <summary>
