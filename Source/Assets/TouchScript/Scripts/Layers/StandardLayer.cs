@@ -502,74 +502,33 @@ namespace TouchScript.Layers
             return HitResult.Hit;
         }
 
+        private static readonly List<RaycastResult> _raycastResultBuffer = new List<RaycastResult>(16);
+
         private void performUISearchForCanvas(IPointer pointer, Canvas canvas, GraphicRaycaster raycaster, Camera eventCamera = null, float maxDistance = float.MaxValue, Ray ray = default(Ray))
         {
-            var position = pointer.Position;
-            var foundGraphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
-            var count = foundGraphics.Count;
             var exclusiveSet = layerManager.HasExclusive;
-
-            for (var i = 0; i < count; i++)
+            var eventData = new PointerEventData(null) {position = pointer.Position};
+            raycaster.Raycast(eventData, _raycastResultBuffer);
+            foreach (var result in _raycastResultBuffer)
             {
-                var graphic = foundGraphics[i];
-                var t = graphic.transform;
+                var trans = result.gameObject.transform;
+                if (exclusiveSet && !layerManager.IsExclusive(trans)) continue;
 
-                if (exclusiveSet && !layerManager.IsExclusive(t)) continue;
-
-                if ((layerMask.value != -1) && ((layerMask.value & (1 << graphic.gameObject.layer)) == 0)) continue;
-
-                // -1 means it hasn't been processed by the canvas, which means it isn't actually drawn
-                if ((graphic.depth == -1) || !graphic.raycastTarget)
-                    continue;
-
-                if (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, position, eventCamera))
-                    continue;
-
-                if (graphic.Raycast(position, eventCamera))
-                {
-                    if (raycaster.ignoreReversedGraphics)
-                        if (eventCamera == null)
-                        {
-                            // If we dont have a camera we know that we should always be facing forward
-                            var dir = t.rotation * Vector3.forward;
-                            if (Vector3.Dot(Vector3.forward, dir) <= 0) continue;
-                        }
-                        else
-                        {
-                            // If we have a camera compare the direction against the cameras forward.
-                            var cameraFoward = eventCamera.transform.rotation * Vector3.forward;
-                            var dir = t.rotation * Vector3.forward;
-                            if (Vector3.Dot(cameraFoward, dir) <= 0) continue;
-                        }
-
-                    float distance = 0;
-
-                    if ((eventCamera == null) || (canvas.renderMode == RenderMode.ScreenSpaceOverlay)) {}
-                    else
+                var graphic = result.gameObject.GetComponent<Graphic>();
+                raycastHitUIList.Add(
+                    new RaycastHitUI()
                     {
-                        var transForward = t.forward;
-                        // http://geomalgorithms.com/a06-_intersect-2.html
-                        distance = Vector3.Dot(transForward, t.position - ray.origin) / Vector3.Dot(transForward, ray.direction);
-
-                        // Check to see if the go is behind the camera.
-                        if (distance < 0) continue;
-                        if (distance >= maxDistance) continue;
-                    }
-
-                    raycastHitUIList.Add(
-                        new RaycastHitUI()
-                        {
-                            Target = graphic.transform,
-                            Raycaster = raycaster,
-                            Graphic = graphic,
-                            GraphicIndex = raycastHitUIList.Count,
-                            Depth = graphic.depth,
-                            SortingLayer = canvas.sortingLayerID,
-                            SortingOrder = canvas.sortingOrder,
-                            Distance = distance
-                        });
-                }
+                        Target = trans,
+                        Raycaster = raycaster,
+                        Graphic = graphic,
+                        GraphicIndex = raycastHitUIList.Count,
+                        Depth = graphic.depth,
+                        SortingLayer = canvas.sortingLayerID,
+                        SortingOrder = canvas.sortingOrder,
+                        Distance = result.distance
+                    });
             }
+            _raycastResultBuffer.Clear();
         }
 
         private HitResult doHit(IPointer pointer, RaycastHitUI raycastHit, out HitData hit)
