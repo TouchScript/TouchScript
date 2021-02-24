@@ -105,7 +105,14 @@ namespace TouchScript
 
             static TouchScriptInputModule ResolveInputModule()
             {
-                var es = EventSystem.current;
+                EventSystem es = null;
+                var rootGameObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+                foreach (var rootGameObject in rootGameObjects)
+                {
+                    if (rootGameObject.TryGetComponent(out es))
+                        break;
+                }
+
                 if (es == null)
                 {
                     var type = typeof(EventSystem);
