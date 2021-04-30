@@ -201,17 +201,17 @@ namespace TouchScript.InputSources
 
             var handled = false;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows8PointerHandler != null) 
+            if (windows8PointerHandler != null)
             {
                 handled = windows8PointerHandler.UpdateInput();
-            } 
+            }
             else
             {
-                if (windows7PointerHandler != null) 
+                if (windows7PointerHandler != null)
                 {
                     handled = windows7PointerHandler.UpdateInput();
                 }
-                else 
+                else
 #endif
             if (touchHandler != null)
             {
@@ -250,7 +250,7 @@ namespace TouchScript.InputSources
         #region Internal methods
 
         /// <inheritdoc />
-        public override void INTERNAL_DiscardPointer(Pointer pointer) 
+        public override void INTERNAL_DiscardPointer(Pointer pointer)
         {
             base.INTERNAL_DiscardPointer(pointer);
 
@@ -378,7 +378,10 @@ namespace TouchScript.InputSources
             if (UniversalWindowsMouse) enableMouse();
 #elif UNITY_PS3 || UNITY_PS4 || UNITY_XBOX360 || UNITY_XBOXONE
             enableMouse();
-#else // UNITY_IOS || UNITY_ANDROID || UNITY_WII || UNITY_BLACKBERRY || UNITY_TIZEN || UNITY_WP8 || UNITY_WP8_1
+#elif UNITY_IOS || UNITY_ANDROID
+            enableMouse();
+            enableTouch();
+#else //  || UNITY_WII || UNITY_BLACKBERRY || UNITY_TIZEN || UNITY_WP8 || UNITY_WP8_1
             enableTouch();
 #endif
 #endif
