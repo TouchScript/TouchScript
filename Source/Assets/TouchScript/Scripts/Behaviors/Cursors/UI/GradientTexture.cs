@@ -99,10 +99,10 @@ namespace TouchScript.Behaviors.Cursors.UI
         private void Start()
         {
             var hash = Name.GetHashCode();
-            if (!textureCache.TryGetValue(hash, out texture))
+            if (!textureCache.TryGetValue(hash, out texture) || texture == null)
             {
                 texture = Generate();
-                textureCache.Add(hash, texture);
+                textureCache[hash] = texture;
             }
             apply();
         }
