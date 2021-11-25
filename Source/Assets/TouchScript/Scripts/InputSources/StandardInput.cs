@@ -145,8 +145,6 @@ namespace TouchScript.InputSources
 
         private static StandardInput instance;
 
-#pragma warning disable CS0414
-
 		[SerializeField]
         [HideInInspector]
         private bool generalProps; // Used in the custom inspector
@@ -158,8 +156,6 @@ namespace TouchScript.InputSources
 		[SerializeField]
 		[HideInInspector]
 		private bool webglProps; // Used in the custom inspector
-
-#pragma warning restore CS0414
 
 		[SerializeField]
         private Windows8APIType windows8API = Windows8APIType.Windows8;
@@ -205,17 +201,17 @@ namespace TouchScript.InputSources
 
             var handled = false;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows8PointerHandler != null) 
+            if (windows8PointerHandler != null)
             {
                 handled = windows8PointerHandler.UpdateInput();
-            } 
+            }
             else
             {
-                if (windows7PointerHandler != null) 
+                if (windows7PointerHandler != null)
                 {
                     handled = windows7PointerHandler.UpdateInput();
                 }
-                else 
+                else
 #endif
             if (touchHandler != null)
             {
@@ -231,17 +227,6 @@ namespace TouchScript.InputSources
             }
 #endif
             return handled;
-        }
-
-        /// <inheritdoc />
-        public override void UpdateResolution()
-        {
-#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows8PointerHandler != null) windows8PointerHandler.UpdateResolution();
-            else if (windows7PointerHandler != null) windows7PointerHandler.UpdateResolution();
-#endif
-            if (touchHandler != null) touchHandler.UpdateResolution();
-            if (mouseHandler != null) mouseHandler.UpdateResolution();
         }
 
         /// <inheritdoc />
@@ -262,15 +247,67 @@ namespace TouchScript.InputSources
 
         #endregion
 
+        #region Internal methods
+
+        /// <inheritdoc />
+        public override void INTERNAL_DiscardPointer(Pointer pointer)
+        {
+            base.INTERNAL_DiscardPointer(pointer);
+
+            var handled = false;
+            if (touchHandler != null) handled = touchHandler.DiscardPointer(pointer);
+            if (mouseHandler != null && !handled) handled = mouseHandler.DiscardPointer(pointer);
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            if (windows7PointerHandler != null && !handled) handled = windows7PointerHandler.DiscardPointer(pointer);
+            if (windows8PointerHandler != null && !handled) handled = windows8PointerHandler.DiscardPointer(pointer);
+#endif
+        }
+
+        /// <inheritdoc />
+        public override void INTERNAL_UpdateResolution()
+        {
+            base.INTERNAL_UpdateResolution();
+
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            if (windows8PointerHandler != null) windows8PointerHandler.UpdateResolution(screenWidth, screenHeight);
+            else if (windows7PointerHandler != null) windows7PointerHandler.UpdateResolution(screenWidth, screenHeight);
+#endif
+            if (touchHandler != null) touchHandler.UpdateResolution(screenWidth, screenHeight);
+            if (mouseHandler != null) mouseHandler.UpdateResolution(screenWidth, screenHeight);
+        }
+
+        #endregion
+
         #region Unity
 
         /// <inheritdoc />
-        protected override void OnEnable()
+        protected override void OnDisable()
+        {
+            disableMouse();
+            disableTouch();
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            disableWindows7Touch();
+            disableWindows8Touch();
+#endif
+
+            base.OnDisable();
+        }
+
+		[ContextMenu("Basic Editor")]
+		private void switchToBasicEditor()
+		{
+			basicEditor = true;
+		}
+
+        #endregion
+
+        #region Protected methods
+
+        /// <inheritdoc />
+        protected override void init()
         {
             if (instance != null) Destroy(instance);
             instance = this;
-
-            base.OnEnable();
 
             Input.simulateMouseWithTouches = false;
 
@@ -341,35 +378,15 @@ namespace TouchScript.InputSources
             if (UniversalWindowsMouse) enableMouse();
 #elif UNITY_PS3 || UNITY_PS4 || UNITY_XBOX360 || UNITY_XBOXONE
             enableMouse();
-#else // UNITY_IOS || UNITY_ANDROID || UNITY_WII || UNITY_BLACKBERRY || UNITY_TIZEN || UNITY_WP8 || UNITY_WP8_1
+#elif UNITY_IOS || UNITY_ANDROID
+            enableMouse();
+            enableTouch();
+#else //  || UNITY_WII || UNITY_BLACKBERRY || UNITY_TIZEN || UNITY_WP8 || UNITY_WP8_1
             enableTouch();
 #endif
 #endif
             if (CoordinatesRemapper != null) updateCoordinatesRemapper(CoordinatesRemapper);
         }
-
-        /// <inheritdoc />
-        protected override void OnDisable()
-        {
-            disableMouse();
-            disableTouch();
-#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            disableWindows7Touch();
-            disableWindows8Touch();
-#endif
-
-            base.OnDisable();
-        }
-
-		[ContextMenu("Basic Editor")]
-		private void switchToBasicEditor()
-		{
-			basicEditor = true;
-		}
-
-        #endregion
-
-        #region Protected methods
 
         /// <inheritdoc />
         protected override void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
@@ -389,7 +406,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            mouseHandler = new MouseHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
             mouseHandler.EmulateSecondMousePointer = emulateSecondMousePointer;
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
@@ -405,7 +422,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            touchHandler = new TouchHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 
@@ -421,7 +438,7 @@ namespace TouchScript.InputSources
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private void enableWindows7Touch()
         {
-            windows7PointerHandler = new Windows7PointerHandler(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            windows7PointerHandler = new Windows7PointerHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 7 pointer input.");
         }
 
@@ -436,7 +453,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows8Touch()
         {
-            windows8PointerHandler = new Windows8PointerHandler(addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            windows8PointerHandler = new Windows8PointerHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
             windows8PointerHandler.MouseInPointer = windows8Mouse;
             Debug.Log("[TouchScript] Initialized Windows 8 pointer input.");
         }
