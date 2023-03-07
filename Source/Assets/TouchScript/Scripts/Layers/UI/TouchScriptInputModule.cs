@@ -29,9 +29,11 @@ namespace TouchScript.Layers.UI
         {
             get
             {
-                if (shuttingDown) return null;
-                if (instance == null)
+                if (object.Equals(instance, null))
                 {
+                    // Create an instance if it hasn't been created yet.
+                    // Don't recreate it if the instance was destroyed. 
+                    // Should happen only when the app is closing or editor is exiting Play Mode.
                     var es = EventSystem.current;
                     if (es == null)
                     {
@@ -60,7 +62,6 @@ namespace TouchScript.Layers.UI
 
         #region Private variables
 
-        private static bool shuttingDown = false;
         private static TouchScriptInputModule instance;
         private static FieldInfo raycastersProp;
         private static PropertyInfo canvasProp;
@@ -77,7 +78,7 @@ namespace TouchScript.Layers.UI
         {
             if (raycastersProp == null)
             {
-                raycastersProp = Type.GetType(Assembly.CreateQualifiedName("UnityEngine.UI", "UnityEngine.EventSystems.RaycasterManager")).
+                raycastersProp = Type.GetType("UnityEngine.EventSystems.RaycasterManager, UnityEngine.UI").
                                      GetField("s_Raycasters", BindingFlags.NonPublic | BindingFlags.Static);
                 canvasProp = typeof(GraphicRaycaster).GetProperty("canvas", BindingFlags.NonPublic | BindingFlags.Instance);
             }
@@ -104,11 +105,6 @@ namespace TouchScript.Layers.UI
             disable();
             if (instance == this) instance = null;
             base.OnDisable();
-        }
-
-        private void OnApplicationQuit()
-        {
-            shuttingDown = true;
         }
 
         #endregion
@@ -198,26 +194,30 @@ namespace TouchScript.Layers.UI
         private void enable()
         {
             ui = new UIStandardInputModule(this);
-            TouchManager.Instance.PointersAdded += ui.ProcessAdded;
-            TouchManager.Instance.PointersUpdated += ui.ProcessUpdated;
-            TouchManager.Instance.PointersPressed += ui.ProcessPressed;
-            TouchManager.Instance.PointersReleased += ui.ProcessReleased;
-            TouchManager.Instance.PointersRemoved += ui.ProcessRemoved;
-            TouchManager.Instance.PointersCancelled += ui.ProcessCancelled;
+            var touchManager = TouchManager.Instance;
+            if (touchManager == null) return;
+
+            touchManager.PointersAdded += ui.ProcessAdded;
+            touchManager.PointersUpdated += ui.ProcessUpdated;
+            touchManager.PointersPressed += ui.ProcessPressed;
+            touchManager.PointersReleased += ui.ProcessReleased;
+            touchManager.PointersRemoved += ui.ProcessRemoved;
+            touchManager.PointersCancelled += ui.ProcessCancelled;
         }
 
         private void disable()
         {
-            if (TouchManager.Instance != null && ui != null)
-            {
-                TouchManager.Instance.PointersAdded -= ui.ProcessAdded;
-                TouchManager.Instance.PointersUpdated -= ui.ProcessUpdated;
-                TouchManager.Instance.PointersPressed -= ui.ProcessPressed;
-                TouchManager.Instance.PointersReleased -= ui.ProcessReleased;
-                TouchManager.Instance.PointersRemoved -= ui.ProcessRemoved;
-                TouchManager.Instance.PointersCancelled -= ui.ProcessCancelled;
-            }
             refCount = 0;
+
+            var touchManager = TouchManager.Instance;
+            if (touchManager == null || ui == null) return;
+
+            touchManager.PointersAdded -= ui.ProcessAdded;
+            touchManager.PointersUpdated -= ui.ProcessUpdated;
+            touchManager.PointersPressed -= ui.ProcessPressed;
+            touchManager.PointersReleased -= ui.ProcessReleased;
+            touchManager.PointersRemoved -= ui.ProcessRemoved;
+            touchManager.PointersCancelled -= ui.ProcessCancelled;
         }
 
         #endregion
@@ -492,14 +492,17 @@ namespace TouchScript.Layers.UI
 						var press = pointer.GetPressData();
 						if (press.Type != HitData.HitType.UI) continue;
 					}
-                    else
-                    {
-    					// Don't update the pointer if it is not over an UI element
-                        if (over.Type != HitData.HitType.UI) continue;
-                    }
 
                     PointerEventData data;
                     GetPointerData(pointer.Id, out data, true);
+
+                    // If not over an UI element this and previous frame, don't process further.
+                    // Need to check the previous hover state to properly process leaving a UI element.
+                    if (over.Type != HitData.HitType.UI) 
+                    {
+                        if (data.hovered.Count == 0) continue;
+                    }
+
                     data.Reset();
                     var target = over.Target;
                     var currentOverGo = target == null ? null : target.gameObject;
