@@ -1,0 +1,12 @@
+{
+    "name": "com.interactive-scape.touchscript",
+    "version": "0.0.1",
+    "displayName": "TouchScript",
+    "description": "Multi touch library for Unity",
+    "unity": "2021.3",
+    "author": {
+        "name": "Interactive Scape",
+        "email": "info@interative-scape.com",
+        "url": "https://www.interactive-scape.com"
+    }
+}
