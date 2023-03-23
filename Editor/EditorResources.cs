@@ -42,7 +42,7 @@ namespace TouchScript.Editor
         {
             path = string.Empty;
 
-            string searchStr = "/TouchScript/Editor/EditorResources/";
+            string searchStr = "/com.interactive-scape.touchscript/Editor/EditorResources/";
             string str = null;
 
             foreach (var assetPath in AssetDatabase.GetAllAssetPaths())
