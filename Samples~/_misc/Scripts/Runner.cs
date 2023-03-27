@@ -47,7 +47,7 @@ namespace TouchScript.Examples
             layer = GetComponent<TouchLayer>();
 
 #if UNITY_EDITOR
-            var guids = AssetDatabase.FindAssets("t:Scene", new string[] {"Assets/TouchScript/Examples"});
+            var guids = AssetDatabase.FindAssets("t:Scene", new string[] {"Packages/com.interactive-scape.touchscript/Samples~"});
             if (EditorBuildSettings.scenes.Length != guids.Length)
             {
                 if (EditorUtility.DisplayDialog("Add Example Scenes to Build Settings?",
