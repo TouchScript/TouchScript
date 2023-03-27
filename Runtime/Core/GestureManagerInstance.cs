@@ -60,9 +60,7 @@ namespace TouchScript.Core
         private List<Gesture> gesturesToReset = new List<Gesture>(20);
         private Dictionary<int, List<Gesture>> pointerToGestures = new Dictionary<int, List<Gesture>>(10);
 
-#if UNITY_5_6_OR_NEWER
 		private CustomSampler gestureSampler;
-#endif
 
         #endregion
 
@@ -114,9 +112,7 @@ namespace TouchScript.Core
             pointerListPool.WarmUp(20);
             transformListPool.WarmUp(1);
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler = CustomSampler.Create("[TouchScript] Update Gestures");
-#endif
         }
 
         private void OnEnable()
@@ -222,9 +218,7 @@ namespace TouchScript.Core
 
         private void updatePressed(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             var activeTargets = transformListPool.Get();
             var gesturesInHierarchy = gestureListPool.Get();
@@ -376,16 +370,12 @@ namespace TouchScript.Core
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         private void updateUpdated(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             sortPointersForActiveGestures(pointers);
 
@@ -404,16 +394,12 @@ namespace TouchScript.Core
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         private void updateReleased(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             sortPointersForActiveGestures(pointers);
 
@@ -433,16 +419,12 @@ namespace TouchScript.Core
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         private void updateCancelled(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             sortPointersForActiveGestures(pointers);
 
@@ -462,9 +444,7 @@ namespace TouchScript.Core
             activeGesturesThisUpdate.Clear();
             pointersToDispatchForGesture.Clear();
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         private void sortPointersForActiveGestures(IList<Pointer> pointers)

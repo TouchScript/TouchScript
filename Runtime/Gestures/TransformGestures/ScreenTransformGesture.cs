@@ -22,9 +22,7 @@ namespace TouchScript.Gestures.TransformGestures
 
 		#region Private variables
 
-#if UNITY_5_6_OR_NEWER
 		private CustomSampler gestureSampler;
-#endif
 
 		#endregion
 
@@ -35,9 +33,7 @@ namespace TouchScript.Gestures.TransformGestures
 		{
 			base.Awake();
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler = CustomSampler.Create("[TouchScript] Screen Transform Gesture");
-#endif
 		}
 
 		[ContextMenu("Basic Editor")]
@@ -50,7 +46,6 @@ namespace TouchScript.Gestures.TransformGestures
 
         #region Gesture callbacks
 
-#if UNITY_5_6_OR_NEWER
 		/// <inheritdoc />
 		protected override void pointersPressed(IList<Pointer> pointers)
 		{
@@ -70,14 +65,11 @@ namespace TouchScript.Gestures.TransformGestures
 
 			gestureSampler.End();
 		}
-#endif
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             base.pointersReleased(pointers);
 
@@ -86,9 +78,7 @@ namespace TouchScript.Gestures.TransformGestures
             else drawDebugDelayed(getNumPoints());
 #endif
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         #endregion

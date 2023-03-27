@@ -91,10 +91,8 @@ namespace TouchScript.Gestures
 
         private Vector2 totalMovement;
 
-#if UNITY_5_6_OR_NEWER
 		private CustomSampler gestureSampler;
-#endif
-
+      
         #endregion
 
         #region Unity methods
@@ -104,9 +102,7 @@ namespace TouchScript.Gestures
 		{
 			base.Awake();
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler = CustomSampler.Create("[TouchScript] Long Press Gesture");
-#endif
 		}
 
         /// <inheritdoc />
@@ -130,9 +126,7 @@ namespace TouchScript.Gestures
         /// <inheritdoc />
         protected override void pointersPressed(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             base.pointersPressed(pointers);
 
@@ -147,17 +141,13 @@ namespace TouchScript.Gestures
                 StartCoroutine("wait");
             }
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         /// <inheritdoc />
         protected override void pointersUpdated(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             base.pointersUpdated(pointers);
 
@@ -167,17 +157,13 @@ namespace TouchScript.Gestures
                 if (totalMovement.sqrMagnitude > distanceLimitInPixelsSquared) setState(GestureState.Failed);
             }
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         /// <inheritdoc />
         protected override void pointersReleased(IList<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.Begin();
-#endif
 
             base.pointersReleased(pointers);
 
@@ -186,9 +172,7 @@ namespace TouchScript.Gestures
                 setState(GestureState.Failed);
             }
 
-#if UNITY_5_6_OR_NEWER
 			gestureSampler.End();
-#endif
         }
 
         /// <inheritdoc />

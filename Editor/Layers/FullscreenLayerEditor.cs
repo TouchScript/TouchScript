@@ -30,11 +30,7 @@ namespace TouchScript.Editor.Layers
 
         public override void OnInspectorGUI()
         {
-#if UNITY_5_6_OR_NEWER
             serializedObject.UpdateIfRequiredOrScript();
-#else
-            serializedObject.UpdateIfDirtyOrScript();
-#endif
 
             EditorGUILayout.PropertyField(layerName, TEXT_NAME);
             EditorGUI.BeginChangeCheck();
