@@ -1,0 +1,16 @@
+{
+    "name": "InteractiveScape.TouchScript.Editor",
+    "rootNamespace": "TouchScript",
+    "references": [
+        "GUID:0d71bc8da9e4ca544a2d7ea096f2ecf0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
