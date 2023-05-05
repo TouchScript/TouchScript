@@ -85,7 +85,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Unity OnEnable callback.
         /// </summary>
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _touchManager = TouchManagerInstance.Instance;
             if (_touchManager == null) throw new InvalidOperationException("TouchManager instance is required!");
