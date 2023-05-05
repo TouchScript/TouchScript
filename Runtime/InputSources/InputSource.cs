@@ -29,12 +29,12 @@ namespace TouchScript.InputSources
         /// <value>Optional remapper to use to change screen coordinates which go into the TouchManager.</value>
         public ICoordinatesRemapper CoordinatesRemapper
         {
-            get { return coordinatesRemapper; }
+            get { return _coordinatesRemapper; }
             set
             {
-                if (coordinatesRemapper == value) return;
-                coordinatesRemapper = value;
-                updateCoordinatesRemapper(value);
+                if (_coordinatesRemapper == value) return;
+                _coordinatesRemapper = value;
+                UpdateCoordinatesRemapper(value);
             }
         }
 
@@ -47,11 +47,11 @@ namespace TouchScript.InputSources
         [HideInInspector]
 		protected bool basicEditor = true;
 
-		private ICoordinatesRemapper coordinatesRemapper;
-        private TouchManagerInstance touchManager;
+		private ICoordinatesRemapper _coordinatesRemapper;
+        private TouchManagerInstance _touchManager;
 
-        protected int screenWidth;
-        protected int screenHeight;
+        protected int ScreenWidth;
+        protected int ScreenHeight;
 
         #endregion
 
@@ -74,8 +74,8 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public virtual void INTERNAL_UpdateResolution()
         {
-            screenWidth = Screen.width;
-            screenHeight = Screen.height;
+            ScreenWidth = Screen.width;
+            ScreenHeight = Screen.height;
         }
 
         #endregion
@@ -87,11 +87,11 @@ namespace TouchScript.InputSources
         /// </summary>
         private void OnEnable()
         {
-            touchManager = TouchManagerInstance.Instance;
-            if (touchManager == null) throw new InvalidOperationException("TouchManager instance is required!");
-            touchManager.AddInput(this);
+            _touchManager = TouchManagerInstance.Instance;
+            if (_touchManager == null) throw new InvalidOperationException("TouchManager instance is required!");
+            _touchManager.AddInput(this);
 
-            init();
+            Init();
 
             INTERNAL_UpdateResolution();
         }
@@ -101,10 +101,10 @@ namespace TouchScript.InputSources
         /// </summary>
         protected virtual void OnDisable()
         {
-            if (touchManager != null)
+            if (_touchManager != null)
             {
-                touchManager.RemoveInput(this);
-                touchManager = null;
+                _touchManager.RemoveInput(this);
+                _touchManager = null;
             }
         }
 
@@ -115,82 +115,82 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Initializes the input source.
         /// </summary>
-        protected abstract void init();
+        protected abstract void Init();
 
         /// <summary>
         /// Adds the pointer to the system.
         /// </summary>
         /// <param name="pointer">The pointer to add.</param>
-        protected virtual void addPointer(Pointer pointer)
+        protected virtual void AddPointer(Pointer pointer)
         {
-            touchManager.INTERNAL_AddPointer(pointer);
+            _touchManager.INTERNAL_AddPointer(pointer);
         }
 
         /// <summary>
         /// Mark pointer as updated.
         /// </summary>
         /// <param name="pointer">The pointer to update.</param>
-        protected virtual void updatePointer(Pointer pointer)
+        protected virtual void UpdatePointer(Pointer pointer)
         {
             if (pointer == null) return;
-            touchManager.INTERNAL_UpdatePointer(pointer.Id);
+            _touchManager.INTERNAL_UpdatePointer(pointer.Id);
         }
 
         /// <summary>
         /// Mark the pointer as touching the surface.
         /// </summary>
         /// <param name="pointer">The pointer.</param>
-        protected virtual void pressPointer(Pointer pointer)
+        protected virtual void PressPointer(Pointer pointer)
         {
             if (pointer == null) return;
-            touchManager.INTERNAL_PressPointer(pointer.Id);
+            _touchManager.INTERNAL_PressPointer(pointer.Id);
         }
 
         /// <summary>
         /// Mark the pointer as no longer touching the surface.
         /// </summary>
         /// <param name="pointer">The pointer.</param>
-        protected virtual void releasePointer(Pointer pointer)
+        protected virtual void ReleasePointer(Pointer pointer)
         {
             if (pointer == null) return;
             pointer.Buttons &= ~Pointer.PointerButtonState.AnyButtonPressed;
-            touchManager.INTERNAL_ReleasePointer(pointer.Id);
+            _touchManager.INTERNAL_ReleasePointer(pointer.Id);
         }
 
         /// <summary>
         /// Removes the pointer.
         /// </summary>
         /// <param name="pointer">The pointer.</param>
-        protected virtual void removePointer(Pointer pointer)
+        protected virtual void RemovePointer(Pointer pointer)
         {
             if (pointer == null) return;
-            touchManager.INTERNAL_RemovePointer(pointer.Id);
+            _touchManager.INTERNAL_RemovePointer(pointer.Id);
         }
 
         /// <summary>
         /// Cancels the pointer.
         /// </summary>
         /// <param name="pointer">The pointer.</param>
-        protected virtual void cancelPointer(Pointer pointer)
+        protected virtual void CancelPointer(Pointer pointer)
         {
             if (pointer == null) return;
-            touchManager.INTERNAL_CancelPointer(pointer.Id);
+            _touchManager.INTERNAL_CancelPointer(pointer.Id);
         }
 
         /// <summary>
         /// Called from <see cref="CoordinatesRemapper"/> setter to update touch handlers with the new value.
         /// </summary>
         /// <param name="remapper">The new remapper.</param>
-        protected abstract void updateCoordinatesRemapper(ICoordinatesRemapper remapper);
+        protected abstract void UpdateCoordinatesRemapper(ICoordinatesRemapper remapper);
 
         /// <summary>
         /// Remaps the coordinates using the <see cref="CoordinatesRemapper"/> if it is set.
         /// </summary>
         /// <param name="position">The position.</param>
         /// <returns>Remapped position if <see cref="CoordinatesRemapper"/> is set; the value of position argument otherwise.</returns>
-        protected virtual Vector2 remapCoordinates(Vector2 position)
+        protected virtual Vector2 RemapCoordinates(Vector2 position)
         {
-            if (coordinatesRemapper != null) return coordinatesRemapper.Remap(position);
+            if (_coordinatesRemapper != null) return _coordinatesRemapper.Remap(position);
             return position;
         }
 
