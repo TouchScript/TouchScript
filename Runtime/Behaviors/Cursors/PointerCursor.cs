@@ -3,10 +3,10 @@
  */
 
 using System.Text;
+using TMPro;
 using TouchScript.Pointers;
 using TouchScript.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TouchScript.Behaviors.Cursors
 {
@@ -32,7 +32,7 @@ namespace TouchScript.Behaviors.Cursors
         /// <summary>
         /// The link to UI.Text component.
         /// </summary>
-        public Text Text;
+        public TMP_Text Text;
 
         #endregion
 
