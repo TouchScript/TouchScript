@@ -58,23 +58,18 @@ namespace TouchScript.InputSources
         #region Public methods
 
         /// <inheritdoc />
-        public virtual bool UpdateInput()
-        {
-            return false;
-        }
+        public abstract bool UpdateInput();
+
 
         /// <inheritdoc />
-        public virtual bool CancelPointer(Pointer pointer, bool shouldReturn)
-        {
-            return false;
-        }
+        public abstract bool CancelPointer(Pointer pointer, bool shouldReturn);
 
         #endregion
 
         #region Internal methods
 
         /// <inheritdoc />
-        public virtual void INTERNAL_DiscardPointer(Pointer pointer) {}
+        public abstract void INTERNAL_DiscardPointer(Pointer pointer);
 
         /// <inheritdoc />
         public virtual void INTERNAL_UpdateResolution()
@@ -120,7 +115,7 @@ namespace TouchScript.InputSources
         /// <summary>
         /// Initializes the input source.
         /// </summary>
-        protected virtual void init() {}
+        protected abstract void init();
 
         /// <summary>
         /// Adds the pointer to the system.
@@ -186,7 +181,7 @@ namespace TouchScript.InputSources
         /// Called from <see cref="CoordinatesRemapper"/> setter to update touch handlers with the new value.
         /// </summary>
         /// <param name="remapper">The new remapper.</param>
-        protected virtual void updateCoordinatesRemapper(ICoordinatesRemapper remapper) {}
+        protected abstract void updateCoordinatesRemapper(ICoordinatesRemapper remapper);
 
         /// <summary>
         /// Remaps the coordinates using the <see cref="CoordinatesRemapper"/> if it is set.

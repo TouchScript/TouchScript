@@ -197,8 +197,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public override bool UpdateInput()
         {
-            if (base.UpdateInput()) return true;
-
             var handled = false;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
             if (windows8PointerHandler != null) 
@@ -232,8 +230,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public override bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
-            base.CancelPointer(pointer, shouldReturn);
-
             var handled = false;
             if (touchHandler != null) handled = touchHandler.CancelPointer(pointer, shouldReturn);
             if (mouseHandler != null && !handled) handled = mouseHandler.CancelPointer(pointer, shouldReturn);
@@ -252,8 +248,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public override void INTERNAL_DiscardPointer(Pointer pointer) 
         {
-            base.INTERNAL_DiscardPointer(pointer);
-
             var handled = false;
             if (touchHandler != null) handled = touchHandler.DiscardPointer(pointer);
             if (mouseHandler != null && !handled) handled = mouseHandler.DiscardPointer(pointer);
@@ -388,7 +382,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         protected override void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
         {
-            base.updateCoordinatesRemapper(remapper);
             if (mouseHandler != null) mouseHandler.CoordinatesRemapper = remapper;
             if (touchHandler != null) touchHandler.CoordinatesRemapper = remapper;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
