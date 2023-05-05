@@ -1,71 +1,74 @@
 {
-    "name": "com.interactive-scape.touchscript",
-    "version": "9.1.0",
-    "displayName": "TouchScript",
-    "description": "Multi touch library for Unity",
-    "unity": "2021.3",
-    "documentationUrl": "https://github.com/InteractiveScapeGmbH/TouchScript/wiki",
-    "author": {
-        "name": "Interactive Scape",
-        "email": "info@interative-scape.com",
-        "url": "https://www.interactive-scape.com"
+  "name": "com.interactive-scape.touchscript",
+  "version": "9.1.0",
+  "displayName": "TouchScript",
+  "description": "Multi touch library for Unity",
+  "unity": "2021.3",
+  "documentationUrl": "https://github.com/InteractiveScapeGmbH/TouchScript/wiki",
+  "author": {
+    "name": "Interactive Scape",
+    "email": "info@interative-scape.com",
+    "url": "https://www.interactive-scape.com"
+  },
+  "keywords": [
+    "touch",
+    "multitouch",
+    "gestures",
+    "tuio"
+  ],
+  "samples": [
+    {
+      "displayName": "Camera",
+      "description": "",
+      "path": "Samples~/Camera"
     },
-    "keywords": [
-        "touch",
-        "multitouch",
-        "gestures",
-        "tuio"
-    ],
-    "samples": [
-        {
-            "displayName": "Camera",
-            "description" : "",
-            "path": "Samples~/Camera"
-        },
-        {
-            "displayName": "Checkers",
-            "description": "",
-            "path": "Samples~/Checkers"
-        },
-        {
-            "displayName": "Colors",
-            "description" : "",
-            "path": "Samples~/Colors"
-        },
-        {
-            "displayName": "Cube",
-            "description" : "",
-            "path": "Samples~/Cube"
-        },
-        {
-            "displayName": "Multiuser",
-            "description" : "",
-            "path": "Samples~/Multiuser"
-        },
-        {
-            "displayName": "Photos",
-            "description" : "",
-            "path": "Samples~/Photos"
-        },
-        {
-            "displayName": "Portal",
-            "description" : "",
-            "path": "Samples~/Portal"
-        },
-        {
-            "displayName": "Pull",
-            "description" : "",
-            "path": "Samples~/Pull"
-        },
-        {
-            "displayName": "RawInput",
-            "description" : "",
-            "path": "Samples~/RawInput"
-        },
-        {
-            "displayName": "Taps",
-            "description" : "",
-            "path": "Samples~/Taps"
-        }
-    ]
+    {
+      "displayName": "Checkers",
+      "description": "",
+      "path": "Samples~/Checkers"
+    },
+    {
+      "displayName": "Colors",
+      "description": "",
+      "path": "Samples~/Colors"
+    },
+    {
+      "displayName": "Cube",
+      "description": "",
+      "path": "Samples~/Cube"
+    },
+    {
+      "displayName": "Multiuser",
+      "description": "",
+      "path": "Samples~/Multiuser"
+    },
+    {
+      "displayName": "Photos",
+      "description": "",
+      "path": "Samples~/Photos"
+    },
+    {
+      "displayName": "Portal",
+      "description": "",
+      "path": "Samples~/Portal"
+    },
+    {
+      "displayName": "Pull",
+      "description": "",
+      "path": "Samples~/Pull"
+    },
+    {
+      "displayName": "RawInput",
+      "description": "",
+      "path": "Samples~/RawInput"
+    },
+    {
+      "displayName": "Taps",
+      "description": "",
+      "path": "Samples~/Taps"
+    }
+  ],
+  "dependencies": {
+    "com.unity.textmeshpro": ""
+  }
 }
