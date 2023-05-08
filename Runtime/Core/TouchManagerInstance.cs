@@ -18,9 +18,7 @@ using TouchScript.Core;
 using TouchScript.Debugging.GL;
 using TouchScript.Debugging.Loggers;
 #endif
-#if UNITY_5_4_OR_NEWER
 using UnityEngine.SceneManagement;
-#endif
 
 namespace TouchScript.Core
 {
@@ -265,9 +263,7 @@ namespace TouchScript.Core
         private IPointerLogger pLogger;
 #endif
 
-#if UNITY_5_6_OR_NEWER
 		private CustomSampler samplerUpdateInputs, samplerUpdateAdded, samplerUpdatePressed, samplerUpdateUpdated, samplerUpdateReleased, samplerUpdateRemoved, samplerUpdateCancelled;
-#endif
 
         #endregion
 
@@ -519,9 +515,7 @@ namespace TouchScript.Core
             pLogger = Debugging.TouchScriptDebugger.Instance.PointerLogger;
 #endif
 
-#if UNITY_5_4_OR_NEWER
             SceneManager.sceneLoaded += sceneLoadedHandler;
-#endif
 
             gameObject.hideFlags = HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
@@ -540,7 +534,6 @@ namespace TouchScript.Core
 			_layerRemovePointer = layerRemovePointer;
 			_layerCancelPointer = layerCancelPointer;
 
-#if UNITY_5_6_OR_NEWER
             samplerUpdateInputs = CustomSampler.Create("[TouchScript] Update Inputs");
 			samplerUpdateAdded = CustomSampler.Create("[TouchScript] Added Pointers");
 			samplerUpdatePressed = CustomSampler.Create("[TouchScript] Press Pointers");
@@ -548,22 +541,13 @@ namespace TouchScript.Core
 			samplerUpdateReleased = CustomSampler.Create("[TouchScript] Release Pointers");
 			samplerUpdateRemoved = CustomSampler.Create("[TouchScript] Remove Pointers");
 			samplerUpdateCancelled = CustomSampler.Create("[TouchScript] Cancel Pointers");
-#endif
         }
 
-#if UNITY_5_4_OR_NEWER
         private void sceneLoadedHandler(Scene scene, LoadSceneMode mode)
         {
             StopAllCoroutines();
             StartCoroutine(lateAwake());
         }
-#else
-        private void OnLevelWasLoaded(int value)
-        {
-            StopAllCoroutines();
-            StartCoroutine(lateAwake());
-        }
-#endif
 
         private IEnumerator lateAwake()
         {
@@ -627,20 +611,14 @@ namespace TouchScript.Core
 
         private void updateInputs()
         {
-#if UNITY_5_6_OR_NEWER
             samplerUpdateInputs.Begin();
-#endif
             for (var i = 0; i < inputCount; i++) inputs[i].UpdateInput();
-#if UNITY_5_6_OR_NEWER
             samplerUpdateInputs.End();
-#endif
         }
 
         private void updateAdded(List<Pointer> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateAdded.Begin();
-#endif
 
             var addedCount = pointers.Count;
             var list = pointerListPool.Get();
@@ -668,9 +646,7 @@ namespace TouchScript.Core
                 pointersAddedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
 
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateAdded.End();
-#endif
         }
 
         private bool layerAddPointer(TouchLayer layer)
@@ -681,9 +657,7 @@ namespace TouchScript.Core
 
         private void updateUpdated(List<int> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateUpdated.Begin();
-#endif
 
             var updatedCount = pointers.Count;
             var list = pointerListPool.Get();
@@ -724,9 +698,7 @@ namespace TouchScript.Core
                 pointersUpdatedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
 
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateUpdated.End();
-#endif
         }
 
         private bool layerUpdatePointer(TouchLayer layer)
@@ -737,9 +709,7 @@ namespace TouchScript.Core
 
         private void updatePressed(List<int> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			samplerUpdatePressed.Begin();
-#endif
 
             var pressedCount = pointers.Count;
             var list = pointerListPool.Get();
@@ -776,16 +746,12 @@ namespace TouchScript.Core
                 pointersPressedInvoker.InvokeHandleExceptions(this, PointerEventArgs.GetCachedEventArgs(list));
             pointerListPool.Release(list);
 
-#if UNITY_5_6_OR_NEWER
 			samplerUpdatePressed.End();
-#endif
         }
 
         private void updateReleased(List<int> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateReleased.Begin();
-#endif
 
             var releasedCount = pointers.Count;
             var list = pointerListPool.Get();
@@ -826,16 +792,12 @@ namespace TouchScript.Core
             }
             pointerListPool.Release(list);
 
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateReleased.End();
-#endif
         }
 
         private void updateRemoved(List<int> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateRemoved.Begin();
-#endif
 
             var removedCount = pointers.Count;
             var list = pointerListPool.Get();
@@ -879,9 +841,7 @@ namespace TouchScript.Core
             }
             pointerListPool.Release(list);
 
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateRemoved.End();
-#endif
         }
 
         private bool layerRemovePointer(TouchLayer layer)
@@ -892,9 +852,7 @@ namespace TouchScript.Core
 
         private void updateCancelled(List<int> pointers)
         {
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateCancelled.Begin();
-#endif
 
             var cancelledCount = pointers.Count;
             var list = pointerListPool.Get();
@@ -939,9 +897,7 @@ namespace TouchScript.Core
             }
             pointerListPool.Release(list);
 
-#if UNITY_5_6_OR_NEWER
 			samplerUpdateCancelled.End();
-#endif
         }
 
         private bool layerCancelPointer(TouchLayer layer)

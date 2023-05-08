@@ -1,0 +1,24 @@
+{
+    "name": "InteractiveScape.TouchScript.Editor.Tests",
+    "rootNamespace": "TouchScript.Tests",
+    "references": [
+        "GUID:3e1c8f8caef0a0f4082a1e39e50dd5c6",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0acc523941302664db1f4e527237feb3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

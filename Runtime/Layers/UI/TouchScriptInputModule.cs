@@ -232,17 +232,13 @@ namespace TouchScript.Layers.UI
         {
             protected TouchScriptInputModule input;
 
-#if UNITY_5_6_OR_NEWER
 			private CustomSampler uiSampler;
-#endif
 
             public UIStandardInputModule(TouchScriptInputModule input)
             {
                 this.input = input;
 
-#if UNITY_5_6_OR_NEWER
 				uiSampler = CustomSampler.Create("[TouchScript] Update UI");
-#endif
             }
 
             #region Unchanged from PointerInputModule
@@ -437,9 +433,7 @@ namespace TouchScript.Layers.UI
 
             public virtual void ProcessAdded(object sender, PointerEventArgs pointerEventArgs)
             {
-#if UNITY_5_6_OR_NEWER
                 uiSampler.Begin();
-#endif
 
                 var pointers = pointerEventArgs.Pointers;
                 var raycast = new RaycastResult();
@@ -467,16 +461,12 @@ namespace TouchScript.Layers.UI
                     input.HandlePointerExitAndEnter(data, currentOverGo);
                 }
 
-#if UNITY_5_6_OR_NEWER
                 uiSampler.End();
-#endif
             }
 
             public virtual void ProcessUpdated(object sender, PointerEventArgs pointerEventArgs)
             {
-#if UNITY_5_6_OR_NEWER
 				uiSampler.Begin();
-#endif
 
                 var pointers = pointerEventArgs.Pointers;
                 var raycast = new RaycastResult();
@@ -550,16 +540,12 @@ namespace TouchScript.Layers.UI
                     }
                 }
 
-#if UNITY_5_6_OR_NEWER
 				uiSampler.End();
-#endif
             }
 
             public virtual void ProcessPressed(object sender, PointerEventArgs pointerEventArgs)
             {
-#if UNITY_5_6_OR_NEWER
 				uiSampler.Begin();
-#endif
 
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
@@ -633,16 +619,12 @@ namespace TouchScript.Layers.UI
                         ExecuteEvents.Execute(data.pointerDrag, data, ExecuteEvents.initializePotentialDrag);
                 }
 
-#if UNITY_5_6_OR_NEWER
 				uiSampler.End();
-#endif
             }
 
             public virtual void ProcessReleased(object sender, PointerEventArgs pointerEventArgs)
             {
-#if UNITY_5_6_OR_NEWER
 				uiSampler.Begin();
-#endif
 
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
@@ -696,16 +678,12 @@ namespace TouchScript.Layers.UI
                     }
                 }
 
-#if UNITY_5_6_OR_NEWER
 				uiSampler.End();
-#endif
             }
 
             public virtual void ProcessCancelled(object sender, PointerEventArgs pointerEventArgs)
             {
-#if UNITY_5_6_OR_NEWER
 				uiSampler.Begin();
-#endif
 
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
@@ -742,16 +720,12 @@ namespace TouchScript.Layers.UI
                     data.pointerEnter = null;
                 }
 
-#if UNITY_5_6_OR_NEWER
 				uiSampler.End();
-#endif
             }
 
             public virtual void ProcessRemoved(object sender, PointerEventArgs pointerEventArgs)
             {
-#if UNITY_5_6_OR_NEWER
 				uiSampler.Begin();
-#endif
 
                 var pointers = pointerEventArgs.Pointers;
                 var count = pointers.Count;
@@ -770,9 +744,7 @@ namespace TouchScript.Layers.UI
                     RemovePointerData(pointer.Id);
                 }
 
-#if UNITY_5_6_OR_NEWER
 				uiSampler.End();
-#endif
             }
 
             #endregion

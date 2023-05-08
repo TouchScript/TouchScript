@@ -135,9 +135,7 @@ namespace TouchScript.Layers
         private static List<RaycastHitUI> raycastHitUIList = new List<RaycastHitUI>(20);
         private static List<RaycastHit> raycastHitList = new List<RaycastHit>(20);
         private static List<HitData> hitList = new List<HitData>(20);
-#if UNITY_5_3_OR_NEWER
         private static RaycastHit[] raycastHits = new RaycastHit[20];
-#endif
         private static RaycastHit2D[] raycastHits2D = new RaycastHit2D[20];
 
 #pragma warning disable 0414
@@ -353,12 +351,7 @@ namespace TouchScript.Layers
 
             if (hit3DObjects)
             {
-#if UNITY_5_3_OR_NEWER
                 count = Physics.RaycastNonAlloc(ray, raycastHits, float.PositiveInfinity, layerMask);
-#else
-                var raycastHits = Physics.RaycastAll(ray, float.PositiveInfinity, layerMask);
-                var count = raycastHits.Length;
-#endif
 
                 // Try to do some optimizations if 2D and WS UI are not required
                 if (!hit2DObjects && !hitWorldSpaceUI)

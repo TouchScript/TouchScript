@@ -97,11 +97,7 @@ namespace TouchScript.Editor
 
         public override void OnInspectorGUI()
         {
-#if UNITY_5_6_OR_NEWER
             serializedObject.UpdateIfRequiredOrScript();
-#else
-            serializedObject.UpdateIfDirtyOrScript();
-#endif
 
             GUILayout.Space(5);
 
@@ -207,11 +203,7 @@ namespace TouchScript.Editor
                     var label = EditorGUI.BeginProperty(r, TEXT_SEND_MESSAGE_EVENTS, sendMessageEvents);
                     EditorGUI.BeginChangeCheck();
                     r = EditorGUI.PrefixLabel(r, label);
-#if UNITY_2017_3_OR_NEWER
                     var sMask = (TouchManager.MessageType) EditorGUI.EnumFlagsField(r, instance.SendMessageEvents);
-#else
-                    var sMask = (TouchManager.MessageType) EditorGUI.EnumMaskField(r, instance.SendMessageEvents);
-#endif
                     if (EditorGUI.EndChangeCheck())
                     {
                         instance.SendMessageEvents = sMask;

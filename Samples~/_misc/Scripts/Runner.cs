@@ -9,10 +9,7 @@ using System.Collections;
 using UnityEditor;
 using System;
 #endif
-#if UNITY_5_3_OR_NEWER
 using UnityEngine.SceneManagement;
-
-#endif
 
 namespace TouchScript.Examples
 {
@@ -24,33 +21,19 @@ namespace TouchScript.Examples
 
         public void LoadLevel(string name)
         {
-#if UNITY_5_3_OR_NEWER
             SceneManager.LoadScene(name);
-#else
-			Application.LoadLevel(name);
-#endif
         }
 
         public void LoadNextLevel()
         {
-#if UNITY_5_3_OR_NEWER
             SceneManager.LoadScene((SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
-#else
-			Application.LoadLevel((Application.loadedLevel + 1)%Application.levelCount);
-#endif
         }
 
         public void LoadPreviousLevel()
         {
-#if UNITY_5_3_OR_NEWER
             var newLevel = SceneManager.GetActiveScene().buildIndex - 1;
             if (newLevel == 0) newLevel = SceneManager.sceneCountInBuildSettings - 1;
             SceneManager.LoadScene(newLevel);
-#else
-			var newLevel = Application.loadedLevel - 1;
-			if (newLevel == 0) newLevel = Application.levelCount - 1;
-			Application.LoadLevel(newLevel);
-#endif
         }
 
         private void Start()
@@ -64,7 +47,7 @@ namespace TouchScript.Examples
             layer = GetComponent<TouchLayer>();
 
 #if UNITY_EDITOR
-            var guids = AssetDatabase.FindAssets("t:Scene", new string[] {"Assets/TouchScript/Examples"});
+            var guids = AssetDatabase.FindAssets("t:Scene", new string[] {"Packages/com.interactive-scape.touchscript/Samples~"});
             if (EditorBuildSettings.scenes.Length != guids.Length)
             {
                 if (EditorUtility.DisplayDialog("Add Example Scenes to Build Settings?",
@@ -84,15 +67,9 @@ namespace TouchScript.Examples
             }
 #endif
 
-#if UNITY_5_4_OR_NEWER
             SceneManager.sceneLoaded += sceneLoadedHandler;
-#endif
 
-#if UNITY_5_3_OR_NEWER
             if (SceneManager.GetActiveScene().name == "Examples" && SceneManager.sceneCountInBuildSettings > 1)
-#else
-			if (Application.loadedLevelName == "Examples" && Application.levelCount > 1)
-#endif
             {
                 LoadNextLevel();
             }
@@ -100,9 +77,7 @@ namespace TouchScript.Examples
 
         private void OnDestroy()
         {
-#if UNITY_5_4_OR_NEWER
             SceneManager.sceneLoaded -= sceneLoadedHandler;
-#endif
         }
 
         private void Update()
@@ -110,17 +85,10 @@ namespace TouchScript.Examples
             if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
         }
 
-#if UNITY_5_4_OR_NEWER
         private void sceneLoadedHandler(Scene scene, LoadSceneMode mode)
         {
             StartCoroutine(resetUILayer());
         }
-#else
-        private void OnLevelWasLoaded(int num)
-        {
-			StartCoroutine(resetUILayer());
-        }
-#endif
 
         private IEnumerator resetUILayer()
         {

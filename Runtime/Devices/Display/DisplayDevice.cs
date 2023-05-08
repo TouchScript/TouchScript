@@ -13,18 +13,9 @@ namespace TouchScript.Devices.Display
     /// A simple display device which inherits from <see cref="ScriptableObject"/> and can be saved in Unity assets.
     /// </summary>
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_Devices_Display_DisplayDevice.htm")]
+    [CreateAssetMenu(fileName = "DisplayDevice", menuName = "TouchScript/New Display Device", order = 0)]
     public class DisplayDevice : ScriptableObject, IDisplayDevice
     {
-#if UNITY_EDITOR
-        //[MenuItem("Window/TouchScript/CreateDisplayDevice")]
-        private static DisplayDevice CreateDisplayDevice()
-        {
-            var dd = CreateInstance<DisplayDevice>();
-            AssetDatabase.CreateAsset(dd, "Assets/DisplayDevice.asset");
-            return dd;
-        }
-#endif
-
         /// <inheritdoc />
         public string Name
         {
