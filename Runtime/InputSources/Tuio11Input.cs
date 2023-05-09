@@ -3,10 +3,7 @@
  */
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID
-using System.Collections.Generic;
 using TouchScript.Pointers;
-using TouchScript.Utils;
-using TuioNet.Common;
 using TuioNet.Tuio11;
 using UnityEngine;
 
