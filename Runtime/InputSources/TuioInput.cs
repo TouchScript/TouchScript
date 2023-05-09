@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace TouchScript.InputSources
 {
+    [HelpURL("https://github.com/InteractiveScapeGmbH/TouchScript/wiki/TUIOInput")]
     public abstract class TuioInput : InputSource
     {
         [SerializeField] protected TuioConnectionType _connectionType;

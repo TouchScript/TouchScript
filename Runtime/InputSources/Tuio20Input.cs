@@ -12,7 +12,6 @@ namespace TouchScript.InputSources
     /// </summary>
     
     [AddComponentMenu("TouchScript/Input Sources/TUIO 2.0 Input")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_InputSources_TuioInput.htm")]
     public sealed class Tuio20Input : TuioInput, ITuio20Listener
     {
         private Tuio20Client _client;

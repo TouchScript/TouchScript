@@ -16,7 +16,6 @@ namespace TouchScript.InputSources
     /// Processes TUIO 1.1 input.
     /// </summary>
     [AddComponentMenu("TouchScript/Input Sources/TUIO 1.1 Input")]
-    [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_InputSources_TuioInput.htm")]
     public sealed class Tuio11Input : TuioInput, ITuio11CursorListener, ITuio11ObjectListener
     {
         private Tuio11Client _client;
