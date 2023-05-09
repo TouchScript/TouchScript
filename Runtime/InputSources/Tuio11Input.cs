@@ -15,9 +15,9 @@ namespace TouchScript.InputSources
     /// <summary>
     /// Processes TUIO 1.1 input.
     /// </summary>
-    [AddComponentMenu("TouchScript/Input Sources/TUIO Input")]
+    [AddComponentMenu("TouchScript/Input Sources/TUIO 1.1 Input")]
     [HelpURL("http://touchscript.github.io/docs/html/T_TouchScript_InputSources_TuioInput.htm")]
-    public sealed class TuioInput : InputSource, ITuio11CursorListener, ITuio11ObjectListener
+    public sealed class Tuio11Input : InputSource, ITuio11CursorListener, ITuio11ObjectListener
     {
         [SerializeField] private TuioConnectionType _connectionType;
         [SerializeField] private int _port = 3333;
@@ -31,7 +31,7 @@ namespace TouchScript.InputSources
         private ObjectPool<TouchPointer> _touchPool;
         private ObjectPool<ObjectPointer> _objectPool;
 
-        public TuioInput()
+        public Tuio11Input()
         {
             _touchPool = new ObjectPool<TouchPointer>(50, () => new TouchPointer(this), null, ResetPointer);
             _objectPool = new ObjectPool<ObjectPointer>(50, () => new ObjectPointer(this), null, ResetPointer);
