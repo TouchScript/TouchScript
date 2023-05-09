@@ -26,7 +26,7 @@ namespace TouchScript.InputSources
         private Tuio11Client _client;
 
         private Dictionary<Tuio11Cursor, TouchPointer> _cursorToInternalId = new();
-        private Dictionary<Tuio11Object, ObjectPointer> _objectToInterlalId = new();
+        private Dictionary<Tuio11Object, ObjectPointer> _objectToInternalId = new();
 
         private ObjectPool<TouchPointer> _touchPool;
         private ObjectPool<ObjectPointer> _objectPool;
@@ -72,13 +72,13 @@ namespace TouchScript.InputSources
                 CancelPointer(kvp.Value);
             }
 
-            foreach (var kvp in _objectToInterlalId)
+            foreach (var kvp in _objectToInternalId)
             {
                 CancelPointer(kvp.Value);
             }
             
             _cursorToInternalId.Clear();
-            _objectToInterlalId.Clear();
+            _objectToInternalId.Clear();
             Disconnect();
             base.OnDisable();
         }
@@ -149,7 +149,7 @@ namespace TouchScript.InputSources
                 };
                 var touch = AddObject(screenPosition);
                 UpdateObjectProperties(touch, tuio11Object);
-                _objectToInterlalId.Add(tuio11Object, touch);
+                _objectToInternalId.Add(tuio11Object, touch);
             }
         }
 
@@ -157,7 +157,7 @@ namespace TouchScript.InputSources
         {
             lock (this)
             {
-                if (!_objectToInterlalId.TryGetValue(tuio11Object, out var touch)) return;
+                if (!_objectToInternalId.TryGetValue(tuio11Object, out var touch)) return;
                 var screenPosition = new Vector2
                 {
                     x = tuio11Object.Position.X * ScreenWidth,
@@ -173,8 +173,8 @@ namespace TouchScript.InputSources
         {
             lock (this)
             {
-                if (!_objectToInterlalId.TryGetValue(tuio11Object, out var touch)) return;
-                _objectToInterlalId.Remove(tuio11Object);
+                if (!_objectToInternalId.TryGetValue(tuio11Object, out var touch)) return;
+                _objectToInternalId.Remove(tuio11Object);
                 ReleasePointer(touch);
                 RemovePointer(touch);
             }
