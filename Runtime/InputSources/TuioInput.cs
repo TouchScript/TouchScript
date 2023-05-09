@@ -164,10 +164,7 @@ namespace TouchScript.InputSources
             return newPointer;
         }
 
-        protected override void UpdateCoordinatesRemapper(ICoordinatesRemapper remapper)
-        {
-            
-        }
+        protected override void UpdateCoordinatesRemapper(ICoordinatesRemapper remapper) { }
         
         private void ResetPointer(Pointer pointer)
         {

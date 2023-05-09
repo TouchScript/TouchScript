@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using TouchScript.Pointers;
-using TouchScript.Utils;
+﻿using TouchScript.Pointers;
 using TuioNet.Common;
 using TuioNet.Tuio20;
 using UnityEngine;

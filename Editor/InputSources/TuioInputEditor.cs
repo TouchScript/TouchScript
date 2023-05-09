@@ -4,7 +4,6 @@
 
 using TouchScript.InputSources;
 using UnityEditor;
-using UnityEngine;
 
 namespace TouchScript.Editor.InputSources
 {
