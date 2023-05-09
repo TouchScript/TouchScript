@@ -54,7 +54,7 @@ namespace TouchScript.InputSources
                         x = tuioPointer.Position.X * ScreenWidth,
                         y = (1f - tuioPointer.Position.Y) * ScreenHeight
                     };
-                   TouchToInternalId.Add(tuioPointer.ComponentId, AddTouch(screenPosition));
+                   TouchToInternalId.Add(tuioPointer.SessionId, AddTouch(screenPosition));
                 }
 
                 if (tuio20Object.ContainsNewTuioToken())
@@ -67,7 +67,7 @@ namespace TouchScript.InputSources
                     };
                     var objectPointer = AddObject(screenPosition);
                     UpdateObjectProperties(objectPointer,token);
-                    ObjectToInternalId.Add(token.ComponentId, objectPointer);
+                    ObjectToInternalId.Add(token.SessionId, objectPointer);
                 }
                 
             }
@@ -80,7 +80,7 @@ namespace TouchScript.InputSources
                 if (tuio20Object.ContainsTuioPointer())
                 {
                     var tuioPointer = tuio20Object.Pointer;
-                    if(!TouchToInternalId.TryGetValue(tuioPointer.ComponentId, out var touchPointer)) return;
+                    if(!TouchToInternalId.TryGetValue(tuioPointer.SessionId, out var touchPointer)) return;
                     var screenPosition = new Vector2
                     {
                         x = tuioPointer.Position.X * ScreenWidth,
@@ -93,7 +93,7 @@ namespace TouchScript.InputSources
                 if (tuio20Object.ContainsTuioToken())
                 {
                     var token = tuio20Object.Token;
-                    if (!ObjectToInternalId.TryGetValue(token.ComponentId, out var objectPointer)) return;
+                    if (!ObjectToInternalId.TryGetValue(token.SessionId, out var objectPointer)) return;
                     var screenPosition = new Vector2
                     {
                         x = token.Position.X * ScreenWidth,
@@ -113,8 +113,8 @@ namespace TouchScript.InputSources
                 if (tuio20Object.ContainsTuioPointer())
                 {
                     var tuioPointer = tuio20Object.Pointer;
-                    if (!TouchToInternalId.TryGetValue(tuioPointer.ComponentId, out var touchPointer)) return;
-                    TouchToInternalId.Remove(tuioPointer.ComponentId);
+                    if (!TouchToInternalId.TryGetValue(tuioPointer.SessionId, out var touchPointer)) return;
+                    TouchToInternalId.Remove(tuioPointer.SessionId);
                     ReleasePointer(touchPointer);
                     RemovePointer(touchPointer);
                 }
@@ -122,8 +122,8 @@ namespace TouchScript.InputSources
                 if (tuio20Object.ContainsTuioToken())
                 {
                     var token = tuio20Object.Token;
-                    if (!ObjectToInternalId.TryGetValue(token.ComponentId, out var objectPointer)) return;
-                    ObjectToInternalId.Remove(token.ComponentId);
+                    if (!ObjectToInternalId.TryGetValue(token.SessionId, out var objectPointer)) return;
+                    ObjectToInternalId.Remove(token.SessionId);
                     ReleasePointer(objectPointer);
                     RemovePointer(objectPointer);
                 }
