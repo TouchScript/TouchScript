@@ -1,6 +1,6 @@
 {
   "name": "com.interactive-scape.touchscript",
-  "version": "9.1.0",
+  "version": "10.0.0",
   "displayName": "TouchScript",
   "description": "Multi touch library for Unity",
   "unity": "2021.3",
