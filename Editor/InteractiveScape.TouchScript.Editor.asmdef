@@ -1,6 +1,6 @@
 {
     "name": "InteractiveScape.TouchScript.Editor",
-    "rootNamespace": "TouchScript",
+    "rootNamespace": "TouchScript.Editor",
     "references": [
         "GUID:0d71bc8da9e4ca544a2d7ea096f2ecf0"
     ],
