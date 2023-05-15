@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 400002}
   - component: {fileID: 11400000}
   - component: {fileID: 11478012}
-  - component: {fileID: 147436423934719234}
   m_Layer: 0
   m_Name: TouchManager
   m_TagString: Untagged
@@ -102,19 +101,3 @@ MonoBehaviour:
   windows7Mouse: 1
   universalWindowsMouse: 1
   emulateSecondMousePointer: 1
---- !u!114 &147436423934719234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c4b35b5ee8a443439ce04199575743f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  basicEditor: 1
-  _connectionType: 0
-  _port: 3333
-  _ipAddress: 127.0.0.1
