@@ -66,6 +66,11 @@
       "displayName": "Taps",
       "description": "",
       "path": "Samples~/Taps"
+    },
+    {
+      "displayName": "TUIO",
+      "description": "Simple sample scenes for tuio 1.1 and 2.0.",
+      "path": "Samples~/TUIO"
     }
   ],
   "dependencies": {
