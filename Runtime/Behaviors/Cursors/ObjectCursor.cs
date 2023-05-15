@@ -63,6 +63,16 @@ namespace TouchScript.Behaviors.Cursors
         }
 
         /// <inheritdoc />
+        protected override void update(IPointer pointer)
+        {
+            base.update(pointer);
+            if (pointer is not ObjectPointer objectPointer) return;
+            var angle = objectPointer.Angle * Mathf.Rad2Deg;
+            var rotation = Quaternion.AngleAxis(angle, Vector3.back);
+            rect.rotation = rotation;
+        }
+
+        /// <inheritdoc />
         protected override bool textIsVisible()
         {
             return base.textIsVisible() || ShowObjectId || ShowSize || ShowAngle;
