@@ -14,7 +14,6 @@ namespace TouchScript.Editor
         private const string SHOW_AT_STARTUP = "TouchScript.ShowSettingsOnStartup";
 
         private const string DEFINE_DEBUG = "TOUCHSCRIPT_DEBUG";
-        private const string DEFINE_TUIO = "TOUCHSCRIPT_TUIO";
 
         private static bool showAtStartup = true;
         private static TouchScriptSettingsWindowSO so;
@@ -28,7 +27,6 @@ namespace TouchScript.Editor
         private static Dictionary<string, bool> enabledDefines = new Dictionary<string, bool>()
         {
             {DEFINE_DEBUG, false},
-            {DEFINE_TUIO, false},
         };
 
         [MenuItem("Window/TouchScript/Settings", false, 0)]
@@ -101,8 +99,6 @@ namespace TouchScript.Editor
             EditorGUI.indentLevel++;
             setDefine(DEFINE_DEBUG, EditorGUILayout.ToggleLeft("Enable Debug Mode", enabledDefines[DEFINE_DEBUG]));
             EditorGUILayout.LabelField("Enables " + DEFINE_DEBUG + " define to turn on some TouchScript debug features.", EditorStyles.miniLabel);
-            setDefine(DEFINE_TUIO, EditorGUILayout.ToggleLeft("Enable TUIO", enabledDefines[DEFINE_TUIO]));
-            EditorGUILayout.LabelField("Enables " + DEFINE_TUIO + " define, this adds TUIO protocol support.", EditorStyles.miniLabel);
 
             EditorGUILayout.EndVertical();
             GUILayout.Space(10);

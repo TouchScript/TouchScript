@@ -36,9 +36,9 @@ namespace TouchScript.Behaviors.Cursors
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void generateText(ObjectPointer pointer, StringBuilder str)
+        protected override void GenerateText(ObjectPointer pointer, StringBuilder str)
         {
-            base.generateText(pointer, str);
+            base.GenerateText(pointer, str);
 
             if (ShowObjectId)
             {
@@ -63,15 +63,25 @@ namespace TouchScript.Behaviors.Cursors
         }
 
         /// <inheritdoc />
-        protected override bool textIsVisible()
+        protected override void UpdatePointerInternal(IPointer pointer)
         {
-            return base.textIsVisible() || ShowObjectId || ShowSize || ShowAngle;
+            base.UpdatePointerInternal(pointer);
+            if (pointer is not ObjectPointer objectPointer) return;
+            var angle = objectPointer.Angle * Mathf.Rad2Deg;
+            var rotation = Quaternion.AngleAxis(angle, Vector3.back);
+            Rect.rotation = rotation;
         }
 
         /// <inheritdoc />
-        protected override uint gethash(ObjectPointer pointer)
+        protected override bool TextIsVisible()
         {
-            var hash = base.gethash(pointer);
+            return base.TextIsVisible() || ShowObjectId || ShowSize || ShowAngle;
+        }
+
+        /// <inheritdoc />
+        protected override uint GetHash(ObjectPointer pointer)
+        {
+            var hash = base.GetHash(pointer);
 
             if (ShowSize) hash += (uint) (pointer.Width * 1024 + pointer.Height * 1024 * 1024) << 8;
             if (ShowAngle) hash += (uint) (pointer.Angle * 1024) << 24;

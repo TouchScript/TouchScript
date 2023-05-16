@@ -31,9 +31,9 @@ namespace TouchScript.Behaviors.Cursors
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void generateText(TouchPointer pointer, StringBuilder str)
+        protected override void GenerateText(TouchPointer pointer, StringBuilder str)
         {
-            base.generateText(pointer, str);
+            base.GenerateText(pointer, str);
 
             if (ShowPressure)
             {
@@ -50,15 +50,15 @@ namespace TouchScript.Behaviors.Cursors
         }
 
         /// <inheritdoc />
-        protected override bool textIsVisible()
+        protected override bool TextIsVisible()
         {
-            return base.textIsVisible() || ShowPressure || ShowRotation;
+            return base.TextIsVisible() || ShowPressure || ShowRotation;
         }
 
         /// <inheritdoc />
-        protected override uint gethash(TouchPointer pointer)
+        protected override uint GetHash(TouchPointer pointer)
         {
-            var hash = base.gethash(pointer);
+            var hash = base.GetHash(pointer);
 
             if (ShowPressure) hash += (uint) (pointer.Pressure * 1024) << 8;
             if (ShowRotation) hash += (uint) (pointer.Rotation * 1024) << 16;

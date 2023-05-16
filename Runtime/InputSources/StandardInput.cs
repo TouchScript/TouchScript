@@ -197,8 +197,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public override bool UpdateInput()
         {
-            if (base.UpdateInput()) return true;
-
             var handled = false;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
             if (windows8PointerHandler != null) 
@@ -232,8 +230,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public override bool CancelPointer(Pointer pointer, bool shouldReturn)
         {
-            base.CancelPointer(pointer, shouldReturn);
-
             var handled = false;
             if (touchHandler != null) handled = touchHandler.CancelPointer(pointer, shouldReturn);
             if (mouseHandler != null && !handled) handled = mouseHandler.CancelPointer(pointer, shouldReturn);
@@ -252,8 +248,6 @@ namespace TouchScript.InputSources
         /// <inheritdoc />
         public override void INTERNAL_DiscardPointer(Pointer pointer) 
         {
-            base.INTERNAL_DiscardPointer(pointer);
-
             var handled = false;
             if (touchHandler != null) handled = touchHandler.DiscardPointer(pointer);
             if (mouseHandler != null && !handled) handled = mouseHandler.DiscardPointer(pointer);
@@ -272,8 +266,8 @@ namespace TouchScript.InputSources
             if (windows8PointerHandler != null) windows8PointerHandler.UpdateResolution(screenWidth, screenHeight);
             else if (windows7PointerHandler != null) windows7PointerHandler.UpdateResolution(screenWidth, screenHeight);
 #endif
-            if (touchHandler != null) touchHandler.UpdateResolution(screenWidth, screenHeight);
-            if (mouseHandler != null) mouseHandler.UpdateResolution(screenWidth, screenHeight);
+            if (touchHandler != null) touchHandler.UpdateResolution(ScreenWidth, ScreenHeight);
+            if (mouseHandler != null) mouseHandler.UpdateResolution(ScreenWidth, ScreenHeight);
         }
 
         #endregion
@@ -304,7 +298,7 @@ namespace TouchScript.InputSources
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void init()
+        protected override void Init()
         {
             if (instance != null) Destroy(instance);
             instance = this;
@@ -382,13 +376,12 @@ namespace TouchScript.InputSources
             enableTouch();
 #endif
 #endif
-            if (CoordinatesRemapper != null) updateCoordinatesRemapper(CoordinatesRemapper);
+            if (CoordinatesRemapper != null) UpdateCoordinatesRemapper(CoordinatesRemapper);
         }
 
         /// <inheritdoc />
-        protected override void updateCoordinatesRemapper(ICoordinatesRemapper remapper)
+        protected override void UpdateCoordinatesRemapper(ICoordinatesRemapper remapper)
         {
-            base.updateCoordinatesRemapper(remapper);
             if (mouseHandler != null) mouseHandler.CoordinatesRemapper = remapper;
             if (touchHandler != null) touchHandler.CoordinatesRemapper = remapper;
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
@@ -403,7 +396,7 @@ namespace TouchScript.InputSources
 
         private void enableMouse()
         {
-            mouseHandler = new MouseHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            mouseHandler = new MouseHandler(this, AddPointer, UpdatePointer, PressPointer, ReleasePointer, RemovePointer, CancelPointer);
             mouseHandler.EmulateSecondMousePointer = emulateSecondMousePointer;
             Debug.Log("[TouchScript] Initialized Unity mouse input.");
         }
@@ -419,7 +412,7 @@ namespace TouchScript.InputSources
 
         private void enableTouch()
         {
-            touchHandler = new TouchHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            touchHandler = new TouchHandler(this, AddPointer, UpdatePointer, PressPointer, ReleasePointer, RemovePointer, CancelPointer);
             Debug.Log("[TouchScript] Initialized Unity touch input.");
         }
 

@@ -48,9 +48,9 @@ namespace TouchScript.Behaviors.Cursors
         #region Protected methods
 
         /// <inheritdoc />
-        protected override void updateOnce(IPointer pointer)
+        protected override void UpdateOnce(IPointer pointer)
         {
-            switch (state)
+            switch (State)
             {
                 case CursorState.Released:
                 case CursorState.Over:
@@ -64,13 +64,13 @@ namespace TouchScript.Behaviors.Cursors
                     break;
             }
 
-            base.updateOnce(pointer);
+            base.UpdateOnce(pointer);
         }
 
         /// <inheritdoc />
-        protected override void generateText(PenPointer pointer, StringBuilder str)
+        protected override void GenerateText(PenPointer pointer, StringBuilder str)
         {
-            base.generateText(pointer, str);
+            base.GenerateText(pointer, str);
 
             if (ShowButtons)
             {
@@ -93,15 +93,15 @@ namespace TouchScript.Behaviors.Cursors
         }
 
         /// <inheritdoc />
-        protected override bool textIsVisible()
+        protected override bool TextIsVisible()
         {
-            return base.textIsVisible() || ShowButtons || ShowPressure || ShowRotation;
+            return base.TextIsVisible() || ShowButtons || ShowPressure || ShowRotation;
         }
 
         /// <inheritdoc />
-        protected override uint gethash(PenPointer pointer)
+        protected override uint GetHash(PenPointer pointer)
         {
-            var hash = base.gethash(pointer);
+            var hash = base.GetHash(pointer);
 
             if (ShowButtons) hash += (uint) (pointer.Buttons & Pointer.PointerButtonState.AnyButtonPressed);
             if (ShowPressure) hash += (uint) (pointer.Pressure * 1024) << 8;

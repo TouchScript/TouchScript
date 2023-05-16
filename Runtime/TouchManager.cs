@@ -158,7 +158,7 @@ namespace TouchScript
         /// <summary>
         /// TouchScript version.
         /// </summary>
-        public static readonly Version VERSION = new Version(9, 0);
+        public static readonly Version VERSION = new Version(10, 0, 0);
 
         /// <summary>
         /// TouchScript version suffix.
