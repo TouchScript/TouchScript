@@ -263,8 +263,8 @@ namespace TouchScript.InputSources
             base.INTERNAL_UpdateResolution();
 
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-            if (windows8PointerHandler != null) windows8PointerHandler.UpdateResolution(screenWidth, screenHeight);
-            else if (windows7PointerHandler != null) windows7PointerHandler.UpdateResolution(screenWidth, screenHeight);
+            if (windows8PointerHandler != null) windows8PointerHandler.UpdateResolution(ScreenWidth, ScreenHeight);
+            else if (windows7PointerHandler != null) windows7PointerHandler.UpdateResolution(ScreenWidth, ScreenHeight);
 #endif
             if (touchHandler != null) touchHandler.UpdateResolution(ScreenWidth, ScreenHeight);
             if (mouseHandler != null) mouseHandler.UpdateResolution(ScreenWidth, ScreenHeight);
@@ -428,7 +428,7 @@ namespace TouchScript.InputSources
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
         private void enableWindows7Touch()
         {
-            windows7PointerHandler = new Windows7PointerHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            windows7PointerHandler = new Windows7PointerHandler(this, AddPointer, UpdatePointer, PressPointer, ReleasePointer, RemovePointer, CancelPointer);
             Debug.Log("[TouchScript] Initialized Windows 7 pointer input.");
         }
 
@@ -443,7 +443,7 @@ namespace TouchScript.InputSources
 
         private void enableWindows8Touch()
         {
-            windows8PointerHandler = new Windows8PointerHandler(this, addPointer, updatePointer, pressPointer, releasePointer, removePointer, cancelPointer);
+            windows8PointerHandler = new Windows8PointerHandler(this, AddPointer, UpdatePointer, PressPointer, ReleasePointer, RemovePointer, CancelPointer);
             windows8PointerHandler.MouseInPointer = windows8Mouse;
             Debug.Log("[TouchScript] Initialized Windows 8 pointer input.");
         }
